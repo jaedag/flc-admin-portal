@@ -199,6 +199,7 @@ type Query {
 	displayCentre(centreID: ID):Centre @cypher(statement: "MATCH (c:Centre{centreID:$centreID}) RETURN c")
 	centreList(communityID:ID):[Centre] @cypher(statement: "MATCH (c:Centre)<-[:HAS_CENTRE]-(:Community {communityID:$communityID}) RETURN c")
 	centreMemberCount (centreID:ID):Int @cypher(statement: "MATCH (c:Centre{centreID:$centreID}) MATCH (c)<-[:BELONGS_TO_CENTRE]-(m:Member) RETURN COUNT(m)")
+	centreDropdown (centreName:String):[Centre] @cypher(statement: "MATCH (c:Centre) WHERE toLower(c.name) CONTAINS toLower($centreName) RETURN c")
 
 #At the Sonta Level
 	sontaList:[Sonta] @cypher(statement: "MATCH (s:Sonta) RETURN s")

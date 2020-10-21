@@ -5,6 +5,7 @@ import Select from './Select'
 import RadioButtons from './RadioButtons'
 import CheckboxGroup from './CheckboxGroup'
 import DatePicker from './DatePicker'
+import FormikAutocomplete from './Combobox'
 
 function FormikControl(props) {
   const { control, ...rest } = props
@@ -12,6 +13,8 @@ function FormikControl(props) {
   switch (control) {
     case 'input':
       return <Input {...rest} />
+    case 'combobox':
+      return <FormikAutocomplete {...rest} />
     case 'textarea':
       return <Textarea {...rest} />
     case 'select':

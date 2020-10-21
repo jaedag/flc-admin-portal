@@ -20,8 +20,8 @@ export const SideBar = () => {
 
   const [inputItems, setInputItems] = useState([])
   const [users, setUsers] = useState([])
-  const [occupation, setOccupation] = useState('')
-  console.log(occupation)
+  const [setOccupation] = useState('')
+  // console.log(occupation)
   useEffect(() => {
     setUsers(['beef', 'turkey', 'Munching'])
   }, [])
@@ -59,7 +59,7 @@ export const SideBar = () => {
     onSubmitProps.resetForm()
   }
   if (occupationData) {
-    console.log(occupationData.Occupation)
+    // console.log(occupationData.Occupation)
     return (
       <nav id="sidebarMenu" className="d-md-block sidebar collapse">
         <Formik initialValues={initialValues} onSubmit={onSubmit}>

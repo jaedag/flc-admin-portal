@@ -11,7 +11,7 @@ export const jobs = gql`
 export const ALL_MEMBERS = gql`
   {
     Member {
-      # memberID
+      memberID
       firstName
       lastName
       pictureUrl

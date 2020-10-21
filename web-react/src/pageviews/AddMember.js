@@ -4,16 +4,14 @@ import { useQuery, useMutation } from '@apollo/client'
 import { Formik, Form, FieldArray } from 'formik'
 import * as Yup from 'yup'
 import FormikControl from '../components/formik-components/FormikControl'
-import PhoneInput from 'react-phone-number-input'
 
 import { NEW_MEMBER_MUTATION } from '../queries/AdditionMutations'
 import { HeadingBar } from '../components/HeadingBar'
 import { NavBar } from '../components/NavBar'
 import Spinner from '../components/Spinner'
 import SpinnerPage from '../components/SpinnerPage'
-import { SONTA_LIST, CENTRE_LIST } from '../queries/DropDownQueries'
+import { SONTA_LIST, CENTRE_DROPDOWN } from '../queries/DropDownQueries'
 import { MemberContext } from '../context/MemberContext'
-import '../phoneInput.css'
 
 export const AddMember = () => {
   const initialValues = {
@@ -28,7 +26,7 @@ export const AddMember = () => {
     maritalStatus: '',
     occupation: '',
     pictureUrl: '',
-
+    country: '',
     centre: '',
     sonta: '',
 
@@ -62,13 +60,25 @@ export const AddMember = () => {
     { key: 'Bishop', value: 'Bishop' },
   ]
 
+  const { setMemberID } = useContext(MemberContext)
+
+  const phoneRegExp = /^[+][(]{0,1}[1-9]{1,4}[)]{0,1}[-\s/0-9]*$/
   const validationSchema = Yup.object({
     firstName: Yup.string().required('Name is a required field'),
     lastName: Yup.string().required('This is a required field'),
     gender: Yup.string().required('This is a required field'),
     email: Yup.string().email('Please enter a valid email address'),
     maritalStatus: Yup.string().required('This is a required field'),
-
+    phoneNumber: Yup.string()
+      .matches(
+        phoneRegExp,
+        `Phone Number must start with + and country code (eg. '+233')`
+      )
+      .required('Phone Number is required'),
+    whatsappNumber: Yup.string().matches(
+      phoneRegExp,
+      `Phone Number must start with + and country code (eg. '+233')`
+    ),
     centre: Yup.string().required('This is a required field'),
     sonta: Yup.string().required('This is a required field'),
   })
@@ -79,17 +89,7 @@ export const AddMember = () => {
     loading: sontaListLoading,
     error: sontaListError,
   } = useQuery(SONTA_LIST)
-  const {
-    data: centreListData,
-    loading: centreListLoading,
-    error: centreListError,
-  } = useQuery(CENTRE_LIST, {
-    variables: {
-      communityID: 'a39b6928-816d-4082-948b-19de278308f2',
-    },
-  })
 
-  const { memberID, setMemberID } = useContext(MemberContext)
   const [AddMember, { data: newMemberData }] = useMutation(
     NEW_MEMBER_MUTATION,
     {
@@ -101,8 +101,6 @@ export const AddMember = () => {
   console.log(newMemberData)
 
   const [image, setImage] = useState('')
-  const [phoneNum, setPhoneNum] = useState()
-  const [whatsappNum, setWhatsappNum] = useState()
   const [loading, setLoading] = useState(false)
   const history = useHistory()
 
@@ -125,15 +123,23 @@ export const AddMember = () => {
 
     setImage(file.secure_url)
     setLoading(false)
-
-    console.log(image)
   }
 
   const onSubmit = async (values, onSubmitProps) => {
     //Variables that are not controlled by formik
     values.pictureUrl = image
-    values.phoneNumber = phoneNum
-    values.whatsappNumber = whatsappNum
+
+    //Formatting of phone number fields
+    values.phoneNumber = values.phoneNumber
+      .replace(/\s/g, '')
+      .replace('+', '')
+      .replace('(', '')
+      .replace(')', '')
+    values.whatsappNumber = values.phoneNumber
+      .replace(/\s/g, '')
+      .replace('+', '')
+      .replace('(', '')
+      .replace(')', '')
 
     AddMember({
       variables: {
@@ -156,20 +162,20 @@ export const AddMember = () => {
         pastoralHistory: values.pastoralHistory,
       },
     })
-    // console.log('Form Data', values)
-    console.log(memberID)
+    console.log('Form Data', values)
+    // console.log(memberID)
     onSubmitProps.setSubmitting(false)
     history.push('/members/displaydetails')
   }
 
-  if (sontaListLoading || centreListLoading) {
+  if (sontaListLoading) {
     return (
       <React.Fragment>
         <NavBar />
         <SpinnerPage />
       </React.Fragment>
     )
-  } else if (sontaListError || centreListError) {
+  } else if (sontaListError) {
     return (
       <React.Fragment>
         <NavBar />
@@ -184,11 +190,6 @@ export const AddMember = () => {
     const sontaOptions = sontaListData.sontaList.map((sonta) => ({
       value: sonta.sontaID,
       key: sonta.name,
-    }))
-
-    const centreOptions = centreListData.centreList.map((centre) => ({
-      value: centre.centreID,
-      key: centre.name,
     }))
 
     return (
@@ -276,23 +277,21 @@ export const AddMember = () => {
                         />
                       </div>
                       <div className="col">
-                        <PhoneInput
+                        <FormikControl
+                          className="form-control"
+                          control="input"
                           placeholder="Enter phone number"
                           id="phoneNumber"
                           name="phoneNumber"
-                          value={phoneNum}
-                          onChange={setPhoneNum}
-                          defaultCountry="GH"
                         />
                       </div>
                       <div className="col">
-                        <PhoneInput
-                          placeholder="Enter phone number"
+                        <FormikControl
+                          className="form-control"
+                          control="input"
+                          placeholder="Enter Your WhatsApp number"
                           id="whatsappNumber"
                           name="whatsappNumber"
-                          value={whatsappNum}
-                          onChange={setWhatsappNum}
-                          defaultCountry="GH"
                         />
                       </div>
                     </div>
@@ -355,11 +354,13 @@ export const AddMember = () => {
                     <div className="form-row row-cols-2">
                       <div className="col">
                         <FormikControl
-                          className="form-control"
-                          control="select"
+                          control="combobox"
                           name="centre"
-                          options={centreOptions}
-                          defaultOption="Centre"
+                          // label="Centre"
+                          placeholder="Centre"
+                          setFieldValue={formik.setFieldValue}
+                          optionsQuery={CENTRE_DROPDOWN}
+                          aria-describedby="Centre Name"
                         />
                       </div>
                       <div className="col">

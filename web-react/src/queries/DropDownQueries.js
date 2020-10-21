@@ -17,9 +17,28 @@ export const GET_CENTRE_LEADERS = gql`
 
 export const GET_CENTRE = gql`
   {
-    centreList(town: $centreName) {
+    centreList(communityID: $communityID) {
       centreID
       name
+    }
+  }
+`
+
+export const CENTRE_DROPDOWN = gql`
+  query($centreName: String) {
+    centreDropdown(centreName: $centreName) {
+      centreID
+      name
+      hall {
+        campus {
+          name
+        }
+      }
+      community {
+        town {
+          name
+        }
+      }
     }
   }
 `

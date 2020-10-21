@@ -77,7 +77,6 @@ function AddCentre() {
 
     //onSubmit receives the form state as argument
     const onSubmit = (values, onSubmitProps) => {
-      console.log(values.townSelect)
       StartCentre({
         variables: {
           centreName: values.centreName,
@@ -195,10 +194,14 @@ function AddCentre() {
                             onClick={() => {
                               window.navigator.geolocation.getCurrentPosition(
                                 (position) => {
-                                  formik.values.venueLatitude =
+                                  formik.setFieldValue(
+                                    'venueLatitude',
                                     position.coords.latitude
-                                  formik.values.venueLongitude =
+                                  )
+                                  formik.setFieldValue(
+                                    'venueLongitude',
                                     position.coords.longitude
+                                  )
                                   document
                                     .getElementById('venueLongitude')
                                     .focus()

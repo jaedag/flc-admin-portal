@@ -15,12 +15,18 @@ import AddCommunity from './pageviews/AddCommunity'
 import AddTown from './pageviews/AddTown'
 import { DisplayCentreDetails } from './pageviews/DisplayCentreDetails'
 import { DisplayCommunityDetails } from './pageviews/DisplayCommunityDetails'
+import { DisplayTownDetails } from './pageviews/DisplayTownDetails'
 import { MemberContext, SearchContext } from './context/MemberContext'
 import {
+  ApostleContext,
   TownContext,
   CommunityContext,
   CentreContext,
+  SontaContext,
 } from './context/ChurchContext'
+import { DisplayAllCentres } from './pageviews/DisplayAllCentres'
+import { DisplayAllCommunities } from './pageviews/DisplayAllCommunities'
+import { DisplayAllTowns } from './pageviews/DisplayAllTowns'
 
 const client = new ApolloClient({
   uri: process.env.REACT_APP_GRAPHQL_URI || '/graphql',
@@ -28,73 +34,97 @@ const client = new ApolloClient({
 })
 
 const PastorsAdmin = () => {
-  const [memberData, setMemberData] = useState({
-    filtered: [],
-    searchKey: '',
-  })
+  // const [memberData, setMemberData] = useState({
+  //   filtered: [],
+  //   searchKey: '',
+  // })
 
-  const [townID, setTownID] = useState('190a9543-d81d-4e76-9488-a37fb919a677')
+  const [apostleID, setApostleID] = useState(
+    '4a12a947-dd5a-4aa2-af10-ce7844c30969'
+  )
+  const [townID, setTownID] = useState('c963976b-5fe0-4798-a1de-b12a4f8e497f')
   const [communityID, setCommunityID] = useState(
-    'a39b6928-816d-4082-948b-19de278308f2'
+    '6fb72744-f98d-4e55-9932-3cc9c262aaa9'
   )
   const [centreID, setCentreID] = useState(
-    'b9f89e20-334b-4b8e-b3ea-61c0e0547c1a'
+    '8657b299-1f24-4264-928c-ca5c8382d414'
   )
-  const [memberID, setMemberID] = useState(
-    'bc961eac-5b4a-4f13-9ddd-78f1cd3b4adb'
-  )
+  const [sontaID, setSontaID] = useState('b7146b8c-d431-4b3d-b522-295fb2b10afa')
+  const [memberID, setMemberID] = useState('')
   const [searchKey, setSearchKey] = useState('')
 
   return (
     <Router>
-      <TownContext.Provider value={{ townID, setTownID }}>
-        <CommunityContext.Provider value={{ communityID, setCommunityID }}>
-          <CentreContext.Provider value={{ centreID, setCentreID }}>
-            <MemberContext.Provider
-              value={{ memberID, setMemberID, memberData, setMemberData }}
-            >
-              <SearchContext.Provider value={{ searchKey, setSearchKey }}>
-                <Switch>
-                  <Route path="/" component={Dashboard} exact />
-                  <Route path="/members" component={MembersGrid} exact />
-                  <Route
-                    path="/members/addmember"
-                    component={AddMember}
-                    exact
-                  />
-                  <Route
-                    path="/members/displaydetails"
-                    component={DisplayMemberDetails}
-                    exact
-                  />
-                  <Route path="/centre/addcentre" component={AddCentre} exact />
-                  <Route
-                    path="/centre/displaydetails"
-                    component={DisplayCentreDetails}
-                    exact
-                  />
-                  <Route
-                    path="/community/displaydetails"
-                    component={DisplayCommunityDetails}
-                    exact
-                  />
-                  <Route
-                    path="/community/addcommunity"
-                    component={AddCommunity}
-                    exact
-                  />
-                  <Route
-                    path="/town/displaydetails"
-                    component={DisplayCommunityDetails}
-                    exact
-                  />
-                  <Route path="/town/addtown" component={AddTown} exact />
-                </Switch>
-              </SearchContext.Provider>
-            </MemberContext.Provider>
-          </CentreContext.Provider>
-        </CommunityContext.Provider>
-      </TownContext.Provider>
+      <ApostleContext.Provider value={{ apostleID, setApostleID }}>
+        <TownContext.Provider value={{ townID, setTownID }}>
+          <CommunityContext.Provider value={{ communityID, setCommunityID }}>
+            <CentreContext.Provider value={{ centreID, setCentreID }}>
+              <SontaContext.Provider value={{ sontaID, setSontaID }}>
+                <MemberContext.Provider value={{ memberID, setMemberID }}>
+                  <SearchContext.Provider value={{ searchKey, setSearchKey }}>
+                    <Switch>
+                      <Route path="/" component={Dashboard} exact />
+                      <Route path="/members" component={MembersGrid} exact />
+                      <Route
+                        path="/members/addmember"
+                        component={AddMember}
+                        exact
+                      />
+                      <Route
+                        path="/members/displaydetails"
+                        component={DisplayMemberDetails}
+                        exact
+                      />
+
+                      <Route
+                        path="/centre/addcentre"
+                        component={AddCentre}
+                        exact
+                      />
+                      <Route
+                        path="/centre/displaydetails"
+                        component={DisplayCentreDetails}
+                        exact
+                      />
+                      <Route
+                        path="/centre/displayall"
+                        component={DisplayAllCentres}
+                        exact
+                      />
+                      <Route
+                        path="/community/displaydetails"
+                        component={DisplayCommunityDetails}
+                        exact
+                      />
+                      <Route
+                        path="/community/addcommunity"
+                        component={AddCommunity}
+                        exact
+                      />
+                      <Route
+                        path="/community/displayall"
+                        component={DisplayAllCommunities}
+                        exact
+                      />
+                      <Route
+                        path="/town/displayall"
+                        component={DisplayAllTowns}
+                        exact
+                      />
+                      <Route
+                        path="/town/displaydetails"
+                        component={DisplayTownDetails}
+                        exact
+                      />
+                      <Route path="/town/addtown" component={AddTown} exact />
+                    </Switch>
+                  </SearchContext.Provider>
+                </MemberContext.Provider>
+              </SontaContext.Provider>
+            </CentreContext.Provider>
+          </CommunityContext.Provider>
+        </TownContext.Provider>
+      </ApostleContext.Provider>
     </Router>
   )
 }

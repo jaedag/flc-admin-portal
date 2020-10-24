@@ -71,7 +71,7 @@ export const NavBar = () => {
         </Link>
         <Link
           className="nav-item nav-link d-flex align-items-center flex-column"
-          to="/centre"
+          to="/community/displayall"
         >
           <span className="fas fa-landmark fa-2x px-1" />
           <span className="d-none d-md-inline">Communities</span>

@@ -1,16 +1,14 @@
 import React, { useContext } from 'react'
 import { useQuery } from '@apollo/client'
-import { DisplayCentreSontaDetails } from '../components/DisplayCentreSontaDetails'
+import { DisplayChurchDetails } from '../components/DisplayChurchDetails'
 import { NavBar } from '../components/NavBar'
 import SpinnerPage from '../components/SpinnerPage'
 import { DISPLAY_COMMUNITY } from '../queries/DisplayQueries'
-import { CommunityContext } from '../context/ChurchContext'
+import { CentreContext, CommunityContext } from '../context/ChurchContext'
 
 export const DisplayCommunityDetails = () => {
-  // const { churchHeading, churchNo, ...rest } = props
-
   const { communityID } = useContext(CommunityContext)
-
+  const { setCentreID } = useContext(CentreContext)
   const {
     data: communityData,
     error: communityError,
@@ -18,9 +16,6 @@ export const DisplayCommunityDetails = () => {
   } = useQuery(DISPLAY_COMMUNITY, {
     variables: { communityID: communityID },
   })
-  console.log(communityData)
-
-  const churchHeading = 'No of Centres'
 
   if (communityError) {
     return (
@@ -42,16 +37,27 @@ export const DisplayCommunityDetails = () => {
       </React.Fragment>
     )
   }
+
+  const {
+    displayCommunity,
+    communityMemberCount,
+    communityCentreCount,
+  } = communityData
   return (
     <div>
       <NavBar />
-      <DisplayCentreSontaDetails
-        name={communityData.displayCommunity.name}
-        leaderTitle={communityData.displayCommunity.leader.title[0].Title.title}
-        membership={communityData.communityMemberCount}
-        leaderName={`${communityData.displayCommunity.leader.firstName} ${communityData.displayCommunity.leader.lastName}`}
-        churchHeading={churchHeading}
-        churchNo={communityData.communityCentreCount}
+      <DisplayChurchDetails
+        name={displayCommunity.name}
+        // leaderTitle={displayCommunity.leader.title[0].Title.title}
+        leaderTitle="Community Leader"
+        membership={communityMemberCount}
+        leaderName={`${displayCommunity.leader.firstName} ${displayCommunity.leader.lastName}`}
+        churchHeading="No of Centres"
+        churchType="Community"
+        subChurch="Centre"
+        subChurchSetter={setCentreID}
+        churchNo={communityCentreCount}
+        buttons={displayCommunity.centres}
       />
     </div>
   )

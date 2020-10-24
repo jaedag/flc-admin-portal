@@ -1,15 +1,14 @@
 import React, { useContext } from 'react'
 import { useQuery } from '@apollo/client'
-import { DisplayCentreSontaDetails } from '../components/DisplayCentreSontaDetails'
+import { DisplayChurchDetails } from '../components/DisplayChurchDetails'
 import { NavBar } from '../components/NavBar'
 import SpinnerPage from '../components/SpinnerPage'
 import { DISPLAY_CENTRE } from '../queries/DisplayQueries'
 import { CentreContext } from '../context/ChurchContext'
 
 export const DisplayCentreDetails = () => {
-  // const { churchHeading, churchNo, ...rest } = props
-
   const { centreID } = useContext(CentreContext)
+
   const {
     data: centreData,
     error: centreError,
@@ -17,10 +16,7 @@ export const DisplayCentreDetails = () => {
   } = useQuery(DISPLAY_CENTRE, {
     variables: { centreID: centreID },
   })
-  console.log(centreData)
-
-  const churchHeading = 'No of Bacentas'
-  const churchNo = '2'
+  // console.log(centreData)
 
   if (centreError) {
     return (
@@ -45,13 +41,17 @@ export const DisplayCentreDetails = () => {
   return (
     <div>
       <NavBar />
-      <DisplayCentreSontaDetails
+      <DisplayChurchDetails
         name={centreData.displayCentre.name}
-        leaderTitle={centreData.displayCentre.leader.title[0].Title.title}
-        membership={centreData.centreMemberCount}
+        leaderTitle="Centre Leader"
         leaderName={`${centreData.displayCentre.leader.firstName} ${centreData.displayCentre.leader.lastName}`}
-        churchHeading={churchHeading}
-        churchNo={churchNo}
+        membership={centreData.centreMemberCount}
+        churchHeading="No of Bacentas"
+        churchNo="2"
+        subChurch="Bacenta"
+        subChurchSetter=""
+        churchType="Centre"
+        buttons={['']}
       />
     </div>
   )

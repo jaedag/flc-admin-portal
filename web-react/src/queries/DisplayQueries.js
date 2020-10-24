@@ -76,7 +76,7 @@ export const DISPLAY_CENTRE = gql`
       leader {
         firstName
         lastName
-        title(orderBy: yearAppointed_desc) {
+        title {
           Title {
             title
           }
@@ -91,10 +91,14 @@ export const DISPLAY_COMMUNITY = gql`
   query displayCommunity($communityID: ID) {
     displayCommunity(communityID: $communityID) {
       name
+      centres {
+        centreID
+        name
+      }
       leader {
         firstName
         lastName
-        title(orderBy: yearAppointed_desc) {
+        title {
           Title {
             title
           }
@@ -103,5 +107,28 @@ export const DISPLAY_COMMUNITY = gql`
     }
     communityMemberCount(communityID: $communityID)
     communityCentreCount(communityID: $communityID)
+  }
+`
+
+export const DISPLAY_TOWN = gql`
+  query displayTown($townID: ID) {
+    displayTown(townID: $townID) {
+      name
+      communities {
+        communityID
+        name
+      }
+      leader {
+        firstName
+        lastName
+        title {
+          Title {
+            title
+          }
+        }
+      }
+    }
+    townMemberCount(townID: $townID)
+    townCommunityCount(townID: $townID)
   }
 `

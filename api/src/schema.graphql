@@ -1,5 +1,5 @@
 type Member {
-	memberID: ID! #@cypher(statement: "CALL apoc.create.uuid()")
+	memberID: ID!
 	firstName: String
 	otherName: String
 	lastName: String
@@ -171,22 +171,31 @@ input pastoralHistory {
 
 #Query Definitions
 type Query {
-#total number of
+#At the Apostolic Level
 	townCount: Int! @cypher(statement: "MATCH (t:Town) RETURN COUNT(t)")
 	communityCount: Int! @cypher(statement: "MATCH (c:Community) RETURN COUNT(c)")
 	centreCount: Int! @cypher(statement: "MATCH (c:Centre) RETURN COUNT(c)")
 	sontaCount: Int! @cypher(statement: "MATCH (s:Sonta) RETURN COUNT(s)")
 	memberCount: Int! @cypher(statement: "MATCH (m:Member) RETURN COUNT(m)")
 	pastorCount: Int! @cypher(statement: "MATCH (t:Title)<-[:HAS_TITLE]-(m:Member) RETURN COUNT(m)")
+	apostleMemberCount(apostleID: ID): Int! @cypher(statement: """
+		MATCH (:Member {memberID: $apostleID})-[:HAS_TOWN]->(t)
+		MATCH (t)-[:HAS_COMMUNITY]->(com)
+		MATCH (com)-[:HAS_CENTRE]->(c)
+		MATCH (c)<-[:BELONGS_TO_CENTRE*]-(m:Member) 
+		RETURN COUNT(m)
+		"""
+		)
 
 #At the Town Level
 	apostlesList: [Member] @cypher(statement:"MATCH (:Campus)<-[:HAS_CAMPUS]-(c:Member) MATCH (:Town)<-[:HAS_TOWN]-(t:Member) RETURN c,t ")
-	townList(aFirstName: String aLastName:String): [Town] @cypher(statement: "MATCH (ttl:Title {title:'Apostle'})<-[:HAS_TITLE]-(a:Member {firstName: $aFirstName, lastName:$aLastName})-[:HAS_TOWN]->(t:Town) RETURN t")
+	displayTown(townID: ID):Town @cypher(statement: "MATCH (t:Town {townID:$townID}) RETURN t")
+	townList(apostleID: ID): [Town] @cypher(statement: "MATCH (ttl:Title {title:'Apostle'})<-[:HAS_TITLE]-(a:Member {memberID:$apostleID})-[:HAS_TOWN]->(t:Town) RETURN t")
 	townCentreList(townID:ID):[Centre] @cypher(statement: "MATCH (c:Centre)<-[:HAS_CENTRE]-(:Community)<-[:HAS_COMMUNITY]-(t:Town {townID: $townID}) RETURN c")
-	townCommunityCount(town: String): Int! @cypher(statement: "MATCH (c:Community)<-[:HAS_COMMUNITY]-(:Town {name:$town}) RETURN COUNT(c)")
-	townCentreCount(town: String): Int! @cypher(statement: "MATCH (:Town {name:$town})-[]-()-[:HAS_CENTRE]->(cen:Centre) RETURN COUNT(cen)")
-	townSontaCount(town: String): Int! @cypher(statement: "MATCH (s:Sonta)<-[:HAS_SONTA]-(:Town {name:$town}) RETURN COUNT(s)")
-	townMemberCount(town: String): Int! @cypher(statement: "MATCH (:Town {name:$town})-[:HAS_MEMBER]->(m:Member) RETURN COUNT(m)")
+	townCommunityCount(townID: ID): Int! @cypher(statement: "MATCH(:Town {townID:$townID})-[:HAS_COMMUNITY]->(c:Community) RETURN COUNT(c)")
+	townCentreCount(townID: ID): Int! @cypher(statement: "MATCH (:Town {townID:$townID})-[]-()-[:HAS_CENTRE]->(cen:Centre) RETURN COUNT(cen)")
+	townSontaCount(townID: ID): Int! @cypher(statement: "MATCH (s:Sonta)<-[:HAS_SONTA]-(:Town {townID:$townID}) RETURN COUNT(s)")
+	townMemberCount(townID: ID): Int! @cypher(statement: "MATCH (:Town {townID:$townID})-[:HAS_MEMBER]->(m:Member) RETURN COUNT(m)")
 
 #At the Community Level
 	displayCommunity(communityID: ID):Community @cypher(statement: "MATCH (comm:Community {communityID:$communityID}) RETURN comm")
@@ -197,7 +206,7 @@ type Query {
 
 #At the Centre Level
 	displayCentre(centreID: ID):Centre @cypher(statement: "MATCH (c:Centre{centreID:$centreID}) RETURN c")
-	centreList(communityID:ID):[Centre] @cypher(statement: "MATCH (c:Centre)<-[:HAS_CENTRE]-(:Community {communityID:$communityID}) RETURN c")
+	centreList(communityID:ID):[Centre] @cypher(statement: "MATCH (:Community {communityID:$communityID})-[:HAS_CENTRE]->(c:Centre) RETURN c")
 	centreMemberCount (centreID:ID):Int @cypher(statement: "MATCH (c:Centre{centreID:$centreID}) MATCH (c)<-[:BELONGS_TO_CENTRE]-(m:Member) RETURN COUNT(m)")
 	centreDropdown (centreName:String):[Centre] @cypher(statement: "MATCH (c:Centre) WHERE toLower(c.name) CONTAINS toLower($centreName) RETURN c")
 

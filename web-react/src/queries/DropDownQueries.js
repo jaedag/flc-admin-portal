@@ -15,11 +15,23 @@ export const GET_CENTRE_LEADERS = gql`
   }
 `
 
-export const GET_CENTRE = gql`
-  {
+export const GET_CENTRES = gql`
+  query($communityID: ID) {
     centreList(communityID: $communityID) {
       centreID
       name
+      leader {
+        firstName
+        lastName
+      }
+      community {
+        name
+        leader {
+          memberID
+          firstName
+          lastName
+        }
+      }
     }
   }
 `
@@ -48,15 +60,36 @@ export const GET_COMMUNITIES = gql`
     communityList(townID: $townID) {
       communityID
       name
+      town {
+        name
+        leader {
+          memberID
+          firstName
+          lastName
+        }
+      }
+      leader {
+        firstName
+        lastName
+      }
     }
   }
 `
 
 export const GET_TOWNS = gql`
-  query($aFirstName: String, $aLastName: String) {
-    townList(aFirstName: $aFirstName, aLastName: $aLastName) {
+  query($apostleID: ID) {
+    townList(apostleID: $apostleID) {
       name
       townID
+      leader {
+        firstName
+        lastName
+      }
+      apostle {
+        memberID
+        firstName
+        lastName
+      }
     }
   }
 `
@@ -64,7 +97,7 @@ export const GET_TOWNS = gql`
 export const GET_APOSTLES = gql`
   query {
     apostlesList {
-      # memberID
+      memberID
       firstName
       lastName
     }
@@ -85,6 +118,7 @@ export const CENTRE_LIST = gql`
     centreList(communityID: $communityID) {
       centreID
       name
+      leader
     }
   }
 `

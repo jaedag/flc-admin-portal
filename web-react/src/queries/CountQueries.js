@@ -23,3 +23,14 @@ export const sontaCount = gql`
     sontaCount
   }
 `
+export const TOWN_MEMBER_COUNT = gql`
+  query townMemberCount($townID: ID) {
+    townMemberCount(townID: $townID)
+  }
+`
+
+export const APOSTLE_MEMBER_COUNT = gql`
+  query apostleMemberCount($apostleID: ID) {
+    apostleMemberCount(apostleID: $apostleID)
+  }
+`

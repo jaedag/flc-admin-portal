@@ -5,7 +5,7 @@ import {
   pastors,
   communityCount,
   sontaCount,
-} from '../queries/DashboardDataQuery'
+} from '../queries/CountQueries'
 import { NavBar } from '../components/NavBar'
 import { DashboardCard } from '../components/DashboardCard'
 import { DashboardButton } from '../components/DashboardButton'
@@ -47,7 +47,7 @@ const Dashboard = () => {
             <DashboardCard name="Pastors" number="Loading...">
               <div className="spinner-border full-center" role="status" />
             </DashboardCard>
-            <DashboardCard name="Communities" number="Loading..." />
+            <DashboardCard name="Towns" number="Loading..." />
             <DashboardCard name="Ministries" number="Loading..." />
           </div>
 
@@ -105,10 +105,7 @@ const Dashboard = () => {
               <DashboardCard name="Pastors" cardLink="members/displaymember" />
             </div>
             <div className="col">
-              <DashboardCard
-                name="Communities"
-                cardLink="centre/displaycentredetails"
-              />
+              <DashboardCard name="Towns" cardLink="town/displayall" />
             </div>
             <div className="col">
               <DashboardCard name="Ministries" />
@@ -163,9 +160,9 @@ const Dashboard = () => {
           </div>
           <div className="col">
             <DashboardCard
-              name="Communities"
+              name="Towns"
               number={community.communityCount}
-              cardLink="/community/displaydetails"
+              cardLink="/town/displayall"
             />
           </div>
           <div className="col">

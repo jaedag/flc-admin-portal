@@ -9,13 +9,18 @@ import { GET_COMMUNITIES, GET_TOWNS } from '../queries/DropDownQueries'
 import { CREATE_CENTRE_MUTATION } from '../queries/AdditionMutations'
 import { NavBar } from '../components/NavBar'
 import SpinnerPage from '../components/SpinnerPage'
-import { TownContext, CentreContext } from '../context/ChurchContext'
+import {
+  TownContext,
+  CentreContext,
+  ApostleContext,
+} from '../context/ChurchContext'
+// import Spinner from '../components/Spinner'
 
 function AddCentre() {
   const initialValues = {
     centreName: '',
-    centreLeaderFName: '',
-    centreLeaderLName: '',
+    centreLeaderName: '',
+    centreLeaderWhatsApp: '',
     whatsappNumber: '',
     meetingDay: '',
     venueLatitude: '',
@@ -30,17 +35,23 @@ function AddCentre() {
     { key: 'Saturday', value: 'Saturday' },
   ]
 
+  const phoneRegExp = /^[+][(]{0,1}[1-9]{1,4}[)]{0,1}[-\s/0-9]*$/
   const validationSchema = Yup.object({
     centreName: Yup.string().required('Centre Name is a required field'),
-    centreLeaderFName: Yup.string().required('This is a required field'),
-    centreLeaderLName: Yup.string().required('This is a required field'),
-    meetingDay: Yup.string().required('Service Day is a required field'),
-    venueLatitude: Yup.string().required('Service Day is a required field'),
-    venueLongitude: Yup.string().required('Service Day is a required field'),
+    centreLeaderName: Yup.string().required('This is a required field'),
+    centreLeaderWhatsApp: Yup.string().matches(
+      phoneRegExp,
+      `Phone Number must start with + and country code (eg. '+233')`
+    ),
+    meetingDay: Yup.string().required('Meeting Day is a required field'),
+    venueLatitude: Yup.string().required('Please fill in your location info'),
+    venueLongitude: Yup.string().required('Please fill in your location info'),
   })
 
+  const { apostleID } = useContext(ApostleContext)
   const { townID, setTownID } = useContext(TownContext)
   const { centreID, setCentreID } = useContext(CentreContext)
+  // const { positionLoading, setPositionLoading } = useState(true)
   const [StartCentre, { data: newCentreData }] = useMutation(
     CREATE_CENTRE_MUTATION,
     {
@@ -53,7 +64,7 @@ function AddCentre() {
   const history = useHistory()
 
   const { data: townListData, loading: townListLoading } = useQuery(GET_TOWNS, {
-    variables: { aFirstName: 'Frank', aLastName: 'Opoku' },
+    variables: { apostleID: apostleID },
   })
 
   const { data: communityListData, loading: communityListLoading } = useQuery(
@@ -142,6 +153,8 @@ function AddCentre() {
                             name="centreName"
                             placeholder="Name of Centre"
                           />
+                        </div>
+                        <div className="col-9">
                           <FormikControl
                             className="form-control"
                             control="select"
@@ -150,25 +163,24 @@ function AddCentre() {
                             defaultOption="Pick a Service Day"
                           />
                         </div>
-                      </div>
-                      <div className="row row-cols-2 d-flex align-items-center">
-                        <div className="col">
+                        <div className="col-9">
                           <FormikControl
                             className="form-control"
                             control="input"
                             name="centreLeaderFName"
-                            placeholder="Leader First Name"
+                            placeholder="Leader Name"
                           />
                         </div>
-                        <div className="col">
+                        <div className="col-9">
                           <FormikControl
                             className="form-control"
                             control="input"
-                            name="centreLeaderLName"
-                            placeholder="Leader Last Name"
+                            name="centreLeaderWhatsapp"
+                            placeholder="Leader WhatsApp No."
                           />
                         </div>
                       </div>
+                      <div className="row row-cols-2 d-flex align-items-center" />
                       <small className="text-muted">Enter Your Location</small>
                       <div className="row row-cols-2 d-flex align-items-center">
                         <div className="col">
@@ -192,6 +204,7 @@ function AddCentre() {
                             type="button"
                             className="btn btn-primary"
                             onClick={() => {
+                              // setPositionLoading(true)
                               window.navigator.geolocation.getCurrentPosition(
                                 (position) => {
                                   formik.setFieldValue(
@@ -211,6 +224,7 @@ function AddCentre() {
                                   document
                                     .getElementById('venueLatitude')
                                     .blur()
+                                  // setPositionLoading(false)
                                   //console.log(formik.values)
                                 }
                               )
@@ -218,6 +232,12 @@ function AddCentre() {
                           >
                             Locate Me Now
                           </button>
+
+                          {/* {positionLoading ? (
+														<span>
+															<Spinner />
+														</span>
+													) : null} */}
                         </div>
                       </div>
                       <small className="text-muted">

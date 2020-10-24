@@ -162,7 +162,7 @@ export const AddMember = () => {
         pastoralHistory: values.pastoralHistory,
       },
     })
-    console.log('Form Data', values)
+    // console.log('Form Data', values)
     // console.log(memberID)
     onSubmitProps.setSubmitting(false)
     history.push('/members/displaydetails')

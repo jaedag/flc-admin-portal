@@ -217,7 +217,9 @@ export const DisplayMemberDetails = () => {
                       </div>
                       <div className="col">
                         <p className="font-weight-bold card-text">
-                          {memberData.displayMember.occupation.occupation}
+                          {memberData.displayMember.occupation
+                            ? memberData.displayMember.occupation.occupation
+                            : 'No Occupation'}
                         </p>
                       </div>
                     </div>
@@ -264,7 +266,10 @@ export const DisplayMemberDetails = () => {
                       </div>
                       <div className="col">
                         <p className="font-weight-bold card-text">
-                          {memberData.displayMember.centre.community.town.name}
+                          {memberData.displayMember.centre
+                            ? memberData.displayMember.centre.community.town
+                                .name
+                            : null}
                         </p>
                       </div>
                     </div>
@@ -274,7 +279,9 @@ export const DisplayMemberDetails = () => {
                       </div>
                       <div className="col">
                         <p className="font-weight-bold card-text">
-                          {memberData.displayMember.centre.community.name}
+                          {memberData.displayMember.centre
+                            ? memberData.displayMember.centre.community.name
+                            : null}
                         </p>
                       </div>
                     </div>
@@ -286,7 +293,9 @@ export const DisplayMemberDetails = () => {
                       </div>
                       <div className="col">
                         <p className="font-weight-bold card-text">
-                          {`${memberData.displayMember.centre.leader.firstName} ${memberData.displayMember.centre.leader.lastName}`}
+                          {memberData.displayMember.centre
+                            ? `${memberData.displayMember.centre.leader.firstName} ${memberData.displayMember.centre.leader.lastName}`
+                            : null}
                         </p>
                       </div>
                     </div>
@@ -298,7 +307,9 @@ export const DisplayMemberDetails = () => {
                       </div>
                       <div className="col">
                         <p className="font-weight-bold card-text">
-                          {`${memberData.displayMember.sonta.leader.firstName} ${memberData.displayMember.sonta.leader.lastName}`}
+                          {memberData.displayMember.sonta
+                            ? `${memberData.displayMember.sonta.leader.firstName} ${memberData.displayMember.sonta.leader.lastName}`
+                            : null}
                         </p>
                       </div>
                     </div>

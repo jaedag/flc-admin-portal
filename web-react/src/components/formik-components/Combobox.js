@@ -4,7 +4,7 @@ import { useQuery } from '@apollo/client'
 import { ErrorMessage } from 'formik'
 import TextError from './TextError'
 
-function FormikAutocomplete(props) {
+function Combobox(props) {
   const { label, name, placeholder, optionsQuery, setFieldValue } = props
 
   const [searchString, setSearchString] = useState('')
@@ -66,4 +66,4 @@ function FormikAutocomplete(props) {
   )
 }
 
-export default FormikAutocomplete
+export default Combobox

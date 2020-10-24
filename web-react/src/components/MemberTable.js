@@ -7,16 +7,13 @@ import { GLOBAL_SEARCH } from '../queries/SearchQuery'
 import Spinner from './Spinner'
 
 export const MemberTable = () => {
-  const { memberID, setMemberID, memberData } = useContext(MemberContext)
+  const { setMemberID } = useContext(MemberContext)
+  // console.log(setMemberID)
   const history = useHistory()
   const { data: member, error: memberError, loading: memberLoading } = useQuery(
     ALL_MEMBERS
   )
-  const { data: res } = useQuery(GLOBAL_SEARCH, {
-    variables: {
-      searchKey: memberData.searchKey,
-    },
-  })
+  const { data: res } = useQuery(GLOBAL_SEARCH)
 
   console.log(res)
 
@@ -105,9 +102,9 @@ export const MemberTable = () => {
             <div
               className="card grid-card mb-2"
               onClick={() => {
-                console.log('Member ID before', soul.memberID)
+                // console.log('Member ID before', soul.memberID)
                 setMemberID(soul.memberID)
-                console.log('Member ID after', memberID)
+                // console.log('Member ID after', setter.memberID)
                 history.push('/members/displaydetails')
               }}
             >

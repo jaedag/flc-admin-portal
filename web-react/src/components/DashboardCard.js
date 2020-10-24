@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 export const DashboardCard = (props) => {
   const { name, number, cardLink } = props
 
-  if (name === 'Communities') {
+  if (name === 'Towns') {
     return (
       <Link
         to={`${cardLink}`}

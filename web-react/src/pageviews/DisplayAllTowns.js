@@ -70,6 +70,7 @@ export const DisplayAllTowns = () => {
 
           <div className="row justify-content-between">
             <div className="py-1 px-3 m-2 card">{`Towns: ${townData.townList.length}`}</div>
+
             <div className="py-1 px-3 m-2 card">{`Membership: ${
               apostleMemberCount ? apostleMemberCount.apostleMemberCount : null
             }`}</div>

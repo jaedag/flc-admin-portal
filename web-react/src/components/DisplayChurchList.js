@@ -10,7 +10,7 @@ export const DisplayChurchList = (props) => {
     <div>
       <NavBar />
       <div className="container">
-        <h5 className="text-muted">Locations</h5>
+        <h5 className="text-muted">{`${churchType} Locations:`}</h5>
         <div className="row">
           {data.map((church, index) => {
             return (

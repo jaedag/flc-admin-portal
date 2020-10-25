@@ -67,8 +67,33 @@ export const GET_COMMUNITIES = gql`
           firstName
           lastName
         }
+        sontas {
+          name
+        }
+      }
+
+      leader {
+        firstName
+        lastName
+      }
+    }
+  }
+`
+export const GET_SONTAS = gql`
+  query($townID: ID) {
+    townSontaList(townID: $townID) {
+      sontaID
+      name
+      town {
+        name
+        leader {
+          memberID
+          firstName
+          lastName
+        }
       }
       leader {
+        memberID
         firstName
         lastName
       }
@@ -82,8 +107,12 @@ export const GET_TOWNS = gql`
       name
       townID
       leader {
+        memberID
         firstName
         lastName
+      }
+      sontas {
+        name
       }
       apostle {
         memberID

@@ -24,6 +24,7 @@ import {
   CentreContext,
   SontaContext,
 } from './context/ChurchContext'
+import { DisplayAllSontas } from './pageviews/DisplayAllSontas'
 import { DisplayAllCentres } from './pageviews/DisplayAllCentres'
 import { DisplayAllCommunities } from './pageviews/DisplayAllCommunities'
 import { DisplayAllTowns } from './pageviews/DisplayAllTowns'
@@ -75,7 +76,11 @@ const PastorsAdmin = () => {
                         component={DisplayMemberDetails}
                         exact
                       />
-
+                      <Route
+                        path="/sonta/displayall"
+                        component={DisplayAllSontas}
+                        exact
+                      />
                       <Route
                         path="/centre/addcentre"
                         component={AddCentre}

@@ -48,7 +48,11 @@ const Dashboard = () => {
               <div className="spinner-border full-center" role="status" />
             </DashboardCard>
             <DashboardCard name="Towns" number="Loading..." />
-            <DashboardCard name="Ministries" number="Loading..." />
+            <DashboardCard
+              name="Ministries"
+              number="Loading..."
+              cardLink="/sonta/displayall"
+            />
           </div>
 
           <div className="row justify-content-center">
@@ -108,7 +112,7 @@ const Dashboard = () => {
               <DashboardCard name="Towns" cardLink="town/displayall" />
             </div>
             <div className="col">
-              <DashboardCard name="Ministries" />
+              <DashboardCard name="Ministries" cardLink="/sonta/displayall" />
             </div>
           </div>
 
@@ -166,7 +170,11 @@ const Dashboard = () => {
             />
           </div>
           <div className="col">
-            <DashboardCard name="Ministries" number={sonta.sontaCount} />
+            <DashboardCard
+              name="Ministries"
+              number={sonta.sontaCount}
+              cardLink="/sonta/displayall"
+            />
           </div>
         </div>
 

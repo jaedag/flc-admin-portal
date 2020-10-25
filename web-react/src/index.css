@@ -106,10 +106,6 @@
   font-size: 0.8rem;
 }
 
-a {
-  color: white;
-}
-
 .image-card {
   width: 120px;
   height: 115px;
@@ -125,8 +121,6 @@ a {
 
 .big-card {
   background-color: var(--card-color);
-  /* width: 120px; */
-  /* height: 200px; */
   border-radius: 7%;
   text-align: center;
   border: 1px solid var(--border-color);
@@ -154,7 +148,6 @@ a {
 }
 
 .card-title {
-  /* font-size: large; */
   font-weight: bold;
 }
 

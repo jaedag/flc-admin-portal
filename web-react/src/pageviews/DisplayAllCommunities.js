@@ -47,22 +47,42 @@ export const DisplayAllCommunities = () => {
     <div>
       <NavBar />
       <div className="body-container container">
-        <div className="mb-4">
-          <h4>{`${communityData.communityList[0].town.name} Communities`}</h4>
-          <Link
-            to="/members/displaydetails"
-            onClick={() => {
-              setMemberID(
-                `${communityData.communityList[0].town.leader.memberID}`
-              )
-            }}
-          >
-            <h6 className="text-muted">
-              Leader:
-              {` ${communityData.communityList[0].town.leader.firstName} ${communityData.communityList[0].town.leader.lastName}`}
-            </h6>
-          </Link>
+        <div className="mb-4 border-bottom">
+          <div className="row justify-content-between">
+            <div className="col-auto">
+              <Link
+                to="/members/displaydetails"
+                onClick={() => {
+                  setMemberID(
+                    `${communityData.communityList[0].town.leader.memberID}`
+                  )
+                }}
+              >
+                <h4>{`${communityData.communityList[0].town.name} Town`}</h4>
+              </Link>{' '}
+            </div>
+            <div className="col-auto">
+              <Link
+                to="/community/addcommunity"
+                className="btn btn-primary text-nowrap"
+              >
+                Add Community
+              </Link>
+            </div>
+            <div className="col">
+              <h6 className="text-muted">
+                Community Leader:
+                {` ${communityData.communityList[0].town.leader.firstName} ${communityData.communityList[0].town.leader.lastName}`}
+              </h6>
+            </div>
+          </div>
+          <div className="row justify-content-start">
+            <div className="py-1 px-2 m-2 card">{`Communities: ${communityData.communityList.length}`}</div>
+            <div className="py-1 px-2 m-2 card">{`Sontas: ${communityData.communityList[0].town.sontas.length}`}</div>
+            <div className="py-1 px-2 m-2 card">{`Membership:`}</div>
+          </div>
         </div>
+
         <DisplayChurchList
           data={communityData.communityList}
           setter={setCommunityID}

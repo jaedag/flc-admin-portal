@@ -8,18 +8,18 @@ import { MemberContext } from '../context/MemberContext'
 
 export const DisplayMemberDetails = () => {
   const monthNames = [
-    'January',
-    'February',
-    'March',
-    'April',
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
     'May',
     'June',
     'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
+    'Aug',
+    'Sept',
+    'Oct',
+    'Nov',
+    'Dec',
   ]
   const { memberID } = useContext(MemberContext)
 
@@ -33,7 +33,7 @@ export const DisplayMemberDetails = () => {
 
   console.log(memberData)
 
-  if (memberError) {
+  if (memberError || memberID == '') {
     return (
       <React.Fragment>
         <NavBar />
@@ -78,7 +78,7 @@ export const DisplayMemberDetails = () => {
                     <div className="col d-flex justify-content-center">
                       <img
                         src={`${memberData.displayMember.pictureUrl}`}
-                        className="m-2 img-fluid rounded profile-img"
+                        className="m-2 rounded profile-img"
                         alt="current member"
                       />
                     </div>
@@ -92,7 +92,9 @@ export const DisplayMemberDetails = () => {
                     </div>
                     <div className="col d-flex justify-content-center mb-2">
                       <p className="font-weight-light card-text">
-                        {memberData.displayMember.centre.name}
+                        {memberData.displayMember.centre
+                          ? `Centre: ${memberData.displayMember.centre.name}`
+                          : `Centre: ${null}`}
                       </p>
                     </div>
                     <div className="col d-flex justify-content-center  mt-2">
@@ -107,7 +109,130 @@ export const DisplayMemberDetails = () => {
                 </MemberCard>
               </div>
             </div>
+            <div className="row">
+              <div className="col">
+                {/* Bio Information */}
+                <MemberCard title="Bio">
+                  <div className="container p-2">
+                    <div className="row py-2">
+                      <div className="col ">
+                        <p className="text-secondary card-text">First Name</p>
+                      </div>
+                      <div className="col">
+                        <p className="font-weight-bold card-text">
+                          {memberData.displayMember.firstName}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="row py-2">
+                      <div className="col">
+                        <p className="text-secondary card-text">Last Name</p>
+                      </div>
+                      <div className="col">
+                        <p className="font-weight-bold card-text">
+                          {memberData.displayMember.lastName}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="row py-2">
+                      <div className="col">
+                        <p className="text-secondary card-text">
+                          Email Address
+                        </p>
+                      </div>
+                      <div className="col-6">
+                        <p className="font-weight-bold card-text text-truncate">
+                          {memberData.displayMember.email}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="row py-2">
+                      <div className="col">
+                        <p className="text-secondary card-text">
+                          Date of Birth
+                        </p>
+                      </div>
+                      <div className="col">
+                        <p className="font-weight-bold card-text">
+                          {memberData.displayMember.dob
+                            ? `${memberData.displayMember.dob.date.day} ${
+                                monthNames[
+                                  memberData.displayMember.dob.date.month
+                                ]
+                              } ${memberData.displayMember.dob.date.year}`
+                            : null}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="row py-2">
+                      <div className="col">
+                        <p className="text-secondary card-text">Gender</p>
+                      </div>
+                      <div className="col">
+                        <p className="font-weight-bold card-text">
+                          {memberData.displayMember.gender.gender}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="row py-2">
+                      <div className="col">
+                        <p className="text-secondary card-text">
+                          Marital Status
+                        </p>
+                      </div>
+                      <div className="col">
+                        <p className="font-weight-bold card-text">
+                          {memberData.displayMember.maritalStatus.status}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="row py-2">
+                      <div className="col">
+                        <p className="text-secondary card-text">Occupation</p>
+                      </div>
+                      <div className="col">
+                        <p className="font-weight-bold card-text">
+                          {memberData.displayMember.occupation
+                            ? memberData.displayMember.occupation.occupation
+                            : 'No Occupation'}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="row py-2">
+                      <div className="col">
+                        <p className="text-secondary card-text">Phone Number</p>
+                      </div>
+                      <div className="col">
+                        <a
+                          className="font-weight-bold card-text"
+                          href={`tel:${memberData.displayMember.phoneNumber}`}
+                        >
+                          {memberData.displayMember.phoneNumber}
+                        </a>
+                      </div>
+                    </div>
+                    <div className="row py-2">
+                      <div className="col">
+                        <p className="text-secondary card-text">
+                          WhatsApp Number
+                        </p>
+                      </div>
+                      <div className="col">
+                        <a
+                          className="font-weight-bold card-text"
+                          href={`https://wa.me/${memberData.displayMember.whatsappNumber}`}
+                        >
+                          {memberData.displayMember.whatsappNumber}
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </MemberCard>
+              </div>
+            </div>
+          </div>
 
+          <div className="col">
             {/* Leadership History Timeline */}
             {memberData.displayMember.leadershipHistory[0] ? (
               <div className="row">
@@ -135,126 +260,7 @@ export const DisplayMemberDetails = () => {
                 </div>
               </div>
             ) : null}
-          </div>
 
-          {/* Bio Information */}
-          <div className="col">
-            <div className="row">
-              <div className="col">
-                <MemberCard title="Bio">
-                  <div className="container p-2">
-                    <div className="row mb-2">
-                      <div className="col">
-                        <p className="text-secondary card-text">First Name</p>
-                      </div>
-                      <div className="col">
-                        <p className="font-weight-bold card-text">
-                          {memberData.displayMember.firstName}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="row mb-2">
-                      <div className="col">
-                        <p className="text-secondary card-text">Last Name</p>
-                      </div>
-                      <div className="col">
-                        <p className="font-weight-bold card-text">
-                          {memberData.displayMember.lastName}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="row mb-2">
-                      <div className="col">
-                        <p className="text-secondary card-text">
-                          Email Address
-                        </p>
-                      </div>
-                      <div className="col">
-                        <p className="font-weight-bold card-text">
-                          {memberData.displayMember.email}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="row mb-2">
-                      <div className="col">
-                        <p className="text-secondary card-text">
-                          Date of Birth
-                        </p>
-                      </div>
-                      <div className="col">
-                        <p className="font-weight-bold card-text">
-                          {`${memberData.displayMember.dob.date.day} ${
-                            monthNames[memberData.displayMember.dob.date.month]
-                          } ${memberData.displayMember.dob.date.year}`}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="row mb-2">
-                      <div className="col">
-                        <p className="text-secondary card-text">Gender</p>
-                      </div>
-                      <div className="col">
-                        <p className="font-weight-bold card-text">
-                          {memberData.displayMember.gender.gender}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="row mb-2">
-                      <div className="col">
-                        <p className="text-secondary card-text">
-                          Marital Status
-                        </p>
-                      </div>
-                      <div className="col">
-                        <p className="font-weight-bold card-text">
-                          {memberData.displayMember.maritalStatus.status}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="row mb-2">
-                      <div className="col">
-                        <p className="text-secondary card-text">Occupation</p>
-                      </div>
-                      <div className="col">
-                        <p className="font-weight-bold card-text">
-                          {memberData.displayMember.occupation
-                            ? memberData.displayMember.occupation.occupation
-                            : 'No Occupation'}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="row mb-2">
-                      <div className="col">
-                        <p className="text-secondary card-text">Phone Number</p>
-                      </div>
-                      <div className="col">
-                        <a
-                          className="font-weight-bold card-text"
-                          href={`tel:${memberData.displayMember.phoneNumber}`}
-                        >
-                          {memberData.displayMember.phoneNumber}
-                        </a>
-                      </div>
-                    </div>
-                    <div className="row mb-2">
-                      <div className="col">
-                        <p className="text-secondary card-text">
-                          WhatsApp Number
-                        </p>
-                      </div>
-                      <div className="col">
-                        <a
-                          className="font-weight-bold card-text"
-                          href={`https://wa.me/${memberData.displayMember.whatsappNumber}`}
-                        >
-                          {memberData.displayMember.whatsappNumber}
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </MemberCard>
-              </div>
-            </div>
             {/* Current Church Status */}
             <div className="row">
               <div className="col">
@@ -301,13 +307,25 @@ export const DisplayMemberDetails = () => {
                     </div>
                     <div className="row mb-2">
                       <div className="col">
+                        <p className="text-secondary card-text">Sonta</p>
+                      </div>
+                      <div className="col">
+                        <p className="font-weight-bold card-text">
+                          {memberData.displayMember.sonta
+                            ? `${memberData.displayMember.sonta.name}`
+                            : null}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="row mb-2">
+                      <div className="col">
                         <p className="text-secondary card-text">
                           Sonta Shepherd
                         </p>
                       </div>
                       <div className="col">
                         <p className="font-weight-bold card-text">
-                          {memberData.displayMember.sonta
+                          {memberData.displayMember.sonta.leader
                             ? `${memberData.displayMember.sonta.leader.firstName} ${memberData.displayMember.sonta.leader.lastName}`
                             : null}
                         </p>

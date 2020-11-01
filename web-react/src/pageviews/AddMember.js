@@ -10,7 +10,7 @@ import { HeadingBar } from '../components/HeadingBar'
 import { NavBar } from '../components/NavBar'
 import Spinner from '../components/Spinner'
 import SpinnerPage from '../components/SpinnerPage'
-import { SONTA_LIST, CENTRE_DROPDOWN } from '../queries/DropDownQueries'
+import { SONTA_LIST, CENTRE_DROPDOWN } from '../queries/ListQueries'
 import { MemberContext } from '../context/MemberContext'
 
 export const AddMember = () => {
@@ -162,8 +162,6 @@ export const AddMember = () => {
         pastoralHistory: values.pastoralHistory,
       },
     })
-    // console.log('Form Data', values)
-    // console.log(memberID)
     onSubmitProps.setSubmitting(false)
     history.push('/members/displaydetails')
   }
@@ -360,6 +358,10 @@ export const AddMember = () => {
                           placeholder="Centre"
                           setFieldValue={formik.setFieldValue}
                           optionsQuery={CENTRE_DROPDOWN}
+                          queryVariable="centreName"
+                          suggestionText="name"
+                          suggestionID="centreID"
+                          dataset="centreDropdown"
                           aria-describedby="Centre Name"
                         />
                       </div>

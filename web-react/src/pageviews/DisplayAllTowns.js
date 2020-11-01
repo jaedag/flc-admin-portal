@@ -4,7 +4,7 @@ import { useQuery } from '@apollo/client'
 import { DisplayChurchList } from '../components/DisplayChurchList'
 import { NavBar } from '../components/NavBar'
 import SpinnerPage from '../components/SpinnerPage'
-import { GET_TOWNS } from '../queries/DropDownQueries'
+import { GET_TOWNS } from '../queries/ListQueries'
 import { ApostleContext, TownContext } from '../context/ChurchContext'
 import { MemberContext } from '../context/MemberContext'
 import { APOSTLE_MEMBER_COUNT } from '../queries/CountQueries'
@@ -70,6 +70,7 @@ export const DisplayAllTowns = () => {
 
           <div className="row justify-content-between">
             <div className="py-1 px-3 m-2 card">{`Towns: ${townData.townList.length}`}</div>
+
             <div className="py-1 px-3 m-2 card">{`Membership: ${
               apostleMemberCount ? apostleMemberCount.apostleMemberCount : null
             }`}</div>

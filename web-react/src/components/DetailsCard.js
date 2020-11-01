@@ -5,7 +5,7 @@ export const DetailsCard = (props) => {
     <div>
       <div className="container-fluid card detail-card m-3">
         <span className="text-secondary">{props.heading}</span>
-        <h1 className="font-weight-bold text-responsive">{props.detail}</h1>
+        <h2 className="font-weight-bold">{props.detail}</h2>
       </div>
     </div>
   )

@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client'
 
 export const GLOBAL_SEARCH = gql`
-  query memberSearch($searchKey: String!) {
-    memberSearch(searchKey: $searchKey) {
+  query globalSearch($searchKey: String!) {
+    globalSearch(searchKey: $searchKey, first: 5) {
       memberID
       firstName
       lastName

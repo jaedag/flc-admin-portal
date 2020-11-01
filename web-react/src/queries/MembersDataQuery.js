@@ -1,16 +1,8 @@
 import { gql } from '@apollo/client'
 
-export const jobs = gql`
-  {
-    Occupation {
-      occupation
-    }
-  }
-`
-
 export const ALL_MEMBERS = gql`
   {
-    Member {
+    Member(first: 50) {
       memberID
       firstName
       lastName

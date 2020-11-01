@@ -4,15 +4,14 @@ import { useQuery } from '@apollo/client'
 import { DisplayChurchList } from '../components/DisplayChurchList'
 import { NavBar } from '../components/NavBar'
 import SpinnerPage from '../components/SpinnerPage'
-import { GET_SONTAS } from '../queries/DropDownQueries'
+import { GET_SONTAS } from '../queries/ListQueries'
 import { TownContext, SontaContext } from '../context/ChurchContext'
 import { MemberContext } from '../context/MemberContext'
 
-export const DisplayAllCommunities = () => {
+export const DisplayAllSontas = () => {
   const { townID } = useContext(TownContext)
   const { setSontaID } = useContext(SontaContext)
   const { setMemberID } = useContext(MemberContext)
-  console.log(setSontaID)
 
   const {
     data: sontaData,
@@ -48,20 +47,24 @@ export const DisplayAllCommunities = () => {
       <NavBar />
       <div className="body-container container">
         <div className="mb-4">
-          <h4>{`${sontaData.communityList[0].town.name} Communities`}</h4>
+          <h4>{`${sontaData.townSontaList[0].town.name} Sontas`}</h4>
           <Link
             to="/members/displaydetails"
             onClick={() => {
-              setMemberID(`${sontaData.communityList[0].town.leader.memberID}`)
+              setMemberID(`${sontaData.townSontaList[0].town.leader.memberID}`)
             }}
           >
             <h6 className="text-muted">
               Leader:
-              {` ${sontaData.communityList[0].town.leader.firstName} ${sontaData.communityList[0].town.leader.lastName}`}
+              {` ${sontaData.townSontaList[0].town.leader.firstName} ${sontaData.townSontaList[0].town.leader.lastName}`}
             </h6>
           </Link>
         </div>
-        <DisplayChurchList data={sontaData.communityList} setter={setSontaID} />
+        <DisplayChurchList
+          data={sontaData.townSontaList}
+          setter={setSontaID}
+          churchType="Sonta"
+        />
       </div>
     </div>
   )

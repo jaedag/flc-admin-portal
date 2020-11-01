@@ -34,3 +34,14 @@ export const APOSTLE_MEMBER_COUNT = gql`
     apostleMemberCount(apostleID: $apostleID)
   }
 `
+export const APOSTLE_PASTOR_COUNT = gql`
+  query apostlePastorCount($apostleID: ID) {
+    apostlePastorCount(apostleID: $apostleID)
+  }
+`
+
+export const APOSTLE_TOWN_COUNT = gql`
+  query apostleTownCount($apostleID: ID) {
+    apostleTownCount(apostleID: $apostleID)
+  }
+`

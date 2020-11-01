@@ -97,7 +97,7 @@ type Campus {
 	leader: Member @relation(name: "LEADS_CAMPUS", direction: "IN")
 	sontas: [Sonta] @relation(name: "HAS_SONTA", direction: "OUT")
 	halls: [Hall] @relation(name: "HAS_HALL", direction: "OUT")
-	apostle: Member @relation (name:"HAS_CAMPUS",direction: IN)
+	apostle: Member @relation (name:"HAS_CAMPUS",direction: "IN")
 }
 
 type Hall {
@@ -171,13 +171,15 @@ input pastoralHistory {
 
 #Query Definitions
 type Query {
-#At the Apostolic Level
-	townCount: Int! @cypher(statement: "MATCH (t:Town) RETURN COUNT(t)")
+#At the Federal Level
+	memberCount: Int! @cypher(statement: "MATCH (m:Member) RETURN COUNT(m)")
 	communityCount: Int! @cypher(statement: "MATCH (c:Community) RETURN COUNT(c)")
 	centreCount: Int! @cypher(statement: "MATCH (c:Centre) RETURN COUNT(c)")
-	sontaCount: Int! @cypher(statement: "MATCH (s:Sonta) RETURN COUNT(s)")
-	memberCount: Int! @cypher(statement: "MATCH (m:Member) RETURN COUNT(m)")
-	pastorCount: Int! @cypher(statement: "MATCH (t:Title)<-[:HAS_TITLE]-(m:Member) RETURN COUNT(m)")
+
+#At the Apostolic Level
+	apostleTownCount(apostleID: ID): Int! @cypher(statement: "MATCH (:Member {memberID: $apostleID})-[:HAS_TOWN]->(t:Town) RETURN COUNT(t)")
+	apostleSontaCount(apostleID: ID): Int! @cypher(statement: "MATCH (s:Sonta) RETURN COUNT(s)")
+	apostlePastorCount(apostleID: ID): Int! @cypher(statement: "MATCH (t:Title)<-[:HAS_TITLE]-(m:Member)-[:BELONGS_TO_CENTRE]->()<-[:HAS_CENTRE]-()-[:HAS_COMMUNITY]-()-[:HAS_TOWN]-(:Member {memberID: $apostleID}) RETURN COUNT(m)")
 	apostleMemberCount(apostleID: ID): Int! @cypher(statement: """
 		MATCH (:Member {memberID: $apostleID})-[:HAS_TOWN]->(t)
 		MATCH (t)-[:HAS_COMMUNITY]->(com)
@@ -188,13 +190,14 @@ type Query {
 		)
 
 #At the Town Level
-	apostlesList: [Member] @cypher(statement:"MATCH (:Campus)<-[:HAS_CAMPUS]-(c:Member) MATCH (:Town)<-[:HAS_TOWN]-(t:Member) RETURN c,t ")
+	apostlesList: [Member] @cypher(statement:"MATCH (:Campus)<-[:HAS_CAMPUS]-(c:Member) MATCH (:Town)<-[:HAS_TOWN]-(t:Member) RETURN c,t")
 	displayTown(townID: ID):Town @cypher(statement: "MATCH (t:Town {townID:$townID}) RETURN t")
 	townList(apostleID: ID): [Town] @cypher(statement: "MATCH (ttl:Title {title:'Apostle'})<-[:HAS_TITLE]-(a:Member {memberID:$apostleID})-[:HAS_TOWN]->(t:Town) RETURN t")
-	townCentreList(townID:ID):[Centre] @cypher(statement: "MATCH (c:Centre)<-[:HAS_CENTRE]-(:Community)<-[:HAS_COMMUNITY]-(t:Town {townID: $townID}) RETURN c")
+	townCentreList(townID:ID):[Centre] @cypher(statement: "MATCH (t:Town {townID: $townID})-[:HAS_COMMUNITY]->(:Community)-[:HAS_CENTRE]-> (c:Centre) RETURN c")
+	townSontaList(townID:ID):[Sonta] @cypher (statement:"MATCH (t:Town {townID: $townID})-[:HAS_SONTA]->(s:Sonta) RETURN s")
 	townCommunityCount(townID: ID): Int! @cypher(statement: "MATCH(:Town {townID:$townID})-[:HAS_COMMUNITY]->(c:Community) RETURN COUNT(c)")
 	townCentreCount(townID: ID): Int! @cypher(statement: "MATCH (:Town {townID:$townID})-[]-()-[:HAS_CENTRE]->(cen:Centre) RETURN COUNT(cen)")
-	townSontaCount(townID: ID): Int! @cypher(statement: "MATCH (s:Sonta)<-[:HAS_SONTA]-(:Town {townID:$townID}) RETURN COUNT(s)")
+	townSontaCount(townID: ID): Int! @cypher(statement: "MATCH (:Town {townID:$townID})-[:HAS_SONTA]->(s:Sonta) RETURN COUNT(s)")
 	townMemberCount(townID: ID): Int! @cypher(statement: "MATCH (:Town {townID:$townID})-[:HAS_MEMBER]->(m:Member) RETURN COUNT(m)")
 
 #At the Community Level
@@ -218,8 +221,8 @@ type Query {
 	displayMember(memberID: ID):Member @cypher(statement: "MATCH (m:Member{memberID:$memberID}) RETURN m")
 
 #Fuzzy Search
-	memberSearch(searchKey:String!):[Member] @cypher(statement:"MATCH (m:Member) WHERE toLower(m.firstName) CONTAINS toLower($searchKey) OR toLower(m.lastName) CONTAINS toLower($searchKey) RETURN m")
-	fuzzyMemberByName(searchKey: String!):[Member] @cypher(statement: "CALL db.index.fulltext.queryNodes('memberNameIndex', $searchKey+'~') YIELD node RETURN node")
+	globalSearch(searchKey:String!):[Member] @cypher(statement:"MATCH (m:Member) WHERE m.firstName STARTS WITH $searchKey OR m.lastName STARTS WITH $searchKey RETURN m")
+	occupationList(searchKey:String!):[Occupation] @cypher(statement:"MATCH (o:Occupation) WHERE toLower(o.occupation) CONTAINS toLower($searchKey) RETURN o")
 
 #Filtering
 	FilterMembers(

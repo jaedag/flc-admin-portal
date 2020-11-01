@@ -1,28 +1,23 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import Autosuggest from 'react-autosuggest'
 import { useQuery } from '@apollo/client'
 import { ErrorMessage } from 'formik'
 import TextError from './TextError'
+import { useHistory } from 'react-router-dom'
+import { GLOBAL_SEARCH } from '../../queries/SearchQuery'
+import { MemberContext } from '../../context/MemberContext'
 
-function Combobox(props) {
-  const {
-    label,
-    name,
-    dataset,
-    queryVariable,
-    suggestionText,
-    suggestionID,
-    placeholder,
-    optionsQuery,
-    setFieldValue,
-  } = props
+function FormikSearchbox(props) {
+  const { label, name, dataset, placeholder, setFieldValue } = props
 
   const [searchString, setSearchString] = useState('')
   const [suggestions, setSuggestions] = useState([])
+  const { setMemberID } = useContext(MemberContext)
+  const history = useHistory()
 
-  const { data } = useQuery(optionsQuery, {
+  const { data } = useQuery(GLOBAL_SEARCH, {
     variables: {
-      [`${queryVariable}`]: searchString,
+      searchKey: searchString,
     },
   })
 
@@ -36,7 +31,7 @@ function Combobox(props) {
           autoComplete: 'off',
           value: searchString,
           name: name,
-          className: 'form-control',
+          className: 'nav-search-box',
           onChange: (_event, { newValue }) => {
             setSearchString(newValue)
           },
@@ -50,8 +45,9 @@ function Combobox(props) {
             console.log(data)
             setSuggestions(
               data[`${dataset}`].map((row) => ({
-                name: row[`${suggestionText}`],
-                id: row[`${suggestionID}`],
+                firstName: row.firstName,
+                lastName: row.lastName,
+                id: row.memberID,
               }))
             )
           } catch (error) {
@@ -65,14 +61,18 @@ function Combobox(props) {
           if (method === 'enter') {
             event.preventDefault()
           }
-          setSearchString(suggestion.name)
+          // setSearchString(suggestion.name)
           console.log(suggestion)
-          setFieldValue(`${name}`, suggestion.id)
+          setMemberID(suggestion.id)
+          history.push('/members/displaydetails')
+          setFieldValue(`${name}`, suggestion.memberID)
         }}
-        getSuggestionValue={(suggestion) => suggestion.name}
+        getSuggestionValue={(suggestion) =>
+          `${suggestion.firstName} ${suggestion.lastName}`
+        }
         highlightFirstSuggestion={true}
         renderSuggestion={(suggestion) => (
-          <div className="combobox-control">{suggestion.name}</div>
+          <div className="combobox-control">{`${suggestion.firstName} ${suggestion.lastName}`}</div>
         )}
       />
       <ErrorMessage name={name} component={TextError} />
@@ -80,4 +80,4 @@ function Combobox(props) {
   )
 }
 
-export default Combobox
+export default FormikSearchbox

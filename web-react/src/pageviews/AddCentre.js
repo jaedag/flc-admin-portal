@@ -5,7 +5,7 @@ import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 import FormikControl from '../components/formik-components/FormikControl'
 
-import { GET_COMMUNITIES, GET_TOWNS } from '../queries/DropDownQueries'
+import { GET_COMMUNITIES, GET_TOWNS } from '../queries/ListQueries'
 import { CREATE_CENTRE_MUTATION } from '../queries/AdditionMutations'
 import { NavBar } from '../components/NavBar'
 import SpinnerPage from '../components/SpinnerPage'

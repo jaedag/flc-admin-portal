@@ -6,6 +6,7 @@ import RadioButtons from './RadioButtons'
 import CheckboxGroup from './CheckboxGroup'
 import DatePicker from './DatePicker'
 import Combobox from './Combobox'
+import FormikSearchbox from './FormikSearchbox'
 
 function FormikControl(props) {
   const { control, ...rest } = props
@@ -15,6 +16,8 @@ function FormikControl(props) {
       return <Input {...rest} />
     case 'combobox':
       return <Combobox {...rest} />
+    case 'searchbox':
+      return <FormikSearchbox {...rest} />
     case 'textarea':
       return <Textarea {...rest} />
     case 'select':

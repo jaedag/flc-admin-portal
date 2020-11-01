@@ -1,5 +1,14 @@
 import { gql } from '@apollo/client'
 
+export const DISPLAY_APOSTLE_NAME = gql`
+  query displayMember($memberID: ID) {
+    displayMember(memberID: $memberID) {
+      firstName
+      lastName
+    }
+  }
+`
+
 export const DISPLAY_MEMBER = gql`
   query displayMember($memberID: ID) {
     displayMember(memberID: $memberID) {

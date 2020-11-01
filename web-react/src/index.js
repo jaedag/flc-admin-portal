@@ -6,7 +6,7 @@ import { Route, Switch, BrowserRouter as Router } from 'react-router-dom'
 import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client'
 // import {Login} from "./pages/Login";
 import './index.css'
-import Dashboard from './pageviews/Dashboard'
+import ApostleDashboard from './pageviews/ApostleDashboard'
 import { MembersGrid } from './pageviews/MembersGrid'
 import { DisplayMemberDetails } from './pageviews/DisplayMemberDetails'
 import { AddMember } from './pageviews/AddMember'
@@ -41,7 +41,7 @@ const PastorsAdmin = () => {
   // })
 
   const [apostleID, setApostleID] = useState(
-    '4a12a947-dd5a-4aa2-af10-ce7844c30969'
+    'abe93bc4-da80-4f9a-aa95-b8df86b4d406'
   )
   const [townID, setTownID] = useState('c963976b-5fe0-4798-a1de-b12a4f8e497f')
   const [communityID, setCommunityID] = useState(
@@ -64,7 +64,7 @@ const PastorsAdmin = () => {
                 <MemberContext.Provider value={{ memberID, setMemberID }}>
                   <SearchContext.Provider value={{ searchKey, setSearchKey }}>
                     <Switch>
-                      <Route path="/" component={Dashboard} exact />
+                      <Route path="/" component={ApostleDashboard} exact />
                       <Route path="/members" component={MembersGrid} exact />
                       <Route
                         path="/members/addmember"

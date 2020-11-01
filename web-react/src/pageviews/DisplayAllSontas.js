@@ -4,7 +4,7 @@ import { useQuery } from '@apollo/client'
 import { DisplayChurchList } from '../components/DisplayChurchList'
 import { NavBar } from '../components/NavBar'
 import SpinnerPage from '../components/SpinnerPage'
-import { GET_SONTAS } from '../queries/DropDownQueries'
+import { GET_SONTAS } from '../queries/ListQueries'
 import { TownContext, SontaContext } from '../context/ChurchContext'
 import { MemberContext } from '../context/MemberContext'
 

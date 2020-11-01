@@ -4,7 +4,7 @@ import { useQuery } from '@apollo/client'
 import { DisplayChurchList } from '../components/DisplayChurchList'
 import { NavBar } from '../components/NavBar'
 import SpinnerPage from '../components/SpinnerPage'
-import { GET_COMMUNITIES } from '../queries/DropDownQueries'
+import { GET_COMMUNITIES } from '../queries/ListQueries'
 import { TownContext } from '../context/ChurchContext'
 import { CommunityContext } from '../context/ChurchContext'
 import { MemberContext } from '../context/MemberContext'
@@ -69,6 +69,8 @@ export const DisplayAllCommunities = () => {
                 Add Community
               </Link>
             </div>
+          </div>
+          <div className="row">
             <div className="col">
               <h6 className="text-muted">
                 Community Leader:
@@ -76,7 +78,8 @@ export const DisplayAllCommunities = () => {
               </h6>
             </div>
           </div>
-          <div className="row justify-content-start">
+
+          <div className="row justify-content-between">
             <div className="py-1 px-2 m-2 card">{`Communities: ${communityData.communityList.length}`}</div>
             <div className="py-1 px-2 m-2 card">{`Sontas: ${communityData.communityList[0].town.sontas.length}`}</div>
             <div className="py-1 px-2 m-2 card">{`Membership:`}</div>

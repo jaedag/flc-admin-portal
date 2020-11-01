@@ -20,8 +20,8 @@ export const DisplayChurchDetails = (props) => {
   return (
     <div>
       <NavBar />
-      <div className=" pb-2 top-heading title-bar mt-5">
-        <div className="container">
+      <div className=" py-2 top-heading title-bar mt-5">
+        <div className="container ">
           <h3 className="mx-3 mt-3 mb-2 font-weight-bold">
             {`${name} ${churchType}`}
             <sup className="text-secondary card-text icon-color font-weight-bold ml-3">
@@ -71,7 +71,7 @@ export const DisplayChurchDetails = (props) => {
             <tr>
               {buttons.map((church, index) => {
                 if (index > 4) {
-                  return
+                  return null
                 }
                 return (
                   <td className="col-auto" key={index}>

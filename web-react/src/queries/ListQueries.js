@@ -38,7 +38,7 @@ export const GET_CENTRES = gql`
 
 export const CENTRE_DROPDOWN = gql`
   query($centreName: String) {
-    centreDropdown(centreName: $centreName) {
+    centreDropdown(centreName: $centreName, first: 8) {
       centreID
       name
       hall {
@@ -71,7 +71,6 @@ export const GET_COMMUNITIES = gql`
           name
         }
       }
-
       leader {
         firstName
         lastName
@@ -148,6 +147,14 @@ export const CENTRE_LIST = gql`
       centreID
       name
       leader
+    }
+  }
+`
+
+export const OCCUPATION_LIST = gql`
+  query($searchKey: String!) {
+    occupationList(searchKey: $searchKey, first: 5) {
+      occupation
     }
   }
 `

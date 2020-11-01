@@ -1,43 +1,53 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { useQuery } from '@apollo/client'
 import {
-  members,
-  pastors,
-  communityCount,
-  sontaCount,
+  APOSTLE_MEMBER_COUNT,
+  APOSTLE_PASTOR_COUNT,
+  APOSTLE_TOWN_COUNT,
 } from '../queries/CountQueries'
+import { DISPLAY_APOSTLE_NAME } from '../queries/DisplayQueries'
 import { NavBar } from '../components/NavBar'
 import { DashboardCard } from '../components/DashboardCard'
 import { DashboardButton } from '../components/DashboardButton'
+import { ApostleContext } from '../context/ChurchContext'
 
-const Dashboard = () => {
+const ApostleDashboard = () => {
+  const { apostleID } = useContext(ApostleContext)
   const {
     data: member,
     error: memberCountError,
     loading: memberCountLoading,
-  } = useQuery(members)
-
+  } = useQuery(APOSTLE_MEMBER_COUNT, {
+    variables: { apostleID: apostleID },
+  })
+  const {
+    data: apostle,
+    error: apostleError,
+    loading: apostleLoading,
+  } = useQuery(DISPLAY_APOSTLE_NAME, {
+    variables: { memberID: apostleID },
+  })
   const {
     data: pastor,
     error: pastorCountError,
     loading: pastorCountLoading,
-  } = useQuery(pastors)
+  } = useQuery(APOSTLE_PASTOR_COUNT, {
+    variables: { apostleID: apostleID },
+  })
   const {
-    data: community,
-    error: communityCountError,
-    loading: communityCountLoading,
-  } = useQuery(communityCount)
-  const {
-    data: sonta,
-    error: sontaCountError,
-    loading: sontaCountLoading,
-  } = useQuery(sontaCount)
+    data: town,
+    error: townCountError,
+    loading: townCountLoading,
+  } = useQuery(APOSTLE_TOWN_COUNT, {
+    variables: { apostleID: apostleID },
+  })
+  // const { data: sonta, error: sontaCountError, loading: sontaCountLoading } = useQuery(sontaCount)
 
   if (
     memberCountLoading ||
     pastorCountLoading ||
-    communityCountLoading ||
-    sontaCountLoading
+    townCountLoading ||
+    apostleLoading
   ) {
     return (
       <div>
@@ -72,10 +82,7 @@ const Dashboard = () => {
               />
             </div>
             <div className="col">
-              <DashboardButton
-                btnText="Add Community"
-                btnLink="community/addcommunity"
-              />
+              <DashboardButton btnText="Add town" btnLink="town/addtown" />
             </div>
             <div className="col ">
               <DashboardButton btnText="Add Town" btnLink="/town/addtown" />
@@ -85,18 +92,8 @@ const Dashboard = () => {
       </div>
     )
   }
-  if (
-    memberCountError ||
-    pastorCountError ||
-    communityCountError ||
-    sontaCountError
-  ) {
-    console.log(
-      memberCountError,
-      pastorCountError,
-      communityCountError,
-      sontaCountError
-    )
+  if (memberCountError || pastorCountError || townCountError || apostleError) {
+    // console.log(memberCountError, pastorCountError, townCountError, sontaCountError)
     return (
       <div>
         <NavBar />
@@ -108,6 +105,7 @@ const Dashboard = () => {
             <div className="col">
               <DashboardCard name="Pastors" cardLink="members/displaymember" />
             </div>
+
             <div className="col">
               <DashboardCard name="Towns" cardLink="town/displayall" />
             </div>
@@ -133,10 +131,7 @@ const Dashboard = () => {
               />
             </div>
             <div className="col">
-              <DashboardButton
-                btnText="Add Community"
-                btnLink="community/addcommunity"
-              />
+              <DashboardButton btnText="Add town" btnLink="town/addtown" />
             </div>
             <div className="col ">
               <DashboardButton btnText="Add Town" btnLink="/town/addtown" />
@@ -151,28 +146,32 @@ const Dashboard = () => {
     <div>
       <NavBar />
       <div className="container body-container">
+        <h4 className="py-4">
+          {`${apostle.displayMember.firstName} ${apostle.displayMember.lastName}`}
+          &apos;s Church
+        </h4>
         <div className="row row-cols-2 row-cols-lg-4">
           <div className="col">
             <DashboardCard
               name="Members"
-              number={member.memberCount}
+              number={member.apostleMemberCount}
               cardLink="/members"
             />
           </div>
           <div className="col">
-            <DashboardCard name="Pastors" number={pastor.pastorCount} />
+            <DashboardCard name="Pastors" number={pastor.apostlePastorCount} />
           </div>
           <div className="col">
             <DashboardCard
               name="Towns"
-              number={community.communityCount}
+              number={town.apostleTownCount}
               cardLink="/town/displayall"
             />
           </div>
           <div className="col">
             <DashboardCard
               name="Ministries"
-              number={sonta.sontaCount}
+              number="0"
               cardLink="/sonta/displayall"
             />
           </div>
@@ -195,10 +194,7 @@ const Dashboard = () => {
             />
           </div>
           <div className="col">
-            <DashboardButton
-              btnText="Add Community"
-              btnLink="/community/addcommunity"
-            />
+            <DashboardButton btnText="Add town" btnLink="/town/addtown" />
           </div>
           <div className="col ">
             <DashboardButton btnText="Add Town" btnLink="/town/addtown" />
@@ -209,4 +205,4 @@ const Dashboard = () => {
   )
 }
 
-export default Dashboard
+export default ApostleDashboard

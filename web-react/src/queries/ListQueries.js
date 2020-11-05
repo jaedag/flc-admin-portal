@@ -1,5 +1,27 @@
 import { gql } from '@apollo/client'
 
+export const ALL_MEMBERS = gql`
+  {
+    Member(first: 50) {
+      memberID
+      firstName
+      lastName
+      pictureUrl
+    }
+  }
+`
+
+export const GET_APOSTLE_MEMBERS = gql`
+  query($apostleID: ID) {
+    apostleMemberList(apostleID: $apostleID, first: 60) {
+      memberID
+      firstName
+      lastName
+      pictureUrl
+    }
+  }
+`
+
 export const GET_CENTRE_LEADERS = gql`
   {
     townList(firstName: $firstName, lastName: $lastName) {
@@ -78,23 +100,23 @@ export const GET_COMMUNITIES = gql`
     }
   }
 `
-export const GET_SONTAS = gql`
-  query($townID: ID) {
-    townSontaList(townID: $townID) {
-      sontaID
+
+export const GET_SONTA_TOWNS = gql`
+  query($ministryID: ID, $apostleID: ID) {
+    sontaTownList(ministryID: $ministryID, apostleID: $apostleID) {
+      townID
       name
-      town {
+      sontas {
+        sontaID
         name
+        ministry {
+          name
+        }
         leader {
           memberID
           firstName
           lastName
         }
-      }
-      leader {
-        memberID
-        firstName
-        lastName
       }
     }
   }
@@ -128,6 +150,13 @@ export const GET_APOSTLES = gql`
       memberID
       firstName
       lastName
+      pictureUrl
+      town {
+        name
+      }
+      campus {
+        name
+      }
     }
   }
 `

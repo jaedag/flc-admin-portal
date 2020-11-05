@@ -16,7 +16,7 @@ export const DisplayChurchList = (props) => {
             return (
               <Link
                 to={`/${churchType.toLowerCase()}/displaydetails`}
-                className="col-5 col-lg card m-2"
+                className="col-5 col-lg-3 card m-2"
                 key={index}
                 onClick={() => {
                   setter(church[churchID])

@@ -5,13 +5,13 @@ import { DisplayChurchList } from '../components/DisplayChurchList'
 import { NavBar } from '../components/NavBar'
 import SpinnerPage from '../components/SpinnerPage'
 import { GET_TOWNS } from '../queries/ListQueries'
-import { ApostleContext, TownContext } from '../context/ChurchContext'
+import { ApostleContext, CampusTownContext } from '../context/ChurchContext'
 import { MemberContext } from '../context/MemberContext'
 import { APOSTLE_MEMBER_COUNT } from '../queries/CountQueries'
 
 export const DisplayAllTowns = () => {
   const { apostleID } = useContext(ApostleContext)
-  const { setTownID } = useContext(TownContext)
+  const { setTownID } = useContext(CampusTownContext)
   const { setMemberID } = useContext(MemberContext)
 
   const { data: townData, error: townError, loading: townLoading } = useQuery(

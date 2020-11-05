@@ -141,3 +141,26 @@ export const DISPLAY_TOWN = gql`
     townCommunityCount(townID: $townID)
   }
 `
+
+export const DISPLAY_CAMPUS = gql`
+  query displayCampus($campusID: ID) {
+    displayCampus(campusID: $campusID) {
+      name
+      halls {
+        hallID
+        name
+      }
+      leader {
+        firstName
+        lastName
+        title {
+          Title {
+            title
+          }
+        }
+      }
+    }
+    campusMemberCount(campusID: $campusID)
+    campusHallCount(campusID: $campusID)
+  }
+`

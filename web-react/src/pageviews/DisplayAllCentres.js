@@ -5,11 +5,11 @@ import { DisplayChurchList } from '../components/DisplayChurchList'
 import { NavBar } from '../components/NavBar'
 import SpinnerPage from '../components/SpinnerPage'
 import { GET_CENTRES } from '../queries/ListQueries'
-import { CentreContext, CommunityContext } from '../context/ChurchContext'
+import { CentreContext, CommunityHallContext } from '../context/ChurchContext'
 import { MemberContext } from '../context/MemberContext'
 
 export const DisplayAllCentres = () => {
-  const { communityID } = useContext(CommunityContext)
+  const { communityID } = useContext(CommunityHallContext)
   const { setCentreID } = useContext(CentreContext)
   const { setMemberID } = useContext(MemberContext)
 

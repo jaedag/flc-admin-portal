@@ -4,7 +4,7 @@ match (n)
 detach delete n;
 
 //Import Apostles data
-LOAD CSV WITH HEADERS FROM "file:///Apostles.csv" as line
+LOAD CSV WITH HEADERS FROM "https://admin-firstlovecenter.imfast.io/Neo4j%20Test%20Data/Apostles.csv" as line
 CREATE (m:Member {whatsappNumber:line.`WhatsApp Number (if different)`})
 	SET 
     m.memberID = apoc.create.uuid(),
@@ -31,58 +31,58 @@ MERGE(m)-[:BELONGS_TO_MINISTRY]->(son)
 WITH line,m
 WHERE line.`Date of Birth`is not null
 // MATCH (m:Member {whatsappNumber:line.`WhatsApp Number (if different)`})
+
 MERGE (dob: TimeGraph {date: date(line.`Date of Birth`)})
 MERGE (m)-[:WAS_BORN_ON]->(dob)
 
 WITH line,m
 WHERE line.Occupation is not null
 // MATCH (m:Member {whatsappNumber: line.`WhatsApp Number (if different)`})
+
 MERGE(O:Occupation {occupation: line.Occupation})
 MERGE(m)-[:HAS_OCCUPATION]->(O);
 
 // Create the Members
-LOAD CSV WITH HEADERS FROM "file:///Members.csv" as line
-CREATE (m:Member {memberID: apoc.create.uuid()})
+LOAD CSV WITH HEADERS FROM "https://admin-firstlovecenter.imfast.io/Neo4j%20Test%20Data/Members.csv" as line
+CREATE (m:Member {whatsappNumber:line.`WhatsApp Number (if different)`})
 	SET 
-    m.firstName = line.`First Name`,
+    m.memberID = apoc.create.uuid(),
     m.middleName = line.`Other Names`,
-    m.lastName = line.`Last Name`,
+    m.firstName = apoc.text.capitalizeAll(toLower(trim(line.`First Name`))),
+    m.lastName = apoc.text.capitalizeAll(toLower(trim(line.`Last Name`))),
     m.phoneNumber = line.`Phone Number`,
-    m.whatsappNumber = line.`WhatsApp Number (if different)`,
     m.areaOfResidence = line.`Area of Residence`,
-    m.pictureUrl = line.picture
+    m.pictureUrl   = line.pictureUrl
 
-with line,m WHERE line.Gender is not null
-MERGE(g: Gender {gender: line.Gender})
-MERGE(m)-[:HAS_GENDER]->(g)
+   
+MERGE(g: Gender {gender: apoc.text.capitalizeAll(toLower(trim(line.Gender)))})
+MERGE(m)-[:HAS_GENDER]->(g)	
 
-with line,m WHERE line.`Marital Status` is not null
-MERGE (ms: MaritalStatus {status: line.`Marital Status`})
+MERGE(ms: MaritalStatus {status: apoc.text.capitalizeAll(toLower(trim(line.`Marital Status`)))})
 MERGE(m)-[:HAS_MARITAL_STATUS]->(ms)
-
-with line,m WHERE line.`Centre Code` is not null
-MERGE (cen:Centre {code:  line.`Centre Code`})
-MERGE (m)-[:BELONGS_TO_CENTRE]->(cen)
 
 with line, m  WHERE line.`Ministry` is not null
 MERGE(son: Ministry {name:line.`Ministry`})
+    ON CREATE SET 
+    son.sontaID = apoc.create.uuid()
 MERGE(m)-[:BELONGS_TO_MINISTRY]->(son)
 
-// LOAD CSV WITH HEADERS FROM "file:///Members.csv" as line 
-WITH line WHERE line.`Date of Birth`is not null
-MATCH (m:Member {whatsappNumber: line.`WhatsApp Number (if different)`})
+WITH line,m
+WHERE line.`Date of Birth`is not null
+// MATCH (m:Member {whatsappNumber:line.`WhatsApp Number (if different)`})
+
 MERGE (dob: TimeGraph {date: date(line.`Date of Birth`)})
 MERGE (m)-[:WAS_BORN_ON]->(dob)
 
-// LOAD CSV WITH HEADERS FROM "file:///Members.csv" as line 
-WITH line
+WITH line,m
 WHERE line.Occupation is not null
-MATCH (m:Member {whatsappNumber: line.`WhatsApp Number (if different)`})
+// MATCH (m:Member {whatsappNumber: line.`WhatsApp Number (if different)`})
+
 MERGE(O:Occupation {occupation: line.Occupation})
 MERGE(m)-[:HAS_OCCUPATION]->(O);
 
 // Create the Churches with 
-LOAD CSV WITH HEADERS FROM "file:///Centres-Table%20Town.csv" as line
+LOAD CSV WITH HEADERS FROM "https://admin-firstlovecenter.imfast.io/Neo4j%20Test%20Data/Centres-Table%20Town.csv" as line
 MERGE(t:Town {name: apoc.text.capitalizeAll(toLower(trim(line.`TOWN`)))})
     ON CREATE SET 
 	t.townID = apoc.create.uuid()
@@ -117,7 +117,7 @@ with line,cen
 MERGE(sDay: ServiceDay {day: apoc.text.capitalizeAll(toLower(line.`SERVICE DAY`))} )
 MERGE (sDay)<-[:MEETS_ON_DAY]-(cen);
 
-LOAD CSV WITH HEADERS FROM "file:///Centres-Table%20Campus.csv" as line
+LOAD CSV WITH HEADERS FROM "https://admin-firstlovecenter.imfast.io/Neo4j%20Test%20Data/Centres-Table%20Campus.csv" as line
 MERGE(camp:Campus {name: apoc.text.capitalizeAll(toLower(trim(line.`CAMPUS`)))})
     ON CREATE SET 
 	camp.campusID = apoc.create.uuid()
@@ -161,19 +161,19 @@ MERGE (sDay)<-[:MEETS_ON_DAY]-(cen);
 // MERGE (a:Member {firstName:'Frank',lastName:'Opoku'})
 // MERGE (f)<-[:HAS_FLOW_CHURCH]-(a);
 
-LOAD CSV WITH HEADERS FROM "file:///Communities.csv" as line
+LOAD CSV WITH HEADERS FROM "https://admin-firstlovecenter.imfast.io/Neo4j%20Test%20Data/Communities.csv" as line
 MATCH (m:Member {whatsappNumber: line.`Whatsapp Number`})
 MATCH (com: Community {name:apoc.text.capitalizeAll(toLower(trim(line.`Community`)))})
 MERGE (m)-[:LEADS_COMMUNITY]->(com)
 RETURN m,com;
 
-LOAD CSV WITH HEADERS FROM "file:///Halls.csv" as line
+LOAD CSV WITH HEADERS FROM "https://admin-firstlovecenter.imfast.io/Neo4j%20Test%20Data/Halls.csv" as line
 MATCH (m:Member {whatsappNumber: line.`Whatsapp Number`})
 MATCH (com: Hall {name:apoc.text.capitalizeAll(toLower(trim(line.`Hall`)))})
 MERGE (m)-[:LEADS_HALL]->(com)
 RETURN m,com;
 
-LOAD CSV WITH HEADERS FROM "file:///Towns.csv" as line WITH line WHERE line.`Whatsapp Number` IS NOT NULL
+LOAD CSV WITH HEADERS FROM "https://admin-firstlovecenter.imfast.io/Neo4j%20Test%20Data/Towns.csv" as line WITH line WHERE line.`Whatsapp Number` IS NOT NULL
 MERGE (m:Member {whatsappNumber: line.`Whatsapp Number`})
 
 with line,m
@@ -181,7 +181,7 @@ MERGE (t:Town {name:apoc.text.capitalizeAll(toLower(trim(line.`TOWN`)))})
 MERGE (m)-[:LEADS_TOWN]->(t)
 RETURN m,t;
 
-LOAD CSV WITH HEADERS FROM "file:///Campuses.csv" as line WITH line WHERE line.`Whatsapp Number` IS NOT NULL
+LOAD CSV WITH HEADERS FROM "https://admin-firstlovecenter.imfast.io/Neo4j%20Test%20Data/Campuses.csv" as line WITH line WHERE line.`Whatsapp Number` IS NOT NULL
 MERGE (m:Member {whatsappNumber: line.`Whatsapp Number`})
 
 with line,m
@@ -192,7 +192,7 @@ RETURN m,t;
  
 
 //Q3 Sonta Relationships
-LOAD CSV WITH HEADERS FROM "file:///Sonta%20Town.csv" as line
+LOAD CSV WITH HEADERS FROM "https://admin-firstlovecenter.imfast.io/Neo4j%20Test%20Data/Sonta%20Town.csv" as line
 MATCH (m:Member {whatsappNumber: line.`Whatsapp Number`})
 
 with line,m
@@ -204,7 +204,7 @@ MATCH (t: Town {name: apoc.text.capitalizeAll(toLower(trim(line.`TOWN`)))})
 MERGE (t)-[:HAS_SONTA]->(sonta)
 RETURN m;
 
-LOAD CSV WITH HEADERS FROM "file:///Sonta%20Campus.csv" as line
+LOAD CSV WITH HEADERS FROM "https://admin-firstlovecenter.imfast.io/Neo4j%20Test%20Data/Sonta%20Campus.csv" as line
 MATCH (m:Member {whatsappNumber: line.`Whatsapp Number`})
 
 with line,m
@@ -216,7 +216,7 @@ MATCH (t: Campus {name: apoc.text.capitalizeAll(toLower(trim(line.`CAMPUS`)))})
 MERGE (t)-[:HAS_SONTA]->(sonta)
 RETURN m;
 
-LOAD CSV WITH HEADERS FROM "file:///Basonta%20Town.csv" as line
+LOAD CSV WITH HEADERS FROM "https://admin-firstlovecenter.imfast.io/Neo4j%20Test%20Data/Basonta%20Town.csv" as line
 MATCH (m:Member {whatsappNumber: line.`Whatsapp Number`})
 
 with line,m
@@ -228,7 +228,7 @@ MATCH (t: Community {name: apoc.text.capitalizeAll(toLower(trim(line.`COMMUNITY`
 MERGE (t)-[:HAS_BASONTA]->(sonta)
 RETURN m;
 
-LOAD CSV WITH HEADERS FROM "file:///Basonta%20Campus.csv" as line
+LOAD CSV WITH HEADERS FROM "https://admin-firstlovecenter.imfast.io/Neo4j%20Test%20Data/Basonta%20Campus.csv" as line
 MATCH (m:Member {whatsappNumber: line.`Whatsapp Number`})
 
 with line,m

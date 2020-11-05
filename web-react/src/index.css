@@ -62,7 +62,7 @@
   background-color: var(--body-bg-color);
   height: 100vh;
   position: fixed;
-  width: 22%;
+  width: 25%;
   border-right: 1px solid var(--border-color);
 }
 
@@ -173,7 +173,9 @@
   color: #fff;
   background-color: var(--accent-color);
   border-color: var(--border-color);
+  border-radius: 10px;
   border: 0px;
+  margin-bottom:15px;
 }
 
 .btn-lg {

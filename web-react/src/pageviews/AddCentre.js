@@ -10,7 +10,7 @@ import { CREATE_CENTRE_MUTATION } from '../queries/AdditionMutations'
 import { NavBar } from '../components/NavBar'
 import SpinnerPage from '../components/SpinnerPage'
 import {
-  TownContext,
+  CampusTownContext,
   CentreContext,
   ApostleContext,
 } from '../context/ChurchContext'
@@ -49,7 +49,7 @@ function AddCentre() {
   })
 
   const { apostleID } = useContext(ApostleContext)
-  const { townID, setTownID } = useContext(TownContext)
+  const { townID, setTownID } = useContext(CampusTownContext)
   const { centreID, setCentreID } = useContext(CentreContext)
   // const { positionLoading, setPositionLoading } = useState(true)
   const [StartCentre, { data: newCentreData }] = useMutation(

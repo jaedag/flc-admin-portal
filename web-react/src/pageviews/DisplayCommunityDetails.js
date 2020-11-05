@@ -4,10 +4,10 @@ import { DisplayChurchDetails } from '../components/DisplayChurchDetails'
 import { NavBar } from '../components/NavBar'
 import SpinnerPage from '../components/SpinnerPage'
 import { DISPLAY_COMMUNITY } from '../queries/DisplayQueries'
-import { CentreContext, CommunityContext } from '../context/ChurchContext'
+import { CentreContext, CommunityHallContext } from '../context/ChurchContext'
 
 export const DisplayCommunityDetails = () => {
-  const { communityID } = useContext(CommunityContext)
+  const { communityID } = useContext(CommunityHallContext)
   const { setCentreID } = useContext(CentreContext)
   const {
     data: communityData,

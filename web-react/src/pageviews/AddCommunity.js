@@ -9,7 +9,10 @@ import { GET_TOWNS } from '../queries/ListQueries'
 import { CREATE_COMMUNITY_MUTATION } from '../queries/AdditionMutations'
 import { NavBar } from '../components/NavBar'
 import SpinnerPage from '../components/SpinnerPage'
-import { TownContext, CommunityContext } from '../context/ChurchContext'
+import {
+  CampusTownContext,
+  CommunityHallContext,
+} from '../context/ChurchContext'
 
 function AddCommunity() {
   const initialValues = {
@@ -24,8 +27,8 @@ function AddCommunity() {
     communityName: Yup.string().required('Community Name is a required field'),
   })
 
-  const { setTownID } = useContext(TownContext)
-  const { communityID, setCommunityID } = useContext(CommunityContext)
+  const { setTownID } = useContext(CampusTownContext)
+  const { communityID, setCommunityID } = useContext(CommunityHallContext)
 
   const [AddCommunity, { data: newCommunityData }] = useMutation(
     CREATE_COMMUNITY_MUTATION,

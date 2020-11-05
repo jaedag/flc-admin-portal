@@ -5,13 +5,13 @@ import { DisplayChurchList } from '../components/DisplayChurchList'
 import { NavBar } from '../components/NavBar'
 import SpinnerPage from '../components/SpinnerPage'
 import { GET_COMMUNITIES } from '../queries/ListQueries'
-import { TownContext } from '../context/ChurchContext'
-import { CommunityContext } from '../context/ChurchContext'
+import { CampusTownContext } from '../context/ChurchContext'
+import { CommunityHallContext } from '../context/ChurchContext'
 import { MemberContext } from '../context/MemberContext'
 
 export const DisplayAllCommunities = () => {
-  const { townID } = useContext(TownContext)
-  const { setCommunityID } = useContext(CommunityContext)
+  const { townID } = useContext(CampusTownContext)
+  const { setCommunityID } = useContext(CommunityHallContext)
   const { setMemberID } = useContext(MemberContext)
 
   const {

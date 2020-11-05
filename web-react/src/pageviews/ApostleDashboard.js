@@ -9,10 +9,11 @@ import { DISPLAY_APOSTLE_NAME } from '../queries/DisplayQueries'
 import { NavBar } from '../components/NavBar'
 import { DashboardCard } from '../components/DashboardCard'
 import { DashboardButton } from '../components/DashboardButton'
-import { ApostleContext } from '../context/ChurchContext'
+import { ApostleContext, ChurchContext } from '../context/ChurchContext'
 
 const ApostleDashboard = () => {
   const { apostleID } = useContext(ApostleContext)
+  const { church, capitalise } = useContext(ChurchContext)
   const {
     data: member,
     error: memberCountError,
@@ -41,7 +42,6 @@ const ApostleDashboard = () => {
   } = useQuery(APOSTLE_TOWN_COUNT, {
     variables: { apostleID: apostleID },
   })
-  // const { data: sonta, error: sontaCountError, loading: sontaCountLoading } = useQuery(sontaCount)
 
   if (
     memberCountLoading ||
@@ -54,15 +54,35 @@ const ApostleDashboard = () => {
         <NavBar />
         <div className="container body-container">
           <div className="row row-cols-2 row-cols-lg-4">
-            <DashboardCard name="Pastors" number="Loading...">
-              <div className="spinner-border full-center" role="status" />
-            </DashboardCard>
-            <DashboardCard name="Towns" number="Loading..." />
-            <DashboardCard
-              name="Ministries"
-              number="Loading..."
-              cardLink="/sonta/displayall"
-            />
+            <div className="col">
+              <DashboardCard name="Members" number="Loading..." />
+            </div>
+            <div className="col">
+              <DashboardCard
+                name="Pastors"
+                number="Loading..."
+                cardLink="members/displaymember"
+              />
+            </div>
+
+            <div className="col">
+              <DashboardCard
+                name={
+                  church.church === 'town'
+                    ? capitalise(church.church) + 's'
+                    : capitalise(church.church)
+                }
+                number="Loading..."
+                cardLink="/church/displayall"
+              />
+            </div>
+            <div className="col">
+              <DashboardCard
+                name="Ministries"
+                number="Loading..."
+                cardLink="/sonta/displayall"
+              />
+            </div>
           </div>
 
           <div className="row justify-content-center">
@@ -81,11 +101,11 @@ const ApostleDashboard = () => {
                 btnLink="centre/addcentre"
               />
             </div>
-            <div className="col">
-              <DashboardButton btnText="Add town" btnLink="town/addtown" />
-            </div>
             <div className="col ">
-              <DashboardButton btnText="Add Town" btnLink="/town/addtown" />
+              <DashboardButton
+                btnText={`Add ${capitalise(church.church)}`}
+                btnLink="/town/addtown"
+              />
             </div>
           </div>
         </div>
@@ -107,7 +127,14 @@ const ApostleDashboard = () => {
             </div>
 
             <div className="col">
-              <DashboardCard name="Towns" cardLink="town/displayall" />
+              <DashboardCard
+                name={
+                  church.church === 'town'
+                    ? capitalise(church.church) + 's'
+                    : capitalise(church.church)
+                }
+                cardLink="/church/displayall"
+              />
             </div>
             <div className="col">
               <DashboardCard name="Ministries" cardLink="/sonta/displayall" />
@@ -122,19 +149,16 @@ const ApostleDashboard = () => {
               />
             </div>
             <div className="col">
-              <DashboardButton btnText="Close a Centre" />
-            </div>
-            <div className="col">
               <DashboardButton
                 btnText="Start a Centre"
                 btnLink="centre/addcentre"
               />
             </div>
-            <div className="col">
-              <DashboardButton btnText="Add town" btnLink="town/addtown" />
-            </div>
             <div className="col ">
-              <DashboardButton btnText="Add Town" btnLink="/town/addtown" />
+              <DashboardButton
+                btnText={`Add ${capitalise(church.church)}`}
+                btnLink="/town/addtown"
+              />
             </div>
           </div>
         </div>
@@ -163,9 +187,13 @@ const ApostleDashboard = () => {
           </div>
           <div className="col">
             <DashboardCard
-              name="Towns"
+              name={
+                church.church === 'town'
+                  ? capitalise(church.church) + 's'
+                  : capitalise(church.church)
+              }
               number={town.apostleTownCount}
-              cardLink="/town/displayall"
+              cardLink="/church/displayall"
             />
           </div>
           <div className="col">
@@ -178,26 +206,23 @@ const ApostleDashboard = () => {
         </div>
 
         <div className="row justify-content-center">
-          <div className="col">
+          <div className="col-sm-12 col-md">
             <DashboardButton
               btnText="Register Member"
               btnLink="/members/addmember"
             />
           </div>
-          <div className="col">
-            <DashboardButton btnText="Close a Centre" />
-          </div>
-          <div className="col">
+          <div className="col-sm-12 col-md">
             <DashboardButton
               btnText="Start a Centre"
               btnLink="/centre/addcentre"
             />
           </div>
-          <div className="col">
-            <DashboardButton btnText="Add town" btnLink="/town/addtown" />
-          </div>
-          <div className="col ">
-            <DashboardButton btnText="Add Town" btnLink="/town/addtown" />
+          <div className="col-sm-12 col-md">
+            <DashboardButton
+              btnText={`Add ${capitalise(church.church)}`}
+              btnLink="/town/addtown"
+            />
           </div>
         </div>
       </div>

@@ -9,7 +9,7 @@ import { GET_APOSTLES } from '../queries/ListQueries'
 import { CREATE_TOWN_MUTATION } from '../queries/AdditionMutations'
 import { NavBar } from '../components/NavBar'
 import SpinnerPage from '../components/SpinnerPage'
-import { TownContext } from '../context/ChurchContext'
+import { CampusTownContext } from '../context/ChurchContext'
 
 function AddTown() {
   const initialValues = {
@@ -23,7 +23,7 @@ function AddTown() {
     townName: Yup.string().required('Centre Name is a required field'),
   })
 
-  const { setTownID } = useContext(TownContext)
+  const { setTownID } = useContext(CampusTownContext)
   const [AddTown, { data: newTownData }] = useMutation(CREATE_TOWN_MUTATION, {
     onCompleted: (newTownData) => {
       setTownID(newTownData.AddTown.townID)

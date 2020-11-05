@@ -70,6 +70,7 @@ export const DisplayAllSontaTowns = () => {
                 </Link>
                 {ministry.sontas.map((sonta) => {
                   console.log(sonta)
+                  return null
                 })}
               </React.Fragment>
             )

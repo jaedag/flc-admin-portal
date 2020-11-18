@@ -3,7 +3,7 @@ import { useQuery } from '@apollo/client'
 import {
   APOSTLE_MEMBER_COUNT,
   APOSTLE_PASTOR_COUNT,
-  APOSTLE_TOWN_COUNT,
+  APOSTLE_CAMPUSTOWN_COUNT,
 } from '../queries/CountQueries'
 import { DISPLAY_APOSTLE_NAME } from '../queries/DisplayQueries'
 import { NavBar } from '../components/NavBar'
@@ -36,17 +36,17 @@ const ApostleDashboard = () => {
     variables: { apostleID: apostleID },
   })
   const {
-    data: town,
-    error: townCountError,
-    loading: townCountLoading,
-  } = useQuery(APOSTLE_TOWN_COUNT, {
+    data: churchCount,
+    error: churchCountError,
+    loading: churchCountLoading,
+  } = useQuery(APOSTLE_CAMPUSTOWN_COUNT, {
     variables: { apostleID: apostleID },
   })
 
   if (
     memberCountLoading ||
     pastorCountLoading ||
-    townCountLoading ||
+    churchCountLoading ||
     apostleLoading
   ) {
     return (
@@ -58,11 +58,7 @@ const ApostleDashboard = () => {
               <DashboardCard name="Members" number="Loading..." />
             </div>
             <div className="col">
-              <DashboardCard
-                name="Pastors"
-                number="Loading..."
-                cardLink="members/displaymember"
-              />
+              <DashboardCard name="Pastors" number="Loading..." cardLink="#" />
             </div>
 
             <div className="col">
@@ -73,7 +69,7 @@ const ApostleDashboard = () => {
                     : capitalise(church.church)
                 }
                 number="Loading..."
-                cardLink="/church/displayall"
+                cardLink={`/${church.church}/displayall`}
               />
             </div>
             <div className="col">
@@ -112,8 +108,13 @@ const ApostleDashboard = () => {
       </div>
     )
   }
-  if (memberCountError || pastorCountError || townCountError || apostleError) {
-    // console.log(memberCountError, pastorCountError, townCountError, sontaCountError)
+  if (
+    memberCountError ||
+    pastorCountError ||
+    churchCountError ||
+    apostleError
+  ) {
+    // console.log(memberCountError, pastorCountError, churchCountError, sontaCountError)
     return (
       <div>
         <NavBar />
@@ -123,7 +124,7 @@ const ApostleDashboard = () => {
               <DashboardCard name="Members" />
             </div>
             <div className="col">
-              <DashboardCard name="Pastors" cardLink="members/displaymember" />
+              <DashboardCard name="Pastors" cardLink="#" />
             </div>
 
             <div className="col">
@@ -133,7 +134,7 @@ const ApostleDashboard = () => {
                     ? capitalise(church.church) + 's'
                     : capitalise(church.church)
                 }
-                cardLink="/church/displayall"
+                cardLink={`/${church.church}/displayall`}
               />
             </div>
             <div className="col">
@@ -183,7 +184,11 @@ const ApostleDashboard = () => {
             />
           </div>
           <div className="col">
-            <DashboardCard name="Pastors" number={pastor.apostlePastorCount} />
+            <DashboardCard
+              name="Pastors"
+              number={pastor.apostlePastorCount}
+              cardLink="#"
+            />
           </div>
           <div className="col">
             <DashboardCard
@@ -192,8 +197,8 @@ const ApostleDashboard = () => {
                   ? capitalise(church.church) + 's'
                   : capitalise(church.church)
               }
-              number={town.apostleTownCount}
-              cardLink="/church/displayall"
+              number={churchCount.apostleCampusTownCount}
+              cardLink={`/${church.church}/displayall`}
             />
           </div>
           <div className="col">
@@ -221,7 +226,7 @@ const ApostleDashboard = () => {
           <div className="col-sm-12 col-md">
             <DashboardButton
               btnText={`Add ${capitalise(church.church)}`}
-              btnLink="/town/addtown"
+              btnLink={`/${church.church}/add${church.church}`}
             />
           </div>
         </div>

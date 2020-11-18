@@ -20,7 +20,7 @@ export const DisplayChurchDetails = (props) => {
   return (
     <div>
       <NavBar />
-      <div className=" py-2 top-heading title-bar mt-5">
+      <div className=" py-2 top-heading title-bar mt-4">
         <div className="container ">
           <h3 className="mx-3 mt-3 mb-2 font-weight-bold">
             {`${name} ${churchType}`}

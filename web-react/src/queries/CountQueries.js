@@ -52,8 +52,8 @@ export const APOSTLE_PASTOR_COUNT = gql`
   }
 `
 
-export const APOSTLE_TOWN_COUNT = gql`
-  query apostleTownCount($apostleID: ID) {
-    apostleTownCount(apostleID: $apostleID)
+export const APOSTLE_CAMPUSTOWN_COUNT = gql`
+  query apostleCampusTownCount($apostleID: ID) {
+    apostleCampusTownCount(apostleID: $apostleID)
   }
 `

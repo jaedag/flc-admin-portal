@@ -8,7 +8,7 @@ export const MembersGrid = () => {
   return (
     <div>
       <NavBar />
-      <div className="row pt-5 w-100 m-0 ">
+      <div className="row w-100 m-0 ">
         <div className="col-lg-3 col-md-4 m-0 px-0">
           <SideBar />
         </div>
@@ -20,7 +20,7 @@ export const MembersGrid = () => {
               <div className="btn-group mr-2">
                 <div className="btn btn-sm btn-primary">
                   {/*<span>Import CSV</span>*/}
-                  <input type="file" />
+                  {/* <input type="file" /> */}
                 </div>
               </div>
               <Link

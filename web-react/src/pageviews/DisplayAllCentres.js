@@ -3,13 +3,18 @@ import { Link } from 'react-router-dom'
 import { useQuery } from '@apollo/client'
 import { DisplayChurchList } from '../components/DisplayChurchList'
 import { NavBar } from '../components/NavBar'
-import SpinnerPage from '../components/SpinnerPage'
+import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
 import { GET_CENTRES } from '../queries/ListQueries'
-import { CentreContext, CommunityHallContext } from '../context/ChurchContext'
+import {
+  CentreContext,
+  CommunityHallContext,
+  ChurchContext,
+} from '../context/ChurchContext'
 import { MemberContext } from '../context/MemberContext'
 
 export const DisplayAllCentres = () => {
-  const { communityID } = useContext(CommunityHallContext)
+  const { church } = useContext(ChurchContext)
+  const { communityID, hallID } = useContext(CommunityHallContext)
   const { setCentreID } = useContext(CentreContext)
   const { setMemberID } = useContext(MemberContext)
 
@@ -18,57 +23,69 @@ export const DisplayAllCentres = () => {
     error: centreError,
     loading: centreLoading,
   } = useQuery(GET_CENTRES, {
-    variables: { communityID: communityID },
+    variables: { communityID: communityID, hallID: hallID },
   })
-  console.log(centreData)
 
-  if (centreError) {
+  if (church.church === 'campus' && centreData) {
     return (
-      <React.Fragment>
+      <div>
         <NavBar />
-        <div className="container full-body-center">
-          <p className="text-center full-center">
-            There seems to be an error loading data
-          </p>
+        <div className="body-container container">
+          <div className="mb-4">
+            <h4>{`${centreData.centreList[0].hall.name} Hall`}</h4>
+            <Link
+              to="/members/displaydetails"
+              onClick={() => {
+                setMemberID(`${centreData.centreList[0].hall.leader.memberID}`)
+              }}
+            >
+              <h6 className="text-muted">
+                Leader:
+                {` ${centreData.centreList[0].hall.leader.firstName} ${centreData.centreList[0].hall.leader.lastName}`}
+              </h6>
+            </Link>
+          </div>
+          <DisplayChurchList
+            data={centreData.centreList}
+            setter={setCentreID}
+            churchType="Centre"
+          />
         </div>
-      </React.Fragment>
+      </div>
     )
+  } else if (church.church === 'town' && centreData) {
+    return (
+      <div>
+        <NavBar />
+        <div className="body-container container">
+          <div className="mb-4">
+            <h4>{`${centreData.centreList[0].community.name} Community`}</h4>
+            <Link
+              to="/members/displaydetails"
+              onClick={() => {
+                setMemberID(
+                  `${centreData.centreList[0].community.leader.memberID}`
+                )
+              }}
+            >
+              <h6 className="text-muted">
+                Leader:
+                {` ${centreData.centreList[0].community.leader.firstName} ${centreData.centreList[0].community.leader.lastName}`}
+              </h6>
+            </Link>
+          </div>
+          <DisplayChurchList
+            data={centreData.centreList}
+            setter={setCentreID}
+            churchType="Centre"
+          />
+        </div>
+      </div>
+    )
+  } else if (centreError) {
+    return <ErrorScreen />
   } else if (centreLoading) {
     // Spinner Icon for Loading Screens
-    return (
-      <React.Fragment>
-        <NavBar />
-        <SpinnerPage />
-      </React.Fragment>
-    )
+    return <LoadingScreen />
   }
-
-  return (
-    <div>
-      <NavBar />
-      <div className="body-container container">
-        <div className="mb-4">
-          <h4>{`${centreData.centreList[0].community.name} Community`}</h4>
-          <Link
-            to="/members/displaydetails"
-            onClick={() => {
-              setMemberID(
-                `${centreData.centreList[0].community.leader.memberID}`
-              )
-            }}
-          >
-            <h6 className="text-muted">
-              Leader:
-              {` ${centreData.centreList[0].community.leader.firstName} ${centreData.centreList[0].community.leader.lastName}`}
-            </h6>
-          </Link>
-        </div>
-        <DisplayChurchList
-          data={centreData.centreList}
-          setter={setCentreID}
-          churchType="Centre"
-        />
-      </div>
-    </div>
-  )
 }

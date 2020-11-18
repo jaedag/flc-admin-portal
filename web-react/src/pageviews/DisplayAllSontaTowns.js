@@ -4,7 +4,7 @@ import { useQuery } from '@apollo/client'
 // import { DisplayChurchList } from '../components/DisplayChurchList'
 import { NavBar } from '../components/NavBar'
 import SpinnerPage from '../components/SpinnerPage'
-import { GET_SONTA_TOWNS } from '../queries/ListQueries'
+import { GET_TOWN_SONTA_LEADERS } from '../queries/ListQueries'
 import { ApostleContext, SontaContext } from '../context/ChurchContext'
 import { MemberContext } from '../context/MemberContext'
 
@@ -21,9 +21,10 @@ export const DisplayAllSontaTowns = () => {
     data: sontaData,
     error: sontaError,
     loading: sontaLoading,
-  } = useQuery(GET_SONTA_TOWNS, {
-    variables: { apostleID: apostleID, ministryID: ministryID },
+  } = useQuery(GET_TOWN_SONTA_LEADERS, {
+    variables: { ministryID: ministryID, apostleID: apostleID },
   })
+  // console.log(sontaData)
 
   if (sontaError) {
     return (
@@ -51,32 +52,35 @@ export const DisplayAllSontaTowns = () => {
       <NavBar />
       <div className="body-container container">
         <div className="my-5">
-          {sontaData.sontaTownList.map((ministry, index) => {
-            console.log(ministry)
+          {sontaData.townSontaLeader.map((leader, index) => {
+            console.log(leader)
             return (
               <React.Fragment key={index}>
-                <h4>{`${ministry.sontas[0].ministry.name} Sontas`}</h4>
+                <h4>{`${leader.sonta.name}`}</h4>
                 <Link
                   to="/members/displaydetails"
                   onClick={() => {
-                    setMemberID(`${ministry.sontas[0].leader.memberID}`)
+                    setMemberID(`${leader.memberID}`)
                   }}
-                >
-                  <h6 className="text-muted">
-                    Leader:
-                    {`${ministry.sontas[0].leader.firstName} 
-										${ministry.sontas[0].leader.lastName}`}
-                  </h6>
-                </Link>
-                {ministry.sontas.map((sonta) => {
-                  console.log(sonta)
-                  return null
+                />
+                {sontaData.townSontaLeader.map((leader, index) => {
+                  return (
+                    <React.Fragment key={index}>
+                      <div className="card p-2 m-2">
+                        {leader.leadsSonta[0].town.name}
+                        <h6 className="text-muted">
+                          Leader:
+                          {`${leader.firstName} ${leader.lastName}`}
+                        </h6>
+                      </div>
+                    </React.Fragment>
+                  )
                 })}
               </React.Fragment>
             )
           })}
         </div>
-        {/* <DisplayChurchList data={sontaData.sontaTownList} setter={setSontaID} churchType="Sonta" /> */}
+        {/* <DisplayChurchList data={sontaData.townSontaLeader} setter={setSontaID} churchType="Sonta" /> */}
       </div>
     </div>
   )

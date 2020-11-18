@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 import { useQuery } from '@apollo/client'
 import { DisplayChurchDetails } from '../components/DisplayChurchDetails'
 import { NavBar } from '../components/NavBar'
-import SpinnerPage from '../components/SpinnerPage'
+import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
 import { DISPLAY_TOWN, DISPLAY_CAMPUS } from '../queries/DisplayQueries'
 import {
   CommunityHallContext,
@@ -30,37 +30,23 @@ export const DisplayCampusTownDetails = () => {
   })
 
   if (townError || campusError) {
-    return (
-      <React.Fragment>
-        <NavBar />
-        <div className="container full-body-center">
-          <p className="text-center full-center">
-            There seems to be an error loading data
-          </p>
-        </div>
-      </React.Fragment>
-    )
+    return <ErrorScreen />
   } else if (townLoading || campusLoading) {
     // Spinner Icon for Loading Screens
-    return (
-      <React.Fragment>
-        <NavBar />
-        <SpinnerPage />
-      </React.Fragment>
-    )
-  } else if (townData) {
+    return <LoadingScreen />
+  } else if (church.church === 'town') {
     return (
       <div>
         <NavBar />
         <DisplayChurchDetails
           name={townData.displayTown.name}
-          leaderTitle={
-            townData.displayTown.leader.title[0]
-              ? townData.displayTown.leader.title[0].Title.title
-              : 'Town GSO'
-          }
+          leaderTitle={'Town GSO'}
           membership={townData.townMemberCount}
-          leaderName={`${townData.displayTown.leader.firstName} ${townData.displayTown.leader.lastName}`}
+          leaderName={
+            townData.displayTown.leader
+              ? `${townData.displayTown.leader.firstName} ${townData.displayTown.leader.lastName}`
+              : null
+          }
           churchHeading="No of Communities"
           churchNo={townData.townCommunityCount}
           churchType={`${capitalise(church.church)}`}
@@ -70,25 +56,25 @@ export const DisplayCampusTownDetails = () => {
         />
       </div>
     )
-  } else if (campusData) {
+  } else if (church.church === 'campus') {
     return (
       <div>
         <NavBar />
         <DisplayChurchDetails
           name={campusData.displayCampus.name}
-          leaderTitle={
-            campusData.displayCampus.leader.title[0]
-              ? campusData.displayCampus.leader.title[0].Title.title
-              : 'Campus GSO'
-          }
+          leaderTitle={'Campus GSO'}
           membership={campusData.campusMemberCount}
-          leaderName={`${campusData.displayCampus.leader.firstName} ${campusData.displayCampus.leader.lastName}`}
+          leaderName={
+            campusData.displayCampus.leader
+              ? `${campusData.displayCampus.leader.firstName} ${campusData.displayCampus.leader.lastName}`
+              : '-'
+          }
           churchHeading="No of Halls"
           churchNo={campusData.campusHallCount}
           churchType={`${capitalise(church.church)}`}
-          subChurch="Community"
+          subChurch="Hall"
           subChurchSetter={setHallID}
-          buttons={campusData.displayCampus.communities}
+          buttons={campusData.displayCampus.halls}
         />
       </div>
     )

@@ -44,6 +44,12 @@ export const DISPLAY_MEMBER = gql`
             name
           }
         }
+        hall {
+          name
+          campus {
+            name
+          }
+        }
       }
       sonta {
         name
@@ -116,6 +122,29 @@ export const DISPLAY_COMMUNITY = gql`
     }
     communityMemberCount(communityID: $communityID)
     communityCentreCount(communityID: $communityID)
+  }
+`
+
+export const DISPLAY_HALL = gql`
+  query displayHall($hallID: ID) {
+    displayHall(hallID: $hallID) {
+      name
+      centres {
+        centreID
+        name
+      }
+      leader {
+        firstName
+        lastName
+        title {
+          Title {
+            title
+          }
+        }
+      }
+    }
+    hallMemberCount(hallID: $hallID)
+    hallCentreCount(hallID: $hallID)
   }
 `
 

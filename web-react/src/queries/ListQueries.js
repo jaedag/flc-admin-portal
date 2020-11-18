@@ -38,8 +38,8 @@ export const GET_CENTRE_LEADERS = gql`
 `
 
 export const GET_CENTRES = gql`
-  query($communityID: ID) {
-    centreList(communityID: $communityID) {
+  query($communityID: ID, $hallID: ID) {
+    centreList(communityID: $communityID, hallID: $hallID) {
       centreID
       name
       leader {
@@ -47,6 +47,14 @@ export const GET_CENTRES = gql`
         lastName
       }
       community {
+        name
+        leader {
+          memberID
+          firstName
+          lastName
+        }
+      }
+      hall {
         name
         leader {
           memberID
@@ -101,22 +109,66 @@ export const GET_COMMUNITIES = gql`
   }
 `
 
-export const GET_SONTA_TOWNS = gql`
-  query($ministryID: ID, $apostleID: ID) {
-    sontaTownList(ministryID: $ministryID, apostleID: $apostleID) {
-      townID
+export const GET_HALLS = gql`
+  query($campusID: ID) {
+    hallList(campusID: $campusID) {
+      hallID
       name
-      sontas {
-        sontaID
+      campus {
         name
-        ministry {
-          name
-        }
         leader {
           memberID
           firstName
           lastName
         }
+        sontas {
+          name
+        }
+      }
+      leader {
+        firstName
+        lastName
+      }
+    }
+  }
+`
+
+export const GET_TOWN_SONTA_LEADERS = gql`
+  query($ministryID: ID, $apostleID: ID) {
+    townSontaLeader(ministryID: $ministryID, apostleID: $apostleID) {
+      memberID
+      firstName
+      lastName
+      sonta {
+        name
+      }
+      leadsSonta {
+        name
+        town {
+          name
+        }
+      }
+    }
+  }
+`
+
+export const GET_CAMPUSES = gql`
+  query($apostleID: ID) {
+    campusList(apostleID: $apostleID) {
+      name
+      campusID
+      leader {
+        memberID
+        firstName
+        lastName
+      }
+      sontas {
+        name
+      }
+      apostle {
+        memberID
+        firstName
+        lastName
       }
     }
   }

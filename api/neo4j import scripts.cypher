@@ -25,7 +25,7 @@ MERGE(m)-[:HAS_MARITAL_STATUS]->(ms)
 with line, m  WHERE line.`Ministry` is not null
 MERGE(son: Ministry {name:line.`Ministry`})
     ON CREATE SET 
-    son.sontaID = apoc.create.uuid()
+    son.ministryID = apoc.create.uuid()
 MERGE(m)-[:BELONGS_TO_MINISTRY]->(son)
 
 WITH line,m
@@ -239,3 +239,36 @@ with line, m,sonta
 MATCH (t: Hall {name: apoc.text.capitalizeAll(toLower(trim(line.`HALL`)))})
 MERGE (t)-[:HAS_BASONTA]->(sonta)
 RETURN t;
+
+//Light Touch Ups
+//Connecting Sontas to Ministries
+MATCH (m:Ministry) 
+MATCH (s:Sonta) 
+WHERE s.name CONTAINS m.name
+MERGE (m)-[:HAS_SONTA]->(s)
+RETURN m,s;
+
+//Connecting Sontas to Towns
+MATCH (s:Sonta)
+MATCH (t:Town) WHERE s.name CONTAINS t.name
+MERGE (t)-[:HAS_SONTA]->(s)
+RETURN t,s;
+
+//Basonta to Hall and Community
+MATCH (b:Basonta)
+MATCH (h:Hall) WHERE b.name CONTAINS h.name
+MERGE (h)-[:HAS_BASONTA]->(b)
+RETURN h,b;
+
+MATCH (b:Basonta)
+MATCH (c:Community) WHERE b.name CONTAINS c.name
+MERGE (c)-[:HAS_BASONTA]->(b)
+RETURN c,b;
+
+MATCH (b:Basonta)
+MATCH (s:Sonta)
+MATCH (s)<-[:HAS_SONTA]-(m:Ministry)
+MATCH (s)<-[:HAS_SONTA]-()-[:HAS_COMMUNITY|:HAS_HALL]->()-[:HAS_BASONTA]->(b)
+WHERE b.name CONTAINS m.name
+MERGE (s)-[r:HAS_BASONTA]->(b)
+RETURN r;

@@ -29,7 +29,7 @@ MERGE(son: Ministry {name:line.`Ministry`})
 MERGE(m)-[:BELONGS_TO_MINISTRY]->(son)
 
 WITH line,m
-WHERE line.`Date of Birth`is not null
+WHERE line.`Date of Birth` is not null
 // MATCH (m:Member {whatsappNumber:line.`WhatsApp Number (if different)`})
 
 MERGE (dob: TimeGraph {date: date(line.`Date of Birth`)})
@@ -53,7 +53,6 @@ CREATE (m:Member {whatsappNumber:line.`WhatsApp Number (if different)`})
     m.phoneNumber = line.`Phone Number`,
     m.areaOfResidence = line.`Area of Residence`,
     m.pictureUrl   = line.pictureUrl
-
    
 MERGE(g: Gender {gender: apoc.text.capitalizeAll(toLower(trim(line.Gender)))})
 MERGE(m)-[:HAS_GENDER]->(g)	
@@ -64,22 +63,27 @@ MERGE(m)-[:HAS_MARITAL_STATUS]->(ms)
 with line, m  WHERE line.`Ministry` is not null
 MERGE(son: Ministry {name:line.`Ministry`})
     ON CREATE SET 
-    son.sontaID = apoc.create.uuid()
-MERGE(m)-[:BELONGS_TO_MINISTRY]->(son)
+    son.ministryID = apoc.create.uuid()
+MERGE(m)-[:BELONGS_TO_MINISTRY]->(son);
 
-WITH line,m
-WHERE line.`Date of Birth`is not null
-// MATCH (m:Member {whatsappNumber:line.`WhatsApp Number (if different)`})
+LOAD CSV WITH HEADERS FROM "https://admin-firstlovecenter.imfast.io/Neo4j%20Test%20Data/Members.csv" as line
+with line WHERE line.`Centre Code` is not null
+MATCH (m:Member {whatsappNumber: line.`WhatsApp Number (if different)`})
+MERGE (cen:Centre {code:  line.`Centre Code`})
+MERGE (m)-[:BELONGS_TO_CENTRE]->(cen);
 
+LOAD CSV WITH HEADERS FROM "https://admin-firstlovecenter.imfast.io/Neo4j%20Test%20Data/Members.csv" as line
+WITH line WHERE line.`Date of Birth` is not null
+MATCH (m:Member {whatsappNumber: line.`WhatsApp Number (if different)`})
 MERGE (dob: TimeGraph {date: date(line.`Date of Birth`)})
 MERGE (m)-[:WAS_BORN_ON]->(dob)
+RETURN dob;
 
-WITH line,m
-WHERE line.Occupation is not null
-// MATCH (m:Member {whatsappNumber: line.`WhatsApp Number (if different)`})
-
-MERGE(O:Occupation {occupation: line.Occupation})
-MERGE(m)-[:HAS_OCCUPATION]->(O);
+LOAD CSV WITH HEADERS FROM "https://admin-firstlovecenter.imfast.io/Neo4j%20Test%20Data/Members.csv" as line
+WITH line WHERE line.Occupation is not null
+MATCH (m:Member {whatsappNumber: line.`WhatsApp Number (if different)`})
+MERGE(occ:Occupation {occupation: line.Occupation})
+MERGE(m)-[:HAS_OCCUPATION]->(occ);
 
 // Create the Churches with 
 LOAD CSV WITH HEADERS FROM "https://admin-firstlovecenter.imfast.io/Neo4j%20Test%20Data/Centres-Table%20Town.csv" as line
@@ -152,15 +156,6 @@ with line,cen
 MERGE(sDay: ServiceDay {day: apoc.text.capitalizeAll(toLower(line.`SERVICE DAY`))} )
 MERGE (sDay)<-[:MEETS_ON_DAY]-(cen);
 
-// LOAD CSV WITH HEADERS FROM "file:///Members.csv" as line
-// WITH line 
-// WHERE line.`Attending Church or FLOW Church` is not null
-// MATCH (m:Member {whatsappNumber: line.`WhatsApp Number (if different)`})
-// MERGE(f:FlowChurch {name: line.`Attending Church or FLOW Church`})
-// MERGE (m)-[:BELONGS_TO_FLOWCHURCH]->(f)
-// MERGE (a:Member {firstName:'Frank',lastName:'Opoku'})
-// MERGE (f)<-[:HAS_FLOW_CHURCH]-(a);
-
 LOAD CSV WITH HEADERS FROM "https://admin-firstlovecenter.imfast.io/Neo4j%20Test%20Data/Communities.csv" as line
 MATCH (m:Member {whatsappNumber: line.`Whatsapp Number`})
 MATCH (com: Community {name:apoc.text.capitalizeAll(toLower(trim(line.`Community`)))})
@@ -189,9 +184,8 @@ MERGE (t:Campus {name:apoc.text.capitalizeAll(toLower(trim(line.`CAMPUS`)))})
 MERGE (m)-[:LEADS_CAMPUS]->(t)
 RETURN m,t;
 
- 
 
-//Q3 Sonta Relationships
+// Sonta Relationships
 LOAD CSV WITH HEADERS FROM "https://admin-firstlovecenter.imfast.io/Neo4j%20Test%20Data/Sonta%20Town.csv" as line
 MATCH (m:Member {whatsappNumber: line.`Whatsapp Number`})
 
@@ -239,3 +233,36 @@ with line, m,sonta
 MATCH (t: Hall {name: apoc.text.capitalizeAll(toLower(trim(line.`HALL`)))})
 MERGE (t)-[:HAS_BASONTA]->(sonta)
 RETURN t;
+
+//Light Touch Ups
+//Connecting Sontas to Ministries
+MATCH (m:Ministry) 
+MATCH (s:Sonta) 
+WHERE s.name CONTAINS m.name
+MERGE (m)-[:HAS_SONTA]->(s)
+RETURN m,s;
+
+//Connecting Sontas to Towns
+MATCH (s:Sonta)
+MATCH (t:Town) WHERE s.name CONTAINS t.name
+MERGE (t)-[:HAS_SONTA]->(s)
+RETURN t,s;
+
+//Basonta to Hall and Community
+MATCH (b:Basonta)
+MATCH (h:Hall) WHERE b.name CONTAINS h.name
+MERGE (h)-[:HAS_BASONTA]->(b)
+RETURN h,b;
+
+MATCH (b:Basonta)
+MATCH (c:Community) WHERE b.name CONTAINS c.name
+MERGE (c)-[:HAS_BASONTA]->(b)
+RETURN c,b;
+
+MATCH (b:Basonta)
+MATCH (s:Sonta)
+MATCH (s)<-[:HAS_SONTA]-(m:Ministry)
+MATCH (s)<-[:HAS_SONTA]-()-[:HAS_COMMUNITY|:HAS_HALL]->()-[:HAS_BASONTA]->(b)
+WHERE b.name CONTAINS m.name
+MERGE (s)-[r:HAS_BASONTA]->(b)
+RETURN r;

@@ -4,25 +4,24 @@ import { useQuery } from '@apollo/client'
 import { DisplayChurchList } from '../components/DisplayChurchList'
 import { NavBar } from '../components/NavBar'
 import SpinnerPage from '../components/SpinnerPage'
-import { GET_COMMUNITIES } from '../queries/ListQueries'
+import { GET_HALLS } from '../queries/ListQueries'
 import { CampusTownContext } from '../context/ChurchContext'
 import { CommunityHallContext } from '../context/ChurchContext'
 import { MemberContext } from '../context/MemberContext'
 
-export const DisplayAllCommunities = () => {
-  const { townID } = useContext(CampusTownContext)
-  const { setCommunityID } = useContext(CommunityHallContext)
+export const DisplayAllHalls = () => {
+  const { campusID } = useContext(CampusTownContext)
+  const { setHallID } = useContext(CommunityHallContext)
   const { setMemberID } = useContext(MemberContext)
 
-  const {
-    data: communityData,
-    error: communityError,
-    loading: communityLoading,
-  } = useQuery(GET_COMMUNITIES, {
-    variables: { townID: townID },
-  })
+  const { data: hallData, error: hallError, loading: hallLoading } = useQuery(
+    GET_HALLS,
+    {
+      variables: { campusID: campusID },
+    }
+  )
 
-  if (communityError) {
+  if (hallError) {
     return (
       <React.Fragment>
         <NavBar />
@@ -33,7 +32,7 @@ export const DisplayAllCommunities = () => {
         </div>
       </React.Fragment>
     )
-  } else if (communityLoading) {
+  } else if (hallLoading) {
     // Spinner Icon for Loading Screens
     return (
       <React.Fragment>
@@ -53,45 +52,40 @@ export const DisplayAllCommunities = () => {
               <Link
                 to="/members/displaydetails"
                 onClick={() => {
-                  setMemberID(
-                    `${communityData.communityList[0].town.leader.memberID}`
-                  )
+                  setMemberID(`${hallData.hallList[0].campus.leader.memberID}`)
                 }}
               >
-                <h4>{`${communityData.communityList[0].town.name} Town`}</h4>
+                <h4>{`${hallData.hallList[0].campus.name} campus`}</h4>
               </Link>{' '}
             </div>
             <div className="col-auto">
-              <Link
-                to="/community/addcommunity"
-                className="btn btn-primary text-nowrap"
-              >
-                Add Community
+              <Link to="/hall/addhall" className="btn btn-primary text-nowrap">
+                Add Hall
               </Link>
             </div>
           </div>
           <div className="row">
             <div className="col">
               <h6 className="text-muted">
-                Community Leader:
-                {communityData.communityList[0].town.leader
-                  ? ` ${communityData.communityList[0].town.leader.firstName} ${communityData.communityList[0].town.leader.lastName}`
+                Hall Leader:
+                {hallData.hallList[0].campus.leader
+                  ? ` ${hallData.hallList[0].campus.leader.firstName} ${hallData.hallList[0].campus.leader.lastName}`
                   : null}
               </h6>
             </div>
           </div>
 
           <div className="row justify-content-between">
-            <div className="py-1 px-2 m-2 card">{`Communities: ${communityData.communityList.length}`}</div>
-            <div className="py-1 px-2 m-2 card">{`Sontas: ${communityData.communityList[0].town.sontas.length}`}</div>
+            <div className="py-1 px-2 m-2 card">{`Halls: ${hallData.hallList.length}`}</div>
+            <div className="py-1 px-2 m-2 card">{`Sontas: ${hallData.hallList[0].campus.sontas.length}`}</div>
             <div className="py-1 px-2 m-2 card">{`Membership:`}</div>
           </div>
         </div>
 
         <DisplayChurchList
-          data={communityData.communityList}
-          setter={setCommunityID}
-          churchType="Community"
+          data={hallData.hallList}
+          setter={setHallID}
+          churchType="Hall"
         />
       </div>
     </div>

@@ -65,7 +65,7 @@ export const ADD_LEADER_TITLE_MUTATION = gql`
 `
 
 export const CREATE_CENTRE_MUTATION = gql`
-  mutation StartCentre(
+  mutation AddCentre(
     $centreName: String!
     $centreLeaderFName: String
     $centreLeaderLName: String
@@ -75,7 +75,7 @@ export const CREATE_CENTRE_MUTATION = gql`
     $venueLongitude: Float
     $venueLatitude: Float
   ) {
-    StartCentre(
+    AddCentre(
       centreName: $centreName
       centreLeaderFName: $centreLeaderFName
       centreLeaderLName: $centreLeaderLName

@@ -24,7 +24,7 @@ function SearchBox() {
       {(formik) => (
         <Form className="form-inline d-none d-md-block">
           <div className="form-row">
-            <div className="col-auto px-0 ">
+            <div className="col-auto px-0 d-flex align-items-center">
               <FormikControl
                 control="searchbox"
                 name="searchKey"
@@ -35,9 +35,9 @@ function SearchBox() {
                 aria-describedby="Global Search"
               />
             </div>
-            <div className="col p-0">
+            <div className="col p-0 d-flex align-items-center">
               <button
-                className="btn btn-primary nav-search-button"
+                className="btn btn-primary nav-search-button m-0"
                 type="submit"
               >
                 <i className="fas fa-search icon-color" />

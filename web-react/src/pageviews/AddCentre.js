@@ -14,7 +14,6 @@ import {
   CentreContext,
   ApostleContext,
 } from '../context/ChurchContext'
-// import Spinner from '../components/Spinner'
 
 function AddCentre() {
   const initialValues = {
@@ -52,11 +51,11 @@ function AddCentre() {
   const { townID, setTownID } = useContext(CampusTownContext)
   const { centreID, setCentreID } = useContext(CentreContext)
   // const { positionLoading, setPositionLoading } = useState(true)
-  const [StartCentre, { data: newCentreData }] = useMutation(
+  const [AddCentre, { data: newCentreData }] = useMutation(
     CREATE_CENTRE_MUTATION,
     {
       onCompleted: (newCentreData) => {
-        setCentreID(newCentreData.StartCentre.centreID)
+        setCentreID(newCentreData.AddCentre.centreID)
       },
     }
   )
@@ -88,7 +87,7 @@ function AddCentre() {
 
     //onSubmit receives the form state as argument
     const onSubmit = (values, onSubmitProps) => {
-      StartCentre({
+      AddCentre({
         variables: {
           centreName: values.centreName,
           centreLeaderFName: values.centreLeaderFName,

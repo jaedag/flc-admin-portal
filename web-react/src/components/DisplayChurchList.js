@@ -25,7 +25,11 @@ export const DisplayChurchList = (props) => {
                 <div className="card-body">
                   <span className="text-muted">{`${churchType}:`}</span>
                   <h6 className="card-title">{church.name}</h6>
-                  <h6 className="card-text text-muted">{`${church.leader.firstName} ${church.leader.lastName}`}</h6>
+                  <h6 className="card-text text-muted">
+                    {church.leader
+                      ? `${church.leader.firstName} ${church.leader.lastName}`
+                      : null}
+                  </h6>
                 </div>
               </Link>
             )

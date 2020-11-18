@@ -3,8 +3,9 @@ import { useQuery } from '@apollo/client'
 import { NavBar } from '../components/NavBar'
 import { MemberCard } from '../components/MemberCard'
 import { DISPLAY_MEMBER } from '../queries/DisplayQueries'
-import SpinnerPage from '../components/SpinnerPage'
+import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
 import { MemberContext } from '../context/MemberContext'
+import { ChurchContext } from '../context/ChurchContext'
 
 export const DisplayMemberDetails = () => {
   const monthNames = [
@@ -22,6 +23,7 @@ export const DisplayMemberDetails = () => {
     'Dec',
   ]
   const { memberID } = useContext(MemberContext)
+  const { church, capitalise } = useContext(ChurchContext)
 
   const {
     data: memberData,
@@ -31,32 +33,16 @@ export const DisplayMemberDetails = () => {
     variables: { memberID: memberID },
   })
 
-  console.log(memberData)
-
   if (memberError || memberID === '') {
-    return (
-      <React.Fragment>
-        <NavBar />
-        <div className="container full-body-center">
-          <p className="text-center full-center">
-            There seems to be an error loading data
-          </p>
-        </div>
-      </React.Fragment>
-    )
+    return <ErrorScreen />
   } else if (memberLoading) {
     // Spinner Icon for Loading Screens
-    return (
-      <React.Fragment>
-        <NavBar />
-        <SpinnerPage />
-      </React.Fragment>
-    )
+    return <LoadingScreen />
   }
+
   return (
     <div className="container pt-5">
       <NavBar />
-
       <div className="container pt-2">
         <div className="row mb-4">
           <div className="col">
@@ -268,25 +254,32 @@ export const DisplayMemberDetails = () => {
                   <div className="container p-2">
                     <div className="row mb-2">
                       <div className="col">
-                        <p className="text-secondary card-text">Town</p>
+                        <p className="text-secondary card-text">{`${capitalise(
+                          church.church
+                        )}`}</p>
                       </div>
                       <div className="col">
                         <p className="font-weight-bold card-text">
                           {memberData.displayMember.centre
-                            ? memberData.displayMember.centre.community.town
-                                .name
+                            ? memberData.displayMember.centre[
+                                `${church.subChurch}`
+                              ][`${church.church}`].name
                             : null}
                         </p>
                       </div>
                     </div>
                     <div className="row mb-2">
                       <div className="col">
-                        <p className="text-secondary card-text">Community</p>
+                        <p className="text-secondary card-text">{`${capitalise(
+                          church.subChurch
+                        )}`}</p>
                       </div>
                       <div className="col">
                         <p className="font-weight-bold card-text">
                           {memberData.displayMember.centre
-                            ? memberData.displayMember.centre.community.name
+                            ? memberData.displayMember.centre[
+                                `${church.subChurch}`
+                              ].name
                             : null}
                         </p>
                       </div>
@@ -325,7 +318,7 @@ export const DisplayMemberDetails = () => {
                       </div>
                       <div className="col">
                         <p className="font-weight-bold card-text">
-                          {memberData.displayMember.sonta
+                          {memberData.displayMember.sonta.leader
                             ? `${memberData.displayMember.sonta.leader.firstName} ${memberData.displayMember.sonta.leader.lastName}`
                             : null}
                         </p>

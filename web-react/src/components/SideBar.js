@@ -36,7 +36,7 @@ export const SideBar = () => {
           <div className="container">
             <Form>
               <div className="form-group ">
-                <h3>Filters</h3>
+                <h3 className="pt-3">Filters</h3>
                 <div className="container-fluid infobar">Basic Info</div>
                 <div className="row row-cols-1">
                   {/* <!-- Basic Info Div --> */}

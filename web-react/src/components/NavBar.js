@@ -1,9 +1,12 @@
-import React from 'react'
+import React, { useContext } from 'react'
 // import { useQuery } from '@apollo/client'
 import { Link } from 'react-router-dom'
 import SearchBox from './SearchBox'
+import { ChurchContext } from '../context/ChurchContext'
 
 export const NavBar = () => {
+  const { church, capitalise } = useContext(ChurchContext)
+
   return (
     <nav className="navbar navbar-dark navbar-expand fixed-top">
       <a className="btn nav-button btn-outline-light" href="/">
@@ -27,10 +30,12 @@ export const NavBar = () => {
         </Link>
         <Link
           className="nav-item nav-link d-flex align-items-center flex-column"
-          to="/town/displayall"
+          to={`/${church.church}/displayall`}
         >
           <span className="fas fa-landmark fa-2x px-1" />
-          <span className="d-none d-md-inline">Towns</span>
+          <span className="d-none d-md-inline">{`${capitalise(
+            church.church
+          )}`}</span>
         </Link>
         <Link
           className="nav-item nav-link d-flex align-items-center flex-column"

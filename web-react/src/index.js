@@ -13,9 +13,11 @@ import { DisplayMemberDetails } from './pageviews/DisplayMemberDetails'
 import { AddMember } from './pageviews/AddMember'
 import AddCentre from './pageviews/AddCentre'
 import AddCommunity from './pageviews/AddCommunity'
+import AddHall from './pageviews/AddHall'
 import AddTown from './pageviews/AddTown'
 import { DisplayCentreDetails } from './pageviews/DisplayCentreDetails'
 import { DisplayCommunityDetails } from './pageviews/DisplayCommunityDetails'
+import { DisplayHallDetails } from './pageviews/DisplayHallDetails'
 import { DisplayCampusTownDetails } from './pageviews/DisplayCampusTownDetails'
 import { DisplaySontaDetails } from './pageviews/DisplaySontaDetails'
 import { MemberContext, SearchContext } from './context/MemberContext'
@@ -30,7 +32,9 @@ import {
 import { DisplayAllSontaTowns } from './pageviews/DisplayAllSontaTowns'
 import { DisplayAllCentres } from './pageviews/DisplayAllCentres'
 import { DisplayAllCommunities } from './pageviews/DisplayAllCommunities'
+import { DisplayAllHalls } from './pageviews/DisplayAllHalls'
 import { DisplayAllTowns } from './pageviews/DisplayAllTowns'
+import { DisplayAllCampuses } from './pageviews/DisplayAllCampuses'
 
 const client = new ApolloClient({
   uri: process.env.REACT_APP_GRAPHQL_URI || '/graphql',
@@ -66,7 +70,7 @@ const PastorsAdmin = () => {
   )
   const [sontaID, setSontaID] = useState('0a2dd076-0ed6-47e6-8055-8ce0df248125')
   const [ministryID, setMinistryID] = useState(
-    'b8f09765-f70b-4dba-8867-3737fcee7c88'
+    'be2ce778-1da2-4bc1-a5d0-c4cde747f963'
   )
   const [memberID, setMemberID] = useState('')
   const [searchKey, setSearchKey] = useState('')
@@ -146,12 +150,33 @@ const PastorsAdmin = () => {
                           exact
                         />
                         <Route
-                          path="/church/displayall"
+                          path="/hall/displaydetails"
+                          component={DisplayHallDetails}
+                          exact
+                        />
+                        <Route path="/hall/addhall" component={AddHall} exact />
+                        <Route
+                          path="/hall/displayall"
+                          component={DisplayAllHalls}
+                          exact
+                        />
+                        <Route
+                          path="/town/displayall"
                           component={DisplayAllTowns}
                           exact
                         />
                         <Route
                           path="/town/displaydetails"
+                          component={DisplayCampusTownDetails}
+                          exact
+                        />
+                        <Route
+                          path="/campus/displayall"
+                          component={DisplayAllCampuses}
+                          exact
+                        />
+                        <Route
+                          path="/campus/displaydetails"
                           component={DisplayCampusTownDetails}
                           exact
                         />

@@ -18,6 +18,7 @@ export const MemberTable = () => {
     }
   )
 
+  console.log(apostleID)
   const { data: res } = useQuery(GLOBAL_SEARCH)
 
   console.log(res)
@@ -109,7 +110,6 @@ export const MemberTable = () => {
               onClick={() => {
                 // console.log('Member ID before', soul.memberID)
                 setMemberID(soul.memberID)
-                // console.log('Member ID after', setter.memberID)
                 history.push('/members/displaydetails')
               }}
             >

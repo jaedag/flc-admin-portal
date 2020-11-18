@@ -26,10 +26,14 @@ const ApostleSelect = () => {
   } else {
     return (
       <React.Fragment>
-        <div className="row no-gutters">
+        <div className="container text-center mb-4">
+          <h1>Welcome to the FLC Admin Dashboard</h1>
+          <h4>Please choose your apostle!</h4>
+        </div>
+        <div className="row px-5">
           {data.apostlesList.map((soul, index) => {
             return (
-              <div className="col px-1" key={index}>
+              <div className="col" key={index}>
                 <div
                   className="card grid-card mb-5"
                   onClick={() => {
@@ -43,15 +47,16 @@ const ApostleSelect = () => {
                     history.push('/dashboard')
                   }}
                 >
-                  <div className="d-none d-sm-block image-card ">
-                    <img
-                      className="card-img-top"
-                      src={soul.pictureUrl}
-                      alt=""
-                    />
-                  </div>
+                  <img
+                    className="card-img-top d-none d-sm-block image-card"
+                    src={soul.pictureUrl}
+                    alt=""
+                  />
                   <p className="card-title text-center pt-2">
                     {soul.firstName + ' ' + soul.lastName}
+                  </p>
+                  <p className="text-center text-muted">
+                    {soul.town[0] ? 'Town' : 'Campus'}
                   </p>
                 </div>
               </div>

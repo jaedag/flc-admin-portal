@@ -22,6 +22,17 @@ export const GET_APOSTLE_MEMBERS = gql`
   }
 `
 
+export const GET_APOSTLE_PASTORS = gql`
+  query($apostleID: ID) {
+    apostlePastorList(apostleID: $apostleID, first: 60) {
+      memberID
+      firstName
+      lastName
+      pictureUrl
+    }
+  }
+`
+
 export const GET_CENTRE_LEADERS = gql`
   {
     townList(firstName: $firstName, lastName: $lastName) {
@@ -213,10 +224,10 @@ export const GET_APOSTLES = gql`
   }
 `
 
-export const SONTA_LIST = gql`
+export const MINISTRY_LIST = gql`
   query {
-    sontaList {
-      sontaID
+    ministryList {
+      ministryID
       name
     }
   }

@@ -42,7 +42,7 @@ function FormikSearchbox(props) {
             setSuggestions([])
           }
           try {
-            console.log(data)
+            // console.log(data)
             setSuggestions(
               data[`${dataset}`].map((row) => ({
                 firstName: row.firstName,
@@ -62,7 +62,7 @@ function FormikSearchbox(props) {
             event.preventDefault()
           }
           // setSearchString(suggestion.name)
-          console.log(suggestion)
+
           setMemberID(suggestion.id)
           history.push('/members/displaydetails')
           setFieldValue(`${name}`, suggestion.memberID)

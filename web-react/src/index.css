@@ -58,6 +58,25 @@
   height: 8vh;
 }
 
+.mobile-search-nav{
+  height: 85px;
+}
+
+.mobile-search-box{
+  width: 70vw;
+  background-color: var(--text-box-inner);
+  color: var(--text-focus-white);
+  height:42px;
+  border: 1px solid var(--border-color);
+  padding-left: 10px;
+  border-radius: 5px;
+  border-radius: 7px 0px 0px 7px;
+}
+
+.mobile-search-button {
+  height:42px;
+}
+
 .sidebar {
   background-color: var(--body-bg-color);
   height: 100vh;
@@ -130,6 +149,10 @@
 .card {
   background-color: var(--card-color);
   border: 1px solid var(--border-color);
+}
+
+.mobile-search-card {
+  border-radius: 20px;
 }
 
 .member-info-card {
@@ -240,7 +263,6 @@
   border-radius: 0px 7px 7px 0px;
   border: 1px solid var(--border-color);
 }
-
 
 input:-webkit-autofill,
 input:-webkit-autofill:hover,

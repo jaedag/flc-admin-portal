@@ -65,7 +65,7 @@ export const DisplayMemberDetails = () => {
                       <img
                         src={`${memberData.displayMember.pictureUrl}`}
                         className="m-2 rounded profile-img"
-                        alt="current member"
+                        alt={`${memberData.displayMember.firstName} ${memberData.displayMember.lastName}`}
                       />
                     </div>
 

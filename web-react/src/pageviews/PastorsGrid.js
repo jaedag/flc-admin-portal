@@ -4,13 +4,13 @@ import { useQuery } from '@apollo/client'
 import { NavBar } from '../components/NavBar'
 import { SideBar } from '../components/SideBar'
 import { MemberTable } from '../components/MemberTable'
-import { GET_APOSTLE_MEMBERS } from '../queries/ListQueries'
+import { GET_APOSTLE_PASTORS } from '../queries/ListQueries'
 import { ApostleContext } from '../context/ChurchContext'
 
-export const MembersGrid = () => {
+export const PastorsGrid = () => {
   const { apostleID } = useContext(ApostleContext)
   const { data: member, error: memberError, loading: memberLoading } = useQuery(
-    GET_APOSTLE_MEMBERS,
+    GET_APOSTLE_PASTORS,
     {
       variables: { apostleID: apostleID },
     }
@@ -42,7 +42,7 @@ export const MembersGrid = () => {
             member={member}
             memberError={memberError}
             memberLoading={memberLoading}
-            list="apostleMemberList"
+            list="apostlePastorList"
           />
         </div>
       </div>

@@ -9,9 +9,9 @@ export const NavBar = () => {
 
   return (
     <nav className="navbar navbar-dark navbar-expand fixed-top">
-      <a className="btn nav-button btn-outline-light" href="/">
+      <Link className="btn nav-button btn-outline-light p-0" to="/">
         <i className="fas fa-bars fa-2x icon-color" />
-      </a>
+      </Link>
 
       <div className="navbar-nav">
         <Link
@@ -46,7 +46,7 @@ export const NavBar = () => {
         </Link>
         <Link
           className="nav-item nav-link d-flex align-items-center flex-column"
-          to="#"
+          to="/membersearch"
         >
           <i className="fas fa-search fa-2x d-md-none icon-color px-1" />
         </Link>
@@ -54,10 +54,10 @@ export const NavBar = () => {
       <div className="container justify-content-end mt-2">
         <SearchBox />
         <Link
-          className="nav-item nav-link d-flex align-items-center flex-column"
+          className="nav-item nav-link d-flex align-items-center flex-column p-0 pb-2"
           to="#"
         >
-          <span className="fas fa-user-circle fa-2x" />
+          <span className="fas fa-user-circle fa-3x" />
           <span className="d-none d-sm-inline">Admin</span>
         </Link>
       </div>

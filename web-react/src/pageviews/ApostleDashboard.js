@@ -82,25 +82,22 @@ const ApostleDashboard = () => {
           </div>
 
           <div className="row justify-content-center">
-            <div className="col">
+            <div className="col-sm-12 col-md">
               <DashboardButton
                 btnText="Register Member"
                 btnLink="/members/addmember"
               />
             </div>
-            <div className="col">
-              <DashboardButton btnText="Close a Centre" />
-            </div>
-            <div className="col">
+            <div className="col-sm-12 col-md">
               <DashboardButton
                 btnText="Start a Centre"
-                btnLink="centre/addcentre"
+                btnLink="/centre/addcentre"
               />
             </div>
-            <div className="col ">
+            <div className="col-sm-12 col-md">
               <DashboardButton
                 btnText={`Add ${capitalise(church.church)}`}
-                btnLink="/town/addtown"
+                btnLink={`/${church.church}/add${church.church}`}
               />
             </div>
           </div>
@@ -143,22 +140,22 @@ const ApostleDashboard = () => {
           </div>
 
           <div className="row justify-content-center">
-            <div className="col">
+            <div className="col-sm-12 col-md">
               <DashboardButton
                 btnText="Register Member"
                 btnLink="/members/addmember"
               />
             </div>
-            <div className="col">
+            <div className="col-sm-12 col-md">
               <DashboardButton
                 btnText="Start a Centre"
-                btnLink="centre/addcentre"
+                btnLink="/centre/addcentre"
               />
             </div>
-            <div className="col ">
+            <div className="col-sm-12 col-md">
               <DashboardButton
                 btnText={`Add ${capitalise(church.church)}`}
-                btnLink="/town/addtown"
+                btnLink={`/${church.church}/add${church.church}`}
               />
             </div>
           </div>
@@ -187,7 +184,7 @@ const ApostleDashboard = () => {
             <DashboardCard
               name="Pastors"
               number={pastor.apostlePastorCount}
-              cardLink="#"
+              cardLink="/pastors"
             />
           </div>
           <div className="col">

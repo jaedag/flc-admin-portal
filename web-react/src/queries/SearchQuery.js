@@ -6,6 +6,13 @@ export const GLOBAL_SEARCH = gql`
       memberID
       firstName
       lastName
+      pictureUrl
+      centre {
+        name
+      }
+      sonta {
+        name
+      }
     }
   }
 `

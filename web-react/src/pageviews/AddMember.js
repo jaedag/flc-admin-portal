@@ -8,9 +8,9 @@ import FormikControl from '../components/formik-components/FormikControl'
 import { NEW_MEMBER_MUTATION } from '../queries/AdditionMutations'
 import { HeadingBar } from '../components/HeadingBar'
 import { NavBar } from '../components/NavBar'
+import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
 import Spinner from '../components/Spinner'
-import SpinnerPage from '../components/SpinnerPage'
-import { SONTA_LIST, CENTRE_DROPDOWN } from '../queries/ListQueries'
+import { MINISTRY_LIST, CENTRE_DROPDOWN } from '../queries/ListQueries'
 import { MemberContext } from '../context/MemberContext'
 
 export const AddMember = () => {
@@ -26,7 +26,6 @@ export const AddMember = () => {
     maritalStatus: '',
     occupation: '',
     pictureUrl: '',
-    country: '',
     centre: '',
     sonta: '',
 
@@ -85,10 +84,10 @@ export const AddMember = () => {
 
   //All of the Hooks!
   const {
-    data: sontaListData,
-    loading: sontaListLoading,
-    error: sontaListError,
-  } = useQuery(SONTA_LIST)
+    data: ministryListData,
+    loading: ministryListLoading,
+    error: ministryListError,
+  } = useQuery(MINISTRY_LIST)
 
   const [AddMember, { data: newMemberData }] = useMutation(
     NEW_MEMBER_MUTATION,
@@ -162,31 +161,18 @@ export const AddMember = () => {
         pastoralHistory: values.pastoralHistory,
       },
     })
+
     onSubmitProps.setSubmitting(false)
     history.push('/members/displaydetails')
   }
 
-  if (sontaListLoading) {
-    return (
-      <React.Fragment>
-        <NavBar />
-        <SpinnerPage />
-      </React.Fragment>
-    )
-  } else if (sontaListError) {
-    return (
-      <React.Fragment>
-        <NavBar />
-        <div className="container full-body-center">
-          <p className="text-center full-center">
-            There seems to be an error loading data
-          </p>
-        </div>
-      </React.Fragment>
-    )
+  if (ministryListLoading) {
+    return <LoadingScreen />
+  } else if (ministryListError) {
+    return <ErrorScreen />
   } else {
-    const sontaOptions = sontaListData.sontaList.map((sonta) => ({
-      value: sonta.sontaID,
+    const sontaOptions = ministryListData.ministryList.map((sonta) => ({
+      value: sonta.ministryID,
       key: sonta.name,
     }))
 
@@ -302,7 +288,7 @@ export const AddMember = () => {
                           name="maritalStatus"
                           placeholder="Marital Status"
                           options={maritalStatusOptions}
-                          defaultOption="Martial Status"
+                          defaultOption="Marital Status"
                         />
                       </div>
                       <div className="col">

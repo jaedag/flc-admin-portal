@@ -9,6 +9,8 @@ import './index.css'
 import ApostleSelect from './pageviews/ApostleSelect'
 import ApostleDashboard from './pageviews/ApostleDashboard'
 import { MembersGrid } from './pageviews/MembersGrid'
+import { PastorsGrid } from './pageviews/PastorsGrid'
+import { SearchPageMobile } from './pageviews/SearchPageMobile'
 import { DisplayMemberDetails } from './pageviews/DisplayMemberDetails'
 import { AddMember } from './pageviews/AddMember'
 import AddCentre from './pageviews/AddCentre'
@@ -98,7 +100,13 @@ const PastorsAdmin = () => {
                           component={ApostleDashboard}
                           exact
                         />
+                        <Route
+                          path="/membersearch"
+                          component={SearchPageMobile}
+                          exact
+                        />
                         <Route path="/members" component={MembersGrid} exact />
+                        <Route path="/pastors" component={PastorsGrid} exact />
                         <Route
                           path="/members/addmember"
                           component={AddMember}

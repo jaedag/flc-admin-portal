@@ -1,24 +1,14 @@
 import React, { useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useQuery } from '@apollo/client'
-import { GET_APOSTLE_MEMBERS } from '../queries/ListQueries'
 import { MemberContext } from '../context/MemberContext'
 import { GLOBAL_SEARCH } from '../queries/SearchQuery'
 import Spinner from './Spinner'
-import { ApostleContext } from '../context/ChurchContext'
 
-export const MemberTable = () => {
+export const MemberTable = (props) => {
+  const { member, memberError, memberLoading, list } = props
   const { setMemberID } = useContext(MemberContext)
-  const { apostleID } = useContext(ApostleContext)
   const history = useHistory()
-  const { data: member, error: memberError, loading: memberLoading } = useQuery(
-    GET_APOSTLE_MEMBERS,
-    {
-      variables: { apostleID: apostleID },
-    }
-  )
-
-  console.log(apostleID)
   const { data: res } = useQuery(GLOBAL_SEARCH)
 
   console.log(res)
@@ -77,7 +67,7 @@ export const MemberTable = () => {
   //     </div>
   //   )
   // }
-  member.apostleMemberList.map((index) => {
+  member[`${list}`].map((index) => {
     return (
       <div key={index} className="container col-lg-9 col-md-9 ">
         <div className="row row-no-gutters">
@@ -102,7 +92,7 @@ export const MemberTable = () => {
   return (
     // Web View Full Screen without filters applied
     <div className="row no-gutters">
-      {member.apostleMemberList.map((soul, index) => {
+      {member[`${list}`].map((soul, index) => {
         return (
           <div className="col px-1" key={index}>
             <div

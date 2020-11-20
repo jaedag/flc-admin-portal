@@ -196,11 +196,8 @@ input pastoralHistory {
 #Query Definitions
 type Query {
 #At the Federal Level
-	apostlesList: [Member] @cypher(statement:"""
-	MATCH ()<-[:HAS_CAMPUS|:HAS_TOWN]-(m:Member)
-	RETURN DISTINCT m
-	"""
-	)
+	apostlesList: [Member] @cypher(statement:"MATCH ()<-[:HAS_CAMPUS|:HAS_TOWN]-(m:Member) RETURN DISTINCT m")
+	ministryList: [Ministry] @cypher (statement:"MATCH (m:Ministry) RETURN m")
 	memberCount: Int! @cypher(statement: "MATCH (m:Member) RETURN COUNT(m)")
 	communityCount: Int! @cypher(statement: "MATCH (c:Community) RETURN COUNT(c)")
 	centreCount: Int! @cypher(statement: "MATCH (c:Centre) RETURN COUNT(c)")
@@ -225,7 +222,8 @@ type Query {
 		RETURN s, COUNT(m)
 		"""
 		)
-	apostlePastorCount(apostleID: ID): Int! @cypher(statement: "MATCH (t:Title)<-[:HAS_TITLE]-(m:Member)-[:BELONGS_TO_CENTRE]->()<-[:HAS_CENTRE]-()-[:HAS_COMMUNITY]-()-[:HAS_TOWN]-(:Member {memberID: $apostleID}) RETURN COUNT(m)")
+	apostlePastorCount(apostleID: ID): Int! @cypher(statement: "MATCH (t:Title)<-[:HAS_TITLE]-(m:Member)-[:BELONGS_TO_CENTRE]->()<-[:HAS_CENTRE]-()-[:HAS_COMMUNITY|:HAS_HALL]-()-[:HAS_TOWN|:HAS_CAMPUS]-(:Member {memberID: $apostleID}) RETURN COUNT(m)")
+	apostlePastorList(apostleID: ID): [Member] @cypher(statement: "MATCH (t:Title)<-[:HAS_TITLE]-(m:Member)-[:BELONGS_TO_CENTRE]->()<-[:HAS_CENTRE]-()-[:HAS_COMMUNITY|:HAS_HALL]-()-[:HAS_TOWN|:HAS_CAMPUS]-(:Member {memberID: $apostleID}) RETURN m")
 	apostleMemberList(apostleID: ID): [Member]! @cypher(statement: 
 		"""
 		MATCH (:Member {memberID: $apostleID})-[:HAS_TOWN|:HAS_CAMPUS]->(t)
@@ -406,7 +404,7 @@ type Mutation {
 		SET
 		h.historyRecord = y.historyRecord,
 		h.created_at = datetime()
-	with m, y, h
+	with m, y, h 
 	MERGE (tg:TimeGraph {date: date(y.historyDate)})
 	MERGE (h)-[:LEADER_STARTED_ON]->(tg)
 	MERGE (m)-[:HAS_LEADERSHIP_HISTORY]->(h)

@@ -51,15 +51,21 @@ export const NavBar = () => {
           <i className="fas fa-search fa-2x d-md-none icon-color px-1" />
         </Link>
       </div>
-      <div className="container justify-content-end mt-2">
-        <SearchBox />
-        <Link
-          className="nav-item nav-link d-flex align-items-center flex-column p-0 pb-2"
-          to="#"
-        >
-          <span className="fas fa-user-circle fa-3x" />
-          <span className="d-none d-sm-inline">Admin</span>
-        </Link>
+      <div className="container justify-content-end mt-2 mr-2">
+        <div className="row">
+          <div className="col">
+            <SearchBox />
+          </div>
+          <div className="col">
+            <Link
+              className="nav-item nav-link d-flex align-items-center flex-column p-0 pb-2"
+              to="#"
+            >
+              <span className="fas fa-user-circle fa-3x" />
+              <span className="d-none d-sm-inline">Admin</span>
+            </Link>
+          </div>
+        </div>
       </div>
     </nav>
   )

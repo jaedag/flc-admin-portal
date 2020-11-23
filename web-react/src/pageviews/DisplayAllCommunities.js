@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { useQuery } from '@apollo/client'
 import { DisplayChurchList } from '../components/DisplayChurchList'
 import { NavBar } from '../components/NavBar'
-import SpinnerPage from '../components/SpinnerPage'
+import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
 import { GET_COMMUNITIES } from '../queries/ListQueries'
 import { CampusTownContext } from '../context/ChurchContext'
 import { CommunityHallContext } from '../context/ChurchContext'
@@ -23,24 +23,10 @@ export const DisplayAllCommunities = () => {
   })
 
   if (communityError) {
-    return (
-      <React.Fragment>
-        <NavBar />
-        <div className="container full-body-center">
-          <p className="text-center full-center">
-            There seems to be an error loading data
-          </p>
-        </div>
-      </React.Fragment>
-    )
+    return <ErrorScreen />
   } else if (communityLoading) {
     // Spinner Icon for Loading Screens
-    return (
-      <React.Fragment>
-        <NavBar />
-        <SpinnerPage />
-      </React.Fragment>
-    )
+    return <LoadingScreen />
   }
 
   return (

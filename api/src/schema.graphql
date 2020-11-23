@@ -21,7 +21,7 @@ type Member {
 	leadsCommunity: [Community] @relation(name: "LEADS_COMMUNITY", direction: "OUT")
 	leadsHall: [Hall] @relation(name: "LEADS_HALL", direction: "OUT")
 	leadsMinistry: [Ministry] @relation(name: "LEADS_MINISTRY", direction: "OUT")
-	leadsSonta: [Sonta] @relation(name: "LEADS_SONTA", direction: "OUT")
+	leadsSonta: Sonta @relation(name: "LEADS_SONTA", direction: "OUT")
 	townGSO: [Town] @relation(name: "LEADS_TOWN", direction: "OUT")
 	campusGSO: [Campus] @relation(name: "LEADS_CAMPUS", direction: "OUT")
 	leadershipHistory: [LeaderHistory] @relation(name:"HAS_LEADERSHIP_HISTORY",direction:"OUT")
@@ -295,14 +295,14 @@ type Query {
 	MATCH (n:Ministry {ministryID: $ministryID})<-[:BELONGS_TO_MINISTRY]-(m:Member)
 	MATCH (m)-[:BELONGS_TO_CENTRE]->(:Centre)<-[:HAS_CENTRE]-()<-[:HAS_COMMUNITY|:HAS_HALL]-(e)
 	MATCH (e)<-[:HAS_TOWN|HAS_CAMPUS]-(:Member {memberID: $apostleID})
-	RETURN DISTINCT e
+	RETURN DISTINCT e,n
 	"""
 	)
 
 #At the Sonta Level
 	sontaList:[Sonta] @cypher(statement: "MATCH (s:Sonta) RETURN s")
 	townSontaLeader(ministryID: ID, apostleID: ID): [Member] @cypher (statement:"""
-	MATCH (n:Ministry {ministryID: $ministryID})<-[:BELONGS_TO_MINISTRY]-(m:Member)
+	MATCH (n:Ministry)<-[:BELONGS_TO_MINISTRY]-(m:Member)
 	MATCH (m)-[:BELONGS_TO_CENTRE]->(:Centre)<-[:HAS_CENTRE]-()<-[:HAS_COMMUNITY|:HAS_HALL]-(e)
 	MATCH (e)<-[:HAS_TOWN|HAS_CAMPUS]-(:Member {memberID: $apostleID})
 	MATCH (n)-[:HAS_SONTA]->(s:Sonta)<-[:LEADS_SONTA]-(l:Member)
@@ -398,7 +398,7 @@ type Mutation {
 	MATCH (t:Title {title: x.title})
 	MERGE (m)-[r:HAS_TITLE]->(t)
 		SET r.yearAppointed = date(x.date)
-	WITH m
+	WITH m WHERE $pastoralHistory.y is not ""
 	UNWIND $pastoralHistory as y
 	CREATE (h:LeaderHistory)
 		SET

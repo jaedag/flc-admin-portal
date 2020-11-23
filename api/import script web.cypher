@@ -75,7 +75,7 @@ MERGE (m)-[:BELONGS_TO_CENTRE]->(cen);
 LOAD CSV WITH HEADERS FROM "https://admin-firstlovecenter.imfast.io/Neo4j%20Test%20Data/Members.csv" as line
 WITH line WHERE line.`Date of Birth` is not null
 MATCH (m:Member {whatsappNumber: line.`WhatsApp Number (if different)`})
-MERGE (dob: TimeGraph {date: date(line.`Date of Birth`)})
+MERGE (dob: TimeGraph {date: date("1993-07-18")})
 MERGE (m)-[:WAS_BORN_ON]->(dob)
 RETURN dob;
 

@@ -145,15 +145,15 @@ export const GET_HALLS = gql`
 `
 
 export const GET_TOWN_SONTA_LEADERS = gql`
-  query($ministryID: ID, $apostleID: ID) {
-    townSontaLeader(ministryID: $ministryID, apostleID: $apostleID) {
+  query($apostleID: ID) {
+    townSontaLeader(apostleID: $apostleID) {
       memberID
       firstName
       lastName
-      sonta {
-        name
-      }
       leadsSonta {
+        ministry {
+          name
+        }
         name
         town {
           name

@@ -22,9 +22,9 @@ function SearchBox() {
       onSubmit={onSubmit}
     >
       {(formik) => (
-        <Form className="form-inline d-none d-md-block">
+        <Form className=" d-none d-md-block">
           <div className="form-row">
-            <div className="col-auto px-0 d-flex align-items-center">
+            <div className="col-auto px-0 d-flex align-items-center mt-2">
               <FormikControl
                 control="searchbox"
                 name="searchKey"
@@ -34,8 +34,7 @@ function SearchBox() {
                 dataset="globalSearch"
                 aria-describedby="Global Search"
               />
-            </div>
-            <div className="col p-0 d-flex align-items-center">
+
               <button
                 className="btn btn-primary nav-search-button m-0"
                 type="submit"

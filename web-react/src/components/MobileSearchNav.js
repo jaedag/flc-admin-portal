@@ -13,7 +13,6 @@ export const MobileSearchNav = () => {
   }
 
   const onSubmit = (values) => {
-    console.log('Form data', values)
     setSearchKey(values.searchKey)
   }
 

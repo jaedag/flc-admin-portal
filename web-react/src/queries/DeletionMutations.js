@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client'
 
-export const DELETE_CENTRE_MUTATION = gql`
-  mutation RemoveCentre($centreID: ID!) {
-    RemoveCentre(centreID: $centreID)
+export const DELETE_BACENTA_MUTATION = gql`
+  mutation RemoveBacenta($bacentaID: ID!) {
+    RemoveBacenta(bacentaID: $bacentaID)
   }
 `

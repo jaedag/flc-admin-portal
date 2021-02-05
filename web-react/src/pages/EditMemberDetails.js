@@ -5,29 +5,57 @@ import { Formik, Form, FieldArray } from 'formik'
 import * as Yup from 'yup'
 import FormikControl from '../components/formik-components/FormikControl'
 
-import { NEW_MEMBER_MUTATION } from '../queries/AdditionMutations'
+import { EDIT_MEMBER_MUTATION } from '../queries/UpdateMutations'
+import { DISPLAY_MEMBER } from '../queries/DisplayQueries'
 import { HeadingBar } from '../components/HeadingBar'
 import { NavBar } from '../components/NavBar'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
 import Spinner from '../components/Spinner'
-import { MINISTRY_LIST, CENTRE_DROPDOWN } from '../queries/ListQueries'
+import { MINISTRY_LIST, BACENTA_DROPDOWN } from '../queries/ListQueries'
 import { MemberContext } from '../context/MemberContext'
+import { ChurchContext } from '../context/ChurchContext'
 
-export const AddMember = () => {
+export const EditMemberDetails = () => {
+  const { memberID } = useContext(MemberContext)
+  const {
+    data: memberData,
+    error: memberError,
+    loading: memberLoading,
+  } = useQuery(DISPLAY_MEMBER, {
+    variables: { memberID: memberID },
+  })
   const initialValues = {
-    firstName: '',
-    middleName: '',
-    lastName: '',
-    gender: '',
-    phoneNumber: '',
-    whatsappNumber: '',
-    email: '',
-    dob: '',
-    maritalStatus: '',
-    occupation: '',
-    pictureUrl: '',
-    centre: '',
-    sonta: '',
+    firstName: memberData.displayMember.firstName,
+    middleName: memberData.displayMember.middleName
+      ? memberData.displayMember.middleName
+      : '',
+    lastName: memberData.displayMember.lastName,
+    gender: memberData.displayMember.gender
+      ? memberData.displayMember.gender.gender
+      : '',
+    phoneNumber: memberData.displayMember.phoneNumber
+      ? `+${memberData.displayMember.phoneNumber}`
+      : '',
+    whatsappNumber: memberData.displayMember.whatsappNumber
+      ? `+${memberData.displayMember.whatsappNumber}`
+      : '',
+    email: memberData.displayMember.email,
+    dob: memberData.displayMember.dob
+      ? memberData.displayMember.dob.date.formatted
+      : '',
+    maritalStatus: memberData.displayMember.maritalStatus
+      ? memberData.displayMember.maritalStatus.status
+      : '',
+    occupation: memberData.displayMember.occupation
+      ? memberData.displayMember.occupation.occupation
+      : '',
+    pictureUrl: memberData.displayMember.pictureUrl,
+    bacenta: memberData.displayMember.bacenta
+      ? memberData.displayMember.bacenta.bacentaID
+      : '',
+    ministry: memberData.displayMember.sonta
+      ? memberData.displayMember.sonta.ministryID
+      : '',
 
     pastoralHistory: [
       {
@@ -55,11 +83,11 @@ export const AddMember = () => {
   const titleOptions = [
     { key: 'Pastor', value: 'Pastor' },
     { key: 'Reverend', value: 'Reverend' },
-    { key: 'Apostle', value: 'Apostle' },
     { key: 'Bishop', value: 'Bishop' },
   ]
 
-  const { setMemberID } = useContext(MemberContext)
+  const { parsePhoneNum } = useContext(ChurchContext)
+  const history = useHistory()
 
   const phoneRegExp = /^[+][(]{0,1}[1-9]{1,4}[)]{0,1}[-\s/0-9]*$/
   const validationSchema = Yup.object({
@@ -78,8 +106,8 @@ export const AddMember = () => {
       phoneRegExp,
       `Phone Number must start with + and country code (eg. '+233')`
     ),
-    centre: Yup.string().required('This is a required field'),
-    sonta: Yup.string().required('This is a required field'),
+    bacenta: Yup.string().required('This is a required field'),
+    ministry: Yup.string().required('This is a required field'),
   })
 
   //All of the Hooks!
@@ -89,19 +117,14 @@ export const AddMember = () => {
     error: ministryListError,
   } = useQuery(MINISTRY_LIST)
 
-  const [AddMember, { data: newMemberData }] = useMutation(
-    NEW_MEMBER_MUTATION,
-    {
-      onCompleted: (newMemberData) => {
-        setMemberID(newMemberData.AddMember.memberID)
-      },
-    }
-  )
-  console.log(newMemberData)
+  const [EditMemberDetails] = useMutation(EDIT_MEMBER_MUTATION, {
+    refetchQueries: [
+      { query: DISPLAY_MEMBER, variables: { memberID: memberID } },
+    ],
+  })
 
   const [image, setImage] = useState('')
   const [loading, setLoading] = useState(false)
-  const history = useHistory()
 
   const uploadImage = async (e) => {
     const files = e.target.files
@@ -129,19 +152,12 @@ export const AddMember = () => {
     values.pictureUrl = image
 
     //Formatting of phone number fields
-    values.phoneNumber = values.phoneNumber
-      .replace(/\s/g, '')
-      .replace('+', '')
-      .replace('(', '')
-      .replace(')', '')
-    values.whatsappNumber = values.phoneNumber
-      .replace(/\s/g, '')
-      .replace('+', '')
-      .replace('(', '')
-      .replace(')', '')
+    values.phoneNumber = parsePhoneNum(values.phoneNumber)
+    values.whatsappNumber = parsePhoneNum(values.phoneNumber)
 
-    AddMember({
+    EditMemberDetails({
       variables: {
+        memberID: memberID,
         firstName: values.firstName,
         middleName: values.middleName,
         lastName: values.lastName,
@@ -154,22 +170,21 @@ export const AddMember = () => {
         occupation: values.occupation,
         pictureUrl: values.pictureUrl,
 
-        centre: values.centre,
-        sonta: values.sonta,
-
-        pastoralAppointment: values.pastoralAppointment,
-        pastoralHistory: values.pastoralHistory,
+        bacenta: values.bacenta,
+        ministry: values.ministry,
       },
     })
 
     onSubmitProps.setSubmitting(false)
+    onSubmitProps.resetForm()
     history.push('/members/displaydetails')
   }
 
-  if (ministryListLoading) {
-    return <LoadingScreen />
-  } else if (ministryListError) {
+  if (memberError || ministryListError || memberID === '') {
     return <ErrorScreen />
+  } else if (memberLoading || ministryListLoading) {
+    // Spinner Icon for Loading Screens
+    return <LoadingScreen />
   } else {
     const sontaOptions = ministryListData.ministryList.map((sonta) => ({
       value: sonta.ministryID,
@@ -186,7 +201,7 @@ export const AddMember = () => {
         >
           {(formik) => (
             <div className="body-card container body-container mt-5">
-              <h3 className="my-3">Register a New Member</h3>
+              <h3 className="my-3">Edit Member Details</h3>
               <Form className="form-group">
                 <div className="row row-cols-1">
                   {/* <!-- Basic Info Div --> */}
@@ -339,25 +354,25 @@ export const AddMember = () => {
                       <div className="col">
                         <FormikControl
                           control="combobox"
-                          name="centre"
-                          // label="Centre"
-                          placeholder="Centre"
+                          name="bacenta"
+                          // label="newBacenta"
+                          placeholder="newBacenta"
                           setFieldValue={formik.setFieldValue}
-                          optionsQuery={CENTRE_DROPDOWN}
-                          queryVariable="centreName"
+                          optionsQuery={BACENTA_DROPDOWN}
+                          queryVariable="bacentaName"
                           suggestionText="name"
-                          suggestionID="centreID"
-                          dataset="centreDropdown"
-                          aria-describedby="Centre Name"
+                          suggestionID="bacentaID"
+                          dataset="bacentaDropdown"
+                          aria-describedby="newBacenta Name"
                         />
                       </div>
                       <div className="col">
                         <FormikControl
                           className="form-control"
                           control="select"
-                          name="sonta"
+                          name="ministry"
                           options={sontaOptions}
-                          defaultOption="Sonta"
+                          defaultOption="Ministry"
                         />
                       </div>
                     </div>

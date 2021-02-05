@@ -1,53 +1,60 @@
 import React, { useContext } from 'react'
 import { useQuery } from '@apollo/client'
 import {
-  APOSTLE_MEMBER_COUNT,
-  APOSTLE_PASTOR_COUNT,
-  APOSTLE_CAMPUSTOWN_COUNT,
+  BISHOP_MEMBER_COUNT,
+  BISHOP_PASTOR_COUNT,
+  BISHOP_CAMPUSTOWN_COUNT,
+  BISHOP_SONTA_MEMBER_COUNT,
 } from '../queries/CountQueries'
-import { DISPLAY_APOSTLE_NAME } from '../queries/DisplayQueries'
+import { DISPLAY_BISHOP_NAME } from '../queries/DisplayQueries'
 import { NavBar } from '../components/NavBar'
 import { DashboardCard } from '../components/DashboardCard'
 import { DashboardButton } from '../components/DashboardButton'
-import { ApostleContext, ChurchContext } from '../context/ChurchContext'
+import { ChurchContext } from '../contexts/ChurchContext'
 
-const ApostleDashboard = () => {
-  const { apostleID } = useContext(ApostleContext)
-  const { church, capitalise } = useContext(ChurchContext)
+const BishopDashboard = () => {
+  const { church, capitalise, bishopID } = useContext(ChurchContext)
   const {
     data: member,
     error: memberCountError,
     loading: memberCountLoading,
-  } = useQuery(APOSTLE_MEMBER_COUNT, {
-    variables: { apostleID: apostleID },
+  } = useQuery(BISHOP_MEMBER_COUNT, {
+    variables: { bishopID: bishopID },
   })
-  const {
-    data: apostle,
-    error: apostleError,
-    loading: apostleLoading,
-  } = useQuery(DISPLAY_APOSTLE_NAME, {
-    variables: { memberID: apostleID },
-  })
+  const { data: bishop, error: bishopError, loading: bishopLoading } = useQuery(
+    DISPLAY_BISHOP_NAME,
+    {
+      variables: { memberID: bishopID },
+    }
+  )
   const {
     data: pastor,
     error: pastorCountError,
     loading: pastorCountLoading,
-  } = useQuery(APOSTLE_PASTOR_COUNT, {
-    variables: { apostleID: apostleID },
+  } = useQuery(BISHOP_PASTOR_COUNT, {
+    variables: { bishopID: bishopID },
   })
   const {
     data: churchCount,
     error: churchCountError,
     loading: churchCountLoading,
-  } = useQuery(APOSTLE_CAMPUSTOWN_COUNT, {
-    variables: { apostleID: apostleID },
+  } = useQuery(BISHOP_CAMPUSTOWN_COUNT, {
+    variables: { bishopID: bishopID },
+  })
+  const {
+    data: sontaMemberCount,
+    error: bishopSontaError,
+    loading: bishopSontaLoading,
+  } = useQuery(BISHOP_SONTA_MEMBER_COUNT, {
+    variables: { bishopID: bishopID },
   })
 
   if (
     memberCountLoading ||
     pastorCountLoading ||
     churchCountLoading ||
-    apostleLoading
+    bishopLoading ||
+    bishopSontaLoading
   ) {
     return (
       <div>
@@ -90,8 +97,8 @@ const ApostleDashboard = () => {
             </div>
             <div className="col-sm-12 col-md">
               <DashboardButton
-                btnText="Start a Centre"
-                btnLink="/centre/addcentre"
+                btnText="Start a Bacenta"
+                btnLink="/bacenta/addbacenta"
               />
             </div>
             <div className="col-sm-12 col-md">
@@ -109,7 +116,8 @@ const ApostleDashboard = () => {
     memberCountError ||
     pastorCountError ||
     churchCountError ||
-    apostleError
+    bishopError ||
+    bishopSontaError
   ) {
     // console.log(memberCountError, pastorCountError, churchCountError, sontaCountError)
     return (
@@ -148,8 +156,8 @@ const ApostleDashboard = () => {
             </div>
             <div className="col-sm-12 col-md">
               <DashboardButton
-                btnText="Start a Centre"
-                btnLink="/centre/addcentre"
+                btnText="Start a Bacenta"
+                btnLink="/bacenta/addbacenta"
               />
             </div>
             <div className="col-sm-12 col-md">
@@ -169,21 +177,21 @@ const ApostleDashboard = () => {
       <NavBar />
       <div className="container body-container">
         <h4 className="py-4">
-          {`${apostle.displayMember.firstName} ${apostle.displayMember.lastName}`}
+          {`${bishop.displayMember.firstName} ${bishop.displayMember.lastName}`}
           &apos;s Church
         </h4>
         <div className="row row-cols-2 row-cols-lg-4">
           <div className="col">
             <DashboardCard
               name="Members"
-              number={member.apostleMemberCount}
+              number={member.bishopMemberCount}
               cardLink="/members"
             />
           </div>
           <div className="col">
             <DashboardCard
               name="Pastors"
-              number={pastor.apostlePastorCount}
+              number={pastor.bishopPastorCount}
               cardLink="/pastors"
             />
           </div>
@@ -194,14 +202,14 @@ const ApostleDashboard = () => {
                   ? capitalise(church.church) + 's'
                   : capitalise(church.church)
               }
-              number={churchCount.apostleCampusTownCount}
+              number={churchCount.bishopsCampusTownCount}
               cardLink={`/${church.church}/displayall`}
             />
           </div>
           <div className="col">
             <DashboardCard
               name="Ministries"
-              number="0"
+              number={sontaMemberCount.bishopSontaMemberCount}
               cardLink="/sonta/displayall"
             />
           </div>
@@ -216,8 +224,8 @@ const ApostleDashboard = () => {
           </div>
           <div className="col-sm-12 col-md">
             <DashboardButton
-              btnText="Start a Centre"
-              btnLink="/centre/addcentre"
+              btnText="Start a Bacenta"
+              btnLink="/bacenta/addbacenta"
             />
           </div>
           <div className="col-sm-12 col-md">
@@ -232,4 +240,4 @@ const ApostleDashboard = () => {
   )
 }
 
-export default ApostleDashboard
+export default BishopDashboard

@@ -5,16 +5,12 @@ import { useQuery } from '@apollo/client'
 import { NavBar } from '../components/NavBar'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
 import { GET_TOWN_SONTA_LEADERS } from '../queries/ListQueries'
-import { ApostleContext, SontaContext } from '../context/ChurchContext'
-import { MemberContext } from '../context/MemberContext'
+import { ChurchContext } from '../contexts/ChurchContext'
+import { MemberContext } from '../contexts/MemberContext'
 
 export const DisplayAllSontaTowns = () => {
   // Display Ministries per Town
-  const { apostleID } = useContext(ApostleContext)
-  const {
-    ministryID,
-    // , setSontaID
-  } = useContext(SontaContext)
+  const { bishopID, ministryID } = useContext(ChurchContext)
   const { setMemberID } = useContext(MemberContext)
 
   const {
@@ -22,7 +18,7 @@ export const DisplayAllSontaTowns = () => {
     error: sontaError,
     loading: sontaLoading,
   } = useQuery(GET_TOWN_SONTA_LEADERS, {
-    variables: { ministryID: ministryID, apostleID: apostleID },
+    variables: { ministryID: ministryID, bishopID: bishopID },
   })
   console.log(sontaData)
 

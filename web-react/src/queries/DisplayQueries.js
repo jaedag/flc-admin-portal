@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client'
 
-export const DISPLAY_APOSTLE_NAME = gql`
+export const DISPLAY_BISHOP_NAME = gql`
   query displayMember($memberID: ID) {
     displayMember(memberID: $memberID) {
       firstName
@@ -32,20 +32,17 @@ export const DISPLAY_MEMBER = gql`
           year
         }
       }
-      centre {
+      bacenta {
         name
         leader {
           firstName
           lastName
         }
-        community {
+        centre {
           name
           town {
             name
           }
-        }
-        hall {
-          name
           campus {
             name
           }
@@ -77,7 +74,61 @@ export const DISPLAY_MEMBER = gql`
         }
         historyRecord
       }
+      leadsBacenta {
+        bacentaID
+        name
+      }
+      leadsCentre {
+        centreID
+        name
+      }
+      townGSO {
+        townID
+        name
+      }
+      campusGSO {
+        campusID
+        name
+      }
+      leadsSonta {
+        sontaID
+        name
+      }
+      leadsMinistry {
+        ministryID
+        name
+      }
+      townBishop {
+        townID
+        name
+      }
+      campusBishop {
+        campusID
+        name
+      }
     }
+  }
+`
+
+export const DISPLAY_BACENTA = gql`
+  query displayBacenta($bacentaID: ID) {
+    displayBacenta(bacentaID: $bacentaID) {
+      name
+      meetingDay {
+        day
+      }
+      leader {
+        memberID
+        firstName
+        lastName
+        title {
+          Title {
+            title
+          }
+        }
+      }
+    }
+    bacentaMemberCount(bacentaID: $bacentaID)
   }
 `
 
@@ -85,10 +136,12 @@ export const DISPLAY_CENTRE = gql`
   query displayCentre($centreID: ID) {
     displayCentre(centreID: $centreID) {
       name
-      meetingDay {
-        day
+      bacentas {
+        bacentaID
+        name
       }
       leader {
+        memberID
         firstName
         lastName
         title {
@@ -99,52 +152,7 @@ export const DISPLAY_CENTRE = gql`
       }
     }
     centreMemberCount(centreID: $centreID)
-  }
-`
-
-export const DISPLAY_COMMUNITY = gql`
-  query displayCommunity($communityID: ID) {
-    displayCommunity(communityID: $communityID) {
-      name
-      centres {
-        centreID
-        name
-      }
-      leader {
-        firstName
-        lastName
-        title {
-          Title {
-            title
-          }
-        }
-      }
-    }
-    communityMemberCount(communityID: $communityID)
-    communityCentreCount(communityID: $communityID)
-  }
-`
-
-export const DISPLAY_HALL = gql`
-  query displayHall($hallID: ID) {
-    displayHall(hallID: $hallID) {
-      name
-      centres {
-        centreID
-        name
-      }
-      leader {
-        firstName
-        lastName
-        title {
-          Title {
-            title
-          }
-        }
-      }
-    }
-    hallMemberCount(hallID: $hallID)
-    hallCentreCount(hallID: $hallID)
+    centreBacentaCount(centreID: $centreID)
   }
 `
 
@@ -152,11 +160,12 @@ export const DISPLAY_TOWN = gql`
   query displayTown($townID: ID) {
     displayTown(townID: $townID) {
       name
-      communities {
-        communityID
+      centres {
+        centreID
         name
       }
       leader {
+        memberID
         firstName
         lastName
         title {
@@ -167,7 +176,7 @@ export const DISPLAY_TOWN = gql`
       }
     }
     townMemberCount(townID: $townID)
-    townCommunityCount(townID: $townID)
+    townCentreCount(townID: $townID)
   }
 `
 
@@ -175,11 +184,12 @@ export const DISPLAY_CAMPUS = gql`
   query displayCampus($campusID: ID) {
     displayCampus(campusID: $campusID) {
       name
-      halls {
-        hallID
+      centres {
+        centreID
         name
       }
       leader {
+        memberID
         firstName
         lastName
         title {
@@ -190,6 +200,6 @@ export const DISPLAY_CAMPUS = gql`
       }
     }
     campusMemberCount(campusID: $campusID)
-    campusHallCount(campusID: $campusID)
+    campusCentreCount(campusID: $campusID)
   }
 `

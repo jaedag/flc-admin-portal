@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 // import { useQuery } from '@apollo/client'
 import { Link } from 'react-router-dom'
 import SearchBox from './SearchBox'
-import { ChurchContext } from '../context/ChurchContext'
+import { ChurchContext } from '../contexts/ChurchContext'
 
 export const NavBar = () => {
   const { church, capitalise } = useContext(ChurchContext)

@@ -12,7 +12,7 @@ export const NEW_MEMBER_MUTATION = gql`
     $maritalStatus: String!
     $gender: String!
     $occupation: String
-    $centre: String!
+    $bacenta: String!
     $sonta: String
     $pictureUrl: String!
     $pastoralHistory: [pastoralHistory]
@@ -29,7 +29,7 @@ export const NEW_MEMBER_MUTATION = gql`
       maritalStatus: $maritalStatus
       gender: $gender
       occupation: $occupation
-      centre: $centre
+      bacenta: $bacenta
       sonta: $sonta
       pictureUrl: $pictureUrl
       pastoralHistory: $pastoralHistory
@@ -64,26 +64,43 @@ export const ADD_LEADER_TITLE_MUTATION = gql`
   }
 `
 
-export const CREATE_CENTRE_MUTATION = gql`
-  mutation AddCentre(
-    $centreName: String!
-    $centreLeaderFName: String
-    $centreLeaderLName: String
+export const CREATE_BACENTA_MUTATION = gql`
+  mutation AddBacenta(
+    $bacentaName: String!
+    $bacentaLeaderFName: String
+    $bacentaLeaderLName: String
     $lWhatsappNumber: String
-    $communityID: ID
+    $centreID: ID
     $meetingDay: String!
     $venueLongitude: Float
     $venueLatitude: Float
   ) {
-    AddCentre(
-      centreName: $centreName
-      centreLeaderFName: $centreLeaderFName
-      centreLeaderLName: $centreLeaderLName
+    AddBacenta(
+      bacentaName: $bacentaName
+      bacentaLeaderFName: $bacentaLeaderFName
+      bacentaLeaderLName: $bacentaLeaderLName
       lWhatsappNumber: $lWhatsappNumber
-      communityID: $communityID
+      centreID: $centreID
       meetingDay: $meetingDay
       venueLongitude: $venueLongitude
       venueLatitude: $venueLatitude
+    ) {
+      bacentaID
+      name
+    }
+  }
+`
+
+export const CREATE_CENTRE_MUTATION = gql`
+  mutation AddCentre(
+    $centreName: String
+    $lWhatsappNumber: String
+    $townID: ID
+  ) {
+    AddCentre(
+      centreName: $centreName
+      lWhatsappNumber: $lWhatsappNumber
+      town: $townID
     ) {
       centreID
       name
@@ -91,35 +108,31 @@ export const CREATE_CENTRE_MUTATION = gql`
   }
 `
 
-export const CREATE_COMMUNITY_MUTATION = gql`
-  mutation AddCommunity(
-    $communityName: String
-    $lWhatsappNumber: String
-    $townID: ID
-  ) {
-    AddCommunity(
-      communityName: $communityName
+export const CREATE_TOWN_MUTATION = gql`
+  mutation AddTown($townName: String, $lWhatsappNumber: String, $bishopID: ID) {
+    AddTown(
+      townName: $townName
       lWhatsappNumber: $lWhatsappNumber
-      town: $townID
+      bishopID: $bishopID
     ) {
-      communityID
+      townID
       name
     }
   }
 `
 
-export const CREATE_TOWN_MUTATION = gql`
-  mutation AddTown(
-    $townName: String
+export const CREATE_CAMPUS_MUTATION = gql`
+  mutation AddCampus(
+    $campusName: String
     $lWhatsappNumber: String
-    $apostleID: ID
+    $bishopID: ID
   ) {
-    AddTown(
-      townName: $townName
+    AddCampus(
+      campusName: $townName
       lWhatsappNumber: $lWhatsappNumber
-      apostleID: $apostleID
+      bishopID: $bishopID
     ) {
-      townID
+      campusID
       name
     }
   }

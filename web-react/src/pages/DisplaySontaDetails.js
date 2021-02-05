@@ -3,20 +3,19 @@ import { useQuery } from '@apollo/client'
 import { DisplayChurchDetails } from '../components/DisplayChurchDetails'
 import { NavBar } from '../components/NavBar'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
-import { DISPLAY_CENTRE } from '../queries/DisplayQueries'
-import { SontaContext } from '../context/ChurchContext'
+import { DISPLAY_BACENTA } from '../queries/DisplayQueries'
+import { ChurchContext } from '../contexts/ChurchContext'
 
 export const DisplaySontaDetails = () => {
-  const { sontaID } = useContext(SontaContext)
+  const { sontaID } = useContext(ChurchContext)
 
   const {
     data: sontaData,
     error: sontaError,
     loading: sontaLoading,
-  } = useQuery(DISPLAY_CENTRE, {
+  } = useQuery(DISPLAY_BACENTA, {
     variables: { sontaID: sontaID },
   })
-  console.log(sontaData)
 
   if (sontaError) {
     return <ErrorScreen />
@@ -28,15 +27,16 @@ export const DisplaySontaDetails = () => {
     <div>
       <NavBar />
       <DisplayChurchDetails
-        name={sontaData.displayCentre.name}
-        leaderTitle="Centre Leader"
-        leaderName={`${sontaData.displayCentre.leader.firstName} ${sontaData.displayCentre.leader.lastName}`}
-        membership={sontaData.centreMemberCount}
+        name={sontaData.displayBacenta.name}
+        leaderTitle="Bacenta Leader"
+        leaderName={`${sontaData.displayBacenta.leader.firstName} ${sontaData.displayBacenta.leader.lastName}`}
+        leaderID={sontaData.displayBacenta.leader.memberID}
+        membership={sontaData.bacentaMemberCount}
         churchHeading="No of Bacentas"
         churchNo="2"
         subChurch="Bacenta"
         subChurchSetter=""
-        churchType="Centre"
+        churchType="Bacenta"
         buttons={['']}
       />
     </div>

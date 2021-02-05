@@ -11,9 +11,9 @@ export const ALL_MEMBERS = gql`
   }
 `
 
-export const GET_APOSTLE_MEMBERS = gql`
-  query($apostleID: ID) {
-    apostleMemberList(apostleID: $apostleID, first: 60) {
+export const GET_BISHOP_MEMBERS = gql`
+  query($bishopID: ID) {
+    bishopMemberList(bishopID: $bishopID, first: 60) {
       memberID
       firstName
       lastName
@@ -22,9 +22,9 @@ export const GET_APOSTLE_MEMBERS = gql`
   }
 `
 
-export const GET_APOSTLE_PASTORS = gql`
-  query($apostleID: ID) {
-    apostlePastorList(apostleID: $apostleID, first: 60) {
+export const GET_BISHOP_PASTORS = gql`
+  query($bishopID: ID) {
+    bishopPastorList(bishopID: $bishopID, first: 60) {
       memberID
       firstName
       lastName
@@ -33,12 +33,12 @@ export const GET_APOSTLE_PASTORS = gql`
   }
 `
 
-export const GET_CENTRE_LEADERS = gql`
+export const GET_BACENTA_LEADERS = gql`
   {
     townList(firstName: $firstName, lastName: $lastName) {
-      communities {
-        centres {
-          centreLeader {
+      centres {
+        bacentas {
+          bacentaLeader {
             firstName
             lastName
           }
@@ -48,24 +48,16 @@ export const GET_CENTRE_LEADERS = gql`
   }
 `
 
-export const GET_CENTRES = gql`
-  query($communityID: ID, $hallID: ID) {
-    centreList(communityID: $communityID, hallID: $hallID) {
-      centreID
+export const GET_BACENTAS = gql`
+  query($centreID: ID) {
+    bacentaList(centreID: $centreID) {
+      bacentaID
       name
       leader {
         firstName
         lastName
       }
-      community {
-        name
-        leader {
-          memberID
-          firstName
-          lastName
-        }
-      }
-      hall {
+      centre {
         name
         leader {
           memberID
@@ -77,17 +69,15 @@ export const GET_CENTRES = gql`
   }
 `
 
-export const CENTRE_DROPDOWN = gql`
-  query($centreName: String) {
-    centreDropdown(centreName: $centreName, first: 8) {
-      centreID
+export const BACENTA_DROPDOWN = gql`
+  query($bacentaName: String) {
+    bacentaDropdown(bacentaName: $bacentaName, first: 8) {
+      bacentaID
       name
-      hall {
+      centre {
         campus {
           name
         }
-      }
-      community {
         town {
           name
         }
@@ -96,10 +86,27 @@ export const CENTRE_DROPDOWN = gql`
   }
 `
 
-export const GET_COMMUNITIES = gql`
-  query($townID: ID) {
-    communityList(townID: $townID) {
-      communityID
+export const CENTRE_DROPDOWN = gql`
+  query($bacentaName: String) {
+    bacentaDropdown(bacentaName: $bacentaName, first: 8) {
+      bacentaID
+      name
+      centre {
+        campus {
+          name
+        }
+        town {
+          name
+        }
+      }
+    }
+  }
+`
+
+export const GET_CENTRES = gql`
+  query($townID: ID, $campusID: ID) {
+    centreList(townID: $townID, campusID: $campusID) {
+      centreID
       name
       town {
         name
@@ -112,19 +119,6 @@ export const GET_COMMUNITIES = gql`
           name
         }
       }
-      leader {
-        firstName
-        lastName
-      }
-    }
-  }
-`
-
-export const GET_HALLS = gql`
-  query($campusID: ID) {
-    hallList(campusID: $campusID) {
-      hallID
-      name
       campus {
         name
         leader {
@@ -145,8 +139,8 @@ export const GET_HALLS = gql`
 `
 
 export const GET_TOWN_SONTA_LEADERS = gql`
-  query($apostleID: ID) {
-    townSontaLeader(apostleID: $apostleID) {
+  query($bishopID: ID) {
+    townSontaLeader(bishopID: $bishopID) {
       memberID
       firstName
       lastName
@@ -164,8 +158,8 @@ export const GET_TOWN_SONTA_LEADERS = gql`
 `
 
 export const GET_CAMPUSES = gql`
-  query($apostleID: ID) {
-    campusList(apostleID: $apostleID) {
+  query($bishopID: ID) {
+    campusList(bishopID: $bishopID) {
       name
       campusID
       leader {
@@ -176,7 +170,7 @@ export const GET_CAMPUSES = gql`
       sontas {
         name
       }
-      apostle {
+      bishop {
         memberID
         firstName
         lastName
@@ -186,8 +180,8 @@ export const GET_CAMPUSES = gql`
 `
 
 export const GET_TOWNS = gql`
-  query($apostleID: ID) {
-    townList(apostleID: $apostleID) {
+  query($bishopID: ID) {
+    townList(bishopID: $bishopID) {
       name
       townID
       leader {
@@ -198,7 +192,7 @@ export const GET_TOWNS = gql`
       sontas {
         name
       }
-      apostle {
+      bishop {
         memberID
         firstName
         lastName
@@ -207,19 +201,24 @@ export const GET_TOWNS = gql`
   }
 `
 
-export const GET_APOSTLES = gql`
+export const GET_BISHOPS = gql`
   query {
-    apostlesList {
+    bishopsList {
       memberID
       firstName
       lastName
       pictureUrl
-      town {
+      townBishop {
         name
       }
-      campus {
+      campusBishop {
         name
       }
+    }
+    bishopsListCampus {
+      memberID
+      firstName
+      lastName
     }
   }
 `
@@ -233,10 +232,10 @@ export const MINISTRY_LIST = gql`
   }
 `
 
-export const CENTRE_LIST = gql`
-  query($communityID: ID) {
-    centreList(communityID: $communityID) {
-      centreID
+export const BACENTA_LIST = gql`
+  query($centreID: ID) {
+    bacentaList(centreID: $centreID) {
+      bacentaID
       name
       leader
     }

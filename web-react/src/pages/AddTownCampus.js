@@ -5,38 +5,34 @@ import { Formik, Form, FieldArray } from 'formik'
 import * as Yup from 'yup'
 import FormikControl from '../components/formik-components/FormikControl'
 
-import {
-  GET_CAMPUS_APOSTLES,
-  GET_TOWN_APOSTLES,
-  HALL_DROPDOWN,
-  COMMUNITY_DROPDOWN,
-} from '../queries/ListQueries'
+import { GET_BISHOPS, CENTRE_DROPDOWN } from '../queries/ListQueries'
 import {
   CREATE_TOWN_MUTATION,
   CREATE_CAMPUS_MUTATION,
 } from '../queries/AdditionMutations'
 import { NavBar } from '../components/NavBar'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
-import {
-  ApostleContext,
-  CampusTownContext,
-  ChurchContext,
-} from '../context/ChurchContext'
+import { ChurchContext } from '../contexts/ChurchContext'
 
 function AddTownCampus() {
-  const { church, capitalise, parsePhoneNum, phoneRegExp } = useContext(
-    ChurchContext
-  )
-  const { setTownID, setCampusID } = useContext(CampusTownContext)
-  const { setApostleID } = useContext(ApostleContext)
+  const {
+    church,
+    capitalise,
+    parsePhoneNum,
+    phoneRegExp,
+    setTownID,
+    setCampusID,
+    setBishopID,
+  } = useContext(ChurchContext)
+
   const history = useHistory()
 
   const initialValues = {
     campusTownName: '',
     leaderName: '',
     leaderWhatsapp: '',
-    apostleSelect: '',
-    communityHalls: [''],
+    bishopSelect: '',
+    centres: [''],
   }
 
   const validationSchema = Yup.object({
@@ -51,7 +47,6 @@ function AddTownCampus() {
 
   const [AddTown] = useMutation(CREATE_TOWN_MUTATION, {
     onCompleted: (newTownData) => {
-      console.log(newTownData)
       setTownID(newTownData.AddTown.townID)
     },
   })
@@ -63,42 +58,33 @@ function AddTownCampus() {
   })
 
   const {
-    data: apostleCampusData,
-    loading: apostleCampusLoading,
-    error: apostleCampusError,
-  } = useQuery(GET_CAMPUS_APOSTLES)
-  const {
-    data: apostleTownData,
-    loading: apostleTownLoading,
-    error: apostleTownError,
-  } = useQuery(GET_TOWN_APOSTLES)
+    data: bishopData,
+    loading: bishopLoading,
+    error: bishopError,
+  } = useQuery(GET_BISHOPS)
 
-  if (apostleCampusError || apostleTownError) {
+  if (bishopError) {
     return <ErrorScreen />
-  } else if (apostleCampusLoading || apostleTownLoading) {
+  } else if (bishopLoading) {
     return <LoadingScreen />
   } else if (
-    (apostleCampusData && church.church === 'campus') ||
-    (apostleTownData && church.church === 'town')
+    (bishopData && church.church === 'campus') ||
+    (bishopData && church.church === 'town')
   ) {
-    const apostleCampusOptions = apostleCampusData.apostlesListCampus.map(
-      (apostle) => ({
-        value: apostle.memberID,
-        key: apostle.firstName + ' ' + apostle.lastName,
-      })
-    )
+    const bishopCampusOptions = bishopData.bishopsListCampus.map((bishop) => ({
+      value: bishop.memberID,
+      key: bishop.firstName + ' ' + bishop.lastName,
+    }))
 
     //Refactoring the Options into Something that can be read by my formik component
-    const apostleTownOptions = apostleTownData.apostlesListTown.map(
-      (apostle) => ({
-        value: apostle.memberID,
-        key: apostle.firstName + ' ' + apostle.lastName,
-      })
-    )
+    const bishopTownOptions = bishopData.bishopsListTown.map((bishop) => ({
+      value: bishop.memberID,
+      key: bishop.firstName + ' ' + bishop.lastName,
+    }))
 
     //onSubmit receives the form state as argument
     const onSubmit = (values, onSubmitProps) => {
-      setApostleID(values.apostleSelect)
+      setBishopID(values.bishopSelect)
       values.leaderWhatsapp = parsePhoneNum(values.leaderWhatsapp)
 
       if (church.church === 'town') {
@@ -106,8 +92,8 @@ function AddTownCampus() {
           variables: {
             townName: values.campusTownName,
             lWhatsappNumber: values.leaderWhatsapp,
-            apostleID: values.apostleSelect,
-            communities: values.communityHalls,
+            bishopID: values.bishopSelect,
+            centres: values.centres,
           },
         })
       } else if (church.church === 'campus') {
@@ -116,8 +102,8 @@ function AddTownCampus() {
           variables: {
             campusName: values.campusTownName,
             lWhatsappNumber: values.leaderWhatsapp,
-            apostleID: values.apostleSelect,
-            halls: values.communityHalls,
+            bishopID: values.bishopSelect,
+            centres: values.centres,
           },
         })
       }
@@ -150,13 +136,13 @@ function AddTownCampus() {
                           <FormikControl
                             className="form-control"
                             control="select"
-                            name="apostleSelect"
+                            name="bishopSelect"
                             options={
                               church.church === 'campus'
-                                ? apostleCampusOptions
-                                : apostleTownOptions
+                                ? bishopCampusOptions
+                                : bishopTownOptions
                             }
-                            defaultOption="Select an Apostle"
+                            defaultOption="Select an Bishop"
                           />
                         </div>
                       </div>
@@ -195,34 +181,30 @@ function AddTownCampus() {
                       </div>
                       <small className="pt-2">
                         {`Select any ${
-                          church.church === 'town' ? 'Communities' : 'Halls'
+                          church.church === 'town' ? 'Centres' : 'centres'
                         } that are being moved to this ${capitalise(
                           church.church
                         )}`}
                       </small>
-                      <FieldArray name="communityHalls">
+                      <FieldArray name="centres">
                         {(fieldArrayProps) => {
                           const { push, remove, form } = fieldArrayProps
                           const { values } = form
-                          const { communityHalls } = values
+                          const { centres } = values
 
                           return (
                             <div>
-                              {communityHalls.map((communityHalls, index) => (
+                              {centres.map((centres, index) => (
                                 <div key={index} className="form-row row-cols">
                                   <div className="col-9">
                                     <FormikControl
                                       control="combobox"
-                                      name={`communityHalls[${index}]`}
+                                      name={`centres[${index}]`}
                                       placeholder={`${capitalise(
                                         church.subChurch
                                       )} Name`}
                                       setFieldValue={formik.setFieldValue}
-                                      optionsQuery={
-                                        church.church === 'town'
-                                          ? COMMUNITY_DROPDOWN
-                                          : HALL_DROPDOWN
-                                      }
+                                      optionsQuery={CENTRE_DROPDOWN}
                                       queryVariable={`${church.subChurch}Name`}
                                       suggestionText="name"
                                       suggestionID={`${church.subChurch}ID`}

@@ -10,7 +10,7 @@ import { DISPLAY_MEMBER } from '../queries/DisplayQueries'
 import { HeadingBar } from '../components/HeadingBar'
 import { NavBar } from '../components/NavBar'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
-import { MemberContext } from '../context/MemberContext'
+import { ChurchContext } from '../context/ChurchContext'
 
 export const AddLeadershipHistory = () => {
   const initialValues = {
@@ -22,7 +22,7 @@ export const AddLeadershipHistory = () => {
     ],
   }
 
-  const { memberID } = useContext(MemberContext)
+  const { memberID } = useContext(ChurchContext)
 
   const history = useHistory()
   const {

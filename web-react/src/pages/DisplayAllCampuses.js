@@ -5,24 +5,21 @@ import { DisplayChurchList } from '../components/DisplayChurchList'
 import { NavBar } from '../components/NavBar'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
 import { GET_CAMPUSES } from '../queries/ListQueries'
-import { ApostleContext, CampusTownContext } from '../context/ChurchContext'
-import { MemberContext } from '../context/MemberContext'
-import { APOSTLE_MEMBER_COUNT } from '../queries/CountQueries'
+import { ChurchContext } from '../contexts/ChurchContext'
+import { BISHOP_MEMBER_COUNT } from '../queries/CountQueries'
 
 export const DisplayAllCampuses = () => {
-  const { apostleID } = useContext(ApostleContext)
-  const { setCampusID } = useContext(CampusTownContext)
-  const { setMemberID } = useContext(MemberContext)
+  const { bishopID, setCampusID, setMemberID } = useContext(ChurchContext)
 
   const {
     data: campusData,
     error: campusError,
     loading: campusLoading,
   } = useQuery(GET_CAMPUSES, {
-    variables: { apostleID: apostleID },
+    variables: { bishopID: bishopID },
   })
-  const { data: apostleMemberCount } = useQuery(APOSTLE_MEMBER_COUNT, {
-    variables: { apostleID: apostleID },
+  const { data: bishopMemberCount } = useQuery(BISHOP_MEMBER_COUNT, {
+    variables: { bishopID: bishopID },
   })
 
   if (campusError) {
@@ -41,10 +38,10 @@ export const DisplayAllCampuses = () => {
               <Link
                 to="/members/displaydetails"
                 onClick={() => {
-                  setMemberID(`${campusData.campusList[0].apostle.memberID}`)
+                  setMemberID(`${campusData.campusList[0].bishop.memberID}`)
                 }}
               >
-                <h4>{`${campusData.campusList[0].apostle.firstName} ${campusData.campusList[0].apostle.lastName}'s Campuses`}</h4>
+                <h4>{`${campusData.campusList[0].bishop.firstName} ${campusData.campusList[0].bishop.lastName}'s Campuses`}</h4>
               </Link>
             </div>
             <div className="col-auto">
@@ -58,7 +55,7 @@ export const DisplayAllCampuses = () => {
             <div className="py-1 px-3 m-2 card">{`Campuses: ${campusData.campusList.length}`}</div>
 
             <div className="py-1 px-3 m-2 card">{`Membership: ${
-              apostleMemberCount ? apostleMemberCount.apostleMemberCount : null
+              bishopMemberCount ? bishopMemberCount.bishopMemberCount : null
             }`}</div>
           </div>
         </div>

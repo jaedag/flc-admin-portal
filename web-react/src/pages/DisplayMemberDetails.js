@@ -1,11 +1,12 @@
 import React, { useContext } from 'react'
+import { Link } from 'react-router-dom'
 import { useQuery } from '@apollo/client'
 import { NavBar } from '../components/NavBar'
 import { MemberCard } from '../components/MemberCard'
 import { DISPLAY_MEMBER } from '../queries/DisplayQueries'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
-import { MemberContext } from '../context/MemberContext'
-import { ChurchContext } from '../context/ChurchContext'
+import { MemberContext } from '../contexts/MemberContext'
+import { ChurchContext } from '../contexts/ChurchContext'
 
 export const DisplayMemberDetails = () => {
   const monthNames = [
@@ -23,7 +24,15 @@ export const DisplayMemberDetails = () => {
     'Dec',
   ]
   const { memberID } = useContext(MemberContext)
-  const { church, capitalise } = useContext(ChurchContext)
+  const {
+    church,
+    capitalise,
+    setBacentaID,
+    setCentreID,
+    setTownID,
+    setCampusID,
+    setSontaID,
+  } = useContext(ChurchContext)
 
   const {
     data: memberData,
@@ -39,6 +48,71 @@ export const DisplayMemberDetails = () => {
     // Spinner Icon for Loading Screens
     return <LoadingScreen />
   }
+
+  let rank = []
+
+  if (memberData.displayMember.leadsBacenta[0]) {
+    rank.push({
+      desc: `Bacenta Leader of ${memberData.displayMember.leadsBacenta[0].name}`,
+      link: '/bacenta/displaydetails',
+      setter: { setBacentaID },
+    })
+  }
+  if (memberData.displayMember.leadsCentre[0]) {
+    rank.push({
+      desc: `Centre Leader of ${memberData.displayMember.leadsCentre.name}`,
+      link: '/centre/displaydetails',
+      setter: { setCentreID },
+    })
+  }
+  if (memberData.displayMember.townGSO[0]) {
+    rank.push({
+      desc: `Con Rep of ${memberData.displayMember.townGSO.name}`,
+      link: '/town/displaydetails',
+      set: { setTownID },
+    })
+  }
+  if (memberData.displayMember.campusGSO[0]) {
+    rank.push({
+      detail: memberData.displayMember.campusGSO.map((campus) => ({
+        desc: `Con Rep of ${campus.name}`,
+        id: campus.campusID,
+        setter: { setCampusID },
+      })),
+      link: '/campus/displaydetails',
+    })
+  }
+  if (memberData.displayMember.leadsSonta[0]) {
+    rank.push({
+      detail: memberData.displayMember.leadsSonta.map((sonta) => ({
+        desc: `Sonta Leader of ${sonta.name}`,
+        id: sonta.sontaID,
+      })),
+      link: '/sonta/displaydetails',
+      setter: { setSontaID },
+    })
+  }
+  if (memberData.displayMember.leadsMinistry[0]) {
+    rank.push({
+      desc: `Ministry Leader of ${memberData.displayMember.leadsMinistry.name}`,
+      link: '',
+      setMinistryID: '',
+    })
+  }
+  if (memberData.displayMember.townBishop[0]) {
+    rank.push({
+      desc: `Town Bishop`,
+      link: '/dashboard',
+    })
+  }
+
+  if (memberData.displayMember.campusBishop[0]) {
+    rank.push({
+      desc: `Campus Bishop`,
+      link: '/dashboard',
+    })
+  }
+  // console.log(rank)
 
   return (
     <div className="container pt-5">
@@ -78,9 +152,25 @@ export const DisplayMemberDetails = () => {
                     </div>
                     <div className="col d-flex justify-content-center mb-2">
                       <p className="font-weight-light card-text">
-                        {memberData.displayMember.centre
-                          ? `Centre: ${memberData.displayMember.centre.name}`
-                          : `Centre: ${null}`}
+                        {
+                          //Rank Discussions
+                          rank
+                            ? rank.map((rank, i) => (
+                                <Link key={i} to={rank.link}>
+                                  {rank.detail.map((detail, i) => (
+                                    <p
+                                      key={i}
+                                      onClick={() => {
+                                        detail.set(detail.id)
+                                      }}
+                                    >
+                                      {detail.desc}
+                                    </p>
+                                  ))}
+                                </Link>
+                              ))
+                            : null
+                        }
                       </p>
                     </div>
                     <div className="col d-flex justify-content-center  mt-2">
@@ -180,7 +270,7 @@ export const DisplayMemberDetails = () => {
                         <p className="font-weight-bold card-text">
                           {memberData.displayMember.occupation
                             ? memberData.displayMember.occupation.occupation
-                            : 'No Occupation'}
+                            : '-'}
                         </p>
                       </div>
                     </div>
@@ -260,10 +350,12 @@ export const DisplayMemberDetails = () => {
                       </div>
                       <div className="col">
                         <p className="font-weight-bold card-text">
-                          {memberData.displayMember.centre
-                            ? memberData.displayMember.centre[
-                                `${church.subChurch}`
-                              ][`${church.church}`].name
+                          {memberData.displayMember.bacenta
+                            ? memberData.displayMember.bacenta.name
+                              ? memberData.displayMember.bacenta[
+                                  `${church.subChurch}`
+                                ][`${church.church}`].name
+                              : null
                             : null}
                         </p>
                       </div>
@@ -276,10 +368,12 @@ export const DisplayMemberDetails = () => {
                       </div>
                       <div className="col">
                         <p className="font-weight-bold card-text">
-                          {memberData.displayMember.centre
-                            ? memberData.displayMember.centre[
-                                `${church.subChurch}`
-                              ].name
+                          {memberData.displayMember.bacenta
+                            ? memberData.displayMember.bacenta.name
+                              ? memberData.displayMember.bacenta[
+                                  `${church.subChurch}`
+                                ].name
+                              : null
                             : null}
                         </p>
                       </div>
@@ -287,13 +381,15 @@ export const DisplayMemberDetails = () => {
                     <div className="row mb-2">
                       <div className="col">
                         <p className="text-secondary card-text">
-                          Centre Shepherd
+                          Bacenta Shepherd
                         </p>
                       </div>
                       <div className="col">
                         <p className="font-weight-bold card-text">
-                          {memberData.displayMember.centre
-                            ? `${memberData.displayMember.centre.leader.firstName} ${memberData.displayMember.centre.leader.lastName}`
+                          {memberData.displayMember.bacenta
+                            ? memberData.displayMember.bacenta.name
+                              ? `${memberData.displayMember.bacenta.leader.firstName} ${memberData.displayMember.bacenta.leader.lastName}`
+                              : null
                             : null}
                         </p>
                       </div>

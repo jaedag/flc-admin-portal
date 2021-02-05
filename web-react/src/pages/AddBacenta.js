@@ -5,21 +5,17 @@ import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 import FormikControl from '../components/formik-components/FormikControl'
 
-import { GET_COMMUNITIES, GET_TOWNS } from '../queries/ListQueries'
-import { CREATE_CENTRE_MUTATION } from '../queries/AdditionMutations'
+import { GET_CENTRES, GET_TOWNS } from '../queries/ListQueries'
+import { CREATE_BACENTA_MUTATION } from '../queries/AdditionMutations'
 import { NavBar } from '../components/NavBar'
 import SpinnerPage from '../components/SpinnerPage'
-import {
-  CampusTownContext,
-  CentreContext,
-  ApostleContext,
-} from '../context/ChurchContext'
+import { ChurchContext } from '../contexts/ChurchContext'
 
-function AddCentre() {
+export const AddBacenta = () => {
   const initialValues = {
-    centreName: '',
-    centreLeaderName: '',
-    centreLeaderWhatsApp: '',
+    bacentaName: '',
+    bacentaLeaderName: '',
+    bacentaLeaderWhatsApp: '',
     whatsappNumber: '',
     meetingDay: '',
     venueLatitude: '',
@@ -36,9 +32,9 @@ function AddCentre() {
 
   const phoneRegExp = /^[+][(]{0,1}[1-9]{1,4}[)]{0,1}[-\s/0-9]*$/
   const validationSchema = Yup.object({
-    centreName: Yup.string().required('Centre Name is a required field'),
-    centreLeaderName: Yup.string().required('This is a required field'),
-    centreLeaderWhatsApp: Yup.string().matches(
+    bacentaName: Yup.string().required('Bacenta Name is a required field'),
+    bacentaLeaderName: Yup.string().required('This is a required field'),
+    bacentaLeaderWhatsApp: Yup.string().matches(
       phoneRegExp,
       `Phone Number must start with + and country code (eg. '+233')`
     ),
@@ -47,27 +43,27 @@ function AddCentre() {
     venueLongitude: Yup.string().required('Please fill in your location info'),
   })
 
-  const { apostleID } = useContext(ApostleContext)
-  const { townID, setTownID } = useContext(CampusTownContext)
-  const { centreID, setCentreID } = useContext(CentreContext)
-  // const { positionLoading, setPositionLoading } = useState(true)
-  const [AddCentre, { data: newCentreData }] = useMutation(
-    CREATE_CENTRE_MUTATION,
+  const { bishopID, townID, setTownID, bacentaID, setBacentaID } = useContext(
+    ChurchContext
+  )
+
+  const [AddBacenta, { data: newBacentaData }] = useMutation(
+    CREATE_BACENTA_MUTATION,
     {
-      onCompleted: (newCentreData) => {
-        setCentreID(newCentreData.AddCentre.centreID)
+      onCompleted: (newBacentaData) => {
+        setBacentaID(newBacentaData.AddBacenta.bacentaID)
       },
     }
   )
-  console.log(newCentreData)
+  console.log(newBacentaData)
   const history = useHistory()
 
   const { data: townListData, loading: townListLoading } = useQuery(GET_TOWNS, {
-    variables: { apostleID: apostleID },
+    variables: { bishopID: bishopID },
   })
 
   const { data: communityListData, loading: communityListLoading } = useQuery(
-    GET_COMMUNITIES,
+    GET_CENTRES,
     {
       variables: { townID: townID },
     }
@@ -87,11 +83,11 @@ function AddCentre() {
 
     //onSubmit receives the form state as argument
     const onSubmit = (values, onSubmitProps) => {
-      AddCentre({
+      AddBacenta({
         variables: {
-          centreName: values.centreName,
-          centreLeaderFName: values.centreLeaderFName,
-          centreLeaderLName: values.centreLeaderLName,
+          bacentaName: values.bacentaName,
+          bacentaLeaderFName: values.bacentaLeaderFName,
+          bacentaLeaderLName: values.bacentaLeaderLName,
           lWhatsappNumber: values.whatsappNumber,
           communityID: values.communitySelect,
           meetingDay: values.meetingDay,
@@ -101,9 +97,9 @@ function AddCentre() {
       })
       // console.log('Form data', values)
       onSubmitProps.setSubmitting(false)
-      console.log('Centre ID', centreID)
+      console.log('Bacenta ID', bacentaID)
       // onSubmitProps.resetForm()
-      history.push('/centre/displaydetails')
+      history.push('/bacenta/displaydetails')
     }
 
     return (
@@ -116,7 +112,7 @@ function AddCentre() {
         >
           {(formik) => (
             <div className="body-card py-4 container mt-5">
-              <div className="container infobar">Start a New Centre</div>
+              <div className="container infobar">Start a New Bacenta</div>
               <Form>
                 <div className="form-group">
                   <div className="row row-cols-1 row-cols-md-2">
@@ -149,8 +145,8 @@ function AddCentre() {
                           <FormikControl
                             className="form-control"
                             control="input"
-                            name="centreName"
-                            placeholder="Name of Centre"
+                            name="bacentaName"
+                            placeholder="Name of Bacenta"
                           />
                         </div>
                         <div className="col-9">
@@ -166,7 +162,7 @@ function AddCentre() {
                           <FormikControl
                             className="form-control"
                             control="input"
-                            name="centreLeaderFName"
+                            name="bacentaLeaderFName"
                             placeholder="Leader Name"
                           />
                         </div>
@@ -174,7 +170,7 @@ function AddCentre() {
                           <FormikControl
                             className="form-control"
                             control="input"
-                            name="centreLeaderWhatsapp"
+                            name="bacentaLeaderWhatsapp"
                             placeholder="Leader WhatsApp No."
                           />
                         </div>
@@ -240,7 +236,7 @@ function AddCentre() {
                         </div>
                       </div>
                       <small className="text-muted">
-                        Click this button if you are currently at your centre
+                        Click this button if you are currently at your bacenta
                         location
                       </small>
 
@@ -256,7 +252,7 @@ function AddCentre() {
 										</div>
 										<small className="text-muted">
 											List any Bacentas that are being
-											moved to this Centre
+											moved to this Bacenta
 										</small> 
 										<div>
 											<button
@@ -303,5 +299,3 @@ function AddCentre() {
     )
   }
 }
-
-export default AddCentre

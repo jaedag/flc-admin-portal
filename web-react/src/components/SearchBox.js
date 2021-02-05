@@ -12,7 +12,6 @@ function SearchBox() {
   })
 
   const onSubmit = (values, onSubmitProps) => {
-    console.log('Form data', values)
     onSubmitProps.resetForm()
   }
   return (

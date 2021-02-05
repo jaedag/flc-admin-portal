@@ -4,16 +4,12 @@ import { DisplayChurchDetails } from '../components/DisplayChurchDetails'
 import { NavBar } from '../components/NavBar'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
 import { DISPLAY_TOWN, DISPLAY_CAMPUS } from '../queries/DisplayQueries'
-import {
-  CommunityHallContext,
-  CampusTownContext,
-  ChurchContext,
-} from '../context/ChurchContext'
+import { ChurchContext } from '../contexts/ChurchContext'
 
 export const DisplayCampusTownDetails = () => {
-  const { church, capitalise } = useContext(ChurchContext)
-  const { townID, campusID } = useContext(CampusTownContext)
-  const { setCommunityID, setHallID } = useContext(CommunityHallContext)
+  const { church, capitalise, townID, campusID, setCentreID } = useContext(
+    ChurchContext
+  )
 
   const { data: townData, error: townError, loading: townLoading } = useQuery(
     DISPLAY_TOWN,
@@ -47,12 +43,17 @@ export const DisplayCampusTownDetails = () => {
               ? `${townData.displayTown.leader.firstName} ${townData.displayTown.leader.lastName}`
               : null
           }
-          churchHeading="No of Communities"
-          churchNo={townData.townCommunityCount}
+          leaderID={
+            townData.displayTown.leader
+              ? townData.displayTown.leader.memberID
+              : null
+          }
+          churchHeading="No of Centres"
+          churchNo={townData.townCentreCount}
           churchType={`${capitalise(church.church)}`}
-          subChurch="Community"
-          subChurchSetter={setCommunityID}
-          buttons={townData.displayTown.communities}
+          subChurch={`${capitalise(church.subChurch)}`}
+          subChurchSetter={setCentreID}
+          buttons={townData.displayTown.centres}
         />
       </div>
     )
@@ -69,12 +70,17 @@ export const DisplayCampusTownDetails = () => {
               ? `${campusData.displayCampus.leader.firstName} ${campusData.displayCampus.leader.lastName}`
               : '-'
           }
-          churchHeading="No of Halls"
-          churchNo={campusData.campusHallCount}
+          leaderID={
+            campusData.displayCampus.leader
+              ? campusData.displayCampus.leader.memberID
+              : null
+          }
+          churchHeading="No of Centres"
+          churchNo={campusData.campusCentreCount}
           churchType={`${capitalise(church.church)}`}
-          subChurch="Hall"
-          subChurchSetter={setHallID}
-          buttons={campusData.displayCampus.halls}
+          subChurch="Centre"
+          subChurchSetter={setCentreID}
+          buttons={campusData.displayCampus.centres}
         />
       </div>
     )

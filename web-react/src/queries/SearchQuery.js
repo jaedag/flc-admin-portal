@@ -7,10 +7,38 @@ export const GLOBAL_SEARCH = gql`
       firstName
       lastName
       pictureUrl
-      centre {
+      bacenta {
         name
+        leader {
+          firstName
+          lastName
+        }
+        centre {
+          town {
+            bishop {
+              memberID
+            }
+          }
+          campus {
+            bishop {
+              memberID
+            }
+          }
+        }
       }
       sonta {
+        name
+      }
+      campusGSO {
+        name
+      }
+      townGSO {
+        name
+      }
+      townBishop {
+        name
+      }
+      campusBishop {
         name
       }
     }

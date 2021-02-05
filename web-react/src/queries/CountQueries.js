@@ -12,9 +12,9 @@ export const pastors = gql`
   }
 `
 
-export const communityCount = gql`
+export const centreCount = gql`
   {
-    communityCount
+    centreCount
   }
 `
 
@@ -29,31 +29,31 @@ export const TOWN_MEMBER_COUNT = gql`
   }
 `
 
-export const APOSTLE_MEMBER_COUNT = gql`
-  query apostleMemberCount($apostleID: ID) {
-    apostleMemberCount(apostleID: $apostleID)
+export const BISHOP_MEMBER_COUNT = gql`
+  query bishopMemberCount($bishopID: ID) {
+    bishopMemberCount(bishopID: $bishopID)
   }
 `
 
-export const APOSTLE_TSONTA_MEMBER_COUNT = gql`
-  query apostleTSontaMemberCount($apostleID: ID) {
-    apostleTSontaMemberCount(apostleID: $apostleID)
+export const BISHOP_TSONTA_MEMBER_COUNT = gql`
+  query bishopTSontaMemberCount($bishopID: ID) {
+    bishopTSontaMemberCount(bishopID: $bishopID)
   }
 `
-export const APOSTLE_SONTA_MEMBER_COUNT = gql`
-  query apostleSontaMemberCount($apostleID: ID) {
-    apostleSontaMemberCount(apostleID: $apostleID)
-  }
-`
-
-export const APOSTLE_PASTOR_COUNT = gql`
-  query apostlePastorCount($apostleID: ID) {
-    apostlePastorCount(apostleID: $apostleID)
+export const BISHOP_SONTA_MEMBER_COUNT = gql`
+  query bishopSontaMemberCount($bishopID: ID) {
+    bishopSontaMemberCount(bishopID: $bishopID)
   }
 `
 
-export const APOSTLE_CAMPUSTOWN_COUNT = gql`
-  query apostleCampusTownCount($apostleID: ID) {
-    apostleCampusTownCount(apostleID: $apostleID)
+export const BISHOP_PASTOR_COUNT = gql`
+  query bishopPastorCount($bishopID: ID) {
+    bishopPastorCount(bishopID: $bishopID)
+  }
+`
+
+export const BISHOP_CAMPUSTOWN_COUNT = gql`
+  query bishopCampusTownCount($bishopID: ID) {
+    bishopsCampusTownCount(bishopID: $bishopID)
   }
 `

@@ -1,13 +1,15 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { DetailsCard } from './DetailsCard'
 import { NavBar } from './NavBar'
+import { MemberContext } from '../contexts/MemberContext'
 
 export const DisplayChurchDetails = (props) => {
   const {
     name,
     leaderTitle,
     leaderName,
+    leaderID,
     churchHeading,
     subChurch,
     subChurchSetter,
@@ -16,6 +18,8 @@ export const DisplayChurchDetails = (props) => {
     membership,
     buttons,
   } = props
+
+  const { setMemberID } = useContext(MemberContext)
 
   return (
     <div>
@@ -38,62 +42,77 @@ export const DisplayChurchDetails = (props) => {
           <div className="col-9 col-md-6 col-lg-4">
             <DetailsCard heading="Membership" detail={membership} />
           </div>
-          <div className="col-9 col-md-6 col-lg-4">
+          <Link
+            to="/members/displaydetails"
+            onClick={() => {
+              setMemberID(leaderID)
+            }}
+            className="col-9 col-md-6 col-lg-4"
+          >
             <DetailsCard heading={leaderTitle} detail={leaderName} />
-          </div>
+          </Link>
           <div className="col-9 col-md-6 col-lg-4">
             <DetailsCard heading={churchHeading} detail={churchNo} />
           </div>
         </div>
       </div>
+      {subChurch ? (
+        <React.Fragment>
+          <div className="container">
+            <hr className="hr-line" />
 
-      <div className="container">
-        <hr className="hr-line" />
+            <div className="row justify-content-between">
+              <div className="col">
+                <p className="text-secondary">{`${subChurch} Locations`}</p>
+              </div>
+              <div className="col-auto">
+                <Link
+                  className="card text-secondary px-1"
+                  to={`/${subChurch.toLowerCase()}/displayall`}
+                >
+                  View All
+                </Link>
+              </div>
+            </div>
+          </div>
 
-        <div className="row justify-content-between">
-          <div className="col">
-            <p className="text-secondary">{`${subChurch} Locations`}</p>
+          <div className="container mb-4 card-button-row">
+            <table>
+              <tbody>
+                <tr>
+                  {buttons.map((church, index) => {
+                    if (index > 4) {
+                      return null
+                    }
+                    return (
+                      <td className="col-auto" key={index}>
+                        <Link
+                          to={
+                            subChurch
+                              ? `/${subChurch.toLowerCase()}/displaydetails`
+                              : null
+                          }
+                        >
+                          <button
+                            className="card-buttons py-2 px-3 text-center text-nowrap text-white"
+                            onClick={() => {
+                              subChurchSetter(
+                                church[`${subChurch.toLowerCase()}ID`]
+                              )
+                            }}
+                          >
+                            {church.name}
+                          </button>
+                        </Link>
+                      </td>
+                    )
+                  })}
+                </tr>
+              </tbody>
+            </table>
           </div>
-          <div className="col-auto">
-            <Link
-              className="card text-secondary px-1"
-              to={`/${subChurch.toLowerCase()}/displayall`}
-              onClick={() => console.log("I'm the one")}
-            >
-              View All
-            </Link>
-          </div>
-        </div>
-      </div>
-      <div className="container mb-4 card-button-row">
-        <table>
-          <tbody>
-            <tr>
-              {buttons.map((church, index) => {
-                if (index > 4) {
-                  return null
-                }
-                return (
-                  <td className="col-auto" key={index}>
-                    <Link to={`/${subChurch.toLowerCase()}/displaydetails`}>
-                      <button
-                        className="card-buttons py-2 px-3 text-center text-nowrap text-white"
-                        onClick={() => {
-                          subChurchSetter(
-                            church[`${subChurch.toLowerCase()}ID`]
-                          )
-                        }}
-                      >
-                        {church.name}
-                      </button>
-                    </Link>
-                  </td>
-                )
-              })}
-            </tr>
-          </tbody>
-        </table>
-      </div>
+        </React.Fragment>
+      ) : null}
     </div>
   )
 }

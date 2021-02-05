@@ -5,7 +5,8 @@ import { ErrorMessage } from 'formik'
 import TextError from './TextError'
 import { useHistory } from 'react-router-dom'
 import { GLOBAL_SEARCH } from '../../queries/SearchQuery'
-import { MemberContext } from '../../context/MemberContext'
+import { MemberContext } from '../../contexts/MemberContext'
+import { ChurchContext } from '../../contexts/ChurchContext'
 
 function FormikSearchbox(props) {
   const { label, name, dataset, placeholder, setFieldValue } = props
@@ -13,6 +14,7 @@ function FormikSearchbox(props) {
   const [searchString, setSearchString] = useState('')
   const [suggestions, setSuggestions] = useState([])
   const { setMemberID } = useContext(MemberContext)
+  const { setChurch, setBishopID } = useContext(ChurchContext)
   const history = useHistory()
 
   const { data } = useQuery(GLOBAL_SEARCH, {
@@ -48,6 +50,9 @@ function FormikSearchbox(props) {
                 firstName: row.firstName,
                 lastName: row.lastName,
                 id: row.memberID,
+                bacenta: row.bacenta,
+                townBishop: row.townBishop,
+                campusBishop: row.campusBishop,
               }))
             )
           } catch (error) {
@@ -61,8 +66,17 @@ function FormikSearchbox(props) {
           if (method === 'enter') {
             event.preventDefault()
           }
-          // setSearchString(suggestion.name)
 
+          if (suggestion.bacenta.centre.town || suggestion.townBishop[0].name) {
+            setChurch({ church: 'town', subChurch: 'centre' })
+            setBishopID(suggestion.bacenta.centre.town.bishop.memberID)
+          } else if (
+            suggestion.bacenta.centre.campus ||
+            suggestion.campusBishop[0].name
+          ) {
+            setChurch({ church: 'campus', subChurch: 'centre' })
+            setBishopID(suggestion.bacenta.centre.campus.bishop.memberID)
+          }
           setMemberID(suggestion.id)
           history.push('/members/displaydetails')
           setFieldValue(`${name}`, suggestion.memberID)

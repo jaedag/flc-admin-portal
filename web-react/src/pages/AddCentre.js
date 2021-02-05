@@ -6,39 +6,32 @@ import * as Yup from 'yup'
 import FormikControl from '../components/formik-components/FormikControl'
 
 import { GET_TOWNS } from '../queries/ListQueries'
-import { CREATE_COMMUNITY_MUTATION } from '../queries/AdditionMutations'
+import { CREATE_CENTRE_MUTATION } from '../queries/AdditionMutations'
 import { NavBar } from '../components/NavBar'
 import SpinnerPage from '../components/SpinnerPage'
-import {
-  CampusTownContext,
-  CommunityHallContext,
-} from '../context/ChurchContext'
+import { ChurchContext } from '../contexts/ChurchContext'
 
-function AddCommunity() {
+function AddCentre() {
   const initialValues = {
-    communityName: '',
-    commLeaderName: '',
+    centreName: '',
+    centreLeaderName: '',
     townSelect: '',
-    centres: [''],
+    bacentas: [''],
   }
 
   const validationSchema = Yup.object({
     // townSelect: Yup.string().required('Choose a Town'),
-    communityName: Yup.string().required('Community Name is a required field'),
+    centreName: Yup.string().required('Centre Name is a required field'),
   })
 
-  const { setTownID } = useContext(CampusTownContext)
-  const { communityID, setCommunityID } = useContext(CommunityHallContext)
+  const { setTownID, setCentreID } = useContext(ChurchContext)
 
-  const [AddCommunity, { data: newCommunityData }] = useMutation(
-    CREATE_COMMUNITY_MUTATION,
-    {
-      onCompleted: (newCommunityData) => {
-        setCommunityID(newCommunityData.AddCommunity.communityID)
-      },
-    }
-  )
-  console.log(newCommunityData, communityID)
+  const [AddCentre] = useMutation(CREATE_CENTRE_MUTATION, {
+    onCompleted: (newCentreData) => {
+      setCentreID(newCentreData.AddCentre.centreID)
+    },
+  })
+
   const history = useHistory()
 
   const { data: townListData, loading: townListLoading } = useQuery(GET_TOWNS, {
@@ -55,10 +48,10 @@ function AddCommunity() {
     //onSubmit receives the form state as argument
     const onSubmit = (values, onSubmitProps) => {
       setTownID(values.townSelect)
-      AddCommunity({
+      AddCentre({
         variables: {
-          communityName: values.communityName,
-          commLeaderName: values.commLeaderName,
+          centreName: values.centreName,
+          centreLeaderName: values.commLeaderName,
           lWhatsappNumber: values.commLeaderWhatsapp,
           townID: values.townSelect,
         },
@@ -67,7 +60,7 @@ function AddCommunity() {
       // console.log('Form data', values)
       onSubmitProps.setSubmitting(false)
       onSubmitProps.resetForm()
-      history.push('/community/displaydetails')
+      history.push('/centre/displaydetails')
     }
 
     return (
@@ -80,7 +73,7 @@ function AddCommunity() {
         >
           {(formik) => (
             <div className="body-card py-4 container mt-5">
-              <div className="container infobar">Start a New Community</div>
+              <div className="container infobar">Start a New Centre</div>
               <Form>
                 <div className="form-group">
                   <div className="row row-cols-1 row-cols-md-2">
@@ -106,8 +99,8 @@ function AddCommunity() {
                           <FormikControl
                             className="form-control"
                             control="input"
-                            name="communityName"
-                            placeholder="Name of Community"
+                            name="centreName"
+                            placeholder="Name of Centre"
                           />
                         </div>
                       </div>
@@ -117,7 +110,7 @@ function AddCommunity() {
                             className="form-control"
                             control="input"
                             name="commLeaderName"
-                            placeholder="Name of Community Leader"
+                            placeholder="Name of Centre Leader"
                           />
                         </div>
                       </div>
@@ -132,24 +125,24 @@ function AddCommunity() {
                         </div>
                       </div>
                       <small className="pt-2">
-                        List any Centres that are being moved to this Community
+                        List any Bacentas that are being moved to this Centre
                       </small>
-                      <FieldArray name="centres">
+                      <FieldArray name="bacentas">
                         {(fieldArrayProps) => {
                           const { push, remove, form } = fieldArrayProps
                           const { values } = form
-                          const { centres } = values
+                          const { bacentas } = values
 
                           return (
                             <div>
-                              {centres.map((centres, index) => (
+                              {bacentas.map((bacentas, index) => (
                                 <div key={index} className="form-row row-cols">
                                   <div className="col-9">
                                     <FormikControl
                                       className="form-control"
-                                      placeholder="Centre Name"
+                                      placeholder="Bacenta Name"
                                       control="input"
-                                      name={`centres[${index}]`}
+                                      name={`bacentas[${index}]`}
                                     />
                                   </div>
                                   <div className="col d-flex">
@@ -244,4 +237,4 @@ function AddCommunity() {
   }
 }
 
-export default AddCommunity
+export default AddCentre

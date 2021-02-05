@@ -5,57 +5,29 @@ import { Formik, Form, FieldArray } from 'formik'
 import * as Yup from 'yup'
 import FormikControl from '../components/formik-components/FormikControl'
 
-import { EDIT_MEMBER_MUTATION } from '../queries/UpdateMutations'
-import { DISPLAY_MEMBER } from '../queries/DisplayQueries'
+import { NEW_MEMBER_MUTATION } from '../queries/AdditionMutations'
 import { HeadingBar } from '../components/HeadingBar'
 import { NavBar } from '../components/NavBar'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
 import Spinner from '../components/Spinner'
-import { MINISTRY_LIST, CENTRE_DROPDOWN } from '../queries/ListQueries'
-import { MemberContext } from '../context/MemberContext'
-import { ChurchContext } from '../context/ChurchContext'
+import { MINISTRY_LIST, BACENTA_DROPDOWN } from '../queries/ListQueries'
+import { ChurchContext } from '../contexts/ChurchContext'
 
-export const EditMemberDetails = () => {
-  const { memberID } = useContext(MemberContext)
-  const {
-    data: memberData,
-    error: memberError,
-    loading: memberLoading,
-  } = useQuery(DISPLAY_MEMBER, {
-    variables: { memberID: memberID },
-  })
+export const AddMember = () => {
   const initialValues = {
-    firstName: memberData.displayMember.firstName,
-    middleName: memberData.displayMember.middleName
-      ? memberData.displayMember.middleName
-      : '',
-    lastName: memberData.displayMember.lastName,
-    gender: memberData.displayMember.gender
-      ? memberData.displayMember.gender.gender
-      : '',
-    phoneNumber: memberData.displayMember.phoneNumber
-      ? `+${memberData.displayMember.phoneNumber}`
-      : '',
-    whatsappNumber: memberData.displayMember.whatsappNumber
-      ? `+${memberData.displayMember.whatsappNumber}`
-      : '',
-    email: memberData.displayMember.email,
-    dob: memberData.displayMember.dob
-      ? memberData.displayMember.dob.date.formatted
-      : '',
-    maritalStatus: memberData.displayMember.maritalStatus
-      ? memberData.displayMember.maritalStatus.status
-      : '',
-    occupation: memberData.displayMember.occupation
-      ? memberData.displayMember.occupation.occupation
-      : '',
-    pictureUrl: memberData.displayMember.pictureUrl,
-    centre: memberData.displayMember.centre
-      ? memberData.displayMember.centre.centreID
-      : '',
-    ministry: memberData.displayMember.sonta
-      ? memberData.displayMember.sonta.ministryID
-      : '',
+    firstName: '',
+    middleName: '',
+    lastName: '',
+    gender: '',
+    phoneNumber: '',
+    whatsappNumber: '',
+    email: '',
+    dob: '',
+    maritalStatus: '',
+    occupation: '',
+    pictureUrl: '',
+    bacenta: '',
+    sonta: '',
 
     pastoralHistory: [
       {
@@ -83,12 +55,11 @@ export const EditMemberDetails = () => {
   const titleOptions = [
     { key: 'Pastor', value: 'Pastor' },
     { key: 'Reverend', value: 'Reverend' },
-    { key: 'Apostle', value: 'Apostle' },
+    { key: 'Bishop', value: 'Bishop' },
     { key: 'Bishop', value: 'Bishop' },
   ]
 
-  const { parsePhoneNum } = useContext(ChurchContext)
-  const history = useHistory()
+  const { setMemberID } = useContext(ChurchContext)
 
   const phoneRegExp = /^[+][(]{0,1}[1-9]{1,4}[)]{0,1}[-\s/0-9]*$/
   const validationSchema = Yup.object({
@@ -107,8 +78,8 @@ export const EditMemberDetails = () => {
       phoneRegExp,
       `Phone Number must start with + and country code (eg. '+233')`
     ),
-    centre: Yup.string().required('This is a required field'),
-    ministry: Yup.string().required('This is a required field'),
+    bacenta: Yup.string().required('This is a required field'),
+    sonta: Yup.string().required('This is a required field'),
   })
 
   //All of the Hooks!
@@ -118,14 +89,19 @@ export const EditMemberDetails = () => {
     error: ministryListError,
   } = useQuery(MINISTRY_LIST)
 
-  const [EditMemberDetails] = useMutation(EDIT_MEMBER_MUTATION, {
-    refetchQueries: [
-      { query: DISPLAY_MEMBER, variables: { memberID: memberID } },
-    ],
-  })
+  const [AddMember, { data: newMemberData }] = useMutation(
+    NEW_MEMBER_MUTATION,
+    {
+      onCompleted: (newMemberData) => {
+        setMemberID(newMemberData.AddMember.memberID)
+      },
+    }
+  )
+  console.log(newMemberData)
 
   const [image, setImage] = useState('')
   const [loading, setLoading] = useState(false)
+  const history = useHistory()
 
   const uploadImage = async (e) => {
     const files = e.target.files
@@ -153,12 +129,19 @@ export const EditMemberDetails = () => {
     values.pictureUrl = image
 
     //Formatting of phone number fields
-    values.phoneNumber = parsePhoneNum(values.phoneNumber)
-    values.whatsappNumber = parsePhoneNum(values.phoneNumber)
+    values.phoneNumber = values.phoneNumber
+      .replace(/\s/g, '')
+      .replace('+', '')
+      .replace('(', '')
+      .replace(')', '')
+    values.whatsappNumber = values.phoneNumber
+      .replace(/\s/g, '')
+      .replace('+', '')
+      .replace('(', '')
+      .replace(')', '')
 
-    EditMemberDetails({
+    AddMember({
       variables: {
-        memberID: memberID,
         firstName: values.firstName,
         middleName: values.middleName,
         lastName: values.lastName,
@@ -171,21 +154,22 @@ export const EditMemberDetails = () => {
         occupation: values.occupation,
         pictureUrl: values.pictureUrl,
 
-        centre: values.centre,
-        ministry: values.ministry,
+        bacenta: values.bacenta,
+        sonta: values.sonta,
+
+        pastoralAppointment: values.pastoralAppointment,
+        pastoralHistory: values.pastoralHistory,
       },
     })
 
     onSubmitProps.setSubmitting(false)
-    onSubmitProps.resetForm()
     history.push('/members/displaydetails')
   }
 
-  if (memberError || ministryListError || memberID === '') {
-    return <ErrorScreen />
-  } else if (memberLoading || ministryListLoading) {
-    // Spinner Icon for Loading Screens
+  if (ministryListLoading) {
     return <LoadingScreen />
+  } else if (ministryListError) {
+    return <ErrorScreen />
   } else {
     const sontaOptions = ministryListData.ministryList.map((sonta) => ({
       value: sonta.ministryID,
@@ -202,7 +186,7 @@ export const EditMemberDetails = () => {
         >
           {(formik) => (
             <div className="body-card container body-container mt-5">
-              <h3 className="my-3">Edit Member Details</h3>
+              <h3 className="my-3">Register a New Member</h3>
               <Form className="form-group">
                 <div className="row row-cols-1">
                   {/* <!-- Basic Info Div --> */}
@@ -355,25 +339,25 @@ export const EditMemberDetails = () => {
                       <div className="col">
                         <FormikControl
                           control="combobox"
-                          name="centre"
-                          // label="newBacenta"
-                          placeholder="newBacenta"
+                          name="bacenta"
+                          // label="Bacenta"
+                          placeholder="Bacenta"
                           setFieldValue={formik.setFieldValue}
-                          optionsQuery={CENTRE_DROPDOWN}
-                          queryVariable="centreName"
+                          optionsQuery={BACENTA_DROPDOWN}
+                          queryVariable="bacentaName"
                           suggestionText="name"
-                          suggestionID="centreID"
-                          dataset="centreDropdown"
-                          aria-describedby="newBacenta Name"
+                          suggestionID="bacentaID"
+                          dataset="bacentaDropdown"
+                          aria-describedby="Bacenta Name"
                         />
                       </div>
                       <div className="col">
                         <FormikControl
                           className="form-control"
                           control="select"
-                          name="ministry"
+                          name="sonta"
                           options={sontaOptions}
-                          defaultOption="Ministry"
+                          defaultOption="Sonta"
                         />
                       </div>
                     </div>

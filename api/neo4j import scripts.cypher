@@ -61,8 +61,8 @@ MERGE (ms: MaritalStatus {status: line.`Marital Status`})
 MERGE(m)-[:HAS_MARITAL_STATUS]->(ms)
 
 with line,m WHERE line.`Centre Code` is not null
-MERGE (cen:Bacenta {code:  line.`Centre Code`})
-MERGE (m)-[:BELONGS_TO]->(cen)
+MERGE (b:Bacenta {code:  line.`Centre Code`})
+MERGE (m)-[:BELONGS_TO]->(b)
 
 with line, m  WHERE line.`Ministry` is not null
 MERGE(son: Ministry {name:line.`Ministry`})
@@ -88,7 +88,7 @@ MERGE(t:Town {name: apoc.text.capitalizeAll(toLower(trim(line.`TOWN`)))})
 	t.townID = apoc.create.uuid()
 
 with line,t
-MATCH (m: Member {lastName: line.`APOSTLE`})
+MATCH (m: Member {whatsappNumber: line.`BISHOP`})
 MERGE (title: Title{title:'Bishop'})
 MERGE (m)-[:HAS_TITLE]-> (title)
 MERGE (t)<-[:HAS_TOWN]-(m)
@@ -103,19 +103,19 @@ MERGE(C: Centre {name: apoc.text.capitalizeAll(toLower(trim(line.COMMUNITY)))})
     MERGE(t)-[:HAS_CENTRE]->(C)
 
 with line, C  WHERE line.`CENTRE NAME` is not null
-MERGE(cen: Centre {code: line.`SERVICE CODE`})
+MERGE(b: Bacenta {code: line.`SERVICE CODE`})
 	SET 
-    cen.centreID = apoc.create.uuid(),
-    cen.name = apoc.text.capitalizeAll(toLower(trim(line.`CENTRE NAME`))),
-    cen.location = point({latitude:toFloat(line.LATITUDE), longitude:toFloat(line.LONGITUDE), crs:'WGS-84'})
+    b.bacentaID = apoc.create.uuid(),
+    b.name = apoc.text.capitalizeAll(toLower(trim(line.`CENTRE NAME`))),
+    b.location = point({latitude:toFloat(line.LATITUDE), longitude:toFloat(line.LONGITUDE), crs:'WGS-84'})
     
-MERGE (cen)<-[:HAS_CENTRE]-(C)
+MERGE (b)<-[:HAS_BACENTA]-(C)
 MERGE (l:Member {whatsappNumber: line.`PHONE NUMBER`})
-MERGE (l)-[:LEADS]->(cen)
+MERGE (l)-[:LEADS]->(b)
 
-with line,cen
+with line,b
 MERGE(sDay: ServiceDay {day: apoc.text.capitalizeAll(toLower(line.`SERVICE DAY`))} )
-MERGE (sDay)<-[:MEETS_ON_DAY]-(cen);
+MERGE (sDay)<-[:MEETS_ON_DAY]-(b);
 
 LOAD CSV WITH HEADERS FROM "file:///Centres-Table%20Campus.csv" as line
 MERGE(camp:Campus {name: apoc.text.capitalizeAll(toLower(trim(line.`CAMPUS`)))})
@@ -123,7 +123,7 @@ MERGE(camp:Campus {name: apoc.text.capitalizeAll(toLower(trim(line.`CAMPUS`)))})
 	camp.campusID = apoc.create.uuid()
 
 with line,camp
-MATCH (m: Member {lastName: line.`APOSTLE`})
+MATCH (m: Member {whatsappNumber: line.`BISHOP`})
 MERGE (title: Title{title:'Bishop'})
 MERGE (m)-[:HAS_TITLE]-> (title)
 MERGE (camp)<-[:HAS_CAMPUS]-(m)
@@ -138,19 +138,19 @@ MERGE(C: Centre {name: apoc.text.capitalizeAll(toLower(trim(line.HALL)))})
     MERGE(t)-[:HAS_CENTRE]->(C)
 
 with line, C  WHERE line.`CENTRE NAME` is not null
-MERGE(cen: Bacenta {code: line.`SERVICE CODE`})
+MERGE(b: Bacenta {code: line.`SERVICE CODE`})
 	SET 
-    cen.bacentaID = apoc.create.uuid(),
-    cen.name = apoc.text.capitalizeAll(toLower(trim(line.`CENTRE NAME`))),
-    cen.location = point({latitude:toFloat(line.LATITUDE), longitude:toFloat(line.LONGITUDE), crs:'WGS-84'})
+    b.bacentaID = apoc.create.uuid(),
+    b.name = apoc.text.capitalizeAll(toLower(trim(line.`CENTRE NAME`))),
+    b.location = point({latitude:toFloat(line.LATITUDE), longitude:toFloat(line.LONGITUDE), crs:'WGS-84'})
     
-MERGE (cen)<-[:HAS_CENTRE]-(C)
+MERGE (b)<-[:HAS_BACENTA]-(C)
 MERGE (l:Member {whatsappNumber: line.`PHONE NUMBER`})
-MERGE (l)-[:LEADS]->(cen)
+MERGE (l)-[:LEADS]->(b)
 
-with line,cen
+with line,b
 MERGE(sDay: ServiceDay {day: apoc.text.capitalizeAll(toLower(line.`SERVICE DAY`))} )
-MERGE (sDay)<-[:MEETS_ON_DAY]-(cen);
+MERGE (sDay)<-[:MEETS_ON_DAY]-(b);
 
 // LOAD CSV WITH HEADERS FROM "file:///Members.csv" as line
 // WITH line 

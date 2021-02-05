@@ -4,11 +4,10 @@ import { DisplayChurchDetails } from '../components/DisplayChurchDetails'
 import { NavBar } from '../components/NavBar'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
 import { DISPLAY_CENTRE } from '../queries/DisplayQueries'
-import { CentreContext } from '../context/ChurchContext'
+import { ChurchContext } from '../contexts/ChurchContext'
 
 export const DisplayCentreDetails = () => {
-  const { centreID } = useContext(CentreContext)
-
+  const { centreID, setBacentaID } = useContext(ChurchContext)
   const {
     data: centreData,
     error: centreError,
@@ -16,7 +15,6 @@ export const DisplayCentreDetails = () => {
   } = useQuery(DISPLAY_CENTRE, {
     variables: { centreID: centreID },
   })
-  // console.log(centreData)
 
   if (centreError) {
     return <ErrorScreen />
@@ -24,24 +22,28 @@ export const DisplayCentreDetails = () => {
     // Spinner Icon for Loading Screens
     return <LoadingScreen />
   }
+
+  const { displayCentre, centreMemberCount, centreBacentaCount } = centreData
   return (
     <div>
       <NavBar />
       <DisplayChurchDetails
-        name={centreData.displayCentre.name}
+        name={displayCentre.name}
+        // leaderTitle={displayCentre.leader.title[0].Title.title}
         leaderTitle="Centre Leader"
+        membership={centreMemberCount}
         leaderName={
-          centreData.displayCentre.leader
-            ? `${centreData.displayCentre.leader.firstName} ${centreData.displayCentre.leader.lastName}`
+          displayCentre.leader
+            ? `${displayCentre.leader.firstName} ${displayCentre.leader.lastName}`
             : '-'
         }
-        membership={centreData.centreMemberCount}
+        leaderID={displayCentre.leader.memberID}
         churchHeading="No of Bacentas"
-        churchNo="2"
-        subChurch="Bacenta"
-        subChurchSetter=""
         churchType="Centre"
-        buttons={['']}
+        subChurch="Bacenta"
+        subChurchSetter={setBacentaID}
+        churchNo={centreBacentaCount}
+        buttons={displayCentre.bacentas}
       />
     </div>
   )

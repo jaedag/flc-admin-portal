@@ -5,23 +5,22 @@ import { DisplayChurchList } from '../components/DisplayChurchList'
 import { NavBar } from '../components/NavBar'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
 import { GET_TOWNS } from '../queries/ListQueries'
-import { ApostleContext, CampusTownContext } from '../context/ChurchContext'
-import { MemberContext } from '../context/MemberContext'
-import { APOSTLE_MEMBER_COUNT } from '../queries/CountQueries'
+import { ChurchContext } from '../contexts/ChurchContext'
+import { MemberContext } from '../contexts/MemberContext'
+import { BISHOP_MEMBER_COUNT } from '../queries/CountQueries'
 
 export const DisplayAllTowns = () => {
-  const { apostleID } = useContext(ApostleContext)
-  const { setTownID } = useContext(CampusTownContext)
+  const { bishopID, setTownID } = useContext(ChurchContext)
   const { setMemberID } = useContext(MemberContext)
 
   const { data: townData, error: townError, loading: townLoading } = useQuery(
     GET_TOWNS,
     {
-      variables: { apostleID: apostleID },
+      variables: { bishopID: bishopID },
     }
   )
-  const { data: apostleMemberCount } = useQuery(APOSTLE_MEMBER_COUNT, {
-    variables: { apostleID: apostleID },
+  const { data: bishopMemberCount } = useQuery(BISHOP_MEMBER_COUNT, {
+    variables: { bishopID: bishopID },
   })
 
   if (townError) {
@@ -41,10 +40,10 @@ export const DisplayAllTowns = () => {
               <Link
                 to="/members/displaydetails"
                 onClick={() => {
-                  setMemberID(`${townData.townList[0].apostle.memberID}`)
+                  setMemberID(`${townData.townList[0].bishop.memberID}`)
                 }}
               >
-                <h4>{`${townData.townList[0].apostle.firstName} ${townData.townList[0].apostle.lastName}'s Towns`}</h4>
+                <h4>{`${townData.townList[0].bishop.firstName} ${townData.townList[0].bishop.lastName}'s Towns`}</h4>
               </Link>
             </div>
             <div className="col-auto">
@@ -58,7 +57,7 @@ export const DisplayAllTowns = () => {
             <div className="py-1 px-3 m-2 card">{`Towns: ${townData.townList.length}`}</div>
 
             <div className="py-1 px-3 m-2 card">{`Membership: ${
-              apostleMemberCount ? apostleMemberCount.apostleMemberCount : null
+              bishopMemberCount ? bishopMemberCount.bishopMemberCount : null
             }`}</div>
           </div>
         </div>

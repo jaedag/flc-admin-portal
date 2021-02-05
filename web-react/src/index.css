@@ -188,6 +188,11 @@
   width: 200px;
 }
 
+.img-search {
+  width: 70px;
+  border: 1px solid var(--infobar-color);
+}
+
 .fa-user-circle-o {
   color: #707070;
 }

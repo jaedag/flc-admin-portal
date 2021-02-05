@@ -1,0 +1,578 @@
+import React, { useState, useContext } from 'react'
+import { useHistory } from 'react-router-dom'
+import { useQuery, useMutation } from '@apollo/client'
+import { Formik, Form, FieldArray } from 'formik'
+import * as Yup from 'yup'
+import FormikControl from '../components/formik-components/FormikControl'
+
+import { EDIT_MEMBER_MUTATION } from '../queries/UpdateMutations'
+import { DISPLAY_MEMBER } from '../queries/DisplayQueries'
+import { HeadingBar } from '../components/HeadingBar'
+import { NavBar } from '../components/NavBar'
+import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
+import Spinner from '../components/Spinner'
+import { MINISTRY_LIST, CENTRE_DROPDOWN } from '../queries/ListQueries'
+import { MemberContext } from '../context/MemberContext'
+import { ChurchContext } from '../context/ChurchContext'
+
+export const EditMemberDetails = () => {
+  const { memberID } = useContext(MemberContext)
+  const {
+    data: memberData,
+    error: memberError,
+    loading: memberLoading,
+  } = useQuery(DISPLAY_MEMBER, {
+    variables: { memberID: memberID },
+  })
+  const initialValues = {
+    firstName: memberData.displayMember.firstName,
+    middleName: memberData.displayMember.middleName
+      ? memberData.displayMember.middleName
+      : '',
+    lastName: memberData.displayMember.lastName,
+    gender: memberData.displayMember.gender
+      ? memberData.displayMember.gender.gender
+      : '',
+    phoneNumber: memberData.displayMember.phoneNumber
+      ? `+${memberData.displayMember.phoneNumber}`
+      : '',
+    whatsappNumber: memberData.displayMember.whatsappNumber
+      ? `+${memberData.displayMember.whatsappNumber}`
+      : '',
+    email: memberData.displayMember.email,
+    dob: memberData.displayMember.dob
+      ? memberData.displayMember.dob.date.formatted
+      : '',
+    maritalStatus: memberData.displayMember.maritalStatus
+      ? memberData.displayMember.maritalStatus.status
+      : '',
+    occupation: memberData.displayMember.occupation
+      ? memberData.displayMember.occupation.occupation
+      : '',
+    pictureUrl: memberData.displayMember.pictureUrl,
+    centre: memberData.displayMember.centre
+      ? memberData.displayMember.centre.centreID
+      : '',
+    ministry: memberData.displayMember.sonta
+      ? memberData.displayMember.sonta.ministryID
+      : '',
+
+    pastoralHistory: [
+      {
+        historyRecord: '',
+        historyDate: '',
+      },
+    ],
+    pastoralAppointment: [
+      {
+        title: '',
+        date: '',
+      },
+    ],
+  }
+
+  const genderOptions = [
+    { key: 'Male', value: 'Male' },
+    { key: 'Female', value: 'Female' },
+  ]
+  const maritalStatusOptions = [
+    { key: 'Single', value: 'Single' },
+    { key: 'Married', value: 'Married' },
+  ]
+
+  const titleOptions = [
+    { key: 'Pastor', value: 'Pastor' },
+    { key: 'Reverend', value: 'Reverend' },
+    { key: 'Apostle', value: 'Apostle' },
+    { key: 'Bishop', value: 'Bishop' },
+  ]
+
+  const { parsePhoneNum } = useContext(ChurchContext)
+  const history = useHistory()
+
+  const phoneRegExp = /^[+][(]{0,1}[1-9]{1,4}[)]{0,1}[-\s/0-9]*$/
+  const validationSchema = Yup.object({
+    firstName: Yup.string().required('Name is a required field'),
+    lastName: Yup.string().required('This is a required field'),
+    gender: Yup.string().required('This is a required field'),
+    email: Yup.string().email('Please enter a valid email address'),
+    maritalStatus: Yup.string().required('This is a required field'),
+    phoneNumber: Yup.string()
+      .matches(
+        phoneRegExp,
+        `Phone Number must start with + and country code (eg. '+233')`
+      )
+      .required('Phone Number is required'),
+    whatsappNumber: Yup.string().matches(
+      phoneRegExp,
+      `Phone Number must start with + and country code (eg. '+233')`
+    ),
+    centre: Yup.string().required('This is a required field'),
+    ministry: Yup.string().required('This is a required field'),
+  })
+
+  //All of the Hooks!
+  const {
+    data: ministryListData,
+    loading: ministryListLoading,
+    error: ministryListError,
+  } = useQuery(MINISTRY_LIST)
+
+  const [EditMemberDetails] = useMutation(EDIT_MEMBER_MUTATION, {
+    refetchQueries: [
+      { query: DISPLAY_MEMBER, variables: { memberID: memberID } },
+    ],
+  })
+
+  const [image, setImage] = useState('')
+  const [loading, setLoading] = useState(false)
+
+  const uploadImage = async (e) => {
+    const files = e.target.files
+    const data = new FormData()
+    data.append('file', files[0])
+    data.append('upload_preset', 'admin-portal')
+
+    setLoading(true)
+
+    const res = await fetch(
+      'https://api.cloudinary.com/v1_1/firstlovecenter/image/upload',
+      {
+        method: 'POST',
+        body: data,
+      }
+    )
+    const file = await res.json()
+
+    setImage(file.secure_url)
+    setLoading(false)
+  }
+
+  const onSubmit = async (values, onSubmitProps) => {
+    //Variables that are not controlled by formik
+    values.pictureUrl = image
+
+    //Formatting of phone number fields
+    values.phoneNumber = parsePhoneNum(values.phoneNumber)
+    values.whatsappNumber = parsePhoneNum(values.phoneNumber)
+
+    EditMemberDetails({
+      variables: {
+        memberID: memberID,
+        firstName: values.firstName,
+        middleName: values.middleName,
+        lastName: values.lastName,
+        gender: values.gender,
+        phoneNumber: values.phoneNumber,
+        whatsappNumber: values.whatsappNumber,
+        email: values.email,
+        dob: values.dob,
+        maritalStatus: values.maritalStatus,
+        occupation: values.occupation,
+        pictureUrl: values.pictureUrl,
+
+        centre: values.centre,
+        ministry: values.ministry,
+      },
+    })
+
+    onSubmitProps.setSubmitting(false)
+    onSubmitProps.resetForm()
+    history.push('/members/displaydetails')
+  }
+
+  if (memberError || ministryListError || memberID === '') {
+    return <ErrorScreen />
+  } else if (memberLoading || ministryListLoading) {
+    // Spinner Icon for Loading Screens
+    return <LoadingScreen />
+  } else {
+    const sontaOptions = ministryListData.ministryList.map((sonta) => ({
+      value: sonta.ministryID,
+      key: sonta.name,
+    }))
+
+    return (
+      <div>
+        <NavBar />
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={onSubmit}
+        >
+          {(formik) => (
+            <div className="body-card container body-container mt-5">
+              <h3 className="my-3">Edit Member Details</h3>
+              <Form className="form-group">
+                <div className="row row-cols-1">
+                  {/* <!-- Basic Info Div --> */}
+                  {/* Photo Upload with Cloudinary */}
+                  <div className="row" />
+                  <div className="col my-3">
+                    <HeadingBar title="Basic Info" />
+                    <div className="container text-center my-2">
+                      {loading ? (
+                        <div className="container my-3">
+                          <Spinner />
+                        </div>
+                      ) : (
+                        <div>
+                          <img
+                            src={image}
+                            className="profile-img rounded my-3"
+                            alt=""
+                          />
+                        </div>
+                      )}
+                      <label>
+                        <input
+                          style={{ display: 'none' }}
+                          type="file"
+                          name="picture"
+                          placeholder="Upload an Image"
+                          accept="image/png, image/jpeg"
+                          onChange={uploadImage}
+                        />
+                        <p className="btn btn-primary btn-medium text-center mb-4">
+                          Upload Picture
+                        </p>
+                      </label>
+                    </div>
+                    <div className="form-row row-cols-2">
+                      <div className="col">
+                        <FormikControl
+                          className="form-control"
+                          control="input"
+                          name="firstName"
+                          placeholder="First Name"
+                          aria-describedby="firstNameHelp"
+                        />
+                      </div>
+                      <div className="col">
+                        <FormikControl
+                          className="form-control"
+                          control="input"
+                          name="middleName"
+                          placeholder="Other Names"
+                          aria-describedby="middleNameHelp"
+                        />
+                      </div>
+                      <div className="col">
+                        <FormikControl
+                          className="form-control"
+                          control="input"
+                          name="lastName"
+                          placeholder="Last Name"
+                          aria-describedby="lastNameHelp"
+                        />
+                      </div>
+                      <div className="col">
+                        <FormikControl
+                          className="form-control"
+                          control="select"
+                          name="gender"
+                          placeholder="Gender"
+                          options={genderOptions}
+                          defaultOption="Gender"
+                        />
+                      </div>
+                      <div className="col">
+                        <FormikControl
+                          className="form-control"
+                          control="input"
+                          placeholder="Enter phone number"
+                          id="phoneNumber"
+                          name="phoneNumber"
+                        />
+                      </div>
+                      <div className="col">
+                        <FormikControl
+                          className="form-control"
+                          control="input"
+                          placeholder="Enter Your WhatsApp number"
+                          id="whatsappNumber"
+                          name="whatsappNumber"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="form-row row-cols-2">
+                      <div className="col">
+                        <FormikControl
+                          className="form-control"
+                          control="select"
+                          name="maritalStatus"
+                          placeholder="Marital Status"
+                          options={maritalStatusOptions}
+                          defaultOption="Marital Status"
+                        />
+                      </div>
+                      <div className="col">
+                        <FormikControl
+                          className="form-control"
+                          control="input"
+                          name="occupation"
+                          placeholder="Occupation"
+                          aria-describedby="occupationHelp"
+                        />
+                      </div>
+                    </div>
+                    <div className="form-row">
+                      <div className="col-8">
+                        <FormikControl
+                          className="form-control"
+                          control="input"
+                          name="email"
+                          placeholder="Enter Email Address"
+                          aria-describedby="emailHelp"
+                        />
+                      </div>
+                      <div className="col-8">
+                        <small
+                          htmlFor="dateofbirth"
+                          className="form-text text-muted"
+                        >
+                          Date of Birth
+                        </small>
+                        <FormikControl
+                          className="form-control"
+                          control="input"
+                          name="dob"
+                          type="date"
+                          placeholder="dd/mm/yyyy"
+                          aria-describedby="dateofbirth"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  {/* <!--End of Basic Info Section--> */}
+
+                  {/* <!-- Beginning of Church Info Section--> */}
+                  <div className="col my-4">
+                    <HeadingBar title="Church Info" />
+
+                    <div className="form-row row-cols-2">
+                      <div className="col">
+                        <FormikControl
+                          control="combobox"
+                          name="centre"
+                          // label="newBacenta"
+                          placeholder="newBacenta"
+                          setFieldValue={formik.setFieldValue}
+                          optionsQuery={CENTRE_DROPDOWN}
+                          queryVariable="centreName"
+                          suggestionText="name"
+                          suggestionID="centreID"
+                          dataset="centreDropdown"
+                          aria-describedby="newBacenta Name"
+                        />
+                      </div>
+                      <div className="col">
+                        <FormikControl
+                          className="form-control"
+                          control="select"
+                          name="ministry"
+                          options={sontaOptions}
+                          defaultOption="Ministry"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  {/* <!-- End of Church Info Section--> */}
+
+                  {/* <!-- Beginning of Pastoral Appointments Section--> */}
+                  <div className="col my-4">
+                    <HeadingBar title="Pastoral Appointments (if any)" />
+                    <FieldArray name="pastoralAppointment">
+                      {(fieldArrayProps) => {
+                        const { push, remove, form } = fieldArrayProps
+                        const { values } = form
+                        const { pastoralAppointment } = values
+
+                        return (
+                          <div>
+                            {pastoralAppointment.map(
+                              (pastoralAppointment, index) => (
+                                <div key={index} className="form-row row-cols">
+                                  <div className="col">
+                                    <FormikControl
+                                      className="form-control"
+                                      control="select"
+                                      options={titleOptions}
+                                      defaultOption="Title"
+                                      name={`pastoralAppointment[${index}].title`}
+                                    />
+                                  </div>
+                                  <div className="col">
+                                    <FormikControl
+                                      className="form-control"
+                                      placeholder="Date"
+                                      control="input"
+                                      type="date"
+                                      name={`pastoralAppointment[${index}].date`}
+                                    />
+                                  </div>
+                                  <div className="col d-flex">
+                                    {index < 3 && (
+                                      <button
+                                        className="plus-button rounded mr-2"
+                                        type="button"
+                                        onClick={() => push()}
+                                      >
+                                        <svg
+                                          aria-hidden="true"
+                                          focusable="false"
+                                          data-prefix="fas"
+                                          data-icon="plus"
+                                          className="svg-inline--fa fa-plus fa-w-14"
+                                          role="img"
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          viewBox="0 0 448 512"
+                                        >
+                                          <path
+                                            fill="currentColor"
+                                            d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"
+                                          />
+                                        </svg>
+                                      </button>
+                                    )}
+
+                                    {index > 0 && (
+                                      <button
+                                        className="plus-button rounded"
+                                        type="button"
+                                        onClick={() => remove(index)}
+                                      >
+                                        {' '}
+                                        <svg
+                                          aria-hidden="true"
+                                          focusable="false"
+                                          data-prefix="fas"
+                                          data-icon="minus"
+                                          className="svg-inline--fa fa-minus fa-w-14"
+                                          role="img"
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          viewBox="0 0 448 512"
+                                        >
+                                          <path
+                                            fill="currentColor"
+                                            d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"
+                                          />
+                                        </svg>
+                                      </button>
+                                    )}
+                                  </div>
+                                </div>
+                              )
+                            )}
+                          </div>
+                        )
+                      }}
+                    </FieldArray>
+                  </div>
+                  {/* <!--End of Pastoral Appointments Section--> */}
+
+                  {/* <!--Beginning of Pastoral History Section--> */}
+                  <div className="col my-4">
+                    <HeadingBar title="Pastoral History" />
+                    <FieldArray name="pastoralHistory">
+                      {(fieldArrayProps) => {
+                        const { push, remove, form } = fieldArrayProps
+                        const { values } = form
+                        const { pastoralHistory } = values
+
+                        return (
+                          <div>
+                            {pastoralHistory.map((pastoralHistory, index) => (
+                              <div key={index} className="form-row row-cols">
+                                <div className="col-7">
+                                  <FormikControl
+                                    className="form-control"
+                                    placeholder="History Entry"
+                                    control="input"
+                                    name={`pastoralHistory[${index}].historyRecord`}
+                                  />
+                                </div>
+                                <div className="col">
+                                  <FormikControl
+                                    className="form-control"
+                                    placeholder="Year"
+                                    control="input"
+                                    name={`pastoralHistory[${index}].historyDate`}
+                                  />
+                                </div>
+                                <div className="col d-flex">
+                                  <button
+                                    className="plus-button rounded mr-2"
+                                    type="button"
+                                    onClick={() => push()}
+                                  >
+                                    <svg
+                                      aria-hidden="true"
+                                      focusable="false"
+                                      data-prefix="fas"
+                                      data-icon="plus"
+                                      className="svg-inline--fa fa-plus fa-w-14"
+                                      role="img"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      viewBox="0 0 448 512"
+                                    >
+                                      <path
+                                        fill="currentColor"
+                                        d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"
+                                      />
+                                    </svg>
+                                  </button>
+                                  {index > 0 && (
+                                    <button
+                                      className="plus-button rounded"
+                                      type="button"
+                                      onClick={() => remove(index)}
+                                    >
+                                      {' '}
+                                      <svg
+                                        aria-hidden="true"
+                                        focusable="false"
+                                        data-prefix="fas"
+                                        data-icon="minus"
+                                        className="svg-inline--fa fa-minus fa-w-14"
+                                        role="img"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 448 512"
+                                      >
+                                        <path
+                                          fill="currentColor"
+                                          d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"
+                                        />
+                                      </svg>
+                                    </button>
+                                  )}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )
+                      }}
+                    </FieldArray>
+                    <div className="row mt-4">
+                      <div className="col d-flex justify-content-center">
+                        <button
+                          type="submit"
+                          disabled={!formik.isValid || formik.isSubmitting}
+                          className="btn btn-primary btn-medium my-3 text-center"
+                        >
+                          Submit
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  {/* <!--End of Pastoral History Section--> */}
+                </div>
+              </Form>
+            </div>
+          )}
+        </Formik>
+      </div>
+    )
+  }
+}

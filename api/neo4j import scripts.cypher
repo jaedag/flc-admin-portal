@@ -3,8 +3,8 @@
 match (n)
 detach delete n;
 
-//Import Apostles data
-LOAD CSV WITH HEADERS FROM "file:///Apostles.csv" as line
+//Import Bishops data
+LOAD CSV WITH HEADERS FROM "file:///Bishops.csv" as line
 CREATE (m:Member {whatsappNumber:line.`WhatsApp Number (if different)`})
 	SET 
     m.memberID = apoc.create.uuid(),

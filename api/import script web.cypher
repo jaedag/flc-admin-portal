@@ -1,10 +1,12 @@
+
+
 // Q1 Town, Community and Centre data import script
 //Delete all Entries
 match (n)
 detach delete n;
 
-//Import Apostles data
-LOAD CSV WITH HEADERS FROM "https://admin-firstlovecenter.imfast.io/Neo4j%20Test%20Data/Apostles.csv" as line
+//Import Bishops data
+LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/e/2PACX-1vQux_Dxr5gR6v8JiJvBtFRm997O9PJEhRhdHduHA5arLyP96PrxvtYCbGMNf3qRcUTRe2O94TrdPtPf/pub?gid=1980829198&single=true&output=csv" as line
 CREATE (m:Member {whatsappNumber:line.`WhatsApp Number (if different)`})
 	SET 
     m.memberID = apoc.create.uuid(),
@@ -16,221 +18,238 @@ CREATE (m:Member {whatsappNumber:line.`WhatsApp Number (if different)`})
     m.pictureUrl   = line.pictureUrl
 
    
-MERGE(g: Gender {gender: apoc.text.capitalizeAll(toLower(trim(line.Gender)))})
-MERGE(m)-[:HAS_GENDER]->(g)	
+with line,m WHERE line.Gender is not null
+MERGE(g: Gender {gender: line.Gender})
+MERGE(m)-[:HAS_GENDER]->(g)
 
-MERGE(ms: MaritalStatus {status: apoc.text.capitalizeAll(toLower(trim(line.`Marital Status`)))})
-MERGE(m)-[:HAS_MARITAL_STATUS]->(ms)
-
-with line, m  WHERE line.`Ministry` is not null
-MERGE(son: Ministry {name:line.`Ministry`})
-    ON CREATE SET 
-    son.sontaID = apoc.create.uuid()
-MERGE(m)-[:BELONGS_TO_MINISTRY]->(son)
-
-WITH line,m
-WHERE line.`Date of Birth` is not null
-// MATCH (m:Member {whatsappNumber:line.`WhatsApp Number (if different)`})
-
-MERGE (dob: TimeGraph {date: date(line.`Date of Birth`)})
-MERGE (m)-[:WAS_BORN_ON]->(dob)
-
-WITH line,m
-WHERE line.Occupation is not null
-// MATCH (m:Member {whatsappNumber: line.`WhatsApp Number (if different)`})
-
-MERGE(O:Occupation {occupation: line.Occupation})
-MERGE(m)-[:HAS_OCCUPATION]->(O);
-
-// Create the Members
-LOAD CSV WITH HEADERS FROM "https://admin-firstlovecenter.imfast.io/Neo4j%20Test%20Data/Members.csv" as line
-CREATE (m:Member {whatsappNumber:line.`WhatsApp Number (if different)`})
-	SET 
-    m.memberID = apoc.create.uuid(),
-    m.middleName = line.`Other Names`,
-    m.firstName = apoc.text.capitalizeAll(toLower(trim(line.`First Name`))),
-    m.lastName = apoc.text.capitalizeAll(toLower(trim(line.`Last Name`))),
-    m.phoneNumber = line.`Phone Number`,
-    m.areaOfResidence = line.`Area of Residence`,
-    m.pictureUrl   = line.pictureUrl
-   
-MERGE(g: Gender {gender: apoc.text.capitalizeAll(toLower(trim(line.Gender)))})
-MERGE(m)-[:HAS_GENDER]->(g)	
-
-MERGE(ms: MaritalStatus {status: apoc.text.capitalizeAll(toLower(trim(line.`Marital Status`)))})
+with line,m WHERE line.`Marital Status` is not null
+MERGE (ms: MaritalStatus {status: line.`Marital Status`})
 MERGE(m)-[:HAS_MARITAL_STATUS]->(ms)
 
 with line, m  WHERE line.`Ministry` is not null
 MERGE(son: Ministry {name:line.`Ministry`})
     ON CREATE SET 
     son.ministryID = apoc.create.uuid()
-MERGE(m)-[:BELONGS_TO_MINISTRY]->(son);
+MERGE(m)-[:BELONGS_TO]->(son)
 
-LOAD CSV WITH HEADERS FROM "https://admin-firstlovecenter.imfast.io/Neo4j%20Test%20Data/Members.csv" as line
-with line WHERE line.`Centre Code` is not null
-MATCH (m:Member {whatsappNumber: line.`WhatsApp Number (if different)`})
-MERGE (cen:Centre {code:  line.`Centre Code`})
-MERGE (m)-[:BELONGS_TO_CENTRE]->(cen);
-
-LOAD CSV WITH HEADERS FROM "https://admin-firstlovecenter.imfast.io/Neo4j%20Test%20Data/Members.csv" as line
-WITH line WHERE line.`Date of Birth` is not null
-MATCH (m:Member {whatsappNumber: line.`WhatsApp Number (if different)`})
-MERGE (dob: TimeGraph {date: date("1993-07-18")})
+WITH line,m
+WHERE line.`Date of Birth`is not null
+// MATCH (m:Member {whatsappNumber:line.`WhatsApp Number (if different)`})
+MERGE (dob: TimeGraph {date: date(line.`Date of Birth`)})
 MERGE (m)-[:WAS_BORN_ON]->(dob)
-RETURN dob;
 
-LOAD CSV WITH HEADERS FROM "https://admin-firstlovecenter.imfast.io/Neo4j%20Test%20Data/Members.csv" as line
-WITH line WHERE line.Occupation is not null
+with line,m WHERE line.`Centre Code` is not null
+MERGE (b:Bacenta {code:  line.`Centre Code`})
+MERGE (m)-[:BELONGS_TO]->(b)
+
+WITH line,m
+WHERE line.Occupation is not null
+// MATCH (m:Member {whatsappNumber: line.`WhatsApp Number (if different)`})
+MERGE(O:Occupation {occupation: line.Occupation})
+MERGE(m)-[:HAS_OCCUPATION]->(O);
+
+// Create the Members
+LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/e/2PACX-1vSwWmJJoyWNd6TBMAE74gxSnss94IC8my0lz5KUmggmwAOfsIOoNIvXH_Iq2sUYi86ULcGingtgE2ze/pub?gid=1112214026&single=true&output=csv" as line
+CREATE (m:Member {memberID: apoc.create.uuid()})
+	SET 
+    m.firstName = line.`First Name`,
+    m.middleName = line.`Other Names`,
+    m.lastName = line.`Last Name`,
+    m.phoneNumber = line.`Phone Number`,
+    m.whatsappNumber = line.`WhatsApp Number (if different)`,
+    m.areaOfResidence = line.`Area of Residence`,
+    m.pictureUrl = line.picture
+
+with line,m WHERE line.Gender is not null
+MERGE(g: Gender {gender: line.Gender})
+MERGE(m)-[:HAS_GENDER]->(g)
+
+with line,m WHERE line.`Marital Status` is not null
+MERGE (ms: MaritalStatus {status: line.`Marital Status`})
+MERGE(m)-[:HAS_MARITAL_STATUS]->(ms)
+
+with line,m WHERE line.`Centre Code` is not null
+MERGE (b:Bacenta {code:  line.`Centre Code`})
+MERGE (m)-[:BELONGS_TO]->(b)
+
+with line, m  WHERE line.`Ministry` is not null
+MERGE(son: Ministry {name:line.`Ministry`})
+ ON CREATE SET 
+    son.ministryID = apoc.create.uuid()
+MERGE(m)-[:BELONGS_TO]->(son)
+
+WITH line WHERE line.`Date of Birth`is not null
 MATCH (m:Member {whatsappNumber: line.`WhatsApp Number (if different)`})
-MERGE(occ:Occupation {occupation: line.Occupation})
-MERGE(m)-[:HAS_OCCUPATION]->(occ);
+MERGE (dob: TimeGraph {date: date(line.`Date of Birth`)})
+MERGE (m)-[:WAS_BORN_ON]->(dob)
+
+
+WITH line
+WHERE line.Occupation is not null
+MATCH (m:Member {whatsappNumber: line.`WhatsApp Number (if different)`})
+MERGE(O:Occupation {occupation: line.Occupation})
+MERGE(m)-[:HAS_OCCUPATION]->(O);
 
 // Create the Churches with 
-LOAD CSV WITH HEADERS FROM "https://admin-firstlovecenter.imfast.io/Neo4j%20Test%20Data/Centres-Table%20Town.csv" as line
+LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/e/2PACX-1vTOjWaKQk38jZYy0hASTI_hSRZR99AC9RJ-AP1YSvks8bex_v7KRI_81uwSriazP2xKSbq6QHVENvZa/pub?output=csv" as line
 MERGE(t:Town {name: apoc.text.capitalizeAll(toLower(trim(line.`TOWN`)))})
     ON CREATE SET 
 	t.townID = apoc.create.uuid()
 
 with line,t
-MATCH (m: Member {lastName: line.`BISHOP`})
-MERGE (title: Title{title:'Apostle'})
+MATCH (m: Member {whatsappNumber: line.`APOSTLE`})
+MERGE (title: Title{title:'Bishop'})
 MERGE (m)-[:HAS_TITLE]-> (title)
 MERGE (t)<-[:HAS_TOWN]-(m)
 
 with line WHERE line.COMMUNITY is not null
-MERGE(C: Community {name: apoc.text.capitalizeAll(toLower(trim(line.COMMUNITY)))})
+MERGE(C: Centre {name: apoc.text.capitalizeAll(toLower(trim(line.COMMUNITY)))})
 	ON CREATE SET
-    C.communityID = apoc.create.uuid()
+    C.centreID = apoc.create.uuid()
 
     with line, C
     MATCH (t: Town {name: apoc.text.capitalizeAll(toLower(trim(line.`TOWN`))) })
-    MERGE(t)-[:HAS_COMMUNITY]->(C)
+    MERGE(t)-[:HAS_CENTRE]->(C)
 
 with line, C  WHERE line.`CENTRE NAME` is not null
-MERGE(cen: Centre {code: line.`SERVICE CODE`})
+MERGE(b: Bacenta {code: line.`SERVICE CODE`})
 	SET 
-    cen.centreID = apoc.create.uuid(),
-    cen.name = apoc.text.capitalizeAll(toLower(trim(line.`CENTRE NAME`))),
-    cen.location = point({latitude:toFloat(line.LATITUDE), longitude:toFloat(line.LONGITUDE), crs:'WGS-84'})
+    b.bacentaID = apoc.create.uuid(),
+    b.name = apoc.text.capitalizeAll(toLower(trim(line.`CENTRE NAME`))),
+    b.location = point({latitude:toFloat(line.LATITUDE), longitude:toFloat(line.LONGITUDE), crs:'WGS-84'})
     
-MERGE (cen)<-[:HAS_CENTRE]-(C)
+MERGE (b)<-[:HAS_BACENTA]-(C)
 MERGE (l:Member {whatsappNumber: line.`PHONE NUMBER`})
-MERGE (l)-[:LEADS_CENTRE]->(cen)
+MERGE (l)-[:LEADS]->(b)
 
-with line,cen
+with line,b
 MERGE(sDay: ServiceDay {day: apoc.text.capitalizeAll(toLower(line.`SERVICE DAY`))} )
-MERGE (sDay)<-[:MEETS_ON_DAY]-(cen);
+MERGE (sDay)<-[:MEETS_ON_DAY]-(b);
 
-LOAD CSV WITH HEADERS FROM "https://admin-firstlovecenter.imfast.io/Neo4j%20Test%20Data/Centres-Table%20Campus.csv" as line
+LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/e/2PACX-1vTJia_j9M49dOptu6pjg3f8Q12CiPSyNjkBkFgD_TKxpofnKUNH-C-y2pwRnAaGbdGy3cYHo9jBZ1EI/pub?output=csv" as line
 MERGE(camp:Campus {name: apoc.text.capitalizeAll(toLower(trim(line.`CAMPUS`)))})
     ON CREATE SET 
 	camp.campusID = apoc.create.uuid()
 
 with line,camp
-MATCH (m: Member {lastName: line.`BISHOP`})
-MERGE (title: Title{title:'Apostle'})
+MATCH (m: Member {whatsappNumber: line.`APOSTLE`})
+MERGE (title: Title{title:'Bishop'})
 MERGE (m)-[:HAS_TITLE]-> (title)
 MERGE (camp)<-[:HAS_CAMPUS]-(m)
 
 with line WHERE line.HALL is not null
-MERGE(C: Hall {name: apoc.text.capitalizeAll(toLower(trim(line.HALL)))})
+MERGE(C: Centre {name: apoc.text.capitalizeAll(toLower(trim(line.HALL)))})
 	ON CREATE SET
-    C.hallID = apoc.create.uuid()
+    C.centreID = apoc.create.uuid()
 
     with line, C
     MATCH (t: Campus {name: apoc.text.capitalizeAll(toLower(trim(line.`CAMPUS`))) })
-    MERGE(t)-[:HAS_HALL]->(C)
+    MERGE(t)-[:HAS_CENTRE]->(C)
 
 with line, C  WHERE line.`CENTRE NAME` is not null
-MERGE(cen: Centre{code: line.`SERVICE CODE`})
+MERGE(b: Bacenta {code: line.`SERVICE CODE`})
 	SET 
-    cen.centreID = apoc.create.uuid(),
-    cen.name = apoc.text.capitalizeAll(toLower(trim(line.`CENTRE NAME`))),
-    cen.location = point({latitude:toFloat(line.LATITUDE), longitude:toFloat(line.LONGITUDE), crs:'WGS-84'})
+    b.bacentaID = apoc.create.uuid(),
+    b.name = apoc.text.capitalizeAll(toLower(trim(line.`CENTRE NAME`))),
+    b.location = point({latitude:toFloat(line.LATITUDE), longitude:toFloat(line.LONGITUDE), crs:'WGS-84'})
     
-MERGE (cen)<-[:HAS_CENTRE]-(C)
+MERGE (b)<-[:HAS_BACENTA]-(C)
 MERGE (l:Member {whatsappNumber: line.`PHONE NUMBER`})
-MERGE (l)-[:LEADS_CENTRE]->(cen)
+MERGE (l)-[:LEADS]->(b)
 
-with line,cen
+with line,b
 MERGE(sDay: ServiceDay {day: apoc.text.capitalizeAll(toLower(line.`SERVICE DAY`))} )
-MERGE (sDay)<-[:MEETS_ON_DAY]-(cen);
+MERGE (sDay)<-[:MEETS_ON_DAY]-(b);
 
-LOAD CSV WITH HEADERS FROM "https://admin-firstlovecenter.imfast.io/Neo4j%20Test%20Data/Communities.csv" as line
+// LOAD CSV WITH HEADERS FROM "file:///Members.csv" as line
+// WITH line 
+// WHERE line.`Attending Church or FLOW Church` is not null
+// MATCH (m:Member {whatsappNumber: line.`WhatsApp Number (if different)`})
+// MERGE(f:FlowChurch {name: line.`Attending Church or FLOW Church`})
+// MERGE (m)-[:BELONGS_TO_FLOWCHURCH]->(f)
+// MERGE (a:Member {firstName:'Frank',lastName:'Opoku'})
+// MERGE (f)<-[:HAS_FLOW_CHURCH]-(a);
+
+LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/e/2PACX-1vTu60_Lgyo45by9Ax3xEd02f2QDpRCP0FDtMrUcqjAZWAABVeHrlx9tZWk9mCLTX-E8GEUOBPOyYlFd/pub?output=csv" as line
 MATCH (m:Member {whatsappNumber: line.`Whatsapp Number`})
-MATCH (com: Community {name:apoc.text.capitalizeAll(toLower(trim(line.`Community`)))})
-MERGE (m)-[:LEADS_COMMUNITY]->(com)
+MATCH (com: Centre {name:apoc.text.capitalizeAll(toLower(trim(line.`Community`)))})
+MERGE (m)-[:LEADS]->(com)
 RETURN m,com;
 
-LOAD CSV WITH HEADERS FROM "https://admin-firstlovecenter.imfast.io/Neo4j%20Test%20Data/Halls.csv" as line
+LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/e/2PACX-1vTN7_EZByGWry2Ozga-Kw4sgsI8tG31KM2s6TjmwpMNVkfFqfTfed61FtaWwOnJH0Ryrp3MSjS5zr1T/pub?output=csv" as line
 MATCH (m:Member {whatsappNumber: line.`Whatsapp Number`})
-MATCH (com: Hall {name:apoc.text.capitalizeAll(toLower(trim(line.`Hall`)))})
-MERGE (m)-[:LEADS_HALL]->(com)
+MATCH (com: Centre {name:apoc.text.capitalizeAll(toLower(trim(line.`Hall`)))})
+MERGE (m)-[:LEADS]->(com)
 RETURN m,com;
 
-LOAD CSV WITH HEADERS FROM "https://admin-firstlovecenter.imfast.io/Neo4j%20Test%20Data/Towns.csv" as line WITH line WHERE line.`Whatsapp Number` IS NOT NULL
+LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/e/2PACX-1vQre5JdM9A2MCmT1ykinqPDr7-_j3j7ggs9Mcg3CSZsDPy_WM28UqHr0tHicnsr6TSeg1GuxEhd8E_i/pub?output=csv" as line WITH line WHERE line.`Whatsapp Number` IS NOT NULL
 MERGE (m:Member {whatsappNumber: line.`Whatsapp Number`})
+ON CREATE SET 
+    m.memberID=apoc.create.uuid()
 
 with line,m
 MERGE (t:Town {name:apoc.text.capitalizeAll(toLower(trim(line.`TOWN`)))})
-MERGE (m)-[:LEADS_TOWN]->(t)
+MERGE (m)-[:LEADS]->(t)
 RETURN m,t;
 
-LOAD CSV WITH HEADERS FROM "https://admin-firstlovecenter.imfast.io/Neo4j%20Test%20Data/Campuses.csv" as line WITH line WHERE line.`Whatsapp Number` IS NOT NULL
+LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/e/2PACX-1vQEMAIhCR5zE05pLxJY-PuhXO-vus2qZVi9mGsOyBl0QYQCIZXMN9-5jeyiMtHSfWye-1eIrjUr5P1f/pub?output=csv" as line WITH line WHERE line.`Whatsapp Number` IS NOT NULL
 MERGE (m:Member {whatsappNumber: line.`Whatsapp Number`})
+ON CREATE SET 
+    m.memberID=apoc.create.uuid()
 
 with line,m
 MERGE (t:Campus {name:apoc.text.capitalizeAll(toLower(trim(line.`CAMPUS`)))})
-MERGE (m)-[:LEADS_CAMPUS]->(t)
+MERGE (m)-[:LEADS]->(t)
 RETURN m,t;
 
+ 
 
-// Sonta Relationships
-LOAD CSV WITH HEADERS FROM "https://admin-firstlovecenter.imfast.io/Neo4j%20Test%20Data/Sonta%20Town.csv" as line
+//Q3 Sonta Relationships
+LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/e/2PACX-1vS6pP1yi3femY5GtlJUTCxEoBwPn-f9jovWz7paFeUZDAgPVsm1CisoV1b9llglNyj8bqnc-jD7igT_/pub?output=csv" as line
 MATCH (m:Member {whatsappNumber: line.`Whatsapp Number`})
 
 with line,m
 MERGE (sonta: Sonta {name: apoc.text.capitalizeAll(toLower(trim(line.`TOWN`)))+" "+line.Sonta})
-MERGE (m)-[:LEADS_SONTA]->(sonta)
+MERGE (m)-[:LEADS]->(sonta)
 
 with line, m,sonta
 MATCH (t: Town {name: apoc.text.capitalizeAll(toLower(trim(line.`TOWN`)))})
 MERGE (t)-[:HAS_SONTA]->(sonta)
 RETURN m;
 
-LOAD CSV WITH HEADERS FROM "https://admin-firstlovecenter.imfast.io/Neo4j%20Test%20Data/Sonta%20Campus.csv" as line
+LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/e/2PACX-1vQD-0Y31CXLBh4m9Ce1cQvfc-jcgNqaYPZ5W2NrKFxHntzeKNc5q0kIfHqj5vNskN9gPfG4GpYlBo-r/pub?output=csv" as line
 MATCH (m:Member {whatsappNumber: line.`Whatsapp Number`})
 
 with line,m
 MERGE (sonta: Sonta {name: apoc.text.capitalizeAll(toLower(trim(line.`CAMPUS`)))+" "+line.Sonta})
-MERGE (m)-[:LEADS_SONTA]->(sonta)
+MERGE (m)-[:LEADS]->(sonta)
 
 with line, m,sonta
 MATCH (t: Campus {name: apoc.text.capitalizeAll(toLower(trim(line.`CAMPUS`)))})
 MERGE (t)-[:HAS_SONTA]->(sonta)
 RETURN m;
 
-LOAD CSV WITH HEADERS FROM "https://admin-firstlovecenter.imfast.io/Neo4j%20Test%20Data/Basonta%20Town.csv" as line
+LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/e/2PACX-1vRQa8RtmkUsLrSMZStlZdrBKLXRS_1_N3B1lFtGETAtO9ToLd4WcoVUF86EkzyC_IGKsHnK9P2i_foO/pub?output=csv" as line
 MATCH (m:Member {whatsappNumber: line.`Whatsapp Number`})
 
 with line,m
 MERGE (sonta: Basonta {name: apoc.text.capitalizeAll(toLower(trim(line.`COMMUNITY`)))+" "+line.Sonta})
-MERGE (m)-[:LEADS_BASONTA]->(sonta)
+MERGE (m)-[:LEADS]->(sonta)
 
 with line, m,sonta
-MATCH (t: Community {name: apoc.text.capitalizeAll(toLower(trim(line.`COMMUNITY`)))})
+MATCH (t: Centre {name: apoc.text.capitalizeAll(toLower(trim(line.`COMMUNITY`)))})
 MERGE (t)-[:HAS_BASONTA]->(sonta)
 RETURN m;
 
-LOAD CSV WITH HEADERS FROM "https://admin-firstlovecenter.imfast.io/Neo4j%20Test%20Data/Basonta%20Campus.csv" as line
+LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/e/2PACX-1vR9m4SljU8402PGFjYdVwMHtqe_NgWRD8Xx2ox_Xw0SBk0GzifP-2rWxS2Vg6HWKPaZZTJHQsTX2ZNL/pub?output=csv" as line
 MATCH (m:Member {whatsappNumber: line.`Whatsapp Number`})
 
 with line,m
 MERGE (sonta: Basonta {name: apoc.text.capitalizeAll(toLower(trim(line.`HALL`)))+" "+line.Sonta})
-MERGE (m)-[:LEADS_BASONTA]->(sonta)
+MERGE (m)-[:LEADS]->(sonta)
 
 with line, m,sonta
-MATCH (t: Hall {name: apoc.text.capitalizeAll(toLower(trim(line.`HALL`)))})
+MATCH (t: Centre {name: apoc.text.capitalizeAll(toLower(trim(line.`HALL`)))})
 MERGE (t)-[:HAS_BASONTA]->(sonta)
 RETURN t;
 
@@ -250,19 +269,14 @@ RETURN t,s;
 
 //Basonta to Hall and Community
 MATCH (b:Basonta)
-MATCH (h:Hall) WHERE b.name CONTAINS h.name
+MATCH (h:Centre) WHERE b.name CONTAINS h.name
 MERGE (h)-[:HAS_BASONTA]->(b)
 RETURN h,b;
 
 MATCH (b:Basonta)
-MATCH (c:Community) WHERE b.name CONTAINS c.name
-MERGE (c)-[:HAS_BASONTA]->(b)
-RETURN c,b;
-
-MATCH (b:Basonta)
 MATCH (s:Sonta)
 MATCH (s)<-[:HAS_SONTA]-(m:Ministry)
-MATCH (s)<-[:HAS_SONTA]-()-[:HAS_COMMUNITY|:HAS_HALL]->()-[:HAS_BASONTA]->(b)
+MATCH (s)<-[:HAS_SONTA]-()-[:HAS_CENTRE]->()-[:HAS_BASONTA]->(b)
 WHERE b.name CONTAINS m.name
 MERGE (s)-[r:HAS_BASONTA]->(b)
 RETURN r;

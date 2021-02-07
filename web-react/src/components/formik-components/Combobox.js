@@ -47,7 +47,6 @@ function Combobox(props) {
             setSuggestions([])
           }
           try {
-            // console.log(data)
             setSuggestions(
               data[`${dataset}`].map((row) => ({
                 name: row[`${suggestionText}`],
@@ -66,7 +65,7 @@ function Combobox(props) {
             event.preventDefault()
           }
           setSearchString(suggestion.name)
-          console.log(suggestion)
+
           setFieldValue(`${name}`, suggestion.id)
         }}
         getSuggestionValue={(suggestion) => suggestion.name}

@@ -12,8 +12,8 @@ import { NavBar } from '../components/NavBar'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
 import Spinner from '../components/Spinner'
 import { MINISTRY_LIST, BACENTA_DROPDOWN } from '../queries/ListQueries'
-import { MemberContext } from '../context/MemberContext'
-import { ChurchContext } from '../context/ChurchContext'
+import { MemberContext } from '../contexts/MemberContext'
+import { ChurchContext } from '../contexts/ChurchContext'
 
 export const EditMemberDetails = () => {
   const { memberID } = useContext(MemberContext)

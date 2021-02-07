@@ -53,11 +53,11 @@ export const SearchPageMobile = () => {
                   setMemberID(searchResult.memberID)
                   history.push('/members/displaydetails')
                   if (!searchResult.bacenta) {
-                    if (searchResult.townBishop[0].name) {
+                    if (searchResult.townBishop[0]) {
                       setChurch({ church: 'town', subChurch: 'centre' })
                       setBishopID(searchResult.memberID)
                       return
-                    } else if (searchResult.campusBishop[0].name) {
+                    } else if (searchResult.campusBishop[0]) {
                       setChurch({ church: 'campus', subChurch: 'centre' })
                       setBishopID(searchResult.memberID)
                       return

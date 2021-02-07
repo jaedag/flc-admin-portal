@@ -128,7 +128,7 @@ export const CREATE_CAMPUS_MUTATION = gql`
     $bishopID: ID
   ) {
     AddCampus(
-      campusName: $townName
+      campusName: $campusName
       lWhatsappNumber: $lWhatsappNumber
       bishopID: $bishopID
     ) {

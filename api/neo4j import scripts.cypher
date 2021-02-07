@@ -88,7 +88,7 @@ MERGE(t:Town {name: apoc.text.capitalizeAll(toLower(trim(line.`TOWN`)))})
 	t.townID = apoc.create.uuid()
 
 with line,t
-MATCH (m: Member {whatsappNumber: line.`BISHOP`})
+MATCH (m: Member {whatsappNumber: line.`APOSTLE`})
 MERGE (title: Title{title:'Bishop'})
 MERGE (m)-[:HAS_TITLE]-> (title)
 MERGE (t)<-[:HAS_TOWN]-(m)
@@ -123,7 +123,7 @@ MERGE(camp:Campus {name: apoc.text.capitalizeAll(toLower(trim(line.`CAMPUS`)))})
 	camp.campusID = apoc.create.uuid()
 
 with line,camp
-MATCH (m: Member {whatsappNumber: line.`BISHOP`})
+MATCH (m: Member {whatsappNumber: line.`APOSTLE`})
 MERGE (title: Title{title:'Bishop'})
 MERGE (m)-[:HAS_TITLE]-> (title)
 MERGE (camp)<-[:HAS_CAMPUS]-(m)
@@ -175,6 +175,8 @@ RETURN m,com;
 
 LOAD CSV WITH HEADERS FROM "file:///Towns.csv" as line WITH line WHERE line.`Whatsapp Number` IS NOT NULL
 MERGE (m:Member {whatsappNumber: line.`Whatsapp Number`})
+ON CREATE SET 
+    m.memberID=apoc.create.uuid()
 
 with line,m
 MERGE (t:Town {name:apoc.text.capitalizeAll(toLower(trim(line.`TOWN`)))})
@@ -183,6 +185,8 @@ RETURN m,t;
 
 LOAD CSV WITH HEADERS FROM "file:///Campuses.csv" as line WITH line WHERE line.`Whatsapp Number` IS NOT NULL
 MERGE (m:Member {whatsappNumber: line.`Whatsapp Number`})
+ON CREATE SET 
+    m.memberID=apoc.create.uuid()
 
 with line,m
 MERGE (t:Campus {name:apoc.text.capitalizeAll(toLower(trim(line.`CAMPUS`)))})

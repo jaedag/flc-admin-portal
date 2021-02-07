@@ -87,18 +87,10 @@ export const BACENTA_DROPDOWN = gql`
 `
 
 export const CENTRE_DROPDOWN = gql`
-  query($bacentaName: String) {
-    bacentaDropdown(bacentaName: $bacentaName, first: 8) {
-      bacentaID
+  query($centreName: String) {
+    centreDropdown(centreName: $centreName, first: 8) {
+      centreID
       name
-      centre {
-        campus {
-          name
-        }
-        town {
-          name
-        }
-      }
     }
   }
 `
@@ -216,6 +208,11 @@ export const GET_BISHOPS = gql`
       }
     }
     bishopsListCampus {
+      memberID
+      firstName
+      lastName
+    }
+    bishopsListTown {
       memberID
       firstName
       lastName

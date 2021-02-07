@@ -13,6 +13,7 @@ import { PastorsGrid } from './pages/PastorsGrid'
 import { SearchPageMobile } from './pages/SearchPageMobile'
 import { DisplayMemberDetails } from './pages/DisplayMemberDetails'
 import { AddMember } from './pages/AddMember'
+import { EditMemberDetails } from './pages/EditMemberDetails'
 import AddCentre from './pages/AddCentre'
 import AddTownCampus from './pages/AddTownCampus'
 import { DisplayBacentaDetails } from './pages/DisplayBacentaDetails'
@@ -41,6 +42,13 @@ const PastorsAdmin = () => {
   const capitalise = (str) => {
     return str.charAt(0).toUpperCase() + str.slice(1)
   }
+  const parsePhoneNum = (phoneNumber) => {
+    phoneNumber
+      .replace(/\s/g, '')
+      .replace('+', '')
+      .replace('(', '')
+      .replace(')', '')
+  }
   const [bishopID, setBishopID] = useState('')
   const [townID, setTownID] = useState('')
   const [campusID, setCampusID] = useState('')
@@ -58,6 +66,7 @@ const PastorsAdmin = () => {
       <ChurchContext.Provider
         value={{
           capitalise,
+          parsePhoneNum,
           church,
           setChurch,
           bishopID,
@@ -85,6 +94,11 @@ const PastorsAdmin = () => {
               <Route path="/members" component={MembersGrid} exact />
               <Route path="/pastors" component={PastorsGrid} exact />
               <Route path="/members/addmember" component={AddMember} exact />
+              <Route
+                path="/members/editmember"
+                component={EditMemberDetails}
+                exact
+              />
               <Route
                 path="/members/displaydetails"
                 component={DisplayMemberDetails}
@@ -143,6 +157,7 @@ const PastorsAdmin = () => {
                 exact
               />
               <Route path="/town/addtown" component={AddTownCampus} exact />
+              <Route path="/campus/addcampus" component={AddTownCampus} exact />
             </Switch>
           </SearchContext.Provider>
         </MemberContext.Provider>

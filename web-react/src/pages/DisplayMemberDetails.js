@@ -132,6 +132,7 @@ export const DisplayMemberDetails = () => {
             <div className="row">
               <div className="col">
                 <MemberCard
+                  editlink="/members/editmember"
                   title={`${memberData.displayMember.firstName} ${memberData.displayMember.lastName}`}
                 >
                   <div className="row row-cols-1 my-2">
@@ -154,7 +155,7 @@ export const DisplayMemberDetails = () => {
                       <p className="font-weight-light card-text">
                         {
                           //Rank Discussions
-                          rank
+                          !rank === []
                             ? rank.map((rank, i) => (
                                 <Link key={i} to={rank.link}>
                                   {rank.detail.map((detail, i) => (
@@ -188,7 +189,7 @@ export const DisplayMemberDetails = () => {
             <div className="row">
               <div className="col">
                 {/* Bio Information */}
-                <MemberCard title="Bio">
+                <MemberCard title="Bio" editlink="/members/editmember">
                   <div className="container p-2">
                     <div className="row py-2">
                       <div className="col ">
@@ -246,7 +247,9 @@ export const DisplayMemberDetails = () => {
                       </div>
                       <div className="col">
                         <p className="font-weight-bold card-text">
-                          {memberData.displayMember.gender.gender}
+                          {memberData.displayMember.gender
+                            ? memberData.displayMember.gender.gender
+                            : null}
                         </p>
                       </div>
                     </div>
@@ -258,7 +261,9 @@ export const DisplayMemberDetails = () => {
                       </div>
                       <div className="col">
                         <p className="font-weight-bold card-text">
-                          {memberData.displayMember.maritalStatus.status}
+                          {memberData.displayMember.maritalStatus
+                            ? memberData.displayMember.maritalStatus.status
+                            : null}
                         </p>
                       </div>
                     </div>
@@ -313,7 +318,7 @@ export const DisplayMemberDetails = () => {
             {memberData.displayMember.leadershipHistory[0] ? (
               <div className="row">
                 <div className="col">
-                  <MemberCard title="History Timeline">
+                  <MemberCard title="History Timeline" editlink="#">
                     <div className="row">
                       <ul className="timeline">
                         {memberData.displayMember.leadershipHistory.map(
@@ -340,7 +345,7 @@ export const DisplayMemberDetails = () => {
             {/* Current Church Status */}
             <div className="row">
               <div className="col">
-                <MemberCard title="Current Church Activity">
+                <MemberCard title="Current Church Activity" editlink="#">
                   <div className="container p-2">
                     <div className="row mb-2">
                       <div className="col">
@@ -414,8 +419,10 @@ export const DisplayMemberDetails = () => {
                       </div>
                       <div className="col">
                         <p className="font-weight-bold card-text">
-                          {memberData.displayMember.sonta.leader
-                            ? `${memberData.displayMember.sonta.leader.firstName} ${memberData.displayMember.sonta.leader.lastName}`
+                          {memberData.displayMember.sonta
+                            ? memberData.displayMember.sonta.leader
+                              ? `${memberData.displayMember.sonta.leader.firstName} ${memberData.displayMember.sonta.leader.lastName}`
+                              : null
                             : null}
                         </p>
                       </div>

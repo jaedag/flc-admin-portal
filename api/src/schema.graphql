@@ -246,7 +246,8 @@ type Query {
 	campusMemberCount(campusID: ID): Int! @cypher(statement: "MATCH (:Campus {campusID:$campusID})-[]-(:Centre)-[]->(:Bacenta)<-[:BELONGS_TO]-(m:Member) RETURN COUNT(m)")
 
 #At the Centre Level
-	displayCentre(centreID: ID):Centre @cypher(statement: "MATCH (comm:Centre {centreID:$centreID}) RETURN comm")
+	displayCentre(centreID: ID):Centre @cypher(statement: "MATCH (c:Centre {centreID:$centreID}) RETURN c")
+	centreDropdown (centreName:String):[Centre] @cypher(statement: "MATCH (c:Centre) WHERE toLower(c.name) CONTAINS toLower($centreName) RETURN c")
 	centreList(townID: ID): [Centre] @cypher(statement: "MATCH (t:Town {townID:$townID})-[:HAS_CENTRE]->(c:Centre) RETURN c")
 	centreBacentaList(centreID:ID):[Bacenta] @cypher(statement: """
 	MATCH (c:Bacenta)  
@@ -430,11 +431,30 @@ type Mutation {
 	MERGE(t:Town {name:$townName})
     	ON CREATE SET 
 		t.townID = apoc.create.uuid()
-	MERGE (m:Member {whatsappNumber: $lWhatsappNumber})
+	WITH t
+	MATCH (m:Member {whatsappNumber: $lWhatsappNumber})
 	MERGE (m)-[:LEADS]->(t)
 	MERGE (a:Member {memberID: $bishopID})
 	MERGE (a)-[:HAS_TOWN]->(t)
 	RETURN t
+	"""
+	),
+	AddCampus(
+		campusName: String
+		lWhatsappNumber: String
+		bishopID: ID
+	):Campus
+	@cypher(statement:
+	"""
+	MERGE(c:Campus {name:$campusName})
+    	ON CREATE SET 
+		c.campusID = apoc.create.uuid()
+	WITH c
+	MATCH (m:Member {whatsappNumber: $lWhatsappNumber})
+	MERGE (m)-[:LEADS]->(c)
+	MERGE (a:Member {memberID: $bishopID})
+	MERGE (a)-[:HAS_CAMPUS]->(c)
+	RETURN c
 	"""
 	),
 	AddCentre(

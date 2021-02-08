@@ -48,27 +48,6 @@ export const GET_BACENTA_LEADERS = gql`
   }
 `
 
-export const GET_BACENTAS = gql`
-  query($centreID: ID) {
-    bacentaList(centreID: $centreID) {
-      bacentaID
-      name
-      leader {
-        firstName
-        lastName
-      }
-      centre {
-        name
-        leader {
-          memberID
-          firstName
-          lastName
-        }
-      }
-    }
-  }
-`
-
 export const BACENTA_DROPDOWN = gql`
   query($bacentaName: String) {
     bacentaDropdown(bacentaName: $bacentaName, first: 8) {
@@ -116,9 +95,9 @@ export const CENTRE_DROPDOWN = gql`
   }
 `
 
-export const GET_CENTRES = gql`
-  query($townID: ID, $campusID: ID) {
-    centreList(townID: $townID, campusID: $campusID) {
+export const GET_TOWN_CENTRES = gql`
+  query($townID: ID) {
+    townCentreList(townID: $townID) {
       centreID
       name
       town {
@@ -132,6 +111,20 @@ export const GET_CENTRES = gql`
           name
         }
       }
+      leader {
+        firstName
+        lastName
+      }
+    }
+    townMemberCount(townID: $townID)
+  }
+`
+
+export const GET_CAMPUS_CENTRES = gql`
+  query($campusID: ID) {
+    campusCentreList(campusID: $campusID) {
+      centreID
+      name
       campus {
         name
         leader {
@@ -148,6 +141,7 @@ export const GET_CENTRES = gql`
         lastName
       }
     }
+    campusMemberCount(campusID: $campusID)
   }
 `
 
@@ -250,12 +244,23 @@ export const MINISTRY_LIST = gql`
   }
 `
 
-export const BACENTA_LIST = gql`
+export const CENTRE_BACENTA_LIST = gql`
   query($centreID: ID) {
-    bacentaList(centreID: $centreID) {
+    centreBacentaList(centreID: $centreID) {
       bacentaID
       name
-      leader
+      leader {
+        firstName
+        lastName
+      }
+      centre {
+        name
+        leader {
+          memberID
+          firstName
+          lastName
+        }
+      }
     }
   }
 `

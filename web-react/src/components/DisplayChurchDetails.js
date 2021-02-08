@@ -59,7 +59,7 @@ export const DisplayChurchDetails = (props) => {
           </div>
         </div>
       </div>
-      {subChurch ? (
+      {subChurch && buttons[0] ? (
         <React.Fragment>
           <div className="container">
             <hr className="hr-line" />

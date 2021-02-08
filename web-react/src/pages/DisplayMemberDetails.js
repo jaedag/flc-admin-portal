@@ -353,15 +353,17 @@ export const DisplayMemberDetails = () => {
                       <div className="col">
                         <p className="font-weight-bold card-text">
                           {memberData.displayMember.bacenta
-                            ? `${
-                                memberData.displayMember.bacenta.centre[
-                                  `${church.church}`
-                                ].bishop.firstName
-                              } ${
-                                memberData.displayMember.bacenta.centre[
-                                  `${church.church}`
-                                ].bishop.lastName
-                              }`
+                            ? memberData.displayMember.bacenta.name
+                              ? `${
+                                  memberData.displayMember.bacenta.centre[
+                                    `${church.church}`
+                                  ].bishop.firstName
+                                } ${
+                                  memberData.displayMember.bacenta.centre[
+                                    `${church.church}`
+                                  ].bishop.lastName
+                                }`
+                              : null
                             : null}
                         </p>
                       </div>

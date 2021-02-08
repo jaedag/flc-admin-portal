@@ -26,7 +26,7 @@ export const DisplayAllBacentas = () => {
           <div className="mb-4">
             <h4>{`${bacentaData.bacentaList[0].centre.name} Centre`}</h4>
             <Link
-              to="/members/displaydetails"
+              to="/member/displaydetails"
               onClick={() => {
                 setMemberID(
                   `${bacentaData.bacentaList[0].centre.leader.memberID}`

@@ -33,7 +33,7 @@ export const DisplayAllCentres = () => {
           <div className="row justify-content-between">
             <div className="col-auto">
               <Link
-                to="/members/displaydetails"
+                to="/member/displaydetails"
                 onClick={() => {
                   setMemberID(
                     `${centreData.centreList[0].town.leader.memberID}`

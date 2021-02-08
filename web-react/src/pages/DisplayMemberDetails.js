@@ -26,7 +26,6 @@ export const DisplayMemberDetails = () => {
   const { memberID } = useContext(MemberContext)
   const {
     church,
-    capitalise,
     setBacentaID,
     setCentreID,
     setTownID,
@@ -132,7 +131,7 @@ export const DisplayMemberDetails = () => {
             <div className="row">
               <div className="col">
                 <MemberCard
-                  editlink="/members/editmember"
+                  editlink="/member/editmember"
                   title={`${memberData.displayMember.firstName} ${memberData.displayMember.lastName}`}
                 >
                   <div className="row row-cols-1 my-2">
@@ -189,7 +188,7 @@ export const DisplayMemberDetails = () => {
             <div className="row">
               <div className="col">
                 {/* Bio Information */}
-                <MemberCard title="Bio" editlink="/members/editmember">
+                <MemberCard title="Bio" editlink="/member/editmember">
                   <div className="container p-2">
                     <div className="row py-2">
                       <div className="col ">
@@ -349,51 +348,33 @@ export const DisplayMemberDetails = () => {
                   <div className="container p-2">
                     <div className="row mb-2">
                       <div className="col">
-                        <p className="text-secondary card-text">{`${capitalise(
-                          church.church
-                        )}`}</p>
+                        <p className="text-secondary card-text">Bishop</p>
                       </div>
                       <div className="col">
                         <p className="font-weight-bold card-text">
                           {memberData.displayMember.bacenta
-                            ? memberData.displayMember.bacenta.name
-                              ? memberData.displayMember.bacenta[
-                                  `${church.subChurch}`
-                                ][`${church.church}`].name
-                              : null
+                            ? `${
+                                memberData.displayMember.bacenta.centre[
+                                  `${church.church}`
+                                ].bishop.firstName
+                              } ${
+                                memberData.displayMember.bacenta.centre[
+                                  `${church.church}`
+                                ].bishop.lastName
+                              }`
                             : null}
                         </p>
                       </div>
                     </div>
                     <div className="row mb-2">
                       <div className="col">
-                        <p className="text-secondary card-text">{`${capitalise(
-                          church.subChurch
-                        )}`}</p>
+                        <p className="text-secondary card-text">Bacenta</p>
                       </div>
                       <div className="col">
                         <p className="font-weight-bold card-text">
                           {memberData.displayMember.bacenta
                             ? memberData.displayMember.bacenta.name
-                              ? memberData.displayMember.bacenta[
-                                  `${church.subChurch}`
-                                ].name
-                              : null
-                            : null}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="row mb-2">
-                      <div className="col">
-                        <p className="text-secondary card-text">
-                          Bacenta Shepherd
-                        </p>
-                      </div>
-                      <div className="col">
-                        <p className="font-weight-bold card-text">
-                          {memberData.displayMember.bacenta
-                            ? memberData.displayMember.bacenta.name
-                              ? `${memberData.displayMember.bacenta.leader.firstName} ${memberData.displayMember.bacenta.leader.lastName}`
+                              ? memberData.displayMember.bacenta.name
                               : null
                             : null}
                         </p>

@@ -5,7 +5,11 @@ import { Formik, Form, FieldArray } from 'formik'
 import * as Yup from 'yup'
 import FormikControl from '../components/formik-components/FormikControl'
 
-import { GET_TOWNS } from '../queries/ListQueries'
+import {
+  GET_CAMPUSES,
+  GET_TOWNS,
+  BISHOP_BACENTA_DROPDOWN,
+} from '../queries/ListQueries'
 import { CREATE_CENTRE_MUTATION } from '../queries/AdditionMutations'
 import { NavBar } from '../components/NavBar'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
@@ -14,17 +18,20 @@ import { ChurchContext } from '../contexts/ChurchContext'
 function AddCentre() {
   const initialValues = {
     centreName: '',
-    centreLeaderName: '',
+    leaderName: '',
+    leaderWhatsapp: '',
     townSelect: '',
+    campusSelect: '',
     bacentas: [''],
   }
 
   const validationSchema = Yup.object({
-    // townSelect: Yup.string().required('Choose a Town'),
     centreName: Yup.string().required('Centre Name is a required field'),
   })
 
-  const { setTownID, setCentreID } = useContext(ChurchContext)
+  const { church, capitalise, bishopID, setTownID, setCentreID } = useContext(
+    ChurchContext
+  )
 
   const [AddCentre] = useMutation(CREATE_CENTRE_MUTATION, {
     onCompleted: (newCentreData) => {
@@ -35,15 +42,25 @@ function AddCentre() {
   const history = useHistory()
 
   const { data: townListData, loading: townListLoading } = useQuery(GET_TOWNS, {
-    variables: { aFirstName: 'Frank', aLastName: 'Opoku' },
+    variables: { bishopID: bishopID },
   })
+  const { data: campusListData, loading: campusListLoading } = useQuery(
+    GET_CAMPUSES,
+    {
+      variables: { bishopID: bishopID },
+    }
+  )
 
-  if (townListData) {
+  if (townListData && campusListData) {
     const townOptions = townListData.townList.map((town) => ({
       value: town.townID,
       key: town.name,
     }))
-    // console.log('Data is here')
+
+    const campusOptions = campusListData.campusList.map((campus) => ({
+      value: campus.campusID,
+      key: campus.name,
+    }))
 
     //onSubmit receives the form state as argument
     const onSubmit = (values, onSubmitProps) => {
@@ -51,9 +68,10 @@ function AddCentre() {
       AddCentre({
         variables: {
           centreName: values.centreName,
-          centreLeaderName: values.commLeaderName,
-          lWhatsappNumber: values.commLeaderWhatsapp,
+          centreLeaderName: values.leaderName,
+          lWhatsappNumber: values.leaderWhatsapp,
           townID: values.townSelect,
+          campusID: values.campusSelect,
         },
       })
 
@@ -85,11 +103,14 @@ function AddCentre() {
                             className="form-control"
                             control="select"
                             name="townSelect"
-                            options={townOptions}
-                            // onChange={(e) => {
-                            // 	setTownID(e.target.value)
-                            // }}
-                            defaultOption="Select a Town"
+                            options={
+                              church.church === 'town'
+                                ? townOptions
+                                : campusOptions
+                            }
+                            defaultOption={`Select a ${capitalise(
+                              church.church
+                            )}`}
                           />
                         </div>
                       </div>
@@ -109,7 +130,7 @@ function AddCentre() {
                           <FormikControl
                             className="form-control"
                             control="input"
-                            name="commLeaderName"
+                            name="leaderName"
                             placeholder="Name of Centre Leader"
                           />
                         </div>
@@ -119,7 +140,7 @@ function AddCentre() {
                           <FormikControl
                             className="form-control"
                             control="input"
-                            name="commLeaderWhatsapp"
+                            name="leaderWhatsapp"
                             placeholder="Enter Leader WhatsApp No"
                           />
                         </div>
@@ -139,10 +160,17 @@ function AddCentre() {
                                 <div key={index} className="form-row row-cols">
                                   <div className="col-9">
                                     <FormikControl
-                                      className="form-control"
-                                      placeholder="Bacenta Name"
-                                      control="input"
+                                      control="combobox"
                                       name={`bacentas[${index}]`}
+                                      placeholder="Bacenta Name"
+                                      setFieldValue={formik.setFieldValue}
+                                      optionsQuery={BISHOP_BACENTA_DROPDOWN}
+                                      queryVariable="bacentaName"
+                                      suggestionText="name"
+                                      suggestionID="bacentaID"
+                                      dataset="bacentaDropdown"
+                                      aria-describedby="Bacenta Name"
+                                      className="form-control"
                                     />
                                   </div>
                                   <div className="col d-flex">
@@ -216,7 +244,7 @@ function AddCentre() {
         </Formik>
       </div>
     )
-  } else if (townListLoading) {
+  } else if (townListLoading || campusListLoading) {
     return <LoadingScreen />
   } else {
     return <ErrorScreen />

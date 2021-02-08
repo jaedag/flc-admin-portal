@@ -187,6 +187,7 @@ type Query {
 
 #At the Episcopal Level
 	bishopsCampusTownCount(bishopID: ID): Int! @cypher(statement: "MATCH (:Member {memberID: $bishopID})-[:HAS_TOWN|:HAS_CAMPUS]->(t) RETURN COUNT(t)")
+	bishopBacentaDropdown (bishopID: ID, bacentaName:String):[Bacenta] @cypher(statement: "MATCH (b:Bacenta)-[]-(:Centre)-[:HAS_CENTRE]-()-[:HAS_TOWN]-(:Member {memberID: $bishopID}) WHERE toLower(b.name) CONTAINS toLower($bacentaName) RETURN b")
 	bishopsSontaMemberList(bishopID: ID): [Member]! @cypher(statement: 
 		"""
 		MATCH (:Member {memberID: $bishopID})-[:HAS_TOWN|:HAS_CAMPUS]->()-[:HAS_CENTRE]->()-[:HAS_BACENTA]->()<-[:BELONGS_TO]-(m:Member)-[:BELONGS_TO]->(s)
@@ -432,17 +433,31 @@ type Mutation {
 		townName: String
 		lWhatsappNumber: String
 		bishopID: ID
+		centres:[ID]
 	):Town
 	@cypher(statement:
 	"""
-	MERGE(t:Town {name:$townName})
-    	ON CREATE SET 
+	CREATE (t:Town {name:$townName})
+    	SET 
 		t.townID = apoc.create.uuid()
 	WITH t
 	MATCH (m:Member {whatsappNumber: $lWhatsappNumber})
 	MERGE (m)-[:LEADS]->(t)
 	MERGE (a:Member {memberID: $bishopID})
 	MERGE (a)-[:HAS_TOWN]->(t)
+
+	WITH t
+    CALL {
+    	WITH t
+    	WITH t  WHERE $centres IS NOT NULL
+    	UNWIND $centres AS x
+        MATCH (c:Centre {centreID:x})
+        MATCH (t1)-[r:HAS_CENTRE]->(c)
+        DELETE r
+        MERGE (t)-[:HAS_CENTRE]->(c)
+    	RETURN count(t)
+    	}
+
 	RETURN t
 	"""
 	),
@@ -450,38 +465,81 @@ type Mutation {
 		campusName: String
 		lWhatsappNumber: String
 		bishopID: ID
+		centres:[ID]
 	):Campus
 	@cypher(statement:
 	"""
-	MERGE(c:Campus {name:$campusName})
-    	ON CREATE SET 
-		c.campusID = apoc.create.uuid()
-	WITH c
+	CREATE (t:Campus {name:$campusName})
+    	SET 
+		t.campusID = apoc.create.uuid()
+	WITH t
 	MATCH (m:Member {whatsappNumber: $lWhatsappNumber})
-	MERGE (m)-[:LEADS]->(c)
+	MERGE (m)-[:LEADS]->(t)
 	MERGE (a:Member {memberID: $bishopID})
-	MERGE (a)-[:HAS_CAMPUS]->(c)
-	RETURN c
+	MERGE (a)-[:HAS_CAMPUS]->(t)
+
+	WITH t
+    CALL {
+    	WITH t
+    	WITH t  WHERE $centres IS NOT NULL
+    	UNWIND $centres AS x
+        MATCH (c:Centre {centreID:x})
+        MATCH (t1)-[r:HAS_CENTRE]->(c)
+        DELETE r
+        MERGE (t)-[:HAS_CENTRE]->(c)
+    	RETURN count(t)
+    	}
+
+	RETURN t
 	"""
 	),
 	AddCentre(
 		centreName: String
 		lWhatsappNumber: String
 		town: ID
-		centre1: String
-		centre2: String
+		campus: ID
+		bacentas:[ID]
 	):Centre
 	@cypher(statement:
 	"""
-	MERGE(com:Centre {name:$centreName})
-    	ON CREATE SET
-		com.centreID = apoc.create.uuid()
-	MERGE (m:Member {whatsappNumber: $lWhatsappNumber})
-	WITH m,com
-	MATCH (t:Town {townID: $town})
-	MERGE (t)-[:HAS_CENTRE]->(com)
-	MERGE (m)-[:LEADS]->(com)
-	RETURN com
+	CREATE (c:Centre {name:$centreName})
+    	SET 
+		c.centreID = apoc.create.uuid()
+	WITH c
+	MATCH (m:Member {whatsappNumber: $lWhatsappNumber})
+	MERGE (m)-[:LEADS]->(t)
+
+	WITH c
+	CALL {
+		WITH c
+		WITH c WHERE $town IS NOT NULL
+		MATCH (t:Town {townID: $town})
+		MERGE (t)-[:HAS_CENTRE]->(c)
+		RETURN count(c)
+	}
+
+	WITH c
+	CALL {
+		WITH c
+		WITH c WHERE $campus IS NOT NULL
+		MATCH (t:Campus {campusID: $campus})
+		MERGE (t)-[:HAS_CENTRE]->(c)
+		RETURN count(c)
+	}
+
+	WITH c
+    CALL {
+    	WITH c
+    	WITH c  WHERE $centres IS NOT NULL
+    	UNWIND $centres AS x
+        MATCH (c:Centre {centreID:x})
+        MATCH (c1)-[r:HAS_CENTRE]->(c)
+        DELETE r
+        MERGE (c)-[:HAS_CENTRE]->(c)
+    	RETURN count(c)
+    	}
+
+	RETURN t
 	"""
 	),
 	AddBacenta(
@@ -509,6 +567,7 @@ type Mutation {
     RETURN c
 	"""
 	),
+
 
 	#UPDATE OPERATIONS
 	EditMemberDetails(
@@ -577,7 +636,37 @@ type Mutation {
 	RETURN m
 	"""
 	),
+	EditTown(
+		townID: ID
+		townName: String
+		lWhatsappNumber: String
+		bishopID: ID
+		centres:[ID]
+	):Town
+	@cypher(statement:
+	"""
+	MATCH (t:Town {townID: $townID})
+	MATCH (m:Member {whatsappNumber: $lWhatsappNumber})
+	MERGE (m)-[:LEADS]->(t)
+	MERGE (a:Member {memberID: $bishopID})
+	MERGE (a)-[:HAS_TOWN]->(t)
 
+	WITH t
+    CALL {
+    	WITH t
+    	WITH t  WHERE $centres IS NOT NULL
+
+    	UNWIND $centres AS x
+        MATCH (c:Centre {centreID:x})
+        MATCH (t1)-[r:HAS_CENTRE]->(c)
+        DELETE r
+        MERGE (t)-[:HAS_CENTRE]->(c)
+    	RETURN count(t)
+    	}
+
+	RETURN t
+	"""
+	),
 
 	#DELETE OPERATIONS
 	RemoveBacenta(bacentaID: ID!):Bacenta

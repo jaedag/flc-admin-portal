@@ -92,7 +92,7 @@ function FormikSearchbox(props) {
           }
 
           setMemberID(suggestion.id)
-          history.push('/members/displaydetails')
+          history.push('/member/displaydetails')
           setFieldValue(`${name}`, suggestion.memberID)
         }}
         getSuggestionValue={(suggestion) =>

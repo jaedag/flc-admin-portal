@@ -149,10 +149,10 @@ export const AddMember = () => {
         pastoralHistory: values.pastoralHistory,
       },
     })
-    console.log(onSubmitProps)
+
     onSubmitProps.setSubmitting(false)
     onSubmitProps.resetForm()
-    history.push('/members/displaydetails')
+    history.push('/member/displaydetails')
   }
 
   if (ministryListLoading) {

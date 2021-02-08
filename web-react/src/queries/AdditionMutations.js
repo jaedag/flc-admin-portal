@@ -96,11 +96,13 @@ export const CREATE_CENTRE_MUTATION = gql`
     $centreName: String
     $lWhatsappNumber: String
     $townID: ID
+    $campusID: ID
   ) {
     AddCentre(
       centreName: $centreName
       lWhatsappNumber: $lWhatsappNumber
       town: $townID
+      campus: $campusID
     ) {
       centreID
       name
@@ -109,11 +111,17 @@ export const CREATE_CENTRE_MUTATION = gql`
 `
 
 export const CREATE_TOWN_MUTATION = gql`
-  mutation AddTown($townName: String, $lWhatsappNumber: String, $bishopID: ID) {
+  mutation AddTown(
+    $townName: String
+    $lWhatsappNumber: String
+    $bishopID: ID
+    $centres: [ID]
+  ) {
     AddTown(
       townName: $townName
       lWhatsappNumber: $lWhatsappNumber
       bishopID: $bishopID
+      centres: $centres
     ) {
       townID
       name
@@ -126,11 +134,13 @@ export const CREATE_CAMPUS_MUTATION = gql`
     $campusName: String
     $lWhatsappNumber: String
     $bishopID: ID
+    $centres: [ID]
   ) {
     AddCampus(
       campusName: $campusName
       lWhatsappNumber: $lWhatsappNumber
       bishopID: $bishopID
+      centres: $centres
     ) {
       campusID
       name

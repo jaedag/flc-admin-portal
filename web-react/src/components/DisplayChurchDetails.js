@@ -17,6 +17,7 @@ export const DisplayChurchDetails = (props) => {
     churchNo,
     membership,
     buttons,
+    editlink,
   } = props
 
   const { setMemberID } = useContext(MemberContext)
@@ -28,10 +29,12 @@ export const DisplayChurchDetails = (props) => {
         <div className="container ">
           <h3 className="mx-3 mt-3 mb-2 font-weight-bold">
             {`${name} ${churchType}`}
-            <sup className="text-secondary card-text icon-color font-weight-bold ml-3">
-              <i className="fas fa-edit" />
-              Edit
-            </sup>
+            <Link to={`${editlink}`}>
+              <sup className="text-secondary card-text icon-color font-weight-bold ml-3">
+                <i className="fas fa-edit" />
+                Edit
+              </sup>
+            </Link>
           </h3>
         </div>
       </div>
@@ -43,7 +46,7 @@ export const DisplayChurchDetails = (props) => {
             <DetailsCard heading="Membership" detail={membership} />
           </div>
           <Link
-            to="/members/displaydetails"
+            to="/member/displaydetails"
             onClick={() => {
               setMemberID(leaderID)
             }}

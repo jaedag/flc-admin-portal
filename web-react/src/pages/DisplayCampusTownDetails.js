@@ -11,23 +11,17 @@ export const DisplayCampusTownDetails = () => {
     ChurchContext
   )
 
-  const { data: townData, error: townError, loading: townLoading } = useQuery(
-    DISPLAY_TOWN,
+  const { data: townData, loading: townLoading } = useQuery(DISPLAY_TOWN, {
+    variables: { townID: townID },
+  })
+  const { data: campusData, loading: campusLoading } = useQuery(
+    DISPLAY_CAMPUS,
     {
-      variables: { townID: townID },
+      variables: { campusID: campusID },
     }
   )
-  const {
-    data: campusData,
-    error: campusError,
-    loading: campusLoading,
-  } = useQuery(DISPLAY_CAMPUS, {
-    variables: { campusID: campusID },
-  })
 
-  if (townError || campusError) {
-    return <ErrorScreen />
-  } else if (townLoading || campusLoading) {
+  if (townLoading || campusLoading) {
     // Spinner Icon for Loading Screens
     return <LoadingScreen />
   } else if (church.church === 'town') {
@@ -54,6 +48,7 @@ export const DisplayCampusTownDetails = () => {
           subChurch={`${capitalise(church.subChurch)}`}
           subChurchSetter={setCentreID}
           buttons={townData.displayTown.centres}
+          editlink={``}
         />
       </div>
     )
@@ -85,4 +80,5 @@ export const DisplayCampusTownDetails = () => {
       </div>
     )
   }
+  return <ErrorScreen />
 }

@@ -51,7 +51,7 @@ export const SearchPageMobile = () => {
                 className="card mobile-search-card p-2 py-3 my-4"
                 onClick={() => {
                   setMemberID(searchResult.memberID)
-                  history.push('/members/displaydetails')
+                  history.push('/member/displaydetails')
                   if (!searchResult.bacenta) {
                     if (searchResult.townBishop[0]) {
                       setChurch({ church: 'town', subChurch: 'centre' })

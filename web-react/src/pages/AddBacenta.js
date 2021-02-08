@@ -5,7 +5,12 @@ import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 import FormikControl from '../components/formik-components/FormikControl'
 
-import { GET_CAMPUSES, GET_CENTRES, GET_TOWNS } from '../queries/ListQueries'
+import {
+  GET_CAMPUSES,
+  GET_TOWN_CENTRES,
+  GET_CAMPUS_CENTRES,
+  GET_TOWNS,
+} from '../queries/ListQueries'
 import { CREATE_BACENTA_MUTATION } from '../queries/AdditionMutations'
 import { NavBar } from '../components/NavBar'
 import { ChurchContext } from '../contexts/ChurchContext'
@@ -72,14 +77,14 @@ export const AddBacenta = () => {
   )
 
   const { data: townCentreList, loading: townCentresLoading } = useQuery(
-    GET_CENTRES,
+    GET_TOWN_CENTRES,
     {
       variables: { townID: townID },
     }
   )
 
   const { data: campusCentreList, loading: campusCentresLoading } = useQuery(
-    GET_CENTRES,
+    GET_CAMPUS_CENTRES,
     {
       variables: { campusID: campusID },
     }

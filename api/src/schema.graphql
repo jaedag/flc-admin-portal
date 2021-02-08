@@ -232,6 +232,7 @@ type Query {
 	townList(bishopID: ID): [Town] @cypher(statement: "MATCH (ttl:Title {title:'Bishop'})<-[:HAS_TITLE]-(a:Member {memberID:$bishopID})-[:HAS_TOWN]->(t:Town) RETURN t")
 	townBacentaList(townID:ID):[Bacenta] @cypher(statement: "MATCH (t:Town {townID: $townID})-[:HAS_CENTRE]->(:Centre)-[:HAS_BACENTA]-> (c:Bacenta) RETURN c")
 	townSontaList (townID:ID):[Sonta] @cypher(statement: "MATCH (t:Town {townID: $townID})-[:HAS_SONTA]->(s:Sonta)  RETURN s")
+	townCentreList(townID: ID): [Centre] @cypher(statement: "MATCH (t:Town {townID:$townID})-[:HAS_CENTRE]->(c:Centre) RETURN c")
 	townCentreCount(townID: ID): Int! @cypher(statement: "MATCH(:Town {townID:$townID})-[:HAS_CENTRE]->(c:Centre) RETURN COUNT(c)")
 	townBacentaCount(townID: ID): Int! @cypher(statement: "MATCH (:Town {townID:$townID})-[]-()-[:HAS_BACENTA]->(cen:Bacenta) RETURN COUNT(cen)")
 	townSontaCount(townID: ID): Int! @cypher(statement: "MATCH (:Town {townID:$townID})-[:HAS_MINISTRY]->(s:Sonta) RETURN COUNT(s)")
@@ -241,6 +242,7 @@ type Query {
 	displayCampus(campusID: ID):Campus @cypher(statement: "MATCH (t:Campus {campusID:$campusID}) RETURN t")
 	campusList(bishopID: ID): [Campus] @cypher(statement: "MATCH (ttl:Title {title:'Bishop'})<-[:HAS_TITLE]-(a:Member {memberID:$bishopID})-[:HAS_CAMPUS]->(c:Campus) RETURN c")
 	campusBacentaList(campusID:ID):[Bacenta] @cypher(statement: "MATCH (t:Campus {campusID: $campusID})-[:HAS_CENTRE]->(:Centre)-[:HAS_BACENTA]-> (c:Bacenta) RETURN c")
+	campusCentreList(campusID: ID): [Centre] @cypher(statement: "MATCH (t:Campus {campusID:$campusID})-[:HAS_CENTRE]->(c:Centre) RETURN c")
 	campusCentreCount(campusID: ID): Int! @cypher(statement: "MATCH(:Campus {campusID:$campusID})-[:HAS_CENTRE]->(c:Centre) RETURN COUNT(c)")
 	campusBacentaCount(campusID: ID): Int! @cypher(statement: "MATCH (:Campus {campusID:$campusID})-[]-()-[:HAS_BACENTA]->(cen:Bacenta) RETURN COUNT(cen)")
 	campusSontaCount(campusID: ID): Int! @cypher(statement: "MATCH (:Campus {campusID:$campusID})-[:HAS_MINISTRY]->(s:Sonta) RETURN COUNT(s)")
@@ -249,7 +251,6 @@ type Query {
 #At the Centre Level
 	displayCentre(centreID: ID):Centre @cypher(statement: "MATCH (c:Centre {centreID:$centreID}) RETURN c")
 	centreDropdown (centreName:String):[Centre] @cypher(statement: "MATCH (c:Centre) WHERE toLower(c.name) CONTAINS toLower($centreName) RETURN c")
-	centreList(townID: ID): [Centre] @cypher(statement: "MATCH (t:Town {townID:$townID})-[:HAS_CENTRE]->(c:Centre) RETURN c")
 	centreBacentaList(centreID:ID):[Bacenta] @cypher(statement: """
 	MATCH (c:Bacenta)  
 	WHERE (:Centre {centreID:$centreID})-[:HAS_BACENTA]->(c)

@@ -30,7 +30,7 @@ export const MembersGrid = () => {
             <div className="btn-toolbar mb-2 mb-md-0 position-fixedd">
               <div className="btn-group mr-2" />
               <Link
-                to="/members/addmember"
+                to="/member/addmember"
                 type="button"
                 className="btn btn-sm btn-primary"
               >

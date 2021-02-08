@@ -68,7 +68,6 @@ with line, m  WHERE line.`Ministry` is not null
 MERGE(son: Ministry {name:line.`Ministry`})
 MERGE(m)-[:BELONGS_TO]->(son)
 
-// LOAD CSV WITH HEADERS FROM "file:///Members.csv" as line 
 WITH line WHERE line.`Date of Birth`is not null
 MATCH (m:Member {whatsappNumber: line.`WhatsApp Number (if different)`})
 MERGE (dob: TimeGraph {date: date(line.`Date of Birth`)})

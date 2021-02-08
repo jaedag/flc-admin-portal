@@ -49,7 +49,7 @@ export const MemberTable = (props) => {
               onClick={() => {
                 // console.log('Member ID before', soul.memberID)
                 setMemberID(soul.memberID)
-                history.push('/members/displaydetails')
+                history.push('/member/displaydetails')
               }}
             >
               <div className="d-none d-sm-block image-card ">

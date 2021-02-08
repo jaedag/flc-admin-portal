@@ -14,7 +14,7 @@ import { NavBar } from '../components/NavBar'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
 import { ChurchContext } from '../contexts/ChurchContext'
 
-function AddTownCampus() {
+export const EditTownCampus = () => {
   const {
     church,
     capitalise,
@@ -97,6 +97,7 @@ function AddTownCampus() {
           },
         })
       } else if (church.church === 'campus') {
+        // console.log("Form data",values);
         AddCampus({
           variables: {
             campusName: values.campusTownName,
@@ -287,5 +288,3 @@ function AddTownCampus() {
     )
   }
 }
-
-export default AddTownCampus

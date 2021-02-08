@@ -68,16 +68,20 @@ function FormikSearchbox(props) {
           }
 
           if (
-            (suggestion.bacenta.centre
-              ? suggestion.bacenta.centre.town
+            (suggestion.bacenta
+              ? suggestion.bacenta.centre
+                ? suggestion.bacenta.centre.town
+                : null
               : null) ||
             (suggestion.townBishop[0] ? suggestion.townBishop[0].name : null)
           ) {
             setChurch({ church: 'town', subChurch: 'centre' })
             setBishopID(suggestion.bacenta.centre.town.bishop.memberID)
           } else if (
-            (suggestion.bacenta.centre
-              ? suggestion.bacenta.centre.campus
+            (suggestion.bacenta
+              ? suggestion.bacenta.centre
+                ? suggestion.bacenta.centre.campus
+                : null
               : null) ||
             (suggestion.campusBishop[0]
               ? suggestion.campusBishop[0].name
@@ -88,7 +92,7 @@ function FormikSearchbox(props) {
           }
 
           setMemberID(suggestion.id)
-          history.push('/members/displaydetails')
+          history.push('/member/displaydetails')
           setFieldValue(`${name}`, suggestion.memberID)
         }}
         getSuggestionValue={(suggestion) =>

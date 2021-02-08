@@ -26,7 +26,7 @@ export const GLOBAL_SEARCH = gql`
           }
         }
       }
-      sonta {
+      ministry {
         name
       }
       campusGSO {

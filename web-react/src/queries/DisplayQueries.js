@@ -42,13 +42,22 @@ export const DISPLAY_MEMBER = gql`
           name
           town {
             name
+            bishop {
+              firstName
+              lastName
+            }
           }
           campus {
             name
+            bishop {
+              firstName
+              lastName
+            }
           }
         }
       }
-      sonta {
+      ministry {
+        ministryID
         name
         leader {
           firstName

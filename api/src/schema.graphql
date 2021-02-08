@@ -11,7 +11,7 @@ type Member {
 	maritalStatus: MaritalStatus @relation(name: "HAS_MARITAL_STATUS", direction: "OUT")
 	dob: TimeGraph @relation(name: "WAS_BORN_ON", direction: "OUT")
 	title: [HasTitle]
-	sonta: Ministry @relation(name: "BELONGS_TO", direction: "OUT")
+	ministry: Ministry @relation(name: "BELONGS_TO", direction: "OUT")
 	occupation: Occupation @relation(name: "HAS_OCCUPATION", direction: "OUT")
 	bacenta: Bacenta @relation(name: "BELONGS_TO", direction: "OUT")
 	leadsBacenta: [Bacenta] @relation(name: "LEADS", direction: "OUT")
@@ -187,6 +187,7 @@ type Query {
 
 #At the Episcopal Level
 	bishopsCampusTownCount(bishopID: ID): Int! @cypher(statement: "MATCH (:Member {memberID: $bishopID})-[:HAS_TOWN|:HAS_CAMPUS]->(t) RETURN COUNT(t)")
+	bishopBacentaDropdown (bishopID: ID, bacentaName:String):[Bacenta] @cypher(statement: "MATCH (b:Bacenta)-[]-(:Centre)-[:HAS_CENTRE]-()-[:HAS_TOWN]-(:Member {memberID: $bishopID}) WHERE toLower(b.name) CONTAINS toLower($bacentaName) RETURN b")
 	bishopsSontaMemberList(bishopID: ID): [Member]! @cypher(statement: 
 		"""
 		MATCH (:Member {memberID: $bishopID})-[:HAS_TOWN|:HAS_CAMPUS]->()-[:HAS_CENTRE]->()-[:HAS_BACENTA]->()<-[:BELONGS_TO]-(m:Member)-[:BELONGS_TO]->(s)
@@ -326,6 +327,7 @@ type Query {
 #Mutation Definitions
 type Mutation {
 
+	#CREATE OPERATIONS
 	# Add Member to the Database
 	AddMember(
 		firstName: String!
@@ -339,7 +341,7 @@ type Mutation {
 		gender: String!
 		occupation: String
 		bacenta: String!
-		sonta: String
+		ministry: String
 		pictureUrl: String!
 		pastoralAppointment: [pastoralAppointment]
 		pastoralHistory: [pastoralHistory]
@@ -354,37 +356,43 @@ type Mutation {
 		m.lastName = $lastName,
 		m.email = $email,
 		m.phoneNumber = $phoneNumber,
-		m.whatsappNumber = $whatsappNumber,
 		m.pictureUrl = $pictureUrl
 
-	MERGE (t:TimeGraph {date: date($dob)})
-	MERGE (m)-[:WAS_BORN_ON]->(t)
-	MERGE (o:Occupation {occupation:$occupation})
-	MERGE (m)-[:HAS_OCCUPATION]-> (o)
-	MERGE (ms:MaritalStatus {status:$maritalStatus})
-	MERGE (m)-[:HAS_MARITAL_STATUS]-> (ms)
-	MERGE (g:Gender {gender: $gender})
-	MERGE (m)-[:HAS_GENDER]-> (g)
-	MERGE (s:Sonta {sontaID:$sonta})
-	MERGE (m)-[:BELONGS_TO]-> (s)
-	MERGE (c:Bacenta {bacentaID: $bacenta})
-	MERGE (m)-[:BELONGS_TO]-> (c)
 	WITH m
-	UNWIND $pastoralAppointment as x
-	MATCH (t:Title {title: x.title})
-	MERGE (m)-[r:HAS_TITLE]->(t)
-		SET r.yearAppointed = date(x.date)
-	WITH m WHERE $pastoralHistory.y is not ""
-	UNWIND $pastoralHistory as y
-	CREATE (h:LeaderHistory)
-		SET
-		h.historyRecord = y.historyRecord,
-		h.created_at = datetime()
-	with m, y, h 
-	MERGE (tg:TimeGraph {date: date(y.historyDate)})
-	MERGE (h)-[:LEADER_STARTED_ON]->(tg)
-	MERGE (m)-[:HAS_LEADERSHIP_HISTORY]->(h)
+	MATCH (ms:MaritalStatus {status:$maritalStatus})
+	MATCH (g:Gender {gender: $gender})
+	
+	MERGE (t:TimeGraph {date:date($dob)})	
+    MERGE (m)-[:HAS_MARITAL_STATUS]-> (ms)
+	MERGE (m)-[:HAS_GENDER]-> (g)
+    MERGE (m)-[:WAS_BORN_ON]->(t)
+    
+    WITH m
 
+    CALL {
+    	WITH m
+    	WITH m  WHERE $occupation IS NOT NULL
+    	MERGE (o:Occupation {occupation:$occupation})
+		MERGE (m)-[:HAS_OCCUPATION]-> (o)
+    	RETURN count(m)
+    	}
+	WITH m
+	CALL {
+    	WITH m
+    	WITH m  WHERE $bacenta IS NOT NULL
+    	MATCH (c:Bacenta {bacentaID: $bacenta})
+		MERGE (m)-[:BELONGS_TO]-> (c)
+    	RETURN count(m)
+    	}
+	WITH m
+	CALL {
+    	WITH m
+    	WITH m  WHERE $ministry IS NOT NULL
+    	MATCH (s:Ministry {ministryID:$ministry})
+		MERGE (m)-[:BELONGS_TO]-> (s)
+    	RETURN count(m)
+    	}
+   
 	RETURN m
 	"""
 	),
@@ -425,17 +433,31 @@ type Mutation {
 		townName: String
 		lWhatsappNumber: String
 		bishopID: ID
+		centres:[ID]
 	):Town
 	@cypher(statement:
 	"""
-	MERGE(t:Town {name:$townName})
-    	ON CREATE SET 
+	CREATE (t:Town {name:$townName})
+    	SET 
 		t.townID = apoc.create.uuid()
 	WITH t
 	MATCH (m:Member {whatsappNumber: $lWhatsappNumber})
 	MERGE (m)-[:LEADS]->(t)
 	MERGE (a:Member {memberID: $bishopID})
 	MERGE (a)-[:HAS_TOWN]->(t)
+
+	WITH t
+    CALL {
+    	WITH t
+    	WITH t  WHERE $centres IS NOT NULL
+    	UNWIND $centres AS x
+        MATCH (c:Centre {centreID:x})
+        MATCH (t1)-[r:HAS_CENTRE]->(c)
+        DELETE r
+        MERGE (t)-[:HAS_CENTRE]->(c)
+    	RETURN count(t)
+    	}
+
 	RETURN t
 	"""
 	),
@@ -443,38 +465,81 @@ type Mutation {
 		campusName: String
 		lWhatsappNumber: String
 		bishopID: ID
+		centres:[ID]
 	):Campus
 	@cypher(statement:
 	"""
-	MERGE(c:Campus {name:$campusName})
-    	ON CREATE SET 
-		c.campusID = apoc.create.uuid()
-	WITH c
+	CREATE (t:Campus {name:$campusName})
+    	SET 
+		t.campusID = apoc.create.uuid()
+	WITH t
 	MATCH (m:Member {whatsappNumber: $lWhatsappNumber})
-	MERGE (m)-[:LEADS]->(c)
+	MERGE (m)-[:LEADS]->(t)
 	MERGE (a:Member {memberID: $bishopID})
-	MERGE (a)-[:HAS_CAMPUS]->(c)
-	RETURN c
+	MERGE (a)-[:HAS_CAMPUS]->(t)
+
+	WITH t
+    CALL {
+    	WITH t
+    	WITH t  WHERE $centres IS NOT NULL
+    	UNWIND $centres AS x
+        MATCH (c:Centre {centreID:x})
+        MATCH (t1)-[r:HAS_CENTRE]->(c)
+        DELETE r
+        MERGE (t)-[:HAS_CENTRE]->(c)
+    	RETURN count(t)
+    	}
+
+	RETURN t
 	"""
 	),
 	AddCentre(
 		centreName: String
 		lWhatsappNumber: String
 		town: ID
-		centre1: String
-		centre2: String
+		campus: ID
+		bacentas:[ID]
 	):Centre
 	@cypher(statement:
 	"""
-	MERGE(com:Centre {name:$centreName})
-    	ON CREATE SET
-		com.centreID = apoc.create.uuid()
-	MERGE (m:Member {whatsappNumber: $lWhatsappNumber})
-	WITH m,com
-	MATCH (t:Town {townID: $town})
-	MERGE (t)-[:HAS_CENTRE]->(com)
-	MERGE (m)-[:LEADS]->(com)
-	RETURN com
+	CREATE (c:Centre {name:$centreName})
+    	SET 
+		c.centreID = apoc.create.uuid()
+	WITH c
+	MATCH (m:Member {whatsappNumber: $lWhatsappNumber})
+	MERGE (m)-[:LEADS]->(t)
+
+	WITH c
+	CALL {
+		WITH c
+		WITH c WHERE $town IS NOT NULL
+		MATCH (t:Town {townID: $town})
+		MERGE (t)-[:HAS_CENTRE]->(c)
+		RETURN count(c)
+	}
+
+	WITH c
+	CALL {
+		WITH c
+		WITH c WHERE $campus IS NOT NULL
+		MATCH (t:Campus {campusID: $campus})
+		MERGE (t)-[:HAS_CENTRE]->(c)
+		RETURN count(c)
+	}
+
+	WITH c
+    CALL {
+    	WITH c
+    	WITH c  WHERE $centres IS NOT NULL
+    	UNWIND $centres AS x
+        MATCH (c:Centre {centreID:x})
+        MATCH (c1)-[r:HAS_CENTRE]->(c)
+        DELETE r
+        MERGE (c)-[:HAS_CENTRE]->(c)
+    	RETURN count(c)
+    	}
+
+	RETURN t
 	"""
 	),
 	AddBacenta(
@@ -502,6 +567,108 @@ type Mutation {
     RETURN c
 	"""
 	),
+
+
+	#UPDATE OPERATIONS
+	EditMemberDetails(
+		memberID: ID!
+		firstName: String!
+		middleName: String
+		lastName: String!
+		email: String
+		phoneNumber: String!
+		whatsappNumber: String
+		dob: String!
+		maritalStatus: String!
+		gender: String!
+		occupation: String
+		bacenta: String!
+		ministry: String
+		pictureUrl: String!
+		pastoralAppointment: [pastoralAppointment]
+		pastoralHistory: [pastoralHistory]
+	): Member
+	@cypher(statement:
+	"""
+	MATCH (m:Member {memberID:$memberID})
+	SET
+		m.firstName = $firstName,
+		m.middleName = $middleName,
+		m.lastName = $lastName,
+		m.email = $email,
+		m.phoneNumber = $phoneNumber,
+		m.pictureUrl = $pictureUrl
+
+	WITH m
+	MATCH (ms:MaritalStatus {status:$maritalStatus})
+	MATCH (g:Gender {gender: $gender})
+	
+	MERGE (t:TimeGraph {date:date($dob)})	
+    MERGE (m)-[:HAS_MARITAL_STATUS]-> (ms)
+	MERGE (m)-[:HAS_GENDER]-> (g)
+    MERGE (m)-[:WAS_BORN_ON]->(t)
+    
+    WITH m
+    CALL {
+    	WITH m
+    	WITH m  WHERE $occupation IS NOT NULL
+    	MERGE (o:Occupation {occupation:$occupation})
+		MERGE (m)-[:HAS_OCCUPATION]-> (o)
+    	RETURN count(m)
+    	}
+	WITH m
+	CALL {
+    	WITH m
+    	WITH m  WHERE $bacenta IS NOT NULL
+    	MATCH (c:Bacenta {bacentaID: $bacenta})
+		MERGE (m)-[:BELONGS_TO]-> (c)
+    	RETURN count(m)
+    	}
+	WITH m
+	CALL {
+    	WITH m
+    	WITH m  WHERE $ministry IS NOT NULL
+    	MATCH (s:Ministry {ministryID:$ministry})
+		MERGE (m)-[:BELONGS_TO]-> (s)
+    	RETURN count(m)
+    	}
+   
+	RETURN m
+	"""
+	),
+	EditTown(
+		townID: ID
+		townName: String
+		lWhatsappNumber: String
+		bishopID: ID
+		centres:[ID]
+	):Town
+	@cypher(statement:
+	"""
+	MATCH (t:Town {townID: $townID})
+	MATCH (m:Member {whatsappNumber: $lWhatsappNumber})
+	MERGE (m)-[:LEADS]->(t)
+	MERGE (a:Member {memberID: $bishopID})
+	MERGE (a)-[:HAS_TOWN]->(t)
+
+	WITH t
+    CALL {
+    	WITH t
+    	WITH t  WHERE $centres IS NOT NULL
+
+    	UNWIND $centres AS x
+        MATCH (c:Centre {centreID:x})
+        MATCH (t1)-[r:HAS_CENTRE]->(c)
+        DELETE r
+        MERGE (t)-[:HAS_CENTRE]->(c)
+    	RETURN count(t)
+    	}
+
+	RETURN t
+	"""
+	),
+
+	#DELETE OPERATIONS
 	RemoveBacenta(bacentaID: ID!):Bacenta
 	@cypher(statement:
 	"""

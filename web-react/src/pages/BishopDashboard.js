@@ -92,7 +92,7 @@ const BishopDashboard = () => {
             <div className="col-sm-12 col-md">
               <DashboardButton
                 btnText="Register Member"
-                btnLink="/members/addmember"
+                btnLink="/member/addmember"
               />
             </div>
             <div className="col-sm-12 col-md">
@@ -151,13 +151,19 @@ const BishopDashboard = () => {
             <div className="col-sm-12 col-md">
               <DashboardButton
                 btnText="Register Member"
-                btnLink="/members/addmember"
+                btnLink="/member/addmember"
               />
             </div>
             <div className="col-sm-12 col-md">
               <DashboardButton
                 btnText="Start a Bacenta"
                 btnLink="/bacenta/addbacenta"
+              />
+            </div>
+            <div className="col-sm-12 col-md">
+              <DashboardButton
+                btnText="Start a Centre"
+                btnLink="/centre/addcentre"
               />
             </div>
             <div className="col-sm-12 col-md">
@@ -219,13 +225,19 @@ const BishopDashboard = () => {
           <div className="col-sm-12 col-md">
             <DashboardButton
               btnText="Register Member"
-              btnLink="/members/addmember"
+              btnLink="/member/addmember"
             />
           </div>
           <div className="col-sm-12 col-md">
             <DashboardButton
               btnText="Start a Bacenta"
               btnLink="/bacenta/addbacenta"
+            />
+          </div>
+          <div className="col-sm-12 col-md">
+            <DashboardButton
+              btnText="Start a Centre"
+              btnLink="/centre/addcentre"
             />
           </div>
           <div className="col-sm-12 col-md">

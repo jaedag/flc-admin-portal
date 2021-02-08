@@ -44,7 +44,7 @@ export const AddLeadershipHistory = () => {
 
     onSubmitProps.setSubmitting(false)
     onSubmitProps.resetForm()
-    history.push('/members/displaydetails')
+    history.push('/member/displaydetails')
   }
 
   if (memberError) {

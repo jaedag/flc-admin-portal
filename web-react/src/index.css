@@ -55,7 +55,7 @@
 .navbar {
   background-color: var(--body-bg-color);
   border-bottom: 1px solid var(--border-color);
-  height: 8vh;
+  height: 80px;
 }
 
 .mobile-search-nav{

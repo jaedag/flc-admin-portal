@@ -16,6 +16,7 @@ import { AddMember } from './pages/AddMember'
 import { EditMemberDetails } from './pages/EditMemberDetails'
 import AddCentre from './pages/AddCentre'
 import AddTownCampus from './pages/AddTownCampus'
+import { EditTownCampus } from './pages/EditTownCampus'
 import { DisplayBacentaDetails } from './pages/DisplayBacentaDetails'
 import { DisplayCentreDetails } from './pages/DisplayCentreDetails'
 import { DisplayCampusTownDetails } from './pages/DisplayCampusTownDetails'
@@ -25,8 +26,7 @@ import { ChurchContext } from './contexts/ChurchContext'
 import { DisplayAllSontaTowns } from './pages/DisplayAllSontaTowns'
 import { DisplayAllBacentas } from './pages/DisplayAllBacentas'
 import { DisplayAllCentres } from './pages/DisplayAllCentres'
-import { DisplayAllTowns } from './pages/DisplayAllTowns'
-import { DisplayAllCampuses } from './pages/DisplayAllCampuses'
+import { DisplayAllTownCampuses } from './pages/DisplayAllTownCampuses'
 import { AddBacenta } from './pages/AddBacenta'
 
 const client = new ApolloClient({
@@ -42,8 +42,9 @@ const PastorsAdmin = () => {
   const capitalise = (str) => {
     return str.charAt(0).toUpperCase() + str.slice(1)
   }
+  const phoneRegExp = /^[+][(]{0,1}[1-9]{1,4}[)]{0,1}[-\s/0-9]*$/
   const parsePhoneNum = (phoneNumber) => {
-    phoneNumber
+    return phoneNumber
       .replace(/\s/g, '')
       .replace('+', '')
       .replace('(', '')
@@ -56,9 +57,7 @@ const PastorsAdmin = () => {
   const [centreID, setCentreID] = useState('')
   const [sontaID, setSontaID] = useState('')
   const [ministryID, setMinistryID] = useState('')
-  const [memberID, setMemberID] = useState(
-    '13c36bd1-ae10-466a-b513-d0bbc81f2740'
-  )
+  const [memberID, setMemberID] = useState('')
   const [searchKey, setSearchKey] = useState('')
 
   return (
@@ -66,6 +65,7 @@ const PastorsAdmin = () => {
       <ChurchContext.Provider
         value={{
           capitalise,
+          phoneRegExp,
           parsePhoneNum,
           church,
           setChurch,
@@ -93,14 +93,14 @@ const PastorsAdmin = () => {
               <Route path="/membersearch" component={SearchPageMobile} exact />
               <Route path="/members" component={MembersGrid} exact />
               <Route path="/pastors" component={PastorsGrid} exact />
-              <Route path="/members/addmember" component={AddMember} exact />
+              <Route path="/member/addmember" component={AddMember} exact />
               <Route
-                path="/members/editmember"
+                path="/member/editmember"
                 component={EditMemberDetails}
                 exact
               />
               <Route
-                path="/members/displaydetails"
+                path="/member/displaydetails"
                 component={DisplayMemberDetails}
                 exact
               />
@@ -138,7 +138,7 @@ const PastorsAdmin = () => {
               />
               <Route
                 path="/town/displayall"
-                component={DisplayAllTowns}
+                component={DisplayAllTownCampuses}
                 exact
               />
               <Route
@@ -148,7 +148,7 @@ const PastorsAdmin = () => {
               />
               <Route
                 path="/campus/displayall"
-                component={DisplayAllCampuses}
+                component={DisplayAllTownCampuses}
                 exact
               />
               <Route
@@ -158,6 +158,12 @@ const PastorsAdmin = () => {
               />
               <Route path="/town/addtown" component={AddTownCampus} exact />
               <Route path="/campus/addcampus" component={AddTownCampus} exact />
+              <Route path="/town/edittown" component={EditTownCampus} exact />
+              <Route
+                path="/campus/editcampus"
+                component={EditTownCampus}
+                exact
+              />
             </Switch>
           </SearchContext.Provider>
         </MemberContext.Provider>

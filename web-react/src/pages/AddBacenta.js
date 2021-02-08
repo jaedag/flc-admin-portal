@@ -5,11 +5,11 @@ import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 import FormikControl from '../components/formik-components/FormikControl'
 
-import { GET_CENTRES, GET_TOWNS } from '../queries/ListQueries'
+import { GET_CAMPUSES, GET_CENTRES, GET_TOWNS } from '../queries/ListQueries'
 import { CREATE_BACENTA_MUTATION } from '../queries/AdditionMutations'
 import { NavBar } from '../components/NavBar'
-import SpinnerPage from '../components/SpinnerPage'
 import { ChurchContext } from '../contexts/ChurchContext'
+import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
 
 export const AddBacenta = () => {
   const initialValues = {
@@ -21,6 +21,18 @@ export const AddBacenta = () => {
     venueLatitude: '',
     venueLongitude: '',
   }
+  const {
+    church,
+    capitalise,
+    bishopID,
+    townID,
+    setTownID,
+    campusID,
+    setCampusID,
+    bacentaID,
+    setBacentaID,
+    phoneRegExp,
+  } = useContext(ChurchContext)
 
   const serviceDayOptions = [
     { key: 'Tuesday', value: 'Tuesday' },
@@ -30,7 +42,6 @@ export const AddBacenta = () => {
     { key: 'Saturday', value: 'Saturday' },
   ]
 
-  const phoneRegExp = /^[+][(]{0,1}[1-9]{1,4}[)]{0,1}[-\s/0-9]*$/
   const validationSchema = Yup.object({
     bacentaName: Yup.string().required('Bacenta Name is a required field'),
     bacentaLeaderName: Yup.string().required('This is a required field'),
@@ -43,43 +54,64 @@ export const AddBacenta = () => {
     venueLongitude: Yup.string().required('Please fill in your location info'),
   })
 
-  const { bishopID, townID, setTownID, bacentaID, setBacentaID } = useContext(
-    ChurchContext
-  )
-
-  const [AddBacenta, { data: newBacentaData }] = useMutation(
-    CREATE_BACENTA_MUTATION,
-    {
-      onCompleted: (newBacentaData) => {
-        setBacentaID(newBacentaData.AddBacenta.bacentaID)
-      },
-    }
-  )
-  console.log(newBacentaData)
+  const [AddBacenta] = useMutation(CREATE_BACENTA_MUTATION, {
+    onCompleted: (newBacentaData) => {
+      setBacentaID(newBacentaData.AddBacenta.bacentaID)
+    },
+  })
   const history = useHistory()
 
   const { data: townListData, loading: townListLoading } = useQuery(GET_TOWNS, {
     variables: { bishopID: bishopID },
   })
+  const { data: campusListData, loading: campusListLoading } = useQuery(
+    GET_CAMPUSES,
+    {
+      variables: { bishopID: bishopID },
+    }
+  )
 
-  const { data: communityListData, loading: communityListLoading } = useQuery(
+  const { data: townCentreList, loading: townCentresLoading } = useQuery(
     GET_CENTRES,
     {
       variables: { townID: townID },
     }
   )
 
-  if (communityListData && townListData) {
-    const communityOptions = communityListData.communityList.map((comm) => ({
-      value: comm.communityID,
-      key: comm.name,
-    }))
+  const { data: campusCentreList, loading: campusCentresLoading } = useQuery(
+    GET_CENTRES,
+    {
+      variables: { campusID: campusID },
+    }
+  )
+
+  if (
+    (townCentreList || campusCentreList) &&
+    (townListData || campusListData)
+  ) {
+    const centreOptions = () => {
+      if (church.church === 'town') {
+        townCentreList.centreList.map((centres) => ({
+          value: centres.centreID,
+          key: centres.name,
+        }))
+      } else if (church.church === 'campus') {
+        campusCentreList.centreList.map((centres) => ({
+          value: centres.centreID,
+          key: centres.name,
+        }))
+      }
+    }
 
     const townOptions = townListData.townList.map((town) => ({
       value: town.townID,
       key: town.name,
     }))
-    // console.log('Data is here')
+
+    const campusOptions = campusListData.campusList.map((campus) => ({
+      value: campus.campusID,
+      key: campus.name,
+    }))
 
     //onSubmit receives the form state as argument
     const onSubmit = (values, onSubmitProps) => {
@@ -89,7 +121,7 @@ export const AddBacenta = () => {
           bacentaLeaderFName: values.bacentaLeaderFName,
           bacentaLeaderLName: values.bacentaLeaderLName,
           lWhatsappNumber: values.whatsappNumber,
-          communityID: values.communitySelect,
+          centreID: values.centreSelect,
           meetingDay: values.meetingDay,
           venueLongitude: parseFloat(values.venueLongitude),
           venueLatitude: parseFloat(values.venueLatitude),
@@ -98,7 +130,7 @@ export const AddBacenta = () => {
       // console.log('Form data', values)
       onSubmitProps.setSubmitting(false)
       console.log('Bacenta ID', bacentaID)
-      // onSubmitProps.resetForm()
+      onSubmitProps.resetForm()
       history.push('/bacenta/displaydetails')
     }
 
@@ -124,18 +156,22 @@ export const AddBacenta = () => {
                             className="form-control"
                             control="select"
                             name="townSelect"
-                            options={townOptions}
+                            options={townListData ? townOptions : campusOptions}
                             onChange={(e) => {
-                              setTownID(e.target.value)
+                              church.church === 'town'
+                                ? setTownID(e.target.value)
+                                : setCampusID(e.target.value)
                             }}
-                            defaultOption="Select a Town"
+                            defaultOption={`Select a ${capitalise(
+                              church.church
+                            )}`}
                           />
                           <FormikControl
                             className="form-control"
                             control="select"
-                            name="communitySelect"
-                            options={communityOptions}
-                            defaultOption="Select a Community"
+                            name="centreSelect"
+                            options={centreOptions}
+                            defaultOption="Select a Centre"
                           />
                         </div>
                       </div>
@@ -239,28 +275,6 @@ export const AddBacenta = () => {
                         Click this button if you are currently at your bacenta
                         location
                       </small>
-
-                      {/* <div className="form-row row-cols-3">
-											<div className="col-9">
-											<FormikControl
-													className="form-control"
-													control="input"
-													name="bacenta"
-													placeholder="Bacenta"
-												/>
-											</div>
-										</div>
-										<small className="text-muted">
-											List any Bacentas that are being
-											moved to this Bacenta
-										</small> 
-										<div>
-											<button
-												type="submit"
-												className="btn btn-primary">
-												Add Bacenta
-											</button>
-										</div> */}
                     </div>
                   </div>
                 </div>
@@ -279,23 +293,14 @@ export const AddBacenta = () => {
         </Formik>
       </div>
     )
-  } else if (townListLoading || communityListLoading) {
-    return (
-      <React.Fragment>
-        <NavBar />
-        <SpinnerPage />
-      </React.Fragment>
-    )
+  } else if (
+    townListLoading ||
+    campusListLoading ||
+    townCentresLoading ||
+    campusCentresLoading
+  ) {
+    return <LoadingScreen />
   } else {
-    return (
-      <React.Fragment>
-        <NavBar />
-        <div className="container full-body-center">
-          <p className="text-center full-center">
-            There seems to be an error loading data
-          </p>
-        </div>
-      </React.Fragment>
-    )
+    return <ErrorScreen />
   }
 }

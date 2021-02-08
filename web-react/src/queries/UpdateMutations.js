@@ -39,3 +39,24 @@ export const EDIT_MEMBER_MUTATION = gql`
     }
   }
 `
+
+export const EDIT_TOWN_MUTATION = gql`
+  mutation EditTown(
+    $townID: ID
+    $townName: String
+    $lWhatsappNumber: String
+    $bishopID: ID
+    $centres: [ID]
+  ) {
+    EditTown(
+      townID: $townID
+      townName: $townName
+      lWhatsappNumber: $lWhatsappNumber
+      bishopID: $bishopID
+      centres: $centres
+    ) {
+      townID
+      name
+    }
+  }
+`

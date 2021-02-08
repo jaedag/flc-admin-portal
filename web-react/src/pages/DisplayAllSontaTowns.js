@@ -40,7 +40,7 @@ export const DisplayAllSontaTowns = () => {
               <React.Fragment key={index}>
                 <h4>{`${leader.leadsSonta.name}`}</h4>
                 <Link
-                  to="/members/displaydetails"
+                  to="/member/displaydetails"
                   onClick={() => {
                     setMemberID(`${leader.memberID}`)
                   }}

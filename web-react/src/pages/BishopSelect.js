@@ -3,7 +3,7 @@ import { useQuery } from '@apollo/client'
 import { useHistory } from 'react-router-dom'
 import { ChurchContext } from '../contexts/ChurchContext'
 import { GET_BISHOPS } from '../queries/ListQueries'
-import SpinnerPage from '../components/SpinnerPage'
+import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
 
 const BishopSelect = () => {
   const { setChurch, setBishopID } = useContext(ChurchContext)
@@ -11,17 +11,9 @@ const BishopSelect = () => {
   const history = useHistory()
 
   if (error) {
-    return (
-      <div>
-        <div>Error loading data</div>
-      </div>
-    )
+    return <ErrorScreen />
   } else if (loading) {
-    return (
-      <div>
-        <SpinnerPage />
-      </div>
-    )
+    return <LoadingScreen />
   } else {
     return (
       <React.Fragment>

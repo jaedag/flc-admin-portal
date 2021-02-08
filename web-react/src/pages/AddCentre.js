@@ -8,7 +8,7 @@ import FormikControl from '../components/formik-components/FormikControl'
 import { GET_TOWNS } from '../queries/ListQueries'
 import { CREATE_CENTRE_MUTATION } from '../queries/AdditionMutations'
 import { NavBar } from '../components/NavBar'
-import SpinnerPage from '../components/SpinnerPage'
+import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
 import { ChurchContext } from '../contexts/ChurchContext'
 
 function AddCentre() {
@@ -217,23 +217,9 @@ function AddCentre() {
       </div>
     )
   } else if (townListLoading) {
-    return (
-      <React.Fragment>
-        <NavBar />
-        <SpinnerPage />
-      </React.Fragment>
-    )
+    return <LoadingScreen />
   } else {
-    return (
-      <React.Fragment>
-        <NavBar />
-        <div className="container full-body-center">
-          <p className="text-center full-center">
-            There seems to be an error loading data
-          </p>
-        </div>
-      </React.Fragment>
-    )
+    return <ErrorScreen />
   }
 }
 

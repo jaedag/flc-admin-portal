@@ -62,7 +62,7 @@ export const NavBar = () => {
               to="#"
             >
               <span className="fas fa-user-circle fa-3x" />
-              <span className="d-none d-sm-inline">Admin</span>
+              <span className="d-none d-md-inline">Admin</span>
             </Link>
           </div>
         </div>

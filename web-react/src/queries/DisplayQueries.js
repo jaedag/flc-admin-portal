@@ -48,7 +48,8 @@ export const DISPLAY_MEMBER = gql`
           }
         }
       }
-      sonta {
+      ministry {
+        ministryID
         name
         leader {
           firstName

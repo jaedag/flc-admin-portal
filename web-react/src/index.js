@@ -42,8 +42,9 @@ const PastorsAdmin = () => {
   const capitalise = (str) => {
     return str.charAt(0).toUpperCase() + str.slice(1)
   }
+  const phoneRegExp = /^[+][(]{0,1}[1-9]{1,4}[)]{0,1}[-\s/0-9]*$/
   const parsePhoneNum = (phoneNumber) => {
-    phoneNumber
+    return phoneNumber
       .replace(/\s/g, '')
       .replace('+', '')
       .replace('(', '')
@@ -56,9 +57,7 @@ const PastorsAdmin = () => {
   const [centreID, setCentreID] = useState('')
   const [sontaID, setSontaID] = useState('')
   const [ministryID, setMinistryID] = useState('')
-  const [memberID, setMemberID] = useState(
-    '13c36bd1-ae10-466a-b513-d0bbc81f2740'
-  )
+  const [memberID, setMemberID] = useState('')
   const [searchKey, setSearchKey] = useState('')
 
   return (
@@ -66,6 +65,7 @@ const PastorsAdmin = () => {
       <ChurchContext.Provider
         value={{
           capitalise,
+          phoneRegExp,
           parsePhoneNum,
           church,
           setChurch,

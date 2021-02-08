@@ -401,28 +401,12 @@ export const DisplayMemberDetails = () => {
                     </div>
                     <div className="row mb-2">
                       <div className="col">
-                        <p className="text-secondary card-text">Sonta</p>
+                        <p className="text-secondary card-text">Ministry</p>
                       </div>
                       <div className="col">
                         <p className="font-weight-bold card-text">
-                          {memberData.displayMember.sonta
-                            ? `${memberData.displayMember.sonta.name}`
-                            : null}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="row mb-2">
-                      <div className="col">
-                        <p className="text-secondary card-text">
-                          Sonta Shepherd
-                        </p>
-                      </div>
-                      <div className="col">
-                        <p className="font-weight-bold card-text">
-                          {memberData.displayMember.sonta
-                            ? memberData.displayMember.sonta.leader
-                              ? `${memberData.displayMember.sonta.leader.firstName} ${memberData.displayMember.sonta.leader.lastName}`
-                              : null
+                          {memberData.displayMember.ministry
+                            ? `${memberData.displayMember.ministry.name}`
                             : null}
                         </p>
                       </div>

@@ -13,7 +13,7 @@ export const NEW_MEMBER_MUTATION = gql`
     $gender: String!
     $occupation: String
     $bacenta: String!
-    $sonta: String
+    $ministry: String
     $pictureUrl: String!
     $pastoralHistory: [pastoralHistory]
     $pastoralAppointment: [pastoralAppointment]
@@ -30,7 +30,7 @@ export const NEW_MEMBER_MUTATION = gql`
       gender: $gender
       occupation: $occupation
       bacenta: $bacenta
-      sonta: $sonta
+      ministry: $ministry
       pictureUrl: $pictureUrl
       pastoralHistory: $pastoralHistory
       pastoralAppointment: $pastoralAppointment

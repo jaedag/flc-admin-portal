@@ -17,6 +17,7 @@ import { ChurchContext } from '../contexts/ChurchContext'
 
 export const EditMemberDetails = () => {
   const { memberID } = useContext(MemberContext)
+  const { phoneRegExp, parsePhoneNum } = useContext(ChurchContext)
   const {
     data: memberData,
     error: memberError,
@@ -24,12 +25,17 @@ export const EditMemberDetails = () => {
   } = useQuery(DISPLAY_MEMBER, {
     variables: { memberID: memberID },
   })
+
   const initialValues = {
-    firstName: memberData.displayMember.firstName,
+    firstName: memberData.displayMember.firstName
+      ? memberData.displayMember.firstName
+      : '',
     middleName: memberData.displayMember.middleName
       ? memberData.displayMember.middleName
       : '',
-    lastName: memberData.displayMember.lastName,
+    lastName: memberData.displayMember.lastName
+      ? memberData.displayMember.lastName
+      : '',
     gender: memberData.displayMember.gender
       ? memberData.displayMember.gender.gender
       : '',
@@ -39,7 +45,7 @@ export const EditMemberDetails = () => {
     whatsappNumber: memberData.displayMember.whatsappNumber
       ? `+${memberData.displayMember.whatsappNumber}`
       : '',
-    email: memberData.displayMember.email,
+    email: memberData.displayMember.email ? memberData.displayMember.email : '',
     dob: memberData.displayMember.dob
       ? memberData.displayMember.dob.date.formatted
       : '',
@@ -49,12 +55,14 @@ export const EditMemberDetails = () => {
     occupation: memberData.displayMember.occupation
       ? memberData.displayMember.occupation.occupation
       : '',
-    pictureUrl: memberData.displayMember.pictureUrl,
+    pictureUrl: memberData.displayMember.pictureUrl
+      ? memberData.displayMember.pictureUrl
+      : '',
     bacenta: memberData.displayMember.bacenta
       ? memberData.displayMember.bacenta.bacentaID
       : '',
-    ministry: memberData.displayMember.sonta
-      ? memberData.displayMember.sonta.ministryID
+    ministry: memberData.displayMember.ministry
+      ? memberData.displayMember.ministry.ministryID
       : '',
 
     pastoralHistory: [
@@ -86,27 +94,23 @@ export const EditMemberDetails = () => {
     { key: 'Bishop', value: 'Bishop' },
   ]
 
-  const { parsePhoneNum } = useContext(ChurchContext)
   const history = useHistory()
 
-  const phoneRegExp = /^[+][(]{0,1}[1-9]{1,4}[)]{0,1}[-\s/0-9]*$/
   const validationSchema = Yup.object({
     firstName: Yup.string().required('Name is a required field'),
     lastName: Yup.string().required('This is a required field'),
     gender: Yup.string().required('This is a required field'),
     email: Yup.string().email('Please enter a valid email address'),
-    maritalStatus: Yup.string().required('This is a required field'),
-    phoneNumber: Yup.string()
+    phoneNumber: Yup.string().matches(
+      phoneRegExp,
+      `Phone Number must start with + and country code (eg. '+233')`
+    ),
+    whatsappNumber: Yup.string()
       .matches(
         phoneRegExp,
         `Phone Number must start with + and country code (eg. '+233')`
       )
-      .required('Phone Number is required'),
-    whatsappNumber: Yup.string().matches(
-      phoneRegExp,
-      `Phone Number must start with + and country code (eg. '+233')`
-    ),
-    bacenta: Yup.string().required('This is a required field'),
+      .required('WhatsApp Number is required'),
     ministry: Yup.string().required('This is a required field'),
   })
 
@@ -149,11 +153,13 @@ export const EditMemberDetails = () => {
 
   const onSubmit = async (values, onSubmitProps) => {
     //Variables that are not controlled by formik
-    values.pictureUrl = image
+    if (image) {
+      values.pictureUrl = image
+    }
 
     //Formatting of phone number fields
     values.phoneNumber = parsePhoneNum(values.phoneNumber)
-    values.whatsappNumber = parsePhoneNum(values.phoneNumber)
+    values.whatsappNumber = parsePhoneNum(values.whatsappNumber)
 
     EditMemberDetails({
       variables: {
@@ -174,7 +180,7 @@ export const EditMemberDetails = () => {
         ministry: values.ministry,
       },
     })
-
+    console.log(values)
     onSubmitProps.setSubmitting(false)
     onSubmitProps.resetForm()
     history.push('/members/displaydetails')
@@ -186,9 +192,9 @@ export const EditMemberDetails = () => {
     // Spinner Icon for Loading Screens
     return <LoadingScreen />
   } else {
-    const sontaOptions = ministryListData.ministryList.map((sonta) => ({
-      value: sonta.ministryID,
-      key: sonta.name,
+    const ministryOptions = ministryListData.ministryList.map((ministry) => ({
+      value: ministry.ministryID,
+      key: ministry.name,
     }))
 
     return (
@@ -217,7 +223,11 @@ export const EditMemberDetails = () => {
                       ) : (
                         <div>
                           <img
-                            src={image}
+                            src={
+                              image
+                                ? image
+                                : memberData.displayMember.pictureUrl
+                            }
                             className="profile-img rounded my-3"
                             alt=""
                           />
@@ -355,15 +365,14 @@ export const EditMemberDetails = () => {
                         <FormikControl
                           control="combobox"
                           name="bacenta"
-                          // label="newBacenta"
-                          placeholder="newBacenta"
+                          placeholder="Bacenta"
                           setFieldValue={formik.setFieldValue}
                           optionsQuery={BACENTA_DROPDOWN}
                           queryVariable="bacentaName"
                           suggestionText="name"
                           suggestionID="bacentaID"
                           dataset="bacentaDropdown"
-                          aria-describedby="newBacenta Name"
+                          aria-describedby="bacenta Name"
                         />
                       </div>
                       <div className="col">
@@ -371,7 +380,7 @@ export const EditMemberDetails = () => {
                           className="form-control"
                           control="select"
                           name="ministry"
-                          options={sontaOptions}
+                          options={ministryOptions}
                           defaultOption="Ministry"
                         />
                       </div>

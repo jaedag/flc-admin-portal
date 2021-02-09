@@ -13,7 +13,7 @@ export const EDIT_MEMBER_MUTATION = gql`
     $maritalStatus: String!
     $gender: String!
     $occupation: String
-    $bacenta: String!
+    $bacenta: String
     $ministry: String
     $pictureUrl: String!
   ) {

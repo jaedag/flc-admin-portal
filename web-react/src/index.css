@@ -186,6 +186,7 @@
 
 .profile-img {
   width: 200px;
+  height: intrinsic;
 }
 
 .img-search {

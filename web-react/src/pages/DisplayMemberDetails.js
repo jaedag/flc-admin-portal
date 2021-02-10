@@ -344,7 +344,10 @@ export const DisplayMemberDetails = () => {
             {/* Current Church Status */}
             <div className="row">
               <div className="col">
-                <MemberCard title="Current Church Activity" editlink="#">
+                <MemberCard
+                  title="Current Church Activity"
+                  editlink="/member/editmember"
+                >
                   <div className="container p-2">
                     <div className="row mb-2">
                       <div className="col">

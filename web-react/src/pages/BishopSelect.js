@@ -3,7 +3,6 @@ import { useQuery } from '@apollo/client'
 import { useHistory } from 'react-router-dom'
 import { ChurchContext } from '../contexts/ChurchContext'
 import { GET_BISHOPS } from '../queries/ListQueries'
-import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
 
 const BishopSelect = () => {
   const { setChurch, setBishopID } = useContext(ChurchContext)
@@ -11,9 +10,33 @@ const BishopSelect = () => {
   const history = useHistory()
 
   if (error) {
-    return <ErrorScreen />
+    return (
+      <div className="container text-center mb-4">
+        <h3>FLC Admin Dashboard</h3>
+        <h5 className="text-secondary">Select Your Bishop</h5>
+        <div className="container full-body-center">
+          <p className="text-center full-center">
+            There seems to be an error loading data
+          </p>
+        </div>
+      </div>
+    )
   } else if (loading) {
-    return <LoadingScreen />
+    return (
+      <div className="container text-center mb-4">
+        <h3>FLC Admin Dashboard</h3>
+        <h5 className="text-secondary">Select Your Bishop</h5>
+        <div className="body-container full-body-center">
+          <div className="row h-75">
+            <div className="col my-auto">
+              <div className="spinner-border-center full-center" role="status">
+                <div className="sr-only">Loading...</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
   } else {
     return (
       <React.Fragment>

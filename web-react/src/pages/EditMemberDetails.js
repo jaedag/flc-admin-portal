@@ -59,7 +59,7 @@ export const EditMemberDetails = () => {
       ? memberData.displayMember.pictureUrl
       : '',
     bacenta: memberData.displayMember.bacenta
-      ? memberData.displayMember.bacenta.bacentaID
+      ? memberData.displayMember.bacenta.name
       : '',
     ministry: memberData.displayMember.ministry
       ? memberData.displayMember.ministry.ministryID
@@ -78,7 +78,6 @@ export const EditMemberDetails = () => {
       },
     ],
   }
-
   const genderOptions = [
     { key: 'Male', value: 'Male' },
     { key: 'Female', value: 'Female' },
@@ -180,7 +179,7 @@ export const EditMemberDetails = () => {
         ministry: values.ministry,
       },
     })
-    console.log(values)
+
     onSubmitProps.setSubmitting(false)
     onSubmitProps.resetForm()
     history.push('/member/displaydetails')
@@ -365,7 +364,7 @@ export const EditMemberDetails = () => {
                         <FormikControl
                           control="combobox"
                           name="bacenta"
-                          placeholder="Bacenta"
+                          placeholder={initialValues.bacenta}
                           setFieldValue={formik.setFieldValue}
                           optionsQuery={BACENTA_DROPDOWN}
                           queryVariable="bacentaName"

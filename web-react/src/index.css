@@ -55,7 +55,7 @@
 .navbar {
   background-color: var(--body-bg-color);
   border-bottom: 1px solid var(--border-color);
-  height: 80px;
+  height: 70px;
 }
 
 .mobile-search-nav{
@@ -187,6 +187,12 @@
 .profile-img {
   width: 200px;
   height: intrinsic;
+}
+
+.user-navbar-img{
+  width: 40px;
+  border: 1px solid var(--infobar-color);
+  border-radius: 100px;
 }
 
 .img-search {

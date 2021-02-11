@@ -177,7 +177,7 @@ input pastoralHistory {
 type Query {
 
 #At the Federal Level
-	bishopsList: [Member] @cypher(statement:"MATCH ()<-[:HAS_CAMPUS|:HAS_TOWN]-(m:Member) RETURN DISTINCT m")
+	bishopsList: [Member] @isAuthenticated @cypher(statement:"MATCH ()<-[:HAS_CAMPUS|:HAS_TOWN]-(m:Member) RETURN DISTINCT m")
 	bishopsListCampus: [Member] @cypher(statement:"MATCH ()<-[:HAS_CAMPUS]-(m:Member) RETURN DISTINCT m")
 	bishopsListTown: [Member] @cypher(statement:"MATCH ()<-[:HAS_TOWN]-(m:Member) RETURN DISTINCT m")
 	ministryList: [Ministry] @cypher (statement:"MATCH (m:Ministry) RETURN m")
@@ -589,6 +589,7 @@ type Mutation {
 		pastoralAppointment: [pastoralAppointment]
 		pastoralHistory: [pastoralHistory]
 	): Member
+	@isAuthenticated
 	@cypher(statement:
 	"""
 	MATCH (m:Member {memberID:$memberID})
@@ -601,19 +602,29 @@ type Mutation {
 		m.pictureUrl = $pictureUrl
 
 	WITH m
-	MATCH (ms:MaritalStatus {status:$maritalStatus})
-	MATCH (g:Gender {gender: $gender})
 	
-	MERGE (t:TimeGraph {date:date($dob)})	
-    MERGE (m)-[:HAS_MARITAL_STATUS]-> (ms)
+	MATCH (g:Gender {gender: $gender})
+	MERGE (t:TimeGraph {date: date($dob)})	
 	MERGE (m)-[:HAS_GENDER]-> (g)
     MERGE (m)-[:WAS_BORN_ON]->(t)
     
+	WITH m
+    CALL {
+    	WITH m
+    	WITH m  WHERE $maritalStatus IS NOT NULL
+    	MATCH (ms:MaritalStatus {status:$maritalStatus})
+		MERGE (m)-[r1:HAS_MARITAL_STATUS]->()
+		DELETE r1
+		MERGE (m)-[:HAS_MARITAL_STATUS]-> (ms)
+    	RETURN count(m)
+    	}
     WITH m
     CALL {
     	WITH m
     	WITH m  WHERE $occupation IS NOT NULL
+		MATCH (m)-[r1:HAS_OCCUPATION]-> ()
     	MERGE (o:Occupation {occupation:$occupation})
+		DELETE r1
 		MERGE (m)-[:HAS_OCCUPATION]-> (o)
     	RETURN count(m)
     	}
@@ -622,6 +633,8 @@ type Mutation {
     	WITH m
     	WITH m  WHERE $bacenta IS NOT NULL
     	MATCH (c:Bacenta {bacentaID: $bacenta})
+		MATCH (m)-[r1:BELONGS_TO]-> (:Bacenta)
+		DELETE r1
 		MERGE (m)-[:BELONGS_TO]-> (c)
     	RETURN count(m)
     	}
@@ -630,6 +643,8 @@ type Mutation {
     	WITH m
     	WITH m  WHERE $ministry IS NOT NULL
     	MATCH (s:Ministry {ministryID:$ministry})
+		MERGE (m)-[r1:BELONGS_TO]-> (:Ministry)
+		DELETE r1
 		MERGE (m)-[:BELONGS_TO]-> (s)
     	RETURN count(m)
     	}

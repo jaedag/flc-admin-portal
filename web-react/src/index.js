@@ -1,10 +1,15 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import ReactDOM from 'react-dom'
 import registerServiceWorker from './registerServiceWorker'
 import { Route, Switch, BrowserRouter as Router } from 'react-router-dom'
-// import ApolloClient from "apollo-boost";
-import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client'
-// import {Login} from "./pages/Login";
+import {
+  ApolloProvider,
+  ApolloClient,
+  createHttpLink,
+  InMemoryCache,
+} from '@apollo/client'
+import { setContext } from '@apollo/client/link/context'
+import { Auth0Provider, useAuth0 } from '@auth0/auth0-react'
 import './index.css'
 import BishopSelect from './pages/BishopSelect'
 import BishopDashboard from './pages/BishopDashboard'
@@ -29,10 +34,52 @@ import { DisplayAllCentres } from './pages/DisplayAllCentres'
 import { DisplayAllTownCampuses } from './pages/DisplayAllTownCampuses'
 import { AddBacenta } from './pages/AddBacenta'
 
-const client = new ApolloClient({
-  uri: process.env.REACT_APP_GRAPHQL_URI || '/graphql',
-  cache: new InMemoryCache(),
-})
+const AppWithApollo = () => {
+  const [accessToken, setAccessToken] = useState()
+  const { getAccessTokenSilently, loginWithRedirect } = useAuth0()
+
+  const getAccessToken = useCallback(async () => {
+    try {
+      const token = await getAccessTokenSilently()
+
+      setAccessToken(token)
+    } catch (err) {
+      loginWithRedirect()
+    }
+  }, [getAccessTokenSilently, loginWithRedirect])
+
+  useEffect(() => {
+    getAccessToken()
+  }, [getAccessToken])
+
+  const httpLink = createHttpLink({
+    uri: process.env.REACT_APP_GRAPHQL_URI || '/graphql',
+  })
+
+  const authLink = setContext((_, { headers }) => {
+    // get the authentication token from local storage if it exists
+    // const token = localStorage.getItem('token');
+
+    // return the headers to the context so httpLink can read them
+    return {
+      headers: {
+        ...headers,
+        Authorization: accessToken ? `Bearer ${accessToken}` : '',
+      },
+    }
+  })
+
+  const client = new ApolloClient({
+    link: authLink.concat(httpLink),
+    cache: new InMemoryCache(),
+  })
+
+  return (
+    <ApolloProvider client={client}>
+      <PastorsAdmin />
+    </ApolloProvider>
+  )
+}
 
 const PastorsAdmin = () => {
   const [church, setChurch] = useState({
@@ -173,9 +220,14 @@ const PastorsAdmin = () => {
 }
 
 const Main = () => (
-  <ApolloProvider client={client}>
-    <PastorsAdmin />
-  </ApolloProvider>
+  <Auth0Provider
+    domain={process.env.REACT_APP_AUTH0_DOMAIN}
+    clientId={process.env.REACT_APP_AUTH0_CLIENT_ID}
+    redirectUri={window.location.origin}
+    audience="https://flcadmin.us.auth0.com/api/v2/"
+  >
+    <AppWithApollo />
+  </Auth0Provider>
 )
 
 ReactDOM.render(<Main />, document.getElementById('root'))

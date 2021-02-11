@@ -1,9 +1,6 @@
-
-
-// Q1 Town, Community and Centre data import script
 //Delete all Entries
-match (n)
-detach delete n;
+call apoc.periodic.iterate("MATCH (n) return n", "DETACH DELETE n", {batchSize:1000})
+yield batches, total return batches, total;
 
 //Import Bishops data
 LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/e/2PACX-1vQux_Dxr5gR6v8JiJvBtFRm997O9PJEhRhdHduHA5arLyP96PrxvtYCbGMNf3qRcUTRe2O94TrdPtPf/pub?gid=1980829198&single=true&output=csv" as line
@@ -48,8 +45,14 @@ WHERE line.Occupation is not null
 MERGE(O:Occupation {occupation: line.Occupation})
 MERGE(m)-[:HAS_OCCUPATION]->(O);
 
+CREATE CONSTRAINT ON (m:Member) ASSERT m.memberID IS UNIQUE;
+CREATE CONSTRAINT ON (b:Bacenta) ASSERT b.bacentaID IS UNIQUE;
+// CREATE CONSTRAINT ON (m:Member) ASSERT m.whatsappNumber IS UNIQUE;
+CREATE INDEX ON :Member(whatsappNumber);
+
 // Create the Members
-LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/e/2PACX-1vSwWmJJoyWNd6TBMAE74gxSnss94IC8my0lz5KUmggmwAOfsIOoNIvXH_Iq2sUYi86ULcGingtgE2ze/pub?gid=1112214026&single=true&output=csv" as line
+:auto USING PERIODIC COMMIT 1000
+LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/e/2PACX-1vSwWmJJoyWNd6TBMAE74gxSnss94IC8my0lz5KUmggmwAOfsIOoNIvXH_Iq2sUYi86ULcGingtgE2ze/pub?output=csv" as line
 CREATE (m:Member {memberID: apoc.create.uuid()})
 	SET 
     m.firstName = line.`First Name`,
@@ -63,6 +66,7 @@ CREATE (m:Member {memberID: apoc.create.uuid()})
 with line,m WHERE line.Gender is not null
 MERGE(g: Gender {gender: line.Gender})
 MERGE(m)-[:HAS_GENDER]->(g)
+
 
 with line,m WHERE line.`Marital Status` is not null
 MERGE (ms: MaritalStatus {status: line.`Marital Status`})
@@ -78,17 +82,18 @@ MERGE(son: Ministry {name:line.`Ministry`})
     son.ministryID = apoc.create.uuid()
 MERGE(m)-[:BELONGS_TO]->(son)
 
-WITH line WHERE line.`Date of Birth`is not null
-MATCH (m:Member {whatsappNumber: line.`WhatsApp Number (if different)`})
-MERGE (dob: TimeGraph {date: date(line.`Date of Birth`)})
-MERGE (m)-[:WAS_BORN_ON]->(dob)
-
-
-WITH line
-WHERE line.Occupation is not null
-MATCH (m:Member {whatsappNumber: line.`WhatsApp Number (if different)`})
+WITH line,m WHERE line.Occupation is not null
 MERGE(O:Occupation {occupation: line.Occupation})
 MERGE(m)-[:HAS_OCCUPATION]->(O);
+
+
+:auto USING PERIODIC COMMIT 500
+LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/e/2PACX-1vSwWmJJoyWNd6TBMAE74gxSnss94IC8my0lz5KUmggmwAOfsIOoNIvXH_Iq2sUYi86ULcGingtgE2ze/pub?output=csv" as line
+MATCH (m:Member {whatsappNumber: line.`WhatsApp Number (if different)`})
+
+WITH line,m WHERE line.`Date of Birth` is not null
+MERGE (dob: TimeGraph {date: date(line.`Date of Birth`)})
+MERGE (m)-[:WAS_BORN_ON]->(dob);
 
 // Create the Churches with 
 LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/e/2PACX-1vTOjWaKQk38jZYy0hASTI_hSRZR99AC9RJ-AP1YSvks8bex_v7KRI_81uwSriazP2xKSbq6QHVENvZa/pub?output=csv" as line

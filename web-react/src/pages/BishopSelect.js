@@ -3,6 +3,8 @@ import { useQuery } from '@apollo/client'
 import { useHistory } from 'react-router-dom'
 import { ChurchContext } from '../contexts/ChurchContext'
 import { GET_BISHOPS } from '../queries/ListQueries'
+import { AuthButton } from '../components/DashboardButton'
+import { UserProfile } from './UserProfile'
 
 const BishopSelect = () => {
   const { setChurch, setBishopID } = useContext(ChurchContext)
@@ -14,10 +16,12 @@ const BishopSelect = () => {
       <div className="container text-center mb-4">
         <h3>FLC Admin Dashboard</h3>
         <h5 className="text-secondary">Select Your Bishop</h5>
-        <div className="container full-body-center">
-          <p className="text-center full-center">
-            There seems to be an error loading data
+        <div className="container">
+          <UserProfile />
+          <p className="text-center">
+            There seems to be an error loading data. Make sure you are logged in{' '}
           </p>
+          <AuthButton />
         </div>
       </div>
     )

@@ -26,6 +26,9 @@ const schema = makeAugmentedSchema({
   config: {
     query: true,
     mutation: false,
+    auth: {
+      isAuthenticated: true,
+    },
   },
 })
 
@@ -71,7 +74,9 @@ init(driver)
  * generated resolvers to connect to the database.
  */
 const server = new ApolloServer({
-  context: { driver, neo4jDatabase: process.env.NEO4J_DATABASE },
+  context: ({ req }) => {
+    return { req, driver, neo4jDatabase: process.env.NEO4J_DATABASE }
+  },
   schema: schema,
   introspection: true,
   playground: true,
@@ -90,4 +95,5 @@ server.applyMiddleware({ app, path })
 
 app.listen({ host, port, path }, () => {
   console.log(`GraphQL server ready at http://${host}:${port}${path}`)
+  console.log(process.env.JWT_SECRET)
 })

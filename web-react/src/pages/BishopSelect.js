@@ -3,8 +3,10 @@ import { useQuery } from '@apollo/client'
 import { useHistory } from 'react-router-dom'
 import { ChurchContext } from '../contexts/ChurchContext'
 import { GET_BISHOPS } from '../queries/ListQueries'
+
+import { NavBar } from '../components/NavBar'
 import { AuthButton } from '../components/DashboardButton'
-import { UserProfile } from './UserProfile'
+import Logo from '../img/flc-logo-small.png'
 
 const BishopSelect = () => {
   const { setChurch, setBishopID } = useContext(ChurchContext)
@@ -13,11 +15,15 @@ const BishopSelect = () => {
 
   if (error) {
     return (
-      <div className="container text-center mb-4">
+      <div className="container text-center my-5">
+        <img
+          src={Logo}
+          alt="logo"
+          className="img-fluid mx-auto d-block d-lg-none"
+          style={{ maxWidth: '30%' }}
+        />
         <h3>FLC Admin Dashboard</h3>
-        <h5 className="text-secondary">Select Your Bishop</h5>
         <div className="container">
-          <UserProfile />
           <p className="text-center">
             There seems to be an error loading data. Make sure you are logged in{' '}
           </p>
@@ -27,7 +33,13 @@ const BishopSelect = () => {
     )
   } else if (loading) {
     return (
-      <div className="container text-center mb-4">
+      <div className="container text-center my-5">
+        <img
+          src={Logo}
+          alt="logo"
+          className="img-fluid mx-auto d-block d-lg-none"
+          style={{ maxWidth: '30%' }}
+        />
         <h3>FLC Admin Dashboard</h3>
         <h5 className="text-secondary">Select Your Bishop</h5>
         <div className="body-container full-body-center">
@@ -44,40 +56,76 @@ const BishopSelect = () => {
   } else {
     return (
       <React.Fragment>
-        <div className="container text-center mb-4">
+        <NavBar />
+        <div className="container text-center my-3">
+          <img
+            src={Logo}
+            alt="logo"
+            className="img-fluid mx-auto d-block d-lg-none"
+            style={{ maxWidth: '30%' }}
+          />
           <h3>FLC Admin Dashboard</h3>
           <h5 className="text-secondary">Select Your Bishop</h5>
         </div>
-        <div className="row px-5">
+        <div className="row row-cols-sm-1 row-cols-lg-4 d-flex justify-content-center px-5">
           {data.bishopsList.map((soul, index) => {
             return (
-              <div className="col" key={index}>
-                <div
-                  className="card grid-card mb-5"
-                  onClick={() => {
-                    if (soul.townBishop[0]) {
-                      setChurch({ church: 'town', subChurch: 'centre' })
-                    } else if (soul.campusBishop[0]) {
-                      setChurch({ church: 'campus', subChurch: 'centre' })
-                    }
+              <div
+                key={index}
+                className="col-sm-12 col-lg card mobile-search-card p-2 m-1"
+                onClick={() => {
+                  if (soul.townBishop[0]) {
+                    setChurch({ church: 'town', subChurch: 'centre' })
+                  } else if (soul.campusBishop[0]) {
+                    setChurch({ church: 'campus', subChurch: 'centre' })
+                  }
 
-                    setBishopID(soul.memberID)
-                    history.push('/dashboard')
-                  }}
-                >
+                  setBishopID(soul.memberID)
+                  history.push('/dashboard')
+                }}
+              >
+                <div className="media">
                   <img
-                    className="card-img-top d-none d-sm-block image-card"
+                    className="mr-3 rounded-circle img-search"
                     src={soul.pictureUrl}
-                    alt=""
+                    alt={`${soul.firstName} ${soul.lastName}`}
                   />
-                  <p className="card-title text-center pt-2">
-                    {soul.firstName + ' ' + soul.lastName}
-                  </p>
-                  <p className="text-center text-muted">
-                    {soul.townBishop[0] ? 'Town' : 'Campus'}
-                  </p>
+                  <div className="media-body">
+                    <h5 className="mt-0">{`${soul.firstName} ${soul.lastName}`}</h5>
+                    <div>
+                      <span className="text-muted">
+                        {soul.townBishop[0] ? 'Town' : 'Campus'}
+                      </span>
+                    </div>
+                  </div>
                 </div>
               </div>
+
+              // <div className="col" key={index}>
+
+              // 	<div
+              // 		className="card mb-5"
+              // 		onClick={() => {
+              // 			if (soul.townBishop[0]) {
+              // 				setChurch({ church: 'town', subChurch: 'centre' })
+              // 			} else if (soul.campusBishop[0]) {
+              // 				setChurch({ church: 'campus', subChurch: 'centre' })
+              // 			}
+
+              // 			setBishopID(soul.memberID)
+              // 			history.push('/dashboard')
+              // 		}}>
+              // 		<img
+              // 			className="card-img-top d-none d-sm-block image-card"
+              // 			src={soul.pictureUrl}
+              // 			alt=""
+              // 		/>
+              // 		<p className="card-title text-center pt-2">
+              // 			{soul.firstName + ' ' + soul.lastName}
+              // 		</p>
+              // 		<p className="text-center text-muted">{soul.townBishop[0] ? 'Town' : 'Campus'}</p>
+              // 	</div>
+              // </div>
             )
           })}
         </div>

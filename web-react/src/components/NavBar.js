@@ -1,11 +1,12 @@
 import React, { useContext } from 'react'
-// import { useQuery } from '@apollo/client'
 import { Link } from 'react-router-dom'
+import { useAuth0 } from '@auth0/auth0-react'
 import SearchBox from './SearchBox'
 import { ChurchContext } from '../contexts/ChurchContext'
 
 export const NavBar = () => {
   const { church, capitalise } = useContext(ChurchContext)
+  const { user } = useAuth0()
 
   return (
     <nav className="navbar navbar-dark navbar-expand fixed-top">
@@ -56,13 +57,20 @@ export const NavBar = () => {
           <div className="col">
             <SearchBox />
           </div>
+
           <div className="col">
             <Link
               className="nav-item nav-link d-flex align-items-center flex-column p-0 pb-2"
               to="#"
             >
-              <span className="fas fa-user-circle fa-3x" />
-              <span className="d-none d-md-inline">Admin</span>
+              <span>
+                <img
+                  className="user-navbar-img "
+                  src={user.picture}
+                  alt={user.name}
+                />
+              </span>
+              <span className="d-none d-md-inline">{user.given_name}</span>
             </Link>
           </div>
         </div>

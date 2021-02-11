@@ -95,5 +95,4 @@ server.applyMiddleware({ app, path })
 
 app.listen({ host, port, path }, () => {
   console.log(`GraphQL server ready at http://${host}:${port}${path}`)
-  console.log(process.env.JWT_SECRET)
 })

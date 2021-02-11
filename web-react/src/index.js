@@ -10,7 +10,6 @@ import {
 } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
 import { Auth0Provider, useAuth0 } from '@auth0/auth0-react'
-// import {Login} from "./pages/Login";
 import './index.css'
 import BishopSelect from './pages/BishopSelect'
 import BishopDashboard from './pages/BishopDashboard'
@@ -45,7 +44,7 @@ const AppWithApollo = () => {
 
       setAccessToken(token)
     } catch (err) {
-      // loginWithRedirect()
+      loginWithRedirect()
     }
   }, [getAccessTokenSilently, loginWithRedirect])
 

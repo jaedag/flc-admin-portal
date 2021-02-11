@@ -604,7 +604,7 @@ type Mutation {
 	WITH m
 	
 	MATCH (g:Gender {gender: $gender})
-	MERGE (t:TimeGraph {date:date($dob)})	
+	MERGE (t:TimeGraph {date: date($dob)})	
 	MERGE (m)-[:HAS_GENDER]-> (g)
     MERGE (m)-[:WAS_BORN_ON]->(t)
     
@@ -622,8 +622,8 @@ type Mutation {
     CALL {
     	WITH m
     	WITH m  WHERE $occupation IS NOT NULL
-    	MERGE (o:Occupation {occupation:$occupation})
 		MATCH (m)-[r1:HAS_OCCUPATION]-> ()
+    	MERGE (o:Occupation {occupation:$occupation})
 		DELETE r1
 		MERGE (m)-[:HAS_OCCUPATION]-> (o)
     	RETURN count(m)

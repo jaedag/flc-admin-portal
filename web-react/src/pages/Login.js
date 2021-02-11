@@ -1,15 +1,16 @@
 import React from 'react'
+import { AuthButton } from '../components/DashboardButton'
 
 export const Login = () => {
   return (
     <>
       <div className="container body-container d-none d-lg-block">
-        {/* <!--Web-->
-      /* <!--Logo and text--> */}
+        {/* <!--Web Logo and text--> */}
         <div className="row align-self-center">
           <div className="col-6 align-items-center">
             <img
-              src="https://admin-firstlovecenter.imfast.io/images/flc-logo-small.png"
+              src="../../img/flc-logo-small.png"
+              alt="logo"
               className="img-fluid"
             />
             <div className="d-none d-lg-block">
@@ -55,18 +56,20 @@ export const Login = () => {
         <div className="row d-flex align-items-center justify-content-center d-lg-none">
           <div className="col-12 col-lg-6">
             <img
-              src="https://admin-firstlovecenter.imfast.io/images/flc-logo-small.png"
+              src="../../img/flc-logo-small.png"
+              alt="logo"
               className="img-fluid mx-auto d-block d-lg-none"
               style={{ maxWidth: '30%' }}
             />
             <div className="d-lg-none h2 text-center text-white">
-              Database App
+              FLC Admin
+              <AuthButton />
             </div>
           </div>
 
           <div className="col-12 col-lg-6 d-flex justify-content-center my-3 ">
             <div className="d-lg-none flex-grow-1">
-              <form>
+              {/* <form>
                 <div className="m-2">
                   <input
                     type="text"
@@ -91,7 +94,7 @@ export const Login = () => {
                     </small>
                   </div>
                 </div>
-              </form>
+              </form> */}
             </div>
           </div>
         </div>

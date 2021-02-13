@@ -11,6 +11,7 @@
   NEO4J_USER = "Neo4j User"
   NEO4J_PASSWORD = "Neo4j Password"
   
+  
 [[redirects]]
   from = "/graphql"
   to = "/.netlify/functions/graphql"

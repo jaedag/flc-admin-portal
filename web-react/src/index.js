@@ -36,7 +36,7 @@ import { AddBacenta } from './pages/AddBacenta'
 
 const AppWithApollo = () => {
   const [accessToken, setAccessToken] = useState()
-  const { getAccessTokenSilently, loginWithRedirect } = useAuth0()
+  const { getAccessTokenSilently } = useAuth0()
 
   const getAccessToken = useCallback(async () => {
     try {
@@ -44,9 +44,9 @@ const AppWithApollo = () => {
 
       setAccessToken(token)
     } catch (err) {
-      loginWithRedirect()
+      // loginWithRedirect()
     }
-  }, [getAccessTokenSilently, loginWithRedirect])
+  }, [getAccessTokenSilently])
 
   useEffect(() => {
     getAccessToken()

@@ -61,7 +61,7 @@ const BishopSelect = () => {
           <img
             src={Logo}
             alt="logo"
-            className="img-fluid mx-auto d-block d-lg-none"
+            className="img-fluid mx-auto"
             style={{ maxWidth: '30%' }}
           />
           <h3>FLC Admin Dashboard</h3>
@@ -100,32 +100,6 @@ const BishopSelect = () => {
                   </div>
                 </div>
               </div>
-
-              // <div className="col" key={index}>
-
-              // 	<div
-              // 		className="card mb-5"
-              // 		onClick={() => {
-              // 			if (soul.townBishop[0]) {
-              // 				setChurch({ church: 'town', subChurch: 'centre' })
-              // 			} else if (soul.campusBishop[0]) {
-              // 				setChurch({ church: 'campus', subChurch: 'centre' })
-              // 			}
-
-              // 			setBishopID(soul.memberID)
-              // 			history.push('/dashboard')
-              // 		}}>
-              // 		<img
-              // 			className="card-img-top d-none d-sm-block image-card"
-              // 			src={soul.pictureUrl}
-              // 			alt=""
-              // 		/>
-              // 		<p className="card-title text-center pt-2">
-              // 			{soul.firstName + ' ' + soul.lastName}
-              // 		</p>
-              // 		<p className="text-center text-muted">{soul.townBishop[0] ? 'Town' : 'Campus'}</p>
-              // 	</div>
-              // </div>
             )
           })}
         </div>

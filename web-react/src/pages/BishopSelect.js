@@ -80,7 +80,7 @@ const BishopSelect = () => {
                     setChurch({ church: 'campus', subChurch: 'centre' })
                   }
 
-                  setBishopID(soul.memberID)
+                  setBishopID(soul.id)
                   history.push('/dashboard')
                 }}
               >

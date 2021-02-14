@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client'
 
 export const DISPLAY_BISHOP_NAME = gql`
-  query displayMember($memberID: ID) {
-    displayMember(memberID: $memberID) {
+  query displayMember($id: ID) {
+    displayMember(id: $id) {
       firstName
       lastName
     }
@@ -10,8 +10,8 @@ export const DISPLAY_BISHOP_NAME = gql`
 `
 
 export const DISPLAY_MEMBER = gql`
-  query displayMember($memberID: ID) {
-    displayMember(memberID: $memberID) {
+  query displayMember($id: ID) {
+    displayMember(id: $id) {
       firstName
       lastName
       email
@@ -57,7 +57,7 @@ export const DISPLAY_MEMBER = gql`
         }
       }
       ministry {
-        ministryID
+        id
         name
         leader {
           firstName
@@ -84,35 +84,35 @@ export const DISPLAY_MEMBER = gql`
         historyRecord
       }
       leadsBacenta {
-        bacentaID
+        id
         name
       }
       leadsCentre {
-        centreID
+        id
         name
       }
       townGSO {
-        townID
+        id
         name
       }
       campusGSO {
-        campusID
+        id
         name
       }
       leadsSonta {
-        sontaID
+        id
         name
       }
       leadsMinistry {
-        ministryID
+        id
         name
       }
       townBishop {
-        townID
+        id
         name
       }
       campusBishop {
-        campusID
+        id
         name
       }
     }
@@ -120,14 +120,14 @@ export const DISPLAY_MEMBER = gql`
 `
 
 export const DISPLAY_BACENTA = gql`
-  query displayBacenta($bacentaID: ID) {
-    displayBacenta(bacentaID: $bacentaID) {
+  query displayBacenta($id: ID) {
+    displayBacenta(id: $id) {
       name
       meetingDay {
         day
       }
       leader {
-        memberID
+        id
         firstName
         lastName
         title {
@@ -137,22 +137,23 @@ export const DISPLAY_BACENTA = gql`
         }
       }
     }
-    bacentaMemberCount(bacentaID: $bacentaID)
+    bacentaMemberCount(id: $id)
   }
 `
 
 export const DISPLAY_CENTRE = gql`
-  query displayCentre($centreID: ID) {
-    displayCentre(centreID: $centreID) {
+  query displayCentre($id: ID) {
+    displayCentre(id: $id) {
       name
       bacentas {
-        bacentaID
+        id
         name
       }
       leader {
-        memberID
+        id
         firstName
         lastName
+        whatsappNumber
         title {
           Title {
             title
@@ -160,23 +161,29 @@ export const DISPLAY_CENTRE = gql`
         }
       }
     }
-    centreMemberCount(centreID: $centreID)
-    centreBacentaCount(centreID: $centreID)
+    centreMemberCount(id: $id)
+    centreBacentaCount(id: $id)
   }
 `
 
 export const DISPLAY_TOWN = gql`
-  query displayTown($townID: ID) {
-    displayTown(townID: $townID) {
+  query displayTown($id: ID) {
+    displayTown(id: $id) {
       name
       centres {
-        centreID
+        id
         name
       }
-      leader {
-        memberID
+      bishop {
+        id
         firstName
         lastName
+      }
+      leader {
+        id
+        firstName
+        lastName
+        whatsappNumber
         title {
           Title {
             title
@@ -184,23 +191,29 @@ export const DISPLAY_TOWN = gql`
         }
       }
     }
-    townMemberCount(townID: $townID)
-    townCentreCount(townID: $townID)
+    townMemberCount(id: $id)
+    townCentreCount(id: $id)
   }
 `
 
 export const DISPLAY_CAMPUS = gql`
-  query displayCampus($campusID: ID) {
-    displayCampus(campusID: $campusID) {
+  query displayCampus($id: ID) {
+    displayCampus(id: $id) {
       name
       centres {
-        centreID
+        id
         name
       }
-      leader {
-        memberID
+      bishop {
+        id
         firstName
         lastName
+      }
+      leader {
+        id
+        firstName
+        lastName
+        whatsappNumber
         title {
           Title {
             title
@@ -208,7 +221,7 @@ export const DISPLAY_CAMPUS = gql`
         }
       }
     }
-    campusMemberCount(campusID: $campusID)
-    campusCentreCount(campusID: $campusID)
+    campusMemberCount(id: $id)
+    campusCentreCount(id: $id)
   }
 `

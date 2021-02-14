@@ -65,7 +65,6 @@ function Combobox(props) {
             event.preventDefault()
           }
           setSearchString(suggestion.name)
-
           setFieldValue(`${name}`, suggestion.id)
         }}
         getSuggestionValue={(suggestion) => suggestion.name}

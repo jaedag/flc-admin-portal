@@ -5,30 +5,65 @@ import { Formik, Form, FieldArray } from 'formik'
 import * as Yup from 'yup'
 import FormikControl from '../components/formik-components/FormikControl'
 
-import { NEW_MEMBER_MUTATION } from '../queries/AdditionMutations'
+import { UPDATE_MEMBER_MUTATION } from '../queries/UpdateMutations'
+import { DISPLAY_MEMBER } from '../queries/DisplayQueries'
 import { HeadingBar } from '../components/HeadingBar'
 import { NavBar } from '../components/NavBar'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
 import Spinner from '../components/Spinner'
 import { MINISTRY_LIST, BACENTA_DROPDOWN } from '../queries/ListQueries'
-import { ChurchContext } from '../contexts/ChurchContext'
 import { MemberContext } from '../contexts/MemberContext'
+import { ChurchContext } from '../contexts/ChurchContext'
 
-export const AddMember = () => {
+export const UpdateMemberDetails = () => {
+  const { memberID } = useContext(MemberContext)
+  const { phoneRegExp, parsePhoneNum } = useContext(ChurchContext)
+  const {
+    data: memberData,
+    error: memberError,
+    loading: memberLoading,
+  } = useQuery(DISPLAY_MEMBER, {
+    variables: { id: memberID },
+  })
+
   const initialValues = {
-    firstName: '',
-    middleName: '',
-    lastName: '',
-    gender: '',
-    phoneNumber: '',
-    whatsappNumber: '',
-    email: '',
-    dob: '',
-    maritalStatus: '',
-    occupation: '',
-    pictureUrl: '',
-    bacenta: '',
-    ministry: '',
+    firstName: memberData.displayMember.firstName
+      ? memberData.displayMember.firstName
+      : '',
+    middleName: memberData.displayMember.middleName
+      ? memberData.displayMember.middleName
+      : '',
+    lastName: memberData.displayMember.lastName
+      ? memberData.displayMember.lastName
+      : '',
+    gender: memberData.displayMember.gender
+      ? memberData.displayMember.gender.gender
+      : '',
+    phoneNumber: memberData.displayMember.phoneNumber
+      ? `+${memberData.displayMember.phoneNumber}`
+      : '',
+    whatsappNumber: memberData.displayMember.whatsappNumber
+      ? `+${memberData.displayMember.whatsappNumber}`
+      : '',
+    email: memberData.displayMember.email ? memberData.displayMember.email : '',
+    dob: memberData.displayMember.dob
+      ? memberData.displayMember.dob.date.formatted
+      : '',
+    maritalStatus: memberData.displayMember.maritalStatus
+      ? memberData.displayMember.maritalStatus.status
+      : '',
+    occupation: memberData.displayMember.occupation
+      ? memberData.displayMember.occupation.occupation
+      : '',
+    pictureUrl: memberData.displayMember.pictureUrl
+      ? memberData.displayMember.pictureUrl
+      : '',
+    bacenta: memberData.displayMember.bacenta
+      ? memberData.displayMember.bacenta.name
+      : '',
+    ministry: memberData.displayMember.ministry
+      ? memberData.displayMember.ministry.id
+      : '',
 
     pastoralHistory: [
       {
@@ -43,7 +78,6 @@ export const AddMember = () => {
       },
     ],
   }
-
   const genderOptions = [
     { key: 'Male', value: 'Male' },
     { key: 'Female', value: 'Female' },
@@ -59,26 +93,23 @@ export const AddMember = () => {
     { key: 'Bishop', value: 'Bishop' },
   ]
 
-  const { phoneRegExp, parsePhoneNum } = useContext(ChurchContext)
-  const { setMemberID } = useContext(MemberContext)
+  const history = useHistory()
 
   const validationSchema = Yup.object({
     firstName: Yup.string().required('Name is a required field'),
     lastName: Yup.string().required('This is a required field'),
     gender: Yup.string().required('This is a required field'),
     email: Yup.string().email('Please enter a valid email address'),
-    maritalStatus: Yup.string().required('This is a required field'),
-    phoneNumber: Yup.string()
+    phoneNumber: Yup.string().matches(
+      phoneRegExp,
+      `Phone Number must start with + and country code (eg. '+233')`
+    ),
+    whatsappNumber: Yup.string()
       .matches(
         phoneRegExp,
         `Phone Number must start with + and country code (eg. '+233')`
       )
-      .required('Phone Number is required'),
-    whatsappNumber: Yup.string().matches(
-      phoneRegExp,
-      `Phone Number must start with + and country code (eg. '+233')`
-    ),
-    bacenta: Yup.string().required('This is a required field'),
+      .required('WhatsApp Number is required'),
     ministry: Yup.string().required('This is a required field'),
   })
 
@@ -89,15 +120,12 @@ export const AddMember = () => {
     error: ministryListError,
   } = useQuery(MINISTRY_LIST)
 
-  const [AddMember] = useMutation(NEW_MEMBER_MUTATION, {
-    onCompleted: (newMemberData) => {
-      setMemberID(newMemberData.AddMember.memberID)
-    },
+  const [UpdateMemberDetails] = useMutation(UPDATE_MEMBER_MUTATION, {
+    refetchQueries: [{ query: DISPLAY_MEMBER, variables: { id: memberID } }],
   })
 
   const [image, setImage] = useState('')
   const [loading, setLoading] = useState(false)
-  const history = useHistory()
 
   const uploadImage = async (e) => {
     const files = e.target.files
@@ -121,15 +149,18 @@ export const AddMember = () => {
   }
 
   const onSubmit = async (values, onSubmitProps) => {
-    // Variables that are not controlled by formik
-    values.pictureUrl = image
+    //Variables that are not controlled by formik
+    if (image) {
+      values.pictureUrl = image
+    }
 
     //Formatting of phone number fields
     values.phoneNumber = parsePhoneNum(values.phoneNumber)
     values.whatsappNumber = parsePhoneNum(values.whatsappNumber)
 
-    AddMember({
+    UpdateMemberDetails({
       variables: {
+        id: memberID,
         firstName: values.firstName,
         middleName: values.middleName,
         lastName: values.lastName,
@@ -144,9 +175,6 @@ export const AddMember = () => {
 
         bacenta: values.bacenta,
         ministry: values.ministry,
-
-        pastoralAppointment: values.pastoralAppointment,
-        pastoralHistory: values.pastoralHistory,
       },
     })
 
@@ -155,13 +183,15 @@ export const AddMember = () => {
     history.push('/member/displaydetails')
   }
 
-  if (ministryListLoading) {
-    return <LoadingScreen />
-  } else if (ministryListError) {
+  if (memberError || ministryListError || memberID === '') {
     return <ErrorScreen />
+  } else if (memberLoading || ministryListLoading) {
+    // Spinner Icon for Loading Screens
+    return <LoadingScreen />
   } else {
+    console.log(ministryListData)
     const ministryOptions = ministryListData.ministryList.map((ministry) => ({
-      value: ministry.ministryID,
+      value: ministry.memberID,
       key: ministry.name,
     }))
 
@@ -175,7 +205,7 @@ export const AddMember = () => {
         >
           {(formik) => (
             <div className="body-card container body-container mt-5">
-              <h3 className="my-3">Register a New Member</h3>
+              <h3 className="my-3">Edit Member Details</h3>
               <Form className="form-group">
                 <div className="row row-cols-1">
                   {/* <!-- Basic Info Div --> */}
@@ -191,7 +221,11 @@ export const AddMember = () => {
                       ) : (
                         <div>
                           <img
-                            src={image}
+                            src={
+                              image
+                                ? image
+                                : memberData.displayMember.pictureUrl
+                            }
                             className="profile-img rounded my-3"
                             alt=""
                           />
@@ -329,15 +363,14 @@ export const AddMember = () => {
                         <FormikControl
                           control="combobox"
                           name="bacenta"
-                          // label="Bacenta"
-                          placeholder="Bacenta"
+                          placeholder={initialValues.bacenta}
                           setFieldValue={formik.setFieldValue}
                           optionsQuery={BACENTA_DROPDOWN}
                           queryVariable="bacentaName"
                           suggestionText="name"
-                          suggestionID="bacentaID"
+                          suggestionID="id"
                           dataset="bacentaDropdown"
-                          aria-describedby="Bacenta Name"
+                          aria-describedby="bacenta Name"
                         />
                       </div>
                       <div className="col">

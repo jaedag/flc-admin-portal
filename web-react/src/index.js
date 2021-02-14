@@ -17,11 +17,11 @@ import { MembersGrid } from './pages/MembersGrid'
 import { PastorsGrid } from './pages/PastorsGrid'
 import { SearchPageMobile } from './pages/SearchPageMobile'
 import { DisplayMemberDetails } from './pages/DisplayMemberDetails'
-import { AddMember } from './pages/AddMember'
-import { EditMemberDetails } from './pages/EditMemberDetails'
-import AddCentre from './pages/AddCentre'
-import AddTownCampus from './pages/AddTownCampus'
-import { EditTownCampus } from './pages/EditTownCampus'
+import { CreateMember } from './pages/CreateMember'
+import { UpdateMemberDetails } from './pages/UpdateMemberDetails'
+import CreateCentre from './pages/CreateCentre'
+import CreateTownCampus from './pages/CreateTownCampus'
+import { UpdateTownCampus } from './pages/UpdateTownCampus'
 import { DisplayBacentaDetails } from './pages/DisplayBacentaDetails'
 import { DisplayCentreDetails } from './pages/DisplayCentreDetails'
 import { DisplayCampusTownDetails } from './pages/DisplayCampusTownDetails'
@@ -32,7 +32,7 @@ import { DisplayAllSontaTowns } from './pages/DisplayAllSontaTowns'
 import { DisplayAllBacentas } from './pages/DisplayAllBacentas'
 import { DisplayAllCentres } from './pages/DisplayAllCentres'
 import { DisplayAllTownCampuses } from './pages/DisplayAllTownCampuses'
-import { AddBacenta } from './pages/AddBacenta'
+import { CreateBacenta } from './pages/CreateBacenta'
 
 const AppWithApollo = () => {
   const [accessToken, setAccessToken] = useState()
@@ -140,10 +140,10 @@ const PastorsAdmin = () => {
               <Route path="/membersearch" component={SearchPageMobile} exact />
               <Route path="/members" component={MembersGrid} exact />
               <Route path="/pastors" component={PastorsGrid} exact />
-              <Route path="/member/addmember" component={AddMember} exact />
+              <Route path="/member/addmember" component={CreateMember} exact />
               <Route
                 path="/member/editmember"
-                component={EditMemberDetails}
+                component={UpdateMemberDetails}
                 exact
               />
               <Route
@@ -161,7 +161,11 @@ const PastorsAdmin = () => {
                 component={DisplaySontaDetails}
                 exact
               />
-              <Route path="/bacenta/addbacenta" component={AddBacenta} exact />
+              <Route
+                path="/bacenta/addbacenta"
+                component={CreateBacenta}
+                exact
+              />
               <Route
                 path="/bacenta/displaydetails"
                 component={DisplayBacentaDetails}
@@ -177,7 +181,7 @@ const PastorsAdmin = () => {
                 component={DisplayCentreDetails}
                 exact
               />
-              <Route path="/centre/addcentre" component={AddCentre} exact />
+              <Route path="/centre/addcentre" component={CreateCentre} exact />
               <Route
                 path="/centre/displayall"
                 component={DisplayAllCentres}
@@ -203,12 +207,16 @@ const PastorsAdmin = () => {
                 component={DisplayCampusTownDetails}
                 exact
               />
-              <Route path="/town/addtown" component={AddTownCampus} exact />
-              <Route path="/campus/addcampus" component={AddTownCampus} exact />
-              <Route path="/town/edittown" component={EditTownCampus} exact />
+              <Route path="/town/addtown" component={CreateTownCampus} exact />
+              <Route
+                path="/campus/addcampus"
+                component={CreateTownCampus}
+                exact
+              />
+              <Route path="/town/edittown" component={UpdateTownCampus} exact />
               <Route
                 path="/campus/editcampus"
-                component={EditTownCampus}
+                component={UpdateTownCampus}
                 exact
               />
             </Switch>

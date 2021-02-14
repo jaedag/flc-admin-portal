@@ -66,11 +66,13 @@ export const NavBar = () => {
               <span>
                 <img
                   className="user-navbar-img "
-                  src={user.picture}
-                  alt={user.name}
+                  src={user ? user.picture : null}
+                  alt={user ? user.name : null}
                 />
               </span>
-              <span className="d-none d-md-inline">{user.given_name}</span>
+              <span className="d-none d-md-inline">
+                {user ? user.given_name : `Admin`}
+              </span>
             </Link>
           </div>
         </div>

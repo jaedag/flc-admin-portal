@@ -5,80 +5,127 @@ import { Formik, Form, FieldArray } from 'formik'
 import * as Yup from 'yup'
 import FormikControl from '../components/formik-components/FormikControl'
 
+import { GET_BISHOPS, CENTRE_DROPDOWN } from '../queries/ListQueries'
 import {
-  GET_CAMPUSES,
-  GET_TOWNS,
-  BISHOP_BACENTA_DROPDOWN,
-} from '../queries/ListQueries'
-import { CREATE_CENTRE_MUTATION } from '../queries/AdditionMutations'
+  EDIT_TOWN_MUTATION,
+  EDIT_CAMPUS_MUTATION,
+} from '../queries/UpdateMutations'
 import { NavBar } from '../components/NavBar'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
 import { ChurchContext } from '../contexts/ChurchContext'
+import { DISPLAY_CAMPUS, DISPLAY_TOWN } from '../queries/DisplayQueries'
 
-function AddCentre() {
+export const UpdateTownCampus = () => {
+  const {
+    church,
+    capitalise,
+    parsePhoneNum,
+    phoneRegExp,
+    campusID,
+    townID,
+    setBishopID,
+  } = useContext(ChurchContext)
+  const {
+    data: campusData,
+    error: campusError,
+    loading: campusLoading,
+  } = useQuery(DISPLAY_CAMPUS, {
+    variables: { id: campusID },
+  })
+  const { data: townData, error: townError, loading: townLoading } = useQuery(
+    DISPLAY_TOWN,
+    {
+      variables: { id: townID },
+    }
+  )
+  console.log(townData)
+  const history = useHistory()
+
   const initialValues = {
-    centreName: '',
-    leaderName: '',
-    leaderWhatsapp: '',
-    townSelect: '',
-    campusSelect: '',
-    bacentas: [''],
+    campusTownName: campusData ? campusData.displayCampus.name : '',
+    leaderName: campusData
+      ? `${campusData.displayCampus.leader.firstName} ${campusData.displayCampus.leader.lastName} `
+      : '',
+    leaderWhatsapp: campusData
+      ? `+${campusData.displayCampus.leader.whatsappNumber}`
+      : '',
+    bishopSelect: campusData ? campusData.displayCampus.bishop.id : '',
+    centres: campusData ? campusData.displayCampus.centres : [],
   }
 
   const validationSchema = Yup.object({
-    centreName: Yup.string().required('Centre Name is a required field'),
+    campusTownName: Yup.string().required(
+      `${capitalise(church.church)} Name is a required field`
+    ),
+    leaderWhatsapp: Yup.string().matches(
+      phoneRegExp,
+      `Phone Number must start with + and country code (eg. '+233')`
+    ),
   })
 
-  const { church, capitalise, bishopID, setTownID, setCentreID } = useContext(
-    ChurchContext
-  )
-
-  const [AddCentre] = useMutation(CREATE_CENTRE_MUTATION, {
-    onCompleted: (newCentreData) => {
-      setCentreID(newCentreData.AddCentre.centreID)
-    },
+  const [UpdateTown] = useMutation(EDIT_TOWN_MUTATION, {
+    refetchQueries: [{ query: DISPLAY_TOWN, variables: { id: townID } }],
   })
 
-  const history = useHistory()
-
-  const { data: townListData, loading: townListLoading } = useQuery(GET_TOWNS, {
-    variables: { bishopID: bishopID },
+  const [EditCampus] = useMutation(EDIT_CAMPUS_MUTATION, {
+    refetchQueries: [{ query: DISPLAY_CAMPUS, variables: { id: campusID } }],
   })
-  const { data: campusListData, loading: campusListLoading } = useQuery(
-    GET_CAMPUSES,
-    {
-      variables: { bishopID: bishopID },
-    }
-  )
 
-  if (townListData && campusListData) {
-    const townOptions = townListData.townList.map((town) => ({
-      value: town.townID,
-      key: town.name,
+  const {
+    data: bishopData,
+    loading: bishopLoading,
+    error: bishopError,
+  } = useQuery(GET_BISHOPS)
+
+  if (bishopError || townError || campusError) {
+    return <ErrorScreen />
+  } else if (bishopLoading || townLoading || campusLoading) {
+    return <LoadingScreen />
+  } else if (
+    (bishopData && church.church === 'campus') ||
+    (bishopData && church.church === 'town')
+  ) {
+    const bishopCampusOptions = bishopData.bishopsListCampus.map((bishop) => ({
+      value: bishop.id,
+      key: bishop.firstName + ' ' + bishop.lastName,
     }))
 
-    const campusOptions = campusListData.campusList.map((campus) => ({
-      value: campus.campusID,
-      key: campus.name,
+    //Refactoring the Options into Something that can be read by my formik component
+    const bishopTownOptions = bishopData.bishopsListTown.map((bishop) => ({
+      value: bishop.id,
+      key: bishop.firstName + ' ' + bishop.lastName,
     }))
 
     //onSubmit receives the form state as argument
     const onSubmit = (values, onSubmitProps) => {
-      setTownID(values.townSelect)
-      AddCentre({
-        variables: {
-          centreName: values.centreName,
-          centreLeaderName: values.leaderName,
-          lWhatsappNumber: values.leaderWhatsapp,
-          townID: values.townSelect,
-          campusID: values.campusSelect,
-        },
-      })
+      setBishopID(values.bishopSelect)
+      values.leaderWhatsapp = parsePhoneNum(values.leaderWhatsapp)
 
-      // console.log('Form data', values)
+      if (church.church === 'town') {
+        UpdateTown({
+          variables: {
+            townID: townID,
+            townName: values.campusTownName,
+            lWhatsappNumber: values.leaderWhatsapp,
+            bishopID: values.bishopSelect,
+            centres: values.centres,
+          },
+        })
+      } else if (church.church === 'campus') {
+        // console.log("Form data",values);
+        EditCampus({
+          variables: {
+            campusID: campusID,
+            campusName: values.campusTownName,
+            lWhatsappNumber: values.leaderWhatsapp,
+            bishopID: values.bishopSelect,
+            centres: values.centres,
+          },
+        })
+      }
+      history.push(`/${church.church}/displaydetails`)
       onSubmitProps.setSubmitting(false)
       onSubmitProps.resetForm()
-      history.push('/centre/displaydetails')
     }
 
     return (
@@ -91,37 +138,37 @@ function AddCentre() {
         >
           {(formik) => (
             <div className="body-card py-4 container mt-5">
-              <div className="container infobar">Start a New Centre</div>
+              <div className="container infobar">{`Start a New ${capitalise(
+                church.church
+              )}`}</div>
               <Form>
                 <div className="form-group">
                   <div className="row row-cols-1 row-cols-md-2">
                     {/* <!-- Basic Info Div --> */}
                     <div className="col mb-2">
                       <div className="form-row row-cols-2">
-                        <div className="col-10">
+                        <div className="col-8">
                           <FormikControl
                             className="form-control"
                             control="select"
-                            name="townSelect"
+                            name="bishopSelect"
                             options={
-                              church.church === 'town'
-                                ? townOptions
-                                : campusOptions
+                              church.church === 'campus'
+                                ? bishopCampusOptions
+                                : bishopTownOptions
                             }
-                            defaultOption={`Select a ${capitalise(
-                              church.church
-                            )}`}
+                            defaultOption="Select a Bishop"
                           />
                         </div>
                       </div>
 
                       <div className="form-row row-cols-3">
-                        <div className="col-10">
+                        <div className="col-9">
                           <FormikControl
                             className="form-control"
                             control="input"
-                            name="centreName"
-                            placeholder="Name of Centre"
+                            name="campusTownName"
+                            placeholder={`Name of ${capitalise(church.church)}`}
                           />
                         </div>
                       </div>
@@ -131,7 +178,9 @@ function AddCentre() {
                             className="form-control"
                             control="input"
                             name="leaderName"
-                            placeholder="Name of Centre Leader"
+                            placeholder={`Name of ${capitalise(
+                              church.church
+                            )} GSO`}
                           />
                         </div>
                       </div>
@@ -146,30 +195,36 @@ function AddCentre() {
                         </div>
                       </div>
                       <small className="pt-2">
-                        List any Bacentas that are being moved to this Centre
+                        {`Select any ${
+                          church.church === 'town' ? 'Centres' : 'centres'
+                        } that are being moved to this ${capitalise(
+                          church.church
+                        )}`}
                       </small>
-                      <FieldArray name="bacentas">
+                      <FieldArray name="centres">
                         {(fieldArrayProps) => {
                           const { push, remove, form } = fieldArrayProps
                           const { values } = form
-                          const { bacentas } = values
+                          const { centres } = values
 
                           return (
                             <div>
-                              {bacentas.map((bacentas, index) => (
+                              {centres.map((centre, index) => (
                                 <div key={index} className="form-row row-cols">
                                   <div className="col-9">
                                     <FormikControl
                                       control="combobox"
-                                      name={`bacentas[${index}]`}
-                                      placeholder="Bacenta Name"
+                                      name={`centres[${index}]`}
+                                      placeholder={centre.name}
                                       setFieldValue={formik.setFieldValue}
-                                      optionsQuery={BISHOP_BACENTA_DROPDOWN}
-                                      queryVariable="bacentaName"
+                                      optionsQuery={CENTRE_DROPDOWN}
+                                      queryVariable={`${church.subChurch}Name`}
                                       suggestionText="name"
-                                      suggestionID="bacentaID"
-                                      dataset="bacentaDropdown"
-                                      aria-describedby="Bacenta Name"
+                                      suggestionID={`${church.subChurch}ID`}
+                                      dataset={`${church.subChurch}Dropdown`}
+                                      aria-describedby={`${capitalise(
+                                        church.subChurch
+                                      )} Name`}
                                       className="form-control"
                                     />
                                   </div>
@@ -229,7 +284,7 @@ function AddCentre() {
                     </div>
                   </div>
                 </div>
-                <div className="d-flex justify-content-center m">
+                <div className="d-flex justify-content-center">
                   <button
                     type="submit"
                     disabled={!formik.isValid || formik.isSubmitting}
@@ -244,11 +299,5 @@ function AddCentre() {
         </Formik>
       </div>
     )
-  } else if (townListLoading || campusListLoading) {
-    return <LoadingScreen />
-  } else {
-    return <ErrorScreen />
   }
 }
-
-export default AddCentre

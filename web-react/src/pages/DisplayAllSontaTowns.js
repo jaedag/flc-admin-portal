@@ -10,7 +10,7 @@ import { MemberContext } from '../contexts/MemberContext'
 
 export const DisplayAllSontaTowns = () => {
   // Display Ministries per Town
-  const { bishopID, ministryID } = useContext(ChurchContext)
+  const { sontaID, townID } = useContext(ChurchContext)
   const { setMemberID } = useContext(MemberContext)
 
   const {
@@ -18,9 +18,8 @@ export const DisplayAllSontaTowns = () => {
     error: sontaError,
     loading: sontaLoading,
   } = useQuery(GET_TOWN_SONTA_LEADERS, {
-    variables: { ministryID: ministryID, bishopID: bishopID },
+    variables: { townID: townID, sontaID: sontaID },
   })
-  console.log(sontaData)
 
   if (sontaError) {
     return <ErrorScreen />
@@ -35,14 +34,13 @@ export const DisplayAllSontaTowns = () => {
       <div className="body-container container">
         <div className="my-5">
           {sontaData.townSontaLeader.map((leader, index) => {
-            console.log(leader)
             return (
               <React.Fragment key={index}>
                 <h4>{`${leader.leadsSonta.name}`}</h4>
                 <Link
                   to="/member/displaydetails"
                   onClick={() => {
-                    setMemberID(`${leader.memberID}`)
+                    setMemberID(`${leader.id}`)
                   }}
                 />
                 {sontaData.townSontaLeader.map((leader, index) => {

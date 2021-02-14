@@ -7,14 +7,14 @@ import { DISPLAY_BACENTA } from '../queries/DisplayQueries'
 import { ChurchContext } from '../contexts/ChurchContext'
 
 export const DisplaySontaDetails = () => {
-  const { sontaID } = useContext(ChurchContext)
+  const { id } = useContext(ChurchContext)
 
   const {
     data: sontaData,
     error: sontaError,
     loading: sontaLoading,
   } = useQuery(DISPLAY_BACENTA, {
-    variables: { sontaID: sontaID },
+    variables: { id: id },
   })
 
   if (sontaError) {
@@ -30,7 +30,7 @@ export const DisplaySontaDetails = () => {
         name={sontaData.displayBacenta.name}
         leaderTitle="Bacenta Leader"
         leaderName={`${sontaData.displayBacenta.leader.firstName} ${sontaData.displayBacenta.leader.lastName}`}
-        leaderID={sontaData.displayBacenta.leader.memberID}
+        leaderID={sontaData.displayBacenta.leader.id}
         membership={sontaData.bacentaMemberCount}
         churchHeading="No of Bacentas"
         churchNo="2"

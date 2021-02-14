@@ -12,7 +12,7 @@ export const PastorsGrid = () => {
   const { data: member, error: memberError, loading: memberLoading } = useQuery(
     GET_BISHOP_PASTORS,
     {
-      variables: { bishopID: bishopID },
+      variables: { id: bishopID },
     }
   )
 

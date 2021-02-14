@@ -12,19 +12,19 @@ export const DisplayCampusTownDetails = () => {
   )
 
   const { data: townData, loading: townLoading } = useQuery(DISPLAY_TOWN, {
-    variables: { townID: townID },
+    variables: { id: townID },
   })
   const { data: campusData, loading: campusLoading } = useQuery(
     DISPLAY_CAMPUS,
     {
-      variables: { campusID: campusID },
+      variables: { id: campusID },
     }
   )
 
   if (townLoading || campusLoading) {
     // Spinner Icon for Loading Screens
     return <LoadingScreen />
-  } else if (church.church === 'town') {
+  } else if (church.church === 'town' && townData) {
     return (
       <div>
         <NavBar />
@@ -38,9 +38,7 @@ export const DisplayCampusTownDetails = () => {
               : null
           }
           leaderID={
-            townData.displayTown.leader
-              ? townData.displayTown.leader.memberID
-              : null
+            townData.displayTown.leader ? townData.displayTown.leader.id : null
           }
           churchHeading="No of Centres"
           churchNo={townData.townCentreCount}
@@ -48,11 +46,11 @@ export const DisplayCampusTownDetails = () => {
           subChurch={`${capitalise(church.subChurch)}`}
           subChurchSetter={setCentreID}
           buttons={townData.displayTown.centres}
-          editlink={``}
+          editlink="/town/edittown"
         />
       </div>
     )
-  } else if (church.church === 'campus') {
+  } else if (church.church === 'campus' && campusData) {
     return (
       <div>
         <NavBar />
@@ -67,7 +65,7 @@ export const DisplayCampusTownDetails = () => {
           }
           leaderID={
             campusData.displayCampus.leader
-              ? campusData.displayCampus.leader.memberID
+              ? campusData.displayCampus.leader.id
               : null
           }
           churchHeading="No of Centres"
@@ -76,6 +74,7 @@ export const DisplayCampusTownDetails = () => {
           subChurch="Centre"
           subChurchSetter={setCentreID}
           buttons={campusData.displayCampus.centres}
+          editlink="/campus/editcampus"
         />
       </div>
     )

@@ -49,7 +49,7 @@ function FormikSearchbox(props) {
               data[`${dataset}`].map((row) => ({
                 firstName: row.firstName,
                 lastName: row.lastName,
-                id: row.memberID,
+                id: row.id,
                 bacenta: row.bacenta,
                 townBishop: row.townBishop,
                 campusBishop: row.campusBishop,
@@ -76,7 +76,7 @@ function FormikSearchbox(props) {
             (suggestion.townBishop[0] ? suggestion.townBishop[0].name : null)
           ) {
             setChurch({ church: 'town', subChurch: 'centre' })
-            setBishopID(suggestion.bacenta.centre.town.bishop.memberID)
+            setBishopID(suggestion.bacenta.centre.town.bishop.id)
           } else if (
             (suggestion.bacenta
               ? suggestion.bacenta.centre
@@ -88,12 +88,12 @@ function FormikSearchbox(props) {
               : null)
           ) {
             setChurch({ church: 'campus', subChurch: 'centre' })
-            setBishopID(suggestion.bacenta.centre.campus.bishop.memberID)
+            setBishopID(suggestion.bacenta.centre.campus.bishop.id)
           }
 
           setMemberID(suggestion.id)
           history.push('/member/displaydetails')
-          setFieldValue(`${name}`, suggestion.memberID)
+          setFieldValue(`${name}`, suggestion.id)
         }}
         getSuggestionValue={(suggestion) =>
           `${suggestion.firstName} ${suggestion.lastName}`

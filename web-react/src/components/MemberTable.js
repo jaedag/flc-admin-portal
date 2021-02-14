@@ -47,8 +47,7 @@ export const MemberTable = (props) => {
             <div
               className="card grid-card mb-2"
               onClick={() => {
-                // console.log('Member ID before', soul.memberID)
-                setMemberID(soul.memberID)
+                setMemberID(soul.id)
                 history.push('/member/displaydetails')
               }}
             >

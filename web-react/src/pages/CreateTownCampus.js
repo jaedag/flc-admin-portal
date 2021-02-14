@@ -9,12 +9,12 @@ import { GET_BISHOPS, CENTRE_DROPDOWN } from '../queries/ListQueries'
 import {
   CREATE_TOWN_MUTATION,
   CREATE_CAMPUS_MUTATION,
-} from '../queries/AdditionMutations'
+} from '../queries/CreateMutations'
 import { NavBar } from '../components/NavBar'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
 import { ChurchContext } from '../contexts/ChurchContext'
 
-export const EditTownCampus = () => {
+function AddTownCampus() {
   const {
     church,
     capitalise,
@@ -45,15 +45,17 @@ export const EditTownCampus = () => {
     ),
   })
 
-  const [AddTown] = useMutation(CREATE_TOWN_MUTATION, {
+  const [CreateTown] = useMutation(CREATE_TOWN_MUTATION, {
     onCompleted: (newTownData) => {
-      setTownID(newTownData.AddTown.townID)
+      setTownID(newTownData.CreateTown.id)
+      history.push(`/${church.church}/displaydetails`)
     },
   })
 
-  const [AddCampus] = useMutation(CREATE_CAMPUS_MUTATION, {
+  const [CreateCampus] = useMutation(CREATE_CAMPUS_MUTATION, {
     onCompleted: (newCampusData) => {
-      setCampusID(newCampusData.AddCampus.campusID)
+      setCampusID(newCampusData.CreateCampus.id)
+      history.push(`/${church.church}/displaydetails`)
     },
   })
 
@@ -72,13 +74,13 @@ export const EditTownCampus = () => {
     (bishopData && church.church === 'town')
   ) {
     const bishopCampusOptions = bishopData.bishopsListCampus.map((bishop) => ({
-      value: bishop.memberID,
+      value: bishop.id,
       key: bishop.firstName + ' ' + bishop.lastName,
     }))
 
     //Refactoring the Options into Something that can be read by my formik component
     const bishopTownOptions = bishopData.bishopsListTown.map((bishop) => ({
-      value: bishop.memberID,
+      value: bishop.id,
       key: bishop.firstName + ' ' + bishop.lastName,
     }))
 
@@ -88,21 +90,20 @@ export const EditTownCampus = () => {
       values.leaderWhatsapp = parsePhoneNum(values.leaderWhatsapp)
 
       if (church.church === 'town') {
-        AddTown({
+        CreateTown({
           variables: {
             townName: values.campusTownName,
             lWhatsappNumber: values.leaderWhatsapp,
-            bishopID: values.bishopSelect,
+            id: values.bishopSelect,
             centres: values.centres,
           },
         })
       } else if (church.church === 'campus') {
-        // console.log("Form data",values);
-        AddCampus({
+        CreateCampus({
           variables: {
             campusName: values.campusTownName,
             lWhatsappNumber: values.leaderWhatsapp,
-            bishopID: values.bishopSelect,
+            id: values.bishopSelect,
             centres: values.centres,
           },
         })
@@ -110,7 +111,6 @@ export const EditTownCampus = () => {
 
       onSubmitProps.setSubmitting(false)
       onSubmitProps.resetForm()
-      history.push(`/${church.church}/displaydetails`)
     }
 
     return (
@@ -207,7 +207,7 @@ export const EditTownCampus = () => {
                                       optionsQuery={CENTRE_DROPDOWN}
                                       queryVariable={`${church.subChurch}Name`}
                                       suggestionText="name"
-                                      suggestionID={`${church.subChurch}ID`}
+                                      suggestionID="id"
                                       dataset={`${church.subChurch}Dropdown`}
                                       aria-describedby={`${capitalise(
                                         church.subChurch
@@ -288,3 +288,5 @@ export const EditTownCampus = () => {
     )
   }
 }
+
+export default AddTownCampus

@@ -3,7 +3,7 @@ import { gql } from '@apollo/client'
 export const GLOBAL_SEARCH = gql`
   query globalSearch($searchKey: String!) {
     globalSearch(searchKey: $searchKey, first: 6) {
-      memberID
+      id
       firstName
       lastName
       pictureUrl
@@ -16,12 +16,12 @@ export const GLOBAL_SEARCH = gql`
         centre {
           town {
             bishop {
-              memberID
+              id
             }
           }
           campus {
             bishop {
-              memberID
+              id
             }
           }
         }

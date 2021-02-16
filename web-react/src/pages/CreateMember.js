@@ -59,7 +59,9 @@ export const CreateMember = () => {
     { key: 'Bishop', value: 'Bishop' },
   ]
 
-  const { phoneRegExp, parsePhoneNum } = useContext(ChurchContext)
+  const { phoneRegExp, parsePhoneNum, makeSelectOptions } = useContext(
+    ChurchContext
+  )
   const { setMemberID } = useContext(MemberContext)
 
   const validationSchema = Yup.object({
@@ -160,10 +162,7 @@ export const CreateMember = () => {
   } else if (ministryListError) {
     return <ErrorScreen />
   } else {
-    const ministryOptions = ministryListData.ministryList.map((ministry) => ({
-      value: ministry.id,
-      key: ministry.name,
-    }))
+    const ministryOptions = makeSelectOptions(ministryListData.ministryList)
 
     return (
       <div>

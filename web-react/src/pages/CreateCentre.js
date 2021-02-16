@@ -9,6 +9,8 @@ import {
   GET_CAMPUSES,
   GET_TOWNS,
   BISHOP_BACENTA_DROPDOWN,
+  GET_CAMPUS_CENTRES,
+  GET_TOWN_CENTRES,
 } from '../queries/ListQueries'
 import { CREATE_CENTRE_MUTATION } from '../queries/CreateMutations'
 import { NavBar } from '../components/NavBar'
@@ -20,8 +22,7 @@ function CreateCentre() {
     centreName: '',
     leaderName: '',
     leaderWhatsapp: '',
-    townSelect: '',
-    campusSelect: '',
+    campusTownSelect: '',
     bacentas: [''],
   }
 
@@ -29,56 +30,62 @@ function CreateCentre() {
     centreName: Yup.string().required('Centre Name is a required field'),
   })
 
-  const { church, capitalise, id, setTownID, setCentreID } = useContext(
-    ChurchContext
-  )
+  const {
+    church,
+    capitalise,
+    parsePhoneNum,
+    makeSelectOptions,
+    bishopID,
+    setTownID,
+    setCampusID,
+    setCentreID,
+  } = useContext(ChurchContext)
+  const history = useHistory()
 
   const [CreateCentre] = useMutation(CREATE_CENTRE_MUTATION, {
+    refetchQueries: [
+      { query: GET_CAMPUS_CENTRES, variables: { id: bishopID } },
+      { query: GET_TOWN_CENTRES, variables: { id: bishopID } },
+    ],
     onCompleted: (newCentreData) => {
       setCentreID(newCentreData.CreateCentre.id)
+      history.push('/centre/displaydetails')
     },
   })
 
-  const history = useHistory()
-
   const { data: townListData, loading: townListLoading } = useQuery(GET_TOWNS, {
-    variables: { id: id },
+    variables: { id: bishopID },
   })
   const { data: campusListData, loading: campusListLoading } = useQuery(
     GET_CAMPUSES,
     {
-      variables: { id: id },
+      variables: { id: bishopID },
     }
   )
 
   if (townListData && campusListData) {
-    const townOptions = townListData.townList.map((town) => ({
-      value: town.id,
-      key: town.name,
-    }))
-
-    const campusOptions = campusListData.campusList.map((campus) => ({
-      value: campus.id,
-      key: campus.name,
-    }))
+    const townOptions = makeSelectOptions(townListData.townList)
+    const campusOptions = makeSelectOptions(campusListData.campusList)
 
     //onSubmit receives the form state as argument
     const onSubmit = (values, onSubmitProps) => {
-      setTownID(values.townSelect)
+      if (church.church === 'town') {
+        setTownID(values.campusTownSelect)
+      } else if (church.church === 'campus') {
+        setCampusID(values.campusTownSelect)
+      }
+
       CreateCentre({
         variables: {
           centreName: values.centreName,
-          centreLeaderName: values.leaderName,
-          lWhatsappNumber: values.leaderWhatsapp,
-          townID: values.townSelect,
-          campusID: values.campusSelect,
+          lWhatsappNumber: parsePhoneNum(values.leaderWhatsapp),
+          townCampusId: values.campusTownSelect,
+          bacentas: values.bacentas,
         },
       })
 
-      // console.log('Form data', values)
       onSubmitProps.setSubmitting(false)
       onSubmitProps.resetForm()
-      history.push('/centre/displaydetails')
     }
 
     return (
@@ -102,7 +109,7 @@ function CreateCentre() {
                           <FormikControl
                             className="form-control"
                             control="select"
-                            name="townSelect"
+                            name="campusTownSelect"
                             options={
                               church.church === 'town'
                                 ? townOptions
@@ -160,15 +167,17 @@ function CreateCentre() {
                                 <div key={index} className="form-row row-cols">
                                   <div className="col-9">
                                     <FormikControl
-                                      control="combobox"
+                                      control="combobox2"
                                       name={`bacentas[${index}]`}
                                       placeholder="Bacenta Name"
                                       setFieldValue={formik.setFieldValue}
                                       optionsQuery={BISHOP_BACENTA_DROPDOWN}
-                                      queryVariable="bacentaName"
+                                      queryVariable1="id"
+                                      variable1={bishopID}
+                                      queryVariable2="bacentaName"
                                       suggestionText="name"
                                       suggestionID="id"
-                                      dataset="bacentaDropdown"
+                                      dataset="bishopBacentaDropdown"
                                       aria-describedby="Bacenta Name"
                                       className="form-control"
                                     />

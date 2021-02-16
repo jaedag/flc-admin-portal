@@ -177,7 +177,7 @@ input pastoralHistory {
 type Query {
 
 #At the Federal Level
-	bishopsList: [Member] @cypher(statement:"MATCH ()<-[:HAS_CAMPUS|:HAS_TOWN]-(m:Member) RETURN DISTINCT m")
+	bishopsList: [Member] @isAuthenticated @cypher(statement:"MATCH ()<-[:HAS_CAMPUS|:HAS_TOWN]-(m:Member) RETURN DISTINCT m")
 	bishopsListCampus: [Member] @cypher(statement:"MATCH ()<-[:HAS_CAMPUS]-(m:Member) RETURN DISTINCT m")
 	bishopsListTown: [Member] @cypher(statement:"MATCH ()<-[:HAS_TOWN]-(m:Member) RETURN DISTINCT m")
 	ministryList: [Ministry] @cypher (statement:"MATCH (m:Ministry) RETURN m")
@@ -187,7 +187,7 @@ type Query {
 
 #At the Episcopal Level
 	bishopsCampusTownCount(id: ID): Int! @cypher(statement: "MATCH (:Member {id: $id})-[:HAS_TOWN|:HAS_CAMPUS]->(t) RETURN COUNT(t)")
-	bishopBacentaDropdown (id: ID, bacentaName:String):[Bacenta] @cypher(statement: "MATCH (b:Bacenta)-[]-(:Centre)-[:HAS_CENTRE]-()-[:HAS_TOWN]-(:Member {id: $id}) WHERE toLower(b.name) CONTAINS toLower($bacentaName) RETURN b")
+	bishopBacentaDropdown (id: ID, bacentaName:String):[Bacenta] @cypher(statement: "MATCH (b:Bacenta)<-[]-(:Centre)<-[:HAS_CENTRE]-()<-[:HAS_TOWN|:HAS_CAMPUS]-(:Member {id: $id}) WHERE toLower(b.name) CONTAINS toLower($bacentaName) RETURN b")
 	bishopsSontaMemberList(id: ID): [Member]! @cypher(statement: 
 		"""
 		MATCH (:Member {id: $id})-[:HAS_TOWN|:HAS_CAMPUS]->()-[:HAS_CENTRE]->()-[:HAS_BACENTA]->()<-[:BELONGS_TO]-(m:Member)-[:BELONGS_TO]->(s)
@@ -349,8 +349,8 @@ type Mutation {
 	): Member
 	@cypher(statement:
 	"""
-	MERGE (m:Member {whatsappNumber:$whatsappNumber})
-	ON CREATE SET
+	CREATE (m:Member {whatsappNumber:$whatsappNumber})
+	SET
 		m.id = apoc.create.uuid(),
 		m.firstName = $firstName,
 		m.middleName = $middleName,
@@ -453,7 +453,7 @@ type Mutation {
     	WITH t  WHERE $centres IS NOT NULL
     	UNWIND $centres AS x
         MATCH (c:Centre {id:x})
-        MATCH (t1)-[r:HAS_CENTRE]->(c)
+        OPTIONAL MATCH (t1)-[r:HAS_CENTRE]->(c)
         DELETE r
         MERGE (t)-[:HAS_CENTRE]->(c)
     	RETURN count(t)
@@ -485,7 +485,7 @@ type Mutation {
     	WITH t  WHERE $centres IS NOT NULL
     	UNWIND $centres AS x
         MATCH (c:Centre {id:x})
-        MATCH (t1)-[r:HAS_CENTRE]->(c)
+        OPTIONAL MATCH (t1)-[r:HAS_CENTRE]->(c)
         DELETE r
         MERGE (t)-[:HAS_CENTRE]->(c)
     	RETURN count(t)
@@ -497,8 +497,7 @@ type Mutation {
 	CreateCentre(
 		centreName: String
 		lWhatsappNumber: String
-		town: ID
-		campus: ID
+		townCampusId: ID
 		bacentas:[ID]
 	):Centre
 	@cypher(statement:
@@ -508,64 +507,46 @@ type Mutation {
 		c.id = apoc.create.uuid()
 	WITH c
 	MATCH (m:Member {whatsappNumber: $lWhatsappNumber})
-	MERGE (m)-[:LEADS]->(t)
-
-	WITH c
-	CALL {
-		WITH c
-		WITH c WHERE $town IS NOT NULL
-		MATCH (t:Town {id: $town})
-		MERGE (t)-[:HAS_CENTRE]->(c)
-		RETURN count(c)
-	}
-
-	WITH c
-	CALL {
-		WITH c
-		WITH c WHERE $campus IS NOT NULL
-		MATCH (t:Campus {id: $campus})
-		MERGE (t)-[:HAS_CENTRE]->(c)
-		RETURN count(c)
-	}
+	MATCH (t {id:$townCampusId})-[:HAS_TOWN|:HAS_CAMPUS]-()
+	MERGE (t)-[:HAS_CENTRE]->(c)
+	MERGE (m)-[:LEADS]->(c)
 
 	WITH c
     CALL {
-    	WITH c
-    	WITH c  WHERE $centres IS NOT NULL
-    	UNWIND $centres AS x
-        MATCH (c:Centre {id:x})
-        MATCH (c1)-[r:HAS_CENTRE]->(c)
+        WITH c
+        WITH c  WHERE $bacentas IS NOT NULL
+        UNWIND $bacentas AS x
+        MATCH (b:Bacenta {id:x})
+        OPTIONAL MATCH (c1)-[r:HAS_BACENTA]->(b)
         DELETE r
-        MERGE (c)-[:HAS_CENTRE]->(c)
-    	RETURN count(c)
-    	}
+        MERGE (c)-[:HAS_BACENTA]->(b)
+        RETURN count(c)
+        }
 
-	RETURN t
+	RETURN c
 	"""
 	),
 	CreateBacenta(
 		bacentaName: String!
-		bacentaLeaderFName: String
-		bacentaLeaderLName: String
-		id: ID
+		lWhatsappNumber: String
+		centreId: ID
 		meetingDay: String!
 		venueLongitude: Float
 		venueLatitude: Float
 	):Bacenta
 	@cypher(statement:
 	"""
-	MERGE(c:Bacenta {name:$bacentaName,location: point({latitude:toFloat($venueLatitude), longitude:toFloat($venueLongitude), crs:'WGS-84'})})
+	CREATE (b:Bacenta {name:$bacentaName,location: point({latitude:toFloat($venueLatitude), longitude:toFloat($venueLongitude), crs:'WGS-84'})})
     	ON CREATE SET
-		c.id = apoc.create.uuid()
-    WITH c
-	MATCH (m:Member {firstName: $bacentaLeaderFName,lastName:$bacentaLeaderLName}) 
-	MATCH (com:Centre {id: $id})
-    MATCH (md:ServiceDay {day: $meetingDay})
-    WITH m, com, md,c
-	MERGE (com)-[:HAS_BACENTA]->(c)
-    MERGE (c)-[:MEETS_ON_DAY]->(md)
-	MERGE (m)-[:LEADS]->(c)
-    RETURN c
+		b.id = apoc.create.uuid()
+    WITH b
+	MATCH (m:Member {whatsappNumber: $lWhatsappNumber}) 
+	MATCH (c:Centre {id: $centreId})
+    MERGE (md:ServiceDay {day: $meetingDay})
+	MERGE (c)-[:HAS_BACENTA]->(b)
+    MERGE (b)-[:MEETS_ON_DAY]->(md)
+	MERGE (m)-[:LEADS]->(b)
+    RETURN b
 	"""
 	),
 

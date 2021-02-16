@@ -64,20 +64,16 @@ export const ADD_LEADER_TITLE_MUTATION = gql`
 export const CREATE_BACENTA_MUTATION = gql`
   mutation CreateBacenta(
     $bacentaName: String!
-    $bacentaLeaderFName: String
-    $bacentaLeaderLName: String
     $lWhatsappNumber: String
-    $id: ID
+    $centreId: ID
     $meetingDay: String!
     $venueLongitude: Float
     $venueLatitude: Float
   ) {
     CreateBacenta(
       bacentaName: $bacentaName
-      bacentaLeaderFName: $bacentaLeaderFName
-      bacentaLeaderLName: $bacentaLeaderLName
       lWhatsappNumber: $lWhatsappNumber
-      id: $id
+      centreId: $centreId
       meetingDay: $meetingDay
       venueLongitude: $venueLongitude
       venueLatitude: $venueLatitude
@@ -92,14 +88,14 @@ export const CREATE_CENTRE_MUTATION = gql`
   mutation CreateCentre(
     $centreName: String
     $lWhatsappNumber: String
-    $id: ID
-    $id: ID
+    $townCampusId: ID
+    $bacentas: [ID]
   ) {
     CreateCentre(
       centreName: $centreName
       lWhatsappNumber: $lWhatsappNumber
-      town: $id
-      campus: $id
+      townCampusId: $townCampusId
+      bacentas: $bacentas
     ) {
       id
       name

@@ -97,6 +97,12 @@ const PastorsAdmin = () => {
       .replace('(', '')
       .replace(')', '')
   }
+  const makeSelectOptions = (data) => {
+    return data.map((data) => ({
+      value: data.id,
+      key: data.name ? data.name : data.firstName + ' ' + data.lastName,
+    }))
+  }
   const [bishopID, setBishopID] = useState('')
   const [townID, setTownID] = useState('')
   const [campusID, setCampusID] = useState('')
@@ -114,6 +120,7 @@ const PastorsAdmin = () => {
           capitalise,
           phoneRegExp,
           parsePhoneNum,
+          makeSelectOptions,
           church,
           setChurch,
           bishopID,

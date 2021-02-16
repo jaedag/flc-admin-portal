@@ -4,8 +4,12 @@ import { useQuery, useMutation } from '@apollo/client'
 import { Formik, Form, FieldArray } from 'formik'
 import * as Yup from 'yup'
 import FormikControl from '../components/formik-components/FormikControl'
-
-import { GET_BISHOPS, CENTRE_DROPDOWN } from '../queries/ListQueries'
+import {
+  GET_BISHOPS,
+  GET_TOWNS,
+  GET_CAMPUSES,
+  CENTRE_DROPDOWN,
+} from '../queries/ListQueries'
 import {
   CREATE_TOWN_MUTATION,
   CREATE_CAMPUS_MUTATION,
@@ -18,8 +22,10 @@ function AddTownCampus() {
   const {
     church,
     capitalise,
+    makeSelectOptions,
     parsePhoneNum,
     phoneRegExp,
+    bishopID,
     setTownID,
     setCampusID,
     setBishopID,
@@ -46,6 +52,7 @@ function AddTownCampus() {
   })
 
   const [CreateTown] = useMutation(CREATE_TOWN_MUTATION, {
+    refetchQueries: [{ query: GET_TOWNS, variables: { id: bishopID } }],
     onCompleted: (newTownData) => {
       setTownID(newTownData.CreateTown.id)
       history.push(`/${church.church}/displaydetails`)
@@ -53,6 +60,7 @@ function AddTownCampus() {
   })
 
   const [CreateCampus] = useMutation(CREATE_CAMPUS_MUTATION, {
+    refetchQueries: [{ query: GET_CAMPUSES, variables: { id: bishopID } }],
     onCompleted: (newCampusData) => {
       setCampusID(newCampusData.CreateCampus.id)
       history.push(`/${church.church}/displaydetails`)
@@ -73,27 +81,18 @@ function AddTownCampus() {
     (bishopData && church.church === 'campus') ||
     (bishopData && church.church === 'town')
   ) {
-    const bishopCampusOptions = bishopData.bishopsListCampus.map((bishop) => ({
-      value: bishop.id,
-      key: bishop.firstName + ' ' + bishop.lastName,
-    }))
-
-    //Refactoring the Options into Something that can be read by my formik component
-    const bishopTownOptions = bishopData.bishopsListTown.map((bishop) => ({
-      value: bishop.id,
-      key: bishop.firstName + ' ' + bishop.lastName,
-    }))
+    const bishopCampusOptions = makeSelectOptions(bishopData.bishopsListCampus)
+    const bishopTownOptions = makeSelectOptions(bishopData.bishopsListTown)
 
     //onSubmit receives the form state as argument
     const onSubmit = (values, onSubmitProps) => {
       setBishopID(values.bishopSelect)
-      values.leaderWhatsapp = parsePhoneNum(values.leaderWhatsapp)
 
       if (church.church === 'town') {
         CreateTown({
           variables: {
             townName: values.campusTownName,
-            lWhatsappNumber: values.leaderWhatsapp,
+            lWhatsappNumber: parsePhoneNum(values.leaderWhatsapp),
             id: values.bishopSelect,
             centres: values.centres,
           },
@@ -142,7 +141,7 @@ function AddTownCampus() {
                                 ? bishopCampusOptions
                                 : bishopTownOptions
                             }
-                            defaultOption="Select an Bishop"
+                            defaultOption="Select a Bishop"
                           />
                         </div>
                       </div>

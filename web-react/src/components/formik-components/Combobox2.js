@@ -4,7 +4,7 @@ import { useQuery } from '@apollo/client'
 import { ErrorMessage } from 'formik'
 import TextError from './TextError'
 
-function Combobox(props) {
+function Combobox2(props) {
   const {
     label,
     name,
@@ -81,4 +81,4 @@ function Combobox(props) {
   )
 }
 
-export default Combobox
+export default Combobox2

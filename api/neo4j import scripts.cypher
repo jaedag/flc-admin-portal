@@ -121,7 +121,7 @@ WITH line,m
 MERGE (t:Title {title: 'Pastor'})
 MERGE (m)-[r:HAS_TITLE]->(t)
 SET 
-r.yearAppointed = line.`Year Appointed`,
+r.yearAppointed = date(line.`Year Appointed`),
 r.status = line.`Pastorstatus`;
 
 // Create the Churches with 

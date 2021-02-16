@@ -177,7 +177,7 @@ input pastoralHistory {
 type Query {
 
 #At the Federal Level
-	bishopsList: [Member] @isAuthenticated @cypher(statement:"MATCH ()<-[:HAS_CAMPUS|:HAS_TOWN]-(m:Member) RETURN DISTINCT m")
+	bishopsList: [Member] @cypher(statement:"MATCH ()<-[:HAS_CAMPUS|:HAS_TOWN]-(m:Member) RETURN DISTINCT m")
 	bishopsListCampus: [Member] @cypher(statement:"MATCH ()<-[:HAS_CAMPUS]-(m:Member) RETURN DISTINCT m")
 	bishopsListTown: [Member] @cypher(statement:"MATCH ()<-[:HAS_TOWN]-(m:Member) RETURN DISTINCT m")
 	ministryList: [Ministry] @cypher (statement:"MATCH (m:Ministry) RETURN m")
@@ -200,9 +200,9 @@ type Query {
 		RETURN COUNT(m)
 		"""
 		)
-	bishopSontaMemberCountList(id: ID): [Ministry]! @cypher(statement: 
+	bishopSontaMemberCountList(bishopId: ID): [Ministry]! @cypher(statement: 
 		"""
-		MATCH (:Member {id: $id})-[:HAS_TOWN|:HAS_CAMPUS]->()-[:HAS_CENTRE]->()-[:HAS_BACENTA]->()<-[:BELONGS_TO]-(m:Member)-[:BELONGS_TO]->(s:Ministry)
+		MATCH (:Member {id: $bishopId})-[:HAS_TOWN|:HAS_CAMPUS]->()-[:HAS_CENTRE]->()-[:HAS_BACENTA]->()<-[:BELONGS_TO]-(m:Member)-[:BELONGS_TO]->(s:Ministry)
 		RETURN s, COUNT(m)
 		"""
 		)
@@ -268,21 +268,21 @@ type Query {
 
 #At the Ministry Level
 	displayMinistry(id: ID):Ministry @cypher(statement:"MATCH (m:Ministry {id: $id}) RETURN m")
-	sontaTownList(id: ID, id: ID): [Town] @cypher(statement: 
+	sontaTownList(bishopId: ID, ministryId: ID): [Town] @cypher(statement: 
 	"""
-	MATCH (n:Ministry {id: $id})<-[:BELONGS_TO]-(m:Member)
+	MATCH (n:Ministry {id: $ministryId})<-[:BELONGS_TO]-(m:Member)
 	MATCH (m)-[:BELONGS_TO]->(:Bacenta)<-[:HAS_BACENTA]-()<-[:HAS_CENTRE]-(e)
-	MATCH (e)<-[:HAS_TOWN|HAS_CAMPUS]-(:Member {id: $id})
+	MATCH (e)<-[:HAS_TOWN|HAS_CAMPUS]-(:Member {id: $bishopId})
 	RETURN DISTINCT e,n
 	"""
 	)
 
 #At the Sonta Level
 	sontaList:[Sonta] @cypher(statement: "MATCH (s:Sonta) RETURN s")
-	townSontaLeader(id: ID, sontaID: ID): [Member] @cypher (statement:"""
+	townSontaLeader(bishopId: ID, sontaID: ID): [Member] @cypher (statement:"""
 	MATCH (n:Ministry)<-[:BELONGS_TO]-(m:Member)
 	MATCH (m)-[:BELONGS_TO]->(:Bacenta)<-[:HAS_BACENTA]-()<-[:HAS_CENTRE]-(e)
-	MATCH (e)<-[:HAS_TOWN|HAS_CAMPUS]-(:Member {id: $id})
+	MATCH (e)<-[:HAS_TOWN|HAS_CAMPUS]-(:Member {id: $bishopId})
 	MATCH (n)-[:HAS_SONTA]->(s:Sonta {id:$sontaID})<-[:LEADS]-(l:Member)
 	WHERE s.name CONTAINS e.name
     RETURN DISTINCT l
@@ -362,14 +362,21 @@ type Mutation {
 	WITH m
 	MATCH (ms:MaritalStatus {status:$maritalStatus})
 	MATCH (g:Gender {gender: $gender})
-	
-	MERGE (t:TimeGraph {date:date($dob)})	
+		
     MERGE (m)-[:HAS_MARITAL_STATUS]-> (ms)
 	MERGE (m)-[:HAS_GENDER]-> (g)
-    MERGE (m)-[:WAS_BORN_ON]->(t)
     
-    WITH m
-
+	WITH m	
+    CALL {
+    	WITH m
+    	WITH m  WHERE $dob IS NOT NULL
+    	MERGE (t:TimeGraph {date: date($dob)})
+		DELETE r1
+		MERGE (m)-[:WAS_BORN_ON]->(t)
+    	RETURN count(m)
+    	}
+    
+	WITH m
     CALL {
     	WITH m
     	WITH m  WHERE $occupation IS NOT NULL
@@ -537,7 +544,7 @@ type Mutation {
 	@cypher(statement:
 	"""
 	CREATE (b:Bacenta {name:$bacentaName,location: point({latitude:toFloat($venueLatitude), longitude:toFloat($venueLongitude), crs:'WGS-84'})})
-    	ON CREATE SET
+    	SET
 		b.id = apoc.create.uuid()
     WITH b
 	MATCH (m:Member {whatsappNumber: $lWhatsappNumber}) 
@@ -560,7 +567,7 @@ type Mutation {
 		email: String
 		phoneNumber: String!
 		whatsappNumber: String
-		dob: String!
+		dob: String
 		maritalStatus: String!
 		gender: String!
 		occupation: String
@@ -570,7 +577,7 @@ type Mutation {
 		pastoralAppointment: [pastoralAppointment]
 		pastoralHistory: [pastoralHistory]
 	): Member
-	@isAuthenticated
+	
 	@cypher(statement:
 	"""
 	MATCH (m:Member {id:$id})
@@ -584,21 +591,33 @@ type Mutation {
 
 	WITH m
 	
-	MATCH (g:Gender {gender: $gender})
-	MERGE (t:TimeGraph {date: date($dob)})	
+	MATCH (g:Gender {gender: $gender})	
 	MERGE (m)-[:HAS_GENDER]-> (g)
-    MERGE (m)-[:WAS_BORN_ON]->(t)
     
+    
+	WITH m
+    CALL {
+    	WITH m
+    	WITH m  WHERE $dob IS NOT NULL
+    	MERGE (t:TimeGraph {date: date($dob)})
+		WITH m,t
+		OPTIONAL MATCH (m)-[r1:WAS_BORN_ON]->()
+		DELETE r1
+		MERGE (m)-[:WAS_BORN_ON]->(t)
+    	RETURN count(m)
+    	}
+
 	WITH m
     CALL {
     	WITH m
     	WITH m  WHERE $maritalStatus IS NOT NULL
     	MATCH (ms:MaritalStatus {status:$maritalStatus})
-		MERGE (m)-[r1:HAS_MARITAL_STATUS]->()
+		OPTIONAL MATCH (m)-[r1:HAS_MARITAL_STATUS]->()
 		DELETE r1
 		MERGE (m)-[:HAS_MARITAL_STATUS]-> (ms)
     	RETURN count(m)
     	}
+
     WITH m
     CALL {
     	WITH m
@@ -614,7 +633,7 @@ type Mutation {
     	WITH m
     	WITH m  WHERE $bacenta IS NOT NULL
     	MATCH (c:Bacenta {id: $bacenta})
-		MATCH (m)-[r1:BELONGS_TO]-> (:Bacenta)
+		OPTIONAL MATCH (m)-[r1:BELONGS_TO]-> (:Bacenta)
 		DELETE r1
 		MERGE (m)-[:BELONGS_TO]-> (c)
     	RETURN count(m)
@@ -624,7 +643,7 @@ type Mutation {
     	WITH m
     	WITH m  WHERE $ministry IS NOT NULL
     	MATCH (s:Ministry {id:$ministry})
-		MERGE (m)-[r1:BELONGS_TO]-> (:Ministry)
+		OPTIONAL MATCH (m)-[r1:BELONGS_TO]-> (:Ministry)
 		DELETE r1
 		MERGE (m)-[:BELONGS_TO]-> (s)
     	RETURN count(m)

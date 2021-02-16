@@ -70,6 +70,7 @@ export const CreateMember = () => {
     gender: Yup.string().required('This is a required field'),
     email: Yup.string().email('Please enter a valid email address'),
     maritalStatus: Yup.string().required('This is a required field'),
+    dob: Yup.string().required('This is a required field'),
     phoneNumber: Yup.string()
       .matches(
         phoneRegExp,

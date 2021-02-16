@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useState, useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/client'
 import { Formik, Form } from 'formik'
@@ -15,12 +15,13 @@ import { CREATE_BACENTA_MUTATION } from '../queries/CreateMutations'
 import { NavBar } from '../components/NavBar'
 import { ChurchContext } from '../contexts/ChurchContext'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
+import Spinner from '../components/Spinner'
 
 export const CreateBacenta = () => {
   const initialValues = {
     bacentaName: '',
     leaderName: '',
-    leaderWhatsApp: '',
+    leaderWhatsapp: '',
     whatsappNumber: '',
     meetingDay: '',
     venueLatitude: '',
@@ -51,18 +52,20 @@ export const CreateBacenta = () => {
 
   const validationSchema = Yup.object({
     bacentaName: Yup.string().required('Bacenta Name is a required field'),
-    bacentaLeaderName: Yup.string().required('This is a required field'),
-    bacentaLeaderWhatsApp: Yup.string().matches(
-      phoneRegExp,
-      `Phone Number must start with + and country code (eg. '+233')`
-    ),
+    leaderName: Yup.string().required('This is a required field'),
+    leaderWhatsapp: Yup.string()
+      .matches(
+        phoneRegExp,
+        `Phone Number must start with + and country code (eg. '+233')`
+      )
+      .required('Phone Number is required'),
     meetingDay: Yup.string().required('Meeting Day is a required field'),
     venueLatitude: Yup.string().required('Please fill in your location info'),
     venueLongitude: Yup.string().required('Please fill in your location info'),
   })
 
   const history = useHistory()
-
+  const [positionLoading, setPositionLoading] = useState(false)
   const [CreateBacenta] = useMutation(CREATE_BACENTA_MUTATION, {
     onCompleted: (newBacentaData) => {
       setBacentaID(newBacentaData.CreateBacenta.id)
@@ -80,21 +83,6 @@ export const CreateBacenta = () => {
     }
   )
 
-  const { data: townCentreList, loading: townCentresLoading } = useQuery(
-    GET_TOWN_CENTRES,
-    {
-      variables: { id: townID },
-    }
-  )
-
-  const { data: campusCentreList, loading: campusCentresLoading } = useQuery(
-    GET_CAMPUS_CENTRES,
-    {
-      variables: { id: campusID },
-    }
-  )
-
-  console.log(townCentreList)
   //onSubmit receives the form state as argument
   const onSubmit = (values, onSubmitProps) => {
     CreateBacenta({
@@ -108,30 +96,21 @@ export const CreateBacenta = () => {
       },
     })
 
-    // console.log('Form data', values)
+    console.log('Form data', values)
     onSubmitProps.setSubmitting(false)
     onSubmitProps.resetForm()
   }
 
-  if (
-    townListLoading ||
-    campusListLoading ||
-    townCentresLoading ||
-    campusCentresLoading
-  ) {
+  if (townListLoading || campusListLoading) {
     return <LoadingScreen />
   } else if (townListData && campusListData) {
-    const centreOptions = campusCentreList
-      ? makeSelectOptions(campusCentreList.centreList)
-      : null
-
     const townOptions = townListData
       ? makeSelectOptions(townListData.townList)
-      : null
+      : []
     const campusOptions = campusListData
       ? makeSelectOptions(campusListData.campusList)
-      : null
-    // console.log(campusOptions)
+      : []
+
     return (
       <div>
         <NavBar />
@@ -170,9 +149,22 @@ export const CreateBacenta = () => {
                           />
                           <FormikControl
                             className="form-control"
-                            control="select"
+                            control="selectWithQuery"
                             name="centreSelect"
-                            options={centreOptions}
+                            optionsQuery={
+                              church.church === 'town'
+                                ? GET_TOWN_CENTRES
+                                : GET_CAMPUS_CENTRES
+                            }
+                            queryVariable="id"
+                            dataset={
+                              church.church === 'town'
+                                ? 'townCentreList'
+                                : 'campusCentreList'
+                            }
+                            varValue={
+                              church.church === 'town' ? townID : campusID
+                            }
                             defaultOption="Select a Centre"
                           />
                         </div>
@@ -232,12 +224,13 @@ export const CreateBacenta = () => {
                             placeholder="Longitude"
                           />
                         </div>
-                        <div className="col mt-2">
+                        <div className="col-auto mt-2">
                           <button
                             type="button"
                             className="btn btn-primary"
                             onClick={() => {
-                              // setPositionLoading(true)
+                              setPositionLoading(true)
+
                               window.navigator.geolocation.getCurrentPosition(
                                 (position) => {
                                   formik.setFieldValue(
@@ -257,7 +250,7 @@ export const CreateBacenta = () => {
                                   document
                                     .getElementById('venueLatitude')
                                     .blur()
-                                  // setPositionLoading(false)
+                                  setPositionLoading(false)
                                   //console.log(formik.values)
                                 }
                               )
@@ -266,11 +259,11 @@ export const CreateBacenta = () => {
                             Locate Me Now
                           </button>
 
-                          {/* {positionLoading ? (
-                              <span>
-                                <Spinner />
-                              </span>
-                            ) : null} */}
+                          {positionLoading ? (
+                            <span className="mx-3">
+                              <Spinner />
+                            </span>
+                          ) : null}
                         </div>
                       </div>
                       <small className="text-muted">

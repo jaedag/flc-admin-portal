@@ -9,7 +9,7 @@ export const UPDATE_MEMBER_MUTATION = gql`
     $email: String!
     $phoneNumber: String!
     $whatsappNumber: String
-    $dob: String!
+    $dob: String
     $maritalStatus: String!
     $gender: String!
     $occupation: String

@@ -26,13 +26,10 @@ function CreateCentre() {
     bacentas: [''],
   }
 
-  const validationSchema = Yup.object({
-    centreName: Yup.string().required('Centre Name is a required field'),
-  })
-
   const {
     church,
     capitalise,
+    phoneRegExp,
     parsePhoneNum,
     makeSelectOptions,
     bishopID,
@@ -41,6 +38,16 @@ function CreateCentre() {
     setCentreID,
   } = useContext(ChurchContext)
   const history = useHistory()
+
+  const validationSchema = Yup.object({
+    centreName: Yup.string().required('Centre Name is a required field'),
+    leaderWhatsApp: Yup.string()
+      .matches(
+        phoneRegExp,
+        `Phone Number must start with + and country code (eg. '+233')`
+      )
+      .required('Phone Number is required'),
+  })
 
   const [CreateCentre] = useMutation(CREATE_CENTRE_MUTATION, {
     refetchQueries: [

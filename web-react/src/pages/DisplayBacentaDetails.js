@@ -36,8 +36,8 @@ export const DisplayBacentaDetails = () => {
         }
         leaderID={bacentaData.displayBacenta.leader.id}
         membership={bacentaData.bacentaMemberCount}
-        churchHeading="No of Bacentas"
-        churchNo="2"
+        churchHeading="Meeting Day"
+        churchNo={bacentaData.displayBacenta.meetingDay.day}
         churchType="Bacenta"
         buttons={['']}
       />

@@ -17,7 +17,9 @@ import { ChurchContext } from '../contexts/ChurchContext'
 
 export const UpdateMemberDetails = () => {
   const { memberID } = useContext(MemberContext)
-  const { phoneRegExp, parsePhoneNum } = useContext(ChurchContext)
+  const { phoneRegExp, parsePhoneNum, makeSelectOptions } = useContext(
+    ChurchContext
+  )
   const {
     data: memberData,
     error: memberError,
@@ -48,7 +50,7 @@ export const UpdateMemberDetails = () => {
     email: memberData.displayMember.email ? memberData.displayMember.email : '',
     dob: memberData.displayMember.dob
       ? memberData.displayMember.dob.date.formatted
-      : '',
+      : null,
     maritalStatus: memberData.displayMember.maritalStatus
       ? memberData.displayMember.maritalStatus.status
       : '',
@@ -189,11 +191,7 @@ export const UpdateMemberDetails = () => {
     // Spinner Icon for Loading Screens
     return <LoadingScreen />
   } else {
-    console.log(ministryListData)
-    const ministryOptions = ministryListData.ministryList.map((ministry) => ({
-      value: ministry.memberID,
-      key: ministry.name,
-    }))
+    const ministryOptions = makeSelectOptions(ministryListData.ministryList)
 
     return (
       <div>

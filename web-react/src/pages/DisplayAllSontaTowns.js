@@ -21,47 +21,49 @@ export const DisplayAllSontaTowns = () => {
     variables: { townID: townID, sontaID: sontaID },
   })
 
-  if (sontaError) {
-    return <ErrorScreen />
-  } else if (sontaLoading) {
+  if (sontaLoading) {
     // Spinner Icon for Loading Screens
     return <LoadingScreen />
-  }
-
-  return (
-    <div>
-      <NavBar />
-      <div className="body-container container">
-        <div className="my-5">
-          {sontaData.townSontaLeader.map((leader, index) => {
-            return (
-              <React.Fragment key={index}>
-                <h4>{`${leader.leadsSonta.name}`}</h4>
-                <Link
-                  to="/member/displaydetails"
-                  onClick={() => {
-                    setMemberID(`${leader.id}`)
-                  }}
-                />
-                {sontaData.townSontaLeader.map((leader, index) => {
-                  return (
-                    <React.Fragment key={index}>
-                      <div className="card p-2 m-2">
-                        {leader.leadsSonta.name}
-                        <h6 className="text-muted">
-                          Leader:
-                          {`${leader.firstName} ${leader.lastName}`}
-                        </h6>
-                      </div>
-                    </React.Fragment>
-                  )
-                })}
-              </React.Fragment>
-            )
-          })}
+  } else if (sontaData) {
+    return (
+      <div>
+        <NavBar />
+        <div className="body-container container">
+          <div className="my-5">
+            console.log(sontaData);
+            {sontaData.townSontaLeader.map((leader, index) => {
+              return (
+                <React.Fragment key={index}>
+                  <h4>{`${leader.leadsSonta.name}`}</h4>
+                  <Link
+                    to="/member/displaydetails"
+                    onClick={() => {
+                      setMemberID(`${leader.id}`)
+                    }}
+                  />
+                  {sontaData.townSontaLeader.map((leader, index) => {
+                    return (
+                      <React.Fragment key={index}>
+                        <div className="card p-2 m-2">
+                          {leader.leadsSonta.name}
+                          <h6 className="text-muted">
+                            Leader:
+                            {`${leader.firstName} ${leader.lastName}`}
+                          </h6>
+                        </div>
+                      </React.Fragment>
+                    )
+                  })}
+                </React.Fragment>
+              )
+            })}
+          </div>
+          {/* <DisplayChurchList data={sontaData.townSontaLeader} setter={setSontaID} churchType="Sonta" /> */}
         </div>
-        {/* <DisplayChurchList data={sontaData.townSontaLeader} setter={setSontaID} churchType="Sonta" /> */}
       </div>
-    </div>
-  )
+    )
+  } else {
+    console.log(sontaError)
+    return <ErrorScreen />
+  }
 }

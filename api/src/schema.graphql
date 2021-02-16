@@ -1,5 +1,5 @@
 type Member {
-	memberID: ID!
+	id: ID!
 	firstName: String
 	otherName: String
 	lastName: String
@@ -93,7 +93,7 @@ type BacentaHistory {
 
 # Campus-Centre, Town-Centre
 type Campus {
-	campusID: ID
+	id: ID
 	name: String
 	leader: Member @relation(name: "LEADS", direction: "IN")
 	sontas: [Sonta] @relation(name: "HAS_MINISTRY", direction: "OUT")
@@ -103,7 +103,7 @@ type Campus {
 
 
 type Town {
-	townID: ID
+	id: ID
 	name: String
 	leader: Member @relation(name: "LEADS", direction: "IN")
 	sontas: [Sonta] @relation(name: "HAS_SONTA", direction: "OUT")
@@ -112,7 +112,7 @@ type Town {
 }
 
 type Centre {
-	centreID: ID
+	id: ID
 	name: String
 	leader: Member @relation(name: "LEADS", direction: "IN")
 	bacentas: [Bacenta] @relation(name:"HAS_BACENTA", direction:"OUT")
@@ -123,7 +123,7 @@ type Centre {
 
 # Shared Units: Bacenta, Bacenta, Sonta
 type Bacenta {
-	bacentaID: ID
+	id: ID
 	name: String
 	centre: Centre @relation(name: "HAS_BACENTA", direction: "IN")
 	location: Point
@@ -139,7 +139,7 @@ type ServiceDay {
 }
 
 type Ministry {
-	ministryID: ID
+	id: ID
 	name: String
 	sonta: [Sonta] @relation(name:"HAS_SONTA", direction:"OUT")
 	leader: Member @relation(name: "LEADS", direction: "IN")
@@ -147,7 +147,7 @@ type Ministry {
 }
 
 type Sonta {
-	sontaID: ID
+	id: ID
 	name: String
 	leader: Member @relation(name: "LEADS", direction: "IN")
 	basonta: [Basonta] @relation(name:"HAS_BASONTA", direction:"OUT")
@@ -186,40 +186,40 @@ type Query {
 	bacentaCount: Int! @cypher(statement: "MATCH (b:Bacenta) RETURN COUNT(b)")
 
 #At the Episcopal Level
-	bishopsCampusTownCount(bishopID: ID): Int! @cypher(statement: "MATCH (:Member {memberID: $bishopID})-[:HAS_TOWN|:HAS_CAMPUS]->(t) RETURN COUNT(t)")
-	bishopBacentaDropdown (bishopID: ID, bacentaName:String):[Bacenta] @cypher(statement: "MATCH (b:Bacenta)-[]-(:Centre)-[:HAS_CENTRE]-()-[:HAS_TOWN]-(:Member {memberID: $bishopID}) WHERE toLower(b.name) CONTAINS toLower($bacentaName) RETURN b")
-	bishopsSontaMemberList(bishopID: ID): [Member]! @cypher(statement: 
+	bishopsCampusTownCount(id: ID): Int! @cypher(statement: "MATCH (:Member {id: $id})-[:HAS_TOWN|:HAS_CAMPUS]->(t) RETURN COUNT(t)")
+	bishopBacentaDropdown (id: ID, bacentaName:String):[Bacenta] @cypher(statement: "MATCH (b:Bacenta)<-[]-(:Centre)<-[:HAS_CENTRE]-()<-[:HAS_TOWN|:HAS_CAMPUS]-(:Member {id: $id}) WHERE toLower(b.name) CONTAINS toLower($bacentaName) RETURN b")
+	bishopsSontaMemberList(id: ID): [Member]! @cypher(statement: 
 		"""
-		MATCH (:Member {memberID: $bishopID})-[:HAS_TOWN|:HAS_CAMPUS]->()-[:HAS_CENTRE]->()-[:HAS_BACENTA]->()<-[:BELONGS_TO]-(m:Member)-[:BELONGS_TO]->(s)
+		MATCH (:Member {id: $id})-[:HAS_TOWN|:HAS_CAMPUS]->()-[:HAS_CENTRE]->()-[:HAS_BACENTA]->()<-[:BELONGS_TO]-(m:Member)-[:BELONGS_TO]->(s)
 		RETURN m
 		"""
 		)
-	bishopSontaMemberCount(bishopID: ID): Int! @cypher(statement: 
+	bishopSontaMemberCount(id: ID): Int! @cypher(statement: 
 		"""
-		MATCH (:Member {memberID: $bishopID})-[:HAS_TOWN|:HAS_CAMPUS]->()-[:HAS_CENTRE]->()-[:HAS_BACENTA]->()<-[:BELONGS_TO]-(m:Member)-[:BELONGS_TO]->(s)
+		MATCH (:Member {id: $id})-[:HAS_TOWN|:HAS_CAMPUS]->()-[:HAS_CENTRE]->()-[:HAS_BACENTA]->()<-[:BELONGS_TO]-(m:Member)-[:BELONGS_TO]->(s)
 		RETURN COUNT(m)
 		"""
 		)
-	bishopSontaMemberCountList(bishopID: ID): [Ministry]! @cypher(statement: 
+	bishopSontaMemberCountList(id: ID): [Ministry]! @cypher(statement: 
 		"""
-		MATCH (:Member {memberID: $bishopID})-[:HAS_TOWN|:HAS_CAMPUS]->()-[:HAS_CENTRE]->()-[:HAS_BACENTA]->()<-[:BELONGS_TO]-(m:Member)-[:BELONGS_TO]->(s:Ministry)
+		MATCH (:Member {id: $id})-[:HAS_TOWN|:HAS_CAMPUS]->()-[:HAS_CENTRE]->()-[:HAS_BACENTA]->()<-[:BELONGS_TO]-(m:Member)-[:BELONGS_TO]->(s:Ministry)
 		RETURN s, COUNT(m)
 		"""
 		)
-	bishopPastorCount(bishopID: ID): Int! @cypher(statement: "MATCH (t:Title)<-[:HAS_TITLE]-(m:Member)-[:BELONGS_TO]->()<-[:HAS_BACENTA]-()-[:HAS_CENTRE]-()-[:HAS_TOWN|:HAS_CAMPUS]-(:Member {memberID: $bishopID}) RETURN COUNT(m)")
-	bishopPastorList(bishopID: ID): [Member] @cypher(statement: "MATCH (t:Title)<-[:HAS_TITLE]-(m:Member)-[:BELONGS_TO]->()<-[:HAS_BACENTA]-()-[:HAS_CENTRE]-()-[:HAS_TOWN|:HAS_CAMPUS]-(:Member {memberID: $bishopID}) RETURN m")
-	bishopMemberList(bishopID: ID): [Member]! @cypher(statement: 
+	bishopPastorCount(id: ID): Int! @cypher(statement: "MATCH (t:Title)<-[:HAS_TITLE]-(m:Member)-[:BELONGS_TO]->()<-[:HAS_BACENTA]-()-[:HAS_CENTRE]-()-[:HAS_TOWN|:HAS_CAMPUS]-(:Member {id: $id}) RETURN COUNT(m)")
+	bishopPastorList(id: ID): [Member] @cypher(statement: "MATCH (t:Title)<-[:HAS_TITLE]-(m:Member)-[:BELONGS_TO]->()<-[:HAS_BACENTA]-()-[:HAS_CENTRE]-()-[:HAS_TOWN|:HAS_CAMPUS]-(:Member {id: $id}) RETURN m")
+	bishopMemberList(id: ID): [Member]! @cypher(statement: 
 		"""
-		MATCH (:Member {memberID: $bishopID})-[:HAS_TOWN|:HAS_CAMPUS]->(t)
+		MATCH (:Member {id: $id})-[:HAS_TOWN|:HAS_CAMPUS]->(t)
 		MATCH (t)-[:HAS_CENTRE]->(com)
 		MATCH (com)-[:HAS_BACENTA]->(c)
 		MATCH (c)<-[:BELONGS_TO*]-(m:Member)
 		RETURN m
 		"""
 		)
-	bishopMemberCount(bishopID: ID): Int! @cypher(statement: 
+	bishopMemberCount(id: ID): Int! @cypher(statement: 
 		"""
-		MATCH (:Member {memberID: $bishopID})-[:HAS_TOWN|:HAS_CAMPUS]->(t)
+		MATCH (:Member {id: $id})-[:HAS_TOWN|:HAS_CAMPUS]->(t)
 		MATCH (t)-[:HAS_CENTRE]->(com)
 		MATCH (com)-[:HAS_BACENTA]->(c)
 		MATCH (c)<-[:BELONGS_TO*]-(m:Member)
@@ -228,62 +228,62 @@ type Query {
 		)
 
 #At the Town Level
-	displayTown(townID: ID):Town @cypher(statement: "MATCH (t:Town {townID:$townID}) RETURN t")
-	townList(bishopID: ID): [Town] @cypher(statement: "MATCH (ttl:Title {title:'Bishop'})<-[:HAS_TITLE]-(a:Member {memberID:$bishopID})-[:HAS_TOWN]->(t:Town) RETURN t")
-	townBacentaList(townID:ID):[Bacenta] @cypher(statement: "MATCH (t:Town {townID: $townID})-[:HAS_CENTRE]->(:Centre)-[:HAS_BACENTA]-> (c:Bacenta) RETURN c")
-	townSontaList (townID:ID):[Sonta] @cypher(statement: "MATCH (t:Town {townID: $townID})-[:HAS_SONTA]->(s:Sonta)  RETURN s")
-	townCentreList(townID: ID): [Centre] @cypher(statement: "MATCH (t:Town {townID:$townID})-[:HAS_CENTRE]->(c:Centre) RETURN c")
-	townCentreCount(townID: ID): Int! @cypher(statement: "MATCH(:Town {townID:$townID})-[:HAS_CENTRE]->(c:Centre) RETURN COUNT(c)")
-	townBacentaCount(townID: ID): Int! @cypher(statement: "MATCH (:Town {townID:$townID})-[]-()-[:HAS_BACENTA]->(cen:Bacenta) RETURN COUNT(cen)")
-	townSontaCount(townID: ID): Int! @cypher(statement: "MATCH (:Town {townID:$townID})-[:HAS_MINISTRY]->(s:Sonta) RETURN COUNT(s)")
-	townMemberCount(townID: ID): Int! @cypher(statement: "MATCH (:Town {townID:$townID})-[]-(:Centre)-[]->(:Bacenta)<-[:BELONGS_TO]-(m:Member) RETURN COUNT(m)")
+	displayTown(id: ID):Town @cypher(statement: "MATCH (t:Town {id:$id}) RETURN t")
+	townList(id: ID): [Town] @cypher(statement: "MATCH (ttl:Title {title:'Bishop'})<-[:HAS_TITLE]-(a:Member {id:$id})-[:HAS_TOWN]->(t:Town) RETURN t")
+	townBacentaList(id:ID):[Bacenta] @cypher(statement: "MATCH (t:Town {id: $id})-[:HAS_CENTRE]->(:Centre)-[:HAS_BACENTA]-> (c:Bacenta) RETURN c")
+	townSontaList (id:ID):[Sonta] @cypher(statement: "MATCH (t:Town {id: $id})-[:HAS_SONTA]->(s:Sonta)  RETURN s")
+	townCentreList(id: ID): [Centre] @cypher(statement: "MATCH (t:Town {id:$id})-[:HAS_CENTRE]->(c:Centre) RETURN c")
+	townCentreCount(id: ID): Int! @cypher(statement: "MATCH(:Town {id:$id})-[:HAS_CENTRE]->(c:Centre) RETURN COUNT(c)")
+	townBacentaCount(id: ID): Int! @cypher(statement: "MATCH (:Town {id:$id})-[]-()-[:HAS_BACENTA]->(cen:Bacenta) RETURN COUNT(cen)")
+	townSontaCount(id: ID): Int! @cypher(statement: "MATCH (:Town {id:$id})-[:HAS_MINISTRY]->(s:Sonta) RETURN COUNT(s)")
+	townMemberCount(id: ID): Int! @cypher(statement: "MATCH (:Town {id:$id})-[]-(:Centre)-[]->(:Bacenta)<-[:BELONGS_TO]-(m:Member) RETURN COUNT(m)")
 
 #At the Campus Level
-	displayCampus(campusID: ID):Campus @cypher(statement: "MATCH (t:Campus {campusID:$campusID}) RETURN t")
-	campusList(bishopID: ID): [Campus] @cypher(statement: "MATCH (ttl:Title {title:'Bishop'})<-[:HAS_TITLE]-(a:Member {memberID:$bishopID})-[:HAS_CAMPUS]->(c:Campus) RETURN c")
-	campusBacentaList(campusID:ID):[Bacenta] @cypher(statement: "MATCH (t:Campus {campusID: $campusID})-[:HAS_CENTRE]->(:Centre)-[:HAS_BACENTA]-> (c:Bacenta) RETURN c")
-	campusCentreList(campusID: ID): [Centre] @cypher(statement: "MATCH (t:Campus {campusID:$campusID})-[:HAS_CENTRE]->(c:Centre) RETURN c")
-	campusCentreCount(campusID: ID): Int! @cypher(statement: "MATCH(:Campus {campusID:$campusID})-[:HAS_CENTRE]->(c:Centre) RETURN COUNT(c)")
-	campusBacentaCount(campusID: ID): Int! @cypher(statement: "MATCH (:Campus {campusID:$campusID})-[]-()-[:HAS_BACENTA]->(cen:Bacenta) RETURN COUNT(cen)")
-	campusSontaCount(campusID: ID): Int! @cypher(statement: "MATCH (:Campus {campusID:$campusID})-[:HAS_MINISTRY]->(s:Sonta) RETURN COUNT(s)")
-	campusMemberCount(campusID: ID): Int! @cypher(statement: "MATCH (:Campus {campusID:$campusID})-[]-(:Centre)-[]->(:Bacenta)<-[:BELONGS_TO]-(m:Member) RETURN COUNT(m)")
+	displayCampus(id: ID):Campus @cypher(statement: "MATCH (t:Campus {id:$id}) RETURN t")
+	campusList(id: ID): [Campus] @cypher(statement: "MATCH (ttl:Title {title:'Bishop'})<-[:HAS_TITLE]-(a:Member {id:$id})-[:HAS_CAMPUS]->(c:Campus) RETURN c")
+	campusBacentaList(id:ID):[Bacenta] @cypher(statement: "MATCH (t:Campus {id: $id})-[:HAS_CENTRE]->(:Centre)-[:HAS_BACENTA]-> (c:Bacenta) RETURN c")
+	campusCentreList(id: ID): [Centre] @cypher(statement: "MATCH (t:Campus {id:$id})-[:HAS_CENTRE]->(c:Centre) RETURN c")
+	campusCentreCount(id: ID): Int! @cypher(statement: "MATCH(:Campus {id:$id})-[:HAS_CENTRE]->(c:Centre) RETURN COUNT(c)")
+	campusBacentaCount(id: ID): Int! @cypher(statement: "MATCH (:Campus {id:$id})-[]-()-[:HAS_BACENTA]->(cen:Bacenta) RETURN COUNT(cen)")
+	campusSontaCount(id: ID): Int! @cypher(statement: "MATCH (:Campus {id:$id})-[:HAS_MINISTRY]->(s:Sonta) RETURN COUNT(s)")
+	campusMemberCount(id: ID): Int! @cypher(statement: "MATCH (:Campus {id:$id})-[]-(:Centre)-[]->(:Bacenta)<-[:BELONGS_TO]-(m:Member) RETURN COUNT(m)")
 
 #At the Centre Level
-	displayCentre(centreID: ID):Centre @cypher(statement: "MATCH (c:Centre {centreID:$centreID}) RETURN c")
+	displayCentre(id: ID):Centre @cypher(statement: "MATCH (c:Centre {id:$id}) RETURN c")
 	centreDropdown (centreName:String):[Centre] @cypher(statement: "MATCH (c:Centre) WHERE toLower(c.name) CONTAINS toLower($centreName) RETURN c")
-	centreBacentaList(centreID:ID):[Bacenta] @cypher(statement: """
+	centreBacentaList(id:ID):[Bacenta] @cypher(statement: """
 	MATCH (c:Bacenta)  
-	WHERE (:Centre {centreID:$centreID})-[:HAS_BACENTA]->(c)
+	WHERE (:Centre {id:$id})-[:HAS_BACENTA]->(c)
 	RETURN c
 	"""
 	)
-	centreBacentaCount(centreID: ID): Int! @cypher(statement: "MATCH (:Centre {centreID:$centreID})-[:HAS_BACENTA]->(cen:Bacenta) RETURN COUNT(cen)")
-	centreSontaCount(centreID: ID): Int! @cypher(statement: "MATCH (s:Sonta)<-[:HAS_MINISTRY]-(:Centre {name:$centre}) RETURN COUNT(s)")
-	centreMemberCount(centreID: ID): Int! @cypher(statement: "MATCH (:Centre {centreID:$centreID})-[:HAS_BACENTA]->(c:Bacenta)<-[:BELONGS_TO]-(m:Member) RETURN COUNT(m)")
+	centreBacentaCount(id: ID): Int! @cypher(statement: "MATCH (:Centre {id:$id})-[:HAS_BACENTA]->(cen:Bacenta) RETURN COUNT(cen)")
+	centreSontaCount(id: ID): Int! @cypher(statement: "MATCH (s:Sonta)<-[:HAS_MINISTRY]-(:Centre {name:$centre}) RETURN COUNT(s)")
+	centreMemberCount(id: ID): Int! @cypher(statement: "MATCH (:Centre {id:$id})-[:HAS_BACENTA]->(c:Bacenta)<-[:BELONGS_TO]-(m:Member) RETURN COUNT(m)")
 
 #At the Bacenta Level
-	displayBacenta(bacentaID: ID):Bacenta @cypher(statement: "MATCH (c:Bacenta{bacentaID:$bacentaID}) RETURN c")
-	bacentaMemberCount (bacentaID:ID):Int @cypher(statement: "MATCH (c:Bacenta{bacentaID:$bacentaID}) MATCH (c)<-[:BELONGS_TO]-(m:Member) RETURN COUNT(m)")
+	displayBacenta(id: ID):Bacenta @cypher(statement: "MATCH (c:Bacenta{id:$id}) RETURN c")
+	bacentaMemberCount (id:ID):Int @cypher(statement: "MATCH (c:Bacenta{id:$id}) MATCH (c)<-[:BELONGS_TO]-(m:Member) RETURN COUNT(m)")
 	bacentaDropdown (bacentaName:String):[Bacenta] @cypher(statement: "MATCH (c:Bacenta) WHERE toLower(c.name) CONTAINS toLower($bacentaName) RETURN c")
 
 #At the Ministry Level
-	displayMinistry(ministryID: ID):Ministry @cypher(statement:"MATCH (m:Ministry {ministryID: $ministryID}) RETURN m")
-	sontaTownList(ministryID: ID, bishopID: ID): [Town] @cypher(statement: 
+	displayMinistry(id: ID):Ministry @cypher(statement:"MATCH (m:Ministry {id: $id}) RETURN m")
+	sontaTownList(id: ID, id: ID): [Town] @cypher(statement: 
 	"""
-	MATCH (n:Ministry {ministryID: $ministryID})<-[:BELONGS_TO]-(m:Member)
+	MATCH (n:Ministry {id: $id})<-[:BELONGS_TO]-(m:Member)
 	MATCH (m)-[:BELONGS_TO]->(:Bacenta)<-[:HAS_BACENTA]-()<-[:HAS_CENTRE]-(e)
-	MATCH (e)<-[:HAS_TOWN|HAS_CAMPUS]-(:Member {memberID: $bishopID})
+	MATCH (e)<-[:HAS_TOWN|HAS_CAMPUS]-(:Member {id: $id})
 	RETURN DISTINCT e,n
 	"""
 	)
 
 #At the Sonta Level
 	sontaList:[Sonta] @cypher(statement: "MATCH (s:Sonta) RETURN s")
-	townSontaLeader(ministryID: ID, bishopID: ID): [Member] @cypher (statement:"""
+	townSontaLeader(id: ID, sontaID: ID): [Member] @cypher (statement:"""
 	MATCH (n:Ministry)<-[:BELONGS_TO]-(m:Member)
 	MATCH (m)-[:BELONGS_TO]->(:Bacenta)<-[:HAS_BACENTA]-()<-[:HAS_CENTRE]-(e)
-	MATCH (e)<-[:HAS_TOWN|HAS_CAMPUS]-(:Member {memberID: $bishopID})
-	MATCH (n)-[:HAS_SONTA]->(s:Sonta)<-[:LEADS]-(l:Member)
+	MATCH (e)<-[:HAS_TOWN|HAS_CAMPUS]-(:Member {id: $id})
+	MATCH (n)-[:HAS_SONTA]->(s:Sonta {id:$sontaID})<-[:LEADS]-(l:Member)
 	WHERE s.name CONTAINS e.name
     RETURN DISTINCT l
 	"""
@@ -291,7 +291,7 @@ type Query {
 
 #Members
 	# Display Member basecd on ID
-	displayMember(memberID: ID):Member @cypher(statement: "MATCH (m:Member {memberID:$memberID}) RETURN m")
+	displayMember(id: ID):Member @cypher(statement: "MATCH (m:Member {id:$id}) RETURN m")
 
 #Fuzzy Search
 	globalSearch(searchKey:String!):[Member] @cypher(statement:"MATCH (m:Member) WHERE toLower(m.firstName) STARTS WITH $searchKey OR toLower(m.lastName) STARTS WITH $searchKey RETURN m")
@@ -330,7 +330,7 @@ type Mutation {
 
 	#CREATE OPERATIONS
 	# Add Member to the Database
-	AddMember(
+	CreateMember(
 		firstName: String!
 		middleName: String
 		lastName: String!
@@ -349,9 +349,9 @@ type Mutation {
 	): Member
 	@cypher(statement:
 	"""
-	MERGE (m:Member {whatsappNumber:$whatsappNumber})
-	ON CREATE SET
-		m.memberID = apoc.create.uuid(),
+	CREATE (m:Member {whatsappNumber:$whatsappNumber})
+	SET
+		m.id = apoc.create.uuid(),
 		m.firstName = $firstName,
 		m.middleName = $middleName,
 		m.lastName = $lastName,
@@ -381,7 +381,7 @@ type Mutation {
 	CALL {
     	WITH m
     	WITH m  WHERE $bacenta IS NOT NULL
-    	MATCH (c:Bacenta {bacentaID: $bacenta})
+    	MATCH (c:Bacenta {id: $bacenta})
 		MERGE (m)-[:BELONGS_TO]-> (c)
     	RETURN count(m)
     	}
@@ -389,7 +389,7 @@ type Mutation {
 	CALL {
     	WITH m
     	WITH m  WHERE $ministry IS NOT NULL
-    	MATCH (s:Ministry {ministryID:$ministry})
+    	MATCH (s:Ministry {id:$ministry})
 		MERGE (m)-[:BELONGS_TO]-> (s)
     	RETURN count(m)
     	}
@@ -397,13 +397,13 @@ type Mutation {
 	RETURN m
 	"""
 	),
-	AddLeaderTitle(
-		memberID: ID!
+	CreateLeaderTitle(
+		id: ID!
 		pastoralAppointment: [pastoralAppointment]
 	):Title
 	@cypher(statement:
 	"""
-	MATCH (member:Member {memberID: $memberID})
+	MATCH (member:Member {id: $id})
 	UNWIND $pastoralAppointment as x
 	MERGE (t:Title {title: x.title})
 	MERGE (member)-[r:HAS_TITLE]->(t)
@@ -412,7 +412,7 @@ type Mutation {
 	"""
 	),
 	AddLeaderHistory(
-		memberID: ID
+		id: ID
 		pastoralHistory: [pastoralHistory]
 	):LeaderHistory
 	@cypher(statement:
@@ -423,28 +423,28 @@ type Mutation {
 		h.historyRecord = x.historyRecord,
 		h.created_at = datetime()
 	with h
-	MATCH (l:Member {memberID: $memberID})
+	MATCH (l:Member {id: $id})
 	MERGE (tg:TimeGraph {date: date(x.historyDate)})
 	MERGE (h)-[:LEADER_STARTED_ON]->(tg)
 	MERGE (l)-[:HAS_LEADERSHIP_HISTORY]->(h) 
 	RETURN h
 	"""
 	),
-	AddTown(
+	CreateTown(
 		townName: String
 		lWhatsappNumber: String
-		bishopID: ID
+		id: ID
 		centres:[ID]
 	):Town
 	@cypher(statement:
 	"""
 	CREATE (t:Town {name:$townName})
     	SET 
-		t.townID = apoc.create.uuid()
+		t.id = apoc.create.uuid()
 	WITH t
 	MATCH (m:Member {whatsappNumber: $lWhatsappNumber})
 	MERGE (m)-[:LEADS]->(t)
-	MERGE (a:Member {memberID: $bishopID})
+	MERGE (a:Member {id: $id})
 	MERGE (a)-[:HAS_TOWN]->(t)
 
 	WITH t
@@ -452,8 +452,8 @@ type Mutation {
     	WITH t
     	WITH t  WHERE $centres IS NOT NULL
     	UNWIND $centres AS x
-        MATCH (c:Centre {centreID:x})
-        MATCH (t1)-[r:HAS_CENTRE]->(c)
+        MATCH (c:Centre {id:x})
+        OPTIONAL MATCH (t1)-[r:HAS_CENTRE]->(c)
         DELETE r
         MERGE (t)-[:HAS_CENTRE]->(c)
     	RETURN count(t)
@@ -462,21 +462,21 @@ type Mutation {
 	RETURN t
 	"""
 	),
-	AddCampus(
+	CreateCampus(
 		campusName: String
 		lWhatsappNumber: String
-		bishopID: ID
+		id: ID
 		centres:[ID]
 	):Campus
 	@cypher(statement:
 	"""
 	CREATE (t:Campus {name:$campusName})
     	SET 
-		t.campusID = apoc.create.uuid()
+		t.id = apoc.create.uuid()
 	WITH t
 	MATCH (m:Member {whatsappNumber: $lWhatsappNumber})
 	MERGE (m)-[:LEADS]->(t)
-	MERGE (a:Member {memberID: $bishopID})
+	MERGE (a:Member {id: $id})
 	MERGE (a)-[:HAS_CAMPUS]->(t)
 
 	WITH t
@@ -484,8 +484,8 @@ type Mutation {
     	WITH t
     	WITH t  WHERE $centres IS NOT NULL
     	UNWIND $centres AS x
-        MATCH (c:Centre {centreID:x})
-        MATCH (t1)-[r:HAS_CENTRE]->(c)
+        MATCH (c:Centre {id:x})
+        OPTIONAL MATCH (t1)-[r:HAS_CENTRE]->(c)
         DELETE r
         MERGE (t)-[:HAS_CENTRE]->(c)
     	RETURN count(t)
@@ -494,85 +494,66 @@ type Mutation {
 	RETURN t
 	"""
 	),
-	AddCentre(
+	CreateCentre(
 		centreName: String
 		lWhatsappNumber: String
-		town: ID
-		campus: ID
+		townCampusId: ID
 		bacentas:[ID]
 	):Centre
 	@cypher(statement:
 	"""
 	CREATE (c:Centre {name:$centreName})
     	SET 
-		c.centreID = apoc.create.uuid()
+		c.id = apoc.create.uuid()
 	WITH c
 	MATCH (m:Member {whatsappNumber: $lWhatsappNumber})
-	MERGE (m)-[:LEADS]->(t)
-
-	WITH c
-	CALL {
-		WITH c
-		WITH c WHERE $town IS NOT NULL
-		MATCH (t:Town {townID: $town})
-		MERGE (t)-[:HAS_CENTRE]->(c)
-		RETURN count(c)
-	}
-
-	WITH c
-	CALL {
-		WITH c
-		WITH c WHERE $campus IS NOT NULL
-		MATCH (t:Campus {campusID: $campus})
-		MERGE (t)-[:HAS_CENTRE]->(c)
-		RETURN count(c)
-	}
+	MATCH (t {id:$townCampusId})-[:HAS_TOWN|:HAS_CAMPUS]-()
+	MERGE (t)-[:HAS_CENTRE]->(c)
+	MERGE (m)-[:LEADS]->(c)
 
 	WITH c
     CALL {
-    	WITH c
-    	WITH c  WHERE $centres IS NOT NULL
-    	UNWIND $centres AS x
-        MATCH (c:Centre {centreID:x})
-        MATCH (c1)-[r:HAS_CENTRE]->(c)
+        WITH c
+        WITH c  WHERE $bacentas IS NOT NULL
+        UNWIND $bacentas AS x
+        MATCH (b:Bacenta {id:x})
+        OPTIONAL MATCH (c1)-[r:HAS_BACENTA]->(b)
         DELETE r
-        MERGE (c)-[:HAS_CENTRE]->(c)
-    	RETURN count(c)
-    	}
+        MERGE (c)-[:HAS_BACENTA]->(b)
+        RETURN count(c)
+        }
 
-	RETURN t
+	RETURN c
 	"""
 	),
-	AddBacenta(
+	CreateBacenta(
 		bacentaName: String!
-		bacentaLeaderFName: String
-		bacentaLeaderLName: String
-		centreID: ID
+		lWhatsappNumber: String
+		centreId: ID
 		meetingDay: String!
 		venueLongitude: Float
 		venueLatitude: Float
 	):Bacenta
 	@cypher(statement:
 	"""
-	MERGE(c:Bacenta {name:$bacentaName,location: point({latitude:toFloat($venueLatitude), longitude:toFloat($venueLongitude), crs:'WGS-84'})})
+	CREATE (b:Bacenta {name:$bacentaName,location: point({latitude:toFloat($venueLatitude), longitude:toFloat($venueLongitude), crs:'WGS-84'})})
     	ON CREATE SET
-		c.bacentaID = apoc.create.uuid()
-    WITH c
-	MATCH (m:Member {firstName: $bacentaLeaderFName,lastName:$bacentaLeaderLName}) 
-	MATCH (com:Centre {centreID: $centreID})
-    MATCH (md:ServiceDay {day: $meetingDay})
-    WITH m, com, md,c
-	MERGE (com)-[:HAS_BACENTA]->(c)
-    MERGE (c)-[:MEETS_ON_DAY]->(md)
-	MERGE (m)-[:LEADS]->(c)
-    RETURN c
+		b.id = apoc.create.uuid()
+    WITH b
+	MATCH (m:Member {whatsappNumber: $lWhatsappNumber}) 
+	MATCH (c:Centre {id: $centreId})
+    MERGE (md:ServiceDay {day: $meetingDay})
+	MERGE (c)-[:HAS_BACENTA]->(b)
+    MERGE (b)-[:MEETS_ON_DAY]->(md)
+	MERGE (m)-[:LEADS]->(b)
+    RETURN b
 	"""
 	),
 
 
 	#UPDATE OPERATIONS
-	EditMemberDetails(
-		memberID: ID!
+	UpdateMemberDetails(
+		id: ID!
 		firstName: String!
 		middleName: String
 		lastName: String!
@@ -592,7 +573,7 @@ type Mutation {
 	@isAuthenticated
 	@cypher(statement:
 	"""
-	MATCH (m:Member {memberID:$memberID})
+	MATCH (m:Member {id:$id})
 	SET
 		m.firstName = $firstName,
 		m.middleName = $middleName,
@@ -632,7 +613,7 @@ type Mutation {
 	CALL {
     	WITH m
     	WITH m  WHERE $bacenta IS NOT NULL
-    	MATCH (c:Bacenta {bacentaID: $bacenta})
+    	MATCH (c:Bacenta {id: $bacenta})
 		MATCH (m)-[r1:BELONGS_TO]-> (:Bacenta)
 		DELETE r1
 		MERGE (m)-[:BELONGS_TO]-> (c)
@@ -642,7 +623,7 @@ type Mutation {
 	CALL {
     	WITH m
     	WITH m  WHERE $ministry IS NOT NULL
-    	MATCH (s:Ministry {ministryID:$ministry})
+    	MATCH (s:Ministry {id:$ministry})
 		MERGE (m)-[r1:BELONGS_TO]-> (:Ministry)
 		DELETE r1
 		MERGE (m)-[:BELONGS_TO]-> (s)
@@ -652,7 +633,7 @@ type Mutation {
 	RETURN m
 	"""
 	),
-	EditTown(
+	UpdateTown(
 		townID: ID
 		townName: String
 		lWhatsappNumber: String
@@ -661,11 +642,11 @@ type Mutation {
 	):Town
 	@cypher(statement:
 	"""
-	MATCH (t:Town {townID: $townID})
+	MATCH (t:Town {id: $townID})
 	MATCH (m:Member {whatsappNumber: $lWhatsappNumber})
 	MERGE (m)-[:LEADS]->(t)
-	MERGE (a:Member {memberID: $bishopID})
-	MERGE (a)-[:HAS_TOWN]->(t)
+	MERGE (b:Member {id: $bishopID})
+	MERGE (b)-[:HAS_TOWN]->(t)
 
 	WITH t
     CALL {
@@ -673,7 +654,7 @@ type Mutation {
     	WITH t  WHERE $centres IS NOT NULL
 
     	UNWIND $centres AS x
-        MATCH (c:Centre {centreID:x})
+        MATCH (c:Centre {id:x})
         MATCH (t1)-[r:HAS_CENTRE]->(c)
         DELETE r
         MERGE (t)-[:HAS_CENTRE]->(c)
@@ -685,22 +666,22 @@ type Mutation {
 	),
 
 	#DELETE OPERATIONS
-	RemoveBacenta(bacentaID: ID!):Bacenta
+	DeleteBacenta(id: ID!):Bacenta
 	@cypher(statement:
 	"""
-	MATCH (c:Bacenta {bacentaID:$bacentaID})
+	MATCH (c:Bacenta {id:$id})
 	DETACH DELETE c
 	"""
 	),
 	MakeBacentaLeader(
-		memberID: ID
+		id: ID
 		lWhatsappNumber: String
 		groupToLead: String
 		startDate: Date
 		):Member
 	@cypher(statement:
 	"""
-	MATCH (m:Member {memberID: $memberID})
+	MATCH (m:Member {id: $id})
 	MERGE (l:LeaderHistory)
 		ON CREATE SET 
 		l.created_at=datetime(),
@@ -744,8 +725,8 @@ type Mutation {
 	@cypher(statement:
 	"""
 	MATCH (m:Member {whatsappNumber: $lWhatsappNumber})
-	MATCH (oldc:Bacenta {bacentaID: $oldGroupToLead})
-	MATCH (newc:Bacenta {bacentaID: $newGroupToLead})
+	MATCH (oldc:Bacenta {id: $oldGroupToLead})
+	MATCH (newc:Bacenta {id: $newGroupToLead})
 	MATCH (l)-[leadsold:LEADS]->(oldc)
 		SET leadsold.edDate: $endDate
 	MERGE (l)-[leadsnew:LEADS]->(newc)

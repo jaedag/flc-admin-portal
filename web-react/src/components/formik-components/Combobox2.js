@@ -9,7 +9,9 @@ function Combobox(props) {
     label,
     name,
     dataset,
-    queryVariable,
+    queryVariable1,
+    queryVariable2,
+    variable1,
     suggestionText,
     suggestionID,
     placeholder,
@@ -22,7 +24,8 @@ function Combobox(props) {
 
   const { data } = useQuery(optionsQuery, {
     variables: {
-      [`${queryVariable}`]: searchString,
+      [`${queryVariable1}`]: variable1,
+      [`${queryVariable2}`]: searchString,
     },
   })
 

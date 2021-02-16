@@ -5,7 +5,7 @@ import { Formik, Form, FieldArray } from 'formik'
 import * as Yup from 'yup'
 import FormikControl from '../components/formik-components/FormikControl'
 
-import { NEW_MEMBER_MUTATION } from '../queries/AdditionMutations'
+import { CREATE_MEMBER_MUTATION } from '../queries/CreateMutations'
 import { HeadingBar } from '../components/HeadingBar'
 import { NavBar } from '../components/NavBar'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
@@ -14,7 +14,7 @@ import { MINISTRY_LIST, BACENTA_DROPDOWN } from '../queries/ListQueries'
 import { ChurchContext } from '../contexts/ChurchContext'
 import { MemberContext } from '../contexts/MemberContext'
 
-export const AddMember = () => {
+export const CreateMember = () => {
   const initialValues = {
     firstName: '',
     middleName: '',
@@ -59,7 +59,9 @@ export const AddMember = () => {
     { key: 'Bishop', value: 'Bishop' },
   ]
 
-  const { phoneRegExp, parsePhoneNum } = useContext(ChurchContext)
+  const { phoneRegExp, parsePhoneNum, makeSelectOptions } = useContext(
+    ChurchContext
+  )
   const { setMemberID } = useContext(MemberContext)
 
   const validationSchema = Yup.object({
@@ -89,9 +91,9 @@ export const AddMember = () => {
     error: ministryListError,
   } = useQuery(MINISTRY_LIST)
 
-  const [AddMember] = useMutation(NEW_MEMBER_MUTATION, {
+  const [CreateMember] = useMutation(CREATE_MEMBER_MUTATION, {
     onCompleted: (newMemberData) => {
-      setMemberID(newMemberData.AddMember.memberID)
+      setMemberID(newMemberData.CreateMember.id)
     },
   })
 
@@ -128,7 +130,7 @@ export const AddMember = () => {
     values.phoneNumber = parsePhoneNum(values.phoneNumber)
     values.whatsappNumber = parsePhoneNum(values.whatsappNumber)
 
-    AddMember({
+    CreateMember({
       variables: {
         firstName: values.firstName,
         middleName: values.middleName,
@@ -160,10 +162,7 @@ export const AddMember = () => {
   } else if (ministryListError) {
     return <ErrorScreen />
   } else {
-    const ministryOptions = ministryListData.ministryList.map((ministry) => ({
-      value: ministry.ministryID,
-      key: ministry.name,
-    }))
+    const ministryOptions = makeSelectOptions(ministryListData.ministryList)
 
     return (
       <div>
@@ -335,7 +334,7 @@ export const AddMember = () => {
                           optionsQuery={BACENTA_DROPDOWN}
                           queryVariable="bacentaName"
                           suggestionText="name"
-                          suggestionID="bacentaID"
+                          suggestionID="id"
                           dataset="bacentaDropdown"
                           aria-describedby="Bacenta Name"
                         />

@@ -7,32 +7,50 @@ import FormikControl from '../components/formik-components/FormikControl'
 
 import { GET_BISHOPS, CENTRE_DROPDOWN } from '../queries/ListQueries'
 import {
-  CREATE_TOWN_MUTATION,
-  CREATE_CAMPUS_MUTATION,
-} from '../queries/AdditionMutations'
+  EDIT_TOWN_MUTATION,
+  EDIT_CAMPUS_MUTATION,
+} from '../queries/UpdateMutations'
 import { NavBar } from '../components/NavBar'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
 import { ChurchContext } from '../contexts/ChurchContext'
+import { DISPLAY_CAMPUS, DISPLAY_TOWN } from '../queries/DisplayQueries'
 
-export const EditTownCampus = () => {
+export const UpdateTownCampus = () => {
   const {
     church,
     capitalise,
     parsePhoneNum,
     phoneRegExp,
-    setTownID,
-    setCampusID,
+    campusID,
+    townID,
     setBishopID,
   } = useContext(ChurchContext)
-
+  const {
+    data: campusData,
+    error: campusError,
+    loading: campusLoading,
+  } = useQuery(DISPLAY_CAMPUS, {
+    variables: { id: campusID },
+  })
+  const { data: townData, error: townError, loading: townLoading } = useQuery(
+    DISPLAY_TOWN,
+    {
+      variables: { id: townID },
+    }
+  )
+  console.log(townData)
   const history = useHistory()
 
   const initialValues = {
-    campusTownName: '',
-    leaderName: '',
-    leaderWhatsapp: '',
-    bishopSelect: '',
-    centres: [''],
+    campusTownName: campusData ? campusData.displayCampus.name : '',
+    leaderName: campusData
+      ? `${campusData.displayCampus.leader.firstName} ${campusData.displayCampus.leader.lastName} `
+      : '',
+    leaderWhatsapp: campusData
+      ? `+${campusData.displayCampus.leader.whatsappNumber}`
+      : '',
+    bishopSelect: campusData ? campusData.displayCampus.bishop.id : '',
+    centres: campusData ? campusData.displayCampus.centres : [],
   }
 
   const validationSchema = Yup.object({
@@ -45,16 +63,12 @@ export const EditTownCampus = () => {
     ),
   })
 
-  const [AddTown] = useMutation(CREATE_TOWN_MUTATION, {
-    onCompleted: (newTownData) => {
-      setTownID(newTownData.AddTown.townID)
-    },
+  const [UpdateTown] = useMutation(EDIT_TOWN_MUTATION, {
+    refetchQueries: [{ query: DISPLAY_TOWN, variables: { id: townID } }],
   })
 
-  const [AddCampus] = useMutation(CREATE_CAMPUS_MUTATION, {
-    onCompleted: (newCampusData) => {
-      setCampusID(newCampusData.AddCampus.campusID)
-    },
+  const [EditCampus] = useMutation(EDIT_CAMPUS_MUTATION, {
+    refetchQueries: [{ query: DISPLAY_CAMPUS, variables: { id: campusID } }],
   })
 
   const {
@@ -63,22 +77,22 @@ export const EditTownCampus = () => {
     error: bishopError,
   } = useQuery(GET_BISHOPS)
 
-  if (bishopError) {
+  if (bishopError || townError || campusError) {
     return <ErrorScreen />
-  } else if (bishopLoading) {
+  } else if (bishopLoading || townLoading || campusLoading) {
     return <LoadingScreen />
   } else if (
     (bishopData && church.church === 'campus') ||
     (bishopData && church.church === 'town')
   ) {
     const bishopCampusOptions = bishopData.bishopsListCampus.map((bishop) => ({
-      value: bishop.memberID,
+      value: bishop.id,
       key: bishop.firstName + ' ' + bishop.lastName,
     }))
 
     //Refactoring the Options into Something that can be read by my formik component
     const bishopTownOptions = bishopData.bishopsListTown.map((bishop) => ({
-      value: bishop.memberID,
+      value: bishop.id,
       key: bishop.firstName + ' ' + bishop.lastName,
     }))
 
@@ -88,8 +102,9 @@ export const EditTownCampus = () => {
       values.leaderWhatsapp = parsePhoneNum(values.leaderWhatsapp)
 
       if (church.church === 'town') {
-        AddTown({
+        UpdateTown({
           variables: {
+            townID: townID,
             townName: values.campusTownName,
             lWhatsappNumber: values.leaderWhatsapp,
             bishopID: values.bishopSelect,
@@ -98,8 +113,9 @@ export const EditTownCampus = () => {
         })
       } else if (church.church === 'campus') {
         // console.log("Form data",values);
-        AddCampus({
+        EditCampus({
           variables: {
+            campusID: campusID,
             campusName: values.campusTownName,
             lWhatsappNumber: values.leaderWhatsapp,
             bishopID: values.bishopSelect,
@@ -107,10 +123,9 @@ export const EditTownCampus = () => {
           },
         })
       }
-
+      history.push(`/${church.church}/displaydetails`)
       onSubmitProps.setSubmitting(false)
       onSubmitProps.resetForm()
-      history.push(`/${church.church}/displaydetails`)
     }
 
     return (
@@ -142,7 +157,7 @@ export const EditTownCampus = () => {
                                 ? bishopCampusOptions
                                 : bishopTownOptions
                             }
-                            defaultOption="Select an Bishop"
+                            defaultOption="Select a Bishop"
                           />
                         </div>
                       </div>
@@ -194,15 +209,13 @@ export const EditTownCampus = () => {
 
                           return (
                             <div>
-                              {centres.map((centres, index) => (
+                              {centres.map((centre, index) => (
                                 <div key={index} className="form-row row-cols">
                                   <div className="col-9">
                                     <FormikControl
                                       control="combobox"
                                       name={`centres[${index}]`}
-                                      placeholder={`${capitalise(
-                                        church.subChurch
-                                      )} Name`}
+                                      placeholder={centre.name}
                                       setFieldValue={formik.setFieldValue}
                                       optionsQuery={CENTRE_DROPDOWN}
                                       queryVariable={`${church.subChurch}Name`}

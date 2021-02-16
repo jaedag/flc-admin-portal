@@ -50,33 +50,29 @@ export const SearchPageMobile = () => {
                 key={index}
                 className="card mobile-search-card p-2 py-3 my-4"
                 onClick={() => {
-                  setMemberID(searchResult.memberID)
+                  setMemberID(searchResult.id)
                   history.push('/member/displaydetails')
                   if (!searchResult.bacenta) {
                     if (searchResult.townBishop[0]) {
                       setChurch({ church: 'town', subChurch: 'centre' })
-                      setBishopID(searchResult.memberID)
+                      setBishopID(searchResult.id)
                       return
                     } else if (searchResult.campusBishop[0]) {
                       setChurch({ church: 'campus', subChurch: 'centre' })
-                      setBishopID(searchResult.memberID)
+                      setBishopID(searchResult.id)
                       return
                     }
                   } else if (!searchResult.bacenta.name) {
                     return
                   } else if (searchResult.bacenta.centre.town) {
                     setChurch({ church: 'town', subChurch: 'centre' })
-                    setBishopID(
-                      searchResult.bacenta.centre.town.bishop.memberID
-                    )
+                    setBishopID(searchResult.bacenta.centre.town.bishop.id)
                   } else if (
                     searchResult.bacenta.centre.campus ||
                     searchResult.campusGSO
                   ) {
                     setChurch({ church: 'campus', subChurch: 'centre' })
-                    setBishopID(
-                      searchResult.bacenta.centre.campus.bishop.memberID
-                    )
+                    setBishopID(searchResult.bacenta.centre.campus.bishop.id)
                   }
                 }}
               >

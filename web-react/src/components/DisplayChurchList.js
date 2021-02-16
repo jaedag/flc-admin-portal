@@ -4,7 +4,7 @@ import { NavBar } from './NavBar'
 
 export const DisplayChurchList = (props) => {
   const { data, setter, churchType } = props
-  const churchID = `${churchType.toLowerCase()}ID`
+  const churchID = 'id'
 
   return (
     <div>

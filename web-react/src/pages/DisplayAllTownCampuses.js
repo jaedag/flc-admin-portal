@@ -16,7 +16,7 @@ export const DisplayAllTownCampuses = () => {
   const { data: townData, error: townError, loading: townLoading } = useQuery(
     GET_TOWNS,
     {
-      variables: { bishopID: bishopID },
+      variables: { id: bishopID },
     }
   )
   const {
@@ -24,10 +24,10 @@ export const DisplayAllTownCampuses = () => {
     error: campusError,
     loading: campusLoading,
   } = useQuery(GET_CAMPUSES, {
-    variables: { bishopID: bishopID },
+    variables: { id: bishopID },
   })
   const { data: bishopMemberCount } = useQuery(BISHOP_MEMBER_COUNT, {
-    variables: { bishopID: bishopID },
+    variables: { id: bishopID },
   })
 
   if (townError || campusError) {
@@ -46,7 +46,7 @@ export const DisplayAllTownCampuses = () => {
                 <Link
                   to="/member/displaydetails"
                   onClick={() => {
-                    setMemberID(`${townData.townList[0].bishop.memberID}`)
+                    setMemberID(`${townData.townList[0].bishop.id}`)
                   }}
                 >
                   <h4>{`${townData.townList[0].bishop.firstName} ${townData.townList[0].bishop.lastName}'s Towns`}</h4>
@@ -86,7 +86,7 @@ export const DisplayAllTownCampuses = () => {
                 <Link
                   to="/member/displaydetails"
                   onClick={() => {
-                    setMemberID(`${campusData.campusList[0].bishop.memberID}`)
+                    setMemberID(`${campusData.campusList[0].bishop.id}`)
                   }}
                 >
                   <h4>{`${campusData.campusList[0].bishop.firstName} ${campusData.campusList[0].bishop.lastName}'s Campuses`}</h4>

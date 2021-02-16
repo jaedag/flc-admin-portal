@@ -13,7 +13,7 @@ export const DisplayCentreDetails = () => {
     error: centreError,
     loading: centreLoading,
   } = useQuery(DISPLAY_CENTRE, {
-    variables: { centreID: centreID },
+    variables: { id: centreID },
   })
 
   if (centreError) {
@@ -37,7 +37,7 @@ export const DisplayCentreDetails = () => {
             ? `${displayCentre.leader.firstName} ${displayCentre.leader.lastName}`
             : '-'
         }
-        leaderID={displayCentre.leader.memberID}
+        leaderID={displayCentre.leader ? displayCentre.leader.id : null}
         churchHeading="No of Bacentas"
         churchType="Centre"
         subChurch="Bacenta"

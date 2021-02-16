@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client'
 
-export const EDIT_MEMBER_MUTATION = gql`
-  mutation EditMemberDetails(
-    $memberID: ID!
+export const UPDATE_MEMBER_MUTATION = gql`
+  mutation UpdateMemberDetails(
+    $id: ID!
     $firstName: String!
     $middleName: String
     $lastName: String!
@@ -17,8 +17,8 @@ export const EDIT_MEMBER_MUTATION = gql`
     $ministry: String
     $pictureUrl: String!
   ) {
-    EditMemberDetails(
-      memberID: $memberID
+    UpdateMemberDetails(
+      id: $id
       firstName: $firstName
       middleName: $middleName
       lastName: $lastName
@@ -33,7 +33,7 @@ export const EDIT_MEMBER_MUTATION = gql`
       ministry: $ministry
       pictureUrl: $pictureUrl
     ) {
-      memberID
+      id
       firstName
       lastName
     }
@@ -41,21 +41,42 @@ export const EDIT_MEMBER_MUTATION = gql`
 `
 
 export const EDIT_TOWN_MUTATION = gql`
-  mutation EditTown(
+  mutation UpdateTown(
     $townID: ID
     $townName: String
     $lWhatsappNumber: String
     $bishopID: ID
     $centres: [ID]
   ) {
-    EditTown(
+    UpdateTown(
       townID: $townID
       townName: $townName
       lWhatsappNumber: $lWhatsappNumber
       bishopID: $bishopID
       centres: $centres
     ) {
-      townID
+      id
+      name
+    }
+  }
+`
+
+export const EDIT_CAMPUS_MUTATION = gql`
+  mutation EditCampus(
+    $campusID: ID
+    $campusName: String
+    $lWhatsappNumber: String
+    $bishopID: ID
+    $centres: [ID]
+  ) {
+    UpdateTown(
+      campusID: $campusID
+      campusName: $campusName
+      lWhatsappNumber: $lWhatsappNumber
+      bishopID: $bishopID
+      centres: $centres
+    ) {
+      id
       name
     }
   }

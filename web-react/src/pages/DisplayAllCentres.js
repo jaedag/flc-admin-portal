@@ -11,8 +11,8 @@ export const DisplayAllCentres = () => {
   const {
     capitalise,
     church,
-    campusID,
     townID,
+    campusID,
     setCentreID,
     setMemberID,
   } = useContext(ChurchContext)
@@ -20,13 +20,13 @@ export const DisplayAllCentres = () => {
   const { data: townCentreData, loading: townLoading } = useQuery(
     GET_TOWN_CENTRES,
     {
-      variables: { townID: townID },
+      variables: { id: townID },
     }
   )
   const { data: campusCentreData, loading: campusLoading } = useQuery(
     GET_CAMPUS_CENTRES,
     {
-      variables: { campusID: campusID },
+      variables: { id: campusID },
     }
   )
 
@@ -45,7 +45,7 @@ export const DisplayAllCentres = () => {
                   to="/member/displaydetails"
                   onClick={() => {
                     setMemberID(
-                      `${campusCentreData.campusCentreList[0].campus.leader.memberID}`
+                      `${campusCentreData.campusCentreList[0].campus.leader.id}`
                     )
                   }}
                 >
@@ -101,7 +101,7 @@ export const DisplayAllCentres = () => {
                   to="/member/displaydetails"
                   onClick={() => {
                     setMemberID(
-                      `${townCentreData.townCentreList[0].town.leader.memberID}`
+                      `${townCentreData.townCentreList[0].town.leader.id}`
                     )
                   }}
                 >

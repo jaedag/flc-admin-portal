@@ -5,7 +5,7 @@ import { Formik, Form, FieldArray } from 'formik'
 import * as Yup from 'yup'
 import FormikControl from '../components/formik-components/FormikControl'
 
-import { EDIT_MEMBER_MUTATION } from '../queries/UpdateMutations'
+import { UPDATE_MEMBER_MUTATION } from '../queries/UpdateMutations'
 import { DISPLAY_MEMBER } from '../queries/DisplayQueries'
 import { HeadingBar } from '../components/HeadingBar'
 import { NavBar } from '../components/NavBar'
@@ -15,7 +15,7 @@ import { MINISTRY_LIST, BACENTA_DROPDOWN } from '../queries/ListQueries'
 import { MemberContext } from '../contexts/MemberContext'
 import { ChurchContext } from '../contexts/ChurchContext'
 
-export const EditMemberDetails = () => {
+export const UpdateMemberDetails = () => {
   const { memberID } = useContext(MemberContext)
   const { phoneRegExp, parsePhoneNum } = useContext(ChurchContext)
   const {
@@ -23,7 +23,7 @@ export const EditMemberDetails = () => {
     error: memberError,
     loading: memberLoading,
   } = useQuery(DISPLAY_MEMBER, {
-    variables: { memberID: memberID },
+    variables: { id: memberID },
   })
 
   const initialValues = {
@@ -62,7 +62,7 @@ export const EditMemberDetails = () => {
       ? memberData.displayMember.bacenta.name
       : '',
     ministry: memberData.displayMember.ministry
-      ? memberData.displayMember.ministry.ministryID
+      ? memberData.displayMember.ministry.id
       : '',
 
     pastoralHistory: [
@@ -120,10 +120,8 @@ export const EditMemberDetails = () => {
     error: ministryListError,
   } = useQuery(MINISTRY_LIST)
 
-  const [EditMemberDetails] = useMutation(EDIT_MEMBER_MUTATION, {
-    refetchQueries: [
-      { query: DISPLAY_MEMBER, variables: { memberID: memberID } },
-    ],
+  const [UpdateMemberDetails] = useMutation(UPDATE_MEMBER_MUTATION, {
+    refetchQueries: [{ query: DISPLAY_MEMBER, variables: { id: memberID } }],
   })
 
   const [image, setImage] = useState('')
@@ -160,9 +158,9 @@ export const EditMemberDetails = () => {
     values.phoneNumber = parsePhoneNum(values.phoneNumber)
     values.whatsappNumber = parsePhoneNum(values.whatsappNumber)
 
-    EditMemberDetails({
+    UpdateMemberDetails({
       variables: {
-        memberID: memberID,
+        id: memberID,
         firstName: values.firstName,
         middleName: values.middleName,
         lastName: values.lastName,
@@ -191,8 +189,9 @@ export const EditMemberDetails = () => {
     // Spinner Icon for Loading Screens
     return <LoadingScreen />
   } else {
+    console.log(ministryListData)
     const ministryOptions = ministryListData.ministryList.map((ministry) => ({
-      value: ministry.ministryID,
+      value: ministry.memberID,
       key: ministry.name,
     }))
 
@@ -369,7 +368,7 @@ export const EditMemberDetails = () => {
                           optionsQuery={BACENTA_DROPDOWN}
                           queryVariable="bacentaName"
                           suggestionText="name"
-                          suggestionID="bacentaID"
+                          suggestionID="id"
                           dataset="bacentaDropdown"
                           aria-describedby="bacenta Name"
                         />

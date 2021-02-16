@@ -99,9 +99,7 @@ export const DisplayChurchDetails = (props) => {
                           <button
                             className="card-buttons py-2 px-3 text-center text-nowrap text-white"
                             onClick={() => {
-                              subChurchSetter(
-                                church[`${subChurch.toLowerCase()}ID`]
-                              )
+                              subChurchSetter(church.id)
                             }}
                           >
                             {church.name}

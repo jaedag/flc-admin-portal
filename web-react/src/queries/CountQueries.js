@@ -24,36 +24,36 @@ export const sontaCount = gql`
   }
 `
 export const TOWN_MEMBER_COUNT = gql`
-  query townMemberCount($townID: ID) {
-    townMemberCount(townID: $townID)
+  query townMemberCount($id: ID) {
+    townMemberCount(id: $id)
   }
 `
 
 export const BISHOP_MEMBER_COUNT = gql`
-  query bishopMemberCount($bishopID: ID) {
-    bishopMemberCount(bishopID: $bishopID)
+  query bishopMemberCount($id: ID) {
+    bishopMemberCount(id: $id)
   }
 `
 
 export const BISHOP_TSONTA_MEMBER_COUNT = gql`
-  query bishopTSontaMemberCount($bishopID: ID) {
-    bishopTSontaMemberCount(bishopID: $bishopID)
+  query bishopTSontaMemberCount($id: ID) {
+    bishopTSontaMemberCount(id: $id)
   }
 `
 export const BISHOP_SONTA_MEMBER_COUNT = gql`
-  query bishopSontaMemberCount($bishopID: ID) {
-    bishopSontaMemberCount(bishopID: $bishopID)
+  query bishopSontaMemberCount($id: ID) {
+    bishopSontaMemberCount(id: $id)
   }
 `
 
 export const BISHOP_PASTOR_COUNT = gql`
-  query bishopPastorCount($bishopID: ID) {
-    bishopPastorCount(bishopID: $bishopID)
+  query bishopPastorCount($id: ID) {
+    bishopPastorCount(id: $id)
   }
 `
 
 export const BISHOP_CAMPUSTOWN_COUNT = gql`
-  query bishopCampusTownCount($bishopID: ID) {
-    bishopsCampusTownCount(bishopID: $bishopID)
+  query bishopCampusTownCount($id: ID) {
+    bishopsCampusTownCount(id: $id)
   }
 `

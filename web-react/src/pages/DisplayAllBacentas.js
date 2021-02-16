@@ -13,7 +13,7 @@ export const DisplayAllBacentas = () => {
   const { data: bacentaData, loading: bacentaLoading } = useQuery(
     CENTRE_BACENTA_LIST,
     {
-      variables: { centreID: centreID },
+      variables: { id: centreID },
     }
   )
   if (bacentaLoading) {
@@ -30,13 +30,15 @@ export const DisplayAllBacentas = () => {
               to="/member/displaydetails"
               onClick={() => {
                 setMemberID(
-                  `${bacentaData.centreBacentaList[0].centre.leader.memberID}`
+                  `${bacentaData.centreBacentaList[0].centre.leader.id}`
                 )
               }}
             >
               <h6 className="text-muted">
                 Leader:
-                {` ${bacentaData.centreBacentaList[0].centre.leader.firstName} ${bacentaData.centreBacentaList[0].centre.leader.lastName}`}
+                {bacentaData.centreBacentaList[0].centre.leader
+                  ? ` ${bacentaData.centreBacentaList[0].centre.leader.firstName} ${bacentaData.centreBacentaList[0].centre.leader.lastName}`
+                  : null}
               </h6>
             </Link>
           </div>

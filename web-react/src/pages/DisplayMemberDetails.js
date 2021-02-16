@@ -38,7 +38,7 @@ export const DisplayMemberDetails = () => {
     error: memberError,
     loading: memberLoading,
   } = useQuery(DISPLAY_MEMBER, {
-    variables: { memberID: memberID },
+    variables: { id: memberID },
   })
 
   if (memberError || memberID === '') {
@@ -75,7 +75,7 @@ export const DisplayMemberDetails = () => {
     rank.push({
       detail: memberData.displayMember.campusGSO.map((campus) => ({
         desc: `Con Rep of ${campus.name}`,
-        id: campus.campusID,
+        memberID: campus.memberID,
         setter: { setCampusID },
       })),
       link: '/campus/displaydetails',
@@ -85,7 +85,7 @@ export const DisplayMemberDetails = () => {
     rank.push({
       detail: memberData.displayMember.leadsSonta.map((sonta) => ({
         desc: `Sonta Leader of ${sonta.name}`,
-        id: sonta.sontaID,
+        memberID: sonta.memberID,
       })),
       link: '/sonta/displaydetails',
       setter: { setSontaID },
@@ -161,7 +161,7 @@ export const DisplayMemberDetails = () => {
                                     <p
                                       key={i}
                                       onClick={() => {
-                                        detail.set(detail.id)
+                                        detail.set(detail.memberID)
                                       }}
                                     >
                                       {detail.desc}

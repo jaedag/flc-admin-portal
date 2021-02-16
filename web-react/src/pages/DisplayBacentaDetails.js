@@ -14,7 +14,7 @@ export const DisplayBacentaDetails = () => {
     error: bacentaError,
     loading: bacentaLoading,
   } = useQuery(DISPLAY_BACENTA, {
-    variables: { bacentaID: bacentaID },
+    variables: { id: bacentaID },
   })
 
   if (bacentaError) {
@@ -34,7 +34,7 @@ export const DisplayBacentaDetails = () => {
             ? `${bacentaData.displayBacenta.leader.firstName} ${bacentaData.displayBacenta.leader.lastName}`
             : '-'
         }
-        leaderID={bacentaData.displayBacenta.leader.memberID}
+        leaderID={bacentaData.displayBacenta.leader.id}
         membership={bacentaData.bacentaMemberCount}
         churchHeading="No of Bacentas"
         churchNo="2"

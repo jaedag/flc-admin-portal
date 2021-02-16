@@ -19,12 +19,12 @@ const BishopDashboard = () => {
     error: memberCountError,
     loading: memberCountLoading,
   } = useQuery(BISHOP_MEMBER_COUNT, {
-    variables: { bishopID: bishopID },
+    variables: { id: bishopID },
   })
   const { data: bishop, error: bishopError, loading: bishopLoading } = useQuery(
     DISPLAY_BISHOP_NAME,
     {
-      variables: { memberID: bishopID },
+      variables: { id: bishopID },
     }
   )
   const {
@@ -32,21 +32,21 @@ const BishopDashboard = () => {
     error: pastorCountError,
     loading: pastorCountLoading,
   } = useQuery(BISHOP_PASTOR_COUNT, {
-    variables: { bishopID: bishopID },
+    variables: { id: bishopID },
   })
   const {
     data: churchCount,
     error: churchCountError,
     loading: churchCountLoading,
   } = useQuery(BISHOP_CAMPUSTOWN_COUNT, {
-    variables: { bishopID: bishopID },
+    variables: { id: bishopID },
   })
   const {
     data: sontaMemberCount,
     error: bishopSontaError,
     loading: bishopSontaLoading,
   } = useQuery(BISHOP_SONTA_MEMBER_COUNT, {
-    variables: { bishopID: bishopID },
+    variables: { id: bishopID },
   })
 
   if (

@@ -3,7 +3,6 @@ import { useQuery } from '@apollo/client'
 import { useHistory } from 'react-router-dom'
 import { ChurchContext } from '../contexts/ChurchContext'
 import { GET_BISHOPS } from '../queries/ListQueries'
-
 import { NavBar } from '../components/NavBar'
 import { AuthButton } from '../components/DashboardButton'
 import Logo from '../img/flc-logo-small.png'
@@ -15,19 +14,23 @@ const BishopSelect = () => {
 
   if (error) {
     return (
-      <div className="container text-center my-5">
-        <img
-          src={Logo}
-          alt="logo"
-          className="img-fluid mx-auto d-block d-lg-none"
-          style={{ maxWidth: '30%' }}
-        />
-        <h3>FLC Admin Dashboard</h3>
-        <div className="container">
-          <p className="text-center">
-            There seems to be an error loading data. Make sure you are logged in{' '}
-          </p>
-          <AuthButton />
+      <div className="container body-container d-none d-lg-block">
+        {/* <!--Web Logo and text--> */}
+        <div className="row align-self-center">
+          {/* <!--Sign In--> */}
+
+          <form className="login-page-lg">
+            <div className="m-5">
+              <div className="col-auto my-3 align-items-center">
+                <img src={Logo} alt="logo" className="img-fluid" />
+                <div className="d-none d-lg-block">
+                  First Love Church is a church full of young people on fire for
+                  the Lord
+                </div>
+              </div>
+              <AuthButton />
+            </div>
+          </form>
         </div>
       </div>
     )
@@ -80,7 +83,7 @@ const BishopSelect = () => {
                     setChurch({ church: 'campus', subChurch: 'centre' })
                   }
 
-                  setBishopID(soul.memberID)
+                  setBishopID(soul.id)
                   history.push('/dashboard')
                 }}
               >

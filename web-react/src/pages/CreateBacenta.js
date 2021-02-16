@@ -11,30 +11,32 @@ import {
   GET_CAMPUS_CENTRES,
   GET_TOWNS,
 } from '../queries/ListQueries'
-import { CREATE_BACENTA_MUTATION } from '../queries/AdditionMutations'
+import { CREATE_BACENTA_MUTATION } from '../queries/CreateMutations'
 import { NavBar } from '../components/NavBar'
 import { ChurchContext } from '../contexts/ChurchContext'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
 
-export const AddBacenta = () => {
+export const CreateBacenta = () => {
   const initialValues = {
     bacentaName: '',
-    bacentaLeaderName: '',
-    bacentaLeaderWhatsApp: '',
+    leaderName: '',
+    leaderWhatsApp: '',
     whatsappNumber: '',
     meetingDay: '',
     venueLatitude: '',
     venueLongitude: '',
   }
+
   const {
     church,
     capitalise,
+    makeSelectOptions,
+    parsePhoneNum,
     bishopID,
     townID,
     setTownID,
     campusID,
     setCampusID,
-    bacentaID,
     setBacentaID,
     phoneRegExp,
   } = useContext(ChurchContext)
@@ -59,86 +61,77 @@ export const AddBacenta = () => {
     venueLongitude: Yup.string().required('Please fill in your location info'),
   })
 
-  const [AddBacenta] = useMutation(CREATE_BACENTA_MUTATION, {
-    onCompleted: (newBacentaData) => {
-      setBacentaID(newBacentaData.AddBacenta.bacentaID)
-    },
-  })
   const history = useHistory()
 
+  const [CreateBacenta] = useMutation(CREATE_BACENTA_MUTATION, {
+    onCompleted: (newBacentaData) => {
+      setBacentaID(newBacentaData.CreateBacenta.id)
+      history.push('/bacenta/displaydetails')
+    },
+  })
+
   const { data: townListData, loading: townListLoading } = useQuery(GET_TOWNS, {
-    variables: { bishopID: bishopID },
+    variables: { id: bishopID },
   })
   const { data: campusListData, loading: campusListLoading } = useQuery(
     GET_CAMPUSES,
     {
-      variables: { bishopID: bishopID },
+      variables: { id: bishopID },
     }
   )
 
   const { data: townCentreList, loading: townCentresLoading } = useQuery(
     GET_TOWN_CENTRES,
     {
-      variables: { townID: townID },
+      variables: { id: townID },
     }
   )
 
   const { data: campusCentreList, loading: campusCentresLoading } = useQuery(
     GET_CAMPUS_CENTRES,
     {
-      variables: { campusID: campusID },
+      variables: { id: campusID },
     }
   )
 
+  console.log(townCentreList)
+  //onSubmit receives the form state as argument
+  const onSubmit = (values, onSubmitProps) => {
+    CreateBacenta({
+      variables: {
+        bacentaName: values.bacentaName,
+        lWhatsappNumber: parsePhoneNum(values.leaderWhatsapp),
+        centreId: values.centreSelect,
+        meetingDay: values.meetingDay,
+        venueLongitude: parseFloat(values.venueLongitude),
+        venueLatitude: parseFloat(values.venueLatitude),
+      },
+    })
+
+    // console.log('Form data', values)
+    onSubmitProps.setSubmitting(false)
+    onSubmitProps.resetForm()
+  }
+
   if (
-    (townCentreList || campusCentreList) &&
-    (townListData || campusListData)
+    townListLoading ||
+    campusListLoading ||
+    townCentresLoading ||
+    campusCentresLoading
   ) {
-    const centreOptions = () => {
-      if (church.church === 'town') {
-        townCentreList.centreList.map((centres) => ({
-          value: centres.centreID,
-          key: centres.name,
-        }))
-      } else if (church.church === 'campus') {
-        campusCentreList.centreList.map((centres) => ({
-          value: centres.centreID,
-          key: centres.name,
-        }))
-      }
-    }
+    return <LoadingScreen />
+  } else if (townListData && campusListData) {
+    const centreOptions = campusCentreList
+      ? makeSelectOptions(campusCentreList.centreList)
+      : null
 
-    const townOptions = townListData.townList.map((town) => ({
-      value: town.townID,
-      key: town.name,
-    }))
-
-    const campusOptions = campusListData.campusList.map((campus) => ({
-      value: campus.campusID,
-      key: campus.name,
-    }))
-
-    //onSubmit receives the form state as argument
-    const onSubmit = (values, onSubmitProps) => {
-      AddBacenta({
-        variables: {
-          bacentaName: values.bacentaName,
-          bacentaLeaderFName: values.bacentaLeaderFName,
-          bacentaLeaderLName: values.bacentaLeaderLName,
-          lWhatsappNumber: values.whatsappNumber,
-          centreID: values.centreSelect,
-          meetingDay: values.meetingDay,
-          venueLongitude: parseFloat(values.venueLongitude),
-          venueLatitude: parseFloat(values.venueLatitude),
-        },
-      })
-      // console.log('Form data', values)
-      onSubmitProps.setSubmitting(false)
-      console.log('Bacenta ID', bacentaID)
-      onSubmitProps.resetForm()
-      history.push('/bacenta/displaydetails')
-    }
-
+    const townOptions = townListData
+      ? makeSelectOptions(townListData.townList)
+      : null
+    const campusOptions = campusListData
+      ? makeSelectOptions(campusListData.campusList)
+      : null
+    // console.log(campusOptions)
     return (
       <div>
         <NavBar />
@@ -161,7 +154,11 @@ export const AddBacenta = () => {
                             className="form-control"
                             control="select"
                             name="townSelect"
-                            options={townListData ? townOptions : campusOptions}
+                            options={
+                              church.church === 'town'
+                                ? townOptions
+                                : campusOptions
+                            }
                             onChange={(e) => {
                               church.church === 'town'
                                 ? setTownID(e.target.value)
@@ -203,7 +200,7 @@ export const AddBacenta = () => {
                           <FormikControl
                             className="form-control"
                             control="input"
-                            name="bacentaLeaderFName"
+                            name="leaderName"
                             placeholder="Leader Name"
                           />
                         </div>
@@ -211,7 +208,7 @@ export const AddBacenta = () => {
                           <FormikControl
                             className="form-control"
                             control="input"
-                            name="bacentaLeaderWhatsapp"
+                            name="leaderWhatsapp"
                             placeholder="Leader WhatsApp No."
                           />
                         </div>
@@ -270,10 +267,10 @@ export const AddBacenta = () => {
                           </button>
 
                           {/* {positionLoading ? (
-														<span>
-															<Spinner />
-														</span>
-													) : null} */}
+                              <span>
+                                <Spinner />
+                              </span>
+                            ) : null} */}
                         </div>
                       </div>
                       <small className="text-muted">
@@ -298,13 +295,6 @@ export const AddBacenta = () => {
         </Formik>
       </div>
     )
-  } else if (
-    townListLoading ||
-    campusListLoading ||
-    townCentresLoading ||
-    campusCentresLoading
-  ) {
-    return <LoadingScreen />
   } else {
     return <ErrorScreen />
   }

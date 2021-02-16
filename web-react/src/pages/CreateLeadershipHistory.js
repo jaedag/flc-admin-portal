@@ -5,7 +5,7 @@ import { useQuery, useMutation } from '@apollo/client'
 import { Formik, Form, FieldArray } from 'formik'
 import FormikControl from '../components/formik-components/FormikControl'
 
-import { ADD_LEADER_HISTORY_MUTATION } from '../queries/AdditionMutations'
+import { ADD_LEADER_HISTORY_MUTATION } from '../queries/CreateMutations'
 import { DISPLAY_MEMBER } from '../queries/DisplayQueries'
 import { HeadingBar } from '../components/HeadingBar'
 import { NavBar } from '../components/NavBar'
@@ -22,7 +22,7 @@ export const AddLeadershipHistory = () => {
     ],
   }
 
-  const { memberID } = useContext(ChurchContext)
+  const { id } = useContext(ChurchContext)
 
   const history = useHistory()
   const {
@@ -30,14 +30,14 @@ export const AddLeadershipHistory = () => {
     error: memberError,
     loading: memberLoading,
   } = useQuery(DISPLAY_MEMBER, {
-    variables: { memberID: memberID },
+    variables: { id: id },
   })
   const [AddLeaderHistory] = useMutation(ADD_LEADER_HISTORY_MUTATION)
 
   const onSubmit = async (values, onSubmitProps) => {
     AddLeaderHistory({
       variables: {
-        memberID: memberID,
+        id: id,
         pastoralHistory: values.pastoralHistory,
       },
     })

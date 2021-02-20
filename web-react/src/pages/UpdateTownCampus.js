@@ -38,19 +38,20 @@ export const UpdateTownCampus = () => {
       variables: { id: townID },
     }
   )
-  console.log(townData)
+
+  const campusTownData =
+    church.church === 'campus' ? campusData.displayCampus : townData.displayTown
+
+  console.log(campusTownData)
+
   const history = useHistory()
 
   const initialValues = {
-    campusTownName: campusData ? campusData.displayCampus.name : '',
-    leaderName: campusData
-      ? `${campusData.displayCampus.leader.firstName} ${campusData.displayCampus.leader.lastName} `
-      : '',
-    leaderWhatsapp: campusData
-      ? `+${campusData.displayCampus.leader.whatsappNumber}`
-      : '',
-    bishopSelect: campusData ? campusData.displayCampus.bishop.id : '',
-    centres: campusData ? campusData.displayCampus.centres : [],
+    campusTownName: campusData?.displayCampus?.name,
+    leaderName: `${campusData?.displayCampus?.leader.firstName} ${campusData?.displayCampus?.leader.lastName} `,
+    leaderWhatsapp: `+${campusData?.displayCampus?.leader.whatsappNumber}`,
+    bishopSelect: campusData?.displayCampus?.bishop.id,
+    centres: campusData?.displayCampus?.centres,
   }
 
   const validationSchema = Yup.object({
@@ -81,10 +82,7 @@ export const UpdateTownCampus = () => {
     return <ErrorScreen />
   } else if (bishopLoading || townLoading || campusLoading) {
     return <LoadingScreen />
-  } else if (
-    (bishopData && church.church === 'campus') ||
-    (bishopData && church.church === 'town')
-  ) {
+  } else {
     const bishopCampusOptions = bishopData.bishopsListCampus.map((bishop) => ({
       value: bishop.id,
       key: bishop.firstName + ' ' + bishop.lastName,

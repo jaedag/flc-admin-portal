@@ -47,8 +47,12 @@ MERGE(m)-[:HAS_OCCUPATION]->(O);
 
 CREATE CONSTRAINT ON (m:Member) ASSERT m.id IS UNIQUE;
 CREATE CONSTRAINT ON (b:Bacenta) ASSERT b.id IS UNIQUE;
+CREATE CONSTRAINT ON (b:Centre) ASSERT b.id IS UNIQUE;
+CREATE CONSTRAINT ON (b:Town) ASSERT b.id IS UNIQUE;
+CREATE CONSTRAINT ON (b:Campus) ASSERT b.id IS UNIQUE;
 // CREATE CONSTRAINT ON (m:Member) ASSERT m.whatsappNumber IS UNIQUE;
-CREATE INDEX ON :Member(whatsappNumber)
+CREATE INDEX ON :Member(whatsappNumber);
+CREATE INDEX ON :TimeGraph(date);
 
 // Create the Members
 :auto USING PERIODIC COMMIT 1000
@@ -96,7 +100,7 @@ MERGE (m:Member {whatsappNumber: line.`Mobile`})
     m.lastName = line.`Last  Name`,
     m.phoneNumber = line.`Phone Number`,
     m.email = line.`Emailaddress`,
-    m.areaOfResidence = line.`Area of Residence`,
+    m.areaOfResidence = line.`Area of Residence`
 
 with line,m WHERE line.Gender is not null
 MERGE(g: Gender {gender: line.Gender})
@@ -251,6 +255,7 @@ MATCH (m:Member {whatsappNumber: line.`Whatsapp Number`})
 
 with line,m
 MERGE (sonta: Sonta {name: apoc.text.capitalizeAll(toLower(trim(line.`TOWN`)))+" "+line.Sonta})
+ON CREATE SET sonta.id = apoc.create.uuid()
 MERGE (m)-[:LEADS]->(sonta)
 
 with line, m,sonta
@@ -263,6 +268,7 @@ MATCH (m:Member {whatsappNumber: line.`Whatsapp Number`})
 
 with line,m
 MERGE (sonta: Sonta {name: apoc.text.capitalizeAll(toLower(trim(line.`CAMPUS`)))+" "+line.Sonta})
+ON CREATE SET sonta.id = apoc.create.uuid()
 MERGE (m)-[:LEADS]->(sonta)
 
 with line, m,sonta
@@ -275,6 +281,7 @@ MATCH (m:Member {whatsappNumber: line.`Whatsapp Number`})
 
 with line,m
 MERGE (sonta: Basonta {name: apoc.text.capitalizeAll(toLower(trim(line.`COMMUNITY`)))+" "+line.Sonta})
+ON CREATE SET sonta.id = apoc.create.uuid()
 MERGE (m)-[:LEADS]->(sonta)
 
 with line, m,sonta
@@ -287,6 +294,7 @@ MATCH (m:Member {whatsappNumber: line.`Whatsapp Number`})
 
 with line,m
 MERGE (sonta: Basonta {name: apoc.text.capitalizeAll(toLower(trim(line.`HALL`)))+" "+line.Sonta})
+ON CREATE SET sonta.id = apoc.create.uuid()
 MERGE (m)-[:LEADS]->(sonta)
 
 with line, m,sonta

@@ -14,7 +14,7 @@ function FormikSearchbox(props) {
   const [searchString, setSearchString] = useState('')
   const [suggestions, setSuggestions] = useState([])
   const { setMemberID } = useContext(MemberContext)
-  const { setChurch, setBishopID } = useContext(ChurchContext)
+  const { determineChurch } = useContext(ChurchContext)
   const history = useHistory()
 
   const { data } = useQuery(GLOBAL_SEARCH, {
@@ -67,30 +67,7 @@ function FormikSearchbox(props) {
             event.preventDefault()
           }
 
-          if (
-            (suggestion.bacenta
-              ? suggestion.bacenta.centre
-                ? suggestion.bacenta.centre.town
-                : null
-              : null) ||
-            (suggestion.townBishop[0] ? suggestion.townBishop[0].name : null)
-          ) {
-            setChurch({ church: 'town', subChurch: 'centre' })
-            setBishopID(suggestion.bacenta.centre.town.bishop.id)
-          } else if (
-            (suggestion.bacenta
-              ? suggestion.bacenta.centre
-                ? suggestion.bacenta.centre.campus
-                : null
-              : null) ||
-            (suggestion.campusBishop[0]
-              ? suggestion.campusBishop[0].name
-              : null)
-          ) {
-            setChurch({ church: 'campus', subChurch: 'centre' })
-            setBishopID(suggestion.bacenta.centre.campus.bishop.id)
-          }
-
+          determineChurch(suggestion)
           setMemberID(suggestion.id)
           history.push('/member/displaydetails')
           setFieldValue(`${name}`, suggestion.id)

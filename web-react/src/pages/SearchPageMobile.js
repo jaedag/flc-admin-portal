@@ -10,7 +10,7 @@ import SpinnerPage from '../components/SpinnerPage'
 export const SearchPageMobile = () => {
   const { searchKey } = useContext(SearchContext)
   const { setMemberID } = useContext(MemberContext)
-  const { setChurch, setBishopID } = useContext(ChurchContext)
+  const { determineChurch } = useContext(ChurchContext)
   let history = useHistory()
 
   const {
@@ -51,29 +51,9 @@ export const SearchPageMobile = () => {
                 className="card mobile-search-card p-2 py-3 my-4"
                 onClick={() => {
                   setMemberID(searchResult.id)
+                  localStorage.setItem('memberId', searchResult.id)
                   history.push('/member/displaydetails')
-                  if (!searchResult.bacenta) {
-                    if (searchResult.townBishop[0]) {
-                      setChurch({ church: 'town', subChurch: 'centre' })
-                      setBishopID(searchResult.id)
-                      return
-                    } else if (searchResult.campusBishop[0]) {
-                      setChurch({ church: 'campus', subChurch: 'centre' })
-                      setBishopID(searchResult.id)
-                      return
-                    }
-                  } else if (!searchResult.bacenta.name) {
-                    return
-                  } else if (searchResult.bacenta.centre.town) {
-                    setChurch({ church: 'town', subChurch: 'centre' })
-                    setBishopID(searchResult.bacenta.centre.town.bishop.id)
-                  } else if (
-                    searchResult.bacenta.centre.campus ||
-                    searchResult.campusGSO
-                  ) {
-                    setChurch({ church: 'campus', subChurch: 'centre' })
-                    setBishopID(searchResult.bacenta.centre.campus.bishop.id)
-                  }
+                  determineChurch(searchResult)
                 }}
               >
                 <div className="media">

@@ -28,21 +28,21 @@ import { DisplayCampusTownDetails } from './pages/DisplayCampusTownDetails'
 import { DisplaySontaDetails } from './pages/DisplaySontaDetails'
 import { MemberContext, SearchContext } from './contexts/MemberContext'
 import { ChurchContext } from './contexts/ChurchContext'
-import { DisplayAllSontaTowns } from './pages/DisplayAllSontaTowns'
 import { DisplayAllBacentas } from './pages/DisplayAllBacentas'
 import { DisplayAllCentres } from './pages/DisplayAllCentres'
+import { DisplayAllSontas } from './pages/DisplayAllSontas'
 import { DisplayAllTownCampuses } from './pages/DisplayAllTownCampuses'
 import { CreateBacenta } from './pages/CreateBacenta'
 
 const AppWithApollo = () => {
-  const [accessToken, setAccessToken] = useState()
+  // const [ accessToken, setAccessToken ] = useState()
   const { getAccessTokenSilently } = useAuth0()
 
   const getAccessToken = useCallback(async () => {
     try {
       const token = await getAccessTokenSilently()
-
-      setAccessToken(token)
+      // setAccessToken(token)
+      localStorage.setItem('token', token)
     } catch (err) {
       // loginWithRedirect()
     }
@@ -58,13 +58,13 @@ const AppWithApollo = () => {
 
   const authLink = setContext((_, { headers }) => {
     // get the authentication token from local storage if it exists
-    // const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token')
 
     // return the headers to the context so httpLink can read them
     return {
       headers: {
         ...headers,
-        Authorization: accessToken ? `Bearer ${accessToken}` : '',
+        Authorization: token ? `Bearer ${token}` : '',
       },
     }
   })
@@ -86,6 +86,15 @@ const PastorsAdmin = () => {
     church: '',
     subChurch: '',
   })
+  const [bishopID, setBishopID] = useState('')
+  const [townID, setTownID] = useState('')
+  const [campusID, setCampusID] = useState('')
+  const [bacentaID, setBacentaID] = useState('')
+  const [centreID, setCentreID] = useState('')
+  const [sontaID, setSontaID] = useState('')
+  const [ministryID, setMinistryID] = useState('')
+  const [memberID, setMemberID] = useState('')
+  const [searchKey, setSearchKey] = useState('')
   const capitalise = (str) => {
     return str.charAt(0).toUpperCase() + str.slice(1)
   }
@@ -103,15 +112,42 @@ const PastorsAdmin = () => {
       key: data.name ? data.name : data.firstName + ' ' + data.lastName,
     }))
   }
-  const [bishopID, setBishopID] = useState('')
-  const [townID, setTownID] = useState('')
-  const [campusID, setCampusID] = useState('')
-  const [bacentaID, setBacentaID] = useState('')
-  const [centreID, setCentreID] = useState('')
-  const [sontaID, setSontaID] = useState('')
-  const [ministryID, setMinistryID] = useState('')
-  const [memberID, setMemberID] = useState('')
-  const [searchKey, setSearchKey] = useState('')
+
+  const determineChurch = (member) => {
+    if (!member.bacenta) {
+      if (!member.townBishop) {
+        return
+      }
+      if (member.townBishop[0]) {
+        setChurch({ church: 'town', subChurch: 'centre' })
+        setBishopID(member.id)
+        return
+      } else if (member.campusBishop[0]) {
+        setChurch({ church: 'campus', subChurch: 'centre' })
+        setBishopID(member.id)
+        return
+      } else {
+        return
+      }
+    }
+    if (
+      (member.bacenta && member.bacenta.centre && member.bacenta.centre.town) ||
+      (member.townGSO && member.townGSO[0])
+    ) {
+      setChurch({ church: 'town', subChurch: 'centre' })
+      setBishopID(member.bacenta.centre.town.bishop.id)
+      return
+    } else if (
+      (member.bacenta &&
+        member.bacenta.centre &&
+        member.bacenta.centre.campus) ||
+      (member.campusGSO && member.campusGSO[0])
+    ) {
+      setChurch({ church: 'campus', subChurch: 'centre' })
+      setBishopID(member.bacenta.centre.campus.bishop.id)
+      return
+    }
+  }
 
   return (
     <Router>
@@ -121,6 +157,7 @@ const PastorsAdmin = () => {
           phoneRegExp,
           parsePhoneNum,
           makeSelectOptions,
+          determineChurch,
           church,
           setChurch,
           bishopID,
@@ -159,11 +196,6 @@ const PastorsAdmin = () => {
                 exact
               />
               <Route
-                path="/sonta/displayall"
-                component={DisplayAllSontaTowns}
-                exact
-              />
-              <Route
                 path="/sonta/displaydetails"
                 component={DisplaySontaDetails}
                 exact
@@ -192,6 +224,11 @@ const PastorsAdmin = () => {
               <Route
                 path="/centre/displayall"
                 component={DisplayAllCentres}
+                exact
+              />
+              <Route
+                path="/sonta/displayall"
+                component={DisplayAllSontas}
                 exact
               />
               <Route
@@ -239,7 +276,7 @@ const Main = () => (
     domain={process.env.REACT_APP_AUTH0_DOMAIN}
     clientId={process.env.REACT_APP_AUTH0_CLIENT_ID}
     redirectUri={window.location.origin}
-    audience="https://flcadmin.us.auth0.com/api/v2/"
+    audience="https://flcadmin.netlify.app/graphql"
   >
     <AppWithApollo />
   </Auth0Provider>

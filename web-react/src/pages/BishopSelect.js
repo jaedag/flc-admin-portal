@@ -4,59 +4,66 @@ import { useHistory } from 'react-router-dom'
 import { ChurchContext } from '../contexts/ChurchContext'
 import { GET_BISHOPS } from '../queries/ListQueries'
 import { NavBar } from '../components/NavBar'
+import Spinner from '../components/Spinner'
 import { AuthButton } from '../components/DashboardButton'
 import Logo from '../img/flc-logo-small.png'
 
 const BishopSelect = () => {
-  const { setChurch, setBishopID } = useContext(ChurchContext)
-  const { data, error, loading } = useQuery(GET_BISHOPS)
+  const { determineChurch, setBishopID } = useContext(ChurchContext)
+  const { data, loading } = useQuery(GET_BISHOPS)
   const history = useHistory()
 
-  if (error) {
+  if (loading) {
     return (
-      <div className="container body-container d-none d-lg-block">
-        {/* <!--Web Logo and text--> */}
-        <div className="row align-self-center">
-          {/* <!--Sign In--> */}
+      <React.Fragment>
+        <div className="container text-center my-5">
+          <img
+            src={Logo}
+            alt="logo"
+            className="img-fluid mx-auto d-block d-lg-none"
+            style={{ maxWidth: '30%' }}
+          />
+          <h3>FLC Admin Dashboard</h3>
+          <h5 className="text-secondary">Select Your Bishop</h5>
 
-          <form className="login-page-lg">
-            <div className="m-5">
-              <div className="col-auto my-3 align-items-center">
-                <img src={Logo} alt="logo" className="img-fluid" />
-                <div className="d-none d-lg-block">
-                  First Love Church is a church full of young people on fire for
-                  the Lord
+          <div className="body-container full-body-center">
+            <div className="row h-75">
+              <div className="col my-auto">
+                <div
+                  className="spinner-border-center full-center"
+                  role="status"
+                >
+                  <Spinner />
+                  <div className="sr-only">Loading...</div>
                 </div>
-              </div>
-              <AuthButton />
-            </div>
-          </form>
-        </div>
-      </div>
-    )
-  } else if (loading) {
-    return (
-      <div className="container text-center my-5">
-        <img
-          src={Logo}
-          alt="logo"
-          className="img-fluid mx-auto d-block d-lg-none"
-          style={{ maxWidth: '30%' }}
-        />
-        <h3>FLC Admin Dashboard</h3>
-        <h5 className="text-secondary">Select Your Bishop</h5>
-        <div className="body-container full-body-center">
-          <div className="row h-75">
-            <div className="col my-auto">
-              <div className="spinner-border-center full-center" role="status">
-                <div className="sr-only">Loading...</div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+        <div className="container d-lg-none">
+          {/* <!--Mobile--> */}
+          <div className="row d-flex align-items-center justify-content-center d-lg-none">
+            <div className="col-12 col-lg-6">
+              <img
+                src="../../img/flc-logo-small.png"
+                alt="logo"
+                className="img-fluid mx-auto d-block d-lg-none"
+                style={{ maxWidth: '30%' }}
+              />
+              <div className="d-lg-none h2 text-center text-white">
+                FLC Admin
+                <Spinner />
+              </div>
+            </div>
+
+            <div className="col-12 col-lg-6 d-flex justify-content-center my-3 ">
+              <div className="d-lg-none flex-grow-1" />
+            </div>
+          </div>
+        </div>
+      </React.Fragment>
     )
-  } else {
+  } else if (data) {
     return (
       <React.Fragment>
         <NavBar />
@@ -77,12 +84,7 @@ const BishopSelect = () => {
                 key={index}
                 className="col-sm-12 col-lg card mobile-search-card p-2 m-1"
                 onClick={() => {
-                  if (soul.townBishop[0]) {
-                    setChurch({ church: 'town', subChurch: 'centre' })
-                  } else if (soul.campusBishop[0]) {
-                    setChurch({ church: 'campus', subChurch: 'centre' })
-                  }
-
+                  determineChurch(soul)
                   setBishopID(soul.id)
                   history.push('/dashboard')
                 }}
@@ -105,6 +107,54 @@ const BishopSelect = () => {
               </div>
             )
           })}
+        </div>
+      </React.Fragment>
+    )
+  } else {
+    return (
+      <React.Fragment>
+        <div className="container body-container d-none d-lg-block">
+          {/* <!--Web Logo and text--> */}
+          <div className="row align-self-center">
+            {/* <!--Sign In--> */}
+
+            <form className="login-page-lg">
+              <div className="m-5">
+                <div className="col-auto my-3 align-items-center">
+                  <img src={Logo} alt="logo" className="img-fluid" />
+                  <div className="d-none d-lg-block">
+                    First Love Church is a church full of young people on fire
+                    for the Lord
+                  </div>
+                </div>
+                <AuthButton />
+              </div>
+            </form>
+          </div>
+        </div>
+
+        {/* <!--Mobile--> */}
+        <div className="row d-flex align-items-center justify-content-center d-lg-none">
+          <div className="col-12 col-lg-6">
+            <img
+              src={Logo}
+              alt="logo"
+              className="img-fluid mx-auto d-block d-lg-none"
+              style={{ maxWidth: '30%' }}
+            />
+            <div className="d-lg-none h2 text-center text-white">FLC Admin</div>
+            <div className="col-auto my-3 align-items-center">
+              First Love Church is a church full of young people on fire for the
+              Lord
+            </div>
+            <div className="col-auto d-flex align-items-center">
+              <AuthButton />
+            </div>
+          </div>
+
+          <div className="col-12 col-lg-6 d-flex justify-content-center my-3 ">
+            <div className="d-lg-none flex-grow-1" />
+          </div>
         </div>
       </React.Fragment>
     )

@@ -26,6 +26,7 @@
     "now-build": "react-scripts build"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-optional-chaining": "^7.12.17",
     "http-proxy-middleware": "^0.20.0"
   },
   "browserslist": [

@@ -1,11 +1,11 @@
 type Member {
-	id: ID!
+	id: ID! 
 	firstName: String
-	otherName: String
+	middleName: String
 	lastName: String
 	email: String
 	phoneNumber: String
-	whatsappNumber: String
+	whatsappNumber: String 
 	pictureUrl: String
 	gender: Gender  @relation(name: "HAS_GENDER", direction: "OUT")
 	maritalStatus: MaritalStatus @relation(name: "HAS_MARITAL_STATUS", direction: "OUT")
@@ -177,7 +177,7 @@ input pastoralHistory {
 type Query {
 
 #At the Federal Level
-	bishopsList: [Member] @cypher(statement:"MATCH ()<-[:HAS_CAMPUS|:HAS_TOWN]-(m:Member) RETURN DISTINCT m")
+	bishopsList: [Member] @isAuthenticated @cypher(statement:"MATCH ()<-[:HAS_CAMPUS|:HAS_TOWN]-(m:Member) RETURN DISTINCT m")
 	bishopsListCampus: [Member] @cypher(statement:"MATCH ()<-[:HAS_CAMPUS]-(m:Member) RETURN DISTINCT m")
 	bishopsListTown: [Member] @cypher(statement:"MATCH ()<-[:HAS_TOWN]-(m:Member) RETURN DISTINCT m")
 	ministryList: [Ministry] @cypher (statement:"MATCH (m:Ministry) RETURN m")
@@ -235,13 +235,15 @@ type Query {
 	townCentreList(id: ID): [Centre] @cypher(statement: "MATCH (t:Town {id:$id})-[:HAS_CENTRE]->(c:Centre) RETURN c")
 	townCentreCount(id: ID): Int! @cypher(statement: "MATCH(:Town {id:$id})-[:HAS_CENTRE]->(c:Centre) RETURN COUNT(c)")
 	townBacentaCount(id: ID): Int! @cypher(statement: "MATCH (:Town {id:$id})-[]-()-[:HAS_BACENTA]->(cen:Bacenta) RETURN COUNT(cen)")
-	townSontaCount(id: ID): Int! @cypher(statement: "MATCH (:Town {id:$id})-[:HAS_MINISTRY]->(s:Sonta) RETURN COUNT(s)")
+	townSontaCount(id: ID): Int! @cypher(statement: "MATCH (:Town {id:$id})-[:HAS_SONTA]->(s:Sonta) RETURN COUNT(s)")
 	townMemberCount(id: ID): Int! @cypher(statement: "MATCH (:Town {id:$id})-[]-(:Centre)-[]->(:Bacenta)<-[:BELONGS_TO]-(m:Member) RETURN COUNT(m)")
+	townSontaMemberCount(id: ID): Int! @cypher(statement: "MATCH (:Town {id: $id})-[]-(:Centre)-[]->(:Bacenta)<-[:BELONGS_TO]-(m:Member) MATCH (m)-[:BELONGS_TO]->(:Ministry) RETURN COUNT(m)")
 
 #At the Campus Level
 	displayCampus(id: ID):Campus @cypher(statement: "MATCH (t:Campus {id:$id}) RETURN t")
 	campusList(id: ID): [Campus] @cypher(statement: "MATCH (ttl:Title {title:'Bishop'})<-[:HAS_TITLE]-(a:Member {id:$id})-[:HAS_CAMPUS]->(c:Campus) RETURN c")
 	campusBacentaList(id:ID):[Bacenta] @cypher(statement: "MATCH (t:Campus {id: $id})-[:HAS_CENTRE]->(:Centre)-[:HAS_BACENTA]-> (c:Bacenta) RETURN c")
+	campusSontaList (id:ID):[Sonta] @cypher(statement: "MATCH (t:Campus {id: $id})-[:HAS_SONTA]->(s:Sonta)  RETURN s")
 	campusCentreList(id: ID): [Centre] @cypher(statement: "MATCH (t:Campus {id:$id})-[:HAS_CENTRE]->(c:Centre) RETURN c")
 	campusCentreCount(id: ID): Int! @cypher(statement: "MATCH(:Campus {id:$id})-[:HAS_CENTRE]->(c:Centre) RETURN COUNT(c)")
 	campusBacentaCount(id: ID): Int! @cypher(statement: "MATCH (:Campus {id:$id})-[]-()-[:HAS_BACENTA]->(cen:Bacenta) RETURN COUNT(cen)")
@@ -277,13 +279,14 @@ type Query {
 	"""
 	)
 
+
 #At the Sonta Level
 	sontaList:[Sonta] @cypher(statement: "MATCH (s:Sonta) RETURN s")
-	townSontaLeader(bishopId: ID, sontaID: ID): [Member] @cypher (statement:"""
+	townSontaLeader(bishopId: ID): [Member] @cypher (statement:"""
 	MATCH (n:Ministry)<-[:BELONGS_TO]-(m:Member)
 	MATCH (m)-[:BELONGS_TO]->(:Bacenta)<-[:HAS_BACENTA]-()<-[:HAS_CENTRE]-(e)
 	MATCH (e)<-[:HAS_TOWN|HAS_CAMPUS]-(:Member {id: $bishopId})
-	MATCH (n)-[:HAS_SONTA]->(s:Sonta {id:$sontaID})<-[:LEADS]-(l:Member)
+	MATCH (n)-[:HAS_SONTA]->(s:Sonta {id:$sontaId})<-[:LEADS]-(l:Member)
 	WHERE s.name CONTAINS e.name
     RETURN DISTINCT l
 	"""
@@ -292,9 +295,10 @@ type Query {
 #Members
 	# Display Member basecd on ID
 	displayMember(id: ID):Member @cypher(statement: "MATCH (m:Member {id:$id}) RETURN m")
+	memberByEmail(email: String):Member @cypher(statement:"MATCH (m:Member {email:$email}) RETURN m")
 
 #Fuzzy Search
-	globalSearch(searchKey:String!):[Member] @cypher(statement:"MATCH (m:Member) WHERE toLower(m.firstName) STARTS WITH $searchKey OR toLower(m.lastName) STARTS WITH $searchKey RETURN m")
+	globalSearch(searchKey:String!):[Member] @cypher(statement:"MATCH (m:Member) WHERE toLower(m.firstName) CONTAINS $searchKey OR toLower(m.lastName) CONTAINS $searchKey RETURN m")
 	occupationList(searchKey:String!):[Occupation] @cypher(statement:"MATCH (o:Occupation) WHERE toLower(o.occupation) CONTAINS toLower($searchKey) RETURN o")
 
 #Filtering
@@ -371,7 +375,6 @@ type Mutation {
     	WITH m
     	WITH m  WHERE $dob IS NOT NULL
     	MERGE (t:TimeGraph {date: date($dob)})
-		DELETE r1
 		MERGE (m)-[:WAS_BORN_ON]->(t)
     	RETURN count(m)
     	}
@@ -576,7 +579,7 @@ type Mutation {
 		pictureUrl: String!
 		pastoralAppointment: [pastoralAppointment]
 		pastoralHistory: [pastoralHistory]
-	): Member
+	): Member 
 	
 	@cypher(statement:
 	"""
@@ -651,7 +654,7 @@ type Mutation {
    
 	RETURN m
 	"""
-	),
+	) ,
 	UpdateTown(
 		townID: ID
 		townName: String

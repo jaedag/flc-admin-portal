@@ -12,8 +12,8 @@ export const ALL_MEMBERS = gql`
 `
 
 export const GET_BISHOP_MEMBERS = gql`
-  query($id: ID) {
-    bishopMemberList(id: $id, first: 60) {
+  query($id: ID, $offset: Int) {
+    bishopMemberList(id: $id, offset: $offset, first: 24) {
       id
       firstName
       lastName

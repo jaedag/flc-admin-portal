@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useQuery } from '@apollo/client'
 import { NavBar } from '../components/NavBar'
@@ -9,12 +9,15 @@ import { ChurchContext } from '../contexts/ChurchContext'
 
 export const MembersGrid = () => {
   const { bishopID } = useContext(ChurchContext)
-  const { data: member, error: memberError, loading: memberLoading } = useQuery(
-    GET_BISHOP_MEMBERS,
-    {
-      variables: { id: bishopID },
-    }
-  )
+  const [offset, setOffset] = useState(0)
+  const {
+    data: memberData,
+    error: memberError,
+    loading: memberLoading,
+    fetchMore,
+  } = useQuery(GET_BISHOP_MEMBERS, {
+    variables: { id: bishopID, offset: offset },
+  })
 
   return (
     <div>
@@ -27,19 +30,41 @@ export const MembersGrid = () => {
         <div className="col px-2">
           <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-2 mb-3 border-bottom">
             <h3 className="h3">Search Results</h3>
-            <div className="btn-toolbar mb-2 mb-md-0 position-fixedd">
+            <div className="btn-toolbar mb-2 mb-md-0">
               <div className="btn-group mr-2" />
-              <Link
-                to="/member/addmember"
-                type="button"
-                className="btn btn-sm btn-primary"
-              >
+              <Link to="/member/addmember" className="btn btn-primary p-2 mx-1">
                 Add Member
               </Link>
+              <button
+                className="btn btn-primary p-2 mx-1"
+                onClick={async () => {
+                  setOffset(offset ? offset - 24 : null)
+                  await fetchMore({
+                    variables: {
+                      offset: offset,
+                    },
+                  })
+                }}
+              >
+                <i className="fas fa-chevron-left" /> Back
+              </button>
+              <button
+                className="btn btn-primary p-2 mx-1"
+                onClick={async () => {
+                  setOffset(offset + 24)
+                  await fetchMore({
+                    variables: {
+                      offset: offset,
+                    },
+                  })
+                }}
+              >
+                Next <i className="fas fa-chevron-right" />
+              </button>
             </div>
           </div>
           <MemberTable
-            member={member}
+            memberData={memberData}
             memberError={memberError}
             memberLoading={memberLoading}
             list="bishopMemberList"

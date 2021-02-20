@@ -7,15 +7,15 @@ import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
 import { GET_CAMPUS_CENTRES, GET_TOWN_CENTRES } from '../queries/ListQueries'
 import { ChurchContext } from '../contexts/ChurchContext'
 
-export const DisplayAllCentres = () => {
+export const DisplayAllSontas = () => {
   const {
     capitalise,
     church,
     townID,
     campusID,
-    setCentreID,
     setTownID,
     setCampusID,
+    setSontaID,
   } = useContext(ChurchContext)
 
   const { data: townCentreData, loading: townLoading } = useQuery(
@@ -68,7 +68,7 @@ export const DisplayAllCentres = () => {
             <div className="row">
               <div className="col">
                 <h6 className="text-muted">
-                  Centre Leader:
+                  Constituency Overseer:
                   {campusCentreData.campusCentreList[0].campus.leader
                     ? ` ${campusCentreData.campusCentreList[0].campus.leader.firstName} ${campusCentreData.campusCentreList[0].campus.leader.lastName}`
                     : null}
@@ -77,19 +77,19 @@ export const DisplayAllCentres = () => {
             </div>
 
             <div className="row justify-content-between">
-              <div className="py-1 px-2 m-2 card">{`Centres: ${campusCentreData.campusCentreList.length}`}</div>
               <Link
-                className="py-1 px-2 m-2 card text-white"
-                to="/sonta/displayall"
-              >{`Sontas: ${campusCentreData.campusCentreList.length}`}</Link>
+                className="py-1 px-2 m-2 card"
+                to="/centre/displayall"
+              >{`Centres: ${campusCentreData.campusCentreList.length}`}</Link>
+              <div className="py-1 px-2 m-2 card">{`Sontas: ${campusCentreData.campusSontaList.length}`}</div>
               <div className="py-1 px-2 m-2 card">{`Membership: ${campusCentreData.campusMemberCount}`}</div>
             </div>
           </div>
 
           <DisplayChurchList
-            data={campusCentreData.campusCentreList}
-            setter={setCentreID}
-            churchType="Centre"
+            data={campusCentreData.campusSontaList}
+            setter={setSontaID}
+            churchType="Sonta"
           />
         </div>
       </div>
@@ -137,25 +137,20 @@ export const DisplayAllCentres = () => {
             </div>
 
             <div className="row justify-content-between">
-              <div className="py-1 px-2 m-2 card">{`Centres: ${townCentreData.townCentreList.length}`}</div>
               <Link
                 className="py-1 px-2 m-2 card text-white"
-                to="/sonta/displayall"
-              >{`Sontas: ${townCentreData.townSontaList.length}`}</Link>
+                to="/centre/displayall"
+              >{`Centres: ${townCentreData.townCentreList.length}`}</Link>
+              <div className="py-1 px-2 m-2 card">{`Sontas: ${townCentreData.townSontaList.length}`}</div>
               <div className="py-1 px-2 m-2 card">{`Membership: ${townCentreData.townMemberCount}`}</div>
             </div>
           </div>
 
           <DisplayChurchList
-            data={townCentreData.townCentreList}
-            setter={setCentreID}
-            churchType="Centre"
-          />
-          {/* <DisplayChurchList
             data={townCentreData.townSontaList}
             setter={setSontaID}
             churchType="Sonta"
-          /> */}
+          />
         </div>
       </div>
     )

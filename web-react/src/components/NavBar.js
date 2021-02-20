@@ -1,12 +1,11 @@
 import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
-import { useAuth0 } from '@auth0/auth0-react'
 import SearchBox from './SearchBox'
+import UserProfile from './UserProfile'
 import { ChurchContext } from '../contexts/ChurchContext'
 
 export const NavBar = () => {
   const { church, capitalise } = useContext(ChurchContext)
-  const { user } = useAuth0()
 
   return (
     <nav className="navbar navbar-dark navbar-expand fixed-top">
@@ -29,15 +28,18 @@ export const NavBar = () => {
           <span className="fas fa-users fa-2x px-1" />
           <span className="d-none d-md-inline">Members</span>
         </Link>
-        <Link
-          className="nav-item nav-link d-flex align-items-center flex-column"
-          to={`/${church.church}/displayall`}
-        >
-          <span className="fas fa-landmark fa-2x px-1" />
-          <span className="d-none d-md-inline">{`${capitalise(
-            church.church
-          )}`}</span>
-        </Link>
+        {church.church && (
+          <Link
+            className="nav-item nav-link d-flex align-items-center flex-column"
+            to={`/${church.church}/displayall`}
+          >
+            <span className="fas fa-landmark fa-2x px-1" />
+            <span className="d-none d-md-inline">{`${capitalise(
+              church.church
+            )}`}</span>
+          </Link>
+        )}
+
         <Link
           className="nav-item nav-link d-flex align-items-center flex-column"
           to="/sonta/displayall"
@@ -59,21 +61,7 @@ export const NavBar = () => {
           </div>
 
           <div className="col">
-            <Link
-              className="nav-item nav-link d-flex align-items-center flex-column p-0 pb-2"
-              to="#"
-            >
-              <span>
-                <img
-                  className="user-navbar-img "
-                  src={user ? user.picture : null}
-                  alt={user ? user.name : null}
-                />
-              </span>
-              <span className="d-none d-md-inline">
-                {user ? user.given_name : `Admin`}
-              </span>
-            </Link>
+            <UserProfile />
           </div>
         </div>
       </div>

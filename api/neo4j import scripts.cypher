@@ -244,6 +244,7 @@ MATCH (m:Member {whatsappNumber: line.`Whatsapp Number`})
 
 with line,m
 MERGE (sonta: Sonta {name: apoc.text.capitalizeAll(toLower(trim(line.`TOWN`)))+" "+line.Sonta})
+SET sonta.id = apoc.create.uuid()
 MERGE (m)-[:LEADS]->(sonta)
 
 with line, m,sonta
@@ -256,6 +257,7 @@ MATCH (m:Member {whatsappNumber: line.`Whatsapp Number`})
 
 with line,m
 MERGE (sonta: Sonta {name: apoc.text.capitalizeAll(toLower(trim(line.`CAMPUS`)))+" "+line.Sonta})
+SET sonta.id = apoc.create.uuid()
 MERGE (m)-[:LEADS]->(sonta)
 
 with line, m,sonta
@@ -268,6 +270,7 @@ MATCH (m:Member {whatsappNumber: line.`Whatsapp Number`})
 
 with line,m
 MERGE (sonta: Basonta {name: apoc.text.capitalizeAll(toLower(trim(line.`COMMUNITY`)))+" "+line.Sonta})
+SET sonta.id = apoc.create.uuid()
 MERGE (m)-[:LEADS]->(sonta)
 
 with line, m,sonta
@@ -280,6 +283,7 @@ MATCH (m:Member {whatsappNumber: line.`Whatsapp Number`})
 
 with line,m
 MERGE (sonta: Basonta {name: apoc.text.capitalizeAll(toLower(trim(line.`HALL`)))+" "+line.Sonta})
+SET sonta.id = apoc.create.uuid()
 MERGE (m)-[:LEADS]->(sonta)
 
 with line, m,sonta

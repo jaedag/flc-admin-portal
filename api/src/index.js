@@ -6,6 +6,7 @@ import neo4j from 'neo4j-driver'
 import { makeAugmentedSchema } from 'neo4j-graphql-js'
 import dotenv from 'dotenv'
 import { initializeDatabase } from './initialize'
+import jwt from 'express-jwt'
 
 // set environment variables from .env
 dotenv.config()
@@ -28,7 +29,6 @@ const schema = makeAugmentedSchema({
     mutation: false,
     auth: {
       isAuthenticated: true,
-      hasScope: true,
     },
   },
 })
@@ -38,6 +38,7 @@ const schema = makeAugmentedSchema({
  * using credentials specified as environment variables
  * with fallback to defaults
  */
+
 const driver = neo4j.driver(
   process.env.NEO4J_URI || 'bolt://localhost:7687',
   neo4j.auth.basic(
@@ -88,10 +89,19 @@ const port = process.env.GRAPHQL_SERVER_PORT || 4001
 const path = process.env.GRAPHQL_SERVER_PATH || '/graphql'
 const host = process.env.GRAPHQL_SERVER_HOST || '0.0.0.0'
 
+app.use(
+  jwt({
+    secret: process.env.JWT_SECRET,
+    algorithms: ['RS256'],
+    credentialsRequired: false,
+  })
+)
+
 /*
  * Optionally, apply Express middleware for authentication, etc
  * This also also allows us to specify a path for the GraphQL endpoint
  */
+
 server.applyMiddleware({ app, path })
 
 app.listen({ host, port, path }, () => {

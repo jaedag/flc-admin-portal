@@ -1,5 +1,6 @@
 import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
+import { useAuth0 } from '@auth0/auth0-react'
 import { DetailsCard } from './DetailsCard'
 import { NavBar } from './NavBar'
 import { MemberContext } from '../contexts/MemberContext'
@@ -20,6 +21,7 @@ export const DisplayChurchDetails = (props) => {
     editlink,
   } = props
 
+  const { isAuthenticated } = useAuth0()
   const { setMemberID } = useContext(MemberContext)
 
   return (
@@ -29,12 +31,14 @@ export const DisplayChurchDetails = (props) => {
         <div className="container ">
           <h3 className="mx-3 mt-3 mb-2 font-weight-bold">
             {`${name} ${churchType}`}
-            <Link to={`${editlink}`}>
-              <sup className="text-secondary card-text icon-color font-weight-bold ml-3">
-                <i className="fas fa-edit" />
-                Edit
-              </sup>
-            </Link>
+            {isAuthenticated && (
+              <Link to={`${editlink}`}>
+                <sup className="text-secondary card-text icon-color font-weight-bold ml-3">
+                  <i className="fas fa-edit" />
+                  Edit
+                </sup>
+              </Link>
+            )}
           </h3>
         </div>
       </div>

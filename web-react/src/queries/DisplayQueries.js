@@ -174,6 +174,10 @@ export const DISPLAY_TOWN = gql`
         id
         name
       }
+      sontas {
+        id
+        name
+      }
       bishop {
         id
         firstName
@@ -201,6 +205,10 @@ export const DISPLAY_CAMPUS = gql`
     displayCampus(id: $id) {
       name
       centres {
+        id
+        name
+      }
+      sontas {
         id
         name
       }

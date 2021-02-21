@@ -18,6 +18,12 @@ export const GET_BISHOP_MEMBERS = gql`
       firstName
       lastName
       pictureUrl
+      bacenta {
+        name
+      }
+      ministry {
+        name
+      }
     }
   }
 `

@@ -51,8 +51,9 @@ CREATE CONSTRAINT ON (b:Centre) ASSERT b.id IS UNIQUE;
 CREATE CONSTRAINT ON (b:Town) ASSERT b.id IS UNIQUE;
 CREATE CONSTRAINT ON (b:Campus) ASSERT b.id IS UNIQUE;
 // CREATE CONSTRAINT ON (m:Member) ASSERT m.whatsappNumber IS UNIQUE;
-CREATE INDEX ON :Member(whatsappNumber);
-CREATE INDEX ON :TimeGraph(date);
+CREATE INDEX FOR (n:Member) ON (n.whatsappNumber);
+CREATE INDEX FOR (n:TimeGraph) ON (n.date);
+
 
 // Create the Members
 :auto USING PERIODIC COMMIT 1000

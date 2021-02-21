@@ -656,7 +656,7 @@ type Mutation {
 	"""
 	) ,
 	UpdateTown(
-		townID: ID
+		townID: ID!
 		townName: String
 		lWhatsappNumber: String
 		bishopID: ID
@@ -665,25 +665,146 @@ type Mutation {
 	@cypher(statement:
 	"""
 	MATCH (t:Town {id: $townID})
-	MATCH (m:Member {whatsappNumber: $lWhatsappNumber})
-	MERGE (m)-[:LEADS]->(t)
-	MERGE (b:Member {id: $bishopID})
-	MERGE (b)-[:HAS_TOWN]->(t)
+		SET t.name = $townName
+	
+	WITH t
+    CALL {
+    	WITH t
+    
+        MATCH (m:Member {whatsappNumber: $lWhatsappNumber})
+        OPTIONAL MATCH (t)<-[r:LEADS]-()
+        DELETE r
+        MERGE (m)-[:LEADS]->(t)
+    	RETURN count(t)
+    	}
+
+	WITH t
+    CALL {
+    	WITH t
+    
+        MATCH (b:Member {id: $bishopID})
+        OPTIONAL MATCH (t)<-[r:HAS_TOWN]-()
+        DELETE r
+        MERGE (b)-[:HAS_TOWN]->(t)
+    	RETURN count(t)
+    	}
 
 	WITH t
     CALL {
     	WITH t
     	WITH t  WHERE $centres IS NOT NULL
-
     	UNWIND $centres AS x
         MATCH (c:Centre {id:x})
-        MATCH (t1)-[r:HAS_CENTRE]->(c)
-        DELETE r
+        OPTIONAL MATCH ()-[r:HAS_CENTRE]->(c)
+		OPTIONAL MATCH (t)-[r1:HAS_CENTRE]->()
+        DELETE r,r1
         MERGE (t)-[:HAS_CENTRE]->(c)
     	RETURN count(t)
     	}
 
 	RETURN t
+	"""
+	),
+	UpdateCampus(
+		campusID: ID
+		campusName: String
+		lWhatsappNumber: String
+		bishopID: ID
+		centres:[ID]
+	):Campus
+	@cypher(statement:
+	"""
+	MATCH (t:Campus {id: $campusID})
+		SET t.name = $campusName
+	
+	WITH t
+    CALL {
+    	WITH t
+    
+        MATCH (m:Member {whatsappNumber: $lWhatsappNumber})
+        OPTIONAL MATCH (t)<-[r:LEADS]-()
+        DELETE r
+        MERGE (m)-[:LEADS]->(t)
+    	RETURN count(t)
+    	}
+
+	WITH t
+    CALL {
+    	WITH t
+    
+        MATCH (b:Member {id: $bishopID})
+        OPTIONAL MATCH (t)<-[r:HAS_CAMPUS]-()
+        DELETE r
+        MERGE (b)-[:HAS_CAMPUS]->(t)
+    	RETURN count(t)
+    	}
+
+	WITH t
+    CALL {
+    	WITH t
+    	WITH t  WHERE $centres IS NOT NULL
+    	UNWIND $centres AS x
+        MATCH (c:Centre {id:x})
+        OPTIONAL MATCH ()-[r:HAS_CENTRE]->(c)
+		OPTIONAL MATCH (t)-[r1:HAS_CENTRE]->()
+        DELETE r,r1
+        MERGE (t)-[:HAS_CENTRE]->(c)
+    	RETURN count(t)
+    	}
+
+	RETURN t
+	"""
+	),
+	UpdateCentre(
+		centreID: ID
+		centreName: String
+		lWhatsappNumber: String
+		campusTownID: ID
+		bacentas:[ID]
+	):Centre
+	@cypher(statement:
+	"""
+	MATCH (c:Centre {id: $campusID})
+		SET c.name = $campusName
+	
+	WITH c
+    CALL {
+    	WITH c
+    
+        MATCH (m:Member {whatsappNumber: $lWhatsappNumber})
+        OPTIONAL MATCH (c)<-[r:LEADS]-()
+        DELETE r
+        MERGE (m)-[:LEADS]->(c)
+    	RETURN count(c)
+    	}
+
+	WITH c
+    CALL {
+    	WITH c
+    
+		OPTIONAL MATCH (b:Campus {id: $campusTownID})
+		OPTIONAL MATCH (b:Town {id: $campusTownID})
+
+        OPTIONAL MATCH (c)<-[r:HAS_CENTRE]-()
+        DELETE r
+        MERGE (b)-[:HAS_CENTRE]->(c)
+    	RETURN count(c)
+    	}
+
+	WITH c
+    CALL {
+    	WITH c
+    	WITH c  WHERE $bacentas IS NOT NULL
+    	UNWIND $bacentas AS x
+        MATCH (b:Bacenta {id:x})
+        OPTIONAL MATCH ()-[r:HAS_BACENTA]-(b)
+		OPTIONAL MATCH (c)-[r1:HAS_BACENTA]->()
+        DELETE r,r1
+        MERGE (c)-[:HAS_BACENTA]->(b)
+    	RETURN count(c)
+    	}
+
+	RETURN c
 	"""
 	),
 

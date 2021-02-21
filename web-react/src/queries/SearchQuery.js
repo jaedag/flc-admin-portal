@@ -41,9 +41,15 @@ export const GLOBAL_SEARCH = gql`
       }
       campusGSO {
         name
+        bishop {
+          id
+        }
       }
       townGSO {
         name
+        bishop {
+          id
+        }
       }
       townBishop {
         name

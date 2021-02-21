@@ -6,6 +6,7 @@ import { GLOBAL_SEARCH } from '../queries/SearchQuery'
 import { SearchContext, MemberContext } from '../contexts/MemberContext'
 import { ChurchContext } from '../contexts/ChurchContext'
 import SpinnerPage from '../components/SpinnerPage'
+import Spinner from '../components/Spinner'
 
 export const SearchPageMobile = () => {
   const { searchKey } = useContext(SearchContext)
@@ -44,6 +45,11 @@ export const SearchPageMobile = () => {
       <React.Fragment>
         <MobileSearchNav />
         <div className="container mt-5">
+          {searchLoading && (
+            <div className="d-flex justify-content-center">
+              <Spinner />
+            </div>
+          )}
           {searchData.globalSearch.map((searchResult, index) => {
             return (
               <div
@@ -52,8 +58,8 @@ export const SearchPageMobile = () => {
                 onClick={() => {
                   setMemberID(searchResult.id)
                   localStorage.setItem('memberId', searchResult.id)
-                  history.push('/member/displaydetails')
                   determineChurch(searchResult)
+                  history.push('/member/displaydetails')
                 }}
               >
                 <div className="media">
@@ -63,17 +69,21 @@ export const SearchPageMobile = () => {
                     alt={`${searchResult.firstName} ${searchResult.lastName}`}
                   />
                   <div className="media-body">
-                    <h5 className="mt-0">{`${searchResult.firstName} ${searchResult.lastName}`}</h5>
+                    <h6 className="mt-0">{`${searchResult.firstName} ${searchResult.lastName}`}</h6>
                     {searchResult.bacenta ? (
                       <div>
-                        <span className="font-weight-bold">Bacenta:</span>{' '}
+                        <span className="font-weight-bold text-secondary">
+                          Bacenta:
+                        </span>{' '}
                         {searchResult.bacenta.name}{' '}
                       </div>
                     ) : null}
-                    {searchResult.sonta ? (
+                    {searchResult.ministry ? (
                       <div>
-                        <span className="font-weight-bold">Ministry:</span>{' '}
-                        {searchResult.sonta.name}{' '}
+                        <span className="font-weight-bold text-secondary">
+                          Ministry:
+                        </span>{' '}
+                        {searchResult.ministry.name}{' '}
                       </div>
                     ) : null}
                   </div>

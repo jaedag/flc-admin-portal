@@ -12,7 +12,7 @@ export const MemberCard = (props) => {
         <div className="col">
           <p className="font-weight-bold my-2">{title}</p>
         </div>
-        {isAuthenticated && (
+        {!isAuthenticated && (
           <Link
             className="col-auto d-flex justify-content-end text-secondary card-text icon-color font-weight-bold my-auto"
             to={`${editlink}`}

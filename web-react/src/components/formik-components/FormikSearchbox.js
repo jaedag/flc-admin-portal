@@ -53,6 +53,8 @@ function FormikSearchbox(props) {
                 bacenta: row.bacenta,
                 townBishop: row.townBishop,
                 campusBishop: row.campusBishop,
+                townGS0: row.townGSO,
+                campusGSO: row.campusGSO,
               }))
             )
           } catch (error) {

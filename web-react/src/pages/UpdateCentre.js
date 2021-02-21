@@ -1,83 +1,42 @@
 import React, { useContext } from 'react'
 import { useHistory } from 'react-router-dom'
-import { useQuery, useMutation } from '@apollo/client'
+import { useQuery } from '@apollo/client'
 import { Formik, Form, FieldArray } from 'formik'
 import * as Yup from 'yup'
 import FormikControl from '../components/formik-components/FormikControl'
 
-import {
-  GET_BISHOPS,
-  CENTRE_DROPDOWN,
-  GET_CAMPUS_CENTRES,
-  GET_TOWN_CENTRES,
-  GET_TOWNS,
-  GET_CAMPUSES,
-} from '../queries/ListQueries'
-import {
-  UPDATE_TOWN_MUTATION,
-  UPDATE_CAMPUS_MUTATION,
-} from '../queries/UpdateMutations'
+import { CENTRE_DROPDOWN } from '../queries/ListQueries'
 import { NavBar } from '../components/NavBar'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
 import { ChurchContext } from '../contexts/ChurchContext'
-import { DISPLAY_CAMPUS, DISPLAY_TOWN } from '../queries/DisplayQueries'
+import { DISPLAY_CENTRE } from '../queries/DisplayQueries'
 
-export const UpdateTownCampus = () => {
-  const {
-    church,
-    capitalise,
-    parsePhoneNum,
-    makeSelectOptions,
-    phoneRegExp,
-    campusID,
-    townID,
-    bishopID,
-    setBishopID,
-  } = useContext(ChurchContext)
-  const {
-    data: campusData,
-    error: campusError,
-    loading: campusLoading,
-  } = useQuery(DISPLAY_CAMPUS, {
-    variables: { id: campusID },
-  })
-  const { data: townData, error: townError, loading: townLoading } = useQuery(
-    DISPLAY_TOWN,
-    {
-      variables: { id: townID },
-    }
+export const UpdateCentre = () => {
+  const { church, capitalise, phoneRegExp, centreID, setBishopID } = useContext(
+    ChurchContext
   )
+
+  const {
+    data: centreData,
+    error: centreError,
+    loading: centreLoading,
+  } = useQuery(DISPLAY_CENTRE, {
+    variables: { id: centreID },
+  })
 
   const history = useHistory()
 
   const initialValues = {
-    campusTownName:
-      church.church === 'campus'
-        ? campusData?.displayCampus?.name
-        : townData?.displayTown?.name,
-    leaderName:
-      church.church === 'campus'
-        ? `${campusData?.displayCampus?.leader.firstName} ${campusData?.displayCampus?.leader.lastName} `
-        : `${townData?.displayTown?.leader.firstName} ${townData?.displayTown?.leader.lastName} `,
-    leaderWhatsapp:
-      church.church === 'campus'
-        ? `+${campusData?.displayCampus?.leader.whatsappNumber}`
-        : `+${townData?.displayTown?.leader.whatsappNumber}`,
-    bishopSelect:
-      church.church === 'campus'
-        ? campusData?.displayCampus?.bishop.id
-        : townData?.displayTown?.bishop.id,
-    centres:
-      church.church === 'campus'
-        ? campusData?.displayCampus?.centres
-        : townData?.displayTown?.centres
-        ? townData?.displayTown?.centres
-        : [],
+    centre: centreData?.displayCentre?.name,
+    leaderName: `${centreData?.displayCentre?.leader.firstName} ${centreData?.displayCentre?.leader.lastName} `,
+    leaderWhatsapp: `+${centreData?.displayCentre?.leader.whatsappNumber}`,
+    centreSelect: centreData?.displayCentre?.centre.id,
+    bacentas: centreData?.displayCentre?.bacentas,
   }
 
   const validationSchema = Yup.object({
     campusTownName: Yup.string().required(
-      `${capitalise(church.church)} Name is a required field`
+      `${capitalise(church.subChurch)} Name is a required field`
     ),
     leaderWhatsapp: Yup.string().matches(
       phoneRegExp,
@@ -85,77 +44,56 @@ export const UpdateTownCampus = () => {
     ),
   })
 
-  const [UpdateTown] = useMutation(UPDATE_TOWN_MUTATION, {
-    refetchQueries: [
-      { query: DISPLAY_TOWN, variables: { id: townID } },
-      { query: GET_TOWN_CENTRES, variables: { id: townID } },
-      { query: GET_TOWNS, variables: { id: bishopID } },
-      { query: GET_TOWNS, variables: { id: townData?.displayTown?.bishop.id } },
-    ],
-  })
+  // const [UpdateTown] = useMutation(UPDATE_TOWN_MUTATION, {
+  //   refetchQueries: [{ query: DISPLAY_TOWN, variables: { id: townID } },{ query: GET_TOWN_CENTRES, variables: { id: townID } },{ query: GET_TOWNS, variables: { id: bishopID } },{ query: GET_TOWNS, variables: { id: townData?.displayTown?.bishop.id } }],
+  // })
 
-  const [UpdateCampus] = useMutation(UPDATE_CAMPUS_MUTATION, {
-    refetchQueries: [
-      { query: DISPLAY_CAMPUS, variables: { id: campusID } },
-      { query: GET_CAMPUS_CENTRES, variables: { id: campusID } },
-      { query: GET_CAMPUSES, variables: { id: bishopID } },
-      {
-        query: GET_CAMPUSES,
-        variables: { id: campusData?.displayCampus?.bishop.id },
-      },
-    ],
-  })
+  // const [UpdateCampus] = useMutation(UPDATE_CAMPUS_MUTATION, {
+  //   refetchQueries: [{ query: DISPLAY_CAMPUS, variables: { id: campusID } },{ query: GET_CAMPUS_CENTRES, variables: { id: campusID } },{ query: GET_CAMPUSES, variables: { id: bishopID } },{ query: GET_CAMPUSES, variables: { id: campusData?.displayCentre?.bishop.id } }],
+  // })
 
-  const {
-    data: bishopData,
-    loading: bishopLoading,
-    error: bishopError,
-  } = useQuery(GET_BISHOPS)
+  // const {
+  //   data: centreData,
+  //   loading: centreLoading,
+  //   error: centreError,
+  // } = useQuery(GET_BISHOPS)
 
-  if (bishopError || townError || campusError) {
+  if (centreError) {
     return <ErrorScreen />
-  } else if (bishopLoading || townLoading || campusLoading) {
+  } else if (centreLoading) {
     return <LoadingScreen />
   } else {
-    const bishopCampusOptions = makeSelectOptions(bishopData.bishopsListCampus)
-
-    //Refactoring the Options into Something that can be read by my formik component
-    const bishopTownOptions = makeSelectOptions(bishopData.bishopsListTown)
-
     //onSubmit receives the form state as argument
     const onSubmit = (values, onSubmitProps) => {
-      setBishopID(values.bishopSelect)
+      setBishopID(values.centreSelect)
 
-      if (church.church === 'town') {
-        UpdateTown({
-          variables: {
-            townID: townID,
-            townName: values.campusTownName,
-            lWhatsappNumber: parsePhoneNum(values.leaderWhatsapp),
-            bishopID: values.bishopSelect,
-            centres: values.centres.map((centre) => {
-              return centre.id
-            }),
-          },
-        })
-      } else if (church.church === 'campus') {
-        // console.log("Form data",values);
-        UpdateCampus({
-          variables: {
-            campusID: campusID,
-            campusName: values.campusTownName,
-            lWhatsappNumber: parsePhoneNum(values.leaderWhatsapp),
-            bishopID: values.bishopSelect,
-            centres: values.centres.map((centre) => {
-              return centre.id
-            }),
-          },
-        })
-      }
+      // if (church.subChurch === 'town') {
+      //   UpdateTown({
+      //     variables: {
+      //     townID: townID,
+      //     townName: values.campusTownName,
+      //     lWhatsappNumber: parsePhoneNum(values.leaderWhatsapp),
+      //     bishopID: values.centreSelect,
+      //     bacentas: values.bacentas.map((centre)=>{return centre.id})}
+      //   })
+      // }
+
+      //  else if (church.subChurch === 'campus') {
+      //   // console.log("Form data",values);
+      //   UpdateCampus({
+      //     variables: {
+      //       campusID: campusID,
+      //       campusName: values.campusTownName,
+      //       lWhatsappNumber: parsePhoneNum(values.leaderWhatsapp),
+      //       bishopID: values.centreSelect,
+      //       bacentas: values.bacentas.map((centre)=>{return centre.id}),
+      //     },
+      //   })
+      // }
 
       onSubmitProps.setSubmitting(false)
       onSubmitProps.resetForm()
-      history.push(`/${church.church}/displaydetails`)
+      history.push(`/${church.subChurch}/displaydetails`)
     }
 
     return (
@@ -169,7 +107,7 @@ export const UpdateTownCampus = () => {
           {(formik) => (
             <div className="body-card py-4 container mt-5">
               <div className="container infobar">{`Start a New ${capitalise(
-                church.church
+                church.subChurch
               )}`}</div>
               <Form>
                 <div className="form-group">
@@ -181,12 +119,8 @@ export const UpdateTownCampus = () => {
                           <FormikControl
                             className="form-control"
                             control="select"
-                            name="bishopSelect"
-                            options={
-                              church.church === 'campus'
-                                ? bishopCampusOptions
-                                : bishopTownOptions
-                            }
+                            name="centreSelect"
+                            options={'yes'}
                             defaultOption="Select a Bishop"
                           />
                         </div>
@@ -198,7 +132,9 @@ export const UpdateTownCampus = () => {
                             className="form-control"
                             control="input"
                             name="campusTownName"
-                            placeholder={`Name of ${capitalise(church.church)}`}
+                            placeholder={`Name of ${capitalise(
+                              church.subChurch
+                            )}`}
                           />
                         </div>
                       </div>
@@ -209,7 +145,7 @@ export const UpdateTownCampus = () => {
                             control="input"
                             name="leaderName"
                             placeholder={`Name of ${capitalise(
-                              church.church
+                              church.subChurch
                             )} GSO`}
                           />
                         </div>
@@ -226,29 +162,29 @@ export const UpdateTownCampus = () => {
                       </div>
                       <small className="pt-2">
                         {`Select any ${
-                          church.church === 'town' ? 'Centres' : 'centres'
+                          church.subChurch === 'town' ? 'Centres' : 'bacentas'
                         } that are being moved to this ${capitalise(
-                          church.church
+                          church.subChurch
                         )}`}
                       </small>
 
-                      <FieldArray name="centres">
+                      <FieldArray name="bacentas">
                         {(fieldArrayProps) => {
                           const { push, remove, form } = fieldArrayProps
                           const { values } = form
-                          const { centres } = values
-                          if (!centres) {
+                          const { bacentas } = values
+                          if (!bacentas) {
                             return null
                           }
 
                           return (
                             <div>
-                              {centres.map((centre, index) => (
+                              {bacentas.map((centre, index) => (
                                 <div key={index} className="form-row row-cols">
                                   <div className="col-9">
                                     <FormikControl
                                       control="combobox"
-                                      name={`centres[${index}]`}
+                                      name={`bacentas[${index}]`}
                                       placeholder={
                                         centre
                                           ? centre.name

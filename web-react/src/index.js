@@ -130,21 +130,25 @@ const PastorsAdmin = () => {
         return
       }
     }
-    if (
-      (member.bacenta && member.bacenta.centre && member.bacenta.centre.town) ||
-      (member.townGSO && member.townGSO[0])
-    ) {
+    if (member.bacenta && member.bacenta.centre && member.bacenta.centre.town) {
       setChurch({ church: 'town', subChurch: 'centre' })
       setBishopID(member.bacenta.centre.town.bishop.id)
       return
+    } else if (member.townGSO && member.townGSO[0]) {
+      setChurch({ church: 'town', subChurch: 'centre' })
+      setBishopID(member.townGSO[0].bishop.id)
+      return
     } else if (
-      (member.bacenta &&
-        member.bacenta.centre &&
-        member.bacenta.centre.campus) ||
-      (member.campusGSO && member.campusGSO[0])
+      member.bacenta &&
+      member.bacenta.centre &&
+      member.bacenta.centre.campus
     ) {
       setChurch({ church: 'campus', subChurch: 'centre' })
       setBishopID(member.bacenta.centre.campus.bishop.id)
+      return
+    } else if (member.campusGSO && member.campusGSO[0]) {
+      setChurch({ church: 'campus', subChurch: 'centre' })
+      setBishopID(member.campusGSO[0].bishop.id)
       return
     }
   }

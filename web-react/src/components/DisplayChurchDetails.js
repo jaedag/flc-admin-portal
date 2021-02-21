@@ -31,7 +31,7 @@ export const DisplayChurchDetails = (props) => {
         <div className="container ">
           <h3 className="mx-3 mt-3 mb-2 font-weight-bold">
             {`${name} ${churchType}`}
-            {isAuthenticated && (
+            {!isAuthenticated && (
               <Link to={`${editlink}`}>
                 <sup className="text-secondary card-text icon-color font-weight-bold ml-3">
                   <i className="fas fa-edit" />

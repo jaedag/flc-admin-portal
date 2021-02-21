@@ -98,6 +98,11 @@ export const DISPLAY_MEMBER = gql`
       campusGSO {
         id
         name
+        bishop {
+          id
+          firstName
+          lastName
+        }
       }
       leadsSonta {
         id

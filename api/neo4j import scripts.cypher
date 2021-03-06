@@ -318,3 +318,5 @@ MATCH (s)<-[:HAS_SONTA]-()-[:HAS_CENTRE]->()-[:HAS_BASONTA]->(b)
 WHERE b.name CONTAINS m.name
 MERGE (s)-[r:HAS_BASONTA]->(b)
 RETURN r;
+
+CALL db.index.fulltext.createNodeIndex("globalSearch",["Member", "Bacenta","Basonta","Centre","Sonta","Campus","Town"],["firstName", "lastName", "name", "leader.firstName","leader.lastName"]);

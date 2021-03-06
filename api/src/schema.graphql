@@ -96,7 +96,7 @@ type Campus {
 	id: ID
 	name: String
 	leader: Member @relation(name: "LEADS", direction: "IN")
-	sontas: [Sonta] @relation(name: "HAS_MINISTRY", direction: "OUT")
+	sontas: [Sonta] @relation(name: "HAS_SONTA", direction: "OUT")
 	centres: [Centre] @relation(name: "HAS_CENTRE", direction: "OUT")
 	bishop: Member @relation (name:"HAS_CAMPUS",direction: "IN")
 }
@@ -298,7 +298,15 @@ type Query {
 	memberByEmail(email: String):Member @cypher(statement:"MATCH (m:Member {email:$email}) RETURN m")
 
 #Fuzzy Search
-	globalSearch(searchKey:String!):[Member] @cypher(statement:"MATCH (m:Member) WHERE toLower(m.firstName) CONTAINS $searchKey OR toLower(m.lastName) CONTAINS $searchKey RETURN m")
+	globalSearch(searchKey:String!):[Member] @cypher(statement:"""
+	MATCH (m:Member) 
+	WHERE toLower(m.firstName) STARTS WITH toLower($searchKey) 
+	OR toLower(m.lastName) STARTS WITH toLower($searchKey) 
+	OR toLower(m.firstName) CONTAINS toLower($searchKey) 
+	OR toLower(m.lastName) CONTAINS toLower($searchKey) 
+	RETURN m
+	"""
+	)
 	occupationList(searchKey:String!):[Occupation] @cypher(statement:"MATCH (o:Occupation) WHERE toLower(o.occupation) CONTAINS toLower($searchKey) RETURN o")
 
 #Filtering
@@ -654,7 +662,7 @@ type Mutation {
    
 	RETURN m
 	"""
-	) ,
+	),
 	UpdateTown(
 		townID: ID!
 		townName: String

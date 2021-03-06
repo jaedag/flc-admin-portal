@@ -45,9 +45,7 @@ export const DisplayAllSontas = () => {
                 <Link
                   to={`/${church.church}/displaydetails`}
                   onClick={() => {
-                    church.church === 'town'
-                      ? setTownID(townID)
-                      : setCampusID(campusID)
+                    setCampusID(campusID)
                   }}
                 >
                   {' '}
@@ -68,7 +66,7 @@ export const DisplayAllSontas = () => {
             <div className="row">
               <div className="col">
                 <h6 className="text-muted">
-                  Constituency Overseer:
+                  Con Overseer:
                   {campusCentreData.campusCentreList[0].campus.leader
                     ? ` ${campusCentreData.campusCentreList[0].campus.leader.firstName} ${campusCentreData.campusCentreList[0].campus.leader.lastName}`
                     : null}
@@ -105,9 +103,7 @@ export const DisplayAllSontas = () => {
                 <Link
                   to={`/${church.church}/displaydetails`}
                   onClick={() => {
-                    church.church === 'town'
-                      ? setTownID(townID)
-                      : setCampusID(campusID)
+                    setTownID(townID)
                   }}
                 >
                   {' '}

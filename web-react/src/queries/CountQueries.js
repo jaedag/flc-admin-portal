@@ -1,8 +1,15 @@
 import { gql } from '@apollo/client'
 
-export const members = gql`
-  {
-    memberCount
+export const BISH_DASHBOARD_COUNTS = gql`
+  query bishDashboardData($id: ID) {
+    displayMember(id: $id) {
+      firstName
+      lastName
+    }
+    bishopMemberCount(id: $id)
+    bishopPastorCount(id: $id)
+    bishopsCampusTownCount(id: $id)
+    bishopSontaMemberCount(id: $id)
   }
 `
 

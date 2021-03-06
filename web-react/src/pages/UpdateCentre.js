@@ -1,20 +1,31 @@
 import React, { useContext } from 'react'
 import { useHistory } from 'react-router-dom'
-import { useQuery } from '@apollo/client'
+import { useQuery, useMutation } from '@apollo/client'
 import { Formik, Form, FieldArray } from 'formik'
 import * as Yup from 'yup'
 import FormikControl from '../components/formik-components/FormikControl'
 
-import { CENTRE_DROPDOWN } from '../queries/ListQueries'
+import {
+  CENTRE_DROPDOWN,
+  GET_TOWN_CENTRES,
+  GET_CENTRE_BACENTAS,
+} from '../queries/ListQueries'
+import { UPDATE_TOWN_MUTATION } from '../queries/UpdateMutations'
 import { NavBar } from '../components/NavBar'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
 import { ChurchContext } from '../contexts/ChurchContext'
 import { DISPLAY_CENTRE } from '../queries/DisplayQueries'
 
 export const UpdateCentre = () => {
-  const { church, capitalise, phoneRegExp, centreID, setBishopID } = useContext(
-    ChurchContext
-  )
+  const {
+    church,
+    parsePhoneNum,
+    capitalise,
+    phoneRegExp,
+    townID,
+    centreID,
+    setBishopID,
+  } = useContext(ChurchContext)
 
   const {
     data: centreData,
@@ -27,15 +38,18 @@ export const UpdateCentre = () => {
   const history = useHistory()
 
   const initialValues = {
-    centre: centreData?.displayCentre?.name,
+    centreName: centreData?.displayCentre?.name,
     leaderName: `${centreData?.displayCentre?.leader.firstName} ${centreData?.displayCentre?.leader.lastName} `,
     leaderWhatsapp: `+${centreData?.displayCentre?.leader.whatsappNumber}`,
-    centreSelect: centreData?.displayCentre?.centre.id,
+    townCampusSelect:
+      church.church === 'town'
+        ? centreData?.displayCentre?.town?.id
+        : centreData?.displayCentre?.campus?.id,
     bacentas: centreData?.displayCentre?.bacentas,
   }
 
   const validationSchema = Yup.object({
-    campusTownName: Yup.string().required(
+    centreName: Yup.string().required(
       `${capitalise(church.subChurch)} Name is a required field`
     ),
     leaderWhatsapp: Yup.string().matches(
@@ -44,13 +58,17 @@ export const UpdateCentre = () => {
     ),
   })
 
-  // const [UpdateTown] = useMutation(UPDATE_TOWN_MUTATION, {
-  //   refetchQueries: [{ query: DISPLAY_TOWN, variables: { id: townID } },{ query: GET_TOWN_CENTRES, variables: { id: townID } },{ query: GET_TOWNS, variables: { id: bishopID } },{ query: GET_TOWNS, variables: { id: townData?.displayTown?.bishop.id } }],
-  // })
-
-  // const [UpdateCampus] = useMutation(UPDATE_CAMPUS_MUTATION, {
-  //   refetchQueries: [{ query: DISPLAY_CAMPUS, variables: { id: campusID } },{ query: GET_CAMPUS_CENTRES, variables: { id: campusID } },{ query: GET_CAMPUSES, variables: { id: bishopID } },{ query: GET_CAMPUSES, variables: { id: campusData?.displayCentre?.bishop.id } }],
-  // })
+  const [UpdateCentre] = useMutation(UPDATE_TOWN_MUTATION, {
+    refetchQueries: [
+      { query: DISPLAY_CENTRE, variables: { id: centreID } },
+      { query: GET_TOWN_CENTRES, variables: { id: townID } },
+      {
+        query: GET_TOWN_CENTRES,
+        variables: { id: initialValues.townCampusSelect },
+      },
+      { query: GET_CENTRE_BACENTAS, variables: { id: '01' } },
+    ],
+  })
 
   // const {
   //   data: centreData,
@@ -67,29 +85,17 @@ export const UpdateCentre = () => {
     const onSubmit = (values, onSubmitProps) => {
       setBishopID(values.centreSelect)
 
-      // if (church.subChurch === 'town') {
-      //   UpdateTown({
-      //     variables: {
-      //     townID: townID,
-      //     townName: values.campusTownName,
-      //     lWhatsappNumber: parsePhoneNum(values.leaderWhatsapp),
-      //     bishopID: values.centreSelect,
-      //     bacentas: values.bacentas.map((centre)=>{return centre.id})}
-      //   })
-      // }
-
-      //  else if (church.subChurch === 'campus') {
-      //   // console.log("Form data",values);
-      //   UpdateCampus({
-      //     variables: {
-      //       campusID: campusID,
-      //       campusName: values.campusTownName,
-      //       lWhatsappNumber: parsePhoneNum(values.leaderWhatsapp),
-      //       bishopID: values.centreSelect,
-      //       bacentas: values.bacentas.map((centre)=>{return centre.id}),
-      //     },
-      //   })
-      // }
+      UpdateCentre({
+        variables: {
+          centreID: townID,
+          centreName: values.campusTownName,
+          leaderWhatsapp: parsePhoneNum(values.leaderWhatsapp),
+          townCampusSelect: values.centreSelect,
+          bacentas: values.bacentas.map((centre) => {
+            return centre.id
+          }),
+        },
+      })
 
       onSubmitProps.setSubmitting(false)
       onSubmitProps.resetForm()

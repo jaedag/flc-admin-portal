@@ -361,7 +361,8 @@ export const UpdateMemberDetails = () => {
                         <FormikControl
                           control="combobox"
                           name="bacenta"
-                          placeholder={initialValues.bacenta}
+                          initValue={initialValues.bacenta}
+                          placeholder="Bacenta name"
                           setFieldValue={formik.setFieldValue}
                           optionsQuery={BACENTA_DROPDOWN}
                           queryVariable="bacentaName"

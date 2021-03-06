@@ -9,9 +9,9 @@ export const NavBar = () => {
 
   return (
     <nav className="navbar navbar-dark navbar-expand fixed-top">
-      <Link className="btn nav-button btn-outline-light p-0" to="/">
+      {/* <Link className="btn nav-button btn-outline-light p-0" to="/">
         <i className="fas fa-bars fa-2x icon-color" />
-      </Link>
+      </Link> */}
 
       <div className="navbar-nav">
         <Link
@@ -19,8 +19,17 @@ export const NavBar = () => {
           to="/"
         >
           <span className="fas fa-home fa-2x  px-1" />
-          <span className="d-none d-md-inline">Dashboard</span>
+          <span className="d-none d-md-inline">Home</span>
         </Link>
+        {church.church && (
+          <Link
+            className="nav-item nav-link d-flex align-items-center flex-column"
+            to="/dashboard"
+          >
+            <span className="fas fa-bold fa-2x  px-1" />
+            <span className="d-none d-md-inline">Bishop</span>
+          </Link>
+        )}
         <Link
           className="nav-item nav-link d-flex align-items-center flex-column"
           to="/members"
@@ -29,29 +38,31 @@ export const NavBar = () => {
           <span className="d-none d-md-inline">Members</span>
         </Link>
         {church.church && (
-          <Link
-            className="nav-item nav-link d-flex align-items-center flex-column"
-            to={`/${church.church}/displayall`}
-          >
-            <span className="fas fa-landmark fa-2x px-1" />
-            <span className="d-none d-md-inline">{`${capitalise(
-              church.church
-            )}`}</span>
-          </Link>
-        )}
+          <React.Fragment>
+            <Link
+              className="nav-item nav-link d-flex align-items-center flex-column"
+              to={`/${church.church}/displayall`}
+            >
+              <span className="fas fa-landmark fa-2x px-1" />
+              <span className="d-none d-md-inline">{`${capitalise(
+                church.church
+              )}`}</span>
+            </Link>
 
+            <Link
+              className="nav-item nav-link d-flex align-items-center flex-column"
+              to={`${church.church}/sonta/displayall`}
+            >
+              <span className="fas fa-church fa-2x px-1" />
+              <span className="d-none d-md-inline">Ministries</span>
+            </Link>
+          </React.Fragment>
+        )}
         <Link
-          className="nav-item nav-link d-flex align-items-center flex-column"
-          to="/sonta/displayall"
-        >
-          <span className="fas fa-church fa-2x px-1" />
-          <span className="d-none d-md-inline">Ministries</span>
-        </Link>
-        <Link
-          className="nav-item nav-link d-flex align-items-center flex-column"
+          className="nav-item nav-link d-flex align-items-center flex-column d-md-none  "
           to="/membersearch"
         >
-          <i className="fas fa-search fa-2x d-md-none icon-color px-1" />
+          <i className="fas fa-search fa-2x icon-color px-1" />
         </Link>
       </div>
       <div className="container justify-content-end mt-2 mr-2">

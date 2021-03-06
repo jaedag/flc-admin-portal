@@ -5,7 +5,6 @@ import { MobileSearchNav } from '../components/MobileSearchNav'
 import { GLOBAL_SEARCH } from '../queries/SearchQuery'
 import { SearchContext, MemberContext } from '../contexts/MemberContext'
 import { ChurchContext } from '../contexts/ChurchContext'
-import SpinnerPage from '../components/SpinnerPage'
 import Spinner from '../components/Spinner'
 
 export const SearchPageMobile = () => {
@@ -37,7 +36,9 @@ export const SearchPageMobile = () => {
     return (
       <React.Fragment>
         <MobileSearchNav />
-        <SpinnerPage />
+        <div className="container body-container text-center">
+          <Spinner />
+        </div>
       </React.Fragment>
     )
   } else {

@@ -22,7 +22,7 @@ export const MembersGrid = () => {
   return (
     <div>
       <NavBar />
-      <div className="row w-100 m-0 pt-5 ">
+      <div className="row w-100 m-0">
         <div className="col-lg-3 col-md-4 m-0 px-0">
           <SideBar />
         </div>

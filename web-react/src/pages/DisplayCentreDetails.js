@@ -44,6 +44,7 @@ export const DisplayCentreDetails = () => {
         subChurchSetter={setBacentaID}
         churchNo={centreBacentaCount}
         buttons={displayCentre.bacentas}
+        editlink="/centre/editcentre"
       />
     </div>
   )

@@ -33,6 +33,8 @@ import { DisplayAllCentres } from './pages/DisplayAllCentres'
 import { DisplayAllSontas } from './pages/DisplayAllSontas'
 import { DisplayAllTownCampuses } from './pages/DisplayAllTownCampuses'
 import { CreateBacenta } from './pages/CreateBacenta'
+import { UpdateCentre } from './pages/UpdateCentre'
+import { DisplaySontasByCampusTown } from './pages/DisplaySontasByCampusTown'
 
 const AppWithApollo = () => {
   // const [ accessToken, setAccessToken ] = useState()
@@ -225,6 +227,7 @@ const PastorsAdmin = () => {
                 exact
               />
               <Route path="/centre/addcentre" component={CreateCentre} exact />
+              <Route path="/centre/editcentre" component={UpdateCentre} exact />
               <Route
                 path="/centre/displayall"
                 component={DisplayAllCentres}
@@ -233,6 +236,16 @@ const PastorsAdmin = () => {
               <Route
                 path="/sonta/displayall"
                 component={DisplayAllSontas}
+                exact
+              />
+              <Route
+                path="/town/sonta/displayall"
+                component={DisplaySontasByCampusTown}
+                exact
+              />
+              <Route
+                path="/campus/sonta/displayall"
+                component={DisplaySontasByCampusTown}
                 exact
               />
               <Route

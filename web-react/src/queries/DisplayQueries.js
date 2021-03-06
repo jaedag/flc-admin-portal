@@ -127,6 +127,7 @@ export const DISPLAY_MEMBER = gql`
 export const DISPLAY_BACENTA = gql`
   query displayBacenta($id: ID) {
     displayBacenta(id: $id) {
+      id
       name
       meetingDay {
         day
@@ -149,8 +150,17 @@ export const DISPLAY_BACENTA = gql`
 export const DISPLAY_CENTRE = gql`
   query displayCentre($id: ID) {
     displayCentre(id: $id) {
+      id
       name
       bacentas {
+        id
+        name
+      }
+      town {
+        id
+        name
+      }
+      campus {
         id
         name
       }
@@ -208,6 +218,7 @@ export const DISPLAY_TOWN = gql`
 export const DISPLAY_CAMPUS = gql`
   query displayCampus($id: ID) {
     displayCampus(id: $id) {
+      id
       name
       centres {
         id

@@ -163,9 +163,9 @@ export const GET_CAMPUS_CENTRES = gql`
   }
 `
 
-export const GET_TOWN_SONTA_LEADERS = gql`
-  query($bishopId: ID) {
-    townSontaLeader(bishopId: $bishopId) {
+export const GET_CENTRE_BACENTAS = gql`
+  query($centreId: ID) {
+    townSontaLeader(centreId: $centreId) {
       id
       firstName
       lastName
@@ -176,6 +176,43 @@ export const GET_TOWN_SONTA_LEADERS = gql`
         name
         town {
           name
+        }
+      }
+    }
+  }
+`
+
+export const GET_SONTAS_BY_CAMPUSTOWN = gql`
+  query($id: ID) {
+    townList(id: $id) {
+      id
+      name
+      bishop {
+        firstName
+        lastName
+      }
+      sontas {
+        id
+        name
+        leader {
+          firstName
+          lastName
+        }
+      }
+    }
+    campusList(id: $id) {
+      id
+      name
+      bishop {
+        firstName
+        lastName
+      }
+      sontas {
+        id
+        name
+        leader {
+          firstName
+          lastName
         }
       }
     }

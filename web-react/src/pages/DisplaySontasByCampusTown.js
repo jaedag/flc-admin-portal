@@ -4,37 +4,36 @@ import { useQuery } from '@apollo/client'
 import { DisplayChurchList } from '../components/DisplayChurchList'
 import { NavBar } from '../components/NavBar'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
-import { GET_CAMPUS_CENTRES, GET_TOWN_CENTRES } from '../queries/ListQueries'
+import { GET_SONTAS_BY_CAMPUSTOWN } from '../queries/ListQueries'
 import { ChurchContext } from '../contexts/ChurchContext'
 
-export const DisplayAllCentres = () => {
+export const DisplaySontasByCampusTown = () => {
   const {
     capitalise,
     church,
-    townID,
     campusID,
-    setCentreID,
+    townID,
+    bishopID,
     setTownID,
     setCampusID,
+    setSontaID,
   } = useContext(ChurchContext)
 
-  const { data: townCentreData, loading: townLoading } = useQuery(
-    GET_TOWN_CENTRES,
+  const { data: sontaData, loading: sontaLoading } = useQuery(
+    GET_SONTAS_BY_CAMPUSTOWN,
     {
-      variables: { id: townID },
-    }
-  )
-  const { data: campusCentreData, loading: campusLoading } = useQuery(
-    GET_CAMPUS_CENTRES,
-    {
-      variables: { id: campusID },
+      variables: { id: bishopID },
     }
   )
 
-  if (campusLoading || townLoading) {
+  const campusCentreData = 0
+  const townCentreData = 0
+
+  if (sontaLoading) {
     // Spinner Icon for Loading Screens
     return <LoadingScreen />
-  } else if (campusCentreData && church.church === 'campus') {
+  } else if (sontaData && church.church === 'campus') {
+    console.log(sontaData)
     return (
       <div>
         <NavBar />
@@ -45,15 +44,11 @@ export const DisplayAllCentres = () => {
                 <Link
                   to={`/${church.church}/displaydetails`}
                   onClick={() => {
-                    church.church === 'town'
-                      ? setTownID(townID)
-                      : setCampusID(campusID)
+                    setCampusID(campusID)
                   }}
                 >
                   {' '}
-                  <h4>{`${
-                    campusCentreData.campusCentreList[0].campus.name
-                  } ${capitalise(church.church)}`}</h4>
+                  <h4>{`${sontaData.campusList[0].bishop.firstName} ${sontaData.campusList[0].bishop.lastName}'s Sontas`}</h4>
                 </Link>
               </div>
               <div className="col-auto">
@@ -65,36 +60,35 @@ export const DisplayAllCentres = () => {
                 </Link>
               </div>
             </div>
-            <div className="row">
-              <div className="col">
-                <h6 className="text-muted">
-                  Con Overseer:
-                  {campusCentreData.campusCentreList[0].campus.leader
-                    ? ` ${campusCentreData.campusCentreList[0].campus.leader.firstName} ${campusCentreData.campusCentreList[0].campus.leader.lastName}`
-                    : null}
-                </h6>
-              </div>
-            </div>
 
             <div className="row justify-content-between">
-              <div className="py-1 px-2 m-2 card">{`Centres: ${campusCentreData.campusCentreList.length}`}</div>
               <Link
-                className="py-1 px-2 m-2 card text-white"
-                to="/sonta/displayall"
-              >{`Sontas: ${campusCentreData.campusCentreList.length}`}</Link>
-              <div className="py-1 px-2 m-2 card">{`Membership: ${campusCentreData.campusMemberCount}`}</div>
+                className="py-1 px-2 m-2 card"
+                to="/centre/displayall"
+              >{`Towns: ${sontaData.campusList.length}`}</Link>
+              {/* <div className="py-1 px-2 m-2 card">{`Sontas: ${sontaData.campusSontaList
+								.length}`}</div> */}
+              <div className="py-1 px-2 m-2 card">{`Membership:${campusCentreData.campusMemberCount}`}</div>
             </div>
           </div>
 
-          <DisplayChurchList
-            data={campusCentreData.campusCentreList}
-            setter={setCentreID}
-            churchType="Centre"
-          />
+          {sontaData.campusList.map((campus, index) => {
+            return (
+              <div key={index}>
+                <h4>{campus.name}</h4>
+                <DisplayChurchList
+                  data={campus.sontas}
+                  setter={setSontaID}
+                  churchType="Sonta"
+                />
+              </div>
+            )
+          })}
         </div>
       </div>
     )
-  } else if (townCentreData && church.church === 'town') {
+  } else if (sontaData && church.church === 'town') {
+    console.log(sontaData)
     return (
       <div>
         <NavBar />
@@ -105,9 +99,7 @@ export const DisplayAllCentres = () => {
                 <Link
                   to={`/${church.church}/displaydetails`}
                   onClick={() => {
-                    church.church === 'town'
-                      ? setTownID(townID)
-                      : setCampusID(campusID)
+                    setTownID(townID)
                   }}
                 >
                   {' '}
@@ -137,25 +129,20 @@ export const DisplayAllCentres = () => {
             </div>
 
             <div className="row justify-content-between">
-              <div className="py-1 px-2 m-2 card">{`Centres: ${townCentreData.townCentreList.length}`}</div>
               <Link
                 className="py-1 px-2 m-2 card text-white"
-                to="/sonta/displayall"
-              >{`Sontas: ${townCentreData.townSontaList.length}`}</Link>
+                to="/centre/displayall"
+              >{`Centres: ${townCentreData.townCentreList.length}`}</Link>
+              <div className="py-1 px-2 m-2 card">{`Sontas: ${townCentreData.townSontaList.length}`}</div>
               <div className="py-1 px-2 m-2 card">{`Membership: ${townCentreData.townMemberCount}`}</div>
             </div>
           </div>
 
           <DisplayChurchList
-            data={townCentreData.townCentreList}
-            setter={setCentreID}
-            churchType="Centre"
-          />
-          {/* <DisplayChurchList
             data={townCentreData.townSontaList}
             setter={setSontaID}
             churchType="Sonta"
-          /> */}
+          />
         </div>
       </div>
     )

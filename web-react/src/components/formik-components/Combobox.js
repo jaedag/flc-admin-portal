@@ -9,6 +9,7 @@ function Combobox(props) {
     label,
     name,
     dataset,
+    initValue,
     queryVariable,
     suggestionText,
     suggestionID,
@@ -17,7 +18,7 @@ function Combobox(props) {
     setFieldValue,
   } = props
 
-  const [searchString, setSearchString] = useState('')
+  const [searchString, setSearchString] = useState(initValue ? initValue : '')
   const [suggestions, setSuggestions] = useState([])
 
   const { data } = useQuery(optionsQuery, {

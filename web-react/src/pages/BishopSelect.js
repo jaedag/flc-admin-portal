@@ -16,28 +16,18 @@ const BishopSelect = () => {
   if (loading) {
     return (
       <React.Fragment>
-        <div className="container text-center my-5">
+        <div className="container text-center my-5  d-none d-lg-block">
           <img
             src={Logo}
             alt="logo"
-            className="img-fluid mx-auto d-block d-lg-none"
+            className="img-fluid mx-auto"
             style={{ maxWidth: '30%' }}
           />
           <h3>FLC Admin Dashboard</h3>
-          <h5 className="text-secondary">Select Your Bishop</h5>
-
-          <div className="body-container full-body-center">
-            <div className="row h-75">
-              <div className="col my-auto">
-                <div
-                  className="spinner-border-center full-center"
-                  role="status"
-                >
-                  <Spinner />
-                  <div className="sr-only">Loading...</div>
-                </div>
-              </div>
-            </div>
+          <h5 className="text-secondary">Loading...</h5>
+          <div className="spinner-border-center full-center" role="status">
+            <Spinner />
+            <div className="sr-only">Loading...</div>
           </div>
         </div>
         <div className="container d-lg-none">
@@ -45,14 +35,21 @@ const BishopSelect = () => {
           <div className="row d-flex align-items-center justify-content-center d-lg-none">
             <div className="col-12 col-lg-6">
               <img
-                src="../../img/flc-logo-small.png"
+                src={Logo}
                 alt="logo"
                 className="img-fluid mx-auto d-block d-lg-none"
                 style={{ maxWidth: '30%' }}
               />
-              <div className="d-lg-none h2 text-center text-white">
-                FLC Admin
-                <Spinner />
+              <div className="text-center">
+                <h3>FLC Admin Dashboard</h3>
+                <h5 className="text-secondary mt-5">Loading...</h5>
+                <div
+                  className="spinner-border-center full-center mb-5"
+                  role="status"
+                >
+                  <Spinner />
+                  <div className="sr-only">Loading...</div>
+                </div>
               </div>
             </div>
 

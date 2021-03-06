@@ -27,7 +27,6 @@ function SearchBox() {
               <FormikControl
                 control="searchbox"
                 name="searchKey"
-                // label="Centre"
                 placeholder="Search for anything..."
                 setFieldValue={formik.setFieldValue}
                 dataset="globalSearch"

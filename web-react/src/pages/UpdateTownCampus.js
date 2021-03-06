@@ -13,6 +13,7 @@ import {
   GET_TOWNS,
   GET_CAMPUSES,
 } from '../queries/ListQueries'
+import { BISH_DASHBOARD_COUNTS } from '../queries/CountQueries'
 import {
   UPDATE_TOWN_MUTATION,
   UPDATE_CAMPUS_MUTATION,
@@ -91,6 +92,7 @@ export const UpdateTownCampus = () => {
       { query: GET_TOWN_CENTRES, variables: { id: townID } },
       { query: GET_TOWNS, variables: { id: bishopID } },
       { query: GET_TOWNS, variables: { id: townData?.displayTown?.bishop.id } },
+      { query: BISH_DASHBOARD_COUNTS, variables: { id: bishopID } },
     ],
   })
 
@@ -98,11 +100,16 @@ export const UpdateTownCampus = () => {
     refetchQueries: [
       { query: DISPLAY_CAMPUS, variables: { id: campusID } },
       { query: GET_CAMPUS_CENTRES, variables: { id: campusID } },
+      {
+        query: GET_CAMPUS_CENTRES,
+        variables: { id: campusData?.displayCampus?.id },
+      },
       { query: GET_CAMPUSES, variables: { id: bishopID } },
       {
         query: GET_CAMPUSES,
         variables: { id: campusData?.displayCampus?.bishop.id },
       },
+      { query: BISH_DASHBOARD_COUNTS, variables: { id: bishopID } },
     ],
   })
 

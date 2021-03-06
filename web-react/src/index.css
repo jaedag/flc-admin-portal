@@ -197,7 +197,7 @@
 
 .img-search {
   width: 70px;
-  border: 1px solid var(--infobar-color);
+  border: 3px solid var(--infobar-color);
 }
 
 .fa-user-circle-o {

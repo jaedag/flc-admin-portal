@@ -40,6 +40,7 @@ export const DisplayBacentaDetails = () => {
         churchNo={bacentaData.displayBacenta.meetingDay.day}
         churchType="Bacenta"
         buttons={['']}
+        editlink="/bacenta/editbacenta"
       />
     </div>
   )

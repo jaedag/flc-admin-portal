@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/client'
 import { Formik, Form } from 'formik'
@@ -6,40 +6,53 @@ import * as Yup from 'yup'
 import FormikControl from '../components/formik-components/FormikControl'
 
 import {
-  GET_CAMPUSES,
-  GET_TOWN_CENTRES,
+  GET_CENTRE_BACENTAS,
   GET_CAMPUS_CENTRES,
-  GET_TOWNS,
+  GET_TOWN_CENTRES,
 } from '../queries/ListQueries'
-import { CREATE_BACENTA_MUTATION } from '../queries/CreateMutations'
+import {
+  ADD_BACENTA_CENTRE,
+  REMOVE_BACENTA_CENTRE,
+  UPDATE_BACENTA,
+} from '../queries/UpdateMutations'
 import { NavBar } from '../components/NavBar'
-import { ChurchContext } from '../contexts/ChurchContext'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
+import { ChurchContext } from '../contexts/ChurchContext'
+import { DISPLAY_BACENTA } from '../queries/DisplayQueries'
 import Spinner from '../components/Spinner'
 
-export const CreateBacenta = () => {
-  const initialValues = {
-    bacentaName: '',
-    leaderName: '',
-    leaderWhatsapp: '',
-    meetingDay: '',
-    venueLatitude: '',
-    venueLongitude: '',
-  }
-
+export const UpdateBacenta = () => {
   const {
     church,
-    capitalise,
-    makeSelectOptions,
     parsePhoneNum,
-    bishopID,
-    townID,
-    setTownID,
-    campusID,
-    setCampusID,
-    setBacentaID,
+    capitalise,
     phoneRegExp,
+    townID,
+    campusID,
+    centreID,
+    setCentreID,
+    bacentaID,
   } = useContext(ChurchContext)
+
+  const { data: bacentaData, loading: bacentaLoading } = useQuery(
+    DISPLAY_BACENTA,
+    {
+      variables: { id: bacentaID },
+    }
+  )
+
+  const history = useHistory()
+  const [positionLoading, setPositionLoading] = useState(false)
+
+  const initialValues = {
+    bacentaName: bacentaData?.displayBacenta?.name,
+    leaderName: `${bacentaData?.displayBacenta?.leader.firstName} ${bacentaData?.displayBacenta?.leader.lastName} `,
+    leaderWhatsapp: `+${bacentaData?.displayBacenta?.leader.whatsappNumber}`,
+    centreSelect: bacentaData?.displayBacenta?.centre?.id,
+    meetingDay: bacentaData?.displayBacenta?.meetingDay?.day,
+    venueLatitude: bacentaData?.displayBacenta?.location?.latitude,
+    venueLongitude: bacentaData?.displayBacenta?.location?.longitude,
+  }
 
   const serviceDayOptions = [
     { key: 'Tuesday', value: 'Tuesday' },
@@ -50,65 +63,63 @@ export const CreateBacenta = () => {
   ]
 
   const validationSchema = Yup.object({
-    bacentaName: Yup.string().required('Bacenta Name is a required field'),
-    leaderName: Yup.string().required('This is a required field'),
-    leaderWhatsapp: Yup.string()
-      .matches(
-        phoneRegExp,
-        `Phone Number must start with + and country code (eg. '+233')`
-      )
-      .required('Phone Number is required'),
-    meetingDay: Yup.string().required('Meeting Day is a required field'),
-    venueLatitude: Yup.string().required('Please fill in your location info'),
-    venueLongitude: Yup.string().required('Please fill in your location info'),
+    bacentaName: Yup.string().required(
+      `${capitalise(church.subChurch)} Name is a required field`
+    ),
+    leaderWhatsapp: Yup.string().matches(
+      phoneRegExp,
+      `Phone Number must start with + and country code (eg. '+233')`
+    ),
   })
 
-  const history = useHistory()
-  const [positionLoading, setPositionLoading] = useState(false)
-  const [CreateBacenta] = useMutation(CREATE_BACENTA_MUTATION, {
-    onCompleted: (newBacentaData) => {
-      setBacentaID(newBacentaData.CreateBacenta.id)
-      history.push('/bacenta/displaydetails')
-    },
-  })
-
-  const { data: townListData, loading: townListLoading } = useQuery(GET_TOWNS, {
-    variables: { id: bishopID },
-  })
-  const { data: campusListData, loading: campusListLoading } = useQuery(
-    GET_CAMPUSES,
-    {
-      variables: { id: bishopID },
-    }
-  )
-
-  //onSubmit receives the form state as argument
-  const onSubmit = (values, onSubmitProps) => {
-    CreateBacenta({
-      variables: {
-        bacentaName: values.bacentaName,
-        lWhatsappNumber: parsePhoneNum(values.leaderWhatsapp),
-        centreId: values.centreSelect,
-        meetingDay: values.meetingDay,
-        venueLongitude: parseFloat(values.venueLongitude),
-        venueLatitude: parseFloat(values.venueLatitude),
+  const [UpdateBacenta] = useMutation(UPDATE_BACENTA, {
+    refetchQueries: [
+      { query: DISPLAY_BACENTA, variables: { id: bacentaID } },
+      { query: GET_CENTRE_BACENTAS, variables: { id: centreID } },
+      {
+        query: GET_CENTRE_BACENTAS,
+        variables: { id: initialValues.centreSelect },
       },
-    })
+    ],
+  })
+  const [AddBacentaCentre] = useMutation(ADD_BACENTA_CENTRE)
+  const [RemoveBacentaCentre] = useMutation(REMOVE_BACENTA_CENTRE)
 
-    console.log('Form data', values)
-    onSubmitProps.setSubmitting(false)
-    onSubmitProps.resetForm()
-  }
-
-  if (townListLoading || campusListLoading) {
+  if (bacentaLoading) {
     return <LoadingScreen />
-  } else if (townListData && campusListData) {
-    const townOptions = townListData
-      ? makeSelectOptions(townListData.townList)
-      : []
-    const campusOptions = campusListData
-      ? makeSelectOptions(campusListData.campusList)
-      : []
+  } else if (bacentaData) {
+    //onSubmit receives the form state as argument
+    const onSubmit = (values, onSubmitProps) => {
+      setCentreID(values.centreSelect)
+      UpdateBacenta({
+        variables: {
+          id: bacentaID,
+          name: values.bacentaName,
+          lWhatsappNumber: parsePhoneNum(values.leaderWhatsapp),
+          meetingDay: values.meetingDay,
+          venueLongitude: parseFloat(values.venueLongitude),
+          venueLatitude: parseFloat(values.venueLongitude),
+        },
+      })
+      if (values.centreSelect !== initialValues.centreSelect) {
+        RemoveBacentaCentre({
+          variables: {
+            centreID: initialValues.centreSelect,
+            bacentaID: bacentaID,
+          },
+        })
+        AddBacentaCentre({
+          variables: {
+            centreID: values.centreSelect,
+            bacentaID: bacentaID,
+          },
+        })
+      }
+
+      onSubmitProps.setSubmitting(false)
+      onSubmitProps.resetForm()
+      history.push(`/bacenta/displaydetails`)
+    }
 
     return (
       <div>
@@ -120,7 +131,7 @@ export const CreateBacenta = () => {
         >
           {(formik) => (
             <div className="body-card py-4 container mt-5">
-              <div className="container infobar">Start a New Bacenta</div>
+              <div className="container infobar">Bacenta Update Form</div>
               <Form>
                 <div className="form-group">
                   <div className="row row-cols-1 row-cols-md-2">
@@ -128,24 +139,6 @@ export const CreateBacenta = () => {
                     <div className="col mb-2">
                       <div className="form-row row-cols-2">
                         <div className="col-8">
-                          <FormikControl
-                            className="form-control"
-                            control="select"
-                            name="townSelect"
-                            options={
-                              church.church === 'town'
-                                ? townOptions
-                                : campusOptions
-                            }
-                            onChange={(e) => {
-                              church.church === 'town'
-                                ? setTownID(e.target.value)
-                                : setCampusID(e.target.value)
-                            }}
-                            defaultOption={`Select a ${capitalise(
-                              church.church
-                            )}`}
-                          />
                           <FormikControl
                             className="form-control"
                             control="selectWithQuery"

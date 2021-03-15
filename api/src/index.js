@@ -26,11 +26,7 @@ const schema = makeAugmentedSchema({
   resolvers,
   config: {
     query: true,
-    mutation: false,
-    auth: {
-      isAuthenticated: true,
-      hasScope: true,
-    },
+    mutation: true,
   },
 })
 

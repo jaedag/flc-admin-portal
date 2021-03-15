@@ -87,18 +87,94 @@ export const UPDATE_CENTRE_MUTATION = gql`
     $centreID: ID
     $centreName: String
     $lWhatsappNumber: String
-    $bishopID: ID
-    $bacentas: [ID]
+    $campusTownID: ID
   ) {
-    Updatecentre(
+    UpdateCentre(
       centreID: $centreID
       centreName: $centreName
       lWhatsappNumber: $lWhatsappNumber
-      bishopID: $bishopID
-      bacentas: $bacentas
+      campusTownID: $campusTownID
     ) {
       id
       name
+    }
+  }
+`
+
+export const ADD_CENTRE_BACENTAS = gql`
+  mutation AddCentreBacentas($centreID: ID!, $bacentaID: ID!) {
+    AddCentreBacentas(from: { id: $centreID }, to: { id: $bacentaID }) {
+      from {
+        id
+        name
+        bacentas {
+          name
+        }
+      }
+    }
+  }
+`
+export const REMOVE_CENTRE_BACENTAS = gql`
+  mutation RemoveCentreBacentas($centreID: ID!, $bacentaID: ID!) {
+    RemoveCentreBacentas(from: { id: $centreID }, to: { id: $bacentaID }) {
+      from {
+        id
+        name
+        bacentas {
+          name
+        }
+      }
+    }
+  }
+`
+
+export const REMOVE_BACENTA_CENTRE = gql`
+  mutation RemoveBacentaCentre($centreID: ID!, $bacentaID: ID!) {
+    RemoveBacentaCentre(from: { id: $centreID }, to: { id: $bacentaID }) {
+      from {
+        id
+        name
+        bacentas {
+          name
+        }
+      }
+    }
+  }
+`
+
+export const UPDATE_BACENTA = gql`
+  mutation UpdateBacenta(
+    $id: ID
+    $name: String
+    $lWhatsappNumber: String
+    $meetingDay: String
+    $venueLatitude: Float
+    $venueLongitude: Float
+  ) {
+    UpdateBacenta(
+      id: $id
+      name: $name
+      lWhatsappNumber: $lWhatsappNumber
+      meetingDay: $meetingDay
+      venueLatitude: $venueLatitude
+      venueLongitude: $venueLongitude
+    ) {
+      id
+      name
+      meetingDay {
+        day
+      }
+    }
+  }
+`
+
+export const ADD_BACENTA_CENTRE = gql`
+  mutation AddBacentaCentre($centreID: ID!, $bacentaID: ID!) {
+    AddBacentaCentre(from: { id: $centreID }, to: { id: $bacentaID }) {
+      from {
+        id
+        name
+      }
     }
   }
 `

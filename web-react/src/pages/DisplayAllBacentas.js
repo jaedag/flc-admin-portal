@@ -4,14 +4,16 @@ import { useQuery } from '@apollo/client'
 import { DisplayChurchList } from '../components/DisplayChurchList'
 import { NavBar } from '../components/NavBar'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
-import { CENTRE_BACENTA_LIST } from '../queries/ListQueries'
+import { GET_CENTRE_BACENTAS } from '../queries/ListQueries'
 import { ChurchContext } from '../contexts/ChurchContext'
+import { MemberContext } from '../contexts/MemberContext'
 
 export const DisplayAllBacentas = () => {
-  const { centreID, setBacentaID, setMemberID } = useContext(ChurchContext)
+  const { centreID, setBacentaID } = useContext(ChurchContext)
+  const { setMemberID } = useContext(MemberContext)
 
   const { data: bacentaData, loading: bacentaLoading } = useQuery(
-    CENTRE_BACENTA_LIST,
+    GET_CENTRE_BACENTAS,
     {
       variables: { id: centreID },
     }

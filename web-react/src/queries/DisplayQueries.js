@@ -132,10 +132,19 @@ export const DISPLAY_BACENTA = gql`
       meetingDay {
         day
       }
+      location {
+        latitude
+        longitude
+      }
+      centre {
+        id
+        name
+      }
       leader {
         id
         firstName
         lastName
+        whatsappNumber
         title {
           Title {
             title

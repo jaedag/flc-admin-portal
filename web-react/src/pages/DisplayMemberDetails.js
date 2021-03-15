@@ -233,7 +233,7 @@ export const DisplayMemberDetails = () => {
                           {memberData.displayMember.dob
                             ? `${memberData.displayMember.dob.date.day} ${
                                 monthNames[
-                                  memberData.displayMember.dob.date.month
+                                  memberData.displayMember.dob.date.month - 1
                                 ]
                               } ${memberData.displayMember.dob.date.year}`
                             : null}

@@ -35,6 +35,7 @@ import { DisplayAllTownCampuses } from './pages/DisplayAllTownCampuses'
 import { CreateBacenta } from './pages/CreateBacenta'
 import { UpdateCentre } from './pages/UpdateCentre'
 import { DisplaySontasByCampusTown } from './pages/DisplaySontasByCampusTown'
+import { UpdateBacenta } from './pages/UpdateBacenta'
 
 const AppWithApollo = () => {
   // const [ accessToken, setAccessToken ] = useState()
@@ -209,6 +210,11 @@ const PastorsAdmin = () => {
               <Route
                 path="/bacenta/addbacenta"
                 component={CreateBacenta}
+                exact
+              />
+              <Route
+                path="/bacenta/editbacenta"
+                component={UpdateBacenta}
                 exact
               />
               <Route

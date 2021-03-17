@@ -7,8 +7,8 @@ import { MemberTable } from '../components/MemberTable'
 import { GET_BISHOP_MEMBERS } from '../queries/ListQueries'
 import { ChurchContext } from '../contexts/ChurchContext'
 
-export const MembersGrid = () => {
-  const { bishopID } = useContext(ChurchContext)
+export const MembersGridBishop = () => {
+  const { memberFilter, filters, bishopID } = useContext(ChurchContext)
   const [offset, setOffset] = useState(0)
   const {
     data: memberData,
@@ -24,7 +24,7 @@ export const MembersGrid = () => {
       <NavBar />
       <div className="row w-100 m-0">
         <div className="col-lg-3 col-md-4 m-0 px-0">
-          <SideBar />
+          <SideBar data={memberData?.bishopMemberList} />
         </div>
 
         <div className="col px-2">
@@ -64,10 +64,13 @@ export const MembersGrid = () => {
             </div>
           </div>
           <MemberTable
-            memberData={memberData}
+            memberData={
+              memberData
+                ? memberFilter(memberData?.bishopMemberList, filters)
+                : null
+            }
             memberError={memberError}
             memberLoading={memberLoading}
-            list="bishopMemberList"
           />
         </div>
       </div>

@@ -10,7 +10,7 @@ import { HeadingBar } from '../components/HeadingBar'
 import { NavBar } from '../components/NavBar'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
 import Spinner from '../components/Spinner'
-import { MINISTRY_LIST, BACENTA_DROPDOWN } from '../queries/ListQueries'
+import { GET_MINISTRIES, BACENTA_DROPDOWN } from '../queries/ListQueries'
 import { ChurchContext } from '../contexts/ChurchContext'
 import { MemberContext } from '../contexts/MemberContext'
 
@@ -90,7 +90,7 @@ export const CreateMember = () => {
     data: ministryListData,
     loading: ministryListLoading,
     error: ministryListError,
-  } = useQuery(MINISTRY_LIST)
+  } = useQuery(GET_MINISTRIES)
 
   const [CreateMember] = useMutation(CREATE_MEMBER_MUTATION, {
     onCompleted: (newMemberData) => {

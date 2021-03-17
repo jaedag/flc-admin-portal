@@ -11,7 +11,7 @@ import { HeadingBar } from '../components/HeadingBar'
 import { NavBar } from '../components/NavBar'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
 import Spinner from '../components/Spinner'
-import { MINISTRY_LIST, BACENTA_DROPDOWN } from '../queries/ListQueries'
+import { GET_MINISTRIES, BACENTA_DROPDOWN } from '../queries/ListQueries'
 import { MemberContext } from '../contexts/MemberContext'
 import { ChurchContext } from '../contexts/ChurchContext'
 
@@ -120,7 +120,7 @@ export const UpdateMemberDetails = () => {
     data: ministryListData,
     loading: ministryListLoading,
     error: ministryListError,
-  } = useQuery(MINISTRY_LIST)
+  } = useQuery(GET_MINISTRIES)
 
   const [UpdateMemberDetails] = useMutation(UPDATE_MEMBER_MUTATION, {
     refetchQueries: [{ query: DISPLAY_MEMBER, variables: { id: memberID } }],

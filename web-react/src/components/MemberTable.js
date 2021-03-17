@@ -5,7 +5,7 @@ import { MemberContext } from '../contexts/MemberContext'
 import Spinner from './Spinner'
 
 export const MemberTable = (props) => {
-  const { memberData, memberError, memberLoading, list } = props
+  const { memberData, memberError, memberLoading } = props
   const { setMemberID } = useContext(MemberContext)
   const { determineChurch } = useContext(ChurchContext)
   const history = useHistory()
@@ -29,7 +29,7 @@ export const MemberTable = (props) => {
     <React.Fragment>
       <div className=" d-none d-lg-block">
         <div className="row no-gutters">
-          {memberData[`${list}`].map((soul, index) => {
+          {memberData.map((soul, index) => {
             return (
               <div className="col px-1" key={index}>
                 <div
@@ -57,7 +57,7 @@ export const MemberTable = (props) => {
       </div>
 
       <div className="d-lg-none">
-        {memberData[`${list}`].map((soul, index) => {
+        {memberData.map((soul, index) => {
           return (
             <div
               key={index}

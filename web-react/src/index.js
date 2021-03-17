@@ -13,7 +13,7 @@ import { Auth0Provider, useAuth0 } from '@auth0/auth0-react'
 import './index.css'
 import BishopSelect from './pages/BishopSelect'
 import BishopDashboard from './pages/BishopDashboard'
-import { MembersGrid } from './pages/MembersGrid'
+import { MembersGridBishop } from './pages/MembersGrid'
 import { PastorsGrid } from './pages/PastorsGrid'
 import { SearchPageMobile } from './pages/SearchPageMobile'
 import { DisplayMemberDetails } from './pages/DisplayMemberDetails'
@@ -98,6 +98,13 @@ const PastorsAdmin = () => {
   const [ministryID, setMinistryID] = useState('')
   const [memberID, setMemberID] = useState('')
   const [searchKey, setSearchKey] = useState('')
+  const [filters, setFilters] = useState({
+    gender: '',
+    maritalStatus: '',
+    occupation: '',
+    leaderRank: [],
+    ministry: '',
+  })
   const capitalise = (str) => {
     return str.charAt(0).toUpperCase() + str.slice(1)
   }
@@ -114,6 +121,108 @@ const PastorsAdmin = () => {
       value: data.id,
       key: data.name ? data.name : data.firstName + ' ' + data.lastName,
     }))
+  }
+  const memberFilter = (memberData, filters) => {
+    let filteredData = memberData
+
+    //Filter for Gender
+    if (filters.gender === 'Male') {
+      filteredData = filteredData.filter((member) => {
+        if (member.gender.gender === 'Male') {
+          return member
+        }
+        return null
+      })
+    } else if (filters.gender === 'Female') {
+      filteredData = filteredData.filter((member) => {
+        if (member.gender.gender === 'Female') {
+          return member
+        }
+        return null
+      })
+    }
+
+    //Filter for Marital Status
+    if (filters.maritalStatus === 'Single') {
+      filteredData = filteredData.filter((member) => {
+        if (member.maritalStatus.status === 'Single') {
+          return member
+        }
+        return null
+      })
+    } else if (filters.maritalStatus === 'Married') {
+      filteredData = filteredData.filter((member) => {
+        if (member.maritalStatus.status === 'Married') {
+          return member
+        }
+        return null
+      })
+    }
+
+    //Filter for Leadership Rank
+
+    let leaderData = {
+      basontaLeaders: [],
+      sontaLeaders: [],
+      bacentaLeaders: [],
+      centreLeaders: [],
+      cOs: [],
+    }
+    if (filters.leaderRank.includes('Basonta Leader')) {
+      leaderData.basontaLeaders = filteredData.filter((member) => {
+        if (member.leadsBasonta[0]) {
+          return member
+        }
+        return null
+      })
+    }
+    if (filters.leaderRank.includes('Sonta Leader')) {
+      leaderData.sontaLeaders = filteredData.filter((member) => {
+        if (member.leadsSonta[0]) {
+          return member
+        }
+        return null
+      })
+    }
+    if (filters.leaderRank.includes('Bacenta Leader')) {
+      leaderData.bacentaLeaders = filteredData.filter((member) => {
+        if (member.leadsBacenta[0]) {
+          return member
+        }
+        return null
+      })
+    }
+    if (filters.leaderRank.includes('Centre Leader')) {
+      leaderData.centreLeaders = filteredData.filter((member) => {
+        if (member.leadsCentre[0]) {
+          return member
+        }
+        return null
+      })
+    }
+    if (filters.leaderRank.includes('CO')) {
+      leaderData.cOs = filteredData.filter((member) => {
+        if (member.townGSO[0] || member.campusGSO[0]) {
+          return member
+        }
+        return null
+      })
+    }
+
+    if (filters.leaderRank[0]) {
+      filteredData = [
+        ...new Set([
+          ...leaderData.basontaLeaders,
+          ...leaderData.sontaLeaders,
+          ...leaderData.bacentaLeaders,
+          ...leaderData.centreLeaders,
+          ...leaderData.cOs,
+        ]),
+      ]
+    }
+
+    console.log(filteredData)
+    return filteredData
   }
 
   const determineChurch = (member) => {
@@ -165,6 +274,9 @@ const PastorsAdmin = () => {
           parsePhoneNum,
           makeSelectOptions,
           determineChurch,
+          filters,
+          setFilters,
+          memberFilter,
           church,
           setChurch,
           bishopID,
@@ -189,7 +301,7 @@ const PastorsAdmin = () => {
               <Route path="/" component={BishopSelect} exact />
               <Route path="/dashboard" component={BishopDashboard} exact />
               <Route path="/membersearch" component={SearchPageMobile} exact />
-              <Route path="/members" component={MembersGrid} exact />
+              <Route path="/members" component={MembersGridBishop} exact />
               <Route path="/pastors" component={PastorsGrid} exact />
               <Route path="/member/addmember" component={CreateMember} exact />
               <Route

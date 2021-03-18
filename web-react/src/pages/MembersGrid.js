@@ -19,17 +19,25 @@ export const MembersGridBishop = () => {
     variables: { id: bishopID, offset: offset },
   })
 
+  const memberDataLoaded = memberData
+    ? memberFilter(memberData?.bishopMemberList, filters)
+    : null
+
   return (
     <div>
       <NavBar />
       <div className="row w-100 m-0">
         <div className="col-lg-3 col-md-4 m-0 px-0">
-          <SideBar data={memberData?.bishopMemberList} />
+          <SideBar />
         </div>
 
         <div className="col px-2">
           <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-2 mb-3 border-bottom">
-            <h3 className="h3">Search Results</h3>
+            <h3 className="h3">
+              {memberData
+                ? `${memberDataLoaded.length} Search Results`
+                : 'SearchResults'}
+            </h3>
             <div className="btn-toolbar mb-2 mb-md-0">
               <div className="btn-group mr-2" />
               <Link to="/member/addmember" className="btn btn-primary p-2 mx-1">
@@ -64,11 +72,7 @@ export const MembersGridBishop = () => {
             </div>
           </div>
           <MemberTable
-            memberData={
-              memberData
-                ? memberFilter(memberData?.bishopMemberList, filters)
-                : null
-            }
+            memberData={memberDataLoaded}
             memberError={memberError}
             memberLoading={memberLoading}
           />

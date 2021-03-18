@@ -8,6 +8,7 @@ function SelectWithQuery(props) {
   const {
     label,
     name,
+    modifier,
     queryVariable,
     optionsQuery,
     varValue,
@@ -36,7 +37,10 @@ function SelectWithQuery(props) {
         </option>
         {options.map((option) => {
           return (
-            <option key={option.value} value={option.value}>
+            <option
+              key={option.value}
+              value={modifier === 'filter' ? option.key : option.value}
+            >
               {option.key}
             </option>
           )

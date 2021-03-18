@@ -81,24 +81,24 @@ export const SideBar = () => {
                       aria-describedby="Occupation Options"
                     />
                   </div>
+                  <div className="col pb-4">
+                    <FormikControl
+                      className="form-control"
+                      control="selectWithQuery"
+                      name="ministry"
+                      modifier="filter"
+                      optionsQuery={GET_MINISTRIES}
+                      queryVariable="id"
+                      dataset="ministryList"
+                      defaultOption="Select a Ministry"
+                    />
+                  </div>
                   <div className="col pb-2">
                     <FormikControl
                       className="form-control"
                       name="leaderRank"
                       control="checkbox"
                       options={leaderOptions}
-                    />
-                  </div>
-
-                  <div className="col pb-4">
-                    <FormikControl
-                      className="form-control"
-                      control="selectWithQuery"
-                      name="ministry"
-                      optionsQuery={GET_MINISTRIES}
-                      queryVariable="id"
-                      dataset="ministryList"
-                      defaultOption="Select a Ministry"
                     />
                   </div>
                 </div>

@@ -122,45 +122,135 @@ const PastorsAdmin = () => {
       key: data.name ? data.name : data.firstName + ' ' + data.lastName,
     }))
   }
+
   const memberFilter = (memberData, filters) => {
     let filteredData = memberData
 
+    const filterFor = (data, field, subfield, criteria) => {
+      data = data.filter((member) => {
+        if (
+          subfield
+            ? member[`${field}`] &&
+              member[`${field}`][`${subfield}`] === criteria
+            : member[`${field}`][0]
+        ) {
+          return member
+        }
+        return null
+      })
+
+      return data
+    }
+
     //Filter for Gender
-    if (filters.gender === 'Male') {
-      filteredData = filteredData.filter((member) => {
-        if (member.gender.gender === 'Male') {
-          return member
-        }
-        return null
-      })
-    } else if (filters.gender === 'Female') {
-      filteredData = filteredData.filter((member) => {
-        if (member.gender.gender === 'Female') {
-          return member
-        }
-        return null
-      })
+    switch (filters.gender) {
+      case 'Male':
+        filteredData = filterFor(filteredData, 'gender', 'gender', 'Male')
+        break
+      case 'Female':
+        filteredData = filterFor(filteredData, 'gender', 'gender', 'Female')
+        break
     }
 
     //Filter for Marital Status
-    if (filters.maritalStatus === 'Single') {
-      filteredData = filteredData.filter((member) => {
-        if (member.maritalStatus.status === 'Single') {
-          return member
-        }
-        return null
-      })
-    } else if (filters.maritalStatus === 'Married') {
-      filteredData = filteredData.filter((member) => {
-        if (member.maritalStatus.status === 'Married') {
-          return member
-        }
-        return null
-      })
+    switch (filters.maritalStatus) {
+      case 'Single':
+        filteredData = filterFor(
+          filteredData,
+          'maritalStatus',
+          'status',
+          'Single'
+        )
+
+        break
+      case 'Married':
+        filteredData = filterFor(
+          filteredData,
+          'maritalStatus',
+          'status',
+          'Married'
+        )
+        break
+    }
+
+    //Filter for Ministry
+    switch (filters.ministry) {
+      case 'Greater Love Choir':
+        filteredData = filterFor(
+          filteredData,
+          'ministry',
+          'name',
+          'Greater Love Choir'
+        )
+
+        break
+      case 'Dancing Stars':
+        filteredData = filterFor(
+          filteredData,
+          'ministry',
+          'name',
+          'Dancing Stars'
+        )
+        break
+
+      case 'Film Stars':
+        filteredData = filterFor(filteredData, 'ministry', 'name', 'Film Stars')
+        break
+      case 'Ushers':
+        filteredData = filterFor(filteredData, 'ministry', 'name', 'Ushers')
+        break
+      case 'Culinary Stars':
+        filteredData = filterFor(
+          filteredData,
+          'ministry',
+          'name',
+          'Culinary Stars'
+        )
+        break
+      case 'Arrivals':
+        filteredData = filterFor(filteredData, 'ministry', 'name', 'Arrivals')
+        break
+      case 'Fragrance':
+        filteredData = filterFor(filteredData, 'ministry', 'name', 'Fragrance')
+        break
+      case 'Telepastors':
+        filteredData = filterFor(
+          filteredData,
+          'ministry',
+          'name',
+          'Telepastors'
+        )
+        break
+      case 'Seeing and Hearing':
+        filteredData = filterFor(
+          filteredData,
+          'ministry',
+          'name',
+          'Seeing and Hearing'
+        )
+        break
+      case 'Understanding Campaign':
+        filteredData = filterFor(
+          filteredData,
+          'ministry',
+          'name',
+          'Understanding Campaign'
+        )
+        break
+      case 'BENMP':
+        filteredData = filterFor(filteredData, 'ministry', 'name', 'BENMP')
+        break
+      case 'Still Photography':
+        filteredData = filterFor(
+          filteredData,
+          'ministry',
+          'name',
+          'Still Photography'
+        )
+        break
     }
 
     //Filter for Leadership Rank
-
     let leaderData = {
       basontaLeaders: [],
       sontaLeaders: [],
@@ -168,37 +258,24 @@ const PastorsAdmin = () => {
       centreLeaders: [],
       cOs: [],
     }
+
     if (filters.leaderRank.includes('Basonta Leader')) {
-      leaderData.basontaLeaders = filteredData.filter((member) => {
-        if (member.leadsBasonta[0]) {
-          return member
-        }
-        return null
-      })
+      // leaderData.basontaLeaders = filteredData.filter((member) => {
+      //   if (member.leadsBasonta[0]) {
+      //     return member
+      //   }
+      //   return null
+      // })
+      leaderData.basontaLeaders = filterFor(filteredData, 'leadsBasonta')
     }
     if (filters.leaderRank.includes('Sonta Leader')) {
-      leaderData.sontaLeaders = filteredData.filter((member) => {
-        if (member.leadsSonta[0]) {
-          return member
-        }
-        return null
-      })
+      leaderData.sontaLeaders = filterFor(filteredData, 'leadsSonta')
     }
     if (filters.leaderRank.includes('Bacenta Leader')) {
-      leaderData.bacentaLeaders = filteredData.filter((member) => {
-        if (member.leadsBacenta[0]) {
-          return member
-        }
-        return null
-      })
+      leaderData.bacentaLeaders = filterFor(filteredData, 'leadsBacenta')
     }
     if (filters.leaderRank.includes('Centre Leader')) {
-      leaderData.centreLeaders = filteredData.filter((member) => {
-        if (member.leadsCentre[0]) {
-          return member
-        }
-        return null
-      })
+      leaderData.centreLeaders = filterFor(filteredData, 'leadsCentre')
     }
     if (filters.leaderRank.includes('CO')) {
       leaderData.cOs = filteredData.filter((member) => {
@@ -209,6 +286,7 @@ const PastorsAdmin = () => {
       })
     }
 
+    //Merge the Arrays without duplicates
     if (filters.leaderRank[0]) {
       filteredData = [
         ...new Set([
@@ -221,7 +299,19 @@ const PastorsAdmin = () => {
       ]
     }
 
-    console.log(filteredData)
+    //Code for finding duplicates
+    // let duplicates = [...yourArray]
+    // yourArrayWithoutDuplicates.forEach((item) => {
+    //   const i = duplicates.indexOf(item)
+    //   duplicates = duplicates
+    //     .slice(0, i)
+    //     .concat(duplicates.slice(i + 1, duplicates.length))
+    // })
+
+    // console.log("duplicates",duplicates) //[ 1, 5 ]
+
+    // console.log("FIltered",filteredData)
+
     return filteredData
   }
 

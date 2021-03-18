@@ -8,7 +8,9 @@ export const BISH_DASHBOARD_COUNTS = gql`
     }
     bishopMemberCount(id: $id)
     bishopPastorCount(id: $id)
-    bishopsCampusTownCount(id: $id)
+    bishopCampusTownCount(id: $id)
+    bishopCentreCount(id: $id)
+    bishopBacentaCount(id: $id)
     bishopSontaMemberCount(id: $id)
   }
 `

@@ -13,7 +13,7 @@ import { Auth0Provider, useAuth0 } from '@auth0/auth0-react'
 import './index.css'
 import BishopSelect from './pages/BishopSelect'
 import BishopDashboard from './pages/BishopDashboard'
-import { MembersGrid } from './pages/MembersGrid'
+import { MembersGridBishop } from './pages/MembersGrid'
 import { PastorsGrid } from './pages/PastorsGrid'
 import { SearchPageMobile } from './pages/SearchPageMobile'
 import { DisplayMemberDetails } from './pages/DisplayMemberDetails'
@@ -98,6 +98,13 @@ const PastorsAdmin = () => {
   const [ministryID, setMinistryID] = useState('')
   const [memberID, setMemberID] = useState('')
   const [searchKey, setSearchKey] = useState('')
+  const [filters, setFilters] = useState({
+    gender: '',
+    maritalStatus: '',
+    occupation: '',
+    leaderRank: [],
+    ministry: '',
+  })
   const capitalise = (str) => {
     return str.charAt(0).toUpperCase() + str.slice(1)
   }
@@ -114,6 +121,198 @@ const PastorsAdmin = () => {
       value: data.id,
       key: data.name ? data.name : data.firstName + ' ' + data.lastName,
     }))
+  }
+
+  const memberFilter = (memberData, filters) => {
+    let filteredData = memberData
+
+    const filterFor = (data, field, subfield, criteria) => {
+      data = data.filter((member) => {
+        if (
+          subfield
+            ? member[`${field}`] &&
+              member[`${field}`][`${subfield}`] === criteria
+            : member[`${field}`][0]
+        ) {
+          return member
+        }
+        return null
+      })
+
+      return data
+    }
+
+    //Filter for Gender
+    switch (filters.gender) {
+      case 'Male':
+        filteredData = filterFor(filteredData, 'gender', 'gender', 'Male')
+        break
+      case 'Female':
+        filteredData = filterFor(filteredData, 'gender', 'gender', 'Female')
+        break
+    }
+
+    //Filter for Marital Status
+    switch (filters.maritalStatus) {
+      case 'Single':
+        filteredData = filterFor(
+          filteredData,
+          'maritalStatus',
+          'status',
+          'Single'
+        )
+
+        break
+      case 'Married':
+        filteredData = filterFor(
+          filteredData,
+          'maritalStatus',
+          'status',
+          'Married'
+        )
+        break
+    }
+
+    //Filter for Ministry
+    switch (filters.ministry) {
+      case 'Greater Love Choir':
+        filteredData = filterFor(
+          filteredData,
+          'ministry',
+          'name',
+          'Greater Love Choir'
+        )
+
+        break
+      case 'Dancing Stars':
+        filteredData = filterFor(
+          filteredData,
+          'ministry',
+          'name',
+          'Dancing Stars'
+        )
+        break
+
+      case 'Film Stars':
+        filteredData = filterFor(filteredData, 'ministry', 'name', 'Film Stars')
+        break
+      case 'Ushers':
+        filteredData = filterFor(filteredData, 'ministry', 'name', 'Ushers')
+        break
+      case 'Culinary Stars':
+        filteredData = filterFor(
+          filteredData,
+          'ministry',
+          'name',
+          'Culinary Stars'
+        )
+        break
+      case 'Arrivals':
+        filteredData = filterFor(filteredData, 'ministry', 'name', 'Arrivals')
+        break
+      case 'Fragrance':
+        filteredData = filterFor(filteredData, 'ministry', 'name', 'Fragrance')
+        break
+      case 'Telepastors':
+        filteredData = filterFor(
+          filteredData,
+          'ministry',
+          'name',
+          'Telepastors'
+        )
+        break
+      case 'Seeing and Hearing':
+        filteredData = filterFor(
+          filteredData,
+          'ministry',
+          'name',
+          'Seeing and Hearing'
+        )
+        break
+      case 'Understanding Campaign':
+        filteredData = filterFor(
+          filteredData,
+          'ministry',
+          'name',
+          'Understanding Campaign'
+        )
+        break
+      case 'BENMP':
+        filteredData = filterFor(filteredData, 'ministry', 'name', 'BENMP')
+        break
+      case 'Still Photography':
+        filteredData = filterFor(
+          filteredData,
+          'ministry',
+          'name',
+          'Still Photography'
+        )
+        break
+    }
+
+    //Filter for Leadership Rank
+    let leaderData = {
+      basontaLeaders: [],
+      sontaLeaders: [],
+      bacentaLeaders: [],
+      centreLeaders: [],
+      cOs: [],
+    }
+
+    if (filters.leaderRank.includes('Basonta Leader')) {
+      // leaderData.basontaLeaders = filteredData.filter((member) => {
+      //   if (member.leadsBasonta[0]) {
+      //     return member
+      //   }
+      //   return null
+      // })
+      leaderData.basontaLeaders = filterFor(filteredData, 'leadsBasonta')
+    }
+    if (filters.leaderRank.includes('Sonta Leader')) {
+      leaderData.sontaLeaders = filterFor(filteredData, 'leadsSonta')
+    }
+    if (filters.leaderRank.includes('Bacenta Leader')) {
+      leaderData.bacentaLeaders = filterFor(filteredData, 'leadsBacenta')
+    }
+    if (filters.leaderRank.includes('Centre Leader')) {
+      leaderData.centreLeaders = filterFor(filteredData, 'leadsCentre')
+    }
+    if (filters.leaderRank.includes('CO')) {
+      leaderData.cOs = filteredData.filter((member) => {
+        if (member.townGSO[0] || member.campusGSO[0]) {
+          return member
+        }
+        return null
+      })
+    }
+
+    //Merge the Arrays without duplicates
+    if (filters.leaderRank[0]) {
+      filteredData = [
+        ...new Set([
+          ...leaderData.basontaLeaders,
+          ...leaderData.sontaLeaders,
+          ...leaderData.bacentaLeaders,
+          ...leaderData.centreLeaders,
+          ...leaderData.cOs,
+        ]),
+      ]
+    }
+
+    //Code for finding duplicates
+    // let duplicates = [...yourArray]
+    // yourArrayWithoutDuplicates.forEach((item) => {
+    //   const i = duplicates.indexOf(item)
+    //   duplicates = duplicates
+    //     .slice(0, i)
+    //     .concat(duplicates.slice(i + 1, duplicates.length))
+    // })
+
+    // console.log("duplicates",duplicates) //[ 1, 5 ]
+
+    // console.log("FIltered",filteredData)
+
+    return filteredData
   }
 
   const determineChurch = (member) => {
@@ -165,6 +364,9 @@ const PastorsAdmin = () => {
           parsePhoneNum,
           makeSelectOptions,
           determineChurch,
+          filters,
+          setFilters,
+          memberFilter,
           church,
           setChurch,
           bishopID,
@@ -189,7 +391,7 @@ const PastorsAdmin = () => {
               <Route path="/" component={BishopSelect} exact />
               <Route path="/dashboard" component={BishopDashboard} exact />
               <Route path="/membersearch" component={SearchPageMobile} exact />
-              <Route path="/members" component={MembersGrid} exact />
+              <Route path="/members" component={MembersGridBishop} exact />
               <Route path="/pastors" component={PastorsGrid} exact />
               <Route path="/member/addmember" component={CreateMember} exact />
               <Route

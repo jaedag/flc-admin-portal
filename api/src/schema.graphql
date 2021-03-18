@@ -19,6 +19,7 @@ type Member {
   leadsCentre: [Centre] @relation(name: "LEADS", direction: "OUT")
   leadsMinistry: [Ministry] @relation(name: "LEADS", direction: "OUT")
   leadsSonta: [Sonta] @relation(name: "LEADS", direction: "OUT")
+  leadsBasonta: [Basonta] @relation(name: "LEADS", direction: "OUT")
   townGSO: [Town] @relation(name: "LEADS", direction: "OUT")
   campusGSO: [Campus] @relation(name: "LEADS", direction: "OUT")
   leadershipHistory: [LeaderHistory]
@@ -174,17 +175,6 @@ type Basonta {
   centre: Centre @relation(name: "HAS_BASONTA", direction: "IN")
 }
 
-#Custom input types
-input pastoralAppointment {
-  title: String
-  date: String
-}
-
-input pastoralHistory {
-  historyRecord: String
-  historyDate: String
-}
-
 #Query Definitions
 type Query {
   #At the Federal Level
@@ -202,9 +192,17 @@ type Query {
   bacentaCount: Int! @cypher(statement: "MATCH (b:Bacenta) RETURN COUNT(b)")
 
   #At the Episcopal Level
-  bishopsCampusTownCount(id: ID): Int!
+  bishopCampusTownCount(id: ID): Int!
     @cypher(
       statement: "MATCH (:Member {id: $id})-[:HAS_TOWN|:HAS_CAMPUS]->(t) RETURN COUNT(t)"
+    )
+    bishopCentreCount(id: ID): Int!
+    @cypher(
+      statement: "MATCH (:Member {id: $id})-[:HAS_TOWN|:HAS_CAMPUS]->()-[:HAS_CENTRE]-(c) RETURN COUNT(c)"
+    )
+    bishopBacentaCount(id: ID): Int!
+    @cypher(
+      statement: "MATCH (:Member {id: $id})-[:HAS_TOWN|:HAS_CAMPUS]->()-[:HAS_CENTRE]-()-[:HAS_BACENTA]-(b) RETURN COUNT(b)"
     )
   bishopBacentaDropdown(id: ID, bacentaName: String): [Bacenta]
     @cypher(
@@ -239,7 +237,7 @@ type Query {
     @cypher(
       statement: "MATCH (t:Title)<-[:HAS_TITLE]-(m:Member)-[:BELONGS_TO]->()<-[:HAS_BACENTA]-()-[:HAS_CENTRE]-()-[:HAS_TOWN|:HAS_CAMPUS]-(:Member {id: $id}) RETURN m"
     )
-  bishopMemberList(id: ID): [Member]!
+  bishopMemberList(id: ID,): [Member]!
     @cypher(
       statement: """
       MATCH (:Member {id: $id})-[:HAS_TOWN|:HAS_CAMPUS]->(t)
@@ -335,7 +333,10 @@ type Query {
     @cypher(
       statement: "MATCH (:Campus {id:$id})-[]-(:Centre)-[]->(:Bacenta)<-[:BELONGS_TO]-(m:Member) RETURN COUNT(m)"
     )
-
+  campusSontaMemberCount(id: ID): Int!
+    @cypher(
+      statement: "MATCH (:Campus {id: $id})-[]-(:Centre)-[]->(:Bacenta)<-[:BELONGS_TO]-(m:Member) MATCH (m)-[:BELONGS_TO]->(:Ministry) RETURN COUNT(m)"
+    )
   #At the Centre Level
   displayCentre(id: ID): Centre
     @cypher(statement: "MATCH (c:Centre {id:$id}) RETURN c")
@@ -473,8 +474,6 @@ type Mutation {
     bacenta: String!
     ministry: String
     pictureUrl: String!
-    pastoralAppointment: [pastoralAppointment]
-    pastoralHistory: [pastoralHistory]
   ): Member
     @cypher(
       statement: """
@@ -500,7 +499,7 @@ type Mutation {
          	WITH m
          	WITH m  WHERE $dob IS NOT NULL
          	MERGE (t:TimeGraph {date: date($dob)})
-      	MERGE (m)-[:WAS_BORN_ON]->(t)
+      	  MERGE (m)-[:WAS_BORN_ON]->(t)
          	RETURN count(m)
          	}
 
@@ -532,33 +531,7 @@ type Mutation {
       RETURN m
       """
     )
-  CreateLeaderTitle(id: ID!, pastoralAppointment: [pastoralAppointment]): Title
-    @cypher(
-      statement: """
-      MATCH (member:Member {id: $id})
-      UNWIND $pastoralAppointment as x
-      MERGE (t:Title {title: x.title})
-      MERGE (member)-[r:HAS_TITLE]->(t)
-      	SET r.yearAppointed = date(x.date)
-      RETURN t
-      """
-    )
-  AddLeaderHistory(id: ID, pastoralHistory: [pastoralHistory]): LeaderHistory
-    @cypher(
-      statement: """
-      UNWIND $pastoralHistory as x
-      CREATE (h:LeaderHistory)
-      	SET
-      	h.historyRecord = x.historyRecord,
-      	h.created_at = datetime()
-      with h
-      MATCH (l:Member {id: $id})
-      MERGE (tg:TimeGraph {date: date(x.historyDate)})
-      MERGE (h)-[:LEADER_STARTED_ON]->(tg)
-      MERGE (l)-[:HAS_LEADERSHIP_HISTORY]->(h)
-      RETURN h
-      """
-    )
+  
   CreateTown(
     townName: String
     lWhatsappNumber: String
@@ -695,8 +668,6 @@ type Mutation {
     bacenta: String
     ministry: String
     pictureUrl: String!
-    pastoralAppointment: [pastoralAppointment]
-    pastoralHistory: [pastoralHistory]
   ): Member
     @cypher(
       statement: """

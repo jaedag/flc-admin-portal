@@ -1,17 +1,19 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Formik, Form } from 'formik'
 import FormikControl from '../components/formik-components/FormikControl'
-import { OCCUPATION_LIST } from '../queries/ListQueries'
+import { GET_MINISTRIES, OCCUPATION_LIST } from '../queries/ListQueries'
+import { ChurchContext } from '../contexts/ChurchContext'
 
 export const SideBar = () => {
   const initialValues = {
     gender: '',
     maritalStatus: '',
-    age: '',
     occupation: '',
-    town: '',
-    yearAppointed: '',
+    leaderRank: [],
+    ministry: '',
   }
+
+  const { setFilters } = useContext(ChurchContext)
 
   const genderOptions = [
     { key: 'Male', value: 'Male' },
@@ -22,13 +24,19 @@ export const SideBar = () => {
     { key: 'Married', value: 'Married' },
   ]
 
+  const leaderOptions = [
+    { key: 'CO', value: 'CO' },
+    { key: 'Centre Leader', value: 'Centre Leader' },
+    { key: 'Sonta Leader', value: 'Sonta Leader' },
+    { key: 'Bacenta Leader', value: 'Bacenta Leader' },
+    { key: 'Basonta Leader', value: 'Basonta Leader' },
+  ]
+
   const onSubmit = (values, onSubmitProps) => {
-    console.log('Form data', values)
     onSubmitProps.setSubmitting(false)
-    onSubmitProps.resetForm()
+    setFilters(values)
   }
 
-  // console.log(occupationData.Occupation)
   return (
     <nav id="sidebarMenu" className="d-md-block sidebar collapse">
       <Formik initialValues={initialValues} onSubmit={onSubmit}>
@@ -60,15 +68,6 @@ export const SideBar = () => {
                   </div>
                   <div className="col pb-2">
                     <FormikControl
-                      label="Age"
-                      className="form-control"
-                      control="input"
-                      name="age"
-                      placeholder="Enter an Age"
-                    />
-                  </div>
-                  <div className="col pb-2">
-                    <FormikControl
                       control="combobox"
                       name="occupation"
                       label="Occupation"
@@ -82,31 +81,40 @@ export const SideBar = () => {
                       aria-describedby="Occupation Options"
                     />
                   </div>
-                  <div className="col pb-2">
-                    <FormikControl
-                      className="form-control"
-                      name="centre"
-                      placeholder="Branch"
-                      control="input"
-                    />
-                  </div>
                   <div className="col pb-4">
                     <FormikControl
                       className="form-control"
-                      name="yearAppointed"
-                      placeholder="Year Appointed"
-                      control="input"
+                      control="selectWithQuery"
+                      name="ministry"
+                      modifier="filter"
+                      optionsQuery={GET_MINISTRIES}
+                      queryVariable="id"
+                      dataset="ministryList"
+                      defaultOption="Select a Ministry"
+                    />
+                  </div>
+                  <div className="col pb-2">
+                    <FormikControl
+                      className="form-control"
+                      name="leaderRank"
+                      control="checkbox"
+                      options={leaderOptions}
                     />
                   </div>
                 </div>
               </div>
-              <div className="d-flex justify-content-center m">
+              <div className="d-flex justify-content-center">
                 <button
                   type="submit"
                   disabled={!formik.isValid || formik.isSubmitting}
                   className="btn btn-primary px-4 py-3"
                 >
                   Apply Filters
+                </button>
+              </div>
+              <div className="d-flex justify-content-center">
+                <button type="reset" className="btn btn-primary px-4 py-3">
+                  Reset Filters
                 </button>
               </div>
             </Form>

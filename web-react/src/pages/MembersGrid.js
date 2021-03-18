@@ -7,8 +7,8 @@ import { MemberTable } from '../components/MemberTable'
 import { GET_BISHOP_MEMBERS } from '../queries/ListQueries'
 import { ChurchContext } from '../contexts/ChurchContext'
 
-export const MembersGrid = () => {
-  const { bishopID } = useContext(ChurchContext)
+export const MembersGridBishop = () => {
+  const { memberFilter, filters, bishopID } = useContext(ChurchContext)
   const [offset, setOffset] = useState(0)
   const {
     data: memberData,
@@ -18,6 +18,10 @@ export const MembersGrid = () => {
   } = useQuery(GET_BISHOP_MEMBERS, {
     variables: { id: bishopID, offset: offset },
   })
+
+  const memberDataLoaded = memberData
+    ? memberFilter(memberData?.bishopMemberList, filters)
+    : null
 
   return (
     <div>
@@ -29,7 +33,11 @@ export const MembersGrid = () => {
 
         <div className="col px-2">
           <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-2 mb-3 border-bottom">
-            <h3 className="h3">Search Results</h3>
+            <h3 className="h3">
+              {memberData
+                ? `${memberDataLoaded.length} Search Results`
+                : 'SearchResults'}
+            </h3>
             <div className="btn-toolbar mb-2 mb-md-0">
               <div className="btn-group mr-2" />
               <Link to="/member/addmember" className="btn btn-primary p-2 mx-1">
@@ -64,10 +72,9 @@ export const MembersGrid = () => {
             </div>
           </div>
           <MemberTable
-            memberData={memberData}
+            memberData={memberDataLoaded}
             memberError={memberError}
             memberLoading={memberLoading}
-            list="bishopMemberList"
           />
         </div>
       </div>

@@ -7,6 +7,7 @@ import { DISPLAY_MEMBER } from '../queries/DisplayQueries'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
 import { MemberContext } from '../contexts/MemberContext'
 import { ChurchContext } from '../contexts/ChurchContext'
+import userIcon from '../img/user.png'
 
 export const DisplayMemberDetails = () => {
   const monthNames = [
@@ -137,7 +138,11 @@ export const DisplayMemberDetails = () => {
                   <div className="row row-cols-1 my-2">
                     <div className="col d-flex justify-content-center">
                       <img
-                        src={`${memberData.displayMember.pictureUrl}`}
+                        src={
+                          memberData.displayMember.pictureUrl
+                            ? memberData.displayMember.pictureUrl
+                            : userIcon
+                        }
                         className="m-2 rounded profile-img"
                         alt={`${memberData.displayMember.firstName} ${memberData.displayMember.lastName}`}
                       />

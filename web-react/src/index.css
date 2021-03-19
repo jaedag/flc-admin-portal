@@ -58,15 +58,15 @@
   height: 70px;
 }
 
-.mobile-search-nav{
+.mobile-search-nav {
   height: 85px;
 }
 
-.mobile-search-box{
+.mobile-search-box {
   width: 70vw;
   background-color: var(--text-box-inner);
   color: var(--text-focus-white);
-  height:42px;
+  height: 42px;
   border: 1px solid var(--border-color);
   padding-left: 10px;
   border-radius: 5px;
@@ -74,7 +74,7 @@
 }
 
 .mobile-search-button {
-  height:42px;
+  height: 42px;
 }
 
 .sidebar {
@@ -126,28 +126,22 @@
   font-size: 0.8rem;
 }
 
-.image-card {
-  width: 120px;
-  height: 115px;
-  border-radius: 7%;
+.card {
   background-color: var(--card-color);
+  border: 1px solid var(--border-color);
 }
 
 .grid-card {
-  justify-content: center;
   width: 120px;
   height: 200px;
+  background-color: transparent;
+  border-color: transparent;
 }
 
 .big-card {
   background-color: var(--card-color);
   border-radius: 7%;
   text-align: center;
-  border: 1px solid var(--border-color);
-}
-
-.card {
-  background-color: var(--card-color);
   border: 1px solid var(--border-color);
 }
 
@@ -189,7 +183,7 @@
   height: intrinsic;
 }
 
-.user-navbar-img{
+.user-navbar-img {
   width: 40px;
   border: 1px solid var(--infobar-color);
   border-radius: 100px;
@@ -210,7 +204,7 @@
   border-color: var(--border-color);
   border-radius: 10px;
   border: 0px;
-  margin-bottom:15px;
+  margin-bottom: 15px;
 }
 
 .btn-lg {
@@ -233,7 +227,6 @@
   border: 1px solid var(--border-color);
 }
 
-
 .form-control {
   background-color: var(--text-box-inner);
   color: var(--text-focus-white);
@@ -251,10 +244,10 @@
   margin: 5px 5px 5px 0px;
 }
 
-.nav-search-box{
+.nav-search-box {
   background-color: var(--text-box-inner);
   color: var(--text-focus-white);
-  height:38px;
+  height: 38px;
   border: 1px solid var(--border-color);
   width: 30vw;
   padding-left: 10px;
@@ -333,9 +326,9 @@ body {
   padding-top: 8vh;
   max-width: 100vw;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji",
-    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji',
+    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
@@ -366,7 +359,7 @@ ul.timeline {
   position: relative;
 }
 ul.timeline:before {
-  content: " ";
+  content: ' ';
   background: #d4d9df;
   display: inline-block;
   position: absolute;
@@ -380,7 +373,7 @@ ul.timeline > li {
   padding-left: 20px;
 }
 ul.timeline > li:before {
-  content: " ";
+  content: ' ';
   background: white;
   display: inline-block;
   position: absolute;

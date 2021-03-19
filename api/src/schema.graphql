@@ -72,7 +72,7 @@ type TimeGraph {
     @relation(name: "SERVICE_DATE", direction: IN)
 }
 type LeaderHistory {
-  created_at: String @neo4j_ignore @cypher(statement: "RETURN datetime()")
+  created_at: DateTime
   historyRecord: String
   historyStartDate: TimeGraph
     @relation(name: "LEADER_STARTED_ON", direction: OUT)
@@ -96,7 +96,7 @@ type BacentaServiceRecords {
 
 type BacentaHistoryLog {
   id: ID
-  created_at: String @neo4j_ignore @cypher(statement: "RETURN datetime()")
+  created_at: DateTime
   historyRecord: String #leader was transferred to
   historyStartDate: TimeGraph
     @relation(name: "BACENTA_STARTED_ON", direction: OUT)

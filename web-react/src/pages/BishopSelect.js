@@ -144,7 +144,7 @@ const BishopSelect = () => {
               First Love Church is a church full of young people on fire for the
               Lord
             </div>
-            <div className="col-auto d-flex align-items-center">
+            <div className="col-auto">
               <AuthButton />
             </div>
           </div>

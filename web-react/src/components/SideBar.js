@@ -112,7 +112,12 @@ export const SideBar = () => {
                   Apply Filters
                 </button>
               </div>
-              <div className="d-flex justify-content-center">
+              <div
+                className="d-flex justify-content-center"
+                onClick={() => {
+                  formik.submitForm()
+                }}
+              >
                 <button type="reset" className="btn btn-primary px-4 py-3">
                   Reset Filters
                 </button>

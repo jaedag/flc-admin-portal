@@ -26,7 +26,7 @@ function UserProfile() {
         </Link>
       )}
       {!isAuthenticated && (
-        <div className="nav-item nav-link d-flex align-items-center">
+        <div className="nav-item nav-link d-flex align-items-center flex-column">
           <AuthButton />
         </div>
       )}

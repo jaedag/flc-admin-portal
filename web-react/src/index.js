@@ -150,6 +150,9 @@ const PastorsAdmin = () => {
       case 'Female':
         filteredData = filterFor(filteredData, 'gender', 'gender', 'Female')
         break
+      default:
+        //do nothing
+        break
     }
 
     //Filter for Marital Status
@@ -170,6 +173,9 @@ const PastorsAdmin = () => {
           'status',
           'Married'
         )
+        break
+      default:
+        //do nothing
         break
     }
 
@@ -247,6 +253,9 @@ const PastorsAdmin = () => {
           'name',
           'Still Photography'
         )
+        break
+      default:
+        //do nothing
         break
     }
 
@@ -390,7 +399,7 @@ const PastorsAdmin = () => {
             <Switch>
               <Route path="/" component={BishopSelect} exact />
               <Route path="/dashboard" component={BishopDashboard} exact />
-              <Route path="/membersearch" component={SearchPageMobile} exact />
+              <Route path="/member-search" component={SearchPageMobile} exact />
               <Route path="/members" component={MembersGridBishop} exact />
               <Route path="/pastors" component={PastorsGrid} exact />
               <Route path="/member/addmember" component={CreateMember} exact />
@@ -447,12 +456,12 @@ const PastorsAdmin = () => {
                 exact
               />
               <Route
-                path="/town/sonta/displayall"
+                path="/town/display-sontas"
                 component={DisplaySontasByCampusTown}
                 exact
               />
               <Route
-                path="/campus/sonta/displayall"
+                path="/campus/display-sontas"
                 component={DisplaySontasByCampusTown}
                 exact
               />

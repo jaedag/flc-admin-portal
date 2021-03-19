@@ -102,6 +102,7 @@ export const UpdateBacenta = () => {
         },
       })
       if (values.centreSelect !== initialValues.centreSelect) {
+        console.log(bacentaData?.displayBacenta?.centre?.name)
         RemoveBacentaCentre({
           variables: {
             centreID: initialValues.centreSelect,

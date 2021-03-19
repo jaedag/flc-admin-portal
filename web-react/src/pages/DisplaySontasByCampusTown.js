@@ -76,7 +76,6 @@ export const DisplaySontasByCampusTown = () => {
       </div>
     )
   } else if (sontaData && church.church === 'town') {
-    console.log(sontaData)
     return (
       <div>
         <NavBar />

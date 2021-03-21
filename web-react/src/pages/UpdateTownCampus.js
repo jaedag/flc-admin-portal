@@ -30,22 +30,22 @@ export const UpdateTownCampus = () => {
     parsePhoneNum,
     makeSelectOptions,
     phoneRegExp,
-    campusID,
-    townID,
-    bishopID,
-    setBishopID,
+    campusId,
+    townId,
+    bishopId,
+    setBishopId,
   } = useContext(ChurchContext)
   const {
     data: campusData,
     error: campusError,
     loading: campusLoading,
   } = useQuery(DISPLAY_CAMPUS, {
-    variables: { id: campusID },
+    variables: { id: campusId },
   })
   const { data: townData, error: townError, loading: townLoading } = useQuery(
     DISPLAY_TOWN,
     {
-      variables: { id: townID },
+      variables: { id: townId },
     }
   )
 
@@ -88,28 +88,28 @@ export const UpdateTownCampus = () => {
 
   const [UpdateTown] = useMutation(UPDATE_TOWN_MUTATION, {
     refetchQueries: [
-      { query: DISPLAY_TOWN, variables: { id: townID } },
-      { query: GET_TOWN_CENTRES, variables: { id: townID } },
-      { query: GET_TOWNS, variables: { id: bishopID } },
+      { query: DISPLAY_TOWN, variables: { id: townId } },
+      { query: GET_TOWN_CENTRES, variables: { id: townId } },
+      { query: GET_TOWNS, variables: { id: bishopId } },
       { query: GET_TOWNS, variables: { id: townData?.displayTown?.bishop.id } },
-      { query: BISH_DASHBOARD_COUNTS, variables: { id: bishopID } },
+      { query: BISH_DASHBOARD_COUNTS, variables: { id: bishopId } },
     ],
   })
 
   const [UpdateCampus] = useMutation(UPDATE_CAMPUS_MUTATION, {
     refetchQueries: [
-      { query: DISPLAY_CAMPUS, variables: { id: campusID } },
-      { query: GET_CAMPUS_CENTRES, variables: { id: campusID } },
+      { query: DISPLAY_CAMPUS, variables: { id: campusId } },
+      { query: GET_CAMPUS_CENTRES, variables: { id: campusId } },
       {
         query: GET_CAMPUS_CENTRES,
         variables: { id: campusData?.displayCampus?.id },
       },
-      { query: GET_CAMPUSES, variables: { id: bishopID } },
+      { query: GET_CAMPUSES, variables: { id: bishopId } },
       {
         query: GET_CAMPUSES,
         variables: { id: campusData?.displayCampus?.bishop.id },
       },
-      { query: BISH_DASHBOARD_COUNTS, variables: { id: bishopID } },
+      { query: BISH_DASHBOARD_COUNTS, variables: { id: bishopId } },
     ],
   })
 
@@ -131,15 +131,15 @@ export const UpdateTownCampus = () => {
 
     //onSubmit receives the form state as argument
     const onSubmit = (values, onSubmitProps) => {
-      setBishopID(values.bishopSelect)
+      setBishopId(values.bishopSelect)
 
       if (church.church === 'town') {
         UpdateTown({
           variables: {
-            townID: townID,
+            townId: townId,
             townName: values.campusTownName,
             lWhatsappNumber: parsePhoneNum(values.leaderWhatsapp),
-            bishopID: values.bishopSelect,
+            bishopId: values.bishopSelect,
             centres: values.centres.map((centre) => {
               return centre.id
             }),
@@ -149,10 +149,10 @@ export const UpdateTownCampus = () => {
         // console.log("Form data",values);
         UpdateCampus({
           variables: {
-            campusID: campusID,
+            campusId: campusId,
             campusName: values.campusTownName,
             lWhatsappNumber: parsePhoneNum(values.leaderWhatsapp),
-            bishopID: values.bishopSelect,
+            bishopId: values.bishopSelect,
             centres: values.centres.map((centre) => {
               return centre.id
             }),

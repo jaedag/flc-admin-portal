@@ -27,8 +27,8 @@ export const UpdateBacenta = () => {
     parsePhoneNum,
     capitalise,
     phoneRegExp,
-    townID,
-    campusID,
+    townId,
+    campusId,
     centreID,
     setCentreID,
     bacentaID,
@@ -156,7 +156,7 @@ export const UpdateBacenta = () => {
                                 : 'campusCentreList'
                             }
                             varValue={
-                              church.church === 'town' ? townID : campusID
+                              church.church === 'town' ? townId : campusId
                             }
                             defaultOption="Select a Centre"
                           />

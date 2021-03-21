@@ -6,33 +6,28 @@ import { NavBar } from '../components/NavBar'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
 import { GET_TOWNS, GET_CAMPUSES } from '../queries/ListQueries'
 import { ChurchContext } from '../contexts/ChurchContext'
-import { MemberContext } from '../contexts/MemberContext'
 import { BISHOP_MEMBER_COUNT } from '../queries/CountQueries'
 
 export const DisplayAllTownCampuses = () => {
-  const { church, bishopID, setTownID, setCampusID } = useContext(ChurchContext)
-  const { setMemberID } = useContext(MemberContext)
-
-  const { data: townData, error: townError, loading: townLoading } = useQuery(
-    GET_TOWNS,
-    {
-      variables: { id: bishopID },
-    }
+  const { clickMember, church, bishopId, setTownId, setCampusID } = useContext(
+    ChurchContext
   )
+
+  const { data: townData, loading: townLoading } = useQuery(GET_TOWNS, {
+    variables: { id: bishopId },
+  })
   const {
     data: campusData,
-    error: campusError,
+
     loading: campusLoading,
   } = useQuery(GET_CAMPUSES, {
-    variables: { id: bishopID },
+    variables: { id: bishopId },
   })
   const { data: bishopMemberCount } = useQuery(BISHOP_MEMBER_COUNT, {
-    variables: { id: bishopID },
+    variables: { id: bishopId },
   })
 
-  if (townError || campusError) {
-    return <ErrorScreen />
-  } else if (townLoading || campusLoading) {
+  if (townLoading || campusLoading) {
     // Spinner Icon for Loading Screens
     return <LoadingScreen />
   } else if (church.church === 'town') {
@@ -46,10 +41,19 @@ export const DisplayAllTownCampuses = () => {
                 <Link
                   to="/member/displaydetails"
                   onClick={() => {
-                    setMemberID(`${townData.townList[0].bishop.id}`)
+                    clickMember(townData.townList[0].bishop)
                   }}
                 >
                   <h4>{`${townData.townList[0].bishop.firstName} ${townData.townList[0].bishop.lastName}'s Towns`}</h4>
+                </Link>
+                <Link
+                  className="pb-4"
+                  to="/member/displaydetails"
+                  onClick={() => {
+                    clickMember(townData.townList[0].bishop?.hasAdmin)
+                  }}
+                >
+                  {`Admin: ${townData.townList[0].bishop?.hasAdmin?.firstName} ${townData.townList[0].bishop?.hasAdmin?.lastName}`}
                 </Link>
               </div>
               <div className="col-auto">
@@ -69,7 +73,7 @@ export const DisplayAllTownCampuses = () => {
           </div>
           <DisplayChurchList
             data={townData.townList}
-            setter={setTownID}
+            setter={setTownId}
             churchType="Town"
           />
         </div>
@@ -86,10 +90,19 @@ export const DisplayAllTownCampuses = () => {
                 <Link
                   to="/member/displaydetails"
                   onClick={() => {
-                    setMemberID(`${campusData.campusList[0].bishop.id}`)
+                    clickMember(campusData.campusList[0].bishop)
                   }}
                 >
                   <h4>{`${campusData.campusList[0].bishop.firstName} ${campusData.campusList[0].bishop.lastName}'s Campuses`}</h4>
+                </Link>
+                <Link
+                  className="pb-4"
+                  to="/member/displaydetails"
+                  onClick={() => {
+                    clickMember(campusData.campusList[0].bishop?.hasAdmin)
+                  }}
+                >
+                  {`Admin: ${campusData.campusList[0].bishop?.hasAdmin?.firstName} ${campusData.campusList[0].bishop?.hasAdmin?.lastName}`}
                 </Link>
               </div>
               <div className="col-auto">
@@ -115,5 +128,7 @@ export const DisplayAllTownCampuses = () => {
         </div>
       </div>
     )
+  } else {
+    return <ErrorScreen />
   }
 }

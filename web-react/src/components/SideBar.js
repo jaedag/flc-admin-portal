@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { Formik, Form } from 'formik'
 import FormikControl from '../components/formik-components/FormikControl'
 import { GET_MINISTRIES, OCCUPATION_LIST } from '../queries/ListQueries'
@@ -13,6 +13,10 @@ export const SideBar = () => {
     leaderRank: [],
     ministry: '',
   }
+
+  useEffect(() => {
+    setFilters(initialValues)
+  }, [])
 
   const genderOptions = [
     { key: 'Male', value: 'Male' },

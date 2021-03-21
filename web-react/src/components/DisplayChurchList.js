@@ -16,15 +16,15 @@ export const DisplayChurchList = (props) => {
             return (
               <Link
                 to={`/${churchType.toLowerCase()}/displaydetails`}
-                className="col-5 col-lg-3 card m-2"
+                className="col-sm-8 col-md-3 card m-2"
                 key={index}
                 onClick={() => {
                   setter(church[churchID])
                 }}
               >
                 <div className="card-body">
-                  <span className="text-muted">{`${churchType}:`}</span>
-                  <h6 className="card-title">{church.name}</h6>
+                  <span className="text-muted">{`${churchType}: `}</span>
+                  <span className="card-title">{church.name}</span>
                   <h6 className="card-text text-muted">
                     {church.leader
                       ? `${church.leader.firstName} ${church.leader.lastName}`

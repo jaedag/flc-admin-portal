@@ -42,17 +42,17 @@ export const UPDATE_MEMBER_MUTATION = gql`
 
 export const UPDATE_TOWN_MUTATION = gql`
   mutation UpdateTown(
-    $townID: ID!
+    $townId: ID!
     $townName: String
     $lWhatsappNumber: String
-    $bishopID: ID
+    $bishopId: ID
     $centres: [ID]
   ) {
     UpdateTown(
-      townID: $townID
+      townId: $townId
       townName: $townName
       lWhatsappNumber: $lWhatsappNumber
-      bishopID: $bishopID
+      bishopId: $bishopId
       centres: $centres
     ) {
       id
@@ -63,17 +63,17 @@ export const UPDATE_TOWN_MUTATION = gql`
 
 export const UPDATE_CAMPUS_MUTATION = gql`
   mutation UpdateCampus(
-    $campusID: ID
+    $campusId: ID
     $campusName: String
     $lWhatsappNumber: String
-    $bishopID: ID
+    $bishopId: ID
     $centres: [ID]
   ) {
     UpdateCampus(
-      campusID: $campusID
+      campusId: $campusId
       campusName: $campusName
       lWhatsappNumber: $lWhatsappNumber
-      bishopID: $bishopID
+      bishopId: $bishopId
       centres: $centres
     ) {
       id

@@ -32,8 +32,8 @@ function CreateCentre() {
     phoneRegExp,
     parsePhoneNum,
     makeSelectOptions,
-    bishopID,
-    setTownID,
+    bishopId,
+    setTownId,
     setCampusID,
     setCentreID,
   } = useContext(ChurchContext)
@@ -51,8 +51,8 @@ function CreateCentre() {
 
   const [CreateCentre] = useMutation(CREATE_CENTRE_MUTATION, {
     refetchQueries: [
-      { query: GET_CAMPUS_CENTRES, variables: { id: bishopID } },
-      { query: GET_TOWN_CENTRES, variables: { id: bishopID } },
+      { query: GET_CAMPUS_CENTRES, variables: { id: bishopId } },
+      { query: GET_TOWN_CENTRES, variables: { id: bishopId } },
     ],
     onCompleted: (newCentreData) => {
       setCentreID(newCentreData.CreateCentre.id)
@@ -61,12 +61,12 @@ function CreateCentre() {
   })
 
   const { data: townListData, loading: townListLoading } = useQuery(GET_TOWNS, {
-    variables: { id: bishopID },
+    variables: { id: bishopId },
   })
   const { data: campusListData, loading: campusListLoading } = useQuery(
     GET_CAMPUSES,
     {
-      variables: { id: bishopID },
+      variables: { id: bishopId },
     }
   )
 
@@ -77,7 +77,7 @@ function CreateCentre() {
     //onSubmit receives the form state as argument
     const onSubmit = (values, onSubmitProps) => {
       if (church.church === 'town') {
-        setTownID(values.campusTownSelect)
+        setTownId(values.campusTownSelect)
       } else if (church.church === 'campus') {
         setCampusID(values.campusTownSelect)
       }
@@ -180,7 +180,7 @@ function CreateCentre() {
                                       setFieldValue={formik.setFieldValue}
                                       optionsQuery={BISHOP_BACENTA_DROPDOWN}
                                       queryVariable1="id"
-                                      variable1={bishopID}
+                                      variable1={bishopId}
                                       queryVariable2="bacentaName"
                                       suggestionText="name"
                                       suggestionID="id"

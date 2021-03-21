@@ -6,7 +6,13 @@ import Spinner from './Spinner'
 import userIcon from '../img/user.png'
 
 export const MemberTable = (props) => {
-  const { memberData, memberError, memberLoading } = props
+  const {
+    memberData,
+    memberError,
+    memberLoading,
+    offset,
+    numberOfRecords,
+  } = props
   const { setMemberID } = useContext(MemberContext)
   const { determineChurch } = useContext(ChurchContext)
   const history = useHistory()
@@ -31,6 +37,11 @@ export const MemberTable = (props) => {
       <div className="container d-none d-lg-block">
         <div className="row">
           {memberData.map((soul, index) => {
+            if (index < offset) {
+              return null
+            } else if (index >= offset + numberOfRecords) {
+              return null
+            }
             return (
               <div className="col-auto" key={index}>
                 <div
@@ -56,8 +67,14 @@ export const MemberTable = (props) => {
         </div>
       </div>
 
+      {/* Mobile View */}
       <div className="d-lg-none">
         {memberData.map((soul, index) => {
+          if (index < offset) {
+            return null
+          } else if (index >= offset + numberOfRecords) {
+            return null
+          }
           return (
             <div
               key={index}

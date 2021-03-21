@@ -37,7 +37,7 @@ export const DisplayCentreDetails = () => {
             ? `${displayCentre.leader.firstName} ${displayCentre.leader.lastName}`
             : '-'
         }
-        leaderID={displayCentre.leader ? displayCentre.leader.id : null}
+        leaderId={displayCentre.leader ? displayCentre.leader.id : null}
         churchHeading="No of Bacentas"
         churchType="Centre"
         subChurch="Bacenta"

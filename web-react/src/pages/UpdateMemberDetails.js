@@ -98,7 +98,7 @@ export const UpdateMemberDetails = () => {
   const history = useHistory()
 
   const validationSchema = Yup.object({
-    firstName: Yup.string().required('Name is a required field'),
+    firstName: Yup.string().required('This is a required field'),
     lastName: Yup.string().required('This is a required field'),
     gender: Yup.string().required('This is a required field'),
     email: Yup.string().email('Please enter a valid email address'),
@@ -249,7 +249,7 @@ export const UpdateMemberDetails = () => {
                           className="form-control"
                           control="input"
                           name="firstName"
-                          placeholder="First Name"
+                          placeholder="First Name*"
                           aria-describedby="firstNameHelp"
                         />
                       </div>

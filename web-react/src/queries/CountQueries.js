@@ -5,6 +5,27 @@ export const BISH_DASHBOARD_COUNTS = gql`
     displayMember(id: $id) {
       firstName
       lastName
+      hasAdmin {
+        id
+        firstName
+        lastName
+        bacenta {
+          centre {
+            town {
+              name
+              bishop {
+                id
+              }
+            }
+            campus {
+              name
+              bishop {
+                id
+              }
+            }
+          }
+        }
+      }
     }
     bishopMemberCount(id: $id)
     bishopPastorCount(id: $id)

@@ -22,9 +22,9 @@ export const UpdateCentre = () => {
     parsePhoneNum,
     capitalise,
     phoneRegExp,
-    townID,
+    townId,
     centreID,
-    setBishopID,
+    setBishopId,
   } = useContext(ChurchContext)
 
   const {
@@ -61,7 +61,7 @@ export const UpdateCentre = () => {
   const [UpdateCentre] = useMutation(UPDATE_CENTRE_MUTATION, {
     refetchQueries: [
       { query: DISPLAY_CENTRE, variables: { id: centreID } },
-      { query: GET_TOWN_CENTRES, variables: { id: townID } },
+      { query: GET_TOWN_CENTRES, variables: { id: townId } },
       {
         query: GET_TOWN_CENTRES,
         variables: { id: initialValues.townCampusSelect },
@@ -78,7 +78,7 @@ export const UpdateCentre = () => {
   } else {
     //onSubmit receives the form state as argument
     const onSubmit = (values, onSubmitProps) => {
-      setBishopID(values.centreSelect)
+      setBishopId(values.centreSelect)
 
       UpdateCentre({
         variables: {

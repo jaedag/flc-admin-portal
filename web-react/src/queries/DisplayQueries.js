@@ -76,7 +76,7 @@ export const DISPLAY_MEMBER = gql`
         }
       }
       leadershipHistory(orderBy: created_at_desc) {
-        historyStartDate {
+        historyDate {
           date {
             formatted
           }
@@ -202,6 +202,27 @@ export const DISPLAY_TOWN = gql`
         id
         name
       }
+      admin {
+        id
+        firstName
+        lastName
+        bacenta {
+          centre {
+            town {
+              name
+              bishop {
+                id
+              }
+            }
+            campus {
+              name
+              bishop {
+                id
+              }
+            }
+          }
+        }
+      }
       bishop {
         id
         firstName
@@ -241,6 +262,27 @@ export const DISPLAY_CAMPUS = gql`
         id
         firstName
         lastName
+      }
+      admin {
+        id
+        firstName
+        lastName
+        bacenta {
+          centre {
+            town {
+              name
+              bishop {
+                id
+              }
+            }
+            campus {
+              name
+              bishop {
+                id
+              }
+            }
+          }
+        }
       }
       leader {
         id

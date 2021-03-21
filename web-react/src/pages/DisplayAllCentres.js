@@ -11,23 +11,23 @@ export const DisplayAllCentres = () => {
   const {
     capitalise,
     church,
-    townID,
-    campusID,
+    townId,
+    campusId,
     setCentreID,
-    setTownID,
+    setTownId,
     setCampusID,
   } = useContext(ChurchContext)
 
   const { data: townCentreData, loading: townLoading } = useQuery(
     GET_TOWN_CENTRES,
     {
-      variables: { id: townID },
+      variables: { id: townId },
     }
   )
   const { data: campusCentreData, loading: campusLoading } = useQuery(
     GET_CAMPUS_CENTRES,
     {
-      variables: { id: campusID },
+      variables: { id: campusId },
     }
   )
 
@@ -46,8 +46,8 @@ export const DisplayAllCentres = () => {
                   to={`/${church.church}/displaydetails`}
                   onClick={() => {
                     church.church === 'town'
-                      ? setTownID(townID)
-                      : setCampusID(campusID)
+                      ? setTownId(townId)
+                      : setCampusID(campusId)
                   }}
                 >
                   {' '}
@@ -106,8 +106,8 @@ export const DisplayAllCentres = () => {
                   to={`/${church.church}/displaydetails`}
                   onClick={() => {
                     church.church === 'town'
-                      ? setTownID(townID)
-                      : setCampusID(campusID)
+                      ? setTownId(townId)
+                      : setCampusID(campusId)
                   }}
                 >
                   {' '}

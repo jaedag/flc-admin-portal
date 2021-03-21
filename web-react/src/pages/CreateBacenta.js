@@ -32,10 +32,10 @@ export const CreateBacenta = () => {
     capitalise,
     makeSelectOptions,
     parsePhoneNum,
-    bishopID,
-    townID,
-    setTownID,
-    campusID,
+    bishopId,
+    townId,
+    setTownId,
+    campusId,
     setCampusID,
     setBacentaID,
     phoneRegExp,
@@ -73,12 +73,12 @@ export const CreateBacenta = () => {
   })
 
   const { data: townListData, loading: townListLoading } = useQuery(GET_TOWNS, {
-    variables: { id: bishopID },
+    variables: { id: bishopId },
   })
   const { data: campusListData, loading: campusListLoading } = useQuery(
     GET_CAMPUSES,
     {
-      variables: { id: bishopID },
+      variables: { id: bishopId },
     }
   )
 
@@ -95,7 +95,7 @@ export const CreateBacenta = () => {
       },
     })
 
-    console.log('Form data', values)
+    // console.log('Form data', values)
     onSubmitProps.setSubmitting(false)
     onSubmitProps.resetForm()
   }
@@ -139,7 +139,7 @@ export const CreateBacenta = () => {
                             }
                             onChange={(e) => {
                               church.church === 'town'
-                                ? setTownID(e.target.value)
+                                ? setTownId(e.target.value)
                                 : setCampusID(e.target.value)
                             }}
                             defaultOption={`Select a ${capitalise(
@@ -162,7 +162,7 @@ export const CreateBacenta = () => {
                                 : 'campusCentreList'
                             }
                             varValue={
-                              church.church === 'town' ? townID : campusID
+                              church.church === 'town' ? townId : campusId
                             }
                             defaultOption="Select a Centre"
                           />

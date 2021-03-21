@@ -3,9 +3,16 @@ import { useHistory } from 'react-router-dom'
 import { ChurchContext } from '../contexts/ChurchContext'
 import { MemberContext } from '../contexts/MemberContext'
 import Spinner from './Spinner'
+import userIcon from '../img/user.png'
 
 export const MemberTable = (props) => {
-  const { memberData, memberError, memberLoading } = props
+  const {
+    memberData,
+    memberError,
+    memberLoading,
+    offset,
+    numberOfRecords,
+  } = props
   const { setMemberID } = useContext(MemberContext)
   const { determineChurch } = useContext(ChurchContext)
   const history = useHistory()
@@ -27,25 +34,29 @@ export const MemberTable = (props) => {
   return (
     // Web View Full Screen without filters applied
     <React.Fragment>
-      <div className=" d-none d-lg-block">
-        <div className="row no-gutters">
+      <div className="container d-none d-lg-block">
+        <div className="row">
           {memberData.map((soul, index) => {
+            if (index < offset) {
+              return null
+            } else if (index >= offset + numberOfRecords) {
+              return null
+            }
             return (
-              <div className="col px-1" key={index}>
+              <div className="col-auto" key={index}>
                 <div
-                  className="card grid-card mb-2"
+                  className="card grid-card"
                   onClick={() => {
                     setMemberID(soul.id)
                     history.push('/member/displaydetails')
                   }}
                 >
-                  <div className="d-none d-sm-block image-card ">
-                    <img
-                      className="card-img-top"
-                      src={soul.pictureUrl}
-                      alt=""
-                    />
-                  </div>
+                  <img
+                    className="card-img-top"
+                    src={soul.pictureUrl ? soul.pictureUrl : userIcon}
+                    alt={soul.firstName + ' ' + soul.lastName}
+                  />
+
                   <p className="card-title text-center pt-2">
                     {soul.firstName + ' ' + soul.lastName}
                   </p>
@@ -56,8 +67,14 @@ export const MemberTable = (props) => {
         </div>
       </div>
 
+      {/* Mobile View */}
       <div className="d-lg-none">
         {memberData.map((soul, index) => {
+          if (index < offset) {
+            return null
+          } else if (index >= offset + numberOfRecords) {
+            return null
+          }
           return (
             <div
               key={index}
@@ -72,7 +89,7 @@ export const MemberTable = (props) => {
               <div className="media">
                 <img
                   className="mr-3 rounded-circle img-search"
-                  src={`${soul.pictureUrl}`}
+                  src={soul.pictureUrl ? soul.pictureUrl : userIcon}
                   alt={`${soul.firstName} ${soul.lastName}`}
                 />
                 <div className="media-body">

@@ -1,10 +1,11 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { Formik, Form } from 'formik'
 import FormikControl from '../components/formik-components/FormikControl'
 import { GET_MINISTRIES, OCCUPATION_LIST } from '../queries/ListQueries'
 import { ChurchContext } from '../contexts/ChurchContext'
 
 export const SideBar = () => {
+  const { setFilters } = useContext(ChurchContext)
   const initialValues = {
     gender: '',
     maritalStatus: '',
@@ -13,7 +14,9 @@ export const SideBar = () => {
     ministry: '',
   }
 
-  const { setFilters } = useContext(ChurchContext)
+  useEffect(() => {
+    setFilters(initialValues)
+  }, [])
 
   const genderOptions = [
     { key: 'Male', value: 'Male' },
@@ -33,8 +36,9 @@ export const SideBar = () => {
   ]
 
   const onSubmit = (values, onSubmitProps) => {
-    onSubmitProps.setSubmitting(false)
+    onSubmitProps.setSubmitting(true)
     setFilters(values)
+    onSubmitProps.setSubmitting(false)
   }
 
   return (
@@ -113,7 +117,19 @@ export const SideBar = () => {
                 </button>
               </div>
               <div className="d-flex justify-content-center">
-                <button type="reset" className="btn btn-primary px-4 py-3">
+                <button
+                  type="reset"
+                  className="btn btn-primary px-4 py-3"
+                  onClick={() => {
+                    setFilters({
+                      gender: '',
+                      maritalStatus: '',
+                      occupation: '',
+                      leaderRank: [],
+                      ministry: '',
+                    })
+                  }}
+                >
                   Reset Filters
                 </button>
               </div>

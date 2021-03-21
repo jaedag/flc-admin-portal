@@ -30,7 +30,7 @@ export const DisplaySontaDetails = () => {
         name={sontaData.displayBacenta.name}
         leaderTitle="Bacenta Leader"
         leaderName={`${sontaData.displayBacenta.leader.firstName} ${sontaData.displayBacenta.leader.lastName}`}
-        leaderID={sontaData.displayBacenta.leader.id}
+        leaderId={sontaData.displayBacenta.leader.id}
         membership={sontaData.bacentaMemberCount}
         churchHeading="No of Bacentas"
         churchNo="2"

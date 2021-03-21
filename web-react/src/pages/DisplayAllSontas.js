@@ -11,9 +11,9 @@ export const DisplayAllSontas = () => {
   const {
     capitalise,
     church,
-    townID,
-    campusID,
-    setTownID,
+    townId,
+    campusId,
+    setTownId,
     setCampusID,
     setSontaID,
   } = useContext(ChurchContext)
@@ -21,13 +21,13 @@ export const DisplayAllSontas = () => {
   const { data: townCentreData, loading: townLoading } = useQuery(
     GET_TOWN_CENTRES,
     {
-      variables: { id: townID },
+      variables: { id: townId },
     }
   )
   const { data: campusCentreData, loading: campusLoading } = useQuery(
     GET_CAMPUS_CENTRES,
     {
-      variables: { id: campusID },
+      variables: { id: campusId },
     }
   )
 
@@ -45,7 +45,7 @@ export const DisplayAllSontas = () => {
                 <Link
                   to={`/${church.church}/displaydetails`}
                   onClick={() => {
-                    setCampusID(campusID)
+                    setCampusID(campusId)
                   }}
                 >
                   {' '}
@@ -103,7 +103,7 @@ export const DisplayAllSontas = () => {
                 <Link
                   to={`/${church.church}/displaydetails`}
                   onClick={() => {
-                    setTownID(townID)
+                    setTownId(townId)
                   }}
                 >
                   {' '}

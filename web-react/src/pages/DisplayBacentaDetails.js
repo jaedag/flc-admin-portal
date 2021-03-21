@@ -34,7 +34,7 @@ export const DisplayBacentaDetails = () => {
             ? `${bacentaData.displayBacenta.leader.firstName} ${bacentaData.displayBacenta.leader.lastName}`
             : '-'
         }
-        leaderID={bacentaData.displayBacenta.leader.id}
+        leaderId={bacentaData.displayBacenta.leader.id}
         membership={bacentaData.bacentaMemberCount}
         churchHeading="Meeting Day"
         churchNo={bacentaData.displayBacenta.meetingDay.day}

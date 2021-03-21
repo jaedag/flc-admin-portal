@@ -4,13 +4,15 @@ import { useAuth0 } from '@auth0/auth0-react'
 import { DetailsCard } from './DetailsCard'
 import { NavBar } from './NavBar'
 import { MemberContext } from '../contexts/MemberContext'
+import { ChurchContext } from '../contexts/ChurchContext'
 
 export const DisplayChurchDetails = (props) => {
   const {
     name,
     leaderTitle,
     leaderName,
-    leaderID,
+    leaderId,
+    admin,
     churchHeading,
     subChurch,
     subChurchSetter,
@@ -23,13 +25,14 @@ export const DisplayChurchDetails = (props) => {
 
   const { isAuthenticated } = useAuth0()
   const { setMemberID } = useContext(MemberContext)
+  const { clickMember } = useContext(ChurchContext)
 
   return (
     <div>
       <NavBar />
       <div className=" py-2 top-heading title-bar mt-4">
         <div className="container ">
-          <h3 className="mx-3 mt-3 mb-2 font-weight-bold">
+          <h3 className="mx-3 mt-3 font-weight-bold">
             {`${name} ${churchType}`}
             {!isAuthenticated && (
               <Link to={`${editlink}`}>
@@ -40,6 +43,17 @@ export const DisplayChurchDetails = (props) => {
               </Link>
             )}
           </h3>
+          {admin && (
+            <Link
+              to="/member/displaydetails"
+              onClick={() => {
+                clickMember(admin)
+              }}
+              className="mx-3 mb-2 text-muted font-weight-bold"
+            >
+              {admin.firstName} {admin.lastName}
+            </Link>
+          )}
         </div>
       </div>
 
@@ -52,7 +66,7 @@ export const DisplayChurchDetails = (props) => {
           <Link
             to="/member/displaydetails"
             onClick={() => {
-              setMemberID(leaderID)
+              setMemberID(leaderId)
             }}
             className="col-9 col-md-6 col-lg-4"
           >

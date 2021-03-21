@@ -8,11 +8,11 @@ import { GET_BISHOP_PASTORS } from '../queries/ListQueries'
 import { ChurchContext } from '../contexts/ChurchContext'
 
 export const PastorsGrid = () => {
-  const { bishopID } = useContext(ChurchContext)
+  const { bishopId } = useContext(ChurchContext)
   const { data: member, error: memberError, loading: memberLoading } = useQuery(
     GET_BISHOP_PASTORS,
     {
-      variables: { id: bishopID },
+      variables: { id: bishopId },
     }
   )
 

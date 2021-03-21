@@ -9,11 +9,15 @@ export const NavBar = () => {
 
   return (
     <nav className="navbar navbar-dark navbar-expand fixed-top">
-      {/* <Link className="btn nav-button btn-outline-light p-0" to="/">
-        <i className="fas fa-bars fa-2x icon-color" />
-      </Link> */}
-
       <div className="navbar-nav">
+        {window.location.href.match(/members$/) && (
+          <Link
+            className="nav-item nav-link d-flex align-items-center flex-column d-md-none"
+            to="#"
+          >
+            <i className="fas fa-bars fa-2x  px-1" />
+          </Link>
+        )}
         <Link
           className="nav-item nav-link d-flex align-items-center flex-column"
           to="/"
@@ -23,24 +27,43 @@ export const NavBar = () => {
         </Link>
         {church.church && (
           <Link
-            className="nav-item nav-link d-flex align-items-center flex-column"
+            className={`nav-item nav-link d-flex align-items-center flex-column ${
+              window.location.href.endsWith('dashboard') && 'active'
+            }`}
             to="/dashboard"
           >
-            <span className="fas fa-bold fa-2x  px-1" />
+            <span className="fas fa-bold fa-2x px-1" />
             <span className="d-none d-md-inline">Bishop</span>
           </Link>
         )}
-        <Link
-          className="nav-item nav-link d-flex align-items-center flex-column"
-          to="/members"
-        >
-          <span className="fas fa-users fa-2x px-1" />
-          <span className="d-none d-md-inline">Members</span>
-        </Link>
-        {church.church && (
-          <React.Fragment>
+        {!window.location.href.endsWith('members') && church.church ? (
+          <Link
+            className="nav-item nav-link d-flex align-items-center flex-column"
+            to="/members"
+          >
+            <span className="fas fa-users fa-2x px-1" />
+            <span className="d-none d-md-inline">Members</span>
+          </Link>
+        ) : (
+          <div className="d-none d-md-block">
             <Link
-              className="nav-item nav-link d-flex align-items-center flex-column"
+              className={`nav-item nav-link d-flex align-items-center flex-column ${
+                window.location.href.endsWith('members') && 'active'
+              }`}
+              to="/members"
+            >
+              <span className="fas fa-users fa-2x px-1" />
+              <span className="d-none d-md-inline">Members</span>
+            </Link>
+          </div>
+        )}
+
+        {church.church && (
+          <>
+            <Link
+              className={`nav-item nav-link d-flex align-items-center flex-column ${
+                window.location.href.endsWith('displayall') && 'active'
+              }`}
               to={`/${church.church}/displayall`}
             >
               <span className="fas fa-landmark fa-2x px-1" />
@@ -50,17 +73,21 @@ export const NavBar = () => {
             </Link>
 
             <Link
-              className="nav-item nav-link d-flex align-items-center flex-column"
-              to={`${church.church}/sonta/displayall`}
+              className={`nav-item nav-link d-flex align-items-center flex-column ${
+                window.location.href.endsWith('display-sontas') && 'active'
+              }`}
+              to={`/${church.church}/display-sontas`}
             >
               <span className="fas fa-church fa-2x px-1" />
               <span className="d-none d-md-inline">Ministries</span>
             </Link>
-          </React.Fragment>
+          </>
         )}
         <Link
-          className="nav-item nav-link d-flex align-items-center flex-column d-md-none  "
-          to="/membersearch"
+          className={`nav-item nav-link d-flex align-items-center flex-column d-md-none ${
+            window.location.href.endsWith('member-search') && 'active'
+          }`}
+          to="/member-search"
         >
           <i className="fas fa-search fa-2x icon-color px-1" />
         </Link>

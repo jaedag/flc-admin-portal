@@ -12,8 +12,8 @@ export const ALL_MEMBERS = gql`
 `
 
 export const GET_BISHOP_MEMBERS = gql`
-  query($id: ID, $offset: Int) {
-    bishopMemberList(id: $id, offset: $offset) {
+  query($id: ID) {
+    bishopMemberList(id: $id, orderBy: firstName_asc) {
       id
       firstName
       lastName
@@ -244,6 +244,11 @@ export const GET_CAMPUSES = gql`
         firstName
         lastName
       }
+      admin {
+        id
+        firstName
+        lastName
+      }
       sontas {
         id
         name
@@ -252,6 +257,27 @@ export const GET_CAMPUSES = gql`
         id
         firstName
         lastName
+        hasAdmin {
+          id
+          firstName
+          lastName
+          bacenta {
+            centre {
+              town {
+                name
+                bishop {
+                  id
+                }
+              }
+              campus {
+                name
+                bishop {
+                  id
+                }
+              }
+            }
+          }
+        }
       }
     }
   }
@@ -275,6 +301,27 @@ export const GET_TOWNS = gql`
         id
         firstName
         lastName
+        hasAdmin {
+          id
+          firstName
+          lastName
+          bacenta {
+            centre {
+              town {
+                name
+                bishop {
+                  id
+                }
+              }
+              campus {
+                name
+                bishop {
+                  id
+                }
+              }
+            }
+          }
+        }
       }
     }
   }

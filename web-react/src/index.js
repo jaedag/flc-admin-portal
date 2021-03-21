@@ -89,9 +89,9 @@ const PastorsAdmin = () => {
     church: '',
     subChurch: '',
   })
-  const [bishopID, setBishopID] = useState('')
-  const [townID, setTownID] = useState('')
-  const [campusID, setCampusID] = useState('')
+  const [bishopId, setBishopId] = useState('')
+  const [townId, setTownId] = useState('')
+  const [campusId, setCampusID] = useState('')
   const [bacentaID, setBacentaID] = useState('')
   const [centreID, setCentreID] = useState('')
   const [sontaID, setSontaID] = useState('')
@@ -106,7 +106,19 @@ const PastorsAdmin = () => {
     ministry: '',
   })
   const capitalise = (str) => {
-    return str.charAt(0).toUpperCase() + str.slice(1)
+    return str?.charAt(0).toUpperCase() + str?.slice(1)
+  }
+  const plural = (church) => {
+    switch (church) {
+      case 'town':
+        return 'towns'
+      case 'campus':
+        return 'campuses'
+      case 'senior high school':
+        return 'senior high schools'
+      default:
+        return
+    }
   }
   const phoneRegExp = /^[+][(]{0,1}[1-9]{1,4}[)]{0,1}[-\s/0-9]*$/
   const parsePhoneNum = (phoneNumber) => {
@@ -116,6 +128,7 @@ const PastorsAdmin = () => {
       .replace('(', '')
       .replace(')', '')
   }
+
   const makeSelectOptions = (data) => {
     return data.map((data) => ({
       value: data.id,
@@ -150,6 +163,9 @@ const PastorsAdmin = () => {
       case 'Female':
         filteredData = filterFor(filteredData, 'gender', 'gender', 'Female')
         break
+      default:
+        //do nothing
+        break
     }
 
     //Filter for Marital Status
@@ -170,6 +186,9 @@ const PastorsAdmin = () => {
           'status',
           'Married'
         )
+        break
+      default:
+        //do nothing
         break
     }
 
@@ -248,6 +267,9 @@ const PastorsAdmin = () => {
           'Still Photography'
         )
         break
+      default:
+        //do nothing
+        break
     }
 
     //Filter for Leadership Rank
@@ -322,37 +344,39 @@ const PastorsAdmin = () => {
       }
       if (member.townBishop[0]) {
         setChurch({ church: 'town', subChurch: 'centre' })
-        setBishopID(member.id)
+        setBishopId(member.id)
         return
       } else if (member.campusBishop[0]) {
         setChurch({ church: 'campus', subChurch: 'centre' })
-        setBishopID(member.id)
+        setBishopId(member.id)
         return
       } else {
         return
       }
     }
-    if (member.bacenta && member.bacenta.centre && member.bacenta.centre.town) {
+    if (member?.bacenta?.centre?.town) {
       setChurch({ church: 'town', subChurch: 'centre' })
-      setBishopID(member.bacenta.centre.town.bishop.id)
+      setBishopId(member.bacenta.centre.town.bishop.id)
       return
     } else if (member.townGSO && member.townGSO[0]) {
       setChurch({ church: 'town', subChurch: 'centre' })
-      setBishopID(member.townGSO[0].bishop.id)
+      setBishopId(member.townGSO[0].bishop.id)
       return
-    } else if (
-      member.bacenta &&
-      member.bacenta.centre &&
-      member.bacenta.centre.campus
-    ) {
+    } else if (member?.bacenta?.centre?.campus) {
       setChurch({ church: 'campus', subChurch: 'centre' })
-      setBishopID(member.bacenta.centre.campus.bishop.id)
+      setBishopId(member?.bacenta?.centre?.campus?.bishop?.id)
       return
-    } else if (member.campusGSO && member.campusGSO[0]) {
+    } else if (member?.campusGSO[0]) {
       setChurch({ church: 'campus', subChurch: 'centre' })
-      setBishopID(member.campusGSO[0].bishop.id)
+      setBishopId(member.campusGSO[0].bishop.id)
       return
     }
+  }
+
+  const clickMember = (member) => {
+    setMemberID(member.id)
+    localStorage.setItem('memberId', member.id)
+    determineChurch(member)
   }
 
   return (
@@ -360,6 +384,8 @@ const PastorsAdmin = () => {
       <ChurchContext.Provider
         value={{
           capitalise,
+          plural,
+          clickMember,
           phoneRegExp,
           parsePhoneNum,
           makeSelectOptions,
@@ -369,11 +395,11 @@ const PastorsAdmin = () => {
           memberFilter,
           church,
           setChurch,
-          bishopID,
-          setBishopID,
-          townID,
-          setTownID,
-          campusID,
+          bishopId,
+          setBishopId,
+          townId,
+          setTownId,
+          campusId,
           setCampusID,
           centreID,
           setCentreID,
@@ -390,7 +416,7 @@ const PastorsAdmin = () => {
             <Switch>
               <Route path="/" component={BishopSelect} exact />
               <Route path="/dashboard" component={BishopDashboard} exact />
-              <Route path="/membersearch" component={SearchPageMobile} exact />
+              <Route path="/member-search" component={SearchPageMobile} exact />
               <Route path="/members" component={MembersGridBishop} exact />
               <Route path="/pastors" component={PastorsGrid} exact />
               <Route path="/member/addmember" component={CreateMember} exact />
@@ -447,12 +473,12 @@ const PastorsAdmin = () => {
                 exact
               />
               <Route
-                path="/town/sonta/displayall"
+                path="/town/display-sontas"
                 component={DisplaySontasByCampusTown}
                 exact
               />
               <Route
-                path="/campus/sonta/displayall"
+                path="/campus/display-sontas"
                 component={DisplaySontasByCampusTown}
                 exact
               />

@@ -25,10 +25,10 @@ function AddTownCampus() {
     makeSelectOptions,
     parsePhoneNum,
     phoneRegExp,
-    bishopID,
-    setTownID,
+    bishopId,
+    setTownId,
     setCampusID,
-    setBishopID,
+    setBishopId,
   } = useContext(ChurchContext)
 
   const history = useHistory()
@@ -52,15 +52,15 @@ function AddTownCampus() {
   })
 
   const [CreateTown] = useMutation(CREATE_TOWN_MUTATION, {
-    refetchQueries: [{ query: GET_TOWNS, variables: { id: bishopID } }],
+    refetchQueries: [{ query: GET_TOWNS, variables: { id: bishopId } }],
     onCompleted: (newTownData) => {
-      setTownID(newTownData.CreateTown.id)
+      setTownId(newTownData.CreateTown.id)
       history.push(`/${church.church}/displaydetails`)
     },
   })
 
   const [CreateCampus] = useMutation(CREATE_CAMPUS_MUTATION, {
-    refetchQueries: [{ query: GET_CAMPUSES, variables: { id: bishopID } }],
+    refetchQueries: [{ query: GET_CAMPUSES, variables: { id: bishopId } }],
     onCompleted: (newCampusData) => {
       setCampusID(newCampusData.CreateCampus.id)
       history.push(`/${church.church}/displaydetails`)
@@ -86,7 +86,7 @@ function AddTownCampus() {
 
     //onSubmit receives the form state as argument
     const onSubmit = (values, onSubmitProps) => {
-      setBishopID(values.bishopSelect)
+      setBishopId(values.bishopSelect)
 
       if (church.church === 'town') {
         CreateTown({

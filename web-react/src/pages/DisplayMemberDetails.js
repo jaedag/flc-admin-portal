@@ -7,6 +7,7 @@ import { DISPLAY_MEMBER } from '../queries/DisplayQueries'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
 import { MemberContext } from '../contexts/MemberContext'
 import { ChurchContext } from '../contexts/ChurchContext'
+import userIcon from '../img/user.png'
 
 export const DisplayMemberDetails = () => {
   const monthNames = [
@@ -28,7 +29,7 @@ export const DisplayMemberDetails = () => {
     church,
     setBacentaID,
     setCentreID,
-    setTownID,
+    setTownId,
     setCampusID,
     setSontaID,
   } = useContext(ChurchContext)
@@ -68,7 +69,7 @@ export const DisplayMemberDetails = () => {
     rank.push({
       desc: `Con Rep of ${memberData.displayMember.townGSO.name}`,
       link: '/town/displaydetails',
-      set: { setTownID },
+      set: { setTownId },
     })
   }
   if (memberData.displayMember.campusGSO[0]) {
@@ -137,7 +138,11 @@ export const DisplayMemberDetails = () => {
                   <div className="row row-cols-1 my-2">
                     <div className="col d-flex justify-content-center">
                       <img
-                        src={`${memberData.displayMember.pictureUrl}`}
+                        src={
+                          memberData.displayMember.pictureUrl
+                            ? memberData.displayMember.pictureUrl
+                            : userIcon
+                        }
                         className="m-2 rounded profile-img"
                         alt={`${memberData.displayMember.firstName} ${memberData.displayMember.lastName}`}
                       />
@@ -355,18 +360,18 @@ export const DisplayMemberDetails = () => {
                       </div>
                       <div className="col">
                         <p className="font-weight-bold card-text">
-                          {memberData.displayMember.bacenta
-                            ? memberData.displayMember.bacenta.name
-                              ? `${
-                                  memberData.displayMember.bacenta.centre[
-                                    `${church.church}`
-                                  ].bishop.firstName
-                                } ${
-                                  memberData.displayMember.bacenta.centre[
-                                    `${church.church}`
-                                  ].bishop.lastName
-                                }`
-                              : null
+                          {memberData.displayMember?.bacenta?.centre[
+                            `${church.church}`
+                          ]?.bishop
+                            ? `${
+                                memberData.displayMember.bacenta.centre[
+                                  `${church.church}`
+                                ].bishop.firstName
+                              } ${
+                                memberData.displayMember.bacenta.centre[
+                                  `${church.church}`
+                                ].bishop.lastName
+                              }`
                             : null}
                         </p>
                       </div>

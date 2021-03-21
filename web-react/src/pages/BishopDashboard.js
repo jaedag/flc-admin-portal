@@ -1,4 +1,5 @@
 import React, { useContext } from 'react'
+import { useHistory } from 'react-router-dom'
 import { useQuery } from '@apollo/client'
 import { BISH_DASHBOARD_COUNTS } from '../queries/CountQueries'
 import { NavBar } from '../components/NavBar'
@@ -7,10 +8,13 @@ import { DashboardButton } from '../components/DashboardButton'
 import { ChurchContext } from '../contexts/ChurchContext'
 
 const BishopDashboard = () => {
-  const { church, capitalise, bishopID } = useContext(ChurchContext)
+  const { church, capitalise, plural, clickMember, bishopId } = useContext(
+    ChurchContext
+  )
   const { data, error, loading } = useQuery(BISH_DASHBOARD_COUNTS, {
-    variables: { id: bishopID },
+    variables: { id: bishopId },
   })
+  const history = useHistory()
 
   if (loading) {
     return (
@@ -35,11 +39,7 @@ const BishopDashboard = () => {
             </div>
             <div className="col">
               <DashboardCard
-                name={
-                  church.church === 'town'
-                    ? capitalise(church.church) + 's'
-                    : capitalise(church.church)
-                }
+                name={capitalise(plural(church.church))}
                 number="Loading..."
                 cardLink={`/${church.church}/displayall`}
               />
@@ -106,11 +106,7 @@ const BishopDashboard = () => {
             </div>
             <div className="col">
               <DashboardCard
-                name={
-                  church.church === 'town'
-                    ? capitalise(church.church) + 's'
-                    : capitalise(church.church)
-                }
+                name={capitalise(plural(church.church))}
                 number="Loading..."
                 cardLink={`/${church.church}/displayall`}
               />
@@ -159,37 +155,46 @@ const BishopDashboard = () => {
     <div>
       <NavBar />
       <div className="container ">
-        <h4 className="py-4">
-          {`${data.displayMember.firstName} ${data.displayMember.lastName}`}
+        <h4 className="pt-4">
+          {`${data.displayMember?.firstName} ${data.displayMember?.lastName}`}
           &apos;s Church
         </h4>
-        <div className="row row-cols-2 row-cols-lg-4">
-          <div className="col">
+        <p
+          className="pb-4"
+          onClick={() => {
+            clickMember(data.displayMember?.hasAdmin)
+            history.push('/member/displaydetails')
+          }}
+        >
+          {`Admin: ${data.displayMember?.hasAdmin?.firstName} ${data.displayMember?.hasAdmin?.lastName}`}
+        </p>
+        <div className="row row-cols-md-2 row-cols-lg-4">
+          <div className="col-sm-12 col-md">
             <DashboardCard
               name="Members"
               number={data.bishopMemberCount}
               cardLink="/members"
             />
           </div>
-          <div className="col">
+          <div className="col-sm-12 col-md">
             <DashboardCard
               name="Pastors"
               number={data.bishopPastorCount}
               cardLink="/pastors"
             />
           </div>
-          <div className="col">
+          <div className="col-sm-12 col-md">
             <DashboardCard
-              name={
-                church.church === 'town'
-                  ? capitalise(church.church) + 's'
-                  : capitalise(church.church)
-              }
-              number={`${data.bishopCampusTownCount} ${data.bishopCentreCount} ${data.bishopBacentaCount} `}
+              name={capitalise(plural(church.church))}
+              number={`${data.bishopCampusTownCount} ${capitalise(
+                plural(church.church)
+              )} | ${data.bishopCentreCount} Centres | ${
+                data.bishopBacentaCount
+              } Bacentas`}
               cardLink={`/${church.church}/displayall`}
             />
           </div>
-          <div className="col">
+          <div className="col-sm-12 col-md">
             <DashboardCard
               name="Ministries"
               number={data.bishopSontaMemberCount}
@@ -198,7 +203,7 @@ const BishopDashboard = () => {
           </div>
         </div>
 
-        <div className="row justify-content-center">
+        <div className="row justify-content-center mt-5">
           <div className="col-sm-12 col-md">
             <DashboardButton
               btnText="Register Member"
@@ -217,7 +222,7 @@ const BishopDashboard = () => {
               btnLink="/centre/addcentre"
             />
           </div>
-          <div className="col-sm-12 col-md">
+          <div className="col-sm-12 col-md-auto">
             <DashboardButton
               btnText={`Add ${capitalise(church.church)}`}
               btnLink={`/${church.church}/add${church.church}`}

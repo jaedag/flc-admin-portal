@@ -9,7 +9,7 @@ import { AuthButton } from '../components/DashboardButton'
 import Logo from '../img/flc-logo-small.png'
 
 const BishopSelect = () => {
-  const { determineChurch, setBishopID } = useContext(ChurchContext)
+  const { determineChurch, setBishopId } = useContext(ChurchContext)
   const { data, loading } = useQuery(GET_BISHOPS)
   const history = useHistory()
 
@@ -82,7 +82,7 @@ const BishopSelect = () => {
                 className="col-sm-12 col-lg card mobile-search-card p-2 m-1"
                 onClick={() => {
                   determineChurch(soul)
-                  setBishopID(soul.id)
+                  setBishopId(soul.id)
                   history.push('/dashboard')
                 }}
               >
@@ -144,7 +144,7 @@ const BishopSelect = () => {
               First Love Church is a church full of young people on fire for the
               Lord
             </div>
-            <div className="col-auto d-flex align-items-center">
+            <div className="col-auto">
               <AuthButton />
             </div>
           </div>

@@ -7,40 +7,44 @@ type Member {
   phoneNumber: String
   whatsappNumber: String
   pictureUrl: String
-  gender: Gender @relation(name: "HAS_GENDER", direction: "OUT")
+  gender: Gender @relation(name: "HAS_GENDER", direction: OUT)
   maritalStatus: MaritalStatus
-    @relation(name: "HAS_MARITAL_STATUS", direction: "OUT")
-  dob: TimeGraph @relation(name: "WAS_BORN_ON", direction: "OUT")
+    @relation(name: "HAS_MARITAL_STATUS", direction: OUT)
+  dob: TimeGraph @relation(name: "WAS_BORN_ON", direction: OUT)
   title: [HasTitle]
-  ministry: Ministry @relation(name: "BELONGS_TO", direction: "OUT")
-  occupation: Occupation @relation(name: "HAS_OCCUPATION", direction: "OUT")
-  bacenta: Bacenta @relation(name: "BELONGS_TO", direction: "OUT")
-  leadsBacenta: [Bacenta] @relation(name: "LEADS", direction: "OUT")
-  leadsCentre: [Centre] @relation(name: "LEADS", direction: "OUT")
-  leadsMinistry: [Ministry] @relation(name: "LEADS", direction: "OUT")
-  leadsSonta: [Sonta] @relation(name: "LEADS", direction: "OUT")
-  leadsBasonta: [Basonta] @relation(name: "LEADS", direction: "OUT")
-  townGSO: [Town] @relation(name: "LEADS", direction: "OUT")
-  campusGSO: [Campus] @relation(name: "LEADS", direction: "OUT")
-  leadershipHistory: [LeaderHistory]
-    @relation(name: "HAS_LEADERSHIP_HISTORY", direction: "OUT")
-  townBishop: [Town] @relation(name: "HAS_TOWN", direction: "OUT")
-  campusBishop: [Campus] @relation(name: "HAS_CAMPUS", direction: "OUT")
+  ministry: Ministry @relation(name: "BELONGS_TO", direction: OUT)
+  occupation: Occupation @relation(name: "HAS_OCCUPATION", direction: OUT)
+  bacenta: Bacenta @relation(name: "BELONGS_TO", direction: OUT)
+  leadsBacenta: [Bacenta] @relation(name: "LEADS", direction: OUT)
+  leadsCentre: [Centre] @relation(name: "LEADS", direction: OUT)
+  leadsMinistry: [Ministry] @relation(name: "LEADS", direction: OUT)
+  leadsSonta: [Sonta] @relation(name: "LEADS", direction: OUT)
+  leadsBasonta: [Basonta] @relation(name: "LEADS", direction: OUT)
+  townGSO: [Town] @relation(name: "LEADS", direction: OUT)
+  campusGSO: [Campus] @relation(name: "LEADS", direction: OUT)
+  leadershipHistory: [HistoryLog]
+    @relation(name: "HAS_HISTORY", direction: OUT)
+  townBishop: [Town] @relation(name: "HAS_TOWN", direction: OUT)
+  campusBishop: [Campus] @relation(name: "HAS_CAMPUS", direction: OUT)
+  isBishopAdminFor: [Member] @relation(name: "IS_ADMIN_FOR", direction: OUT)
+  isCampusAdminFor: [Campus] @relation(name: "IS_ADMIN_FOR", direction: OUT)
+  isTownAdminFor: [Town] @relation(name: "IS_ADMIN_FOR", direction: OUT)
+  hasAdmin: Member @relation(name: "IS_ADMIN_FOR", direction: IN)
 }
 
 type Gender {
   gender: String
-  members: [Member] @relation(name: "HAS_GENDER", direction: "IN")
+  members: [Member] @relation(name: "HAS_GENDER", direction: IN)
 }
 
 type MaritalStatus {
   status: String
-  members: [Member] @relation(name: "HAS_MARITAL_STATUS", direction: "IN")
+  members: [Member] @relation(name: "HAS_MARITAL_STATUS", direction: IN)
 }
 
 type Occupation {
   occupation: String
-  members: [Member] @relation(name: "HAS_OCCUPATION", direction: "IN")
+  members: [Member] @relation(name: "HAS_OCCUPATION", direction: IN)
 }
 
 type Title {
@@ -58,121 +62,119 @@ type HasTitle @relation(name: "HAS_TITLE") {
 
 type TimeGraph {
   date: Date
-  memberDob: Member @relation(name: "WAS_BORN_ON", direction: "IN")
-  # titleAppointmentDate: Member @relation(name: "APPOINTED_ON", direction: "IN")
+  memberDob: Member @relation(name: "WAS_BORN_ON", direction: IN)
+  # titleAppointmentDate: Member @relation(name: "APPOINTED_ON", direction: IN)
   leaderHistoryStartDate: TimeGraph
-    @relation(name: "LEADER_STARTED_ON", direction: "OUT")
+    @relation(name: "LEADER_STARTED_ON", direction: OUT)
   leaderHistoryEndDate: TimeGraph
-    @relation(name: "LEADER_ENDED_ON", direction: "OUT")
-  bacentaHistoryStartDate: TimeGraph
-    @relation(name: "BACENTA_STARTED_ON", direction: "OUT")
-  bacentaHistoryEndDate: TimeGraph
-    @relation(name: "BACENTA_ENDED_ON", direction: "OUT")
-  serviceDate: [BacentaServiceRecords]
-    @relation(name: "SERVICE_DATE", direction: "IN")
-}
-type LeaderHistory {
-  created_at: DateTime
-  historyRecord: String
-  historyStartDate: TimeGraph
-    @relation(name: "LEADER_STARTED_ON", direction: "OUT")
-  historyEndDate: TimeGraph @relation(name: "LEADER_ENDED_ON", direction: "OUT")
-  leaders: Member @relation(name: "HAS_LEADERSHIP_HISTORY", direction: "IN")
-  bacentaerviceRecords: [BacentaServiceRecords]
-    @relation(name: "HAS_SERVICE_RECORDS", direction: "OUT")
+    @relation(name: "LEADER_ENDED_ON", direction: OUT)
+  HistoryDate: TimeGraph @relation(name: "RECORDED_ON", direction: OUT)
+  serviceDate: [ServiceRecords] @relation(name: "SERVICE_DATE", direction: IN)
 }
 
-type BacentaServiceRecords {
+# type LeaderHistory {
+#   created_at: DateTime
+#   historyRecord: String
+#   historyDate: TimeGraph
+#     @relation(name: "LEADER_STARTED_ON", direction: OUT)
+#   historyEndDate: TimeGraph @relation(name: "LEADER_ENDED_ON", direction: OUT)
+#   leaders: Member @relation(name: "HAS_LEADERSHIP_HISTORY", direction: IN)
+#   bacentaerviceRecords: [ServiceRecords]
+#     @relation(name: "HAS_RECORDS", direction: OUT)
+# }
+
+type ServiceRecords {
   created_at: DateTime
-  bacenta: Bacenta @relation(name: "HAS_SERVICE_RECORDS", direction: "IN")
-  serviceDate: TimeGraph @relation(name: "SERVICE_DATE", direction: "OUT")
+  bacenta: Bacenta @relation(name: "HAS_RECORDS", direction: IN)
+  serviceDate: TimeGraph @relation(name: "SERVICE_DATE", direction: OUT)
   attendance: Int
   income: Float
-  treasurer1ID: String
-  treasurer2ID: String
-  leaderHistory: LeaderHistory
-    @relation(name: "HAS_SERVICE_RECORDS", direction: "IN")
+  treasurer1ID: String!
+  treasurer2ID: String!
+  leaderHistory: HistoryLog @relation(name: "HAS_RECORDS", direction: IN)
 }
 
-type BacentaHistoryLog {
+type HistoryLog {
+  id: ID
   created_at: DateTime
   historyRecord: String #leader was transferred to
-  historyStartDate: TimeGraph
-    @relation(name: "BACENTA_STARTED_ON", direction: "OUT")
-  historyEndDate: TimeGraph
-    @relation(name: "BACENTA_ENDED_ON", direction: "OUT")
-  Bacenta: Bacenta @relation(name: "HAS_BACENTA_HISTORY", direction: "IN")
+  historyDate: TimeGraph @relation(name: "RECORDED_ON", direction: OUT)
+  leaders: Member @relation(name: "HAS_HISTORY", direction: IN)
+  Bacenta: [Bacenta] @relation(name: "HAS_HISTORY", direction: IN)
 }
 
 # Campus-Centre, Town-Centre
 type Campus {
   id: ID
   name: String
-  leader: Member @relation(name: "LEADS", direction: "IN")
-  sontas: [Sonta] @relation(name: "HAS_SONTA", direction: "OUT")
-  centres: [Centre] @relation(name: "HAS_CENTRE", direction: "OUT")
-  bishop: Member @relation(name: "HAS_CAMPUS", direction: "IN")
+  leader: Member @relation(name: "LEADS", direction: IN)
+  sontas: [Sonta] @relation(name: "HAS_SONTA", direction: OUT)
+  centres: [Centre] @relation(name: "HAS_CENTRE", direction: OUT)
+  bishop: Member @relation(name: "HAS_CAMPUS", direction: IN)
+  admin: Member @relation(name: "IS_ADMIN_FOR", direction: IN)
 }
 
 type Town {
   id: ID
   name: String
-  leader: Member @relation(name: "LEADS", direction: "IN")
-  sontas: [Sonta] @relation(name: "HAS_SONTA", direction: "OUT")
-  centres: [Centre] @relation(name: "HAS_CENTRE", direction: "OUT")
-  bishop: Member @relation(name: "HAS_TOWN", direction: "IN")
+  leader: Member @relation(name: "LEADS", direction: IN)
+  sontas: [Sonta] @relation(name: "HAS_SONTA", direction: OUT)
+  centres: [Centre] @relation(name: "HAS_CENTRE", direction: OUT)
+  bishop: Member @relation(name: "HAS_TOWN", direction: IN)
+  admin: Member @relation(name: "IS_ADMIN_FOR", direction: IN)
 }
 
 type Centre {
   id: ID
   name: String
-  leader: Member @relation(name: "LEADS", direction: "IN")
-  bacentas: [Bacenta] @relation(name: "HAS_BACENTA", direction: "OUT")
-  basontas: Basonta @relation(name: "HAS_BASONTA", direction: "OUT")
-  town: Town @relation(name: "HAS_CENTRE", direction: "IN")
-  campus: Campus @relation(name: "HAS_CENTRE", direction: "IN")
+  leader: Member @relation(name: "LEADS", direction: IN)
+  bacentas: [Bacenta] @relation(name: "HAS_BACENTA", direction: OUT)
+  basontas: Basonta @relation(name: "HAS_BASONTA", direction: OUT)
+  town: Town @relation(name: "HAS_CENTRE", direction: IN)
+  campus: Campus @relation(name: "HAS_CENTRE", direction: IN)
 }
 
 # Shared Units: Bacenta, Bacenta, Sonta
 type Bacenta {
   id: ID
   name: String
-  centre: Centre @relation(name: "HAS_BACENTA", direction: "IN")
+  centre: Centre @relation(name: "HAS_BACENTA", direction: IN)
   location: Point
-  leader: Member @relation(name: "LEADS", direction: "IN")
-  members: [Member] @relation(name: "BELONGS_TO", direction: "IN")
-  meetingDay: ServiceDay @relation(name: "MEETS_ON_DAY", direction: "OUT")
-  serviceRecords: BacentaServiceRecords
-    @relation(name: "HAS_SERVICE_RECORDS", direction: "OUT")
+  leader: Member @relation(name: "LEADS", direction: IN)
+  members: [Member] @relation(name: "BELONGS_TO", direction: IN)
+  meetingDay: ServiceDay @relation(name: "MEETS_ON_DAY", direction: OUT)
+  history: [HistoryLog] @relation(name: "HAS_HISTORY", direction: OUT)
+  serviceRecords: [ServiceRecords]
+    @relation(name: "HAS_RECORDS", direction: OUT)
 }
 
 type ServiceDay {
   day: String!
-  bacenta: Bacenta @relation(name: "MEETS_ON_DAY", direction: "IN")
+  bacenta: Bacenta @relation(name: "MEETS_ON_DAY", direction: IN)
 }
 
 type Ministry {
   id: ID
   name: String
-  sonta: [Sonta] @relation(name: "HAS_SONTA", direction: "OUT")
-  leader: Member @relation(name: "LEADS", direction: "IN")
-  members: [Member] @relation(name: "BELONGS_TO", direction: "IN")
+  sonta: [Sonta] @relation(name: "HAS_SONTA", direction: OUT)
+  leader: Member @relation(name: "LEADS", direction: IN)
+  members: [Member] @relation(name: "BELONGS_TO", direction: IN)
 }
 
 type Sonta {
   id: ID
   name: String
-  leader: Member @relation(name: "LEADS", direction: "IN")
-  basonta: [Basonta] @relation(name: "HAS_BASONTA", direction: "OUT")
-  ministry: Ministry @relation(name: "HAS_SONTA", direction: "IN")
-  town: Town @relation(name: "HAS_SONTA", direction: "IN")
-  campus: [Campus] @relation(name: "HAS_SONTA", direction: "IN")
+  leader: Member @relation(name: "LEADS", direction: IN)
+  basonta: [Basonta] @relation(name: "HAS_BASONTA", direction: OUT)
+  ministry: Ministry @relation(name: "HAS_SONTA", direction: IN)
+  town: Town @relation(name: "HAS_SONTA", direction: IN)
+  campus: [Campus] @relation(name: "HAS_SONTA", direction: IN)
 }
 type Basonta {
   basontaID: ID
   name: String
-  leader: Member @relation(name: "LEADS", direction: "IN")
-  centre: Centre @relation(name: "HAS_BASONTA", direction: "IN")
+  leader: Member @relation(name: "LEADS", direction: IN)
+  centre: Centre @relation(name: "HAS_BASONTA", direction: IN)
 }
 
 #Query Definitions
@@ -196,11 +198,11 @@ type Query {
     @cypher(
       statement: "MATCH (:Member {id: $id})-[:HAS_TOWN|:HAS_CAMPUS]->(t) RETURN COUNT(t)"
     )
-    bishopCentreCount(id: ID): Int!
+  bishopCentreCount(id: ID): Int!
     @cypher(
       statement: "MATCH (:Member {id: $id})-[:HAS_TOWN|:HAS_CAMPUS]->()-[:HAS_CENTRE]-(c) RETURN COUNT(c)"
     )
-    bishopBacentaCount(id: ID): Int!
+  bishopBacentaCount(id: ID): Int!
     @cypher(
       statement: "MATCH (:Member {id: $id})-[:HAS_TOWN|:HAS_CAMPUS]->()-[:HAS_CENTRE]-()-[:HAS_BACENTA]-(b) RETURN COUNT(b)"
     )
@@ -237,7 +239,7 @@ type Query {
     @cypher(
       statement: "MATCH (t:Title)<-[:HAS_TITLE]-(m:Member)-[:BELONGS_TO]->()<-[:HAS_BACENTA]-()-[:HAS_CENTRE]-()-[:HAS_TOWN|:HAS_CAMPUS]-(:Member {id: $id}) RETURN m"
     )
-  bishopMemberList(id: ID,): [Member]!
+  bishopMemberList(id: ID): [Member]!
     @cypher(
       statement: """
       MATCH (:Member {id: $id})-[:HAS_TOWN|:HAS_CAMPUS]->(t)
@@ -427,33 +429,6 @@ type Query {
     @cypher(
       statement: "MATCH (o:Occupation) WHERE toLower(o.occupation) CONTAINS toLower($searchKey) RETURN o"
     )
-
-  #Filtering
-  FilterMembers(
-    gender: String
-    maritalStatus: String
-    occupation: String
-    yearAppointed: Int
-    title: String
-    age: Int
-  ): Member
-    @cypher(
-      statement: """
-      MATCH (m:Member)-[:HAS_GENDER]->(g:Gender {gender: $gender})
-      WHERE EXISTS {
-         MATCH (:MaritalStatus {status:$maritalStatus})<-[:HAS_MARITAL_STATUS]-(m)-[:HAS_OCCUPATION]->(:Occupation {occupation:$occupation})
-         	WHERE EXISTS {
-             MATCH (t:Title{title:$title})<-[tit:HAS_TITLE]-(m)
-             WHERE date(tit.yearAppointed).year = $yearAppointed
-             } WHERE EXISTS
-      		{
-      			MATCH (m)-[:WAS_BORN_ON]->(dob:TimeGraph)
-      			WHERE date().year - date(dob.date).year = $age
-      		}
-         }
-         RETURN m
-      """
-    )
 }
 
 #Mutation Definitions
@@ -486,7 +461,12 @@ type Mutation {
       	m.email = $email,
       	m.phoneNumber = $phoneNumber,
       	m.pictureUrl = $pictureUrl
-
+      CREATE (log:HistoryLog {created_at:datetime()})<-[:HAS_HISTORY]-(b)
+        SET
+        log.id =  apoc.create.uuid(),
+        log.historyRecord = $firstName $lastName+' was registered on '+toString(date(datetime()))
+      MERGE (t:TimeGraph {date: date(datetime())})
+      	  MERGE (log)-[:RECORDED_ON]->(t)
       WITH m
       MATCH (ms:MaritalStatus {status:$maritalStatus})
       MATCH (g:Gender {gender: $gender})
@@ -531,7 +511,7 @@ type Mutation {
       RETURN m
       """
     )
-  
+
   CreateTown(
     townName: String
     lWhatsappNumber: String
@@ -543,6 +523,12 @@ type Mutation {
       CREATE (t:Town {name:$townName})
          	SET
       	t.id = apoc.create.uuid()
+       CREATE (log:HistoryLog {created_at:datetime()})<-[:HAS_HISTORY]-(b)
+        SET
+        log.id =  apoc.create.uuid(),
+        log.historyRecord = $townName +' Church was started on '+toString(date(datetime()))
+      MERGE (t:TimeGraph {date: date(datetime())})
+      	  MERGE (log)-[:RECORDED_ON]->(t)
       WITH t
       MATCH (m:Member {whatsappNumber: $lWhatsappNumber})
       MERGE (m)-[:LEADS]->(t)
@@ -575,6 +561,12 @@ type Mutation {
       CREATE (t:Campus {name:$campusName})
          	SET
       	t.id = apoc.create.uuid()
+       CREATE (log:HistoryLog {created_at:datetime()})<-[:HAS_HISTORY]-(b)
+        SET
+        log.id =  apoc.create.uuid(),
+        log.historyRecord = $campusName +' Church was started on '+toString(date(datetime()))
+      MERGE (t:TimeGraph {date: date(datetime())})
+      	  MERGE (log)-[:RECORDED_ON]->(t)
       WITH t
       MATCH (m:Member {whatsappNumber: $lWhatsappNumber})
       MERGE (m)-[:LEADS]->(t)
@@ -607,11 +599,18 @@ type Mutation {
       CREATE (c:Centre {name:$centreName})
          	SET
       	c.id = apoc.create.uuid()
+      CREATE (log:HistoryLog {created_at:datetime()})<-[:HAS_HISTORY]-(b)
+        SET
+        log.id =  apoc.create.uuid(),
+        log.historyRecord = $centreName +' Centre was started on '+toString(date(datetime()))
+      MERGE (t:TimeGraph {date: date(datetime())})
+      	  MERGE (log)-[:RECORDED_ON]->(t)
       WITH c
       MATCH (m:Member {whatsappNumber: $lWhatsappNumber})
       MATCH (t {id:$townCampusId})-[:HAS_TOWN|:HAS_CAMPUS]-()
       MERGE (t)-[:HAS_CENTRE]->(c)
       MERGE (m)-[:LEADS]->(c)
+
 
       WITH c
          CALL {
@@ -641,13 +640,18 @@ type Mutation {
       CREATE (b:Bacenta {name:$bacentaName,location: point({latitude:toFloat($venueLatitude), longitude:toFloat($venueLongitude), crs:'WGS-84'})})
          	SET
       	b.id = apoc.create.uuid()
-         WITH b
-      MATCH (m:Member {whatsappNumber: $lWhatsappNumber})
+      CREATE (log:HistoryLog {created_at:datetime()})<-[:HAS_HISTORY]-(b)
+        SET
+        log.id =  apoc.create.uuid(),
+        log.historyRecord = $bacentaName +' Bacenta was started on '+toString(date(datetime()))
+      MERGE (t:TimeGraph {date: date(datetime())})
+      	  MERGE (log)-[:RECORDED_ON]->(t)
+      WITH b
       MATCH (c:Centre {id: $centreId})
          MERGE (md:ServiceDay {day: $meetingDay})
       MERGE (c)-[:HAS_BACENTA]->(b)
          MERGE (b)-[:MEETS_ON_DAY]->(md)
-      MERGE (m)-[:LEADS]->(b)
+      MERGE (m:Member {whatsappNumber: $lWhatsappNumber})-[:LEADS]->(b)
          RETURN b
       """
     )
@@ -743,16 +747,17 @@ type Mutation {
       RETURN m
       """
     )
+
   UpdateTown(
-    townID: ID!
+    townId: ID!
     townName: String
     lWhatsappNumber: String
-    bishopID: ID
+    bishopId: ID
     centres: [ID]
   ): Town
     @cypher(
       statement: """
-      MATCH (t:Town {id: $townID})
+      MATCH (t:Town {id: $townId})
       	SET t.name = $townName
 
       WITH t
@@ -770,7 +775,7 @@ type Mutation {
          CALL {
          	WITH t
 
-             MATCH (b:Member {id: $bishopID})
+             MATCH (b:Member {id: $bishopId})
              OPTIONAL MATCH (t)<-[r:HAS_TOWN]-()
              DELETE r
              MERGE (b)-[:HAS_TOWN]->(t)
@@ -794,15 +799,15 @@ type Mutation {
       """
     )
   UpdateCampus(
-    campusID: ID
+    campusId: ID
     campusName: String
     lWhatsappNumber: String
-    bishopID: ID
+    bishopId: ID
     centres: [ID]
   ): Campus
     @cypher(
       statement: """
-      MATCH (t:Campus {id: $campusID})
+      MATCH (t:Campus {id: $campusId})
       	SET t.name = $campusName
 
       WITH t
@@ -820,7 +825,7 @@ type Mutation {
          CALL {
          	WITH t
 
-             MATCH (b:Member {id: $bishopID})
+             MATCH (b:Member {id: $bishopId})
              OPTIONAL MATCH (t)<-[r:HAS_CAMPUS]-()
              DELETE r
              MERGE (b)-[:HAS_CAMPUS]->(t)
@@ -883,43 +888,27 @@ type Mutation {
     id: ID
     name: String
     lWhatsappNumber: String
-    meetingDay: String
     venueLongitude: Float
     venueLatitude: Float
   ): Bacenta
     @cypher(
       statement: """
-           MATCH (b:Bacenta {id: $id})
-           	SET b.name = $name
-          	SET b.location = point({latitude:toFloat($venueLatitude), longitude:toFloat($venueLongitude), crs:'WGS-84'})
+               MATCH (b:Bacenta {id: $id})
+               	SET b.name = $name
+              	SET b.location = point({latitude:toFloat($venueLatitude), longitude:toFloat($venueLongitude), crs:'WGS-84'})
 
-          WITH b
-                CALL {
-                 	WITH b
+              WITH b
+                    CALL {
+                     	WITH b
 
-                    MATCH (m:Member {whatsappNumber: $lWhatsappNumber})
-                    OPTIONAL MATCH (b)<-[r:LEADS]-()
-                    DELETE r
-                    MERGE (m)-[:LEADS]->(b)
-                 	RETURN count(b)
-                 	}
+                        MATCH (m:Member {whatsappNumber: $lWhatsappNumber})
+                        OPTIONAL MATCH (b)<-[r:LEADS]-()
+                        DELETE r
+                        MERGE (m)-[:LEADS]->(b)
+                     	RETURN count(b)
+                     	}
 
-
-      WITH b 
-                CALL {
-                 	WITH b 
-					WITH b 
-					MATCH (md:ServiceDay {day:$meetingDay})
-					OPTIONAL MATCH (b)-[r:MEETS_ON_DAY]->(oldDay) WHERE oldDay.day <> $meetingDay
-                    DELETE r
-                    MERGE (b)-[:MEETS_ON_DAY]->(md)
-					WITH b,oldDay WHERE oldDay.day <> $meetingDay
-					CREATE (l:BacentaHistoryLog {created_at: datetime()})
-					 MERGE (b)-[:HAS_BACENTA_HISTORY]->(l)
-					 SET l.historyRecord ='Service Day changed to '+$meetingDay
-                 	RETURN count(b)
-                 	}
-		RETURN b
+      RETURN b
       """
     )
 
@@ -929,69 +918,6 @@ type Mutation {
       statement: """
       MATCH (c:Bacenta {id:$id})
       DETACH DELETE c
-      """
-    )
-  MakeBacentaLeader(
-    id: ID
-    lWhatsappNumber: String
-    groupToLead: String
-    startDate: Date
-  ): Member
-    @cypher(
-      statement: """
-      MATCH (m:Member {id: $id})
-      MERGE (l:LeaderHistory)
-      	ON CREATE SET
-      	l.created_at=datetime(),
-      	l.historyRecord="Frank Opoku went to lead the Aba Gomez Bacenta"
-      MERGE (tg:TimeGraph {date:date("2020-02-01")})
-      MERGE (l)-[:LEADER_STARTED_ON]->(tg)
-      MERGE (m)-[:HAS_LEADERSHIP_HISTORY]->(l)
-
-      # MATCH (m:Member {whatsappNumber: $lWhatsappNumber})
-      # MATCH (c:Bacenta {name: $groupToLead})
-      # MERGE (l)-[leads:LEADS]->(c)
-      # 	SET leads.startDate: $startDate
-      # MERGE (hist:LeaderHistory {HistoryDate:$startDate, HistoryRecord: `m.firstName m.lastName has been has been made the Bacenta Leader of $groupNotToLead`})
-      # MERGE (m)-[:HAS_LEADERSHIP_HISTORY]->(hist)
-      # RETURN m
-      """
-    )
-  RemoveBacentaLeader(
-    lWhatsappNumber: String
-    groupToNotLead: String
-    endDate: Date
-  ): Member
-    @cypher(
-      statement: """
-      MATCH (m:Member {whatsappNumber: $lWhatsappNumber})
-      MATCH (c:Bacenta {name: $groupToNotLead})
-      MERGE (l)-[leads:LEADS]->(c)
-      	SET leads.endDate: $endDate
-      MERGE (hist:LeaderHistory {HistoryDate:$endDate, HistoryRecord: `m.firstName m.lastName has been has been removed as a bacenta leader of $groupNotToLead`})
-      MERGE (m)-[:HAS_LEADERSHIP_HISTORY]->(hist)
-      RETURN m
-      """
-    )
-  TransferBacentaLeader(
-    lWhatsappNumber: String
-    oldGroupToLead: String
-    newGroupToLead: String
-    startDate: Date
-    endDate: Date
-  ): Member
-    @cypher(
-      statement: """
-      MATCH (m:Member {whatsappNumber: $lWhatsappNumber})
-      MATCH (oldc:Bacenta {id: $oldGroupToLead})
-      MATCH (newc:Bacenta {id: $newGroupToLead})
-      MATCH (l)-[leadsold:LEADS]->(oldc)
-      	SET leadsold.edDate: $endDate
-      MERGE (l)-[leadsnew:LEADS]->(newc)
-      	SET leadsnew.startDate: $startDate
-      MERGE (hist:LeaderHistory {HistoryDate:$endDate, HistoryRecord: `m.firstName m.lastName has been transferred from $oldc to $newc`})
-      MERGE (m)-[:HAS_LEADERSHIP_HISTORY]->(hist)
-      RETURN m
       """
     )
 }

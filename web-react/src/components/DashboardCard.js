@@ -5,7 +5,7 @@ export const DashboardCard = (props) => {
   let icon = ''
   const { name, number, cardLink } = props
 
-  if (name === 'Towns' || name === 'Campus') {
+  if (name === 'Towns' || name === 'Campuses') {
     icon = 'landmark'
   }
   if (name === 'Ministries') {

@@ -166,7 +166,9 @@ const BishopDashboard = () => {
             history.push('/member/displaydetails')
           }}
         >
-          {`Admin: ${data.displayMember?.hasAdmin?.firstName} ${data.displayMember?.hasAdmin?.lastName}`}
+          {data.displayMember?.hasAdmin
+            ? `Admin: ${data.displayMember?.hasAdmin?.firstName} ${data.displayMember?.hasAdmin?.lastName}`
+            : ''}
         </p>
         <div className="row row-cols-md-2 row-cols-lg-4">
           <div className="col-sm-12 col-md">

@@ -7,14 +7,14 @@ import { DISPLAY_BACENTA } from '../queries/DisplayQueries'
 import { ChurchContext } from '../contexts/ChurchContext'
 
 export const DisplayBacentaDetails = () => {
-  const { bacentaID } = useContext(ChurchContext)
+  const { bacentaId } = useContext(ChurchContext)
 
   const {
     data: bacentaData,
     error: bacentaError,
     loading: bacentaLoading,
   } = useQuery(DISPLAY_BACENTA, {
-    variables: { id: bacentaID },
+    variables: { id: bacentaId },
   })
 
   if (bacentaError) {
@@ -27,17 +27,17 @@ export const DisplayBacentaDetails = () => {
     <div>
       <NavBar />
       <DisplayChurchDetails
-        name={bacentaData.displayBacenta.name}
+        name={bacentaData.displayBacenta?.name}
         leaderTitle="Bacenta Leader"
         leaderName={
-          bacentaData.displayBacenta.leader
+          bacentaData.displayBacenta?.leader
             ? `${bacentaData.displayBacenta.leader.firstName} ${bacentaData.displayBacenta.leader.lastName}`
             : '-'
         }
-        leaderId={bacentaData.displayBacenta.leader.id}
+        leaderId={bacentaData.displayBacenta?.leader.id}
         membership={bacentaData.bacentaMemberCount}
         churchHeading="Meeting Day"
-        churchNo={bacentaData.displayBacenta.meetingDay.day}
+        churchNo={bacentaData.displayBacenta?.meetingDay.day}
         churchType="Bacenta"
         buttons={['']}
         editlink="/bacenta/editbacenta"

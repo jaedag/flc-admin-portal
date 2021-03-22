@@ -27,7 +27,7 @@ function AddTownCampus() {
     phoneRegExp,
     bishopId,
     setTownId,
-    setCampusID,
+    setCampusId,
     setBishopId,
   } = useContext(ChurchContext)
 
@@ -62,7 +62,7 @@ function AddTownCampus() {
   const [CreateCampus] = useMutation(CREATE_CAMPUS_MUTATION, {
     refetchQueries: [{ query: GET_CAMPUSES, variables: { id: bishopId } }],
     onCompleted: (newCampusData) => {
-      setCampusID(newCampusData.CreateCampus.id)
+      setCampusId(newCampusData.CreateCampus.id)
       history.push(`/${church.church}/displaydetails`)
     },
   })

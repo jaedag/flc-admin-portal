@@ -84,13 +84,13 @@ export const UPDATE_CAMPUS_MUTATION = gql`
 
 export const UPDATE_CENTRE_MUTATION = gql`
   mutation UpdateCentre(
-    $centreID: ID
+    $centreId: ID
     $centreName: String
     $lWhatsappNumber: String
     $campusTownID: ID
   ) {
     UpdateCentre(
-      centreID: $centreID
+      centreId: $centreId
       centreName: $centreName
       lWhatsappNumber: $lWhatsappNumber
       campusTownID: $campusTownID
@@ -102,8 +102,8 @@ export const UPDATE_CENTRE_MUTATION = gql`
 `
 
 export const ADD_CENTRE_BACENTAS = gql`
-  mutation AddCentreBacentas($centreID: ID!, $bacentaID: ID!) {
-    AddCentreBacentas(from: { id: $centreID }, to: { id: $bacentaID }) {
+  mutation AddCentreBacentas($centreId: ID!, $bacentaId: ID!) {
+    AddCentreBacentas(from: { id: $centreId }, to: { id: $bacentaId }) {
       from {
         id
         name
@@ -115,8 +115,8 @@ export const ADD_CENTRE_BACENTAS = gql`
   }
 `
 export const REMOVE_CENTRE_BACENTAS = gql`
-  mutation RemoveCentreBacentas($centreID: ID!, $bacentaID: ID!) {
-    RemoveCentreBacentas(from: { id: $centreID }, to: { id: $bacentaID }) {
+  mutation RemoveCentreBacentas($centreId: ID!, $bacentaId: ID!) {
+    RemoveCentreBacentas(from: { id: $centreId }, to: { id: $bacentaId }) {
       from {
         id
         name
@@ -129,8 +129,8 @@ export const REMOVE_CENTRE_BACENTAS = gql`
 `
 
 export const REMOVE_BACENTA_CENTRE = gql`
-  mutation RemoveBacentaCentre($centreID: ID!, $bacentaID: ID!) {
-    RemoveBacentaCentre(from: { id: $centreID }, to: { id: $bacentaID }) {
+  mutation RemoveBacentaCentre($centreId: ID!, $bacentaId: ID!) {
+    RemoveBacentaCentre(from: { id: $centreId }, to: { id: $bacentaId }) {
       from {
         id
         name
@@ -169,8 +169,8 @@ export const UPDATE_BACENTA = gql`
 `
 
 export const ADD_BACENTA_CENTRE = gql`
-  mutation AddBacentaCentre($centreID: ID!, $bacentaID: ID!) {
-    AddBacentaCentre(from: { id: $centreID }, to: { id: $bacentaID }) {
+  mutation AddBacentaCentre($centreId: ID!, $bacentaId: ID!) {
+    AddBacentaCentre(from: { id: $centreId }, to: { id: $bacentaId }) {
       from {
         id
         name

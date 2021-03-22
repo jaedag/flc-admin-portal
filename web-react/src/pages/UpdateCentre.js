@@ -23,7 +23,7 @@ export const UpdateCentre = () => {
     capitalise,
     phoneRegExp,
     townId,
-    centreID,
+    centreId,
     setBishopId,
   } = useContext(ChurchContext)
 
@@ -32,7 +32,7 @@ export const UpdateCentre = () => {
     error: centreError,
     loading: centreLoading,
   } = useQuery(DISPLAY_CENTRE, {
-    variables: { id: centreID },
+    variables: { id: centreId },
   })
 
   const history = useHistory()
@@ -60,7 +60,7 @@ export const UpdateCentre = () => {
 
   const [UpdateCentre] = useMutation(UPDATE_CENTRE_MUTATION, {
     refetchQueries: [
-      { query: DISPLAY_CENTRE, variables: { id: centreID } },
+      { query: DISPLAY_CENTRE, variables: { id: centreId } },
       { query: GET_TOWN_CENTRES, variables: { id: townId } },
       {
         query: GET_TOWN_CENTRES,
@@ -82,7 +82,7 @@ export const UpdateCentre = () => {
 
       UpdateCentre({
         variables: {
-          centreID: centreID,
+          centreId: centreId,
           centreName: values.centreName,
           lWhatsappNumber: parsePhoneNum(values.leaderWhatsapp),
           campusTownID: values.townCampusSelect,
@@ -107,22 +107,22 @@ export const UpdateCentre = () => {
       removeBacentas.forEach((bacenta) => {
         RemoveBacentaCentre({
           variables: {
-            centreID: centreID,
-            bacentaID: bacenta,
+            centreId: centreId,
+            bacentaId: bacenta,
           },
         })
       })
       addBacentas.forEach((bacenta) => {
         RemoveBacentaCentre({
           variables: {
-            centreID: centreID,
-            bacentaID: bacenta,
+            centreId: centreId,
+            bacentaId: bacenta,
           },
         })
         AddCentreBacentas({
           variables: {
-            centreID: centreID,
-            bacentaID: bacenta,
+            centreId: centreId,
+            bacentaId: bacenta,
           },
         })
       })

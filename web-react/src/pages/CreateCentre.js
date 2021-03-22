@@ -34,8 +34,8 @@ function CreateCentre() {
     makeSelectOptions,
     bishopId,
     setTownId,
-    setCampusID,
-    setCentreID,
+    setCampusId,
+    setCentreId,
   } = useContext(ChurchContext)
   const history = useHistory()
 
@@ -55,7 +55,7 @@ function CreateCentre() {
       { query: GET_TOWN_CENTRES, variables: { id: bishopId } },
     ],
     onCompleted: (newCentreData) => {
-      setCentreID(newCentreData.CreateCentre.id)
+      setCentreId(newCentreData.CreateCentre.id)
       history.push('/centre/displaydetails')
     },
   })
@@ -79,7 +79,7 @@ function CreateCentre() {
       if (church.church === 'town') {
         setTownId(values.campusTownSelect)
       } else if (church.church === 'campus') {
-        setCampusID(values.campusTownSelect)
+        setCampusId(values.campusTownSelect)
       }
 
       CreateCentre({

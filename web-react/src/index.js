@@ -91,11 +91,11 @@ const PastorsAdmin = () => {
   })
   const [bishopId, setBishopId] = useState('')
   const [townId, setTownId] = useState('')
-  const [campusId, setCampusID] = useState('')
-  const [bacentaID, setBacentaID] = useState('')
-  const [centreID, setCentreID] = useState('')
-  const [sontaID, setSontaID] = useState('')
-  const [ministryID, setMinistryID] = useState('')
+  const [campusId, setCampusId] = useState('')
+  const [bacentaId, setBacentaId] = useState('')
+  const [centreId, setCentreId] = useState('')
+  const [sontaId, setSontaId] = useState('')
+  const [ministryId, setMinistryId] = useState('')
   const [memberID, setMemberID] = useState('')
   const [searchKey, setSearchKey] = useState('')
   const [filters, setFilters] = useState({
@@ -400,15 +400,15 @@ const PastorsAdmin = () => {
           townId,
           setTownId,
           campusId,
-          setCampusID,
-          centreID,
-          setCentreID,
-          bacentaID,
-          setBacentaID,
-          sontaID,
-          setSontaID,
-          ministryID,
-          setMinistryID,
+          setCampusId,
+          centreId,
+          setCentreId,
+          bacentaId,
+          setBacentaId,
+          sontaId,
+          setSontaId,
+          ministryId,
+          setMinistryId,
         }}
       >
         <MemberContext.Provider value={{ memberID, setMemberID }}>

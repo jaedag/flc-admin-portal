@@ -7,45 +7,44 @@ import { DISPLAY_CENTRE } from '../queries/DisplayQueries'
 import { ChurchContext } from '../contexts/ChurchContext'
 
 export const DisplayCentreDetails = () => {
-  const { centreID, setBacentaID } = useContext(ChurchContext)
-  const {
-    data: centreData,
-    error: centreError,
-    loading: centreLoading,
-  } = useQuery(DISPLAY_CENTRE, {
-    variables: { id: centreID },
-  })
+  const { centreId, setBacentaId } = useContext(ChurchContext)
+  const { data: centreData, loading: centreLoading } = useQuery(
+    DISPLAY_CENTRE,
+    {
+      variables: { id: centreId },
+    }
+  )
 
-  if (centreError) {
-    return <ErrorScreen />
-  } else if (centreLoading) {
+  if (centreLoading) {
     // Spinner Icon for Loading Screens
     return <LoadingScreen />
+  } else if (centreData) {
+    const { displayCentre, centreMemberCount, centreBacentaCount } = centreData
+    return (
+      <div>
+        <NavBar />
+        <DisplayChurchDetails
+          name={displayCentre.name}
+          // leaderTitle={displayCentre.leader.title[0].Title.title}
+          leaderTitle="Centre Leader"
+          membership={centreMemberCount}
+          leaderName={
+            displayCentre.leader
+              ? `${displayCentre.leader.firstName} ${displayCentre.leader.lastName}`
+              : '-'
+          }
+          leaderId={displayCentre.leader ? displayCentre.leader.id : null}
+          churchHeading="No of Bacentas"
+          churchType="Centre"
+          subChurch="Bacenta"
+          subChurchSetter={setBacentaId}
+          churchNo={centreBacentaCount}
+          buttons={displayCentre.bacentas}
+          editlink="/centre/editcentre"
+        />
+      </div>
+    )
+  } else {
+    return <ErrorScreen />
   }
-
-  const { displayCentre, centreMemberCount, centreBacentaCount } = centreData
-  return (
-    <div>
-      <NavBar />
-      <DisplayChurchDetails
-        name={displayCentre.name}
-        // leaderTitle={displayCentre.leader.title[0].Title.title}
-        leaderTitle="Centre Leader"
-        membership={centreMemberCount}
-        leaderName={
-          displayCentre.leader
-            ? `${displayCentre.leader.firstName} ${displayCentre.leader.lastName}`
-            : '-'
-        }
-        leaderId={displayCentre.leader ? displayCentre.leader.id : null}
-        churchHeading="No of Bacentas"
-        churchType="Centre"
-        subChurch="Bacenta"
-        subChurchSetter={setBacentaID}
-        churchNo={centreBacentaCount}
-        buttons={displayCentre.bacentas}
-        editlink="/centre/editcentre"
-      />
-    </div>
-  )
 }

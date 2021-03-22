@@ -7,7 +7,7 @@ import { DISPLAY_TOWN, DISPLAY_CAMPUS } from '../queries/DisplayQueries'
 import { ChurchContext } from '../contexts/ChurchContext'
 
 export const DisplayCampusTownDetails = () => {
-  const { church, capitalise, townId, campusId, setCentreID } = useContext(
+  const { church, capitalise, townId, campusId, setCentreId } = useContext(
     ChurchContext
   )
 
@@ -43,7 +43,7 @@ export const DisplayCampusTownDetails = () => {
           admin={townData.displayTown.admin}
           churchType={`${capitalise(church.church)}`}
           subChurch={`${capitalise(church.subChurch)}`}
-          subChurchSetter={setCentreID}
+          subChurchSetter={setCentreId}
           buttons={townData.displayTown.centres}
           editlink="/town/edittown"
         />
@@ -72,7 +72,7 @@ export const DisplayCampusTownDetails = () => {
           admin={campusData.displayCampus.admin}
           churchType={`${capitalise(church.church)}`}
           subChurch="Centre"
-          subChurchSetter={setCentreID}
+          subChurchSetter={setCentreId}
           buttons={campusData.displayCampus.centres}
           editlink="/campus/editcampus"
         />

@@ -3,7 +3,11 @@ import { resolvers } from './resolvers'
 import { ApolloServer } from 'apollo-server-express'
 import express from 'express'
 import neo4j from 'neo4j-driver'
-import { makeAugmentedSchema } from 'neo4j-graphql-js'
+import {
+  makeAugmentedSchema,
+  searchSchema,
+  assertSchema,
+} from 'neo4j-graphql-js'
 import dotenv from 'dotenv'
 import { initializeDatabase } from './initialize'
 // import jwt from 'express-jwt'
@@ -46,6 +50,9 @@ const driver = neo4j.driver(
     encrypted: process.env.NEO4J_ENCRYPTED ? 'ENCRYPTION_ON' : 'ENCRYPTION_OFF',
   }
 )
+
+searchSchema({ schema, driver, debug: true })
+assertSchema({ schema, driver, debug: true })
 
 /*
  * Perform any database initialization steps such as

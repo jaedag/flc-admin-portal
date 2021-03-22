@@ -9,13 +9,13 @@ import { ChurchContext } from '../contexts/ChurchContext'
 import { MemberContext } from '../contexts/MemberContext'
 
 export const DisplayAllBacentas = () => {
-  const { centreID, setBacentaID } = useContext(ChurchContext)
+  const { centreId, setBacentaId } = useContext(ChurchContext)
   const { setMemberID } = useContext(MemberContext)
 
   const { data: bacentaData, loading: bacentaLoading } = useQuery(
     GET_CENTRE_BACENTAS,
     {
-      variables: { id: centreID },
+      variables: { id: centreId },
     }
   )
   if (bacentaLoading) {
@@ -46,7 +46,7 @@ export const DisplayAllBacentas = () => {
           </div>
           <DisplayChurchList
             data={bacentaData.centreBacentaList}
-            setter={setBacentaID}
+            setter={setBacentaId}
             churchType="Bacenta"
           />
         </div>

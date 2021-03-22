@@ -9,7 +9,7 @@ import { ChurchContext } from '../contexts/ChurchContext'
 import { MemberContext } from '../contexts/MemberContext'
 
 export const DisplaySontasByCampusTown = () => {
-  const { church, bishopId, setSontaID } = useContext(ChurchContext)
+  const { church, bishopId, setSontaId } = useContext(ChurchContext)
   const { setMemberID } = useContext(MemberContext)
 
   const { data: sontaData, loading: sontaLoading } = useQuery(
@@ -66,7 +66,7 @@ export const DisplaySontasByCampusTown = () => {
                 <h4>{campus.name}</h4>
                 <DisplayChurchList
                   data={campus.sontas}
-                  setter={setSontaID}
+                  setter={setSontaId}
                   churchType="Sonta"
                 />
               </div>
@@ -119,7 +119,7 @@ export const DisplaySontasByCampusTown = () => {
                 <h4>{town.name}</h4>
                 <DisplayChurchList
                   data={town.sontas}
-                  setter={setSontaID}
+                  setter={setSontaId}
                   churchType="Sonta"
                 />
               </div>

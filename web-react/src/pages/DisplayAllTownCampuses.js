@@ -9,7 +9,7 @@ import { ChurchContext } from '../contexts/ChurchContext'
 import { BISHOP_MEMBER_COUNT } from '../queries/CountQueries'
 
 export const DisplayAllTownCampuses = () => {
-  const { clickMember, church, bishopId, setTownId, setCampusID } = useContext(
+  const { clickMember, church, bishopId, setTownId, setCampusId } = useContext(
     ChurchContext
   )
 
@@ -122,7 +122,7 @@ export const DisplayAllTownCampuses = () => {
           </div>
           <DisplayChurchList
             data={campusData.campusList}
-            setter={setCampusID}
+            setter={setCampusId}
             churchType="Campus"
           />
         </div>

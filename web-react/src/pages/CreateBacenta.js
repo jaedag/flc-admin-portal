@@ -22,6 +22,8 @@ export const CreateBacenta = () => {
     bacentaName: '',
     leaderName: '',
     leaderWhatsapp: '',
+    townSelect: '',
+    centreSelect: '',
     meetingDay: '',
     venueLatitude: '',
     venueLongitude: '',
@@ -33,14 +35,11 @@ export const CreateBacenta = () => {
     makeSelectOptions,
     parsePhoneNum,
     bishopId,
-    townId,
-    setTownId,
-    campusId,
-    setCampusID,
-    setBacentaID,
+    setBacentaId,
     phoneRegExp,
   } = useContext(ChurchContext)
 
+  let townCampusIdVar
   const serviceDayOptions = [
     { key: 'Tuesday', value: 'Tuesday' },
     { key: 'Wednesday', value: 'Wednesday' },
@@ -67,7 +66,7 @@ export const CreateBacenta = () => {
   const [positionLoading, setPositionLoading] = useState(false)
   const [CreateBacenta] = useMutation(CREATE_BACENTA_MUTATION, {
     onCompleted: (newBacentaData) => {
-      setBacentaID(newBacentaData.CreateBacenta.id)
+      setBacentaId(newBacentaData.CreateBacenta.id)
       history.push('/bacenta/displaydetails')
     },
   })
@@ -138,9 +137,10 @@ export const CreateBacenta = () => {
                                 : campusOptions
                             }
                             onChange={(e) => {
-                              church.church === 'town'
-                                ? setTownId(e.target.value)
-                                : setCampusID(e.target.value)
+                              formik.setFieldValue('townSelect', e.target.value)
+                              townCampusIdVar = e.target.value
+
+                              console.log('Town', townCampusIdVar)
                             }}
                             defaultOption={`Select a ${capitalise(
                               church.church
@@ -161,9 +161,7 @@ export const CreateBacenta = () => {
                                 ? 'townCentreList'
                                 : 'campusCentreList'
                             }
-                            varValue={
-                              church.church === 'town' ? townId : campusId
-                            }
+                            varValue={townCampusIdVar}
                             defaultOption="Select a Centre"
                           />
                         </div>

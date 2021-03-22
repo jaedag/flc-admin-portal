@@ -75,8 +75,8 @@ export const DISPLAY_MEMBER = gql`
           year
         }
       }
-      leadershipHistory(orderBy: created_at_desc) {
-        historyDate {
+      history {
+        created_at {
           date {
             formatted
           }
@@ -139,6 +139,10 @@ export const DISPLAY_BACENTA = gql`
       centre {
         id
         name
+        town {
+          id
+          name
+        }
       }
       leader {
         id

@@ -9,6 +9,8 @@ import {
   GET_CENTRE_BACENTAS,
   GET_CAMPUS_CENTRES,
   GET_TOWN_CENTRES,
+  GET_TOWNS,
+  GET_CAMPUSES,
 } from '../queries/ListQueries'
 import {
   ADD_BACENTA_CENTRE,
@@ -20,24 +22,26 @@ import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
 import { ChurchContext } from '../contexts/ChurchContext'
 import { DISPLAY_BACENTA } from '../queries/DisplayQueries'
 import Spinner from '../components/Spinner'
+import { LOG_BACENTA_HISTORY } from '../queries/LogMutations'
 
 export const UpdateBacenta = () => {
   const {
     church,
+    makeSelectOptions,
     parsePhoneNum,
     capitalise,
     phoneRegExp,
-    townId,
-    campusId,
-    centreID,
-    setCentreID,
-    bacentaID,
-  } = useContext(ChurchContext)
+    bishopId,
 
+    centreId,
+    setCentreId,
+    bacentaId,
+  } = useContext(ChurchContext)
+  let townCampusIdVar
   const { data: bacentaData, loading: bacentaLoading } = useQuery(
     DISPLAY_BACENTA,
     {
-      variables: { id: bacentaID },
+      variables: { id: bacentaId },
     }
   )
 
@@ -48,7 +52,8 @@ export const UpdateBacenta = () => {
     bacentaName: bacentaData?.displayBacenta?.name,
     leaderName: `${bacentaData?.displayBacenta?.leader.firstName} ${bacentaData?.displayBacenta?.leader.lastName} `,
     leaderWhatsapp: `+${bacentaData?.displayBacenta?.leader.whatsappNumber}`,
-    centreSelect: bacentaData?.displayBacenta?.centre?.id,
+    centreSelect: bacentaData?.displayBacenta?.centre,
+    townCampusSelect: bacentaData?.displayBacenta?.centre.town.id,
     meetingDay: bacentaData?.displayBacenta?.meetingDay?.day,
     venueLatitude: bacentaData?.displayBacenta?.location?.latitude,
     venueLongitude: bacentaData?.displayBacenta?.location?.longitude,
@@ -72,28 +77,49 @@ export const UpdateBacenta = () => {
     ),
   })
 
+  const { data: townListData } = useQuery(GET_TOWNS, {
+    variables: { id: bishopId },
+  })
+  const { data: campusListData } = useQuery(GET_CAMPUSES, {
+    variables: { id: bishopId },
+  })
+
   const [UpdateBacenta] = useMutation(UPDATE_BACENTA, {
     refetchQueries: [
-      { query: DISPLAY_BACENTA, variables: { id: bacentaID } },
-      { query: GET_CENTRE_BACENTAS, variables: { id: centreID } },
+      { query: DISPLAY_BACENTA, variables: { id: bacentaId } },
+      { query: GET_CENTRE_BACENTAS, variables: { id: centreId } },
       {
         query: GET_CENTRE_BACENTAS,
-        variables: { id: initialValues.centreSelect },
+        variables: { id: initialValues.centreSelect?.id },
       },
     ],
   })
-  const [AddBacentaCentre] = useMutation(ADD_BACENTA_CENTRE)
+  let newCentreName
+  const [AddBacentaCentre] = useMutation(ADD_BACENTA_CENTRE, {
+    onCompleted: (newCentre) => {
+      newCentreName = newCentre.AddBacentaCentre.from.name
+    },
+  })
   const [RemoveBacentaCentre] = useMutation(REMOVE_BACENTA_CENTRE)
+  const [LogBacentaHistory] = useMutation(LOG_BACENTA_HISTORY)
 
   if (bacentaLoading) {
     return <LoadingScreen />
   } else if (bacentaData) {
+    const townOptions = townListData
+      ? makeSelectOptions(townListData.townList)
+      : []
+    const campusOptions = campusListData
+      ? makeSelectOptions(campusListData.campusList)
+      : []
+
     //onSubmit receives the form state as argument
     const onSubmit = (values, onSubmitProps) => {
-      setCentreID(values.centreSelect)
+      setCentreId(values.centreSelect)
+
       UpdateBacenta({
         variables: {
-          id: bacentaID,
+          id: bacentaId,
           name: values.bacentaName,
           lWhatsappNumber: parsePhoneNum(values.leaderWhatsapp),
           meetingDay: values.meetingDay,
@@ -101,21 +127,45 @@ export const UpdateBacenta = () => {
           venueLatitude: parseFloat(values.venueLongitude),
         },
       })
-      if (values.centreSelect !== initialValues.centreSelect) {
-        console.log(bacentaData?.displayBacenta?.centre?.name)
+
+      //Log If The Centre Changes
+      if (values.centreSelect !== initialValues.centreSelect.id) {
+        console.log(newCentreName)
         RemoveBacentaCentre({
           variables: {
-            centreID: initialValues.centreSelect,
-            bacentaID: bacentaID,
+            centreId: initialValues.centreSelect.id,
+            bacentaId: bacentaId,
           },
         })
         AddBacentaCentre({
           variables: {
-            centreID: values.centreSelect,
-            bacentaID: bacentaID,
+            centreId: values.centreSelect,
+            bacentaId: bacentaId,
+          },
+        })
+        LogBacentaHistory({
+          variables: {
+            bacentaId: bacentaId,
+            historyRecord: `${values.bacentaName} has been moved from ${initialValues.centreSelect.name} Centre to ${newCentreName} Centre`,
           },
         })
       }
+
+      //STUFF THAT IS LEFT TO DO
+      //Log if the Leader Changes
+      // if(values.leaderWhatsapp !== initialValues.leaderWhatsapp){
+
+      // }
+
+      //Log if the Meeting Day Changes
+      // if(values.meetingDay.day !== initialValues.meetingDay){
+
+      // }
+
+      //Log if the Venue Changes
+      // if(values.venueLongitude !== initialValues.venueLongitude || values.venueLatitude !== initialValues.venueLatitude){
+
+      // }
 
       onSubmitProps.setSubmitting(false)
       onSubmitProps.resetForm()
@@ -142,6 +192,27 @@ export const UpdateBacenta = () => {
                         <div className="col-8">
                           <FormikControl
                             className="form-control"
+                            control="select"
+                            name="townCampusSelect"
+                            label={`Select a ${capitalise(church.church)}`}
+                            options={
+                              church.church === 'town'
+                                ? townOptions
+                                : campusOptions
+                            }
+                            onChange={(e) => {
+                              formik.setFieldValue(
+                                'townCampusSelect',
+                                e.target.value
+                              )
+                              townCampusIdVar = e.target.value
+                            }}
+                            defaultOption={`Select a ${capitalise(
+                              church.church
+                            )}`}
+                          />
+                          <FormikControl
+                            className="form-control"
                             control="selectWithQuery"
                             name="centreSelect"
                             optionsQuery={
@@ -156,9 +227,12 @@ export const UpdateBacenta = () => {
                                 : 'campusCentreList'
                             }
                             varValue={
-                              church.church === 'town' ? townId : campusId
+                              townCampusIdVar
+                                ? townCampusIdVar
+                                : initialValues.townCampusSelect
                             }
                             defaultOption="Select a Centre"
+                            label="Select a Centre"
                           />
                         </div>
                       </div>

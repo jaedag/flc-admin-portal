@@ -78,6 +78,7 @@ export const DisplayCampusTownDetails = () => {
         />
       </div>
     )
+  } else {
+    return <ErrorScreen />
   }
-  return <ErrorScreen />
 }

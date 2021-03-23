@@ -28,6 +28,50 @@ export const GET_LOGGED_IN_USER = gql`
 
 export const GLOBAL_SEARCH = gql`
   query globalSearch($searchKey: String!) {
+    globalTownSearch(searchKey: $searchKey, first: 6) {
+      id
+      name
+      bishop {
+        id
+      }
+    }
+    globalCampusSearch(searchKey: $searchKey, first: 6) {
+      id
+      name
+      bishop {
+        id
+      }
+    }
+    globalCentreSearch(searchKey: $searchKey, first: 6) {
+      id
+      name
+      town {
+        bishop {
+          id
+        }
+      }
+      campus {
+        bishop {
+          id
+        }
+      }
+    }
+    globalBacentaSearch(searchKey: $searchKey, first: 6) {
+      id
+      name
+      centre {
+        town {
+          bishop {
+            id
+          }
+        }
+        campus {
+          bishop {
+            id
+          }
+        }
+      }
+    }
     globalMemberSearch(searchKey: $searchKey, first: 6) {
       id
       firstName

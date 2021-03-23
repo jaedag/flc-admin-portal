@@ -348,6 +348,16 @@ const PastorsAdmin = () => {
   }
 
   const determineChurch = (member) => {
+    if (member.__typename === 'Town') {
+      setChurch({ church: 'town', subChurch: 'centre' })
+      setBishopId(member.bishop.id)
+      return
+    } else if (member.__typename === 'Campus') {
+      setChurch({ church: 'campus', subChurch: 'centre' })
+      setBishopId(member.bishop.id)
+      return
+    }
+
     if (!member.bacenta) {
       if (!member.townBishop) {
         return

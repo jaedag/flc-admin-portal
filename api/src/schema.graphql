@@ -442,6 +442,33 @@ type Query {
       RETURN b
       """
     )
+  globalCentreSearch(searchKey: String!): [Centre]
+    @cypher(
+      statement: """
+      MATCH (c:Centre)
+      WHERE toLower(c.name) STARTS WITH toLower($searchKey)
+      OR toLower(c.name) CONTAINS toLower($searchKey)
+      RETURN c
+      """
+    )
+  globalCampusSearch(searchKey: String!): [Campus]
+    @cypher(
+      statement: """
+      MATCH (c:Campus)
+      WHERE toLower(c.name) STARTS WITH toLower($searchKey)
+      OR toLower(c.name) CONTAINS toLower($searchKey)
+      RETURN c
+      """
+    )
+  globalTownSearch(searchKey: String!): [Town]
+    @cypher(
+      statement: """
+      MATCH (c:Town)
+      WHERE toLower(c.name) STARTS WITH toLower($searchKey)
+      OR toLower(c.name) CONTAINS toLower($searchKey)
+      RETURN c
+      """
+    )
   occupationList(searchKey: String!): [Occupation]
     @cypher(
       statement: "MATCH (o:Occupation) WHERE toLower(o.occupation) CONTAINS toLower($searchKey) RETURN o"

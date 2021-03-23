@@ -10,38 +10,35 @@ import Spinner from '../components/Spinner'
 export const SearchPageMobile = () => {
   const { searchKey } = useContext(SearchContext)
   // const { setMemberID } = useContext(MemberContext)
-  const { clickMember } = useContext(ChurchContext)
-
+  const { determineChurch, clickCard } = useContext(ChurchContext)
   const history = useHistory()
-  const {
-    data: searchData,
-    error: searchError,
-    loading: searchLoading,
-  } = useQuery(GLOBAL_SEARCH, {
-    variables: { searchKey: searchKey },
+
+  const { data: searchData, loading: searchLoading } = useQuery(GLOBAL_SEARCH, {
+    variables: {
+      searchKey: searchKey,
+    },
   })
 
-  if (searchError) {
-    return (
-      <React.Fragment>
-        <MobileSearchNav />
-        <div className="container full-body-center">
-          <p className="text-center full-center">
-            There seems to be an error loading data
-          </p>
-        </div>
-      </React.Fragment>
-    )
-  } else if (searchLoading) {
+  if (searchLoading) {
     return (
       <React.Fragment>
         <MobileSearchNav />
         <div className="container body-container text-center">
-          <Spinner />
+          <div className="mt-5">
+            <Spinner />
+          </div>
         </div>
       </React.Fragment>
     )
-  } else {
+  } else if (searchData) {
+    const combinedData = [
+      ...searchData.globalMemberSearch,
+      ...searchData.globalCampusSearch,
+      ...searchData.globalTownSearch,
+      ...searchData.globalCentreSearch,
+      ...searchData.globalBacentaSearch,
+    ]
+
     return (
       <React.Fragment>
         <MobileSearchNav />
@@ -51,30 +48,51 @@ export const SearchPageMobile = () => {
               <Spinner />
             </div>
           )}
-          {searchData.globalMemberSearch.map((searchResult, index) => {
+          {combinedData.map((searchResult, index) => {
             return (
               <div
                 key={index}
                 className="card mobile-search-card p-2 py-3 my-4"
                 onClick={() => {
-                  clickMember(searchResult)
-                  history.push('/member/displaydetails')
+                  determineChurch(searchResult)
+                  clickCard(searchResult)
+                  history.push(
+                    `/${searchResult.__typename.toLowerCase()}/displaydetails`
+                  )
                 }}
               >
                 <div className="media">
-                  <img
-                    className="mr-3 rounded-circle img-search"
-                    src={`${searchResult.pictureUrl}`}
-                    alt={`${searchResult.firstName} ${searchResult.lastName}`}
-                  />
+                  {searchResult.pictureUrl ? (
+                    <img
+                      className="mr-3 rounded-circle img-search"
+                      src={`${searchResult.pictureUrl}`}
+                      alt={`${
+                        searchResult.name
+                          ? searchResult.name
+                          : searchResult.firstName + ' ' + searchResult.lastName
+                      }`}
+                    />
+                  ) : null}
+
                   <div className="media-body">
-                    <h6 className="mt-0">{`${searchResult.firstName} ${searchResult.lastName}`}</h6>
+                    <h6 className="mt-0">{`${
+                      searchResult.name
+                        ? searchResult.name
+                        : searchResult.firstName + ' ' + searchResult.lastName
+                    }`}</h6>
+
                     {searchResult.bacenta ? (
                       <div>
                         <span className="font-weight-bold text-secondary">
                           Bacenta:
                         </span>{' '}
-                        {searchResult.bacenta.name}{' '}
+                        {searchResult.bacenta.name}
+                      </div>
+                    ) : searchResult.__typename ? (
+                      <div>
+                        <span className="font-weight-bold text-secondary">
+                          {searchResult.__typename}
+                        </span>
                       </div>
                     ) : null}
                     {searchResult.ministry ? (
@@ -90,6 +108,17 @@ export const SearchPageMobile = () => {
               </div>
             )
           })}
+        </div>
+      </React.Fragment>
+    )
+  } else {
+    return (
+      <React.Fragment>
+        <MobileSearchNav />
+        <div className="container full-body-center">
+          <p className="text-center full-center">
+            There seems to be an error loading data
+          </p>
         </div>
       </React.Fragment>
     )

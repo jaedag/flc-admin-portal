@@ -5,7 +5,6 @@ import { ErrorMessage } from 'formik'
 import TextError from './TextError'
 import { useHistory } from 'react-router-dom'
 import { GLOBAL_SEARCH } from '../../queries/SearchQuery'
-import { MemberContext } from '../../contexts/MemberContext'
 import { ChurchContext } from '../../contexts/ChurchContext'
 
 function FormikSearchbox(props) {
@@ -13,11 +12,8 @@ function FormikSearchbox(props) {
 
   const [searchString, setSearchString] = useState('')
   const [suggestions, setSuggestions] = useState([])
-  const { setMemberID } = useContext(MemberContext)
-  const { setTownId, setCampusId, setCentreId, setBacentaId } = useContext(
-    ChurchContext
-  )
-  const { determineChurch } = useContext(ChurchContext)
+  const { clickCard } = useContext(ChurchContext)
+
   const history = useHistory()
   let combinedData
   const { error } = useQuery(GLOBAL_SEARCH, {
@@ -95,26 +91,7 @@ function FormikSearchbox(props) {
             event.preventDefault()
           }
           setFieldValue(`${name}`, suggestion.id)
-          determineChurch(suggestion)
-          switch (suggestion.__typename) {
-            case 'Member':
-              setMemberID(suggestion.id)
-              break
-            case 'Bacenta':
-              setBacentaId(suggestion.id)
-              break
-            case 'Centre':
-              setCentreId(suggestion.id)
-              break
-            case 'Town':
-              setTownId(suggestion.id)
-              break
-            case 'Campus':
-              setCampusId(suggestion.id)
-              break
-            default:
-              console.log("We don't have this type")
-          }
+          clickCard(suggestion)
 
           history.push(`/${suggestion.__typename.toLowerCase()}/displaydetails`)
         }}

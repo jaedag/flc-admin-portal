@@ -393,10 +393,28 @@ const PastorsAdmin = () => {
     }
   }
 
-  const clickMember = (member) => {
-    setMemberID(member.id)
-    sessionStorage.setItem('memberId', member.id)
-    determineChurch(member)
+  const clickCard = (card) => {
+    determineChurch(card)
+    switch (card.__typename) {
+      case 'Member':
+        setMemberID(card.id)
+        sessionStorage.setItem('memberId', card.id)
+        break
+      case 'Bacenta':
+        setBacentaId(card.id)
+        break
+      case 'Centre':
+        setCentreId(card.id)
+        break
+      case 'Town':
+        setTownId(card.id)
+        break
+      case 'Campus':
+        setCampusId(card.id)
+        break
+      default:
+        console.log("We don't have this type")
+    }
   }
 
   if (isLoading) {
@@ -409,7 +427,7 @@ const PastorsAdmin = () => {
         value={{
           capitalise,
           plural,
-          clickMember,
+          clickCard,
           phoneRegExp,
           parsePhoneNum,
           makeSelectOptions,

@@ -8,7 +8,7 @@ import { DashboardButton } from '../components/DashboardButton'
 import { ChurchContext } from '../contexts/ChurchContext'
 
 const BishopDashboard = () => {
-  const { church, capitalise, plural, clickMember, bishopId } = useContext(
+  const { church, capitalise, plural, clickCard, bishopId } = useContext(
     ChurchContext
   )
   const { data, error, loading } = useQuery(BISH_DASHBOARD_COUNTS, {
@@ -94,7 +94,7 @@ const BishopDashboard = () => {
           <p
             className="pb-4"
             onClick={() => {
-              clickMember(data.displayMember?.hasAdmin)
+              clickCard(data.displayMember?.hasAdmin)
               history.push('/member/displaydetails')
             }}
           >
@@ -171,33 +171,33 @@ const BishopDashboard = () => {
       <div>
         <NavBar />
         <div className="container ">
-          <h4 className="py-4">Loading...</h4>
+          <h4 className="py-4">Error!</h4>
           <div className="row row-cols-2 row-cols-lg-4">
             <div className="col">
               <DashboardCard
                 name="Members"
-                number="Loading..."
+                number="Error!"
                 cardLink="/members"
               />
             </div>
             <div className="col">
               <DashboardCard
                 name="Pastors"
-                number="Loading..."
+                number="Error!"
                 cardLink="/pastors"
               />
             </div>
             <div className="col">
               <DashboardCard
                 name={capitalise(plural(church.church))}
-                number="Loading..."
+                number="Error!"
                 cardLink={`/${church.church}/displayall`}
               />
             </div>
             <div className="col">
               <DashboardCard
                 name="Ministries"
-                number="Loading"
+                number="Error!"
                 cardLink={`${church.church}/sonta/displayall`}
               />
             </div>

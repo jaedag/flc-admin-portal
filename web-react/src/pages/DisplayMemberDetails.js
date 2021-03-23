@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
-import { Link } from 'react-router-dom'
 import { useQuery } from '@apollo/client'
+import { useHistory } from 'react-router-dom'
 import { NavBar } from '../components/NavBar'
 import { MemberCard } from '../components/MemberCard'
 import { DISPLAY_MEMBER } from '../queries/DisplayQueries'
@@ -25,14 +25,10 @@ export const DisplayMemberDetails = () => {
     'Dec',
   ]
   const { memberID } = useContext(MemberContext)
-  const {
-    church,
-    setBacentaId,
-    setCentreId,
-    setTownId,
-    setCampusId,
-    setSontaId,
-  } = useContext(ChurchContext)
+  const { church, capitalise, determineChurch, clickCard } = useContext(
+    ChurchContext
+  )
+  const history = useHistory()
 
   const {
     data: memberData,
@@ -49,68 +45,74 @@ export const DisplayMemberDetails = () => {
     return <LoadingScreen />
   }
 
-  let rank = []
+  let rank = {
+    bacentaLeader: [],
+    centreLeader: [],
+    basontaLeader: [],
+    sontaLeader: [],
+    townLeader: [],
+    campusLeader: [],
+    bishop: [],
+  }
 
-  if (memberData.displayMember.leadsBacenta[0]) {
-    rank.push({
-      desc: `Bacenta Leader of ${memberData.displayMember.leadsBacenta[0].name}`,
-      link: '/bacenta/displaydetails',
-      setter: { setBacentaId },
+  const updateRank = (member, churchType) => {
+    if (churchType === 'bishop') {
+      if (member.townBishop[0]) {
+        member.townBishop.map((church) => {
+          rank.bishop.push({
+            name: church.name,
+            id: church.id,
+            __typename: church.__typename,
+          })
+          return null
+        })
+        return
+      } else if (member.campusBishop[0]) {
+        member.campusBishop.map((church) => {
+          rank.bishop.push({
+            name: church.name,
+            id: church.id,
+            __typename: church.__typename,
+          })
+          return null
+        })
+        return
+      }
+    }
+
+    member[`leads${capitalise(churchType)}`].map((church) => {
+      let ch = church.__typename.toLowerCase()
+
+      rank[`${ch}Leader`].push({
+        name: church.name,
+        id: church.id,
+        link: '',
+        __typename: church.__typename,
+      })
+      return null
     })
+    return null
+  }
+  if (memberData.displayMember.leadsBacenta[0]) {
+    updateRank(memberData.displayMember, 'bacenta')
   }
   if (memberData.displayMember.leadsCentre[0]) {
-    rank.push({
-      desc: `Centre Leader of ${memberData.displayMember.leadsCentre.name}`,
-      link: '/centre/displaydetails',
-      setter: { setCentreId },
-    })
+    updateRank(memberData.displayMember, 'centre')
   }
-  if (memberData.displayMember.townGSO[0]) {
-    rank.push({
-      desc: `Con Rep of ${memberData.displayMember.townGSO.name}`,
-      link: '/town/displaydetails',
-      set: { setTownId },
-    })
+  if (memberData.displayMember.leadsTown[0]) {
+    updateRank(memberData.displayMember, 'town')
   }
-  if (memberData.displayMember.campusGSO[0]) {
-    rank.push({
-      detail: memberData.displayMember.campusGSO.map((campus) => ({
-        desc: `Con Rep of ${campus.name}`,
-        memberID: campus.memberID,
-        setter: { setCampusId },
-      })),
-      link: '/campus/displaydetails',
-    })
+  if (memberData.displayMember.leadsCampus[0]) {
+    updateRank(memberData.displayMember, 'campus')
   }
   if (memberData.displayMember.leadsSonta[0]) {
-    rank.push({
-      detail: memberData.displayMember.leadsSonta.map((sonta) => ({
-        desc: `Sonta Leader of ${sonta.name}`,
-        memberID: sonta.memberID,
-      })),
-      link: '/sonta/displaydetails',
-      setter: { setSontaId },
-    })
+    updateRank(memberData.displayMember, 'sonta')
   }
   if (memberData.displayMember.leadsMinistry[0]) {
-    rank.push({
-      desc: `Ministry Leader of ${memberData.displayMember.leadsMinistry.name}`,
-      link: '',
-      setMinistryId: '',
-    })
+    updateRank(memberData.displayMember, 'ministry')
   }
   if (memberData.displayMember.townBishop[0]) {
-    rank.push({
-      desc: `Town Bishop`,
-      link: '/dashboard',
-    })
-  }
-
-  if (memberData.displayMember.campusBishop[0]) {
-    rank.push({
-      desc: `Campus Bishop`,
-      link: '/dashboard',
-    })
+    updateRank(memberData.displayMember, 'bishop')
   }
   // console.log(rank)
 
@@ -156,27 +158,35 @@ export const DisplayMemberDetails = () => {
                       </h5>
                     </div>
                     <div className="col d-flex justify-content-center mb-2">
-                      <p className="font-weight-light card-text">
-                        {
-                          //Rank Discussions
-                          !rank === []
-                            ? rank.map((rank, i) => (
-                                <Link key={i} to={rank.link}>
-                                  {rank.detail.map((detail, i) => (
-                                    <p
-                                      key={i}
-                                      onClick={() => {
-                                        detail.set(detail.memberID)
-                                      }}
-                                    >
-                                      {detail.desc}
-                                    </p>
-                                  ))}
-                                </Link>
-                              ))
-                            : null
-                        }
-                      </p>
+                      <div className="font-weight-light card-text text-center">
+                        {memberData.displayMember.townBishop[0] ? (
+                          <span
+                            onClick={() => {
+                              determineChurch(memberData.displayMember)
+                              history.push('/dashboard')
+                            }}
+                          >{`Bishop in the First Love Centre`}</span>
+                        ) : (
+                          //Rank Discussions */}
+                          Object.entries(rank).map((rank) => {
+                            return rank[1].map((place, i) => {
+                              // console.log(place)
+                              return (
+                                <span
+                                  key={i}
+                                  onClick={() => {
+                                    clickCard(place)
+                                    history.push(place.link)
+                                  }}
+                                >
+                                  {`${place.__typename} Leader for ${place.name}`}
+                                  <br />
+                                </span>
+                              )
+                            })
+                          })
+                        )}
+                      </div>
                     </div>
                     <div className="col d-flex justify-content-center  mt-2">
                       <button
@@ -333,7 +343,7 @@ export const DisplayMemberDetails = () => {
                                   {element.historyRecord}
                                   <br />
                                   <small>
-                                    {element.historyStartDate.date.formatted}
+                                    {element.historyStartDate?.date.formatted}
                                   </small>
                                 </p>
                               </li>

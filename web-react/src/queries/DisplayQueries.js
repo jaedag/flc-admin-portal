@@ -12,6 +12,7 @@ export const DISPLAY_BISHOP_NAME = gql`
 export const DISPLAY_MEMBER = gql`
   query displayMember($id: ID) {
     displayMember(id: $id) {
+      id
       firstName
       lastName
       email
@@ -91,11 +92,16 @@ export const DISPLAY_MEMBER = gql`
         id
         name
       }
-      townGSO {
+      leadsTown {
         id
         name
+        bishop {
+          id
+          firstName
+          lastName
+        }
       }
-      campusGSO {
+      leadsCampus {
         id
         name
         bishop {

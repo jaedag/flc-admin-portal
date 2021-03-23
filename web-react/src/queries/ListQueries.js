@@ -45,10 +45,10 @@ export const GET_BISHOP_MEMBERS = gql`
       leadsBasonta {
         name
       }
-      townGSO {
+      leadsTown {
         name
       }
-      campusGSO {
+      leadsCampus {
         name
       }
       townBishop {

@@ -11,7 +11,6 @@ import {
 import { setContext } from '@apollo/client/link/context'
 import { Auth0Provider, useAuth0 } from '@auth0/auth0-react'
 import './index.css'
-
 import BishopSelect from './pages/BishopSelect'
 import BishopDashboard from './pages/BishopDashboard'
 import { MembersGridBishop } from './pages/MembersGrid'
@@ -113,7 +112,7 @@ const PastorsAdmin = () => {
     constituency: '',
     roles: [],
   })
-  const [searchKey, setSearchKey] = useState('')
+  const [searchKey, setSearchKey] = useState('a')
   const [filters, setFilters] = useState({
     gender: '',
     maritalStatus: '',
@@ -121,6 +120,7 @@ const PastorsAdmin = () => {
     leaderRank: [],
     ministry: '',
   })
+
   const capitalise = (str) => {
     return str?.charAt(0).toUpperCase() + str?.slice(1)
   }
@@ -311,7 +311,7 @@ const PastorsAdmin = () => {
     }
     if (filters.leaderRank.includes('CO')) {
       leaderData.cOs = filteredData.filter((member) => {
-        if (member.townGSO[0] || member.campusGSO[0]) {
+        if (member.leadsTown[0] || member.leadsCampus[0]) {
           return member
         }
         return null
@@ -350,11 +350,11 @@ const PastorsAdmin = () => {
   const determineChurch = (member) => {
     if (member.__typename === 'Town') {
       setChurch({ church: 'town', subChurch: 'centre' })
-      setBishopId(member.bishop.id)
+      setBishopId(member.bishop?.id)
       return
     } else if (member.__typename === 'Campus') {
       setChurch({ church: 'campus', subChurch: 'centre' })
-      setBishopId(member.bishop.id)
+      setBishopId(member.bishop?.id)
       return
     }
 
@@ -378,23 +378,24 @@ const PastorsAdmin = () => {
       setChurch({ church: 'town', subChurch: 'centre' })
       setBishopId(member.bacenta.centre.town.bishop.id)
       return
-    } else if (member.townGSO && member.townGSO[0]) {
+    } else if (member.leadsTown && member.leadsTown[0]) {
       setChurch({ church: 'town', subChurch: 'centre' })
-      setBishopId(member.townGSO[0].bishop.id)
+      setBishopId(member.leadsTown[0].bishop?.id)
       return
     } else if (member?.bacenta?.centre?.campus) {
       setChurch({ church: 'campus', subChurch: 'centre' })
       setBishopId(member?.bacenta?.centre?.campus?.bishop?.id)
       return
-    } else if (member?.campusGSO[0]) {
+    } else if (member?.leadsCampus[0]) {
       setChurch({ church: 'campus', subChurch: 'centre' })
-      setBishopId(member.campusGSO[0].bishop.id)
+      setBishopId(member.leadsCampus[0].bishop?.id)
       return
     }
   }
 
   const clickCard = (card) => {
     determineChurch(card)
+
     switch (card.__typename) {
       case 'Member':
         setMemberID(card.id)
@@ -414,6 +415,10 @@ const PastorsAdmin = () => {
         break
       default:
         console.log("We don't have this type")
+    }
+
+    if (card.link === '') {
+      card.link = `/${card.__typename.toLowerCase()}/displaydetails`
     }
   }
 

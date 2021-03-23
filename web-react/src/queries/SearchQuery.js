@@ -72,6 +72,52 @@ export const GLOBAL_SEARCH = gql`
         }
       }
     }
+    Member(search: { MemberSearch: $searchKey }) {
+      id
+      firstName
+      lastName
+      pictureUrl
+      bacenta {
+        name
+        leader {
+          firstName
+          lastName
+        }
+        centre {
+          town {
+            bishop {
+              id
+            }
+          }
+          campus {
+            bishop {
+              id
+            }
+          }
+        }
+      }
+      ministry {
+        name
+      }
+      leadsCampus {
+        name
+        bishop {
+          id
+        }
+      }
+      leadsTown {
+        name
+        bishop {
+          id
+        }
+      }
+      townBishop {
+        name
+      }
+      campusBishop {
+        name
+      }
+    }
     globalMemberSearch(searchKey: $searchKey, first: 6) {
       id
       firstName
@@ -99,13 +145,13 @@ export const GLOBAL_SEARCH = gql`
       ministry {
         name
       }
-      campusGSO {
+      leadsCampus {
         name
         bishop {
           id
         }
       }
-      townGSO {
+      leadsTown {
         name
         bishop {
           id

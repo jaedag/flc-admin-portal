@@ -16,18 +16,21 @@ function FormikSearchbox(props) {
 
   const history = useHistory()
   let combinedData
-  const { error } = useQuery(GLOBAL_SEARCH, {
+  const { data } = useQuery(GLOBAL_SEARCH, {
     variables: {
       searchKey: searchString,
     },
     onCompleted: (data) => {
+      console.log(data)
       combinedData = [
+        ...data.Member,
         ...data.globalMemberSearch,
         ...data.globalCampusSearch,
         ...data.globalTownSearch,
         ...data.globalCentreSearch,
         ...data.globalBacentaSearch,
       ]
+      console.log(combinedData)
       setSuggestions(
         combinedData.map((row) => ({
           name: row.name,
@@ -40,9 +43,7 @@ function FormikSearchbox(props) {
       )
     },
   })
-  if (error) {
-    console.log(error)
-  }
+
   return (
     <div>
       {label ? <label htmlFor={name}>{label}</label> : null}
@@ -62,6 +63,7 @@ function FormikSearchbox(props) {
         onSuggestionsFetchRequested={async ({ value }) => {
           if (!value) {
             setSuggestions([])
+            console.log(data)
           }
           try {
             // setSuggestions(
@@ -74,8 +76,8 @@ function FormikSearchbox(props) {
             //     bacenta: row.bacenta,
             //     townBishop: row.townBishop,
             //     campusBishop: row.campusBishop,
-            //     townGS0: row.townGSO,
-            //     campusGSO: row.campusGSO,
+            //     townGS0: row.leadsTown,
+            //     leadsCampus: row.leadsCampus,
             //   }))
             // )
             // console.log(suggestions)

@@ -25,7 +25,7 @@ export const DisplayChurchDetails = (props) => {
 
   const { isAuthenticated } = useAuth0()
   const { setMemberID } = useContext(MemberContext)
-  const { clickMember } = useContext(ChurchContext)
+  const { clickCard } = useContext(ChurchContext)
 
   return (
     <div>
@@ -47,7 +47,7 @@ export const DisplayChurchDetails = (props) => {
             <Link
               to="/member/displaydetails"
               onClick={() => {
-                clickMember(admin)
+                clickCard(admin)
               }}
               className="mx-3 mb-2 text-muted font-weight-bold"
             >

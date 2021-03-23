@@ -32,12 +32,15 @@ export const SearchPageMobile = () => {
     )
   } else if (searchData) {
     const combinedData = [
+      // ...new Set([
+      ...searchData.Member,
       ...searchData.globalMemberSearch,
       ...searchData.globalCampusSearch,
       ...searchData.globalTownSearch,
       ...searchData.globalCentreSearch,
       ...searchData.globalBacentaSearch,
     ]
+    // ),]
 
     return (
       <React.Fragment>

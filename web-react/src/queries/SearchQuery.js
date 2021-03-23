@@ -6,13 +6,29 @@ export const GET_LOGGED_IN_USER = gql`
       id
       firstName
       lastName
+      bacenta {
+        centre {
+          campus {
+            id
+            bishop {
+              id
+            }
+          }
+          town {
+            id
+            bishop {
+              id
+            }
+          }
+        }
+      }
     }
   }
 `
 
 export const GLOBAL_SEARCH = gql`
   query globalSearch($searchKey: String!) {
-    globalSearch(searchKey: $searchKey, first: 6) {
+    globalMemberSearch(searchKey: $searchKey, first: 6) {
       id
       firstName
       lastName

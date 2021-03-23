@@ -11,6 +11,7 @@ import {
 import { setContext } from '@apollo/client/link/context'
 import { Auth0Provider, useAuth0 } from '@auth0/auth0-react'
 import './index.css'
+
 import BishopSelect from './pages/BishopSelect'
 import BishopDashboard from './pages/BishopDashboard'
 import { MembersGridBishop } from './pages/MembersGrid'
@@ -36,16 +37,18 @@ import { CreateBacenta } from './pages/CreateBacenta'
 import { UpdateCentre } from './pages/UpdateCentre'
 import { DisplaySontasByCampusTown } from './pages/DisplaySontasByCampusTown'
 import { UpdateBacenta } from './pages/UpdateBacenta'
+// import ProtectedRoute from './auth/ProtectedRoute'
+import Loading from './components/index/Loading'
 
 const AppWithApollo = () => {
-  // const [ accessToken, setAccessToken ] = useState()
+  const [accessToken, setAccessToken] = useState()
   const { getAccessTokenSilently } = useAuth0()
 
   const getAccessToken = useCallback(async () => {
     try {
       const token = await getAccessTokenSilently()
-      // setAccessToken(token)
-      localStorage.setItem('token', token)
+      setAccessToken(token)
+      sessionStorage.setItem('token', token)
     } catch (err) {
       // loginWithRedirect()
     }
@@ -61,7 +64,9 @@ const AppWithApollo = () => {
 
   const authLink = setContext((_, { headers }) => {
     // get the authentication token from local storage if it exists
-    const token = localStorage.getItem('token')
+    const token = sessionStorage.getItem('token')
+      ? sessionStorage.getItem('token')
+      : accessToken
 
     // return the headers to the context so httpLink can read them
     return {
@@ -85,10 +90,12 @@ const AppWithApollo = () => {
 }
 
 const PastorsAdmin = () => {
+  const { isLoading } = useAuth0()
   const [church, setChurch] = useState({
     church: '',
     subChurch: '',
   })
+
   const [bishopId, setBishopId] = useState('')
   const [townId, setTownId] = useState('')
   const [campusId, setCampusId] = useState('')
@@ -97,6 +104,15 @@ const PastorsAdmin = () => {
   const [sontaId, setSontaId] = useState('')
   const [ministryId, setMinistryId] = useState('')
   const [memberID, setMemberID] = useState('')
+  const [currentUser, setCurrentUser] = useState({
+    id: '',
+    firstName: '',
+    lastName: '',
+    email: '',
+    bishop: '',
+    constituency: '',
+    roles: [],
+  })
   const [searchKey, setSearchKey] = useState('')
   const [filters, setFilters] = useState({
     gender: '',
@@ -282,12 +298,6 @@ const PastorsAdmin = () => {
     }
 
     if (filters.leaderRank.includes('Basonta Leader')) {
-      // leaderData.basontaLeaders = filteredData.filter((member) => {
-      //   if (member.leadsBasonta[0]) {
-      //     return member
-      //   }
-      //   return null
-      // })
       leaderData.basontaLeaders = filterFor(filteredData, 'leadsBasonta')
     }
     if (filters.leaderRank.includes('Sonta Leader')) {
@@ -375,8 +385,12 @@ const PastorsAdmin = () => {
 
   const clickMember = (member) => {
     setMemberID(member.id)
-    localStorage.setItem('memberId', member.id)
+    sessionStorage.setItem('memberId', member.id)
     determineChurch(member)
+  }
+
+  if (isLoading) {
+    return <Loading />
   }
 
   return (
@@ -411,7 +425,9 @@ const PastorsAdmin = () => {
           setMinistryId,
         }}
       >
-        <MemberContext.Provider value={{ memberID, setMemberID }}>
+        <MemberContext.Provider
+          value={{ memberID, setMemberID, currentUser, setCurrentUser }}
+        >
           <SearchContext.Provider value={{ searchKey, setSearchKey }}>
             <Switch>
               <Route path="/" component={BishopSelect} exact />

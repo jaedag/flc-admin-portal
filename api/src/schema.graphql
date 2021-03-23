@@ -422,7 +422,7 @@ type Query {
     @cypher(statement: "MATCH (m:Member {email:$email}) RETURN m")
 
   #Fuzzy Search
-  globalSearch(searchKey: String!): [Member]
+  globalMemberSearch(searchKey: String!): [Member]
     @cypher(
       statement: """
       MATCH (m:Member)
@@ -431,6 +431,15 @@ type Query {
       OR toLower(m.firstName) CONTAINS toLower($searchKey)
       OR toLower(m.lastName) CONTAINS toLower($searchKey)
       RETURN m
+      """
+    )
+  globalBacentaSearch(searchKey: String!): [Bacenta]
+    @cypher(
+      statement: """
+      MATCH (b:Bacenta)
+      WHERE toLower(b.name) STARTS WITH toLower($searchKey)
+      OR toLower(b.name) CONTAINS toLower($searchKey)
+      RETURN b
       """
     )
   occupationList(searchKey: String!): [Occupation]
@@ -473,7 +482,7 @@ type Mutation {
         SET
         log.id =  apoc.create.uuid(),
         log.timeStamp = time(),
-        log.historyRecord = $firstName $lastName+' was registered on '+toString(date())
+        log.historyRecord = $firstName + $lastName+' was registered on '+toString(date())
       MERGE (t:TimeGraph {date: date()})
       	  MERGE (log)-[:RECORDED_ON]->(t)
       WITH m

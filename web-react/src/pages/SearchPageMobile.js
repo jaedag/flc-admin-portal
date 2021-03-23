@@ -51,7 +51,7 @@ export const SearchPageMobile = () => {
               <Spinner />
             </div>
           )}
-          {searchData.globalSearch.map((searchResult, index) => {
+          {searchData.globalMemberSearch.map((searchResult, index) => {
             return (
               <div
                 key={index}

@@ -16,7 +16,8 @@ export const SideBar = () => {
 
   useEffect(() => {
     setFilters(initialValues)
-  }, []) // eslint-disable-next-line
+    // eslint-disable-next-line
+  }, [])
 
   const genderOptions = [
     { key: 'Male', value: 'Male' },

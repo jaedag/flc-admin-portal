@@ -29,7 +29,7 @@ function SearchBox() {
                 name="searchKey"
                 placeholder="Search for anything..."
                 setFieldValue={formik.setFieldValue}
-                dataset="globalSearch"
+                dataset="globalMemberSearch"
                 aria-describedby="Global Search"
               />
 

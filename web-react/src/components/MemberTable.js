@@ -1,7 +1,6 @@
 import React, { useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import { ChurchContext } from '../contexts/ChurchContext'
-import { MemberContext } from '../contexts/MemberContext'
 import Spinner from './Spinner'
 import userIcon from '../img/user.png'
 
@@ -13,8 +12,8 @@ export const MemberTable = (props) => {
     offset,
     numberOfRecords,
   } = props
-  const { setMemberID } = useContext(MemberContext)
-  const { determineChurch } = useContext(ChurchContext)
+
+  const { clickCard } = useContext(ChurchContext)
   const history = useHistory()
 
   if (memberLoading || memberError) {
@@ -39,7 +38,7 @@ export const MemberTable = (props) => {
           {memberData.map((soul, index) => {
             if (index < offset) {
               return null
-            } else if (index >= offset + numberOfRecords) {
+            } else if (index >= offset + numberOfRecords - 1) {
               return null
             }
             return (
@@ -47,7 +46,7 @@ export const MemberTable = (props) => {
                 <div
                   className="card grid-card"
                   onClick={() => {
-                    setMemberID(soul.id)
+                    clickCard(soul)
                     history.push('/member/displaydetails')
                   }}
                 >
@@ -80,10 +79,8 @@ export const MemberTable = (props) => {
               key={index}
               className="card mobile-search-card p-2 py-3 my-4"
               onClick={() => {
-                setMemberID(soul.id)
-                localStorage.setItem('memberId', soul.id)
+                clickCard(soul)
                 history.push('/member/displaydetails')
-                determineChurch(soul)
               }}
             >
               <div className="media">

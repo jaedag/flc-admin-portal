@@ -1,23 +1,20 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext } from 'react'
+import { useLocation, useHistory } from 'react-router-dom'
 import { Formik, Form } from 'formik'
 import FormikControl from '../components/formik-components/FormikControl'
 import { GET_MINISTRIES, OCCUPATION_LIST } from '../queries/ListQueries'
 import { ChurchContext } from '../contexts/ChurchContext'
 
 export const SideBar = () => {
-  const { setFilters } = useContext(ChurchContext)
-  const initialValues = {
-    gender: '',
-    maritalStatus: '',
-    occupation: '',
-    leaderRank: [],
-    ministry: '',
-  }
+  const { filters, setFilters } = useContext(ChurchContext)
 
-  useEffect(() => {
-    setFilters(initialValues)
-    // eslint-disable-next-line
-  }, [])
+  const initialValues = {
+    gender: filters.gender ? filters.gender : '',
+    maritalStatus: filters.maritalStatus ? filters.maritalStatus : '',
+    occupation: filters.occupation ? filters.occupation : '',
+    leaderRank: filters.leaderRank ? filters.leaderRank : [],
+    ministry: filters.ministry ? filters.ministry : '',
+  }
 
   const genderOptions = [
     { key: 'Male', value: 'Male' },
@@ -36,14 +33,18 @@ export const SideBar = () => {
     { key: 'Basonta Leader', value: 'Basonta Leader' },
   ]
 
+  const location = useLocation()
+  const history = useHistory()
   const onSubmit = (values, onSubmitProps) => {
     onSubmitProps.setSubmitting(true)
     setFilters(values)
     onSubmitProps.setSubmitting(false)
+
+    location.pathname.endsWith('filter-members') && history.push('/members')
   }
 
   return (
-    <nav id="sidebarMenu" className="d-md-block sidebar collapse">
+    <nav id="sidebarMenu" className="sidebar filter-mobile">
       <Formik initialValues={initialValues} onSubmit={onSubmit}>
         {(formik) => (
           <div className="container">

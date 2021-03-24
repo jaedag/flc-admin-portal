@@ -8,9 +8,14 @@ import { DashboardButton } from '../components/DashboardButton'
 import { ChurchContext } from '../contexts/ChurchContext'
 
 const BishopDashboard = () => {
-  const { church, capitalise, plural, clickCard, bishopId } = useContext(
-    ChurchContext
-  )
+  const {
+    church,
+    capitalise,
+    plural,
+    clickCard,
+    bishopId,
+    setFilters,
+  } = useContext(ChurchContext)
   const { data, error, loading } = useQuery(BISH_DASHBOARD_COUNTS, {
     variables: { id: bishopId },
   })
@@ -28,6 +33,15 @@ const BishopDashboard = () => {
                 name="Members"
                 number="Loading..."
                 cardLink="/members"
+                onClick={() => {
+                  setFilters({
+                    gender: '',
+                    maritalStatus: '',
+                    occupation: '',
+                    leaderRank: [],
+                    ministry: '',
+                  })
+                }}
               />
             </div>
             <div className="col">
@@ -108,6 +122,15 @@ const BishopDashboard = () => {
                 name="Members"
                 number={data.bishopMemberCount}
                 cardLink="/members"
+                onClick={() => {
+                  setFilters({
+                    gender: '',
+                    maritalStatus: '',
+                    occupation: '',
+                    leaderRank: [],
+                    ministry: '',
+                  })
+                }}
               />
             </div>
             <div className="col-sm-12 col-md">
@@ -178,6 +201,15 @@ const BishopDashboard = () => {
                 name="Members"
                 number="Error!"
                 cardLink="/members"
+                onClick={() => {
+                  setFilters({
+                    gender: '',
+                    maritalStatus: '',
+                    occupation: '',
+                    leaderRank: [],
+                    ministry: '',
+                  })
+                }}
               />
             </div>
             <div className="col">

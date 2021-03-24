@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 export const DashboardCard = (props) => {
   let icon = ''
-  const { name, number, cardLink } = props
+  const { name, number, cardLink, onClick } = props
 
   if (name === 'Towns' || name === 'Campuses') {
     icon = 'landmark'
@@ -33,6 +33,7 @@ export const DashboardCard = (props) => {
       <Link
         to={`${cardLink}`}
         className="card align-self-center card-body mx-2 py-2 mb-2"
+        onClick={() => (onClick ? onClick() : null)}
       >
         <span
           className={`fas fa-${icon} fa-2x d-md-none  pb-3 icon-color text-center`}

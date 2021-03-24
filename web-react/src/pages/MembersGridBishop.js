@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useQuery } from '@apollo/client'
 import { NavBar } from '../components/NavBar'
@@ -10,6 +10,10 @@ import { ChurchContext } from '../contexts/ChurchContext'
 export const MembersGridBishop = () => {
   const { memberFilter, filters, bishopId } = useContext(ChurchContext)
   const [offset, setOffset] = useState(0)
+  const [dimensions, setDimensions] = React.useState({
+    height: window.innerHeight,
+    width: window.innerWidth,
+  })
   const {
     data: memberData,
     error: memberError,
@@ -18,16 +22,49 @@ export const MembersGridBishop = () => {
     variables: { id: bishopId },
   })
 
-  const numberOfRecords = 25
+  let numberOfRecords = Math.round(
+    ((dimensions.height - 96 - 30) * (0.75 * dimensions.width - 46)) /
+      (160 * 126)
+  )
+  //Navbar takes 70px of the height and side bar takes 25% of the width
   const memberDataLoaded = memberData
     ? memberFilter(memberData?.bishopMemberList, filters)
     : null
+
+  //debouncing function
+  function debounce(fn, ms) {
+    let timer
+    return () => {
+      clearTimeout(timer)
+      timer = setTimeout(() => {
+        timer = null
+        fn.apply(this, arguments)
+      }, ms)
+    }
+  }
+
+  // console.log(numberOfRecords)
+
+  useEffect(() => {
+    const debouncedHandleResize = debounce(function handleResize() {
+      setDimensions({
+        height: window.innerHeight,
+        width: window.innerWidth,
+      })
+    }, 500)
+
+    window.addEventListener('resize', debouncedHandleResize)
+    // console.log(dimensions)
+    return () => {
+      window.removeEventListener('resize', debouncedHandleResize)
+    }
+  })
 
   return (
     <div>
       <NavBar />
       <div className="row w-100 m-0">
-        <div className="col-lg-3 col-md-4 m-0 px-0">
+        <div className="d-none d-md-block col-lg-3 col-md-4 m-0 px-0">
           <SideBar />
         </div>
 

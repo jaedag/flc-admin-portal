@@ -13,7 +13,7 @@ import { Auth0Provider, useAuth0 } from '@auth0/auth0-react'
 import './index.css'
 import BishopSelect from './pages/BishopSelect'
 import BishopDashboard from './pages/BishopDashboard'
-import { MembersGridBishop } from './pages/MembersGrid'
+import { MembersGridBishop } from './pages/MembersGridBishop'
 import { PastorsGrid } from './pages/PastorsGrid'
 import { SearchPageMobile } from './pages/SearchPageMobile'
 import { DisplayMemberDetails } from './pages/DisplayMemberDetails'
@@ -38,6 +38,7 @@ import { DisplaySontasByCampusTown } from './pages/DisplaySontasByCampusTown'
 import { UpdateBacenta } from './pages/UpdateBacenta'
 // import ProtectedRoute from './auth/ProtectedRoute'
 import Loading from './components/index/Loading'
+import { MemberFiltersMobile } from './pages/MemberFiltersMobile'
 
 const AppWithApollo = () => {
   const [accessToken, setAccessToken] = useState()
@@ -94,7 +95,6 @@ const PastorsAdmin = () => {
     church: '',
     subChurch: '',
   })
-
   const [bishopId, setBishopId] = useState('')
   const [townId, setTownId] = useState('')
   const [campusId, setCampusId] = useState('')
@@ -466,6 +466,11 @@ const PastorsAdmin = () => {
               <Route path="/" component={BishopSelect} exact />
               <Route path="/dashboard" component={BishopDashboard} exact />
               <Route path="/member-search" component={SearchPageMobile} exact />
+              <Route
+                path="/filter-members"
+                component={MemberFiltersMobile}
+                exact
+              />
               <Route path="/members" component={MembersGridBishop} exact />
               <Route path="/pastors" component={PastorsGrid} exact />
               <Route path="/member/addmember" component={CreateMember} exact />

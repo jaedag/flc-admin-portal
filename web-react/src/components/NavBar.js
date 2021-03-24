@@ -5,20 +5,12 @@ import UserProfile from './UserProfile'
 import { ChurchContext } from '../contexts/ChurchContext'
 
 export const NavBar = () => {
-  const { church, capitalise } = useContext(ChurchContext)
+  const { church, capitalise, setFilters } = useContext(ChurchContext)
   const location = useLocation()
 
   return (
     <nav className="navbar navbar-dark navbar-expand fixed-top">
       <div className="navbar-nav">
-        {location.pathname.endsWith('members') && (
-          <Link
-            className={`nav-item nav-link d-flex align-items-center flex-column d-md-none`}
-            to="#"
-          >
-            <i className="fas fa-bars fa-2x  px-1" />
-          </Link>
-        )}
         <Link
           className={`nav-item nav-link d-flex align-items-center flex-column ${
             location.pathname === '/' && 'active'
@@ -42,6 +34,15 @@ export const NavBar = () => {
         {!location.pathname.endsWith('members') && church.church ? (
           <Link
             className="nav-item nav-link d-flex align-items-center flex-column"
+            onClick={() => {
+              setFilters({
+                gender: '',
+                maritalStatus: '',
+                occupation: '',
+                leaderRank: [],
+                ministry: '',
+              })
+            }}
             to="/members"
           >
             <span className="fas fa-users fa-2x px-1" />
@@ -53,6 +54,15 @@ export const NavBar = () => {
               className={`nav-item nav-link d-flex align-items-center flex-column ${
                 location.pathname.endsWith('members') && 'active'
               }`}
+              onClick={() => {
+                setFilters({
+                  gender: '',
+                  maritalStatus: '',
+                  occupation: '',
+                  leaderRank: [],
+                  ministry: '',
+                })
+              }}
               to="/members"
             >
               <span className="fas fa-users fa-2x px-1" />
@@ -85,6 +95,14 @@ export const NavBar = () => {
               <span className="d-none d-md-inline">Ministries</span>
             </Link>
           </>
+        )}
+        {location.pathname.endsWith('members') && (
+          <Link
+            className={`nav-item nav-link d-flex align-items-center flex-column d-md-none`}
+            to="/filter-members"
+          >
+            <i className="fas fa-filter fa-2x  px-1" />
+          </Link>
         )}
         <Link
           className={`nav-item nav-link d-flex align-items-center flex-column d-md-none ${

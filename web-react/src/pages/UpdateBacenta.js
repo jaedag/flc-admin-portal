@@ -32,7 +32,6 @@ export const UpdateBacenta = () => {
     capitalise,
     phoneRegExp,
     bishopId,
-
     centreId,
     setCentreId,
     bacentaId,
@@ -45,6 +44,10 @@ export const UpdateBacenta = () => {
     }
   )
 
+  const [newLeaderInfo, setNewLeaderInfo] = useState({})
+  // const [newCentreName, setNewCentreName] = useState('')
+  let newCentreName = 'Kwaver'
+
   const history = useHistory()
   const [positionLoading, setPositionLoading] = useState(false)
 
@@ -55,8 +58,8 @@ export const UpdateBacenta = () => {
     centreSelect: bacentaData?.displayBacenta?.centre,
     townCampusSelect:
       church.church === 'town'
-        ? bacentaData?.displayBacenta?.centre.town.id
-        : bacentaData?.displayBacenta?.centre.campus.id,
+        ? bacentaData?.displayBacenta?.centre?.town?.id
+        : bacentaData?.displayBacenta?.centre?.campus?.id,
     meetingDay: bacentaData?.displayBacenta?.meetingDay?.day,
     venueLatitude: bacentaData?.displayBacenta?.location?.latitude
       ? bacentaData?.displayBacenta?.location?.latitude
@@ -92,6 +95,11 @@ export const UpdateBacenta = () => {
   })
 
   const [UpdateBacenta] = useMutation(UPDATE_BACENTA, {
+    onCompleted: (updatedInfo) => {
+      setNewLeaderInfo(updatedInfo.UpdateBacenta?.leader)
+      // newLeaderInfo = updatedInfo.UpdateBacenta?.leader
+      // console.log('New Leader Info', newLeaderInfo)
+    },
     refetchQueries: [
       { query: DISPLAY_BACENTA, variables: { id: bacentaId } },
       { query: GET_CENTRE_BACENTAS, variables: { id: centreId } },
@@ -101,17 +109,19 @@ export const UpdateBacenta = () => {
       },
     ],
   })
-  let newCentreName
+
   const [AddBacentaCentre] = useMutation(ADD_BACENTA_CENTRE, {
     onCompleted: (newCentre) => {
+      // setNewCentreName(newCentre.AddBacentaCentre.from.name)
       newCentreName = newCentre.AddBacentaCentre.from.name
+      console.log(newCentreName)
     },
   })
   const [RemoveBacentaCentre] = useMutation(REMOVE_BACENTA_CENTRE)
   const [LogBacentaHistory] = useMutation(LOG_BACENTA_HISTORY, {
     onCompleted: (newLog) => {
       newLog.LogBacentaHistory.history.map((history) =>
-        console.log(history.HistoryLog)
+        console.log('History ', history.HistoryLog)
       )
     },
   })
@@ -140,7 +150,7 @@ export const UpdateBacenta = () => {
           venueLatitude: parseFloat(values.venueLongitude),
         },
       })
-      console.log(values)
+
       //Log If The Centre Changes
       if (values.centreSelect !== initialValues.centreSelect.id) {
         RemoveBacentaCentre({
@@ -167,9 +177,26 @@ export const UpdateBacenta = () => {
 
       //STUFF THAT IS LEFT TO DO
       //Log if the Leader Changes
-      // if(values.leaderWhatsapp !== initialValues.leaderWhatsapp){
+      if (values.leaderWhatsapp !== initialValues.leaderWhatsapp) {
+        LogBacentaHistory({
+          variables: {
+            bacentaId: bacentaId,
+            leaderId: newLeaderInfo.id,
+            historyRecord: `${newLeaderInfo.firstName} ${newLeaderInfo.lastName} was transferred to become the new Centre Leader for ${values.bacentaName}`,
+          },
+        })
+      }
 
-      // }
+      //Log if the Bacenta Name Changes
+      if (values.bacentaName !== initialValues.bacentaName) {
+        LogBacentaHistory({
+          variables: {
+            bacentaId: bacentaId,
+            leaderId: '',
+            historyRecord: `The Bacenta name has been changed from ${initialValues.bacentaName} to ${values.bacentaName}`,
+          },
+        })
+      }
 
       // Log if the Meeting Day Changes
       if (values.meetingDay !== initialValues.meetingDay) {

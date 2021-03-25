@@ -164,6 +164,11 @@ export const UPDATE_BACENTA = gql`
       meetingDay {
         day
       }
+      leader {
+        id
+        firstName
+        lastName
+      }
     }
   }
 `

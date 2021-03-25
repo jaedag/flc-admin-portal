@@ -59,6 +59,8 @@ export const CreateMember = () => {
     { key: 'Bishop', value: 'Bishop' },
   ]
 
+  let titleOptionsMutable = titleOptions
+
   const { phoneRegExp, parsePhoneNum, makeSelectOptions } = useContext(
     ChurchContext
   )
@@ -371,7 +373,7 @@ export const CreateMember = () => {
                                     <FormikControl
                                       className="form-control"
                                       control="select"
-                                      options={titleOptions}
+                                      options={titleOptionsMutable}
                                       defaultOption="Title"
                                       name={`pastoralAppointment[${index}].title`}
                                     />
@@ -386,11 +388,49 @@ export const CreateMember = () => {
                                     />
                                   </div>
                                   <div className="col d-flex">
-                                    {index < 3 && (
+                                    {index < 2 && (
                                       <button
                                         className="plus-button rounded mr-2"
                                         type="button"
-                                        onClick={() => push()}
+                                        onClick={() => {
+                                          if (index < 2) {
+                                            push()
+                                            console.log(
+                                              formik.values.pastoralAppointment
+                                            )
+                                            let selectedTitles = formik.values.pastoralAppointment.map(
+                                              (pastoralRecords) => {
+                                                console.log(
+                                                  'pastoral rec',
+                                                  pastoralRecords
+                                                )
+                                                return pastoralRecords.title
+                                              }
+                                            )
+                                            console.log(
+                                              'selected',
+                                              selectedTitles
+                                            )
+                                            for (
+                                              let i = 0;
+                                              i < titleOptions.length;
+                                              i++
+                                            ) {
+                                              if (
+                                                selectedTitles.includes(
+                                                  titleOptions[i].key
+                                                )
+                                              ) {
+                                                titleOptionsMutable.splice(i, 1)
+                                              }
+                                            }
+
+                                            console.log(
+                                              'Title Options',
+                                              titleOptions
+                                            )
+                                          }
+                                        }}
                                       >
                                         <svg
                                           aria-hidden="true"
@@ -478,7 +518,9 @@ export const CreateMember = () => {
                                   <button
                                     className="plus-button rounded mr-2"
                                     type="button"
-                                    onClick={() => push()}
+                                    onClick={() => {
+                                      push()
+                                    }}
                                   >
                                     <svg
                                       aria-hidden="true"

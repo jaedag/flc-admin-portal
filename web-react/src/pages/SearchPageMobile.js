@@ -51,7 +51,7 @@ export const SearchPageMobile = () => {
               <Spinner />
             </div>
           )}
-          {combinedData.combinedData.slice(0, 10).map((searchResult, index) => {
+          {combinedData.slice(0, 10).map((searchResult, index) => {
             return (
               <div
                 key={index}

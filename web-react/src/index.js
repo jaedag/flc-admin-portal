@@ -350,14 +350,27 @@ const PastorsAdmin = () => {
   }
 
   const determineChurch = (member) => {
-    if (member.__typename === 'Town') {
-      setChurch({ church: 'town', subChurch: 'centre' })
-      setBishopId(member.bishop?.id)
-      return
-    } else if (member.__typename === 'Campus') {
-      setChurch({ church: 'campus', subChurch: 'centre' })
-      setBishopId(member.bishop?.id)
-      return
+    switch (member.__typename) {
+      case 'Town':
+        setChurch({ church: 'town', subChurch: 'centre' })
+        setBishopId(member.bishop?.id)
+        break
+      case 'Campus':
+        setChurch({ church: 'campus', subChurch: 'centre' })
+        setBishopId(member.bishop?.id)
+        break
+      case 'Centre':
+        setChurch({
+          church: member.campus ? 'campus' : 'town',
+          subChurch: 'centre',
+        })
+        setBishopId(member.town.bishop.id)
+        break
+      case 'Bacenta':
+        setChurch({ church: member.centre?.town ? 'town' : 'campus' })
+        setBishopId(member.centre?.town ? 'town' : 'campus')
+        break
+      default:
     }
 
     if (!member.bacenta) {

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { useLocation, useHistory } from 'react-router-dom'
 import { Formik, Form } from 'formik'
 import FormikControl from '../components/formik-components/FormikControl'
@@ -6,15 +6,26 @@ import { GET_MINISTRIES, OCCUPATION_LIST } from '../queries/ListQueries'
 import { ChurchContext } from '../contexts/ChurchContext'
 
 export const SideBar = () => {
-  const { filters, setFilters } = useContext(ChurchContext)
+  const { setFilters } = useContext(ChurchContext)
 
   const initialValues = {
-    gender: filters.gender ? filters.gender : '',
-    maritalStatus: filters.maritalStatus ? filters.maritalStatus : '',
-    occupation: filters.occupation ? filters.occupation : '',
-    leaderRank: filters.leaderRank ? filters.leaderRank : [],
-    ministry: filters.ministry ? filters.ministry : '',
+    gender: '',
+    maritalStatus: '',
+    occupation: '',
+    leaderRank: '',
+    ministry: '',
   }
+
+  useEffect(() => {
+    setFilters({
+      gender: '',
+      maritalStatus: '',
+      occupation: '',
+      leaderRank: '',
+      ministry: '',
+    })
+    // eslint-disable-next-line
+  }, [])
 
   const genderOptions = [
     { key: 'Male', value: 'Male' },
@@ -40,7 +51,7 @@ export const SideBar = () => {
     setFilters(values)
     onSubmitProps.setSubmitting(false)
 
-    location.pathname.endsWith('filter-members') && history.push('/members')
+    location.pathname.endsWith('filter-members') && history.push('/mb-members')
   }
 
   return (

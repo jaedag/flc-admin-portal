@@ -357,9 +357,9 @@ type Query {
   centreBacentaList(id: ID): [Bacenta]
     @cypher(
       statement: """
-      MATCH (c:Bacenta)
-      WHERE (:Centre {id:$id})-[:HAS_BACENTA]->(c)
-      RETURN c
+      MATCH (b:Bacenta)
+      WHERE (:Centre {id:$id})-[:HAS_BACENTA]->(b)
+      RETURN b
       """
     )
   centreBacentaCount(id: ID): Int!
@@ -426,7 +426,9 @@ type Query {
     @cypher(
       statement: """
       MATCH (m:Member)
-      WHERE toLower(m.firstName) STARTS WITH toLower($searchKey)
+      WHERE toLower(m.firstName) = toLower($searchKey)
+      OR toLower(m.lastName) = toLower($searchKey)
+      OR toLower(m.firstName) STARTS WITH toLower($searchKey)
       OR toLower(m.lastName) STARTS WITH toLower($searchKey)
       OR toLower(m.firstName) CONTAINS toLower($searchKey)
       OR toLower(m.lastName) CONTAINS toLower($searchKey)
@@ -984,7 +986,7 @@ type Mutation {
       RETURN b
       """
     )
-  LogBacentaHistory(bacentaId: ID!, historyRecord: String, leader: ID): Bacenta
+  LogBacentaHistory(bacentaId: ID!, historyRecord: String, leaderId: ID): Bacenta
     @cypher(
       statement: """
       MATCH  (b:Bacenta {id: $bacentaId})
@@ -998,10 +1000,10 @@ type Mutation {
       WITH log,b,r
       CALL{
         WITH log
-        WITH log WHERE $leader IS NOT NULL
-        MATCH (l:Member {id: $leader})
-        MERGE (log:ServiceLog)
-        MERGE (l)-[:HAS_HISTORY]->(log)
+        WITH log WHERE $leaderId IS NOT NULL
+        MATCH (l:Member {id: $leaderId})
+        MERGE (slog:ServiceLog)
+        MERGE (l)-[r:HAS_HISTORY]->(slog)
          SET r.pointer = true
         RETURN COUNT(log)
       }

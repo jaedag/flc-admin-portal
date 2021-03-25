@@ -53,10 +53,17 @@ export const UpdateBacenta = () => {
     leaderName: `${bacentaData?.displayBacenta?.leader.firstName} ${bacentaData?.displayBacenta?.leader.lastName} `,
     leaderWhatsapp: `+${bacentaData?.displayBacenta?.leader.whatsappNumber}`,
     centreSelect: bacentaData?.displayBacenta?.centre,
-    townCampusSelect: bacentaData?.displayBacenta?.centre.town.id,
+    townCampusSelect:
+      church.church === 'town'
+        ? bacentaData?.displayBacenta?.centre.town.id
+        : bacentaData?.displayBacenta?.centre.campus.id,
     meetingDay: bacentaData?.displayBacenta?.meetingDay?.day,
-    venueLatitude: bacentaData?.displayBacenta?.location?.latitude,
-    venueLongitude: bacentaData?.displayBacenta?.location?.longitude,
+    venueLatitude: bacentaData?.displayBacenta?.location?.latitude
+      ? bacentaData?.displayBacenta?.location?.latitude
+      : '',
+    venueLongitude: bacentaData?.displayBacenta?.location?.longitude
+      ? bacentaData?.displayBacenta?.location?.longitude
+      : '',
   }
 
   const serviceDayOptions = [
@@ -101,7 +108,13 @@ export const UpdateBacenta = () => {
     },
   })
   const [RemoveBacentaCentre] = useMutation(REMOVE_BACENTA_CENTRE)
-  const [LogBacentaHistory] = useMutation(LOG_BACENTA_HISTORY)
+  const [LogBacentaHistory] = useMutation(LOG_BACENTA_HISTORY, {
+    onCompleted: (newLog) => {
+      newLog.LogBacentaHistory.history.map((history) =>
+        console.log(history.HistoryLog)
+      )
+    },
+  })
 
   if (bacentaLoading) {
     return <LoadingScreen />
@@ -127,10 +140,9 @@ export const UpdateBacenta = () => {
           venueLatitude: parseFloat(values.venueLongitude),
         },
       })
-
+      console.log(values)
       //Log If The Centre Changes
       if (values.centreSelect !== initialValues.centreSelect.id) {
-        console.log(newCentreName)
         RemoveBacentaCentre({
           variables: {
             centreId: initialValues.centreSelect.id,
@@ -143,9 +155,11 @@ export const UpdateBacenta = () => {
             bacentaId: bacentaId,
           },
         })
+
         LogBacentaHistory({
           variables: {
             bacentaId: bacentaId,
+            leaderId: '',
             historyRecord: `${values.bacentaName} has been moved from ${initialValues.centreSelect.name} Centre to ${newCentreName} Centre`,
           },
         })
@@ -157,15 +171,30 @@ export const UpdateBacenta = () => {
 
       // }
 
-      //Log if the Meeting Day Changes
-      // if(values.meetingDay.day !== initialValues.meetingDay){
-
-      // }
+      // Log if the Meeting Day Changes
+      if (values.meetingDay !== initialValues.meetingDay) {
+        LogBacentaHistory({
+          variables: {
+            bacentaId: bacentaId,
+            leaderId: '',
+            historyRecord: `${values.bacentaName} has changed their meeting day from ${initialValues.meetingDay} to ${values.meetingDay}`,
+          },
+        })
+      }
 
       //Log if the Venue Changes
-      // if(values.venueLongitude !== initialValues.venueLongitude || values.venueLatitude !== initialValues.venueLatitude){
-
-      // }
+      if (
+        values.venueLongitude !== initialValues.venueLongitude ||
+        values.venueLatitude !== initialValues.venueLatitude
+      ) {
+        LogBacentaHistory({
+          variables: {
+            bacentaId: bacentaId,
+            leaderId: '',
+            historyRecord: `${values.bacentaName} has changed their venue`,
+          },
+        })
+      }
 
       onSubmitProps.setSubmitting(false)
       onSubmitProps.resetForm()

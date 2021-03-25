@@ -18,6 +18,7 @@ export const DisplayAllBacentas = () => {
       variables: { id: centreId },
     }
   )
+
   if (bacentaLoading) {
     // Spinner Icon for Loading Screens
     return <LoadingScreen />

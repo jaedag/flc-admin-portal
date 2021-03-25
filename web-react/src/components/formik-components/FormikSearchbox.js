@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import Autosuggest from 'react-autosuggest'
 import { useQuery } from '@apollo/client'
 import { ErrorMessage } from 'formik'
@@ -13,26 +13,25 @@ function FormikSearchbox(props) {
   const [searchString, setSearchString] = useState('')
   const [suggestions, setSuggestions] = useState([])
   const { clickCard } = useContext(ChurchContext)
-
+  const [debouncedText, setDebouncedText] = useState('')
   const history = useHistory()
+
   let combinedData
-  const { data } = useQuery(GLOBAL_SEARCH, {
+  useQuery(GLOBAL_SEARCH, {
     variables: {
-      searchKey: searchString,
+      searchKey: debouncedText,
     },
     onCompleted: (data) => {
-      console.log(data)
       combinedData = [
-        ...data.Member,
         ...data.globalMemberSearch,
         ...data.globalCampusSearch,
         ...data.globalTownSearch,
         ...data.globalCentreSearch,
         ...data.globalBacentaSearch,
       ]
-      console.log(combinedData)
+
       setSuggestions(
-        combinedData.map((row) => ({
+        combinedData.slice(0, 10).map((row) => ({
           name: row.name,
           __typename: row.__typename,
           firstName: row.firstName,
@@ -43,6 +42,15 @@ function FormikSearchbox(props) {
       )
     },
   })
+
+  useEffect(() => {
+    const timerId = setTimeout(() => {
+      setDebouncedText(searchString)
+    }, 500)
+    return () => {
+      clearTimeout(timerId)
+    }
+  }, [searchString])
 
   return (
     <div>
@@ -56,14 +64,13 @@ function FormikSearchbox(props) {
           name: name,
           className: 'nav-search-box',
           onChange: (_event, { newValue }) => {
-            setSearchString(newValue)
+            setSearchString(newValue.trim())
           },
         }}
         suggestions={suggestions}
         onSuggestionsFetchRequested={async ({ value }) => {
           if (!value) {
             setSuggestions([])
-            console.log(data)
           }
           try {
             // setSuggestions(
@@ -94,7 +101,6 @@ function FormikSearchbox(props) {
           }
           setFieldValue(`${name}`, suggestion.id)
           clickCard(suggestion)
-
           history.push(`/${suggestion.__typename.toLowerCase()}/displaydetails`)
         }}
         getSuggestionValue={(suggestion) =>

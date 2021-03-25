@@ -33,7 +33,7 @@ export const SearchPageMobile = () => {
   } else if (searchData) {
     const combinedData = [
       // ...new Set([
-      ...searchData.Member,
+      // ...searchData.Member,
       ...searchData.globalMemberSearch,
       ...searchData.globalCampusSearch,
       ...searchData.globalTownSearch,
@@ -51,7 +51,7 @@ export const SearchPageMobile = () => {
               <Spinner />
             </div>
           )}
-          {combinedData.map((searchResult, index) => {
+          {combinedData.combinedData.slice(0, 10).map((searchResult, index) => {
             return (
               <div
                 key={index}

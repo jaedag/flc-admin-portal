@@ -46,13 +46,13 @@ export const DisplayMemberDetails = () => {
   }
 
   let rank = {
-    bacentaLeader: [],
-    centreLeader: [],
-    basontaLeader: [],
-    sontaLeader: [],
-    townLeader: [],
-    campusLeader: [],
     bishop: [],
+    campusLeader: [],
+    townLeader: [],
+    sontaLeader: [],
+    basontaLeader: [],
+    centreLeader: [],
+    bacentaLeader: [],
   }
 
   const updateRank = (member, churchType) => {
@@ -171,6 +171,12 @@ export const DisplayMemberDetails = () => {
                           Object.entries(rank).map((rank) => {
                             return rank[1].map((place, i) => {
                               // console.log(place)
+                              let leader
+                              if (place.__typename === ('Campus' || 'Town')) {
+                                leader = 'CO'
+                              } else {
+                                leader = 'Leader'
+                              }
                               return (
                                 <span
                                   key={i}
@@ -179,7 +185,8 @@ export const DisplayMemberDetails = () => {
                                     history.push(place.link)
                                   }}
                                 >
-                                  {`${place.__typename} Leader for ${place.name}`}
+                                  <span className="font-weight-bold">{`${place.__typename} ${leader}`}</span>
+                                  {` for ${place.name}`}
                                   <br />
                                 </span>
                               )

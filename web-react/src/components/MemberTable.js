@@ -19,7 +19,9 @@ export const MemberTable = (props) => {
   if (memberLoading || memberError) {
     return (
       <div className="container d-flex justify-content-center">
-        <Spinner />
+        <div className="mt-5 pt-5">
+          <Spinner />
+        </div>
       </div>
     )
   } else if (!memberData) {

@@ -28,6 +28,7 @@ import { DisplayCampusTownDetails } from './pages/DisplayCampusTownDetails'
 import { DisplaySontaDetails } from './pages/DisplaySontaDetails'
 import { MemberContext, SearchContext } from './contexts/MemberContext'
 import { ChurchContext } from './contexts/ChurchContext'
+import { FunctionContext } from './contexts/FunctionContext'
 import { DisplayAllBacentas } from './pages/DisplayAllBacentas'
 import { DisplayAllCentres } from './pages/DisplayAllCentres'
 import { DisplayAllSontas } from './pages/DisplayAllSontas'
@@ -39,6 +40,7 @@ import { UpdateBacenta } from './pages/UpdateBacenta'
 // import ProtectedRoute from './auth/ProtectedRoute'
 import Loading from './components/index/Loading'
 import { MemberFiltersMobile } from './pages/MemberFiltersMobile'
+import { MemberTableMobile } from './components/MemberTableMobile'
 
 const AppWithApollo = () => {
   const [accessToken, setAccessToken] = useState()
@@ -428,150 +430,177 @@ const PastorsAdmin = () => {
 
   return (
     <Router>
-      <ChurchContext.Provider
-        value={{
-          capitalise,
-          plural,
-          clickCard,
-          phoneRegExp,
-          parsePhoneNum,
-          makeSelectOptions,
-          determineChurch,
-          filters,
-          setFilters,
-          memberFilter,
-          church,
-          setChurch,
-          bishopId,
-          setBishopId,
-          townId,
-          setTownId,
-          campusId,
-          setCampusId,
-          centreId,
-          setCentreId,
-          bacentaId,
-          setBacentaId,
-          sontaId,
-          setSontaId,
-          ministryId,
-          setMinistryId,
-        }}
-      >
-        <MemberContext.Provider
-          value={{ memberID, setMemberID, currentUser, setCurrentUser }}
+      <FunctionContext.Provider>
+        <ChurchContext.Provider
+          value={{
+            capitalise,
+            plural,
+            clickCard,
+            phoneRegExp,
+            parsePhoneNum,
+            makeSelectOptions,
+            determineChurch,
+            filters,
+            setFilters,
+            memberFilter,
+            church,
+            setChurch,
+            bishopId,
+            setBishopId,
+            townId,
+            setTownId,
+            campusId,
+            setCampusId,
+            centreId,
+            setCentreId,
+            bacentaId,
+            setBacentaId,
+            sontaId,
+            setSontaId,
+            ministryId,
+            setMinistryId,
+          }}
         >
-          <SearchContext.Provider value={{ searchKey, setSearchKey }}>
-            <Switch>
-              <Route path="/" component={BishopSelect} exact />
-              <Route path="/dashboard" component={BishopDashboard} exact />
-              <Route path="/member-search" component={SearchPageMobile} exact />
-              <Route
-                path="/filter-members"
-                component={MemberFiltersMobile}
-                exact
-              />
-              <Route path="/members" component={MembersGridBishop} exact />
-              <Route path="/pastors" component={PastorsGrid} exact />
-              <Route path="/member/addmember" component={CreateMember} exact />
-              <Route
-                path="/member/editmember"
-                component={UpdateMemberDetails}
-                exact
-              />
-              <Route
-                path="/member/displaydetails"
-                component={DisplayMemberDetails}
-                exact
-              />
-              <Route
-                path="/sonta/displaydetails"
-                component={DisplaySontaDetails}
-                exact
-              />
-              <Route
-                path="/bacenta/addbacenta"
-                component={CreateBacenta}
-                exact
-              />
-              <Route
-                path="/bacenta/editbacenta"
-                component={UpdateBacenta}
-                exact
-              />
-              <Route
-                path="/bacenta/displaydetails"
-                component={DisplayBacentaDetails}
-                exact
-              />
-              <Route
-                path="/bacenta/displayall"
-                component={DisplayAllBacentas}
-                exact
-              />
-              <Route
-                path="/centre/displaydetails"
-                component={DisplayCentreDetails}
-                exact
-              />
-              <Route path="/centre/addcentre" component={CreateCentre} exact />
-              <Route path="/centre/editcentre" component={UpdateCentre} exact />
-              <Route
-                path="/centre/displayall"
-                component={DisplayAllCentres}
-                exact
-              />
-              <Route
-                path="/sonta/displayall"
-                component={DisplayAllSontas}
-                exact
-              />
-              <Route
-                path="/town/display-sontas"
-                component={DisplaySontasByCampusTown}
-                exact
-              />
-              <Route
-                path="/campus/display-sontas"
-                component={DisplaySontasByCampusTown}
-                exact
-              />
-              <Route
-                path="/town/displayall"
-                component={DisplayAllTownCampuses}
-                exact
-              />
-              <Route
-                path="/town/displaydetails"
-                component={DisplayCampusTownDetails}
-                exact
-              />
-              <Route
-                path="/campus/displayall"
-                component={DisplayAllTownCampuses}
-                exact
-              />
-              <Route
-                path="/campus/displaydetails"
-                component={DisplayCampusTownDetails}
-                exact
-              />
-              <Route path="/town/addtown" component={CreateTownCampus} exact />
-              <Route
-                path="/campus/addcampus"
-                component={CreateTownCampus}
-                exact
-              />
-              <Route path="/town/edittown" component={UpdateTownCampus} exact />
-              <Route
-                path="/campus/editcampus"
-                component={UpdateTownCampus}
-                exact
-              />
-            </Switch>
-          </SearchContext.Provider>
-        </MemberContext.Provider>
-      </ChurchContext.Provider>
+          <MemberContext.Provider
+            value={{ memberID, setMemberID, currentUser, setCurrentUser }}
+          >
+            <SearchContext.Provider value={{ searchKey, setSearchKey }}>
+              <Switch>
+                <Route path="/" component={BishopSelect} exact />
+                <Route path="/dashboard" component={BishopDashboard} exact />
+                <Route
+                  path="/member-search"
+                  component={SearchPageMobile}
+                  exact
+                />
+                <Route
+                  path="/filter-members"
+                  component={MemberFiltersMobile}
+                  exact
+                />
+                <Route path="/members" component={MembersGridBishop} exact />
+                <Route path="/mb-members" component={MemberTableMobile} exact />
+                <Route path="/pastors" component={PastorsGrid} exact />
+                <Route
+                  path="/member/addmember"
+                  component={CreateMember}
+                  exact
+                />
+                <Route
+                  path="/member/editmember"
+                  component={UpdateMemberDetails}
+                  exact
+                />
+                <Route
+                  path="/member/displaydetails"
+                  component={DisplayMemberDetails}
+                  exact
+                />
+                <Route
+                  path="/sonta/displaydetails"
+                  component={DisplaySontaDetails}
+                  exact
+                />
+                <Route
+                  path="/bacenta/addbacenta"
+                  component={CreateBacenta}
+                  exact
+                />
+                <Route
+                  path="/bacenta/editbacenta"
+                  component={UpdateBacenta}
+                  exact
+                />
+                <Route
+                  path="/bacenta/displaydetails"
+                  component={DisplayBacentaDetails}
+                  exact
+                />
+                <Route
+                  path="/bacenta/displayall"
+                  component={DisplayAllBacentas}
+                  exact
+                />
+                <Route
+                  path="/centre/displaydetails"
+                  component={DisplayCentreDetails}
+                  exact
+                />
+                <Route
+                  path="/centre/addcentre"
+                  component={CreateCentre}
+                  exact
+                />
+                <Route
+                  path="/centre/editcentre"
+                  component={UpdateCentre}
+                  exact
+                />
+                <Route
+                  path="/centre/displayall"
+                  component={DisplayAllCentres}
+                  exact
+                />
+                <Route
+                  path="/sonta/displayall"
+                  component={DisplayAllSontas}
+                  exact
+                />
+                <Route
+                  path="/town/display-sontas"
+                  component={DisplaySontasByCampusTown}
+                  exact
+                />
+                <Route
+                  path="/campus/display-sontas"
+                  component={DisplaySontasByCampusTown}
+                  exact
+                />
+                <Route
+                  path="/town/displayall"
+                  component={DisplayAllTownCampuses}
+                  exact
+                />
+                <Route
+                  path="/town/displaydetails"
+                  component={DisplayCampusTownDetails}
+                  exact
+                />
+                <Route
+                  path="/campus/displayall"
+                  component={DisplayAllTownCampuses}
+                  exact
+                />
+                <Route
+                  path="/campus/displaydetails"
+                  component={DisplayCampusTownDetails}
+                  exact
+                />
+                <Route
+                  path="/town/addtown"
+                  component={CreateTownCampus}
+                  exact
+                />
+                <Route
+                  path="/campus/addcampus"
+                  component={CreateTownCampus}
+                  exact
+                />
+                <Route
+                  path="/town/edittown"
+                  component={UpdateTownCampus}
+                  exact
+                />
+                <Route
+                  path="/campus/editcampus"
+                  component={UpdateTownCampus}
+                  exact
+                />
+              </Switch>
+            </SearchContext.Provider>
+          </MemberContext.Provider>
+        </ChurchContext.Provider>
+      </FunctionContext.Provider>
     </Router>
   )
 }

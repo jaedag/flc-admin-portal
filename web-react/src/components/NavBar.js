@@ -54,15 +54,6 @@ export const NavBar = () => {
               className={`nav-item nav-link d-flex align-items-center flex-column ${
                 location.pathname.endsWith('members') && 'active'
               }`}
-              onClick={() => {
-                setFilters({
-                  gender: '',
-                  maritalStatus: '',
-                  occupation: '',
-                  leaderRank: [],
-                  ministry: '',
-                })
-              }}
               to="/members"
             >
               <span className="fas fa-users fa-2x px-1" />

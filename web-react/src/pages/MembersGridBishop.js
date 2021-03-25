@@ -44,7 +44,6 @@ export const MembersGridBishop = () => {
   }
 
   // console.log(numberOfRecords)
-
   useEffect(() => {
     const debouncedHandleResize = debounce(function handleResize() {
       setDimensions({

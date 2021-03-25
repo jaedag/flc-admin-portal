@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 export const DashboardCard = (props) => {
   let icon = ''
-  const { name, number, cardLink, onClick } = props
+  const { name, detail1, detail2, cardLink } = props
 
   if (name === 'Towns' || name === 'Campuses') {
     icon = 'landmark'
@@ -17,26 +17,12 @@ export const DashboardCard = (props) => {
 
   return (
     <div>
-      {/* <Link
-        className="card mobile-search-card p-2 py-3 my-4"
-        onClick={() => {}}
-      >
-        <div className="media">
-          <span
-            className={`fas fa-${icon} fa-2x d-md-none  pb-3 icon-color text-center`}
-          />
-          <div className="media-body">
-            <h6 className="mt-0">{name}</h6>
-          </div>
-        </div>
-      </Link> */}
       <Link
         to={`${cardLink}`}
-        className="card align-self-center card-body mx-2 py-2 mb-2"
-        onClick={() => (onClick ? onClick() : null)}
+        className="card dashboard-card align-self-center card-body mx-2 mb-2"
       >
         <span
-          className={`fas fa-${icon} fa-2x d-md-none  pb-3 icon-color text-center`}
+          className={`fas fa-${icon} fa-2x d-md-none pb-3 icon-color text-center`}
         />
         <span
           className={`fas fa-${icon} fa-4x d-none d-md-block pb-3 icon-color text-center`}
@@ -44,7 +30,8 @@ export const DashboardCard = (props) => {
         <h5 className="card-title text-center text-nowrap text-white">
           {name}
         </h5>
-        <p className="card-text text-muted text-center">{number}</p>
+        <span className="card-text text-muted text-center">{`${detail1}`}</span>
+        <span className="card-text text-muted text-center">{detail2}</span>
       </Link>
     </div>
   )

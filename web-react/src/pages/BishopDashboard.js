@@ -8,14 +8,9 @@ import { DashboardButton } from '../components/DashboardButton'
 import { ChurchContext } from '../contexts/ChurchContext'
 
 const BishopDashboard = () => {
-  const {
-    church,
-    capitalise,
-    plural,
-    clickCard,
-    bishopId,
-    setFilters,
-  } = useContext(ChurchContext)
+  const { church, capitalise, plural, clickCard, bishopId } = useContext(
+    ChurchContext
+  )
   const { data, error, loading } = useQuery(BISH_DASHBOARD_COUNTS, {
     variables: { id: bishopId },
   })
@@ -31,37 +26,28 @@ const BishopDashboard = () => {
             <div className="col">
               <DashboardCard
                 name="Members"
-                number="Loading..."
+                detail1="Loading..."
                 cardLink="/members"
-                onClick={() => {
-                  setFilters({
-                    gender: '',
-                    maritalStatus: '',
-                    occupation: '',
-                    leaderRank: [],
-                    ministry: '',
-                  })
-                }}
               />
             </div>
             <div className="col">
               <DashboardCard
                 name="Pastors"
-                number="Loading..."
+                detail1="Loading..."
                 cardLink="/pastors"
               />
             </div>
             <div className="col">
               <DashboardCard
                 name={capitalise(plural(church.church))}
-                number="Loading..."
+                detail1="Loading..."
                 cardLink={`/${church.church}/displayall`}
               />
             </div>
             <div className="col">
               <DashboardCard
                 name="Ministries"
-                number="Loading"
+                detail1="Loading"
                 cardLink={`${church.church}/sonta/displayall`}
               />
             </div>
@@ -120,60 +106,50 @@ const BishopDashboard = () => {
             <div className="col-sm-12 col-md">
               <DashboardCard
                 name="Members"
-                number={data.bishopMemberCount}
+                detail1={`${data.bishopMemberCount} Members`}
                 cardLink="/members"
-                onClick={() => {
-                  setFilters({
-                    gender: '',
-                    maritalStatus: '',
-                    occupation: '',
-                    leaderRank: [],
-                    ministry: '',
-                  })
-                }}
               />
             </div>
             <div className="col-sm-12 col-md">
               <DashboardCard
                 name="Pastors"
-                number={data.bishopPastorCount}
+                detail1={`${data.bishopPastorCount} Pastors`}
                 cardLink="/pastors"
               />
             </div>
             <div className="col-sm-12 col-md">
               <DashboardCard
                 name={capitalise(plural(church.church))}
-                number={`${data.bishopCampusTownCount} ${capitalise(
+                detail1={`${data.bishopCampusTownCount} ${capitalise(
                   plural(church.church)
-                )} | ${data.bishopCentreCount} Centres | ${
-                  data.bishopBacentaCount
-                } Bacentas`}
+                )} | ${data.bishopCentreCount} Centres`}
+                detail2={`${data.bishopBacentaCount} Bacentas`}
                 cardLink={`/${church.church}/displayall`}
               />
             </div>
             <div className="col-sm-12 col-md">
               <DashboardCard
                 name="Ministries"
-                number={data.bishopSontaMemberCount}
+                detail1={`${data.bishopSontaMemberCount} Members in Ministries`}
                 cardLink={`${church.church}/sonta/displayall`}
               />
             </div>
           </div>
 
           <div className="row justify-content-center mt-5">
-            <div className="col-sm-12 col-md">
+            <div className="col-sm-12 col-md-auto">
               <DashboardButton
                 btnText="Register Member"
                 btnLink="/member/addmember"
               />
             </div>
-            <div className="col-sm-12 col-md">
+            <div className="col-sm-12 col-md-auto">
               <DashboardButton
                 btnText="Start a Bacenta"
                 btnLink="/bacenta/addbacenta"
               />
             </div>
-            <div className="col-sm-12 col-md">
+            <div className="col-sm-12 col-md-auto">
               <DashboardButton
                 btnText="Start a Centre"
                 btnLink="/centre/addcentre"
@@ -199,37 +175,28 @@ const BishopDashboard = () => {
             <div className="col">
               <DashboardCard
                 name="Members"
-                number="Error!"
+                detail1="Error!"
                 cardLink="/members"
-                onClick={() => {
-                  setFilters({
-                    gender: '',
-                    maritalStatus: '',
-                    occupation: '',
-                    leaderRank: [],
-                    ministry: '',
-                  })
-                }}
               />
             </div>
             <div className="col">
               <DashboardCard
                 name="Pastors"
-                number="Error!"
+                detail1="Error!"
                 cardLink="/pastors"
               />
             </div>
             <div className="col">
               <DashboardCard
                 name={capitalise(plural(church.church))}
-                number="Error!"
+                detail1="Error!"
                 cardLink={`/${church.church}/displayall`}
               />
             </div>
             <div className="col">
               <DashboardCard
                 name="Ministries"
-                number="Error!"
+                detail1="Error!"
                 cardLink={`${church.church}/sonta/displayall`}
               />
             </div>

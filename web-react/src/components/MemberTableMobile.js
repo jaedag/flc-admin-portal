@@ -88,7 +88,7 @@ export const MemberTableMobile = () => {
           </small>
         </div>
 
-        <div className="d-lg-none">
+        <div className="d-lg-none ">
           {memberDataLoaded.map((soul, index) => {
             if (index < offset) {
               return null
@@ -98,7 +98,7 @@ export const MemberTableMobile = () => {
             return (
               <div
                 key={index}
-                className="card mobile-search-card p-2 py-3 my-4"
+                className="card mobile-search-card fade-in p-2 py-3 my-4"
                 onClick={() => {
                   clickCard(soul)
                   history.push('/member/displaydetails')

@@ -30,88 +30,88 @@ export const MemberTable = (props) => {
         <div>There does not seem to be any data to display for you</div>
       </div>
     )
-  }
+  } else {
+    return (
+      // Web View Full Screen without filters applied
+      <React.Fragment>
+        <div className="container member-grid  d-none d-lg-block">
+          <div className="row">
+            {memberData.map((soul, index) => {
+              if (index < offset) {
+                return null
+              } else if (index >= offset + numberOfRecords - 1) {
+                return null
+              }
 
-  return (
-    // Web View Full Screen without filters applied
-    <React.Fragment>
-      <div className="container d-none d-lg-block">
-        <div className="row">
+              return (
+                <div className="col-auto " key={index}>
+                  <div
+                    className="card grid-card fade-in"
+                    onClick={() => {
+                      clickCard(soul)
+                      history.push('/member/displaydetails')
+                    }}
+                  >
+                    <img
+                      className="card-img-top"
+                      src={soul.pictureUrl ? soul.pictureUrl : userIcon}
+                      alt={soul.firstName + ' ' + soul.lastName}
+                    />
+
+                    <p className="card-title text-center pt-2">
+                      {soul.firstName + ' ' + soul.lastName}
+                    </p>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+
+        {/* Mobile View */}
+        <div className="d-lg-none member-grid">
           {memberData.map((soul, index) => {
             if (index < offset) {
               return null
-            } else if (index >= offset + numberOfRecords - 1) {
+            } else if (index >= offset + numberOfRecords) {
               return null
             }
-
             return (
-              <div className="col-auto" key={index}>
-                <div
-                  className="card grid-card"
-                  onClick={() => {
-                    clickCard(soul)
-                    history.push('/member/displaydetails')
-                  }}
-                >
+              <div
+                key={index}
+                className="card mobile-search-card p-2 py-3 my-4"
+                onClick={() => {
+                  clickCard(soul)
+                  history.push('/member/displaydetails')
+                }}
+              >
+                <div className="media">
                   <img
-                    className="card-img-top"
+                    className="mr-3 rounded-circle img-search"
                     src={soul.pictureUrl ? soul.pictureUrl : userIcon}
-                    alt={soul.firstName + ' ' + soul.lastName}
+                    alt={`${soul.firstName} ${soul.lastName}`}
                   />
-
-                  <p className="card-title text-center pt-2">
-                    {soul.firstName + ' ' + soul.lastName}
-                  </p>
+                  <div className="media-body">
+                    <h5 className="mt-0">{`${soul.firstName} ${soul.lastName}`}</h5>
+                    {soul.bacenta ? (
+                      <div>
+                        <span className="font-weight-bold">Bacenta:</span>{' '}
+                        {soul.bacenta.name}{' '}
+                      </div>
+                    ) : null}
+                    {soul.ministry && (
+                      <div>
+                        <span className="font-weight-bold">Ministry:</span>{' '}
+                        {soul.ministry.name}{' '}
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             )
           })}
         </div>
-      </div>
-
-      {/* Mobile View */}
-      <div className="d-lg-none">
-        {memberData.map((soul, index) => {
-          if (index < offset) {
-            return null
-          } else if (index >= offset + numberOfRecords) {
-            return null
-          }
-          return (
-            <div
-              key={index}
-              className="card mobile-search-card p-2 py-3 my-4"
-              onClick={() => {
-                clickCard(soul)
-                history.push('/member/displaydetails')
-              }}
-            >
-              <div className="media">
-                <img
-                  className="mr-3 rounded-circle img-search"
-                  src={soul.pictureUrl ? soul.pictureUrl : userIcon}
-                  alt={`${soul.firstName} ${soul.lastName}`}
-                />
-                <div className="media-body">
-                  <h5 className="mt-0">{`${soul.firstName} ${soul.lastName}`}</h5>
-                  {soul.bacenta ? (
-                    <div>
-                      <span className="font-weight-bold">Bacenta:</span>{' '}
-                      {soul.bacenta.name}{' '}
-                    </div>
-                  ) : null}
-                  {soul.ministry && (
-                    <div>
-                      <span className="font-weight-bold">Ministry:</span>{' '}
-                      {soul.ministry.name}{' '}
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          )
-        })}
-      </div>
-    </React.Fragment>
-  )
+      </React.Fragment>
+    )
+  }
 }

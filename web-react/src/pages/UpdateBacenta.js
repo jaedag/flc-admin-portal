@@ -60,7 +60,7 @@ export const UpdateBacenta = () => {
       church.church === 'town'
         ? bacentaData?.displayBacenta?.centre?.town?.id
         : bacentaData?.displayBacenta?.centre?.campus?.id,
-    centreSelect: bacentaData?.displayBacenta?.centre?.id,
+    centreSelect: bacentaData?.displayBacenta?.centre.id,
     meetingDay: bacentaData?.displayBacenta?.meetingDay?.day,
     venueLatitude: bacentaData?.displayBacenta?.location?.latitude
       ? bacentaData?.displayBacenta?.location?.latitude

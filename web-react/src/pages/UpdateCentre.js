@@ -29,7 +29,7 @@ export const UpdateCentre = () => {
 
   const {
     data: centreData,
-    error: centreError,
+
     loading: centreLoading,
   } = useQuery(DISPLAY_CENTRE, {
     variables: { id: centreId },
@@ -71,11 +71,9 @@ export const UpdateCentre = () => {
   const [AddCentreBacentas] = useMutation(ADD_CENTRE_BACENTAS)
   const [RemoveBacentaCentre] = useMutation(REMOVE_BACENTA_CENTRE)
 
-  if (centreError) {
-    return <ErrorScreen />
-  } else if (centreLoading) {
+  if (centreLoading) {
     return <LoadingScreen />
-  } else {
+  } else if (centreData) {
     //onSubmit receives the form state as argument
     const onSubmit = (values, onSubmitProps) => {
       setBishopId(values.centreSelect)
@@ -295,5 +293,7 @@ export const UpdateCentre = () => {
         </Formik>
       </div>
     )
+  } else {
+    return <ErrorScreen />
   }
 }

@@ -986,7 +986,13 @@ type Mutation {
       RETURN b
       """
     )
-  LogBacentaHistory(bacentaId: ID!, historyRecord: String, leaderId: ID): Bacenta
+  LogBacentaHistory(
+    bacentaId: ID!
+    historyRecord: String
+    leaderId: ID
+    oldCentreId: ID
+    newCentreId: ID
+  ): Bacenta
     @cypher(
       statement: """
       MATCH  (b:Bacenta {id: $bacentaId})
@@ -997,16 +1003,43 @@ type Mutation {
       MERGE (b)-[r:HAS_HISTORY]->(log)
       MERGE (log)-[:RECORDED_ON]->(t)
 
-      WITH log,b,r
+      WITH log,b
       CALL{
         WITH log
         WITH log WHERE $leaderId IS NOT NULL
-        MATCH (l:Member {id: $leaderId})
-        MERGE (slog:ServiceLog)
-        MERGE (l)-[r:HAS_HISTORY]->(slog)
+      CREATE (log:HistoryLog {id:apoc.create.uuid()})
+        WITH log
+      MATCH (l:Member {id: $leaderId})
+        SET log :ServiceLog
+        WITH log, l
+      OPTIONAl MATCH ()-[r0:HAS_HISTORY]->(log)
+        SET r0.pointer = false
+        WITH log,l
+      CREATE (l)-[r:HAS_HISTORY]->(log)
          SET r.pointer = true
+         WITH log
+      RETURN COUNT(log)
+      }
+
+
+      WITH log,b
+      CALL{
+        WITH log
+        WITH log WHERE $oldCentreId IS NOT NULL
+        MATCH (c:Centre {id: $oldCentreId})
+        MERGE (c)-[:HAS_HISTORY]->(log)
         RETURN COUNT(log)
       }
+
+      WITH log,b
+      CALL{
+        WITH log
+        WITH log WHERE $newCentreId IS NOT NULL
+        MATCH (c:Centre {id: $newCentreId})
+        MERGE (c)-[:HAS_HISTORY]->(log)
+        RETURN COUNT(log)
+      }
+
       RETURN b
       """
     )

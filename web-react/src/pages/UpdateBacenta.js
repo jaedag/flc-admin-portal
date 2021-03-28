@@ -125,6 +125,8 @@ export const UpdateBacenta = () => {
         variables: {
           bacentaId: bacentaId,
           leaderId: '',
+          newCentreId: newCentre.AddBacentaCentre.from.id,
+          oldCentreId: bacentaData?.displayBacenta?.centre.id,
           historyRecord: `${initialValues.bacentaName} has been moved from ${bacentaData?.displayBacenta?.centre.name} Centre to ${newCentre.AddBacentaCentre.from.name} Centre`,
         },
       })

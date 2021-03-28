@@ -58,13 +58,13 @@ CREATE INDEX FOR (n:TimeGraph) ON (n.date);
 // Create the Members
 :auto USING PERIODIC COMMIT 1000
 LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/e/2PACX-1vSwWmJJoyWNd6TBMAE74gxSnss94IC8my0lz5KUmggmwAOfsIOoNIvXH_Iq2sUYi86ULcGingtgE2ze/pub?output=csv" as line
-CREATE (m:Member {id: apoc.create.uuid()})
-	SET 
+MERGE (m:Member {whatsappNumber: line.`WhatsApp Number (if different)`})
+	ON CREATE SET 
+    m.id = apoc.create.uuid()
     m.firstName = line.`First Name`,
     m.middleName = line.`Other Names`,
     m.lastName = line.`Last Name`,
     m.phoneNumber = line.`Phone Number`,
-    m.whatsappNumber = line.`WhatsApp Number (if different)`,
     m.areaOfResidence = line.`Area of Residence`,
     m.pictureUrl = line.picture
 

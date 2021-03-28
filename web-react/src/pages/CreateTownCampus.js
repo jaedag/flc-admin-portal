@@ -164,7 +164,7 @@ function AddTownCampus() {
                             name="leaderName"
                             placeholder={`Name of ${capitalise(
                               church.church
-                            )} GSO`}
+                            )} CO`}
                           />
                         </div>
                       </div>

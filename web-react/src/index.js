@@ -364,11 +364,17 @@ const PastorsAdmin = () => {
           church: member.campus ? 'campus' : 'town',
           subChurch: 'centre',
         })
-        setBishopId(member.town.bishop.id)
+        setBishopId(
+          member.campus ? member.campus.bishop.id : member.town.bishop.id
+        )
         break
       case 'Bacenta':
         setChurch({ church: member.centre?.town ? 'town' : 'campus' })
-        setBishopId(member.centre?.town ? 'town' : 'campus')
+        setBishopId(
+          member.centre?.town
+            ? member.centre?.town.bishop.id
+            : member.centre?.campus.bishop.id
+        )
         break
       default:
     }

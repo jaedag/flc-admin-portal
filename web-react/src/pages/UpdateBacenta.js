@@ -36,7 +36,9 @@ export const UpdateBacenta = () => {
     setCentreId,
     bacentaId,
   } = useContext(ChurchContext)
+
   let townCampusIdVar
+
   const { data: bacentaData, loading: bacentaLoading } = useQuery(
     DISPLAY_BACENTA,
     {
@@ -45,8 +47,6 @@ export const UpdateBacenta = () => {
   )
 
   const [newLeaderInfo, setNewLeaderInfo] = useState({})
-  // const [newCentreName, setNewCentreName] = useState('')
-  let newCentreName = 'Kwaver'
 
   const history = useHistory()
   const [positionLoading, setPositionLoading] = useState(false)
@@ -55,11 +55,12 @@ export const UpdateBacenta = () => {
     bacentaName: bacentaData?.displayBacenta?.name,
     leaderName: `${bacentaData?.displayBacenta?.leader.firstName} ${bacentaData?.displayBacenta?.leader.lastName} `,
     leaderWhatsapp: `+${bacentaData?.displayBacenta?.leader.whatsappNumber}`,
-    centreSelect: bacentaData?.displayBacenta?.centre,
+
     townCampusSelect:
       church.church === 'town'
         ? bacentaData?.displayBacenta?.centre?.town?.id
         : bacentaData?.displayBacenta?.centre?.campus?.id,
+    centreSelect: bacentaData?.displayBacenta?.centre?.id,
     meetingDay: bacentaData?.displayBacenta?.meetingDay?.day,
     venueLatitude: bacentaData?.displayBacenta?.location?.latitude
       ? bacentaData?.displayBacenta?.location?.latitude
@@ -97,32 +98,36 @@ export const UpdateBacenta = () => {
   const [UpdateBacenta] = useMutation(UPDATE_BACENTA, {
     onCompleted: (updatedInfo) => {
       setNewLeaderInfo(updatedInfo.UpdateBacenta?.leader)
-      // newLeaderInfo = updatedInfo.UpdateBacenta?.leader
-      // console.log('New Leader Info', newLeaderInfo)
     },
     refetchQueries: [
-      { query: DISPLAY_BACENTA, variables: { id: bacentaId } },
       { query: GET_CENTRE_BACENTAS, variables: { id: centreId } },
       {
         query: GET_CENTRE_BACENTAS,
-        variables: { id: initialValues.centreSelect?.id },
+        variables: { id: initialValues.centreSelect },
       },
     ],
   })
 
-  const [AddBacentaCentre] = useMutation(ADD_BACENTA_CENTRE, {
-    onCompleted: (newCentre) => {
-      // setNewCentreName(newCentre.AddBacentaCentre.from.name)
-      newCentreName = newCentre.AddBacentaCentre.from.name
-      console.log(newCentreName)
-    },
-  })
   const [RemoveBacentaCentre] = useMutation(REMOVE_BACENTA_CENTRE)
   const [LogBacentaHistory] = useMutation(LOG_BACENTA_HISTORY, {
     onCompleted: (newLog) => {
       newLog.LogBacentaHistory.history.map((history) =>
         console.log('History ', history.HistoryLog)
       )
+    },
+    refetchQueries: [{ query: DISPLAY_BACENTA, variables: { id: bacentaId } }],
+  })
+
+  const [AddBacentaCentre] = useMutation(ADD_BACENTA_CENTRE, {
+    onCompleted: (newCentre) => {
+      //After Adding the bacenta to a centre, then you log that change.
+      LogBacentaHistory({
+        variables: {
+          bacentaId: bacentaId,
+          leaderId: '',
+          historyRecord: `${initialValues.bacentaName} has been moved from ${bacentaData?.displayBacenta?.centre.name} Centre to ${newCentre.AddBacentaCentre.from.name} Centre`,
+        },
+      })
     },
   })
 
@@ -152,10 +157,10 @@ export const UpdateBacenta = () => {
       })
 
       //Log If The Centre Changes
-      if (values.centreSelect !== initialValues.centreSelect.id) {
+      if (values.centreSelect !== initialValues.centreSelect) {
         RemoveBacentaCentre({
           variables: {
-            centreId: initialValues.centreSelect.id,
+            centreId: initialValues.centreSelect,
             bacentaId: bacentaId,
           },
         })
@@ -163,14 +168,6 @@ export const UpdateBacenta = () => {
           variables: {
             centreId: values.centreSelect,
             bacentaId: bacentaId,
-          },
-        })
-
-        LogBacentaHistory({
-          variables: {
-            bacentaId: bacentaId,
-            leaderId: '',
-            historyRecord: `${values.bacentaName} has been moved from ${initialValues.centreSelect.name} Centre to ${newCentreName} Centre`,
           },
         })
       }
@@ -262,6 +259,8 @@ export const UpdateBacenta = () => {
                                 e.target.value
                               )
                               townCampusIdVar = e.target.value
+                              //Set centreSelect to empty string so that the value is set back to the default option when a user changes the townCampus var
+                              formik.setFieldValue('centreSelect', '')
                             }}
                             defaultOption={`Select a ${capitalise(
                               church.church
@@ -287,6 +286,12 @@ export const UpdateBacenta = () => {
                                 ? townCampusIdVar
                                 : initialValues.townCampusSelect
                             }
+                            onChange={(e) => {
+                              formik.setFieldValue(
+                                'centreSelect',
+                                e.target.value
+                              )
+                            }}
                             defaultOption="Select a Centre"
                             label="Select a Centre"
                           />
@@ -374,7 +379,6 @@ export const UpdateBacenta = () => {
                                     .getElementById('venueLatitude')
                                     .blur()
                                   setPositionLoading(false)
-                                  //console.log(formik.values)
                                 }
                               )
                             }}

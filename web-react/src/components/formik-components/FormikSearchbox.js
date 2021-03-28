@@ -19,7 +19,7 @@ function FormikSearchbox(props) {
   let combinedData
   useQuery(GLOBAL_SEARCH, {
     variables: {
-      searchKey: debouncedText,
+      searchKey: debouncedText.trim(),
     },
     onCompleted: (data) => {
       combinedData = [
@@ -36,6 +36,9 @@ function FormikSearchbox(props) {
           __typename: row.__typename,
           firstName: row.firstName,
           lastName: row.lastName,
+          centre: row.centre,
+          town: row.town,
+          campus: row.campus,
           bishop: row.bishop,
           id: row.id,
         }))
@@ -46,7 +49,7 @@ function FormikSearchbox(props) {
   useEffect(() => {
     const timerId = setTimeout(() => {
       setDebouncedText(searchString)
-    }, 500)
+    }, 200)
     return () => {
       clearTimeout(timerId)
     }
@@ -64,7 +67,7 @@ function FormikSearchbox(props) {
           name: name,
           className: 'nav-search-box',
           onChange: (_event, { newValue }) => {
-            setSearchString(newValue.trim())
+            setSearchString(newValue)
           },
         }}
         suggestions={suggestions}
@@ -104,7 +107,11 @@ function FormikSearchbox(props) {
           history.push(`/${suggestion.__typename.toLowerCase()}/displaydetails`)
         }}
         getSuggestionValue={(suggestion) =>
-          `${suggestion.firstName} ${suggestion.lastName}`
+          `${
+            suggestion.name
+              ? suggestion.name
+              : suggestion.firstName + ' ' + suggestion.lastName
+          }`
         }
         highlightFirstSuggestion={true}
         renderSuggestion={(suggestion) => (

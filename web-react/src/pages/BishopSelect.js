@@ -16,7 +16,7 @@ const BishopSelect = () => {
   const { currentUser, setCurrentUser } = useContext(MemberContext)
   const { user, isAuthenticated } = useAuth0()
   const { data, loading } = useQuery(GET_BISHOPS)
-  const { data: userData } = useQuery(GET_LOGGED_IN_USER, {
+  useQuery(GET_LOGGED_IN_USER, {
     variables: {
       email: currentUser?.email,
     },
@@ -92,11 +92,7 @@ const BishopSelect = () => {
         </div>
       </React.Fragment>
     )
-  } else if (
-    data
-    // && userData
-  ) {
-    console.log(userData)
+  } else if (data) {
     return (
       <React.Fragment>
         <NavBar />

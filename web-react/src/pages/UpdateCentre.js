@@ -170,7 +170,7 @@ export const UpdateCentre = () => {
                             name="leaderName"
                             placeholder={`Name of ${capitalise(
                               church.subChurch
-                            )} GSO`}
+                            )} CO`}
                           />
                         </div>
                       </div>

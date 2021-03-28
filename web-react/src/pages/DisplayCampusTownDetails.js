@@ -30,7 +30,7 @@ export const DisplayCampusTownDetails = () => {
         <NavBar />
         <DisplayChurchDetails
           name={townData.displayTown.name}
-          leaderTitle={'Town GSO'}
+          leaderTitle={'Town CO'}
           membership={townData.townMemberCount}
           leaderName={
             townData.displayTown.leader
@@ -55,7 +55,7 @@ export const DisplayCampusTownDetails = () => {
         <NavBar />
         <DisplayChurchDetails
           name={campusData.displayCampus.name}
-          leaderTitle={'Campus GSO'}
+          leaderTitle={'Campus CO'}
           membership={campusData.campusMemberCount}
           leaderName={
             campusData.displayCampus.leader

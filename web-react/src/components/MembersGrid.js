@@ -1,33 +1,59 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { useQuery } from '@apollo/client'
-import { NavBar } from '../components/NavBar'
-import { SideBar } from '../components/SideBar'
-import { MemberTable } from '../components/MemberTable'
-import { GET_BISHOP_MEMBERS } from '../queries/ListQueries'
+import { NavBar } from './NavBar'
+import { SideBar } from './SideBar'
+import { MemberTable } from './MemberTable'
 import { ChurchContext } from '../contexts/ChurchContext'
 
-export const MembersGridBishop = () => {
-  const { memberFilter, filters, bishopId } = useContext(ChurchContext)
+export const MembersGrid = (props) => {
+  const { memberData, memberError, memberLoading } = props
+  const { memberFilter, filters } = useContext(ChurchContext)
   const [offset, setOffset] = useState(0)
-  const {
-    data: memberData,
-    error: memberError,
-    loading: memberLoading,
-  } = useQuery(GET_BISHOP_MEMBERS, {
-    variables: { id: bishopId },
+  const [dimensions, setDimensions] = React.useState({
+    height: window.innerHeight,
+    width: window.innerWidth,
   })
 
-  const numberOfRecords = 25
-  const memberDataLoaded = memberData
-    ? memberFilter(memberData?.bishopMemberList, filters)
-    : null
+  let numberOfRecords = Math.round(
+    ((dimensions.height - 96 - 30) * (0.75 * dimensions.width - 46)) /
+      (160 * 126)
+  )
+  //Navbar takes 70px of the height and side bar takes 25% of the width
+  const memberDataLoaded = memberData ? memberFilter(memberData, filters) : null
+
+  //debouncing function
+  function debounce(fn, ms) {
+    let timer
+    return () => {
+      clearTimeout(timer)
+      timer = setTimeout(() => {
+        timer = null
+        fn.apply(this, arguments)
+      }, ms)
+    }
+  }
+
+  // console.log(numberOfRecords)
+  useEffect(() => {
+    const debouncedHandleResize = debounce(function handleResize() {
+      setDimensions({
+        height: window.innerHeight,
+        width: window.innerWidth,
+      })
+    }, 500)
+
+    window.addEventListener('resize', debouncedHandleResize)
+    // console.log(dimensions)
+    return () => {
+      window.removeEventListener('resize', debouncedHandleResize)
+    }
+  })
 
   return (
     <div>
       <NavBar />
       <div className="row w-100 m-0">
-        <div className="col-lg-3 col-md-4 m-0 px-0">
+        <div className="d-none d-md-block col-lg-3 col-md-4 m-0 px-0">
           <SideBar />
         </div>
 
@@ -36,7 +62,7 @@ export const MembersGridBishop = () => {
             <h3 className="h3">
               {memberData
                 ? `${memberDataLoaded.length} Search Results`
-                : 'SearchResults'}
+                : 'Search Results'}
             </h3>
 
             <div className="btn-toolbar mb-2 mb-md-0">

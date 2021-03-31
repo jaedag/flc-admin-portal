@@ -7,7 +7,7 @@ import { DISPLAY_TOWN, DISPLAY_CAMPUS } from '../queries/DisplayQueries'
 import { ChurchContext } from '../contexts/ChurchContext'
 
 export const DisplayCampusTownDetails = () => {
-  const { church, capitalise, townId, campusId, setCentreID } = useContext(
+  const { church, capitalise, townId, campusId, setCentreId } = useContext(
     ChurchContext
   )
 
@@ -30,7 +30,7 @@ export const DisplayCampusTownDetails = () => {
         <NavBar />
         <DisplayChurchDetails
           name={townData.displayTown.name}
-          leaderTitle={'Town GSO'}
+          leaderTitle={'Town CO'}
           membership={townData.townMemberCount}
           leaderName={
             townData.displayTown.leader
@@ -43,7 +43,7 @@ export const DisplayCampusTownDetails = () => {
           admin={townData.displayTown.admin}
           churchType={`${capitalise(church.church)}`}
           subChurch={`${capitalise(church.subChurch)}`}
-          subChurchSetter={setCentreID}
+          subChurchSetter={setCentreId}
           buttons={townData.displayTown.centres}
           editlink="/town/edittown"
         />
@@ -55,7 +55,7 @@ export const DisplayCampusTownDetails = () => {
         <NavBar />
         <DisplayChurchDetails
           name={campusData.displayCampus.name}
-          leaderTitle={'Campus GSO'}
+          leaderTitle={'Campus CO'}
           membership={campusData.campusMemberCount}
           leaderName={
             campusData.displayCampus.leader
@@ -72,12 +72,13 @@ export const DisplayCampusTownDetails = () => {
           admin={campusData.displayCampus.admin}
           churchType={`${capitalise(church.church)}`}
           subChurch="Centre"
-          subChurchSetter={setCentreID}
+          subChurchSetter={setCentreId}
           buttons={campusData.displayCampus.centres}
           editlink="/campus/editcampus"
         />
       </div>
     )
+  } else {
+    return <ErrorScreen />
   }
-  return <ErrorScreen />
 }

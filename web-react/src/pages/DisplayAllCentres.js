@@ -13,9 +13,9 @@ export const DisplayAllCentres = () => {
     church,
     townId,
     campusId,
-    setCentreID,
+    setCentreId,
     setTownId,
-    setCampusID,
+    setCampusId,
   } = useContext(ChurchContext)
 
   const { data: townCentreData, loading: townLoading } = useQuery(
@@ -47,7 +47,7 @@ export const DisplayAllCentres = () => {
                   onClick={() => {
                     church.church === 'town'
                       ? setTownId(townId)
-                      : setCampusID(campusId)
+                      : setCampusId(campusId)
                   }}
                 >
                   {' '}
@@ -88,7 +88,7 @@ export const DisplayAllCentres = () => {
 
           <DisplayChurchList
             data={campusCentreData.campusCentreList}
-            setter={setCentreID}
+            setter={setCentreId}
             churchType="Centre"
           />
         </div>
@@ -107,7 +107,7 @@ export const DisplayAllCentres = () => {
                   onClick={() => {
                     church.church === 'town'
                       ? setTownId(townId)
-                      : setCampusID(campusId)
+                      : setCampusId(campusId)
                   }}
                 >
                   {' '}
@@ -148,12 +148,12 @@ export const DisplayAllCentres = () => {
 
           <DisplayChurchList
             data={townCentreData.townCentreList}
-            setter={setCentreID}
+            setter={setCentreId}
             churchType="Centre"
           />
           {/* <DisplayChurchList
             data={townCentreData.townSontaList}
-            setter={setSontaID}
+            setter={setSontaId}
             churchType="Sonta"
           /> */}
         </div>

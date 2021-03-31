@@ -82,9 +82,17 @@
   height: 100vh;
   position: fixed;
   width: 25%;
+  max-width: 307px;
+  min-width: 268px;
   border-right: 1px solid var(--border-color);
 }
-
+@media (max-width: 767.98px) {
+  .filter-mobile {
+    background-color: none;
+    width: 100%;
+    border-right: none;
+  }
+}
 .overflow {
   overflow: scroll;
 }
@@ -131,12 +139,241 @@
   border: 1px solid var(--border-color);
 }
 
-.grid-card {
-  width: 120px;
+.dashboard-card {
   height: 200px;
+  display: flex;
+  justify-content: center;
+}
+
+@media (max-width: 767.98px) {
+  .dashboard-card {
+    height: auto;
+  }
+}
+.grid-card {
+  width: 96px;
+  height: 160px;
   background-color: transparent;
   border-color: transparent;
 }
+
+.fade-in {
+  opacity: 0;
+  animation-name: fadeIn;
+  animation-duration: 0.001s;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+
+.member-grid {
+  max-width: none;
+}
+
+/*Daddy's animation*/
+div:nth-child(2) > div {
+  animation-delay: 0.05s;
+}
+div:nth-child(3) > div {
+  animation-delay: 0.10s;
+}
+div:nth-child(4) > div {
+  animation-delay: 0.15s;
+}
+div:nth-child(5) > div {
+  animation-delay: 0.20s;
+}
+div:nth-child(6) > div {
+  animation-delay: 0.25s;
+}
+div:nth-child(7) > div {
+  animation-delay: 0.30s;
+}
+div:nth-child(8) > div {
+  animation-delay: 0.35s;
+}
+div:nth-child(9) > div {
+  animation-delay: 0.40s;
+}
+div:nth-child(10) > div {
+  animation-delay: 0.45s;
+}
+div:nth-child(11) > div {
+  animation-delay: 0.50s;
+}
+div:nth-child(12) > div {
+  animation-delay: 0.55s;
+}
+div:nth-child(13) > div {
+  animation-delay: 0.60s;
+}
+div:nth-child(14) > div {
+  animation-delay: 0.65s;
+}
+div:nth-child(15) > div {
+  animation-delay: 0.70s;
+}
+div:nth-child(16) > div {
+  animation-delay: 0.75s;
+}
+div:nth-child(17) > div {
+  animation-delay: 0.80s;
+}
+div:nth-child(18) > div {
+  animation-delay: 0.85s;
+}
+div:nth-child(19) > div {
+  animation-delay: 0.90s;
+}
+div:nth-child(20) > div {
+  animation-delay: 0.95s;
+}
+div:nth-child(21) > div {
+  animation-delay: 1.00s;
+}
+div:nth-child(22) > div {
+  animation-delay: 1.05s;
+}
+div:nth-child(23) > div {
+  animation-delay: 1.10s;
+}
+div:nth-child(24) > div {
+  animation-delay: 1.15s;
+}
+div:nth-child(25) > div {
+  animation-delay: 1.20s;
+}
+div:nth-child(26) > div {
+  animation-delay: 1.25s;
+}
+div:nth-child(27) > div {
+  animation-delay: 1.30s;
+}
+div:nth-child(28) > div {
+  animation-delay: 1.35s;
+}
+div:nth-child(29) > div {
+  animation-delay: 1.40s;
+}
+div:nth-child(30) > div {
+  animation-delay: 1.45s;
+}
+div:nth-child(31) > div {
+  animation-delay: 1.50s;
+}
+div:nth-child(32) > div {
+  animation-delay: 1.55s;
+}
+div:nth-child(33) > div {
+  animation-delay: 1.60s;
+}
+div:nth-child(34) > div {
+  animation-delay: 1.65s;
+}
+div:nth-child(35) > div {
+  animation-delay: 1.70s;
+}
+div:nth-child(36) > div {
+  animation-delay: 1.75s;
+}
+div:nth-child(37) > div {
+  animation-delay: 1.80s;
+}
+div:nth-child(38) > div {
+  animation-delay: 1.85s;
+}
+div:nth-child(39) > div {
+  animation-delay: 1.90s;
+}
+div:nth-child(40) > div {
+  animation-delay: 1.95s;
+}
+div:nth-child(41) > div {
+  animation-delay: 2.00s;
+}
+div:nth-child(42) > div {
+  animation-delay: 2.05s;
+}
+div:nth-child(43) > div {
+  animation-delay: 2.10s;
+}
+div:nth-child(44) > div {
+  animation-delay: 2.15s;
+}
+div:nth-child(45) > div {
+  animation-delay: 2.20s;
+}
+div:nth-child(46) > div {
+  animation-delay: 2.25s;
+}
+div:nth-child(47) > div {
+  animation-delay: 2.30s;
+}
+div:nth-child(48) > div {
+  animation-delay: 2.35s;
+}
+div:nth-child(49) > div {
+  animation-delay: 2.40s;
+}
+div:nth-child(50) > div {
+  animation-delay: 2.45s;
+}
+div:nth-child(51) > div {
+  animation-delay: 2.50s;
+}
+div:nth-child(52) > div {
+  animation-delay: 2.55s;
+}
+div:nth-child(53) > div {
+  animation-delay: 2.60s;
+}
+div:nth-child(52) > div {
+  animation-delay: 2.65s;
+}
+div:nth-child(53) > div {
+  animation-delay: 2.70s;
+}
+div:nth-child(54) > div {
+  animation-delay: 2.75s;
+}
+div:nth-child(55) > div {
+  animation-delay: 2.80s;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+/* 
+  @keyframes fadeIn {
+  0% {opacity:0;}
+  100% {opacity:1;}
+  }
+  
+  @-moz-keyframes fadeIn {
+  0% {opacity:0;}
+  100% {opacity:1;}
+  }
+  
+  @-webkit-keyframes fadeIn {
+  0% {opacity:0;}
+  100% {opacity:1;}
+  }
+  
+  @-o-keyframes fadeIn {
+  0% {opacity:0;}
+  100% {opacity:1;}
+  }
+  
+  @-ms-keyframes fadeIn {
+  0% {opacity:0;}
+  100% {opacity:1;}
+  }  */
 
 .big-card {
   background-color: var(--card-color);
@@ -323,7 +560,7 @@ select {
 }
 
 body {
-  padding-top: 8vh;
+  padding-top: 70px;
   max-width: 100vw;
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,

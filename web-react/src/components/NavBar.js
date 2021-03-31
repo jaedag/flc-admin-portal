@@ -1,25 +1,20 @@
 import React, { useContext } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import SearchBox from './SearchBox'
 import UserProfile from './UserProfile'
 import { ChurchContext } from '../contexts/ChurchContext'
 
 export const NavBar = () => {
-  const { church, capitalise } = useContext(ChurchContext)
+  const { church, capitalise, setFilters } = useContext(ChurchContext)
+  const location = useLocation()
 
   return (
     <nav className="navbar navbar-dark navbar-expand fixed-top">
       <div className="navbar-nav">
-        {window.location.href.match(/members$/) && (
-          <Link
-            className="nav-item nav-link d-flex align-items-center flex-column d-md-none"
-            to="#"
-          >
-            <i className="fas fa-bars fa-2x  px-1" />
-          </Link>
-        )}
         <Link
-          className="nav-item nav-link d-flex align-items-center flex-column"
+          className={`nav-item nav-link d-flex align-items-center flex-column ${
+            location.pathname === '/' && 'active'
+          }`}
           to="/"
         >
           <span className="fas fa-home fa-2x  px-1" />
@@ -28,7 +23,7 @@ export const NavBar = () => {
         {church.church && (
           <Link
             className={`nav-item nav-link d-flex align-items-center flex-column ${
-              window.location.href.endsWith('dashboard') && 'active'
+              location.pathname.endsWith('dashboard') && 'active'
             }`}
             to="/dashboard"
           >
@@ -36,9 +31,18 @@ export const NavBar = () => {
             <span className="d-none d-md-inline">Bishop</span>
           </Link>
         )}
-        {!window.location.href.endsWith('members') && church.church ? (
+        {!location.pathname.endsWith('members') && church.church ? (
           <Link
             className="nav-item nav-link d-flex align-items-center flex-column"
+            onClick={() => {
+              setFilters({
+                gender: '',
+                maritalStatus: '',
+                occupation: '',
+                leaderRank: [],
+                ministry: '',
+              })
+            }}
             to="/members"
           >
             <span className="fas fa-users fa-2x px-1" />
@@ -48,7 +52,7 @@ export const NavBar = () => {
           <div className="d-none d-md-block">
             <Link
               className={`nav-item nav-link d-flex align-items-center flex-column ${
-                window.location.href.endsWith('members') && 'active'
+                location.pathname.endsWith('members') && 'active'
               }`}
               to="/members"
             >
@@ -62,7 +66,7 @@ export const NavBar = () => {
           <>
             <Link
               className={`nav-item nav-link d-flex align-items-center flex-column ${
-                window.location.href.endsWith('displayall') && 'active'
+                location.pathname.endsWith('displayall') && 'active'
               }`}
               to={`/${church.church}/displayall`}
             >
@@ -74,7 +78,7 @@ export const NavBar = () => {
 
             <Link
               className={`nav-item nav-link d-flex align-items-center flex-column ${
-                window.location.href.endsWith('display-sontas') && 'active'
+                location.pathname.endsWith('display-sontas') && 'active'
               }`}
               to={`/${church.church}/display-sontas`}
             >
@@ -83,9 +87,17 @@ export const NavBar = () => {
             </Link>
           </>
         )}
+        {location.pathname.endsWith('members') && (
+          <Link
+            className={`nav-item nav-link d-flex align-items-center flex-column d-md-none`}
+            to="/filter-members"
+          >
+            <i className="fas fa-filter fa-2x  px-1" />
+          </Link>
+        )}
         <Link
           className={`nav-item nav-link d-flex align-items-center flex-column d-md-none ${
-            window.location.href.endsWith('member-search') && 'active'
+            location.pathname.endsWith('member-search') && 'active'
           }`}
           to="/member-search"
         >

@@ -1,27 +1,60 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import Autosuggest from 'react-autosuggest'
 import { useQuery } from '@apollo/client'
 import { ErrorMessage } from 'formik'
 import TextError from './TextError'
 import { useHistory } from 'react-router-dom'
 import { GLOBAL_SEARCH } from '../../queries/SearchQuery'
-import { MemberContext } from '../../contexts/MemberContext'
 import { ChurchContext } from '../../contexts/ChurchContext'
 
 function FormikSearchbox(props) {
-  const { label, name, dataset, placeholder, setFieldValue } = props
+  const { label, name, placeholder, setFieldValue } = props
 
   const [searchString, setSearchString] = useState('')
   const [suggestions, setSuggestions] = useState([])
-  const { setMemberID } = useContext(MemberContext)
-  const { determineChurch } = useContext(ChurchContext)
+  const { clickCard } = useContext(ChurchContext)
+  const [debouncedText, setDebouncedText] = useState('')
   const history = useHistory()
 
-  const { data } = useQuery(GLOBAL_SEARCH, {
+  let combinedData
+  useQuery(GLOBAL_SEARCH, {
     variables: {
-      searchKey: searchString,
+      searchKey: debouncedText.trim(),
+    },
+    onCompleted: (data) => {
+      combinedData = [
+        ...data.globalMemberSearch,
+        ...data.globalCampusSearch,
+        ...data.globalTownSearch,
+        ...data.globalSontaSearch,
+        ...data.globalCentreSearch,
+        ...data.globalBacentaSearch,
+      ]
+
+      setSuggestions(
+        combinedData.slice(0, 10).map((row) => ({
+          name: row.name,
+          __typename: row.__typename,
+          firstName: row.firstName,
+          lastName: row.lastName,
+          centre: row.centre,
+          town: row.town,
+          campus: row.campus,
+          bishop: row.bishop,
+          id: row.id,
+        }))
+      )
     },
   })
+
+  useEffect(() => {
+    const timerId = setTimeout(() => {
+      setDebouncedText(searchString)
+    }, 200)
+    return () => {
+      clearTimeout(timerId)
+    }
+  }, [searchString])
 
   return (
     <div>
@@ -44,19 +77,21 @@ function FormikSearchbox(props) {
             setSuggestions([])
           }
           try {
-            // console.log(data)
-            setSuggestions(
-              data[`${dataset}`].map((row) => ({
-                firstName: row.firstName,
-                lastName: row.lastName,
-                id: row.id,
-                bacenta: row.bacenta,
-                townBishop: row.townBishop,
-                campusBishop: row.campusBishop,
-                townGS0: row.townGSO,
-                campusGSO: row.campusGSO,
-              }))
-            )
+            // setSuggestions(
+            //   combinedData.map((row) => ({
+            //     name: row.name,
+            //     __typename: row.__typename,
+            //     firstName: row.firstName,
+            //     lastName: row.lastName,
+            //     id: row.id,
+            //     bacenta: row.bacenta,
+            //     townBishop: row.townBishop,
+            //     campusBishop: row.campusBishop,
+            //     townGS0: row.leadsTown,
+            //     leadsCampus: row.leadsCampus,
+            //   }))
+            // )
+            // console.log(suggestions)
           } catch (error) {
             setSuggestions([])
           }
@@ -68,18 +103,30 @@ function FormikSearchbox(props) {
           if (method === 'enter') {
             event.preventDefault()
           }
-
-          determineChurch(suggestion)
-          setMemberID(suggestion.id)
-          history.push('/member/displaydetails')
           setFieldValue(`${name}`, suggestion.id)
+          clickCard(suggestion)
+          history.push(`/${suggestion.__typename.toLowerCase()}/displaydetails`)
         }}
         getSuggestionValue={(suggestion) =>
-          `${suggestion.firstName} ${suggestion.lastName}`
+          `${
+            suggestion.name
+              ? suggestion.name
+              : suggestion.firstName + ' ' + suggestion.lastName
+          }`
         }
         highlightFirstSuggestion={true}
         renderSuggestion={(suggestion) => (
-          <div className="combobox-control">{`${suggestion.firstName} ${suggestion.lastName}`}</div>
+          <div className="combobox-control">
+            <span>{`${
+              suggestion.name
+                ? suggestion.name
+                : suggestion.firstName + ' ' + suggestion.lastName
+            }`}</span>
+            <br />
+            {suggestion.__typename && (
+              <small className="text-secondary">{`${suggestion?.__typename}`}</small>
+            )}
+          </div>
         )}
       />
       <ErrorMessage name={name} component={TextError} />

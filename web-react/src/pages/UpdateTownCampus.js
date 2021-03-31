@@ -217,7 +217,7 @@ export const UpdateTownCampus = () => {
                             name="leaderName"
                             placeholder={`Name of ${capitalise(
                               church.church
-                            )} GSO`}
+                            )} CO`}
                           />
                         </div>
                       </div>

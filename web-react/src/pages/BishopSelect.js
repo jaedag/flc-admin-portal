@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { useQuery } from '@apollo/client'
 import { useHistory } from 'react-router-dom'
 import { ChurchContext } from '../contexts/ChurchContext'
@@ -7,15 +7,47 @@ import { NavBar } from '../components/NavBar'
 import Spinner from '../components/Spinner'
 import { AuthButton } from '../components/DashboardButton'
 import Logo from '../img/flc-logo-small.png'
+import { MemberContext } from '../contexts/MemberContext'
+import { GET_LOGGED_IN_USER } from '../queries/SearchQuery'
+import { useAuth0 } from '@auth0/auth0-react'
 
 const BishopSelect = () => {
   const { determineChurch, setBishopId } = useContext(ChurchContext)
+  const { currentUser, setCurrentUser } = useContext(MemberContext)
+  const { user, isAuthenticated } = useAuth0()
   const { data, loading } = useQuery(GET_BISHOPS)
+  useQuery(GET_LOGGED_IN_USER, {
+    variables: {
+      email: currentUser?.email,
+    },
+    onCompleted: (data) => {
+      determineChurch(data.memberByEmail)
+      setCurrentUser({
+        ...currentUser,
+        id: data.memberByEmail.id,
+        firstName: data.memberByEmail.firstName,
+        lastName: data.memberByEmail.lastName,
+        constituency: data.memberByEmail.bacenta.centre?.town
+          ? data.memberByEmail.bacenta.centre?.town.id
+          : data.memberByEmail.bacenta.centre?.campus.id,
+      })
+    },
+  })
+  useEffect(() => {
+    setCurrentUser({
+      ...currentUser,
+      email: user?.email,
+      roles: user ? user[`https://flcadmin.netlify.app/roles`] : [],
+    })
+    // eslint-disable-next-line
+  }, [isAuthenticated])
+
   const history = useHistory()
 
   if (loading) {
     return (
       <React.Fragment>
+        <NavBar />
         <div className="container text-center my-5  d-none d-lg-block">
           <img
             src={Logo}
@@ -71,7 +103,10 @@ const BishopSelect = () => {
             className="img-fluid mx-auto"
             style={{ maxWidth: '30%' }}
           />
-          <h3>FLC Admin Dashboard</h3>
+          {currentUser?.roles.includes('superadmin') && (
+            <h3>FLC Admin Dashboard</h3>
+          )}
+
           <h5 className="text-secondary">Select Your Bishop</h5>
         </div>
         <div className="row row-cols-sm-1 row-cols-lg-4 d-flex justify-content-center px-5">

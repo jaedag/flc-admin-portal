@@ -14,8 +14,8 @@ export const DisplayAllSontas = () => {
     townId,
     campusId,
     setTownId,
-    setCampusID,
-    setSontaID,
+    setCampusId,
+    setSontaId,
   } = useContext(ChurchContext)
 
   const { data: townCentreData, loading: townLoading } = useQuery(
@@ -45,7 +45,7 @@ export const DisplayAllSontas = () => {
                 <Link
                   to={`/${church.church}/displaydetails`}
                   onClick={() => {
-                    setCampusID(campusId)
+                    setCampusId(campusId)
                   }}
                 >
                   {' '}
@@ -86,7 +86,7 @@ export const DisplayAllSontas = () => {
 
           <DisplayChurchList
             data={campusCentreData.campusSontaList}
-            setter={setSontaID}
+            setter={setSontaId}
             churchType="Sonta"
           />
         </div>
@@ -144,7 +144,7 @@ export const DisplayAllSontas = () => {
 
           <DisplayChurchList
             data={townCentreData.townSontaList}
-            setter={setSontaID}
+            setter={setSontaId}
             churchType="Sonta"
           />
         </div>

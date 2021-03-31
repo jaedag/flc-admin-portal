@@ -3,42 +3,39 @@ import { useQuery } from '@apollo/client'
 import { DisplayChurchDetails } from '../components/DisplayChurchDetails'
 import { NavBar } from '../components/NavBar'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
-import { DISPLAY_BACENTA } from '../queries/DisplayQueries'
+import { DISPLAY_SONTA } from '../queries/DisplayQueries'
 import { ChurchContext } from '../contexts/ChurchContext'
 
 export const DisplaySontaDetails = () => {
-  const { id } = useContext(ChurchContext)
+  const { sontaId } = useContext(ChurchContext)
 
-  const {
-    data: sontaData,
-    error: sontaError,
-    loading: sontaLoading,
-  } = useQuery(DISPLAY_BACENTA, {
-    variables: { id: id },
+  const { data: sontaData, loading: sontaLoading } = useQuery(DISPLAY_SONTA, {
+    variables: { id: sontaId },
   })
 
-  if (sontaError) {
-    return <ErrorScreen />
-  } else if (sontaLoading) {
+  if (sontaLoading) {
     // Spinner Icon for Loading Screens
     return <LoadingScreen />
+  } else if (sontaData) {
+    return (
+      <div>
+        <NavBar />
+        <DisplayChurchDetails
+          name={sontaData.displaySonta?.name}
+          leaderTitle="Sonta Leader"
+          leaderName={`${sontaData.displaySonta?.leader.firstName} ${sontaData.displaySonta?.leader.lastName}`}
+          leaderId={sontaData.displaySonta?.leader.id}
+          membership={sontaData.sontaMemberCount}
+          churchHeading="No of Basonta Leaders"
+          churchNo={sontaData.sontaBasontaLeaderList.length}
+          subChurch=""
+          subChurchSetter=""
+          churchType={`Sonta`}
+          buttons={['']}
+        />
+      </div>
+    )
+  } else {
+    return <ErrorScreen />
   }
-  return (
-    <div>
-      <NavBar />
-      <DisplayChurchDetails
-        name={sontaData.displayBacenta.name}
-        leaderTitle="Bacenta Leader"
-        leaderName={`${sontaData.displayBacenta.leader.firstName} ${sontaData.displayBacenta.leader.lastName}`}
-        leaderId={sontaData.displayBacenta.leader.id}
-        membership={sontaData.bacentaMemberCount}
-        churchHeading="No of Bacentas"
-        churchNo="2"
-        subChurch="Bacenta"
-        subChurchSetter=""
-        churchType="Bacenta"
-        buttons={['']}
-      />
-    </div>
-  )
 }

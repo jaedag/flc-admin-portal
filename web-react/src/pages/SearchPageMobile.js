@@ -37,6 +37,7 @@ export const SearchPageMobile = () => {
       ...searchData.globalMemberSearch,
       ...searchData.globalCampusSearch,
       ...searchData.globalTownSearch,
+      ...searchData.globalSontaSearch,
       ...searchData.globalCentreSearch,
       ...searchData.globalBacentaSearch,
     ]

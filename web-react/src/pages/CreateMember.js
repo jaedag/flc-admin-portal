@@ -38,7 +38,15 @@ export const CreateMember = () => {
     ],
     pastoralAppointment: [
       {
-        title: '',
+        title: 'Pastor',
+        date: '',
+      },
+      {
+        title: 'Reverend',
+        date: '',
+      },
+      {
+        title: 'Bishop',
         date: '',
       },
     ],
@@ -58,8 +66,6 @@ export const CreateMember = () => {
     { key: 'Reverend', value: 'Reverend' },
     { key: 'Bishop', value: 'Bishop' },
   ]
-
-  let titleOptionsMutable = titleOptions
 
   const { phoneRegExp, parsePhoneNum, makeSelectOptions } = useContext(
     ChurchContext
@@ -132,6 +138,15 @@ export const CreateMember = () => {
     //Formatting of phone number fields
     values.phoneNumber = parsePhoneNum(values.phoneNumber)
     values.whatsappNumber = parsePhoneNum(values.whatsappNumber)
+
+    values.pastoralAppointment = values.pastoralAppointment.filter(
+      (pastoralAppointment) => {
+        if (pastoralAppointment.date) {
+          return pastoralAppointment
+        }
+        return null
+      }
+    )
 
     CreateMember({
       variables: {
@@ -360,7 +375,7 @@ export const CreateMember = () => {
                     <HeadingBar title="Pastoral Appointments (if any)" />
                     <FieldArray name="pastoralAppointment">
                       {(fieldArrayProps) => {
-                        const { push, remove, form } = fieldArrayProps
+                        const { remove, form } = fieldArrayProps
                         const { values } = form
                         const { pastoralAppointment } = values
 
@@ -373,7 +388,7 @@ export const CreateMember = () => {
                                     <FormikControl
                                       className="form-control"
                                       control="select"
-                                      options={titleOptionsMutable}
+                                      options={titleOptions}
                                       defaultOption="Title"
                                       name={`pastoralAppointment[${index}].title`}
                                     />
@@ -388,68 +403,6 @@ export const CreateMember = () => {
                                     />
                                   </div>
                                   <div className="col d-flex">
-                                    {index < 2 && (
-                                      <button
-                                        className="plus-button rounded mr-2"
-                                        type="button"
-                                        onClick={() => {
-                                          if (index < 2) {
-                                            push()
-                                            console.log(
-                                              formik.values.pastoralAppointment
-                                            )
-                                            let selectedTitles = formik.values.pastoralAppointment.map(
-                                              (pastoralRecords) => {
-                                                console.log(
-                                                  'pastoral rec',
-                                                  pastoralRecords
-                                                )
-                                                return pastoralRecords.title
-                                              }
-                                            )
-                                            console.log(
-                                              'selected',
-                                              selectedTitles
-                                            )
-                                            for (
-                                              let i = 0;
-                                              i < titleOptions.length;
-                                              i++
-                                            ) {
-                                              if (
-                                                selectedTitles.includes(
-                                                  titleOptions[i].key
-                                                )
-                                              ) {
-                                                titleOptionsMutable.splice(i, 1)
-                                              }
-                                            }
-
-                                            console.log(
-                                              'Title Options',
-                                              titleOptions
-                                            )
-                                          }
-                                        }}
-                                      >
-                                        <svg
-                                          aria-hidden="true"
-                                          focusable="false"
-                                          data-prefix="fas"
-                                          data-icon="plus"
-                                          className="svg-inline--fa fa-plus fa-w-14"
-                                          role="img"
-                                          xmlns="http://www.w3.org/2000/svg"
-                                          viewBox="0 0 448 512"
-                                        >
-                                          <path
-                                            fill="currentColor"
-                                            d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"
-                                          />
-                                        </svg>
-                                      </button>
-                                    )}
-
                                     {index > 0 && (
                                       <button
                                         className="plus-button rounded"

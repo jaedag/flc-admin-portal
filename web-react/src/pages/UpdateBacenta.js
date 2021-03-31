@@ -174,14 +174,13 @@ export const UpdateBacenta = () => {
         })
       }
 
-      //STUFF THAT IS LEFT TO DO
       //Log if the Leader Changes
       if (values.leaderWhatsapp !== initialValues.leaderWhatsapp) {
         LogBacentaHistory({
           variables: {
             bacentaId: bacentaId,
             leaderId: newLeaderInfo.id,
-            historyRecord: `${newLeaderInfo.firstName} ${newLeaderInfo.lastName} was transferred to become the new Centre Leader for ${values.bacentaName}`,
+            historyRecord: `${newLeaderInfo.firstName} ${newLeaderInfo.lastName} was transferred to become the new Bacenta Leader for ${values.bacentaName}`,
           },
         })
       }

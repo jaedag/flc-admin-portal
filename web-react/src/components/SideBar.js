@@ -12,7 +12,8 @@ export const SideBar = () => {
     gender: '',
     maritalStatus: '',
     occupation: '',
-    leaderRank: '',
+    leaderTitle: [],
+    leaderRank: [],
     ministry: '',
   }
 
@@ -21,7 +22,8 @@ export const SideBar = () => {
       gender: '',
       maritalStatus: '',
       occupation: '',
-      leaderRank: '',
+      leaderTitle: [],
+      leaderRank: [],
       ministry: '',
     })
     // eslint-disable-next-line
@@ -42,6 +44,12 @@ export const SideBar = () => {
     { key: 'Sonta Leader', value: 'Sonta Leader' },
     { key: 'Bacenta Leader', value: 'Bacenta Leader' },
     { key: 'Basonta Leader', value: 'Basonta Leader' },
+  ]
+
+  const leaderTitleOptions = [
+    { key: 'Pastors', value: 'Pastors' },
+    { key: 'Reverends', value: 'Reverends' },
+    { key: 'Bishops', value: 'Bishops' },
   ]
 
   const location = useLocation()
@@ -118,6 +126,14 @@ export const SideBar = () => {
                       options={leaderOptions}
                     />
                   </div>
+                  <div className="col pb-2">
+                    <FormikControl
+                      className="form-control"
+                      name="leaderTitle"
+                      control="checkbox"
+                      options={leaderTitleOptions}
+                    />
+                  </div>
                 </div>
               </div>
               <div className="d-flex justify-content-center">
@@ -138,6 +154,7 @@ export const SideBar = () => {
                       gender: '',
                       maritalStatus: '',
                       occupation: '',
+                      leaderTitle: [],
                       leaderRank: [],
                       ministry: '',
                     })

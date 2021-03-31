@@ -101,6 +101,66 @@ export const UPDATE_CENTRE_MUTATION = gql`
   }
 `
 
+export const ADD_CENTRE_TOWN = gql`
+  mutation AddCentreTown($townId: ID!, $centreId: ID!) {
+    AddCentreTown(from: { id: $townId }, to: { id: $centreId }) {
+      from {
+        id
+        name
+        centres {
+          id
+          name
+        }
+      }
+    }
+  }
+`
+
+export const ADD_CENTRE_CAMPUS = gql`
+  mutation AddCentreCampus($campusId: ID!, $centreId: ID!) {
+    AddCentreCampus(from: { id: $campusId }, to: { id: $centreId }) {
+      from {
+        id
+        name
+        centres {
+          id
+          name
+        }
+      }
+    }
+  }
+`
+
+export const REMOVE_CENTRE_TOWN = gql`
+  mutation RemoveCentreTown($townId: ID!, $centreId: ID!) {
+    RemoveCentreTown(from: { id: $townId }, to: { id: $centreId }) {
+      from {
+        id
+        name
+        centres {
+          id
+          name
+        }
+      }
+    }
+  }
+`
+
+export const REMOVE_CENTRE_CAMPUS = gql`
+  mutation RemoveCentreCampus($campusId: ID!, $centreId: ID!) {
+    RemoveCentreCampus(from: { id: $campusId }, to: { id: $centreId }) {
+      from {
+        id
+        name
+        centres {
+          id
+          name
+        }
+      }
+    }
+  }
+`
+
 export const ADD_CENTRE_BACENTAS = gql`
   mutation AddCentreBacentas($centreId: ID!, $bacentaId: ID!) {
     AddCentreBacentas(from: { id: $centreId }, to: { id: $bacentaId }) {

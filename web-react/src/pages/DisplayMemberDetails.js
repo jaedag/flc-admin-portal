@@ -61,6 +61,7 @@ export const DisplayMemberDetails = () => {
         member.townBishop.map((church) => {
           rank.bishop.push({
             name: church.name,
+            church: church,
             id: church.id,
             __typename: church.__typename,
           })
@@ -71,6 +72,7 @@ export const DisplayMemberDetails = () => {
         member.campusBishop.map((church) => {
           rank.bishop.push({
             name: church.name,
+            church: church,
             id: church.id,
             __typename: church.__typename,
           })
@@ -85,6 +87,10 @@ export const DisplayMemberDetails = () => {
 
       rank[`${ch}Leader`].push({
         name: church.name,
+        centre: church.centre,
+        campus: church.campus,
+        town: church.town,
+        bishop: church.bishop,
         id: church.id,
         link: '',
         __typename: church.__typename,
@@ -107,6 +113,9 @@ export const DisplayMemberDetails = () => {
   }
   if (memberData.displayMember.leadsSonta[0]) {
     updateRank(memberData.displayMember, 'sonta')
+  }
+  if (memberData.displayMember.leadsBasonta[0]) {
+    updateRank(memberData.displayMember, 'basonta')
   }
   if (memberData.displayMember.leadsMinistry[0]) {
     updateRank(memberData.displayMember, 'ministry')

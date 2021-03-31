@@ -1,25 +1,17 @@
 import React, { useContext, useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { useQuery } from '@apollo/client'
-import { NavBar } from '../components/NavBar'
-import { SideBar } from '../components/SideBar'
-import { MemberTable } from '../components/MemberTable'
-import { GET_BISHOP_MEMBERS } from '../queries/ListQueries'
+import { NavBar } from './NavBar'
+import { SideBar } from './SideBar'
+import { MemberTable } from './MemberTable'
 import { ChurchContext } from '../contexts/ChurchContext'
 
-export const MembersGridBishop = () => {
-  const { memberFilter, filters, bishopId } = useContext(ChurchContext)
+export const MembersGrid = (props) => {
+  const { memberData, memberError, memberLoading } = props
+  const { memberFilter, filters } = useContext(ChurchContext)
   const [offset, setOffset] = useState(0)
   const [dimensions, setDimensions] = React.useState({
     height: window.innerHeight,
     width: window.innerWidth,
-  })
-  const {
-    data: memberData,
-    error: memberError,
-    loading: memberLoading,
-  } = useQuery(GET_BISHOP_MEMBERS, {
-    variables: { id: bishopId },
   })
 
   let numberOfRecords = Math.round(
@@ -27,9 +19,7 @@ export const MembersGridBishop = () => {
       (160 * 126)
   )
   //Navbar takes 70px of the height and side bar takes 25% of the width
-  const memberDataLoaded = memberData
-    ? memberFilter(memberData?.bishopMemberList, filters)
-    : null
+  const memberDataLoaded = memberData ? memberFilter(memberData, filters) : null
 
   //debouncing function
   function debounce(fn, ms) {

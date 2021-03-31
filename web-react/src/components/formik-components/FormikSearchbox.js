@@ -26,6 +26,7 @@ function FormikSearchbox(props) {
         ...data.globalMemberSearch,
         ...data.globalCampusSearch,
         ...data.globalTownSearch,
+        ...data.globalSontaSearch,
         ...data.globalCentreSearch,
         ...data.globalBacentaSearch,
       ]

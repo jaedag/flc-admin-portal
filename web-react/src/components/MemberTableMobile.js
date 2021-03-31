@@ -3,7 +3,7 @@ import { Link, useHistory } from 'react-router-dom'
 import { useQuery } from '@apollo/client'
 import { ChurchContext } from '../contexts/ChurchContext'
 import Spinner from './Spinner'
-import { GET_BISHOP_MEMBERS } from '../queries/ListQueries'
+import { GET_BISHOP_MEMBERS } from '../queries/GridQueries'
 import userIcon from '../img/user.png'
 import { NavBar } from './NavBar'
 

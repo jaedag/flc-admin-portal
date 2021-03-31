@@ -11,67 +11,6 @@ export const ALL_MEMBERS = gql`
   }
 `
 
-export const GET_BISHOP_MEMBERS = gql`
-  query($id: ID) {
-    bishopMemberList(id: $id, orderBy: firstName_asc) {
-      id
-      firstName
-      lastName
-      pictureUrl
-      bacenta {
-        name
-      }
-      ministry {
-        name
-      }
-      maritalStatus {
-        status
-      }
-      gender {
-        gender
-      }
-      leadsBacenta {
-        name
-      }
-      leadsCentre {
-        name
-      }
-      leadsMinistry {
-        name
-      }
-      leadsSonta {
-        name
-      }
-      leadsBasonta {
-        name
-      }
-      leadsTown {
-        name
-      }
-      leadsCampus {
-        name
-      }
-      townBishop {
-        name
-      }
-      campusBishop {
-        name
-      }
-    }
-  }
-`
-
-export const GET_BISHOP_PASTORS = gql`
-  query($id: ID) {
-    bishopPastorList(id: $id, first: 60) {
-      id
-      firstName
-      lastName
-      pictureUrl
-    }
-  }
-`
-
 export const GET_BACENTA_LEADERS = gql`
   {
     townList(firstName: $firstName, lastName: $lastName) {

@@ -60,8 +60,24 @@ type HasTitle @relation(name: "HAS_TITLE") {
   numberofTimesRemoved: Int
 }
 
-type HasHistory @relation(name: "HAS_HISTORY") {
+type HasBacentaHistory @relation(name: "HAS_HISTORY") {
   from: Bacenta
+
+  to: HistoryLog
+  pointer: Boolean
+}
+type HasCentreHistory @relation(name: "HAS_HISTORY") {
+  from: Centre
+  to: HistoryLog
+  pointer: Boolean
+}
+type HasCampusHistory @relation(name: "HAS_HISTORY") {
+  from: Campus
+  to: HistoryLog
+  pointer: Boolean
+}
+type HasTownHistory @relation(name: "HAS_HISTORY") {
+  from: Town
   to: HistoryLog
   pointer: Boolean
 }
@@ -92,6 +108,9 @@ type TimeGraph {
 type ServiceRecords {
   created_at: DateTime
   bacenta: Bacenta @relation(name: "HAS_RECORDS", direction: IN)
+  centre: Centre @relation(name: "HAS_RECORDS", direction: IN)
+  campus: Campus @relation(name: "HAS_RECORDS", direction: IN)
+  town: Town @relation(name: "HAS_RECORDS", direction: IN)
   serviceDate: TimeGraph @relation(name: "SERVICE_DATE", direction: OUT)
   attendance: Int
   income: Float
@@ -107,6 +126,9 @@ type HistoryLog {
   created_at: TimeGraph @relation(name: "RECORDED_ON", direction: OUT)
   leaders: [Member] @relation(name: "HAS_HISTORY", direction: IN)
   Bacenta: [Bacenta] @relation(name: "HAS_HISTORY", direction: IN)
+  Centre: [Centre] @relation(name: "HAS_HISTORY", direction: IN)
+  Campus: [Campus] @relation(name: "HAS_HISTORY", direction: IN)
+  Town: [Town] @relation(name: "HAS_HISTORY", direction: IN)
 }
 
 # Campus-Centre, Town-Centre
@@ -118,6 +140,9 @@ type Campus {
   centres: [Centre] @relation(name: "HAS_CENTRE", direction: OUT)
   bishop: Member @relation(name: "HAS_CAMPUS", direction: IN)
   admin: Member @relation(name: "IS_ADMIN_FOR", direction: IN)
+  history: [HasCampusHistory]
+  serviceRecords: [ServiceRecords]
+    @relation(name: "HAS_RECORDS", direction: OUT)
 }
 
 type Town {
@@ -128,6 +153,9 @@ type Town {
   centres: [Centre] @relation(name: "HAS_CENTRE", direction: OUT)
   bishop: Member @relation(name: "HAS_TOWN", direction: IN)
   admin: Member @relation(name: "IS_ADMIN_FOR", direction: IN)
+  history: [HasTownHistory]
+  serviceRecords: [ServiceRecords]
+    @relation(name: "HAS_RECORDS", direction: OUT)
 }
 
 type Centre {
@@ -138,6 +166,9 @@ type Centre {
   basontas: Basonta @relation(name: "HAS_BASONTA", direction: OUT)
   town: Town @relation(name: "HAS_CENTRE", direction: IN)
   campus: Campus @relation(name: "HAS_CENTRE", direction: IN)
+  history: [HasCentreHistory]
+  serviceRecords: [ServiceRecords]
+    @relation(name: "HAS_RECORDS", direction: OUT)
 }
 
 # Shared Units: Bacenta, Bacenta, Sonta
@@ -149,7 +180,7 @@ type Bacenta {
   leader: Member @relation(name: "LEADS", direction: IN)
   members: [Member] @relation(name: "BELONGS_TO", direction: IN)
   meetingDay: ServiceDay @relation(name: "MEETS_ON_DAY", direction: OUT)
-  history: [HasHistory]
+  history: [HasBacentaHistory]
   serviceRecords: [ServiceRecords]
     @relation(name: "HAS_RECORDS", direction: OUT)
 }
@@ -196,22 +227,27 @@ type Query {
   bishopsListTown: [Member]
     @cypher(statement: "MATCH ()<-[:HAS_TOWN]-(m:Member) RETURN DISTINCT m")
   ministryList: [Ministry] @cypher(statement: "MATCH (m:Ministry) RETURN m")
-  memberCount: Int! @cypher(statement: "MATCH (m:Member) RETURN COUNT(m)")
-  centreCount: Int! @cypher(statement: "MATCH (b:Centre) RETURN COUNT(c)")
-  bacentaCount: Int! @cypher(statement: "MATCH (b:Bacenta) RETURN COUNT(b)")
+  memberCount: Int!
+    @cypher(statement: "MATCH (m:Member) RETURN COUNT(DISTINCT m)")
+  centreCount: Int!
+    @cypher(statement: "MATCH (b:Centre) RETURN COUNT(DISTINCT c)")
+  bacentaCount: Int!
+    @cypher(statement: "MATCH (b:Bacenta) RETURN COUNT( DISTINCT b)")
+  federalPastorList(id: ID): [Member]
+    @cypher(statement: "MATCH (t:Title)<-[:HAS_TITLE]-(m:Member) RETURN m")
 
   #At the Episcopal Level
   bishopCampusTownCount(id: ID): Int!
     @cypher(
-      statement: "MATCH (:Member {id: $id})-[:HAS_TOWN|:HAS_CAMPUS]->(t) RETURN COUNT(t)"
+      statement: "MATCH (:Member {id: $id})-[:HAS_TOWN|:HAS_CAMPUS]->(t) RETURN COUNT(DISTINCT t)"
     )
   bishopCentreCount(id: ID): Int!
     @cypher(
-      statement: "MATCH (:Member {id: $id})-[:HAS_TOWN|:HAS_CAMPUS]->()-[:HAS_CENTRE]-(c) RETURN COUNT(c)"
+      statement: "MATCH (:Member {id: $id})-[:HAS_TOWN|:HAS_CAMPUS]->()-[:HAS_CENTRE]-(c) RETURN COUNT(DISTINCT c)"
     )
   bishopBacentaCount(id: ID): Int!
     @cypher(
-      statement: "MATCH (:Member {id: $id})-[:HAS_TOWN|:HAS_CAMPUS]->()-[:HAS_CENTRE]-()-[:HAS_BACENTA]-(b) RETURN COUNT(b)"
+      statement: "MATCH (:Member {id: $id})-[:HAS_TOWN|:HAS_CAMPUS]->()-[:HAS_CENTRE]-()-[:HAS_BACENTA]-(b) RETURN COUNT(DISTINCT b)"
     )
   bishopBacentaDropdown(id: ID, bacentaName: String): [Bacenta]
     @cypher(
@@ -228,23 +264,23 @@ type Query {
     @cypher(
       statement: """
       MATCH (:Member {id: $id})-[:HAS_TOWN|:HAS_CAMPUS]->()-[:HAS_CENTRE]->()-[:HAS_BACENTA]->()<-[:BELONGS_TO]-(m:Member)-[:BELONGS_TO]->(s)
-      RETURN COUNT(m)
+      RETURN COUNT(DISTINCT m)
       """
     )
   bishopSontaMemberCountList(bishopId: ID): [Ministry]!
     @cypher(
       statement: """
       MATCH (:Member {id: $bishopId})-[:HAS_TOWN|:HAS_CAMPUS]->()-[:HAS_CENTRE]->()-[:HAS_BACENTA]->()<-[:BELONGS_TO]-(m:Member)-[:BELONGS_TO]->(s:Ministry)
-      RETURN s, COUNT(m)
+      RETURN s, COUNT(DISTINCT m)
       """
     )
   bishopPastorCount(id: ID): Int!
     @cypher(
-      statement: "MATCH (t:Title)<-[:HAS_TITLE]-(m:Member)-[:BELONGS_TO]->()<-[:HAS_BACENTA]-()-[:HAS_CENTRE]-()-[:HAS_TOWN|:HAS_CAMPUS]-(:Member {id: $id}) RETURN COUNT(m)"
+      statement: "MATCH (t:Title)<-[:HAS_TITLE]-(m:Member)-[:BELONGS_TO]->()<-[:HAS_BACENTA]-()-[:HAS_CENTRE]-()-[:HAS_TOWN|:HAS_CAMPUS]-(:Member {id: $id}) RETURN COUNT( DISTINCT m)"
     )
   bishopPastorList(id: ID): [Member]
     @cypher(
-      statement: "MATCH (t:Title)<-[:HAS_TITLE]-(m:Member)-[:BELONGS_TO]->()<-[:HAS_BACENTA]-()-[:HAS_CENTRE]-()-[:HAS_TOWN|:HAS_CAMPUS]-(:Member {id: $id}) RETURN m"
+      statement: "MATCH (t:Title)<-[:HAS_TITLE]-(m:Member)-[:BELONGS_TO]->()<-[:HAS_BACENTA]-()<-[:HAS_CENTRE]-()<-[:HAS_TOWN|:HAS_CAMPUS]-(:Member {id: $id}) RETURN m"
     )
   bishopMemberList(id: ID): [Member]!
     @cypher(
@@ -263,7 +299,21 @@ type Query {
       MATCH (t)-[:HAS_CENTRE]->(com)
       MATCH (com)-[:HAS_BACENTA]->(c)
       MATCH (c)<-[:BELONGS_TO*]-(m:Member)
-      RETURN COUNT(m)
+      RETURN COUNT(DISTINCT m)
+      """
+    )
+  campusMemberList(id: ID): [Member]
+    @cypher(
+      statement: """
+      MATCH (:Campus {id:$id})-[:HAS_CENTRE]->()-[:HAS_BACENTA]->()<-[:BELONGS_TO]-(c:Member)
+      RETURN DISTINCT c
+      """
+    )
+  townMemberList(id: ID): [Member]
+    @cypher(
+      statement: """
+      MATCH (:Town {id:$id})-[:HAS_CENTRE]->()-[:HAS_BACENTA]->()<-[:BELONGS_TO]-(t:Member)
+      RETURN DISTINCT t
       """
     )
 
@@ -300,11 +350,11 @@ type Query {
     )
   townMemberCount(id: ID): Int!
     @cypher(
-      statement: "MATCH (:Town {id:$id})-[]-(:Centre)-[]->(:Bacenta)<-[:BELONGS_TO]-(m:Member) RETURN COUNT(m)"
+      statement: "MATCH (:Town {id:$id})-[]-(:Centre)-[]->(:Bacenta)<-[:BELONGS_TO]-(m:Member) RETURN COUNT(DISTINCT m)"
     )
   townSontaMemberCount(id: ID): Int!
     @cypher(
-      statement: "MATCH (:Town {id: $id})-[]-(:Centre)-[]->(:Bacenta)<-[:BELONGS_TO]-(m:Member) MATCH (m)-[:BELONGS_TO]->(:Ministry) RETURN COUNT(m)"
+      statement: "MATCH (:Town {id: $id})-[]-(:Centre)-[]->(:Bacenta)<-[:BELONGS_TO]-(m:Member) MATCH (m)-[:BELONGS_TO]->(:Ministry) RETURN COUNT(DISTINCT m)"
     )
 
   #At the Campus Level
@@ -340,11 +390,11 @@ type Query {
     )
   campusMemberCount(id: ID): Int!
     @cypher(
-      statement: "MATCH (:Campus {id:$id})-[]-(:Centre)-[]->(:Bacenta)<-[:BELONGS_TO]-(m:Member) RETURN COUNT(m)"
+      statement: "MATCH (:Campus {id:$id})-[]-(:Centre)-[]->(:Bacenta)<-[:BELONGS_TO]-(m:Member) RETURN COUNT(DISTINCT m)"
     )
   campusSontaMemberCount(id: ID): Int!
     @cypher(
-      statement: "MATCH (:Campus {id: $id})-[]-(:Centre)-[]->(:Bacenta)<-[:BELONGS_TO]-(m:Member) MATCH (m)-[:BELONGS_TO]->(:Ministry) RETURN COUNT(m)"
+      statement: "MATCH (:Campus {id: $id})-[]-(:Centre)-[]->(:Bacenta)<-[:BELONGS_TO]-(m:Member) MATCH (m)-[:BELONGS_TO]->(:Ministry) RETURN COUNT(DISTINCT m)"
     )
 
   #At the Centre Level
@@ -372,7 +422,14 @@ type Query {
     )
   centreMemberCount(id: ID): Int!
     @cypher(
-      statement: "MATCH (:Centre {id:$id})-[:HAS_BACENTA]->(c:Bacenta)<-[:BELONGS_TO]-(m:Member) RETURN COUNT(m)"
+      statement: "MATCH (:Centre {id:$id})-[:HAS_BACENTA]->(c:Bacenta)<-[:BELONGS_TO]-(m:Member) RETURN COUNT(DISTINCT m)"
+    )
+  centreMemberList(id: ID): [Member]
+    @cypher(
+      statement: """
+      MATCH (:Centre {id: $id})-[:HAS_BACENTA]->()<-[:BELONGS_TO]-(m:Member)
+      RETURN m
+      """
     )
 
   #At the Bacenta Level
@@ -380,7 +437,14 @@ type Query {
     @cypher(statement: "MATCH (c:Bacenta{id:$id}) RETURN c")
   bacentaMemberCount(id: ID): Int
     @cypher(
-      statement: "MATCH (c:Bacenta{id:$id}) MATCH (c)<-[:BELONGS_TO]-(m:Member) RETURN COUNT(m)"
+      statement: "MATCH (c:Bacenta{id:$id}) MATCH (c)<-[:BELONGS_TO]-(m:Member) RETURN COUNT(DISTINCT m)"
+    )
+  bacentaMemberList(id: ID): [Member]
+    @cypher(
+      statement: """
+      MATCH (:Bacenta {id:$id})<-[:BELONGS_TO]-(m:Member)
+      RETURN m
+      """
     )
   bacentaDropdown(bacentaName: String): [Bacenta]
     @cypher(
@@ -401,6 +465,8 @@ type Query {
     )
 
   #At the Sonta Level
+  displaySonta(id: ID): Sonta
+    @cypher(statement: "MATCH (s:Sonta {id: $id}) RETURN s")
   sontaList: [Sonta] @cypher(statement: "MATCH (s:Sonta) RETURN s")
   townSontaLeader(bishopId: ID): [Member]
     @cypher(
@@ -411,6 +477,31 @@ type Query {
       MATCH (n)-[:HAS_SONTA]->(s:Sonta {id:$sontaId})<-[:LEADS]-(l:Member)
       WHERE s.name CONTAINS e.name
          RETURN DISTINCT l
+      """
+    )
+  sontaMemberList(id: ID): [Member]
+    @cypher(
+      statement: """
+      MATCH (s:Sonta {id: $id})
+      MATCH (s)<-[:HAS_SONTA]-()-[:HAS_CENTRE]->()-[:HAS_BACENTA]->()<-[:BELONGS_TO]-(m:Member)
+      RETURN m
+      """
+    )
+  sontaMemberCount(id: ID): Int!
+    @cypher(
+      statement: """
+      MATCH (s:Sonta {id: $id})
+      MATCH (s)<-[:HAS_SONTA]-()-[:HAS_CENTRE]->()-[:HAS_BACENTA]->()<-[:BELONGS_TO]-(m:Member)
+      RETURN COUNT(m)
+      """
+    )
+  sontaBasontaLeaderList(id: ID): [Member]
+    @cypher(
+      statement: """
+      MATCH (s:Sonta {id: $id})
+      MATCH (b:Basonta)<-[:HAS_BASONTA]-(s)
+      MATCH (b)<-[:LEADS]-(m)
+      RETURN m
       """
     )
 
@@ -458,6 +549,15 @@ type Query {
     @cypher(
       statement: """
       MATCH (c:Campus)
+      WHERE toLower(c.name) STARTS WITH toLower($searchKey)
+      OR toLower(c.name) CONTAINS toLower($searchKey)
+      RETURN c
+      """
+    )
+  globalSontaSearch(searchKey: String!): [Sonta]
+    @cypher(
+      statement: """
+      MATCH (c:Sonta)
       WHERE toLower(c.name) STARTS WITH toLower($searchKey)
       OR toLower(c.name) CONTAINS toLower($searchKey)
       RETURN c
@@ -1007,8 +1107,6 @@ type Mutation {
       CALL{
         WITH log
         WITH log WHERE $leaderId IS NOT NULL
-      CREATE (log:HistoryLog {id:apoc.create.uuid()})
-        WITH log
       MATCH (l:Member {id: $leaderId})
         SET log :ServiceLog
         WITH log, l
@@ -1041,6 +1139,61 @@ type Mutation {
       }
 
       RETURN b
+      """
+    )
+  LogCentreHistory(
+    centreId: ID!
+    historyRecord: String
+    leaderId: ID
+    oldTownId: ID
+    newTownId: ID
+  ): Centre
+    @cypher(
+      statement: """
+      MATCH  (c:Centre {id: $centreId})
+      CREATE (log:HistoryLog {id: apoc.create.uuid()})
+        SET log.historyRecord = $historyRecord,
+          log.timeStamp = time()
+      MERGE (t:TimeGraph {date: date()})
+      MERGE (c)-[r:HAS_HISTORY]->(log)
+      MERGE (log)-[:RECORDED_ON]->(t)
+
+      WITH log,c
+      CALL{
+        WITH log
+        WITH log WHERE $leaderId IS NOT NULL
+      MATCH (l:Member {id: $leaderId})
+        SET log :ServiceLog
+        WITH log, l
+      OPTIONAl MATCH ()-[r0:HAS_HISTORY]->(log)
+        SET r0.pointer = false
+        WITH log,l
+      CREATE (l)-[r:HAS_HISTORY]->(log)
+         SET r.pointer = true
+         WITH log
+      RETURN COUNT(log)
+      }
+
+
+      WITH log,c
+      CALL{
+        WITH log
+        WITH log WHERE $oldTownId IS NOT NULL
+        MATCH (t:Town {id: $oldTownId})
+        MERGE (t)-[:HAS_HISTORY]->(log)
+        RETURN COUNT(log)
+      }
+
+      WITH log,c
+      CALL{
+        WITH log
+        WITH log WHERE $newTownId IS NOT NULL
+        MATCH (t:Centre {id: $newTownId})
+        MERGE (t)-[:HAS_HISTORY]->(log)
+        RETURN COUNT(log)
+      }
+
+      RETURN c
       """
     )
 }

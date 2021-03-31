@@ -13,8 +13,11 @@ import { Auth0Provider, useAuth0 } from '@auth0/auth0-react'
 import './index.css'
 import BishopSelect from './pages/BishopSelect'
 import BishopDashboard from './pages/BishopDashboard'
-import { MembersGridBishop } from './pages/MembersGridBishop'
-import { PastorsGrid } from './pages/PastorsGrid'
+import { GridBishopMembers } from './pages/GridPages/GridBishopMembers'
+import { GridCampusTownMembers } from './pages/GridPages/GridCampusTownMembers'
+import { GridCentreMembers } from './pages/GridPages/GridCentreMembers'
+import { GridBacentaMembers } from './pages/GridPages/GridBacentaMembers'
+import { GridSontaMembers } from './pages/GridPages/GridSontaMembers'
 import { SearchPageMobile } from './pages/SearchPageMobile'
 import { DisplayMemberDetails } from './pages/DisplayMemberDetails'
 import { CreateMember } from './pages/CreateMember'
@@ -119,6 +122,7 @@ const PastorsAdmin = () => {
     gender: '',
     maritalStatus: '',
     occupation: '',
+    leaderTitle: [],
     leaderRank: [],
     ministry: '',
   })
@@ -157,7 +161,7 @@ const PastorsAdmin = () => {
   const memberFilter = (memberData, filters) => {
     let filteredData = memberData
 
-    const filterFor = (data, field, subfield, criteria) => {
+    const filterFor = (data, field, subfield, criteria, subsubfield) => {
       data = data.filter((member) => {
         if (
           subfield
@@ -166,6 +170,14 @@ const PastorsAdmin = () => {
             : member[`${field}`][0]
         ) {
           return member
+        }
+
+        if (subsubfield === 'title') {
+          for (let i = 0; i < member.title.length; i++) {
+            if (member.title[i]?.Title?.title === criteria) {
+              return member
+            }
+          }
         }
         return null
       })
@@ -333,6 +345,52 @@ const PastorsAdmin = () => {
       ]
     }
 
+    //Filter for Pastors
+    let leaderTitleData = {
+      pastors: [],
+      reverends: [],
+      bishops: [],
+    }
+
+    if (filters.leaderTitle.includes('Pastors')) {
+      leaderTitleData.pastors = filterFor(
+        filteredData,
+        'title',
+        'Title',
+        'Pastor',
+        'title'
+      )
+    }
+    if (filters.leaderTitle.includes('Reverends')) {
+      leaderTitleData.reverends = filterFor(
+        filteredData,
+        'title',
+        'Title',
+        'Reverend',
+        'title'
+      )
+    }
+    if (filters.leaderTitle.includes('Bishops')) {
+      leaderTitleData.bishops = filterFor(
+        filteredData,
+        'title',
+        'Title',
+        'Bishop',
+        'title'
+      )
+    }
+
+    //Merge the Arrays without duplicates
+    if (filters.leaderTitle[0]) {
+      filteredData = [
+        ...new Set([
+          ...leaderTitleData.pastors,
+          ...leaderTitleData.reverends,
+          ...leaderTitleData.bishops,
+        ]),
+      ]
+    }
+
     //Code for finding duplicates
     // let duplicates = [...yourArray]
     // yourArrayWithoutDuplicates.forEach((item) => {
@@ -343,8 +401,6 @@ const PastorsAdmin = () => {
     // })
 
     // console.log("duplicates",duplicates) //[ 1, 5 ]
-
-    // console.log("FIltered",filteredData)
 
     return filteredData
   }
@@ -422,6 +478,9 @@ const PastorsAdmin = () => {
         setMemberID(card.id)
         sessionStorage.setItem('memberId', card.id)
         break
+      case 'Sonta':
+        setSontaId(card.id)
+        break
       case 'Bacenta':
         setBacentaId(card.id)
         break
@@ -497,9 +556,34 @@ const PastorsAdmin = () => {
                   component={MemberFiltersMobile}
                   exact
                 />
-                <Route path="/members" component={MembersGridBishop} exact />
+                <Route path="/members" component={GridBishopMembers} exact />
+                <Route
+                  path="/campus/members"
+                  component={GridCampusTownMembers}
+                  exact
+                />
+                <Route
+                  path="/town/members"
+                  component={GridCampusTownMembers}
+                  exact
+                />
+                <Route
+                  path="/centre/members"
+                  component={GridCentreMembers}
+                  exact
+                />
+                <Route
+                  path="/bacenta/members"
+                  component={GridBacentaMembers}
+                  exact
+                />
+                <Route
+                  path="/sonta/members"
+                  component={GridSontaMembers}
+                  exact
+                />
                 <Route path="/mb-members" component={MemberTableMobile} exact />
-                <Route path="/pastors" component={PastorsGrid} exact />
+                <Route path="/pastors" component={GridBishopMembers} exact />
                 <Route
                   path="/member/addmember"
                   component={CreateMember}

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/client'
 import { Formik, Form, FieldArray } from 'formik'
@@ -9,12 +9,17 @@ import { BACENTA_DROPDOWN, GET_TOWN_CENTRES } from '../queries/ListQueries'
 import {
   ADD_CENTRE_BACENTAS,
   REMOVE_BACENTA_CENTRE,
+  ADD_CENTRE_TOWN,
+  ADD_CENTRE_CAMPUS,
+  REMOVE_CENTRE_TOWN,
+  REMOVE_CENTRE_CAMPUS,
   UPDATE_CENTRE_MUTATION,
 } from '../queries/UpdateMutations'
 import { NavBar } from '../components/NavBar'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
 import { ChurchContext } from '../contexts/ChurchContext'
 import { DISPLAY_CENTRE } from '../queries/DisplayQueries'
+import { LOG_CENTRE_HISTORY } from '../queries/LogMutations'
 
 export const UpdateCentre = () => {
   const {
@@ -35,6 +40,7 @@ export const UpdateCentre = () => {
     variables: { id: centreId },
   })
 
+  const [newLeaderInfo, setNewLeaderInfo] = useState({})
   const history = useHistory()
 
   const initialValues = {
@@ -59,6 +65,9 @@ export const UpdateCentre = () => {
   })
 
   const [UpdateCentre] = useMutation(UPDATE_CENTRE_MUTATION, {
+    onCompleted: (updatedInfo) => {
+      setNewLeaderInfo(updatedInfo.UpdateCentre?.leader)
+    },
     refetchQueries: [
       { query: DISPLAY_CENTRE, variables: { id: centreId } },
       { query: GET_TOWN_CENTRES, variables: { id: townId } },
@@ -68,8 +77,55 @@ export const UpdateCentre = () => {
       },
     ],
   })
+  const [LogCentreHistory] = useMutation(LOG_CENTRE_HISTORY, {
+    onCompleted: (newLog) => {
+      newLog.LogCentreHistory.history.map((history) =>
+        console.log('History ', history.HistoryLog)
+      )
+    },
+    refetchQueries: [{ query: DISPLAY_CENTRE, variables: { id: centreId } }],
+  })
+
   const [AddCentreBacentas] = useMutation(ADD_CENTRE_BACENTAS)
   const [RemoveBacentaCentre] = useMutation(REMOVE_BACENTA_CENTRE)
+  const [RemoveCentreTown] = useMutation(REMOVE_CENTRE_TOWN)
+  const [RemoveCentreCampus] = useMutation(REMOVE_CENTRE_CAMPUS)
+  const [AddCentreTown] = useMutation(ADD_CENTRE_TOWN, {
+    onCompleted: (newTown) => {
+      //After Adding the centre to a campus/town, then you log that change.
+      LogCentreHistory({
+        variables: {
+          centreId: centreId,
+          leaderId: '',
+          newTownId: newTown.AddCentreTown.from.id,
+          oldCentreId: centreData?.displayCentre?.town.id,
+          historyRecord: `${initialValues.centreName} has been moved from ${
+            centreData?.displayCentre?.town.name
+          } ${capitalise(church.church)} to ${
+            newTown.AddCentreTown.from.name
+          } ${capitalise(church.church)}`,
+        },
+      })
+    },
+  })
+  const [AddCentreCampus] = useMutation(ADD_CENTRE_CAMPUS, {
+    onCompleted: (newCampus) => {
+      //After Adding the centre to a campus/Campus, then you log that change.
+      LogCentreHistory({
+        variables: {
+          centreId: centreId,
+          leaderId: '',
+          newCampusId: newCampus.AddCentreCampus.from.id,
+          oldCentreId: centreData?.displayCentre?.Campus.id,
+          historyRecord: `${initialValues.centreName} has been moved from ${
+            centreData?.displayCentre?.Campus.name
+          } ${capitalise(church.church)} to ${
+            newCampus.AddCentreCampus.from.name
+          } ${capitalise(church.church)}`,
+        },
+      })
+    },
+  })
 
   if (centreLoading) {
     return <LoadingScreen />
@@ -87,6 +143,61 @@ export const UpdateCentre = () => {
         },
       })
 
+      //For the Logging of Stuff
+      //Log if the Leader Changes
+      if (values.leaderWhatsapp !== initialValues.leaderWhatsapp) {
+        LogCentreHistory({
+          variables: {
+            centreId: centreId,
+            leaderId: newLeaderInfo.id,
+            historyRecord: `${newLeaderInfo.firstName} ${newLeaderInfo.lastName} was transferred to become the new Bacenta Leader for ${values.bacentaName}`,
+          },
+        })
+      }
+
+      //Log If The TownCampus Changes
+      if (values.townCampusSelect !== initialValues.townCampusSelect) {
+        if (church.church === 'town') {
+          RemoveCentreTown({
+            variables: {
+              townId: initialValues.townCampusSelect,
+              centreId: centreId,
+            },
+          })
+          AddCentreTown({
+            variables: {
+              townId: values.townCampusSelect,
+              centreId: centreId,
+            },
+          })
+        } else if (church.church === 'campus') {
+          RemoveCentreCampus({
+            variables: {
+              campusId: initialValues.townCampusSelect,
+              centreId: centreId,
+            },
+          })
+          AddCentreCampus({
+            variables: {
+              campusId: values.townCampusSelect,
+              centreId: centreId,
+            },
+          })
+        }
+      }
+
+      //Log if Centre Name Changes
+      if (values.centreName !== initialValues.centreName) {
+        LogCentreHistory({
+          variables: {
+            centreId: centreId,
+            leaderId: '',
+            historyRecord: `The Centre name has been changed from ${initialValues.centreName} to ${values.centreName}`,
+          },
+        })
+      }
+
+      //For the adding and removing of bacentas
       const oldBacentaList = initialValues.bacentas.map((bacenta) => {
         return bacenta.id
       })

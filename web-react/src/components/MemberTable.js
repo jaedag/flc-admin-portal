@@ -34,7 +34,7 @@ export const MemberTable = (props) => {
     return (
       // Web View Full Screen without filters applied
       <React.Fragment>
-        <div className="container member-grid  d-none d-lg-block">
+        <div className="container member-grid d-none d-lg-block">
           <div className="row">
             {memberData.map((soul, index) => {
               if (index < offset) {
@@ -54,12 +54,12 @@ export const MemberTable = (props) => {
                   >
                     <img
                       className="card-img-top"
-                      src={soul.pictureUrl ? soul.pictureUrl : userIcon}
-                      alt={soul.firstName + ' ' + soul.lastName}
+                      src={soul?.pictureUrl ? soul.pictureUrl : userIcon}
+                      alt={soul?.firstName + ' ' + soul?.lastName}
                     />
 
                     <p className="card-title text-center pt-2">
-                      {soul.firstName + ' ' + soul.lastName}
+                      {soul?.firstName + ' ' + soul?.lastName}
                     </p>
                   </div>
                 </div>
@@ -88,21 +88,21 @@ export const MemberTable = (props) => {
                 <div className="media">
                   <img
                     className="mr-3 rounded-circle img-search"
-                    src={soul.pictureUrl ? soul.pictureUrl : userIcon}
-                    alt={`${soul.firstName} ${soul.lastName}`}
+                    src={soul?.pictureUrl ? soul.pictureUrl : userIcon}
+                    alt={`${soul?.firstName} ${soul?.lastName}`}
                   />
                   <div className="media-body">
-                    <h5 className="mt-0">{`${soul.firstName} ${soul.lastName}`}</h5>
-                    {soul.bacenta ? (
+                    <h5 className="mt-0">{`${soul?.firstName} ${soul?.lastName}`}</h5>
+                    {soul?.bacenta ? (
                       <div>
                         <span className="font-weight-bold">Bacenta:</span>{' '}
-                        {soul.bacenta.name}{' '}
+                        {soul?.bacenta.name}{' '}
                       </div>
                     ) : null}
-                    {soul.ministry && (
+                    {soul?.ministry && (
                       <div>
                         <span className="font-weight-bold">Ministry:</span>{' '}
-                        {soul.ministry.name}{' '}
+                        {soul?.ministry.name}{' '}
                       </div>
                     )}
                   </div>

@@ -8,9 +8,14 @@ import { DashboardButton } from '../components/DashboardButton'
 import { ChurchContext } from '../contexts/ChurchContext'
 
 const BishopDashboard = () => {
-  const { church, capitalise, plural, clickCard, bishopId } = useContext(
-    ChurchContext
-  )
+  const {
+    church,
+    capitalise,
+    plural,
+    setFilters,
+    clickCard,
+    bishopId,
+  } = useContext(ChurchContext)
   const { data, error, loading } = useQuery(BISH_DASHBOARD_COUNTS, {
     variables: { id: bishopId },
   })
@@ -48,7 +53,7 @@ const BishopDashboard = () => {
               <DashboardCard
                 name="Ministries"
                 detail1="Loading"
-                cardLink={`${church.church}/sonta/displayall`}
+                cardLink={`${church.church}/display-sontas`}
               />
             </div>
           </div>
@@ -115,6 +120,16 @@ const BishopDashboard = () => {
                 name="Pastors"
                 detail1={`${data.bishopPastorCount} Pastors`}
                 cardLink="/pastors"
+                onClick={() => {
+                  setFilters({
+                    gender: '',
+                    maritalStatus: '',
+                    occupation: '',
+                    leaderTitle: ['Pastor'],
+                    leaderRank: [],
+                    ministry: '',
+                  })
+                }}
               />
             </div>
             <div className="col-sm-12 col-md">
@@ -131,7 +146,7 @@ const BishopDashboard = () => {
               <DashboardCard
                 name="Ministries"
                 detail1={`${data.bishopSontaMemberCount} Members in Ministries`}
-                cardLink={`${church.church}/sonta/displayall`}
+                cardLink={`${church.church}/display-sontas`}
               />
             </div>
           </div>
@@ -197,7 +212,7 @@ const BishopDashboard = () => {
               <DashboardCard
                 name="Ministries"
                 detail1="Error!"
-                cardLink={`${church.church}/sonta/displayall`}
+                cardLink={`${church.church}/display-sontas`}
               />
             </div>
           </div>

@@ -15,8 +15,6 @@ export const CREATE_MEMBER_MUTATION = gql`
     $bacenta: String!
     $ministry: String
     $pictureUrl: String!
-    $pastoralHistory: [pastoralHistory]
-    $pastoralAppointment: [pastoralAppointment]
   ) {
     CreateMember(
       firstName: $firstName
@@ -32,8 +30,6 @@ export const CREATE_MEMBER_MUTATION = gql`
       bacenta: $bacenta
       ministry: $ministry
       pictureUrl: $pictureUrl
-      pastoralHistory: $pastoralHistory
-      pastoralAppointment: $pastoralAppointment
     ) {
       id
       firstName

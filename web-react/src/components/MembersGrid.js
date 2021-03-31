@@ -62,7 +62,7 @@ export const MembersGrid = (props) => {
             <h3 className="h3">
               {memberData
                 ? `${memberDataLoaded.length} Search Results`
-                : 'SearchResults'}
+                : 'Search Results'}
             </h3>
 
             <div className="btn-toolbar mb-2 mb-md-0">

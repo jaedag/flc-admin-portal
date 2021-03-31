@@ -17,7 +17,6 @@ export const DisplaySontaDetails = () => {
     // Spinner Icon for Loading Screens
     return <LoadingScreen />
   } else if (sontaData) {
-    console.log(sontaData.sontaBasontaLeaderList)
     return (
       <div>
         <NavBar />

@@ -94,7 +94,6 @@ function CreateCentre() {
       onSubmitProps.setSubmitting(false)
       onSubmitProps.resetForm()
     }
-    console.log(Formik.formik)
 
     return (
       <div>

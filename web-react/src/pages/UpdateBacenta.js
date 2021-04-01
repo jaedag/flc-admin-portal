@@ -125,8 +125,12 @@ export const UpdateBacenta = () => {
         variables: {
           bacentaId: bacentaId,
           leaderId: '',
-          newCentreId: newCentre.AddBacentaCentre.from.id,
-          oldCentreId: bacentaData?.displayBacenta?.centre.id,
+          newCentreId: newCentre.AddBacentaCentre.from
+            ? newCentre.AddBacentaCentre.from.id
+            : '',
+          oldCentreId: bacentaData?.displayBacenta?.centre
+            ? bacentaData?.displayBacenta?.centre.id
+            : null,
           historyRecord: `${initialValues.bacentaName} has been moved from ${bacentaData?.displayBacenta?.centre.name} Centre to ${newCentre.AddBacentaCentre.from.name} Centre`,
         },
       })
@@ -180,6 +184,8 @@ export const UpdateBacenta = () => {
           variables: {
             bacentaId: bacentaId,
             leaderId: newLeaderInfo.id,
+            oldCentreId: '',
+            newCentreId: '',
             historyRecord: `${newLeaderInfo.firstName} ${newLeaderInfo.lastName} was transferred to become the new Bacenta Leader for ${values.bacentaName}`,
           },
         })
@@ -191,6 +197,8 @@ export const UpdateBacenta = () => {
           variables: {
             bacentaId: bacentaId,
             leaderId: '',
+            oldCentreId: '',
+            newCentreId: '',
             historyRecord: `The Bacenta name has been changed from ${initialValues.bacentaName} to ${values.bacentaName}`,
           },
         })
@@ -202,6 +210,8 @@ export const UpdateBacenta = () => {
           variables: {
             bacentaId: bacentaId,
             leaderId: '',
+            oldCentreId: '',
+            newCentreId: '',
             historyRecord: `${values.bacentaName} has changed their meeting day from ${initialValues.meetingDay} to ${values.meetingDay}`,
           },
         })
@@ -216,6 +226,8 @@ export const UpdateBacenta = () => {
           variables: {
             bacentaId: bacentaId,
             leaderId: '',
+            oldCentreId: '',
+            newCentreId: '',
             historyRecord: `${values.bacentaName} has changed their venue`,
           },
         })

@@ -25,6 +25,7 @@ export const DisplayCampusTownDetails = () => {
     // Spinner Icon for Loading Screens
     return <LoadingScreen />
   } else if (church.church === 'town' && townData) {
+    let breadcrumb = [townData.displayTown?.bishop, townData.displayTown]
     return (
       <div>
         <NavBar />
@@ -46,6 +47,7 @@ export const DisplayCampusTownDetails = () => {
           subChurchSetter={setCentreId}
           buttons={townData.displayTown.centres}
           editlink="/town/edittown"
+          breadcrumb={breadcrumb && breadcrumb}
         />
       </div>
     )

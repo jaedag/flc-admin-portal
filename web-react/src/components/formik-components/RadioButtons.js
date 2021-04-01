@@ -9,10 +9,12 @@ function RadioButtons(props) {
     <div>
       {label ? (
         <div>
-          <label htmlFor={name}>{label}</label>
+          <label className="font-weight-bold" htmlFor={name}>
+            {label}
+          </label>
         </div>
       ) : null}
-      <Field name={name} className="row row-cols-2" {...rest}>
+      <Field name={name} className="row row-cols-2 " {...rest}>
         {({ field }) => {
           return options.map((option) => {
             return (
@@ -24,7 +26,7 @@ function RadioButtons(props) {
                   value={option.value}
                   checked={field.value === option.value}
                 />
-                <label className="pl-1" htmlFor={option.value}>
+                <label className="pl-2" htmlFor={option.value}>
                   {option.key}
                 </label>
               </span>

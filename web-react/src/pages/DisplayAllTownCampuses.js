@@ -46,15 +46,17 @@ export const DisplayAllTownCampuses = () => {
                 >
                   <h4>{`${townData.townList[0].bishop.firstName} ${townData.townList[0].bishop.lastName}'s Towns`}</h4>
                 </Link>
-                <Link
-                  className="pb-4"
-                  to="/member/displaydetails"
-                  onClick={() => {
-                    clickCard(townData.townList[0].bishop?.hasAdmin)
-                  }}
-                >
-                  {`Admin: ${townData.townList[0].bishop?.hasAdmin?.firstName} ${townData.townList[0].bishop?.hasAdmin?.lastName}`}
-                </Link>
+                {townData.townList[0].bishop?.hasAdmin ? (
+                  <Link
+                    className="pb-4"
+                    to="/member/displaydetails"
+                    onClick={() => {
+                      clickCard(townData.townList[0].bishop?.hasAdmin)
+                    }}
+                  >
+                    {`Admin: ${townData.townList[0].bishop?.hasAdmin?.firstName} ${townData.townList[0].bishop?.hasAdmin?.lastName}`}
+                  </Link>
+                ) : null}
               </div>
               <div className="col-auto">
                 <Link to="/town/addtown" className="btn btn-primary">
@@ -95,15 +97,17 @@ export const DisplayAllTownCampuses = () => {
                 >
                   <h4>{`${campusData.campusList[0].bishop.firstName} ${campusData.campusList[0].bishop.lastName}'s Campuses`}</h4>
                 </Link>
-                <Link
-                  className="pb-4"
-                  to="/member/displaydetails"
-                  onClick={() => {
-                    clickCard(campusData.campusList[0].bishop?.hasAdmin)
-                  }}
-                >
-                  {`Admin: ${campusData.campusList[0].bishop?.hasAdmin?.firstName} ${campusData.campusList[0].bishop?.hasAdmin?.lastName}`}
-                </Link>
+                {campusData.campusList[0].bishop?.hasAdmin ? (
+                  <Link
+                    className="pb-4"
+                    to="/member/displaydetails"
+                    onClick={() => {
+                      clickCard(campusData.campusList[0].bishop?.hasAdmin)
+                    }}
+                  >
+                    {`Admin: ${campusData.campusList[0].bishop?.hasAdmin?.firstName} ${campusData.campusList[0].bishop?.hasAdmin?.lastName}`}
+                  </Link>
+                ) : null}
               </div>
               <div className="col-auto">
                 <Link to="/campus/addcampus" className="btn btn-primary">

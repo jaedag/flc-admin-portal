@@ -7,7 +7,11 @@ function Input(props) {
 
   return (
     <div>
-      {label ? <label htmlFor={name}>{label}</label> : null}
+      {label ? (
+        <label className="label" htmlFor={name}>
+          {label}
+        </label>
+      ) : null}
       <Field id={name} name={name} {...rest} />
       <ErrorMessage name={name} component={TextError} />
     </div>

@@ -70,10 +70,10 @@ export const CreateMember = () => {
   const { phoneRegExp, parsePhoneNum, makeSelectOptions } = useContext(
     ChurchContext
   )
-  const { setMemberID } = useContext(MemberContext)
+  const { setMemberId } = useContext(MemberContext)
 
   const validationSchema = Yup.object({
-    firstName: Yup.string().required('Name is a required field'),
+    firstName: Yup.string().required('This is a required field'),
     lastName: Yup.string().required('This is a required field'),
     gender: Yup.string().required('This is a required field'),
     email: Yup.string().email('Please enter a valid email address'),
@@ -89,8 +89,8 @@ export const CreateMember = () => {
       phoneRegExp,
       `Phone Number must start with + and country code (eg. '+233')`
     ),
-    bacenta: Yup.string().required('This is a required field'),
-    ministry: Yup.string().required('This is a required field'),
+    // bacenta: Yup.string().required('This is a required field'),
+    // ministry: Yup.string().required('This is a required field'),
   })
 
   //All of the Hooks!
@@ -102,7 +102,7 @@ export const CreateMember = () => {
 
   const [CreateMember] = useMutation(CREATE_MEMBER_MUTATION, {
     onCompleted: (newMemberData) => {
-      setMemberID(newMemberData.CreateMember.id)
+      setMemberId(newMemberData.CreateMember.id)
     },
   })
 
@@ -228,9 +228,15 @@ export const CreateMember = () => {
                         </p>
                       </label>
                     </div>
+                    <p className="text-center text-danger">
+                      <small>
+                        Please note that * are required to submit the form
+                      </small>
+                    </p>
                     <div className="form-row row-cols-2">
                       <div className="col">
                         <FormikControl
+                          label="First Name*"
                           className="form-control"
                           control="input"
                           name="firstName"
@@ -240,6 +246,7 @@ export const CreateMember = () => {
                       </div>
                       <div className="col">
                         <FormikControl
+                          label="Middle Name"
                           className="form-control"
                           control="input"
                           name="middleName"
@@ -249,6 +256,7 @@ export const CreateMember = () => {
                       </div>
                       <div className="col">
                         <FormikControl
+                          label="Last Name*"
                           className="form-control"
                           control="input"
                           name="lastName"
@@ -258,6 +266,7 @@ export const CreateMember = () => {
                       </div>
                       <div className="col">
                         <FormikControl
+                          label="Gender*"
                           className="form-control"
                           control="select"
                           name="gender"
@@ -268,6 +277,7 @@ export const CreateMember = () => {
                       </div>
                       <div className="col">
                         <FormikControl
+                          label="Phone Number*"
                           className="form-control"
                           control="input"
                           placeholder="Enter phone number"
@@ -277,6 +287,7 @@ export const CreateMember = () => {
                       </div>
                       <div className="col">
                         <FormikControl
+                          label="WhatsApp Number*"
                           className="form-control"
                           control="input"
                           placeholder="Enter Your WhatsApp number"
@@ -289,6 +300,7 @@ export const CreateMember = () => {
                     <div className="form-row row-cols-2">
                       <div className="col">
                         <FormikControl
+                          label="Marital Status*"
                           className="form-control"
                           control="select"
                           name="maritalStatus"
@@ -299,6 +311,7 @@ export const CreateMember = () => {
                       </div>
                       <div className="col">
                         <FormikControl
+                          label="Occupation"
                           className="form-control"
                           control="input"
                           name="occupation"
@@ -310,6 +323,7 @@ export const CreateMember = () => {
                     <div className="form-row">
                       <div className="col-8">
                         <FormikControl
+                          label="Email Address"
                           className="form-control"
                           control="input"
                           name="email"
@@ -318,10 +332,7 @@ export const CreateMember = () => {
                         />
                       </div>
                       <div className="col-8">
-                        <small
-                          htmlFor="dateofbirth"
-                          className="form-text text-muted"
-                        >
+                        <small htmlFor="dateofbirth" className="form-text ">
                           Date of Birth
                         </small>
                         <FormikControl
@@ -345,6 +356,7 @@ export const CreateMember = () => {
                       <div className="col">
                         <FormikControl
                           control="combobox"
+                          label="Bacenta*"
                           name="bacenta"
                           // label="Bacenta"
                           placeholder="Bacenta"
@@ -360,6 +372,7 @@ export const CreateMember = () => {
                       <div className="col">
                         <FormikControl
                           className="form-control"
+                          label="Ministry*"
                           control="select"
                           name="ministry"
                           options={ministryOptions}

@@ -16,7 +16,7 @@ import { MemberContext } from '../contexts/MemberContext'
 import { ChurchContext } from '../contexts/ChurchContext'
 
 export const UpdateMemberDetails = () => {
-  const { memberID } = useContext(MemberContext)
+  const { memberId } = useContext(MemberContext)
   const { phoneRegExp, parsePhoneNum, makeSelectOptions } = useContext(
     ChurchContext
   )
@@ -25,7 +25,7 @@ export const UpdateMemberDetails = () => {
     error: memberError,
     loading: memberLoading,
   } = useQuery(DISPLAY_MEMBER, {
-    variables: { id: memberID },
+    variables: { id: memberId },
   })
 
   const initialValues = {
@@ -123,7 +123,7 @@ export const UpdateMemberDetails = () => {
   } = useQuery(GET_MINISTRIES)
 
   const [UpdateMemberDetails] = useMutation(UPDATE_MEMBER_MUTATION, {
-    refetchQueries: [{ query: DISPLAY_MEMBER, variables: { id: memberID } }],
+    refetchQueries: [{ query: DISPLAY_MEMBER, variables: { id: memberId } }],
   })
 
   const [image, setImage] = useState('')
@@ -162,7 +162,7 @@ export const UpdateMemberDetails = () => {
 
     UpdateMemberDetails({
       variables: {
-        id: memberID,
+        id: memberId,
         firstName: values.firstName,
         middleName: values.middleName,
         lastName: values.lastName,
@@ -185,7 +185,7 @@ export const UpdateMemberDetails = () => {
     history.push('/member/displaydetails')
   }
 
-  if (memberError || ministryListError || memberID === '') {
+  if (memberError || ministryListError || memberId === '') {
     return <ErrorScreen />
   } else if (memberLoading || ministryListLoading) {
     // Spinner Icon for Loading Screens

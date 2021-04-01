@@ -7,12 +7,16 @@ function CheckboxGroup(props) {
 
   return (
     <div>
-      {label ? <label htmlFor={name}>{label}</label> : null}
+      {label ? (
+        <label className="label" htmlFor={name}>
+          {label}
+        </label>
+      ) : null}
       <Field name={name} {...rest}>
         {({ field }) => {
           return options.map((option) => {
             return (
-              <div key={option.key}>
+              <div key={option.key} className="ml-2">
                 <input
                   type="checkbox"
                   id={option.value}
@@ -20,7 +24,7 @@ function CheckboxGroup(props) {
                   value={option.value}
                   checked={field.value.includes(option.value)}
                 />
-                <label className="pl-3" htmlFor={option.value}>
+                <label className="pl-4" htmlFor={option.value}>
                   {option.key}
                 </label>
               </div>

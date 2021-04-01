@@ -6,7 +6,7 @@ import { MemberTable } from './MemberTable'
 import { ChurchContext } from '../contexts/ChurchContext'
 
 export const MembersGrid = (props) => {
-  const { memberData, memberError, memberLoading } = props
+  const { memberData, memberError, memberLoading, title } = props
   const { memberFilter, filters } = useContext(ChurchContext)
   const [offset, setOffset] = useState(0)
   const [dimensions, setDimensions] = React.useState({
@@ -58,12 +58,17 @@ export const MembersGrid = (props) => {
         </div>
 
         <div className="col px-2">
+          {title ? (
+            <h3 className="text-center font-weight-bold mt-3 mb-0">{title}</h3>
+          ) : null}
           <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-2 border-bottom">
-            <h3 className="h3">
-              {memberData
-                ? `${memberDataLoaded.length} Search Results`
-                : 'Search Results'}
-            </h3>
+            <div>
+              <h5>
+                {memberData
+                  ? `${memberDataLoaded.length} Search Results`
+                  : 'Search Results'}
+              </h5>
+            </div>
 
             <div className="btn-toolbar mb-2 mb-md-0">
               <div className="btn-group mr-2" />

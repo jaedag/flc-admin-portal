@@ -12,6 +12,7 @@ export const GridCentreMembers = () => {
 
   return (
     <MembersGrid
+      title={data ? `${data.displayCentre?.name} Centre` : null}
       memberData={data?.centreMemberList}
       memberLoading={loading}
       memberError={error}

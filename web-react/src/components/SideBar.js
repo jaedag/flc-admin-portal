@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from 'react'
 import { useLocation, useHistory } from 'react-router-dom'
 import { Formik, Form } from 'formik'
 import FormikControl from '../components/formik-components/FormikControl'
-import { GET_MINISTRIES, OCCUPATION_LIST } from '../queries/ListQueries'
+import { GET_MINISTRIES } from '../queries/ListQueries'
 import { ChurchContext } from '../contexts/ChurchContext'
 
 export const SideBar = () => {
@@ -59,7 +59,7 @@ export const SideBar = () => {
     setFilters(values)
     onSubmitProps.setSubmitting(false)
 
-    location.pathname.endsWith('filter-members') && history.push('/mb-members')
+    location.pathname === '/filter-members' && history.push('/mb-members')
   }
 
   return (
@@ -69,9 +69,23 @@ export const SideBar = () => {
           <div className="container">
             <Form>
               <div className="form-group ">
-                <h3 className="pt-3">Filters</h3>
+                <div className="row pt-3">
+                  <div className="col">
+                    <h3>Filters</h3>
+                  </div>
+                  <div className="col-auto">
+                    <button
+                      type="submit"
+                      disabled={!formik.isValid || formik.isSubmitting}
+                      className="btn btn-primary"
+                    >
+                      Apply Filters
+                    </button>
+                  </div>
+                </div>
+
                 <div className="container-fluid infobar">Basic Info</div>
-                <div className="row row-cols-1">
+                <div className="row row-cols-1  ">
                   {/* <!-- Basic Info Div --> */}
                   <div className="col pb-2">
                     <FormikControl
@@ -91,7 +105,7 @@ export const SideBar = () => {
                       options={maritalStatusOptions}
                     />
                   </div>
-                  <div className="col pb-2">
+                  {/* <div className="col pb-2">
                     <FormikControl
                       control="combobox"
                       name="occupation"
@@ -105,8 +119,11 @@ export const SideBar = () => {
                       dataset="occupationList"
                       aria-describedby="Occupation Options"
                     />
-                  </div>
-                  <div className="col pb-4">
+                  </div> */}
+                  <div className="col">
+                    <span className=" font-weight-bold" htmlFor="ministry">
+                      Ministry
+                    </span>
                     <FormikControl
                       className="form-control"
                       control="selectWithQuery"
@@ -118,7 +135,11 @@ export const SideBar = () => {
                       defaultOption="Select a Ministry"
                     />
                   </div>
+
                   <div className="col pb-2">
+                    <span className=" font-weight-bold" htmlFor="leaderRank">
+                      Leader Rank
+                    </span>
                     <FormikControl
                       className="form-control"
                       name="leaderRank"
@@ -127,6 +148,9 @@ export const SideBar = () => {
                     />
                   </div>
                   <div className="col pb-2">
+                    <span className="font-weight-bold" htmlFor="leaderTitle">
+                      Leader Title
+                    </span>
                     <FormikControl
                       className="form-control"
                       name="leaderTitle"
@@ -135,33 +159,35 @@ export const SideBar = () => {
                     />
                   </div>
                 </div>
-              </div>
-              <div className="d-flex justify-content-center">
-                <button
-                  type="submit"
-                  disabled={!formik.isValid || formik.isSubmitting}
-                  className="btn btn-primary px-4 py-3"
-                >
-                  Apply Filters
-                </button>
-              </div>
-              <div className="d-flex justify-content-center">
-                <button
-                  type="reset"
-                  className="btn btn-primary px-4 py-3"
-                  onClick={() => {
-                    setFilters({
-                      gender: '',
-                      maritalStatus: '',
-                      occupation: '',
-                      leaderTitle: [],
-                      leaderRank: [],
-                      ministry: '',
-                    })
-                  }}
-                >
-                  Reset Filters
-                </button>
+                <div className="row row-cols-2 row-cols-md-1 mt-3">
+                  <div className="col d-flex justify-content-center">
+                    <button
+                      type="submit"
+                      disabled={!formik.isValid || formik.isSubmitting}
+                      className="btn btn-primary px-4 py-3"
+                    >
+                      Apply Filters
+                    </button>
+                  </div>
+                  <div className="col d-flex justify-content-center">
+                    <button
+                      type="reset"
+                      className="btn btn-primary px-4 py-3"
+                      onClick={() => {
+                        setFilters({
+                          gender: '',
+                          maritalStatus: '',
+                          occupation: '',
+                          leaderTitle: [],
+                          leaderRank: [],
+                          ministry: '',
+                        })
+                      }}
+                    >
+                      Reset Filters
+                    </button>
+                  </div>
+                </div>
               </div>
             </Form>
           </div>

@@ -27,29 +27,29 @@ const BishopDashboard = () => {
         <NavBar />
         <div className="container ">
           <h4 className="py-4">Loading...</h4>
-          <div className="row row-cols-2 row-cols-lg-4">
-            <div className="col">
+          <div className="row row-cols-md-2 row-cols-lg-4">
+            <div className="col-sm-12 col-md">
               <DashboardCard
                 name="Members"
                 detail1="Loading..."
                 cardLink="/members"
               />
             </div>
-            <div className="col">
+            <div className="col-sm-12 col-md">
               <DashboardCard
                 name="Pastors"
                 detail1="Loading..."
                 cardLink="/pastors"
               />
             </div>
-            <div className="col">
+            <div className="col-sm-12 col-md">
               <DashboardCard
                 name={capitalise(plural(church.church))}
                 detail1="Loading..."
                 cardLink={`/${church.church}/displayall`}
               />
             </div>
-            <div className="col">
+            <div className="col-sm-12 col-md">
               <DashboardCard
                 name="Ministries"
                 detail1="Loading"
@@ -187,28 +187,28 @@ const BishopDashboard = () => {
         <div className="container ">
           <h4 className="py-4">Error!</h4>
           <div className="row row-cols-2 row-cols-lg-4">
-            <div className="col">
+            <div className="col-sm-12 col-md">
               <DashboardCard
                 name="Members"
                 detail1="Error!"
                 cardLink="/members"
               />
             </div>
-            <div className="col">
+            <div className="col-sm-12 col-md">
               <DashboardCard
                 name="Pastors"
                 detail1="Error!"
                 cardLink="/pastors"
               />
             </div>
-            <div className="col">
+            <div className="col-sm-12 col-md">
               <DashboardCard
                 name={capitalise(plural(church.church))}
                 detail1="Error!"
                 cardLink={`/${church.church}/displayall`}
               />
             </div>
-            <div className="col">
+            <div className="col-sm-12 col-md">
               <DashboardCard
                 name="Ministries"
                 detail1="Error!"

@@ -22,6 +22,7 @@ export const DisplayChurchDetails = (props) => {
     buttons,
     editlink,
     history,
+    breadcrumb,
   } = props
 
   const { isAuthenticated } = useAuth0()
@@ -33,6 +34,42 @@ export const DisplayChurchDetails = (props) => {
       <NavBar />
       <div className=" py-2 top-heading title-bar mt-4">
         <div className="container ">
+          {breadcrumb
+            ? breadcrumb.map((bread, i) => {
+                if (i === breadcrumb.length - 1) {
+                  return (
+                    <small
+                      key={i}
+                      to={`/${bread?.__typename.toLowerCase()}/displaydetails`}
+                      className="label text-secondary"
+                      // onClick={() => {
+                      //   clickCard(bread)
+                      // }}
+                    >
+                      {bread?.name
+                        ? `${bread?.name} ${bread?.__typename}`
+                        : `Bishop ${bread?.firstName} ${bread?.lastName}`}
+                    </small>
+                  )
+                } else {
+                  return (
+                    <Link
+                      key={i}
+                      to={`/${bread?.__typename.toLowerCase()}/displaydetails`}
+                      className=" label text-secondary"
+                      onClick={() => {
+                        clickCard(bread)
+                      }}
+                    >
+                      {bread?.name
+                        ? `${bread?.name} ${bread?.__typename}`
+                        : `Bishop ${bread?.firstName} ${bread?.lastName}`}
+                      {' >'}{' '}
+                    </Link>
+                  )
+                }
+              })
+            : null}
           <h3 className="mx-3 mt-3 font-weight-bold">
             {`${name} ${churchType}`}
             {!isAuthenticated && (

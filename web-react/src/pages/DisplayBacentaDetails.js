@@ -20,6 +20,17 @@ export const DisplayBacentaDetails = () => {
     // Spinner Icon for Loading Screens
     return <LoadingScreen />
   } else if (bacentaData) {
+    let breadcrumb = [
+      bacentaData.displayBacenta?.centre.town
+        ? bacentaData.displayBacenta?.centre.town.bishop
+        : bacentaData.displayBacenta?.centre.campus.bishop,
+      bacentaData.displayBacenta?.centre.town
+        ? bacentaData.displayBacenta?.centre.town
+        : bacentaData.displayBacenta?.centre.campus,
+      bacentaData.displayBacenta?.centre,
+      bacentaData.displayBacenta,
+    ]
+
     return (
       <div>
         <NavBar />
@@ -42,6 +53,7 @@ export const DisplayBacentaDetails = () => {
             bacentaData.displayBacenta?.history.length !== 0 &&
             bacentaData.displayBacenta?.history
           }
+          breadcrumb={breadcrumb && breadcrumb}
         />
       </div>
     )

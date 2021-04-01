@@ -797,6 +797,8 @@ type Mutation {
       MERGE (md:ServiceDay {day: $meetingDay})
       MERGE (c)-[:HAS_BACENTA]->(b)
       MERGE (b)-[:MEETS_ON_DAY]->(md)
+
+      
       WITH b
         CALL {
          	WITH b

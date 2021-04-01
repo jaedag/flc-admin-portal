@@ -20,6 +20,14 @@ export const DisplayCentreDetails = () => {
     return <LoadingScreen />
   } else if (centreData) {
     const { displayCentre, centreMemberCount, centreBacentaCount } = centreData
+    let breadcrumb = [
+      displayCentre.town
+        ? displayCentre.town.bishop
+        : displayCentre.campus.bishop,
+      displayCentre.town ? displayCentre.town : displayCentre.campus,
+      displayCentre,
+    ]
+
     return (
       <div>
         <NavBar />
@@ -41,6 +49,7 @@ export const DisplayCentreDetails = () => {
           churchNo={centreBacentaCount}
           buttons={displayCentre ? displayCentre.bacentas : []}
           editlink="/centre/editcentre"
+          breadcrumb={breadcrumb && breadcrumb}
         />
       </div>
     )

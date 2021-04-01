@@ -12,7 +12,7 @@ import { GET_LOGGED_IN_USER } from '../queries/SearchQuery'
 import { useAuth0 } from '@auth0/auth0-react'
 
 const BishopSelect = () => {
-  const { determineChurch, setBishopId } = useContext(ChurchContext)
+  const { determineChurch, clickCard } = useContext(ChurchContext)
   const { currentUser, setCurrentUser } = useContext(MemberContext)
   const { user, isAuthenticated } = useAuth0()
   const { data, loading } = useQuery(GET_BISHOPS)
@@ -116,8 +116,7 @@ const BishopSelect = () => {
                 key={index}
                 className="col-sm-12 col-lg card mobile-search-card p-2 m-1"
                 onClick={() => {
-                  determineChurch(soul)
-                  setBishopId(soul.id)
+                  clickCard(soul)
                   history.push('/dashboard')
                 }}
               >

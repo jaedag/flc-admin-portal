@@ -95,19 +95,23 @@ const AppWithApollo = () => {
 
 const PastorsAdmin = () => {
   const { isLoading } = useAuth0()
-  const [church, setChurch] = useState({
-    church: '',
-    subChurch: '',
-  })
-  const [bishopId, setBishopId] = useState('')
-  const [townId, setTownId] = useState('')
-  const [campusId, setCampusId] = useState('')
+
+  const [church, setChurch] = useState(
+    sessionStorage.getItem('church')
+      ? JSON.parse(sessionStorage.getItem('church'))
+      : { church: '', subChurch: '' }
+  )
+  const [bishopId, setBishopId] = useState(sessionStorage.getItem('bishopId'))
+  const [townId, setTownId] = useState(sessionStorage.getItem('townId'))
+  const [campusId, setCampusId] = useState(sessionStorage.getItem('campusId'))
   const [bacentaId, setBacentaId] = useState(
     sessionStorage.getItem('bacentaId')
   )
-  const [centreId, setCentreId] = useState('')
-  const [sontaId, setSontaId] = useState('')
-  const [ministryId, setMinistryId] = useState('')
+  const [centreId, setCentreId] = useState(sessionStorage.getItem('centreId'))
+  const [sontaId, setSontaId] = useState(sessionStorage.getItem('sontaId'))
+  const [ministryId, setMinistryId] = useState(
+    sessionStorage.getItem('ministryId')
+  )
   const [memberId, setMemberId] = useState(sessionStorage.getItem('memberId'))
   const [currentUser, setCurrentUser] = useState({
     id: '',
@@ -118,6 +122,7 @@ const PastorsAdmin = () => {
     constituency: '',
     roles: [],
   })
+
   const [searchKey, setSearchKey] = useState('a')
   const [filters, setFilters] = useState({
     gender: '',
@@ -410,10 +415,24 @@ const PastorsAdmin = () => {
     switch (member.__typename) {
       case 'Town':
         setChurch({ church: 'town', subChurch: 'centre' })
+        sessionStorage.setItem(
+          'church',
+          JSON.stringify({
+            church: 'town',
+            subChurch: 'centre',
+          })
+        )
         setBishopId(member.bishop?.id)
         break
       case 'Campus':
         setChurch({ church: 'campus', subChurch: 'centre' })
+        sessionStorage.setItem(
+          'church',
+          JSON.stringify({
+            church: 'campus',
+            subChurch: 'centre',
+          })
+        )
         setBishopId(member.bishop?.id)
         break
       case 'Centre':
@@ -421,12 +440,25 @@ const PastorsAdmin = () => {
           church: member.campus ? 'campus' : 'town',
           subChurch: 'centre',
         })
+        sessionStorage.setItem(
+          'church',
+          JSON.stringify({
+            church: member.campus ? 'campus' : 'town',
+            subChurch: 'centre',
+          })
+        )
         setBishopId(
           member.campus ? member.campus.bishop.id : member.town.bishop.id
         )
         break
       case 'Bacenta':
         setChurch({ church: member.centre?.town ? 'town' : 'campus' })
+        sessionStorage.setItem(
+          'church',
+          JSON.stringify({
+            church: member.centre?.town ? 'town' : 'campus',
+          })
+        )
         setBishopId(
           member.centre?.town
             ? member.centre?.town.bishop.id
@@ -442,11 +474,27 @@ const PastorsAdmin = () => {
       }
       if (member.townBishop[0]) {
         setChurch({ church: 'town', subChurch: 'centre' })
+        sessionStorage.setItem(
+          'church',
+          JSON.stringify({
+            church: 'town',
+            subChurch: 'centre',
+          })
+        )
         setBishopId(member.id)
+        sessionStorage.setItem('bishopId', member.id)
         return
       } else if (member.campusBishop[0]) {
         setChurch({ church: 'campus', subChurch: 'centre' })
+        sessionStorage.setItem(
+          'church',
+          JSON.stringify({
+            church: 'campus',
+            subChurch: 'centre',
+          })
+        )
         setBishopId(member.id)
+        sessionStorage.setItem('bishopId', member.id)
         return
       } else {
         return
@@ -454,19 +502,54 @@ const PastorsAdmin = () => {
     }
     if (member?.bacenta?.centre?.town) {
       setChurch({ church: 'town', subChurch: 'centre' })
+      sessionStorage.setItem(
+        'church',
+        JSON.stringify({
+          church: 'town',
+          subChurch: 'centre',
+        })
+      )
       setBishopId(member.bacenta.centre.town.bishop.id)
+      sessionStorage.setItem('bishopId', member.bacenta.centre.town.bishop.id)
       return
     } else if (member.leadsTown && member.leadsTown[0]) {
       setChurch({ church: 'town', subChurch: 'centre' })
+      sessionStorage.setItem(
+        'church',
+        JSON.stringify({
+          church: 'town',
+          subChurch: 'centre',
+        })
+      )
       setBishopId(member.leadsTown[0].bishop?.id)
+      sessionStorage.setItem('bishopId', member.leadsTown[0].bishop?.id)
       return
     } else if (member?.bacenta?.centre?.campus) {
       setChurch({ church: 'campus', subChurch: 'centre' })
+      sessionStorage.setItem(
+        'church',
+        JSON.stringify({
+          church: 'campus',
+          subChurch: 'centre',
+        })
+      )
       setBishopId(member?.bacenta?.centre?.campus?.bishop?.id)
+      sessionStorage.setItem(
+        'bishopId',
+        member?.bacenta?.centre?.campus?.bishop?.id
+      )
       return
     } else if (member?.leadsCampus[0]) {
       setChurch({ church: 'campus', subChurch: 'centre' })
+      sessionStorage.setItem(
+        'church',
+        JSON.stringify({
+          church: 'campus',
+          subChurch: 'centre',
+        })
+      )
       setBishopId(member.leadsCampus[0].bishop?.id)
+      sessionStorage.setItem('bishopId', member.leadsCampus[0].bishop?.id)
       return
     }
   }
@@ -481,6 +564,7 @@ const PastorsAdmin = () => {
         break
       case 'Sonta':
         setSontaId(card.id)
+        sessionStorage.setItem('sontaId', card.id)
         break
       case 'Bacenta':
         setBacentaId(card.id)
@@ -488,12 +572,15 @@ const PastorsAdmin = () => {
         break
       case 'Centre':
         setCentreId(card.id)
+        sessionStorage.setItem('centreId', card.id)
         break
       case 'Town':
         setTownId(card.id)
+        sessionStorage.setItem('townId', card.id)
         break
       case 'Campus':
         setCampusId(card.id)
+        sessionStorage.setItem('campusId', card.id)
         break
       default:
         console.log("We don't have this type")

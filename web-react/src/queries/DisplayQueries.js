@@ -193,6 +193,11 @@ export const DISPLAY_BACENTA = gql`
         town {
           id
           name
+          bishop {
+            id
+            firstName
+            lastName
+          }
         }
         campus {
           id
@@ -265,10 +270,20 @@ export const DISPLAY_CENTRE = gql`
       town {
         id
         name
+        bishop {
+          id
+          firstName
+          lastName
+        }
       }
       campus {
         id
         name
+        bishop {
+          id
+          firstName
+          lastName
+        }
       }
       leader {
         id

@@ -31,7 +31,7 @@ export const NavBar = () => {
             <span className="d-none d-md-inline">Bishop</span>
           </Link>
         )}
-        {!location.pathname.endsWith('members') && church.church ? (
+        {!(location.pathname === '/members') && church.church ? (
           <Link
             className="nav-item nav-link d-flex align-items-center flex-column"
             onClick={() => {
@@ -40,6 +40,7 @@ export const NavBar = () => {
                 maritalStatus: '',
                 occupation: '',
                 leaderRank: [],
+                leaderTitle: [],
                 ministry: '',
               })
             }}
@@ -87,7 +88,7 @@ export const NavBar = () => {
             </Link>
           </>
         )}
-        {location.pathname.endsWith('members') && (
+        {location.pathname === '/members' && (
           <Link
             className={`nav-item nav-link d-flex align-items-center flex-column d-md-none`}
             to="/filter-members"

@@ -9,7 +9,7 @@ import Spinner from '../components/Spinner'
 
 export const SearchPageMobile = () => {
   const { searchKey } = useContext(SearchContext)
-  // const { setMemberID } = useContext(MemberContext)
+  // const { setMemberId } = useContext(MemberContext)
   const { determineChurch, clickCard } = useContext(ChurchContext)
   const history = useHistory()
 

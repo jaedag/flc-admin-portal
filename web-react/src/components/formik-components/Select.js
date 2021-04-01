@@ -7,7 +7,11 @@ function Select(props) {
 
   return (
     <div>
-      {label ? <label htmlFor={name}>{label}</label> : null}
+      {label ? (
+        <label className="label" htmlFor={name}>
+          {label}
+        </label>
+      ) : null}
       <Field as="select" id={name} name={name} {...rest}>
         <option value="" disabled defaultValue>
           {defaultOption}

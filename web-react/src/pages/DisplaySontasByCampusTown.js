@@ -10,7 +10,7 @@ import { MemberContext } from '../contexts/MemberContext'
 
 export const DisplaySontasByCampusTown = () => {
   const { church, bishopId, setSontaId } = useContext(ChurchContext)
-  const { setMemberID } = useContext(MemberContext)
+  const { setMemberId } = useContext(MemberContext)
 
   const { data: sontaData, loading: sontaLoading } = useQuery(
     GET_SONTAS_BY_CAMPUSTOWN,
@@ -33,7 +33,7 @@ export const DisplaySontasByCampusTown = () => {
                 <Link
                   to={`/member/displaydetails`}
                   onClick={() => {
-                    setMemberID(bishopId)
+                    setMemberId(bishopId)
                   }}
                 >
                   {' '}
@@ -86,7 +86,7 @@ export const DisplaySontasByCampusTown = () => {
                 <Link
                   to={`/member/displaydetails`}
                   onClick={() => {
-                    setMemberID(bishopId)
+                    setMemberId(bishopId)
                   }}
                 >
                   {' '}

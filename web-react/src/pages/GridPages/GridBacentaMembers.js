@@ -12,6 +12,7 @@ export const GridBacentaMembers = () => {
 
   return (
     <MembersGrid
+      title={data ? `${data.displayBacenta?.name} Bacenta` : null}
       memberData={data?.bacentaMemberList}
       memberLoading={loading}
       memberError={error}

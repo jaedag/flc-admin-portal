@@ -14,6 +14,7 @@ export const GridSontaMembers = () => {
   console.log(error)
   return (
     <MembersGrid
+      title={data ? `${data.displaySonta?.name} Sonta` : null}
       memberData={data?.sontaMemberList}
       memberLoading={loading}
       memberError={error}

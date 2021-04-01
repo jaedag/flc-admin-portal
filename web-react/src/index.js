@@ -102,11 +102,13 @@ const PastorsAdmin = () => {
   const [bishopId, setBishopId] = useState('')
   const [townId, setTownId] = useState('')
   const [campusId, setCampusId] = useState('')
-  const [bacentaId, setBacentaId] = useState('')
+  const [bacentaId, setBacentaId] = useState(
+    sessionStorage.getItem('bacentaId')
+  )
   const [centreId, setCentreId] = useState('')
   const [sontaId, setSontaId] = useState('')
   const [ministryId, setMinistryId] = useState('')
-  const [memberID, setMemberID] = useState('')
+  const [memberId, setMemberId] = useState(sessionStorage.getItem('memberId'))
   const [currentUser, setCurrentUser] = useState({
     id: '',
     firstName: '',
@@ -474,7 +476,7 @@ const PastorsAdmin = () => {
 
     switch (card.__typename) {
       case 'Member':
-        setMemberID(card.id)
+        setMemberId(card.id)
         sessionStorage.setItem('memberId', card.id)
         break
       case 'Sonta':
@@ -482,6 +484,7 @@ const PastorsAdmin = () => {
         break
       case 'Bacenta':
         setBacentaId(card.id)
+        sessionStorage.setItem('bacentaId', card.id)
         break
       case 'Centre':
         setCentreId(card.id)
@@ -538,7 +541,7 @@ const PastorsAdmin = () => {
         }}
       >
         <MemberContext.Provider
-          value={{ memberID, setMemberID, currentUser, setCurrentUser }}
+          value={{ memberId, setMemberId, currentUser, setCurrentUser }}
         >
           <SearchContext.Provider value={{ searchKey, setSearchKey }}>
             <Switch>

@@ -10,7 +10,7 @@ import { MemberContext } from '../contexts/MemberContext'
 
 export const DisplayAllBacentas = () => {
   const { centreId, setBacentaId } = useContext(ChurchContext)
-  const { setMemberID } = useContext(MemberContext)
+  const { setMemberId } = useContext(MemberContext)
 
   const { data: bacentaData, loading: bacentaLoading } = useQuery(
     GET_CENTRE_BACENTAS,
@@ -32,7 +32,7 @@ export const DisplayAllBacentas = () => {
             <Link
               to="/member/displaydetails"
               onClick={() => {
-                setMemberID(
+                setMemberId(
                   `${bacentaData.centreBacentaList[0].centre.leader.id}`
                 )
               }}

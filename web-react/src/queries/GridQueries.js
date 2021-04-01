@@ -120,6 +120,11 @@ export const GET_FEDERAL_PASTORS = gql`
 
 export const GET_BISHOP_MEMBERS = gql`
   query($id: ID) {
+    displayMember(id: $id) {
+      id
+      firstName
+      lastName
+    }
     bishopMemberList(id: $id, orderBy: firstName_asc) {
       id
       firstName
@@ -179,6 +184,10 @@ export const GET_BISHOP_MEMBERS = gql`
 
 export const GET_CAMPUSTOWN_MEMBERS = gql`
   query($id: ID) {
+    displayTown(id: $id) {
+      id
+      name
+    }
     townMemberList(id: $id, orderBy: firstName_asc) {
       id
       firstName
@@ -232,6 +241,10 @@ export const GET_CAMPUSTOWN_MEMBERS = gql`
       campusBishop {
         name
       }
+    }
+    displayCampus(id: $id) {
+      id
+      name
     }
     campusMemberList(id: $id, orderBy: firstName_asc) {
       id
@@ -292,6 +305,10 @@ export const GET_CAMPUSTOWN_MEMBERS = gql`
 
 export const GET_CENTRE_MEMBERS = gql`
   query($id: ID) {
+    displayCentre(id: $id) {
+      id
+      name
+    }
     centreMemberList(id: $id, orderBy: firstName_asc) {
       id
       firstName
@@ -351,6 +368,9 @@ export const GET_CENTRE_MEMBERS = gql`
 
 export const GET_BACENTA_MEMBERS = gql`
   query($id: ID) {
+    displayBacenta(id: $id) {
+      name
+    }
     bacentaMemberList(id: $id, orderBy: firstName_asc) {
       id
       firstName
@@ -410,6 +430,10 @@ export const GET_BACENTA_MEMBERS = gql`
 
 export const GET_SONTA_MEMBERS = gql`
   query($id: ID) {
+    displaySonta(id: $id) {
+      id
+      name
+    }
     sontaMemberList(id: $id, orderBy: firstName_asc) {
       id
       firstName

@@ -41,12 +41,12 @@ function CreateCentre() {
 
   const validationSchema = Yup.object({
     centreName: Yup.string().required('Centre Name is a required field'),
-    leaderWhatsApp: Yup.string()
+    leaderWhatsapp: Yup.string()
+      .required('Phone Number is required')
       .matches(
         phoneRegExp,
         `Phone Number must start with + and country code (eg. '+233')`
-      )
-      .required('Phone Number is required'),
+      ),
   })
 
   const [CreateCentre] = useMutation(CREATE_CENTRE_MUTATION, {
@@ -94,6 +94,7 @@ function CreateCentre() {
       onSubmitProps.setSubmitting(false)
       onSubmitProps.resetForm()
     }
+    console.log(Formik.formik)
 
     return (
       <div>

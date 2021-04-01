@@ -12,6 +12,11 @@ export const GridBishopMembers = () => {
 
   return (
     <MembersGrid
+      title={
+        data
+          ? `Bishop ${data?.displayMember?.firstName} ${data?.displayMember?.lastName}`
+          : null
+      }
       memberData={data && data.bishopMemberList}
       memberLoading={loading}
       memberError={error}

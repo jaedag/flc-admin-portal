@@ -9,7 +9,11 @@ function DatePicker(props) {
 
   return (
     <div>
-      {label ? <label htmlFor={name}>{label}</label> : null}
+      {label ? (
+        <label className="label" htmlFor={name}>
+          {label}
+        </label>
+      ) : null}
       <Field name={name}>
         {({ field, form }) => {
           const { setFieldValue } = form

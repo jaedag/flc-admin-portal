@@ -92,7 +92,7 @@
     width: 100%;
     max-width: 100%;
     min-width: 100%;
-    position:relative;
+    position: relative;
     border-right: none;
   }
 }
@@ -351,32 +351,6 @@ div:nth-child(55) > div {
     opacity: 1;
   }
 }
-
-/* 
-  @keyframes fadeIn {
-  0% {opacity:0;}
-  100% {opacity:1;}
-  }
-  
-  @-moz-keyframes fadeIn {
-  0% {opacity:0;}
-  100% {opacity:1;}
-  }
-  
-  @-webkit-keyframes fadeIn {
-  0% {opacity:0;}
-  100% {opacity:1;}
-  }
-  
-  @-o-keyframes fadeIn {
-  0% {opacity:0;}
-  100% {opacity:1;}
-  }
-  
-  @-ms-keyframes fadeIn {
-  0% {opacity:0;}
-  100% {opacity:1;}
-  }  */
 
 .big-card {
   background-color: var(--card-color);

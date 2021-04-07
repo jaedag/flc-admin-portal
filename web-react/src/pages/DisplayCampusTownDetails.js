@@ -52,6 +52,10 @@ export const DisplayCampusTownDetails = () => {
       </div>
     )
   } else if (church.church === 'campus' && campusData) {
+    let breadcrumb = [
+      campusData.displayCampus?.bishop,
+      campusData.displayCampus,
+    ]
     return (
       <div>
         <NavBar />
@@ -76,6 +80,7 @@ export const DisplayCampusTownDetails = () => {
           subChurch="Centre"
           subChurchSetter={setCentreId}
           buttons={campusData.displayCampus.centres}
+          breadcrumb={breadcrumb && breadcrumb}
           editlink="/campus/editcampus"
         />
       </div>

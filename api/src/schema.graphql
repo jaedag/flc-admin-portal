@@ -798,7 +798,7 @@ type Mutation {
       MERGE (c)-[:HAS_BACENTA]->(b)
       MERGE (b)-[:MEETS_ON_DAY]->(md)
 
-      
+
       WITH b
         CALL {
          	WITH b
@@ -1147,8 +1147,8 @@ type Mutation {
     centreId: ID!
     historyRecord: String
     leaderId: ID
-    oldTownId: ID
-    newTownId: ID
+    newCampusTownId: ID
+    oldCampusTownId: ID
   ): Centre
     @cypher(
       statement: """
@@ -1178,19 +1178,19 @@ type Mutation {
 
 
       WITH log,c
-      CALL{
+      CALL {
         WITH log
-        WITH log WHERE $oldTownId IS NOT NULL
-        MATCH (t:Town {id: $oldTownId})
+        WITH log WHERE $oldCampusTownId IS NOT NULL
+        MATCH (t:Town {id: $oldCampusTownId})
         MERGE (t)-[:HAS_HISTORY]->(log)
         RETURN COUNT(log)
       }
 
       WITH log,c
-      CALL{
+      CALL {
         WITH log
-        WITH log WHERE $newTownId IS NOT NULL
-        MATCH (t:Centre {id: $newTownId})
+        WITH log WHERE $newCampusTownId IS NOT NULL
+        MATCH (t:Centre {id: $newCampusTownId})
         MERGE (t)-[:HAS_HISTORY]->(log)
         RETURN COUNT(log)
       }

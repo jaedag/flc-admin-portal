@@ -66,7 +66,7 @@ export const UpdateCentre = () => {
 
   const [UpdateCentre] = useMutation(UPDATE_CENTRE_MUTATION, {
     onCompleted: (updatedInfo) => {
-      setNewLeaderInfo(updatedInfo.UpdateCentre?.leader)
+      setNewLeaderInfo(updatedInfo.UpdateCentre.leader)
     },
     refetchQueries: [
       { query: DISPLAY_CENTRE, variables: { id: centreId } },
@@ -97,8 +97,8 @@ export const UpdateCentre = () => {
         variables: {
           centreId: centreId,
           leaderId: '',
-          newTownId: newTown.AddCentreTown.from.id,
-          oldCentreId: centreData?.displayCentre?.town.id,
+          newCampusTownId: newTown.AddCentreTown.from.id,
+          oldCampusTownId: centreData?.displayCentre?.town.id,
           historyRecord: `${initialValues.centreName} has been moved from ${
             centreData?.displayCentre?.town.name
           } ${capitalise(church.church)} to ${
@@ -115,8 +115,8 @@ export const UpdateCentre = () => {
         variables: {
           centreId: centreId,
           leaderId: '',
-          newCampusId: newCampus.AddCentreCampus.from.id,
-          oldCentreId: centreData?.displayCentre?.Campus.id,
+          oldCampusTownId: centreData?.displayCentre?.Campus.id,
+          newCampusTownId: newCampus.AddCentreCampus.from.id,
           historyRecord: `${initialValues.centreName} has been moved from ${
             centreData?.displayCentre?.Campus.name
           } ${capitalise(church.church)} to ${
@@ -133,7 +133,7 @@ export const UpdateCentre = () => {
     //onSubmit receives the form state as argument
     const onSubmit = (values, onSubmitProps) => {
       setBishopId(values.centreSelect)
-
+      console.log(newLeaderInfo)
       UpdateCentre({
         variables: {
           centreId: centreId,
@@ -150,7 +150,9 @@ export const UpdateCentre = () => {
           variables: {
             centreId: centreId,
             leaderId: newLeaderInfo.id,
-            historyRecord: `${newLeaderInfo.firstName} ${newLeaderInfo.lastName} was transferred to become the new Bacenta Leader for ${values.bacentaName}`,
+            oldCampusTownId: '',
+            newCampusTownId: '',
+            historyRecord: `${newLeaderInfo.firstName} ${newLeaderInfo.lastName} becamethe new Centre Leader for ${values.bacentaName}`,
           },
         })
       }
@@ -192,6 +194,8 @@ export const UpdateCentre = () => {
           variables: {
             centreId: centreId,
             leaderId: '',
+            oldCampusTownId: '',
+            newCampusTownId: '',
             historyRecord: `The Centre name has been changed from ${initialValues.centreName} to ${values.centreName}`,
           },
         })

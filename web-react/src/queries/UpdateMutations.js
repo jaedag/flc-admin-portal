@@ -57,6 +57,11 @@ export const UPDATE_TOWN_MUTATION = gql`
     ) {
       id
       name
+      leader {
+        id
+        firstName
+        lastName
+      }
     }
   }
 `
@@ -78,6 +83,11 @@ export const UPDATE_CAMPUS_MUTATION = gql`
     ) {
       id
       name
+      leader {
+        id
+        firstName
+        lastName
+      }
     }
   }
 `
@@ -97,6 +107,11 @@ export const UPDATE_CENTRE_MUTATION = gql`
     ) {
       id
       name
+      leader {
+        id
+        firstName
+        lastName
+      }
     }
   }
 `

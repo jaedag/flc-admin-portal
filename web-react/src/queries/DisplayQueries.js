@@ -247,6 +247,17 @@ export const DISPLAY_SONTA = gql`
           }
         }
       }
+      history {
+        HistoryLog {
+          id
+          created_at {
+            date {
+              formatted
+            }
+          }
+          historyRecord
+        }
+      }
     }
     sontaMemberCount(id: $id)
 
@@ -294,6 +305,17 @@ export const DISPLAY_CENTRE = gql`
           Title {
             title
           }
+        }
+      }
+      history {
+        HistoryLog {
+          id
+          created_at {
+            date {
+              formatted
+            }
+          }
+          historyRecord
         }
       }
     }
@@ -351,6 +373,17 @@ export const DISPLAY_TOWN = gql`
           }
         }
       }
+      history {
+        HistoryLog {
+          id
+          created_at {
+            date {
+              formatted
+            }
+          }
+          historyRecord
+        }
+      }
     }
     townMemberCount(id: $id)
     townCentreCount(id: $id)
@@ -405,6 +438,17 @@ export const DISPLAY_CAMPUS = gql`
           Title {
             title
           }
+        }
+      }
+      history {
+        HistoryLog {
+          id
+          created_at {
+            date {
+              formatted
+            }
+          }
+          historyRecord
         }
       }
     }

@@ -58,26 +58,26 @@ const BishopDashboard = () => {
             </div>
           </div>
 
-          <div className="row justify-content-center">
-            <div className="col-sm-12 col-md">
+          <div className="row justify-content-center mt-5">
+            <div className="col-sm-12 col-md-auto">
               <DashboardButton
                 btnText="Register Member"
                 btnLink="/member/addmember"
               />
             </div>
-            <div className="col-sm-12 col-md">
+            <div className="col-sm-12 col-md-auto">
               <DashboardButton
                 btnText="Start a Bacenta"
                 btnLink="/bacenta/addbacenta"
               />
             </div>
-            <div className="col-sm-12 col-md">
+            <div className="col-sm-12 col-md-auto">
               <DashboardButton
                 btnText="Start a Centre"
                 btnLink="/centre/addcentre"
               />
             </div>
-            <div className="col-sm-12 col-md">
+            <div className="col-sm-12 col-md-auto">
               <DashboardButton
                 btnText={`Add ${capitalise(church.church)}`}
                 btnLink={`/${church.church}/add${church.church}`}
@@ -217,26 +217,26 @@ const BishopDashboard = () => {
             </div>
           </div>
 
-          <div className="row justify-content-center">
-            <div className="col-sm-12 col-md">
+          <div className="row justify-content-center mt-5">
+            <div className="col-sm-12 col-md-auto">
               <DashboardButton
                 btnText="Register Member"
                 btnLink="/member/addmember"
               />
             </div>
-            <div className="col-sm-12 col-md">
+            <div className="col-sm-12 col-md-auto">
               <DashboardButton
                 btnText="Start a Bacenta"
                 btnLink="/bacenta/addbacenta"
               />
             </div>
-            <div className="col-sm-12 col-md">
+            <div className="col-sm-12 col-md-auto">
               <DashboardButton
                 btnText="Start a Centre"
                 btnLink="/centre/addcentre"
               />
             </div>
-            <div className="col-sm-12 col-md">
+            <div className="col-sm-12 col-md-auto">
               <DashboardButton
                 btnText={`Add ${capitalise(church.church)}`}
                 btnLink={`/${church.church}/add${church.church}`}

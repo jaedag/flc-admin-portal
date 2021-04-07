@@ -1,12 +1,13 @@
 import React from 'react'
+import Spinner from './Spinner'
 
 function SpinnerPage() {
   return (
     <div className="body-container full-body-center">
-      <div className="row h-75">
+      <div className="row">
         <div className="col my-auto">
-          <div className="spinner-border-center full-center" role="status">
-            <div className="sr-only">Loading...</div>
+          <div className="spinner-border-center full-center">
+            <Spinner />
           </div>
         </div>
       </div>

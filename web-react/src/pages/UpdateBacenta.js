@@ -46,10 +46,10 @@ export const UpdateBacenta = () => {
     }
   )
 
-  const [newLeaderInfo, setNewLeaderInfo] = useState({})
-
   const history = useHistory()
   const [positionLoading, setPositionLoading] = useState(false)
+  // const [newLeaderInfo, setNewLeaderInfo] = useState({})
+  let newLeaderInfo = 'lw'
 
   const initialValues = {
     bacentaName: bacentaData?.displayBacenta?.name,
@@ -97,7 +97,9 @@ export const UpdateBacenta = () => {
 
   const [UpdateBacenta] = useMutation(UPDATE_BACENTA, {
     onCompleted: (updatedInfo) => {
-      setNewLeaderInfo(updatedInfo.UpdateBacenta?.leader)
+      // setNewLeaderInfo(updatedInfo.UpdateBacenta?.leader)
+
+      newLeaderInfo = updatedInfo.UpdateBacenta?.leader
     },
     refetchQueries: [
       { query: GET_CENTRE_BACENTAS, variables: { id: centreId } },
@@ -162,6 +164,9 @@ export const UpdateBacenta = () => {
         },
       })
 
+      console.log('this', this)
+      console.log(newLeaderInfo)
+
       //Log If The Centre Changes
       if (values.centreSelect !== initialValues.centreSelect) {
         RemoveBacentaCentre({
@@ -180,6 +185,7 @@ export const UpdateBacenta = () => {
 
       //Log if the Leader Changes
       if (values.leaderWhatsapp !== initialValues.leaderWhatsapp) {
+        // console.log(newLeaderInfo)
         LogBacentaHistory({
           variables: {
             bacentaId: bacentaId,

@@ -37,6 +37,7 @@ function FormikSearchbox(props) {
           __typename: row.__typename,
           firstName: row.firstName,
           lastName: row.lastName,
+          bacenta: row.bacenta,
           centre: row.centre,
           town: row.town,
           campus: row.campus,

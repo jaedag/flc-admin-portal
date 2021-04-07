@@ -12,6 +12,7 @@ function UserProfile() {
         <Link
           className="nav-item nav-link d-flex align-items-center flex-column p-0 pb-2"
           to="#"
+          // onClick={() => logout({ returnTo: window.location.origin })}
         >
           <span>
             <img

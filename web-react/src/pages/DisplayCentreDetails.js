@@ -49,6 +49,10 @@ export const DisplayCentreDetails = () => {
           churchNo={centreBacentaCount}
           buttons={displayCentre ? displayCentre.bacentas : []}
           editlink="/centre/editcentre"
+          history={
+            centreData.displayCentre?.history.length !== 0 &&
+            centreData.displayCentre?.history
+          }
           breadcrumb={breadcrumb && breadcrumb}
         />
       </div>

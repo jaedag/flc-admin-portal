@@ -23,11 +23,14 @@ export const DisplayAllTownCampuses = () => {
   } = useQuery(GET_CAMPUSES, {
     variables: { id: bishopId },
   })
-  const { data: bishopMemberCount } = useQuery(BISHOP_MEMBER_COUNT, {
-    variables: { id: bishopId },
-  })
+  const { data: bishopMemberCount, loading: bishopMemberLoading } = useQuery(
+    BISHOP_MEMBER_COUNT,
+    {
+      variables: { id: bishopId },
+    }
+  )
 
-  if (townLoading || campusLoading) {
+  if (townLoading || campusLoading || bishopMemberLoading) {
     // Spinner Icon for Loading Screens
     return <LoadingScreen />
   } else if (church.church === 'town') {

@@ -35,15 +35,15 @@ export const LOG_CENTRE_HISTORY = gql`
     $centreId: ID!
     $historyRecord: String
     $leaderId: ID
-    $oldTownId: ID
-    $newTownId: ID
+    $oldCampusTownId: ID
+    $newCampusTownId: ID
   ) {
     LogCentreHistory(
       centreId: $centreId
       historyRecord: $historyRecord
       leaderId: $leaderId
-      oldTownId: $oldTownId
-      newTownId: $newTownId
+      oldCampusTownId: $oldCampusTownId
+      newCampusTownId: $newCampusTownId
     ) {
       id
       name

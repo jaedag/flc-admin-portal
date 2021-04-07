@@ -5,6 +5,8 @@ import { DetailsCard } from './DetailsCard'
 import { NavBar } from './NavBar'
 import { MemberContext } from '../contexts/MemberContext'
 import { ChurchContext } from '../contexts/ChurchContext'
+import { Timeline } from './Timeline'
+import { EditButton } from './EditButton'
 
 export const DisplayChurchDetails = (props) => {
   const {
@@ -40,7 +42,11 @@ export const DisplayChurchDetails = (props) => {
                   return (
                     <small
                       key={i}
-                      to={`/${bread?.__typename.toLowerCase()}/displaydetails`}
+                      to={
+                        bread?.firstName
+                          ? `/dashboard`
+                          : `/${bread?.__typename.toLowerCase()}/displaydetails`
+                      }
                       className="label text-secondary"
                       // onClick={() => {
                       //   clickCard(bread)
@@ -55,7 +61,11 @@ export const DisplayChurchDetails = (props) => {
                   return (
                     <Link
                       key={i}
-                      to={`/${bread?.__typename.toLowerCase()}/displaydetails`}
+                      to={
+                        bread?.firstName
+                          ? `/dashboard`
+                          : `/${bread?.__typename.toLowerCase()}/displaydetails`
+                      }
                       className=" label text-secondary"
                       onClick={() => {
                         clickCard(bread)
@@ -72,14 +82,7 @@ export const DisplayChurchDetails = (props) => {
             : null}
           <h3 className="mx-3 mt-3 font-weight-bold">
             {`${name} ${churchType}`}
-            {!isAuthenticated && (
-              <Link to={`${editlink}`}>
-                <sup className="text-secondary card-text icon-color font-weight-bold ml-3">
-                  <i className="fas fa-edit" />
-                  Edit
-                </sup>
-              </Link>
-            )}
+            {isAuthenticated && <EditButton link={editlink} />}
           </h3>
           {admin && (
             <Link
@@ -177,22 +180,7 @@ export const DisplayChurchDetails = (props) => {
       {history && (
         <div className="container px-3">
           <h5>Church History</h5>
-          <ul className="timeline">
-            {history.map(
-              (element, index) =>
-                index < 5 && (
-                  <li key={index}>
-                    <p className="timeline-text">
-                      {element.HistoryLog.historyRecord}
-                      <br />
-                      <small className="text-secondary">
-                        {element.HistoryLog.created_at.date?.formatted}
-                      </small>
-                    </p>
-                  </li>
-                )
-            )}
-          </ul>
+          <Timeline record={history} modifier="church" limit={5} />
         </div>
       )}
     </div>

@@ -12,7 +12,11 @@ export const MemberCard = (props) => {
         <div className="col">
           <p className="font-weight-bold my-2">{title}</p>
         </div>
-        {isAuthenticated && <EditButton link={editlink} />}
+        {isAuthenticated && (
+          <div className="col-auto my-auto d-flex justify-content-end">
+            <EditButton link={editlink} />
+          </div>
+        )}
       </div>
       {props.children}
     </div>

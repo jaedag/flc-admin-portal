@@ -13,6 +13,8 @@ import Spinner from '../components/Spinner'
 import { GET_MINISTRIES, BACENTA_DROPDOWN } from '../queries/ListQueries'
 import { ChurchContext } from '../contexts/ChurchContext'
 import { MemberContext } from '../contexts/MemberContext'
+import PlusSign from '../components/PlusSign'
+import MinusSign from '../components/MinusSign'
 
 export const CreateMember = () => {
   const initialValues = {
@@ -422,22 +424,7 @@ export const CreateMember = () => {
                                         type="button"
                                         onClick={() => remove(index)}
                                       >
-                                        {' '}
-                                        <svg
-                                          aria-hidden="true"
-                                          focusable="false"
-                                          data-prefix="fas"
-                                          data-icon="minus"
-                                          className="svg-inline--fa fa-minus fa-w-14"
-                                          role="img"
-                                          xmlns="http://www.w3.org/2000/svg"
-                                          viewBox="0 0 448 512"
-                                        >
-                                          <path
-                                            fill="currentColor"
-                                            d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"
-                                          />
-                                        </svg>
+                                        <PlusSign />
                                       </button>
                                     )}
                                   </div>
@@ -488,21 +475,7 @@ export const CreateMember = () => {
                                       push()
                                     }}
                                   >
-                                    <svg
-                                      aria-hidden="true"
-                                      focusable="false"
-                                      data-prefix="fas"
-                                      data-icon="plus"
-                                      className="svg-inline--fa fa-plus fa-w-14"
-                                      role="img"
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      viewBox="0 0 448 512"
-                                    >
-                                      <path
-                                        fill="currentColor"
-                                        d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"
-                                      />
-                                    </svg>
+                                    <PlusSign />
                                   </button>
                                   {index > 0 && (
                                     <button
@@ -510,22 +483,7 @@ export const CreateMember = () => {
                                       type="button"
                                       onClick={() => remove(index)}
                                     >
-                                      {' '}
-                                      <svg
-                                        aria-hidden="true"
-                                        focusable="false"
-                                        data-prefix="fas"
-                                        data-icon="minus"
-                                        className="svg-inline--fa fa-minus fa-w-14"
-                                        role="img"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 448 512"
-                                      >
-                                        <path
-                                          fill="currentColor"
-                                          d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"
-                                        />
-                                      </svg>
+                                      <MinusSign />
                                     </button>
                                   )}
                                 </div>

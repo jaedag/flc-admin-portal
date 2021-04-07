@@ -4,6 +4,7 @@ export const LOG_BACENTA_HISTORY = gql`
   mutation LogBacentaHistory(
     $bacentaId: ID!
     $historyRecord: String
+    $oldLeaderId: ID
     $leaderId: ID
     $oldCentreId: ID
     $newCentreId: ID
@@ -11,6 +12,7 @@ export const LOG_BACENTA_HISTORY = gql`
     LogBacentaHistory(
       bacentaId: $bacentaId
       historyRecord: $historyRecord
+      oldLeaderId: $oldLeaderId
       leaderId: $leaderId
       oldCentreId: $oldCentreId
       newCentreId: $newCentreId
@@ -34,6 +36,7 @@ export const LOG_CENTRE_HISTORY = gql`
   mutation LogCentreHistory(
     $centreId: ID!
     $historyRecord: String
+    $oldLeaderId: ID
     $leaderId: ID
     $oldCampusTownId: ID
     $newCampusTownId: ID
@@ -42,6 +45,7 @@ export const LOG_CENTRE_HISTORY = gql`
       centreId: $centreId
       historyRecord: $historyRecord
       leaderId: $leaderId
+      oldLeaderId: $oldLeaderId
       oldCampusTownId: $oldCampusTownId
       newCampusTownId: $newCampusTownId
     ) {

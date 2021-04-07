@@ -61,6 +61,7 @@ export const UPDATE_TOWN_MUTATION = gql`
         id
         firstName
         lastName
+        whatsappNumber
       }
     }
   }
@@ -87,6 +88,7 @@ export const UPDATE_CAMPUS_MUTATION = gql`
         id
         firstName
         lastName
+        whatsappNumber
       }
     }
   }
@@ -111,6 +113,7 @@ export const UPDATE_CENTRE_MUTATION = gql`
         id
         firstName
         lastName
+        whatsappNumber
       }
     }
   }
@@ -186,6 +189,10 @@ export const ADD_CENTRE_BACENTAS = gql`
           name
         }
       }
+      to {
+        id
+        name
+      }
     }
   }
 `
@@ -212,6 +219,10 @@ export const REMOVE_BACENTA_CENTRE = gql`
         bacentas {
           name
         }
+      }
+      to {
+        id
+        name
       }
     }
   }
@@ -243,6 +254,7 @@ export const UPDATE_BACENTA = gql`
         id
         firstName
         lastName
+        whatsappNumber
       }
     }
   }

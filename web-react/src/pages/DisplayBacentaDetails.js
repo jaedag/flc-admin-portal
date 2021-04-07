@@ -21,15 +21,18 @@ export const DisplayBacentaDetails = () => {
     return <LoadingScreen />
   } else if (bacentaData) {
     let breadcrumb = [
-      bacentaData.displayBacenta?.centre.town
-        ? bacentaData.displayBacenta?.centre.town.bishop
-        : bacentaData.displayBacenta?.centre.campus.bishop,
-      bacentaData.displayBacenta?.centre.town
-        ? bacentaData.displayBacenta?.centre.town
-        : bacentaData.displayBacenta?.centre.campus,
+      bacentaData.displayBacenta?.centre?.town
+        ? bacentaData.displayBacenta?.centre?.town.bishop
+        : bacentaData.displayBacenta?.centre?.campus.bishop,
+      bacentaData.displayBacenta?.centre?.town
+        ? bacentaData.displayBacenta?.centre?.town
+        : bacentaData.displayBacenta?.centre?.campus,
       bacentaData.displayBacenta?.centre,
       bacentaData.displayBacenta,
     ]
+    if (!bacentaData.displayBacenta?.centre) {
+      breadcrumb = [bacentaData.displayBacenta]
+    }
 
     return (
       <div>

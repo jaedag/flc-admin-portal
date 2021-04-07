@@ -6,6 +6,8 @@ import { GLOBAL_SEARCH } from '../queries/SearchQuery'
 import { SearchContext } from '../contexts/MemberContext'
 import { ChurchContext } from '../contexts/ChurchContext'
 import Spinner from '../components/Spinner'
+import user from '../img/user.png'
+import bussolid from '../img/bus-solid.svg'
 
 export const SearchPageMobile = () => {
   const { searchKey } = useContext(SearchContext)
@@ -53,6 +55,31 @@ export const SearchPageMobile = () => {
             </div>
           )}
           {combinedData.slice(0, 10).map((searchResult, index) => {
+            let icon
+
+            switch (searchResult.__typename) {
+              case 'Member':
+                icon = { user }
+                break
+              case 'Bacenta':
+                icon = bussolid
+                break
+              case 'Centre':
+                icon = bussolid
+                break
+              case 'Town':
+                icon = bussolid
+                break
+              case 'Campus':
+                icon = bussolid
+                break
+              case 'Sonta':
+                icon = bussolid
+                break
+              default:
+                break
+            }
+
             return (
               <div
                 key={index}
@@ -76,7 +103,17 @@ export const SearchPageMobile = () => {
                           : searchResult.firstName + ' ' + searchResult.lastName
                       }`}
                     />
-                  ) : null}
+                  ) : (
+                    <img
+                      className="mr-3 rounded-circle img-search p-2 text-secondary"
+                      src={icon}
+                      alt={`${
+                        searchResult.name
+                          ? searchResult.name
+                          : searchResult.firstName + ' ' + searchResult.lastName
+                      }`}
+                    />
+                  )}
 
                   <div className="media-body">
                     <h6 className="mt-0">{`${

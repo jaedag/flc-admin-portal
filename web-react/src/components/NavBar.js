@@ -16,7 +16,7 @@ export const NavBar = () => {
         {church.church && (
           <NavLink label="Bishop" linkTo="/dashboard" icon="bold" />
         )}
-        {!(location.pathname === '/members') && church.church ? (
+        {!location.pathname.endsWith('/members') && church.church ? (
           <NavLink
             linkTo="/members"
             label="Members"
@@ -52,11 +52,12 @@ export const NavBar = () => {
             />
           </>
         )}
-        {location.pathname === '/members' && (
-          <NavLink linkTo="/filter-members" icon="filter" />
+        {location.pathname.endsWith('/members') && (
+          <div className="d-md-none">
+            <NavLink linkTo="/filter-members" icon="filter" />
+          </div>
         )}
         <div className="d-md-none">
-          {' '}
           <NavLink linkTo="/member-search" icon="search" />
         </div>
       </div>

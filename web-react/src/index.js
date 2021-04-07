@@ -157,6 +157,24 @@ const PastorsAdmin = () => {
       .replace(')', '')
   }
 
+  const parseDate = (date) => {
+    // Get today's date
+    let todaysDate = new Date()
+
+    // Create date from input value
+    let inputDate = new Date(date)
+
+    // call setHours to take the time out of the comparison
+    if (inputDate.toDateString() === todaysDate.toDateString()) {
+      // Date equals today's date
+      return 'Today'
+    } else if (inputDate.getDate() === todaysDate.getDate() - 1) {
+      // Date equals yesterday's date
+      return 'Yesterday'
+    }
+    return inputDate.toDateString()
+  }
+
   const makeSelectOptions = (data) => {
     return data.map((data) => ({
       value: data.id,
@@ -601,6 +619,7 @@ const PastorsAdmin = () => {
         value={{
           capitalise,
           plural,
+          parseDate,
           clickCard,
           phoneRegExp,
           parsePhoneNum,

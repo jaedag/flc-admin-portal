@@ -46,14 +46,12 @@ export const UPDATE_TOWN_MUTATION = gql`
     $townName: String
     $lWhatsappNumber: String
     $bishopId: ID
-    $centres: [ID]
   ) {
     UpdateTown(
       townId: $townId
       townName: $townName
       lWhatsappNumber: $lWhatsappNumber
       bishopId: $bishopId
-      centres: $centres
     ) {
       id
       name
@@ -73,14 +71,12 @@ export const UPDATE_CAMPUS_MUTATION = gql`
     $campusName: String
     $lWhatsappNumber: String
     $bishopId: ID
-    $centres: [ID]
   ) {
     UpdateCampus(
       campusId: $campusId
       campusName: $campusName
       lWhatsappNumber: $lWhatsappNumber
       bishopId: $bishopId
-      centres: $centres
     ) {
       id
       name
@@ -264,6 +260,71 @@ export const ADD_BACENTA_CENTRE = gql`
   mutation AddBacentaCentre($centreId: ID!, $bacentaId: ID!) {
     AddBacentaCentre(from: { id: $centreId }, to: { id: $bacentaId }) {
       from {
+        id
+        name
+      }
+    }
+  }
+`
+
+//Updating Campus/Town Mutations
+export const ADD_TOWN_BISHOP = gql`
+  mutation AddTownBishop($townId: ID!, $bishopId: ID!) {
+    AddTownBishop(from: { id: $bishopId }, to: { id: $townId }) {
+      from {
+        id
+        firstName
+        lastName
+      }
+      to {
+        id
+        name
+      }
+    }
+  }
+`
+
+export const REMOVE_TOWN_BISHOP = gql`
+  mutation RemoveTownBishop($townId: ID!, $bishopId: ID!) {
+    RemoveTownBishop(from: { id: $bishopId }, to: { id: $townId }) {
+      from {
+        id
+        firstName
+        lastName
+      }
+      to {
+        id
+        name
+      }
+    }
+  }
+`
+
+export const ADD_CAMPUS_BISHOP = gql`
+  mutation AddCampusBishop($campusId: ID!, $bishopId: ID!) {
+    AddCampusBishop(from: { id: $bishopId }, to: { id: $campusId }) {
+      from {
+        id
+        firstName
+        lastName
+      }
+      to {
+        id
+        name
+      }
+    }
+  }
+`
+
+export const REMOVE_CAMPUS_BISHOP = gql`
+  mutation RemoveCampusBishop($campusId: ID!, $bishopId: ID!) {
+    RemoveCampusBishop(from: { id: $bishopId }, to: { id: $campusId }) {
+      from {
+        id
+        firstName
+        lastName
+      }
+      to {
         id
         name
       }

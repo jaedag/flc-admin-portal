@@ -77,11 +77,16 @@ export const DISPLAY_MEMBER = gql`
         }
       }
       history {
+        timeStamp {
+          hour
+          minute
+        }
         created_at {
           date {
             formatted
           }
         }
+        
         historyRecord
       }
       leadsBacenta {
@@ -218,11 +223,16 @@ export const DISPLAY_BACENTA = gql`
       history {
         HistoryLog {
           id
+          timeStamp {
+            hour
+            minute
+          }
           created_at {
             date {
               formatted
             }
           }
+
           historyRecord
         }
       }
@@ -250,6 +260,10 @@ export const DISPLAY_SONTA = gql`
       history {
         HistoryLog {
           id
+          timeStamp {
+            hour
+            minute
+          }
           created_at {
             date {
               formatted
@@ -310,6 +324,10 @@ export const DISPLAY_CENTRE = gql`
       history {
         HistoryLog {
           id
+          timeStamp {
+            hour
+            minute
+          }
           created_at {
             date {
               formatted
@@ -376,6 +394,10 @@ export const DISPLAY_TOWN = gql`
       history {
         HistoryLog {
           id
+          timeStamp {
+          hour
+          minute
+        }
           created_at {
             date {
               formatted
@@ -443,6 +465,10 @@ export const DISPLAY_CAMPUS = gql`
       history {
         HistoryLog {
           id
+          timeStamp {
+          hour
+          minute
+        }
           created_at {
             date {
               formatted

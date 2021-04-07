@@ -346,7 +346,7 @@ type Query {
   townSontaCount(id: ID): Int!
     @cypher(
       statement: "MATCH (:Town {id:$id})-[:HAS_SONTA]->(s:Sonta) RETURN COUNT(s)"
-    )
+    ) 
   townMemberCount(id: ID): Int!
     @cypher(
       statement: "MATCH (:Town {id:$id})-[]-(:Centre)-[]->(:Bacenta)<-[:BELONGS_TO]-(m:Member) RETURN COUNT(DISTINCT m)"
@@ -918,7 +918,6 @@ type Mutation {
     townName: String
     lWhatsappNumber: String
     bishopId: ID
-    centres: [ID]
   ): Town
     @cypher(
       statement: """
@@ -927,36 +926,21 @@ type Mutation {
 
       WITH t
          CALL {
-         	WITH t
-
-             MATCH (m:Member {whatsappNumber: $lWhatsappNumber})
-             OPTIONAL MATCH (t)<-[r:LEADS]-()
-             DELETE r
-             MERGE (m)-[:LEADS]->(t)
-         	RETURN count(t)
+        WITH t
+          MATCH (m:Member {whatsappNumber: $lWhatsappNumber})
+          OPTIONAL MATCH (t)<-[r:LEADS]-()
+          DELETE r
+          MERGE (m)-[:LEADS]->(t)
+        RETURN count(t)
          	}
 
       WITH t
          CALL {
          	WITH t
-
-             MATCH (b:Member {id: $bishopId})
-             OPTIONAL MATCH (t)<-[r:HAS_TOWN]-()
-             DELETE r
-             MERGE (b)-[:HAS_TOWN]->(t)
-         	RETURN count(t)
-         	}
-
-      WITH t
-         CALL {
-         	WITH t
-         	WITH t  WHERE $centres IS NOT NULL
-         	UNWIND $centres AS x
-             MATCH (c:Centre {id:x})
-             OPTIONAL MATCH ()-[r:HAS_CENTRE]->(c)
-      	OPTIONAL MATCH (t)-[r1:HAS_CENTRE]->()
-             DELETE r,r1
-             MERGE (t)-[:HAS_CENTRE]->(c)
+          MATCH (b:Member {id: $bishopId})
+          OPTIONAL MATCH (t)<-[r:HAS_TOWN]-()
+          DELETE r
+          MERGE (b)-[:HAS_TOWN]->(t)
          	RETURN count(t)
          	}
 
@@ -994,19 +978,6 @@ type Mutation {
              OPTIONAL MATCH (t)<-[r:HAS_CAMPUS]-()
              DELETE r
              MERGE (b)-[:HAS_CAMPUS]->(t)
-         	RETURN count(t)
-         	}
-
-      WITH t
-         CALL {
-         	WITH t
-         	WITH t  WHERE $centres IS NOT NULL
-         	UNWIND $centres AS x
-             MATCH (c:Centre {id:x})
-             OPTIONAL MATCH ()-[r:HAS_CENTRE]->(c)
-      	OPTIONAL MATCH (t)-[r1:HAS_CENTRE]->()
-             DELETE r,r1
-             MERGE (t)-[:HAS_CENTRE]->(c)
          	RETURN count(t)
          	}
 
@@ -1186,7 +1157,7 @@ type Mutation {
        CALL {
          WITH log
          WITH log WHERE $oldCampusTownId IS NOT NULL
-         MATCH (t:Town {id: $oldCampusTownId})
+         MATCH (t {id: $oldCampusTownId}) WHERE t:Town OR t:Campus
          MERGE (t)-[:HAS_HISTORY]->(log)
          RETURN COUNT(log)
        }
@@ -1195,7 +1166,66 @@ type Mutation {
        CALL {
          WITH log
          WITH log WHERE $newCampusTownId IS NOT NULL
-         MATCH (t:Centre {id: $newCampusTownId})
+         OPTIONAL MATCH (t:Town {id: $newCampusTownId})
+          MATCH (t {id: $oldCampusTownId}) WHERE t:Town OR t:Campus
+         MERGE (t)-[:HAS_HISTORY]->(log)
+         RETURN COUNT(log)
+       }
+
+       RETURN c
+      """
+    )
+  LogTownHistory(
+    townId: ID!
+    historyRecord: String
+    leaderId: ID
+    oldLeaderId: ID
+    newBishopId: ID
+    oldBishopId: ID
+  ): Town
+    @cypher(
+      statement: """
+       MATCH  (c:Town {id: $townId})
+       CREATE (log:HistoryLog {id: apoc.create.uuid()})
+         SET log.historyRecord = $historyRecord,
+           log.timeStamp = time()
+       MERGE (t:TimeGraph {date: date()})
+       MERGE (c)-[r:HAS_HISTORY]->(log)
+       MERGE (log)-[:RECORDED_ON]->(t)
+
+       WITH log,c
+       CALL{
+         WITH log
+         WITH log WHERE $leaderId IS NOT NULL
+       MATCH (l:Member {id: $leaderId})
+        OPTIONAL MATCH (oldl:Member {id: $oldLeaderId})
+         SET log :ServiceLog
+         WITH log, l,oldl
+       OPTIONAl MATCH ()-[r0:HAS_HISTORY]->(log)
+         SET r0.pointer = false
+         WITH log,l,oldl
+       CREATE (oldl)-[:HAS_HISTORY]->(log)
+       CREATE (l)-[r:HAS_HISTORY]->(log)
+          SET r.pointer = true
+          WITH log
+       RETURN COUNT(log)
+       }
+
+
+       WITH log,c
+       CALL {
+         WITH log
+         WITH log WHERE $oldBishopId IS NOT NULL
+         MATCH (t:Member {id: $oldBishopId})
+         MERGE (t)-[:HAS_HISTORY]->(log)
+         RETURN COUNT(log)
+       }
+
+       WITH log,c
+       CALL {
+         WITH log
+         WITH log WHERE $newBishopId IS NOT NULL
+         MATCH (t:Member {id: $newBishopId})
          MERGE (t)-[:HAS_HISTORY]->(log)
          RETURN COUNT(log)
        }

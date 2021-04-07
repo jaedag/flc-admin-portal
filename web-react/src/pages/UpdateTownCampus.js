@@ -24,6 +24,11 @@ import { ChurchContext } from '../contexts/ChurchContext'
 import { DISPLAY_CAMPUS, DISPLAY_TOWN } from '../queries/DisplayQueries'
 import PlusSign from '../components/PlusSign'
 import MinusSign from '../components/MinusSign'
+import {
+  LOG_CAMPUS_HISTORY,
+  LOG_CENTRE_HISTORY,
+  LOG_TOWN_HISTORY,
+} from '../queries/LogMutations'
 
 export const UpdateTownCampus = () => {
   const {
@@ -37,6 +42,7 @@ export const UpdateTownCampus = () => {
     bishopId,
     setBishopId,
   } = useContext(ChurchContext)
+
   const {
     data: campusData,
     error: campusError,
@@ -44,6 +50,7 @@ export const UpdateTownCampus = () => {
   } = useQuery(DISPLAY_CAMPUS, {
     variables: { id: campusId },
   })
+
   const { data: townData, error: townError, loading: townLoading } = useQuery(
     DISPLAY_TOWN,
     {
@@ -88,32 +95,98 @@ export const UpdateTownCampus = () => {
     ),
   })
 
-  const [UpdateTown] = useMutation(UPDATE_TOWN_MUTATION, {
+  const [LogTownHistory] = useMutation(LOG_TOWN_HISTORY, {
+    refetchQueries: [{ query: DISPLAY_TOWN, variables: { id: townId } }],
+  })
+  const [LogCampusHistory] = useMutation(LOG_CAMPUS_HISTORY, {
+    refetchQueries: [{ query: DISPLAY_CAMPUS, variables: { id: campusId } }],
+  })
+  const [LogCentreHistory] = useMutation(LOG_CENTRE_HISTORY, {
     refetchQueries: [
+      { query: DISPLAY_CAMPUS, variables: { id: campusId } },
       { query: DISPLAY_TOWN, variables: { id: townId } },
-      { query: GET_TOWN_CENTRES, variables: { id: townId } },
-      { query: GET_TOWNS, variables: { id: bishopId } },
-      { query: GET_TOWNS, variables: { id: townData?.displayTown?.bishop.id } },
-      { query: BISH_DASHBOARD_COUNTS, variables: { id: bishopId } },
     ],
   })
 
-  const [UpdateCampus] = useMutation(UPDATE_CAMPUS_MUTATION, {
-    refetchQueries: [
-      { query: DISPLAY_CAMPUS, variables: { id: campusId } },
-      { query: GET_CAMPUS_CENTRES, variables: { id: campusId } },
-      {
-        query: GET_CAMPUS_CENTRES,
-        variables: { id: campusData?.displayCampus?.id },
+  const [UpdateTown] = useMutation(
+    UPDATE_TOWN_MUTATION,
+    {
+      onCompleted: (updatedInfo) => {
+        let newLeaderInfo = updatedInfo.UpdateTown?.leader
+
+        //Log if the Leader Changes
+        if (
+          parsePhoneNum(newLeaderInfo.whatsappNumber) !==
+          parsePhoneNum(initialValues.leaderWhatsapp)
+        ) {
+          LogTownHistory({
+            variables: {
+              townId: townId,
+              leaderId: newLeaderInfo.id,
+              oldLeaderId: townData?.displayTown.leader.id,
+              oldBishopId: '',
+              newBishopId: '',
+              historyRecord: `${newLeaderInfo.firstName} ${newLeaderInfo.lastName} was transferred to become the new Town CO for ${initialValues.campusTownName} replacing ${townData?.displayTown?.leader.firstName} ${townData?.displayTown?.leader.lastName}`,
+            },
+          })
+        }
       },
-      { query: GET_CAMPUSES, variables: { id: bishopId } },
-      {
-        query: GET_CAMPUSES,
-        variables: { id: campusData?.displayCampus?.bishop.id },
+    },
+    {
+      refetchQueries: [
+        { query: DISPLAY_TOWN, variables: { id: townId } },
+        { query: GET_TOWN_CENTRES, variables: { id: townId } },
+        { query: GET_TOWNS, variables: { id: bishopId } },
+        {
+          query: GET_TOWNS,
+          variables: { id: townData?.displayTown?.bishop.id },
+        },
+        { query: BISH_DASHBOARD_COUNTS, variables: { id: bishopId } },
+      ],
+    }
+  )
+
+  const [UpdateCampus] = useMutation(
+    UPDATE_CAMPUS_MUTATION,
+    {
+      onCompleted: (updatedInfo) => {
+        let newLeaderInfo = updatedInfo.UpdateCampus?.leader
+
+        //Log if the Leader Changes
+        if (
+          parsePhoneNum(newLeaderInfo.whatsappNumber) !==
+          parsePhoneNum(initialValues.leaderWhatsapp)
+        ) {
+          LogCampusHistory({
+            variables: {
+              campusId: campusId,
+              leaderId: newLeaderInfo.id,
+              oldLeaderId: campusData?.displayCampus.leader.id,
+              oldBishopId: '',
+              newBishopId: '',
+              historyRecord: `${newLeaderInfo.firstName} ${newLeaderInfo.lastName} was transferred to become the new Campu CO for ${initialValues.campusTownName}, replacing ${campusData?.displayCampus?.leader.firstName} ${campusData?.displayCampus?.leader.lastName}`,
+            },
+          })
+        }
       },
-      { query: BISH_DASHBOARD_COUNTS, variables: { id: bishopId } },
-    ],
-  })
+    },
+    {
+      refetchQueries: [
+        { query: DISPLAY_CAMPUS, variables: { id: campusId } },
+        { query: GET_CAMPUS_CENTRES, variables: { id: campusId } },
+        {
+          query: GET_CAMPUS_CENTRES,
+          variables: { id: campusData?.displayCampus?.id },
+        },
+        { query: GET_CAMPUSES, variables: { id: bishopId } },
+        {
+          query: GET_CAMPUSES,
+          variables: { id: campusData?.displayCampus?.bishop.id },
+        },
+        { query: BISH_DASHBOARD_COUNTS, variables: { id: bishopId } },
+      ],
+    }
+  )
 
   const {
     data: bishopData,
@@ -142,11 +215,54 @@ export const UpdateTownCampus = () => {
             townName: values.campusTownName,
             lWhatsappNumber: parsePhoneNum(values.leaderWhatsapp),
             bishopId: values.bishopSelect,
-            centres: values.centres.map((centre) => {
-              return centre.id
-            }),
           },
         })
+
+        //Log if Campus Name Changes
+        if (values.campusTownName !== initialValues.campusTownName) {
+          LogTownHistory({
+            variables: {
+              townId: townId,
+              leaderId: '',
+              oldLeaderId: '',
+              oldBishopId: '',
+              newBishopId: '',
+              historyRecord: `The Town name has been changed from ${initialValues.campusTownName} to ${values.campusTownName}`,
+            },
+          })
+        }
+
+      //Log If The Bishop Changes
+      if (values.bishopSelect !== initialValues.bishopSelect) {
+        if (church.church === 'town') {
+          RemoveTownBishop({
+            variables: {
+              townId: initialValues.bishopSelect,
+              centreId: centreId,
+            },
+          })
+          AddTownBishop({
+            variables: {
+              townId: values.bishopSelect,
+              centreId: centreId,
+            },
+          })
+        } else if (church.church === 'campus') {
+          RemoveCampusBishop({
+            variables: {
+              campusId: initialValues.bishopSelect,
+              centreId: centreId,
+            },
+          })
+          AddCampusBishop({
+            variables: {
+              campusId: values.bishopSelect,
+              centreId: centreId,
+            },
+          })
+        }
+      }
+
       } else if (church.church === 'campus') {
         // console.log("Form data",values);
         UpdateCampus({
@@ -155,15 +271,27 @@ export const UpdateTownCampus = () => {
             campusName: values.campusTownName,
             lWhatsappNumber: parsePhoneNum(values.leaderWhatsapp),
             bishopId: values.bishopSelect,
-            centres: values.centres.map((centre) => {
-              return centre.id
-            }),
           },
         })
+
+        //Log if Town Name Changes
+        if (values.campusTownName !== initialValues.campusTownName) {
+          LogCampusHistory({
+            variables: {
+              campusId: campusId,
+              leaderId: '',
+              oldLeaderId: '',
+              oldBishopId: '',
+              newBishopId: '',
+              historyRecord: `The Campus name has been changed from ${initialValues.campusTownName} to ${values.campusTownName}`,
+            },
+          })
+        }
       }
 
       onSubmitProps.setSubmitting(false)
       onSubmitProps.resetForm()
+
       history.push(`/${church.church}/displaydetails`)
     }
 

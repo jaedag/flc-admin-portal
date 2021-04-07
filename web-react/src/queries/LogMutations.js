@@ -63,3 +63,67 @@ export const LOG_CENTRE_HISTORY = gql`
     }
   }
 `
+
+export const LOG_CAMPUS_HISTORY = gql`
+  mutation LogCampusHistory(
+    $campusId: ID!
+    $historyRecord: String
+    $oldLeaderId: ID
+    $leaderId: ID
+    $oldBishopId: ID
+    $newBishopId: ID
+  ) {
+    LogCampusHistory(
+      campusId: $campusId
+      historyRecord: $historyRecord
+      leaderId: $leaderId
+      oldLeaderId: $oldLeaderId
+      oldBishopId: $oldBishopId
+      newBishopId: $newBishopId
+    ) {
+      id
+      name
+      history {
+        HistoryLog {
+          historyRecord
+          timeStamp {
+            formatted
+          }
+        }
+        pointer
+      }
+    }
+  }
+`
+
+export const LOG_TOWN_HISTORY = gql`
+  mutation LogTownHistory(
+    $townId: ID!
+    $historyRecord: String
+    $oldLeaderId: ID
+    $leaderId: ID
+    $oldBishopId: ID
+    $newBishopId: ID
+  ) {
+    LogTownHistory(
+      townId: $townId
+      historyRecord: $historyRecord
+      leaderId: $leaderId
+      oldLeaderId: $oldLeaderId
+      oldBishopId: $oldBishopId
+      newBishopId: $newBishopId
+    ) {
+      id
+      name
+      history {
+        HistoryLog {
+          historyRecord
+          timeStamp {
+            formatted
+          }
+        }
+        pointer
+      }
+    }
+  }
+`

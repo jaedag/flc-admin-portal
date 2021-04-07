@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/client'
 import { Formik, Form, FieldArray } from 'formik'
@@ -19,7 +19,12 @@ import { NavBar } from '../components/NavBar'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
 import { ChurchContext } from '../contexts/ChurchContext'
 import { DISPLAY_CENTRE } from '../queries/DisplayQueries'
-import { LOG_CENTRE_HISTORY } from '../queries/LogMutations'
+import {
+  LOG_CENTRE_HISTORY,
+  LOG_BACENTA_HISTORY,
+} from '../queries/LogMutations'
+import PlusSign from '../components/PlusSign'
+import MinusSign from '../components/MinusSign'
 
 export const UpdateCentre = () => {
   const {
@@ -32,15 +37,13 @@ export const UpdateCentre = () => {
     setBishopId,
   } = useContext(ChurchContext)
 
-  const {
-    data: centreData,
+  const { data: centreData, loading: centreLoading } = useQuery(
+    DISPLAY_CENTRE,
+    {
+      variables: { id: centreId },
+    }
+  )
 
-    loading: centreLoading,
-  } = useQuery(DISPLAY_CENTRE, {
-    variables: { id: centreId },
-  })
-
-  const [newLeaderInfo, setNewLeaderInfo] = useState({})
   const history = useHistory()
 
   const initialValues = {
@@ -64,9 +67,34 @@ export const UpdateCentre = () => {
     ),
   })
 
+  const [LogCentreHistory] = useMutation(LOG_CENTRE_HISTORY, {
+    refetchQueries: [{ query: DISPLAY_CENTRE, variables: { id: centreId } }],
+  })
+
+  const [LogBacentaHistory] = useMutation(LOG_BACENTA_HISTORY, {
+    refetchQueries: [{ query: DISPLAY_CENTRE, variables: { id: centreId } }],
+  })
+
   const [UpdateCentre] = useMutation(UPDATE_CENTRE_MUTATION, {
     onCompleted: (updatedInfo) => {
-      setNewLeaderInfo(updatedInfo.UpdateCentre.leader)
+      let newLeaderInfo = updatedInfo.UpdateCentre?.leader
+      //Log if the Leader Changes
+
+      if (
+        parsePhoneNum(newLeaderInfo.whatsappNumber) !==
+        parsePhoneNum(initialValues.leaderWhatsapp)
+      ) {
+        LogCentreHistory({
+          variables: {
+            centreId: centreId,
+            leaderId: newLeaderInfo.id,
+            oldLeaderId: centreData?.displayCentre?.leader.id,
+            oldCampusTownId: '',
+            newCampusTownId: '',
+            historyRecord: `${newLeaderInfo.firstName} ${newLeaderInfo.lastName} was transferred to become the new Centre Leader for ${initialValues.centreName}, replacing ${centreData?.displayCentre?.leader.firstName} ${centreData?.displayCentre?.leader.lastName}`,
+          },
+        })
+      }
     },
     refetchQueries: [
       { query: DISPLAY_CENTRE, variables: { id: centreId } },
@@ -77,17 +105,38 @@ export const UpdateCentre = () => {
       },
     ],
   })
-  const [LogCentreHistory] = useMutation(LOG_CENTRE_HISTORY, {
-    onCompleted: (newLog) => {
-      newLog.LogCentreHistory.history.map((history) =>
-        console.log('History ', history.HistoryLog)
-      )
-    },
-    refetchQueries: [{ query: DISPLAY_CENTRE, variables: { id: centreId } }],
-  })
 
-  const [AddCentreBacentas] = useMutation(ADD_CENTRE_BACENTAS)
-  const [RemoveBacentaCentre] = useMutation(REMOVE_BACENTA_CENTRE)
+  const [AddCentreBacentas] = useMutation(ADD_CENTRE_BACENTAS, {
+    onCompleted: (data) => {
+      //After removing the bacenta from a centre, then you log that change.
+      LogBacentaHistory({
+        variables: {
+          bacentaId: data.AddCentreBacentas.to.id,
+          leaderId: '',
+          oldLeaderId: '',
+          newCentreId: centreId,
+          oldCentreId: '',
+          historyRecord: `${data.AddCentreBacentas.to.name} Bacenta has been moved to ${data.AddCentreBacentas.from.name} Centre`,
+        },
+      })
+    },
+  })
+  const [RemoveBacentaCentre] = useMutation(REMOVE_BACENTA_CENTRE, {
+    onCompleted: (data) => {
+      console.log(data)
+      //After removing the bacenta from a centre, then you log that change.
+      LogBacentaHistory({
+        variables: {
+          bacentaId: data.RemoveBacentaCentre.to.id,
+          leaderId: '',
+          oldLeaderId: '',
+          newCentreId: '',
+          oldCentreId: centreId,
+          historyRecord: `${data.RemoveBacentaCentre.to.name} Bacenta has been moved from ${initialValues.centreName} Centre`,
+        },
+      })
+    },
+  })
   const [RemoveCentreTown] = useMutation(REMOVE_CENTRE_TOWN)
   const [RemoveCentreCampus] = useMutation(REMOVE_CENTRE_CAMPUS)
   const [AddCentreTown] = useMutation(ADD_CENTRE_TOWN, {
@@ -97,9 +146,12 @@ export const UpdateCentre = () => {
         variables: {
           centreId: centreId,
           leaderId: '',
+          oldLeaderId: '',
           newCampusTownId: newTown.AddCentreTown.from.id,
           oldCampusTownId: centreData?.displayCentre?.town.id,
-          historyRecord: `${initialValues.centreName} has been moved from ${
+          historyRecord: `${
+            initialValues.centreName
+          } Centre has been moved from ${
             centreData?.displayCentre?.town.name
           } ${capitalise(church.church)} to ${
             newTown.AddCentreTown.from.name
@@ -115,6 +167,7 @@ export const UpdateCentre = () => {
         variables: {
           centreId: centreId,
           leaderId: '',
+          oldLeaderId: '',
           oldCampusTownId: centreData?.displayCentre?.Campus.id,
           newCampusTownId: newCampus.AddCentreCampus.from.id,
           historyRecord: `${initialValues.centreName} has been moved from ${
@@ -133,7 +186,7 @@ export const UpdateCentre = () => {
     //onSubmit receives the form state as argument
     const onSubmit = (values, onSubmitProps) => {
       setBishopId(values.centreSelect)
-      console.log(newLeaderInfo)
+
       UpdateCentre({
         variables: {
           centreId: centreId,
@@ -144,19 +197,6 @@ export const UpdateCentre = () => {
       })
 
       //For the Logging of Stuff
-      //Log if the Leader Changes
-      if (values.leaderWhatsapp !== initialValues.leaderWhatsapp) {
-        LogCentreHistory({
-          variables: {
-            centreId: centreId,
-            leaderId: newLeaderInfo.id,
-            oldCampusTownId: '',
-            newCampusTownId: '',
-            historyRecord: `${newLeaderInfo.firstName} ${newLeaderInfo.lastName} becamethe new Centre Leader for ${values.bacentaName}`,
-          },
-        })
-      }
-
       //Log If The TownCampus Changes
       if (values.townCampusSelect !== initialValues.townCampusSelect) {
         if (church.church === 'town') {
@@ -194,6 +234,7 @@ export const UpdateCentre = () => {
           variables: {
             centreId: centreId,
             leaderId: '',
+            oldLeaderId: '',
             oldCampusTownId: '',
             newCampusTownId: '',
             historyRecord: `The Centre name has been changed from ${initialValues.centreName} to ${values.centreName}`,
@@ -343,44 +384,15 @@ export const UpdateCentre = () => {
                                       type="button"
                                       onClick={() => push()}
                                     >
-                                      <svg
-                                        aria-hidden="true"
-                                        focusable="false"
-                                        data-prefix="fas"
-                                        data-icon="plus"
-                                        className="svg-inline--fa fa-plus fa-w-14"
-                                        role="img"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 448 512"
-                                      >
-                                        <path
-                                          fill="currentColor"
-                                          d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"
-                                        />
-                                      </svg>
+                                      <PlusSign />
                                     </button>
-                                    {index > 0 && (
+                                    {index >= 0 && (
                                       <button
                                         className="plus-button rounded"
                                         type="button"
                                         onClick={() => remove(index)}
                                       >
-                                        {' '}
-                                        <svg
-                                          aria-hidden="true"
-                                          focusable="false"
-                                          data-prefix="fas"
-                                          data-icon="minus"
-                                          className="svg-inline--fa fa-minus fa-w-14"
-                                          role="img"
-                                          xmlns="http://www.w3.org/2000/svg"
-                                          viewBox="0 0 448 512"
-                                        >
-                                          <path
-                                            fill="currentColor"
-                                            d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"
-                                          />
-                                        </svg>
+                                        <MinusSign />
                                       </button>
                                     )}
                                   </div>

@@ -219,6 +219,10 @@ export const REMOVE_BACENTA_CENTRE = gql`
       to {
         id
         name
+        centre {
+          id
+          name
+        }
       }
     }
   }

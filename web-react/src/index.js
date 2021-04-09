@@ -446,6 +446,7 @@ const PastorsAdmin = () => {
   }
 
   const determineChurch = (member) => {
+    //switch case for other church types
     switch (member.__typename) {
       case 'Town':
         setChurch({ church: 'town', subChurch: 'centre' })

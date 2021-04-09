@@ -32,6 +32,8 @@ export const BACENTA_DROPDOWN = gql`
       id
       name
       centre {
+        id
+        name
         campus {
           name
         }

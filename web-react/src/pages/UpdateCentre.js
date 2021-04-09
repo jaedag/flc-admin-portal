@@ -5,7 +5,12 @@ import { Formik, Form, FieldArray } from 'formik'
 import * as Yup from 'yup'
 import FormikControl from '../components/formik-components/FormikControl'
 
-import { BACENTA_DROPDOWN, GET_TOWN_CENTRES } from '../queries/ListQueries'
+import {
+  BACENTA_DROPDOWN,
+  GET_CAMPUSES,
+  GET_TOWNS,
+  GET_TOWN_CENTRES,
+} from '../queries/ListQueries'
 import {
   ADD_CENTRE_BACENTAS,
   REMOVE_BACENTA_CENTRE,
@@ -31,9 +36,11 @@ export const UpdateCentre = () => {
     church,
     parsePhoneNum,
     capitalise,
+    makeSelectOptions,
     phoneRegExp,
     townId,
     centreId,
+    bishopId,
     setBishopId,
   } = useContext(ChurchContext)
 
@@ -44,13 +51,23 @@ export const UpdateCentre = () => {
     }
   )
 
+  const { data: townListData, loading: townListLoading } = useQuery(GET_TOWNS, {
+    variables: { id: bishopId },
+  })
+  const { data: campusListData, loading: campusListLoading } = useQuery(
+    GET_CAMPUSES,
+    {
+      variables: { id: bishopId },
+    }
+  )
+
   const history = useHistory()
 
   const initialValues = {
     centreName: centreData?.displayCentre?.name,
     leaderName: `${centreData?.displayCentre?.leader.firstName} ${centreData?.displayCentre?.leader.lastName} `,
     leaderWhatsapp: `+${centreData?.displayCentre?.leader.whatsappNumber}`,
-    townCampusSelect:
+    campusTownSelect:
       church.church === 'town'
         ? centreData?.displayCentre?.town?.id
         : centreData?.displayCentre?.campus?.id,
@@ -101,37 +118,44 @@ export const UpdateCentre = () => {
       { query: GET_TOWN_CENTRES, variables: { id: townId } },
       {
         query: GET_TOWN_CENTRES,
-        variables: { id: initialValues.townCampusSelect },
+        variables: { id: initialValues.campusTownSelect },
       },
     ],
   })
 
-  const [AddCentreBacentas] = useMutation(ADD_CENTRE_BACENTAS, {
-    onCompleted: (data) => {
-      //After removing the bacenta from a centre, then you log that change.
-      LogBacentaHistory({
-        variables: {
-          bacentaId: data.AddCentreBacentas.to.id,
-          leaderId: '',
-          oldLeaderId: '',
-          newCentreId: centreId,
-          oldCentreId: '',
-          historyRecord: `${data.AddCentreBacentas.to.name} Bacenta has been moved to ${data.AddCentreBacentas.from.name} Centre`,
-        },
-      })
-    },
-  })
+  const [AddCentreBacentas] = useMutation(ADD_CENTRE_BACENTAS)
+
   const [RemoveBacentaCentre] = useMutation(REMOVE_BACENTA_CENTRE, {
     onCompleted: (data) => {
+      let prevCentre = data.RemoveBacentaCentre?.from
+      let newCentreId = ''
+      let oldCentreId = ''
+      let historyRecord
+
+      if (data.RemoveBacentaCentre.from.id === centreId) {
+        //Bacenta has previous centre which is current centre and is going
+        oldCentreId = centreId
+        newCentreId = ''
+        historyRecord = `${data.RemoveBacentaCentre.to.name}
+      Bacenta has been moved from ${initialValues.centreName} Centre`
+      } else if (prevCentre.id !== centreId) {
+        //Bacenta has previous centre which is not current centre and is joining
+        oldCentreId = prevCentre.id
+        newCentreId = centreId
+        historyRecord = `${data.RemoveBacentaCentre.to.name} 
+      Bacenta has been moved to ${initialValues.centreName} Centre 
+      from ${prevCentre.name}`
+      } else console.log('no historyRecord')
+
       //After removing the bacenta from a centre, then you log that change.
       LogBacentaHistory({
         variables: {
-          bacentaId: data.RemoveBacentaCentre.to.id,
+          bacentaId: data.RemoveBacentaCentre?.to.id,
           leaderId: '',
           oldLeaderId: '',
-          newCentreId: '',
-          oldCentreId: centreId,
-          historyRecord: `${data.RemoveBacentaCentre.to.name} Bacenta has been moved from ${initialValues.centreName} Centre`,
+          newCentreId: newCentreId,
+          oldCentreId: oldCentreId,
+          historyRecord: historyRecord,
         },
       })
     },
@@ -141,6 +165,42 @@ export const UpdateCentre = () => {
   const [RemoveCentreCampus] = useMutation(REMOVE_CENTRE_CAMPUS)
   const [AddCentreTown] = useMutation(ADD_CENTRE_TOWN, {
     onCompleted: (newTown) => {
+      if (!centreData?.displayCentre?.town.name) {
+        //If There is no old town
+        let recordIfNoOldTown = `${
+          initialValues.centreName
+        } Centre has been moved to ${
+          newTown.AddCentreTown.from.name
+        } ${capitalise(church.church)} `
+
+        LogCentreHistory({
+          variables: {
+            centreId: centreId,
+            leaderId: '',
+            oldLeaderId: '',
+            newCampusTownId: newTown.AddCentreTown.from.id,
+            oldCampusTownId: centreData?.displayCentre?.town.id,
+            historyRecord: recordIfNoOldTown,
+          },
+        })
+      }
+
+      //Break Link to the Old Town
+      RemoveCentreTown({
+        variables: {
+          townId: initialValues.campusTownSelect,
+          centreId: centreId,
+        },
+      })
+
+      let recordIfOldTown = `${
+        initialValues.centreName
+      } Centre has been moved from ${
+        centreData?.displayCentre?.town.name
+      } ${capitalise(church.church)} to ${
+        newTown.AddCentreTown.from.name
+      } ${capitalise(church.church)}`
+
       //After Adding the centre to a campus/town, then you log that change.
       LogCentreHistory({
         variables: {
@@ -149,13 +209,7 @@ export const UpdateCentre = () => {
           oldLeaderId: '',
           newCampusTownId: newTown.AddCentreTown.from.id,
           oldCampusTownId: centreData?.displayCentre?.town.id,
-          historyRecord: `${
-            initialValues.centreName
-          } Centre has been moved from ${
-            centreData?.displayCentre?.town.name
-          } ${capitalise(church.church)} to ${
-            newTown.AddCentreTown.from.name
-          } ${capitalise(church.church)}`,
+          historyRecord: recordIfOldTown,
         },
       })
     },
@@ -180,9 +234,15 @@ export const UpdateCentre = () => {
     },
   })
 
-  if (centreLoading) {
+  if (centreLoading || townListLoading || campusListLoading) {
     return <LoadingScreen />
-  } else if (centreData) {
+  } else if (centreData && (townListData || campusListData)) {
+    const townOptions = townListData
+      ? makeSelectOptions(townListData.townList)
+      : []
+    const campusOptions = campusListData
+      ? makeSelectOptions(campusListData.campusList)
+      : []
     //onSubmit receives the form state as argument
     const onSubmit = (values, onSubmitProps) => {
       setBishopId(values.centreSelect)
@@ -192,36 +252,30 @@ export const UpdateCentre = () => {
           centreId: centreId,
           centreName: values.centreName,
           lWhatsappNumber: parsePhoneNum(values.leaderWhatsapp),
-          campusTownID: values.townCampusSelect,
+          campusTownID: values.campusTownSelect,
         },
       })
 
       //For the Logging of Stuff
       //Log If The TownCampus Changes
-      if (values.townCampusSelect !== initialValues.townCampusSelect) {
+      if (values.campusTownSelect !== initialValues.campusTownSelect) {
         if (church.church === 'town') {
-          RemoveCentreTown({
-            variables: {
-              townId: initialValues.townCampusSelect,
-              centreId: centreId,
-            },
-          })
           AddCentreTown({
             variables: {
-              townId: values.townCampusSelect,
+              townId: values.campusTownSelect,
               centreId: centreId,
             },
           })
         } else if (church.church === 'campus') {
           RemoveCentreCampus({
             variables: {
-              campusId: initialValues.townCampusSelect,
+              campusId: initialValues.campusTownSelect,
               centreId: centreId,
             },
           })
           AddCentreCampus({
             variables: {
-              campusId: values.townCampusSelect,
+              campusId: values.campusTownSelect,
               centreId: centreId,
             },
           })
@@ -250,14 +304,16 @@ export const UpdateCentre = () => {
       const newBacentaList = values.bacentas.map((bacenta) => {
         return bacenta.id ? bacenta.id : bacenta
       })
+
       const removeBacentas = oldBacentaList.filter(function (value) {
         return !newBacentaList.includes(value)
       })
 
-      const addBacentas = newBacentaList.filter(function (value) {
-        return !oldBacentaList.includes(value)
+      const addBacentas = values.bacentas.filter(function (value) {
+        return !oldBacentaList.includes(value.id)
       })
 
+      console.log(addBacentas)
       removeBacentas.forEach((bacenta) => {
         RemoveBacentaCentre({
           variables: {
@@ -267,16 +323,32 @@ export const UpdateCentre = () => {
         })
       })
       addBacentas.forEach((bacenta) => {
-        RemoveBacentaCentre({
-          variables: {
-            centreId: centreId,
-            bacentaId: bacenta,
-          },
-        })
+        //Bacenta has no previous centre and is now joining. ie. RemoveBacentaCentre won't run
+        if (bacenta.centre) {
+          RemoveBacentaCentre({
+            variables: {
+              centreId: bacenta.centre.id,
+              bacentaId: bacenta.id,
+            },
+          })
+        } else {
+          LogBacentaHistory({
+            variables: {
+              bacentaId: bacenta.id,
+              leaderId: '',
+              oldLeaderId: '',
+              newCentreId: centreId,
+              oldCentreId: '',
+              historyRecord: `${bacenta.name} 
+              Bacenta has been moved to ${initialValues.centreName} Centre`,
+            },
+          })
+        }
+
         AddCentreBacentas({
           variables: {
             centreId: centreId,
-            bacentaId: bacenta,
+            bacentaId: bacenta.id,
           },
         })
       })
@@ -305,6 +377,21 @@ export const UpdateCentre = () => {
                     {/* <!-- Basic Info Div --> */}
                     <div className="col mb-2">
                       <div className="form-row row-cols-3">
+                        <div className="col-9">
+                          <FormikControl
+                            className="form-control"
+                            control="select"
+                            name="campusTownSelect"
+                            options={
+                              church.church === 'town'
+                                ? townOptions
+                                : campusOptions
+                            }
+                            defaultOption={`Select a ${capitalise(
+                              church.church
+                            )}`}
+                          />
+                        </div>
                         <div className="col-9">
                           <FormikControl
                             className="form-control"

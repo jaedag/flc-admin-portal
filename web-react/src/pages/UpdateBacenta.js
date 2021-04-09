@@ -127,26 +127,17 @@ export const UpdateBacenta = () => {
     ],
   })
 
-  const [RemoveBacentaCentre] = useMutation(REMOVE_BACENTA_CENTRE, {
-    onCompleted: () => {
-      //After removing the bacenta froma centre, then you log that change.
-      LogBacentaHistory({
-        variables: {
-          bacentaId: bacentaId,
-          leaderId: '',
-          oldLeaderId: '',
-          newCentreId: '',
-          oldCentreId: bacentaData?.displayBacenta?.centre
-            ? bacentaData?.displayBacenta?.centre.id
-            : null,
-          historyRecord: `${initialValues.bacentaName} Bacenta has been moved from ${bacentaData?.displayBacenta?.centre.name} Centre`,
-        },
-      })
-    },
-  })
+  const [RemoveBacentaCentre] = useMutation(REMOVE_BACENTA_CENTRE)
 
   const [AddBacentaCentre] = useMutation(ADD_BACENTA_CENTRE, {
     onCompleted: (newCentre) => {
+      //Remove Link to the old Bacenta
+      RemoveBacentaCentre({
+        variables: {
+          centreId: initialValues.centreSelect,
+          bacentaId: bacentaId,
+        },
+      })
       //After Adding the bacenta to a centre, then you log that change.
       LogBacentaHistory({
         variables: {
@@ -192,12 +183,6 @@ export const UpdateBacenta = () => {
 
       //Log If The Centre Changes
       if (values.centreSelect !== initialValues.centreSelect) {
-        RemoveBacentaCentre({
-          variables: {
-            centreId: initialValues.centreSelect,
-            bacentaId: bacentaId,
-          },
-        })
         AddBacentaCentre({
           variables: {
             centreId: values.centreSelect,
@@ -205,21 +190,6 @@ export const UpdateBacenta = () => {
           },
         })
       }
-
-      //Log if the Leader Changes
-      // if (values.leaderWhatsapp !== initialValues.leaderWhatsapp) {
-      //   console.log(newLeaderInfo)
-
-      //   LogBacentaHistory({
-      //     variables: {
-      //       bacentaId: bacentaId,
-      //       leaderId: newLeaderInfo.id,
-      //       oldCentreId: '',
-      //       newCentreId: '',
-      //       historyRecord: `${newLeaderInfo.firstName} ${newLeaderInfo.lastName} was transferred to become the new Bacenta Leader for ${values.bacentaName}`,
-      //     },
-      //   })
-      // }
 
       //Log if the Bacenta Name Changes
       if (values.bacentaName !== initialValues.bacentaName) {

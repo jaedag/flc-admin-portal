@@ -82,7 +82,7 @@ export const DisplayChurchDetails = (props) => {
             : null}
           <h3 className="mx-3 mt-3 font-weight-bold">
             {`${name} ${churchType}`}
-            {isAuthenticated && <EditButton link={editlink} />}
+            {!isAuthenticated && <EditButton link={editlink} />}
           </h3>
           {admin && (
             <Link

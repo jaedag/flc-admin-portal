@@ -83,7 +83,7 @@
   position: fixed;
   width: 25%;
   max-width: 307px;
-  min-width: 268px;
+  min-width: 255px;
   border-right: 1px solid var(--border-color);
 }
 @media (max-width: 767.98px) {

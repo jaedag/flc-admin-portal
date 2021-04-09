@@ -17,6 +17,10 @@ import { BISH_DASHBOARD_COUNTS } from '../queries/CountQueries'
 import {
   UPDATE_TOWN_MUTATION,
   UPDATE_CAMPUS_MUTATION,
+  ADD_TOWN_BISHOP,
+  REMOVE_TOWN_BISHOP,
+  ADD_CAMPUS_BISHOP,
+  REMOVE_CAMPUS_BISHOP,
 } from '../queries/UpdateMutations'
 import { NavBar } from '../components/NavBar'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
@@ -108,6 +112,7 @@ export const UpdateTownCampus = () => {
     ],
   })
 
+  console.log(LogCentreHistory)
   const [UpdateTown] = useMutation(
     UPDATE_TOWN_MUTATION,
     {
@@ -164,7 +169,7 @@ export const UpdateTownCampus = () => {
               oldLeaderId: campusData?.displayCampus.leader.id,
               oldBishopId: '',
               newBishopId: '',
-              historyRecord: `${newLeaderInfo.firstName} ${newLeaderInfo.lastName} was transferred to become the new Campu CO for ${initialValues.campusTownName}, replacing ${campusData?.displayCampus?.leader.firstName} ${campusData?.displayCampus?.leader.lastName}`,
+              historyRecord: `${newLeaderInfo.firstName} ${newLeaderInfo.lastName} was transferred to become the new Campu CO for ${initialValues.campusTownName} replacing ${campusData?.displayCampus?.leader.firstName} ${campusData?.displayCampus?.leader.lastName}`,
             },
           })
         }
@@ -187,6 +192,12 @@ export const UpdateTownCampus = () => {
       ],
     }
   )
+
+  //Changes upwards
+  const [AddTownBishop] = useMutation(ADD_TOWN_BISHOP)
+  const [RemoveTownBishop] = useMutation(REMOVE_TOWN_BISHOP)
+  const [AddCampusBishop] = useMutation(ADD_CAMPUS_BISHOP)
+  const [RemoveCampusBishop] = useMutation(REMOVE_CAMPUS_BISHOP)
 
   const {
     data: bishopData,
@@ -232,37 +243,36 @@ export const UpdateTownCampus = () => {
           })
         }
 
-      //Log If The Bishop Changes
-      if (values.bishopSelect !== initialValues.bishopSelect) {
-        if (church.church === 'town') {
-          RemoveTownBishop({
-            variables: {
-              townId: initialValues.bishopSelect,
-              centreId: centreId,
-            },
-          })
-          AddTownBishop({
-            variables: {
-              townId: values.bishopSelect,
-              centreId: centreId,
-            },
-          })
-        } else if (church.church === 'campus') {
-          RemoveCampusBishop({
-            variables: {
-              campusId: initialValues.bishopSelect,
-              centreId: centreId,
-            },
-          })
-          AddCampusBishop({
-            variables: {
-              campusId: values.bishopSelect,
-              centreId: centreId,
-            },
-          })
+        //Log If The Bishop Changes
+        if (values.bishopSelect !== initialValues.bishopSelect) {
+          if (church.church === 'town') {
+            RemoveTownBishop({
+              variables: {
+                bishopId: initialValues.bishopSelect,
+                townId: townId,
+              },
+            })
+            AddTownBishop({
+              variables: {
+                bishopId: values.bishopSelect,
+                townId: townId,
+              },
+            })
+          } else if (church.church === 'campus') {
+            RemoveCampusBishop({
+              variables: {
+                bishopId: initialValues.bishopSelect,
+                campusId: campusId,
+              },
+            })
+            AddCampusBishop({
+              variables: {
+                bishopId: values.bishopSelect,
+                campusId: campusId,
+              },
+            })
+          }
         }
-      }
-
       } else if (church.church === 'campus') {
         // console.log("Form data",values);
         UpdateCampus({

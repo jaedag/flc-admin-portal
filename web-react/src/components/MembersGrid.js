@@ -53,7 +53,7 @@ export const MembersGrid = (props) => {
     <div>
       <NavBar />
       <div className="row w-100 m-0">
-        <div className="d-none d-md-block col-lg-3 col-md-4 m-0 px-0">
+        <div className="col d-none d-md-block m-0 px-0">
           <SideBar />
         </div>
 

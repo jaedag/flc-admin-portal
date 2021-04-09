@@ -113,7 +113,7 @@ export const UpdateBacenta = () => {
             leaderId: newLeaderInfo.id,
             oldCentreId: '',
             newCentreId: '',
-            historyRecord: `${newLeaderInfo.firstName} ${newLeaderInfo.lastName} was transferred to become the new Bacenta Leader for ${initialValues.bacentaName}, replacing ${bacentaData?.displayBacenta?.leader.firstName} ${bacentaData?.displayBacenta?.leader.lastName}`,
+            historyRecord: `${newLeaderInfo.firstName} ${newLeaderInfo.lastName} was transferred to become the new Bacenta Leader for ${initialValues.bacentaName} replacing ${bacentaData?.displayBacenta?.leader.firstName} ${bacentaData?.displayBacenta?.leader.lastName}`,
           },
         })
       }

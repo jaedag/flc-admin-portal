@@ -35,7 +35,7 @@ export const MemberTable = (props) => {
       // Web View Full Screen without filters applied
       <React.Fragment>
         <div className="container member-grid d-none d-lg-block">
-          <div className="row">
+          <div className="row justify-content-around">
             {memberData.map((soul, index) => {
               if (index < offset) {
                 return null

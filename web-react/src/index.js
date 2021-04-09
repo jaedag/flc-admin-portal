@@ -101,18 +101,34 @@ const PastorsAdmin = () => {
       ? JSON.parse(sessionStorage.getItem('church'))
       : { church: '', subChurch: '' }
   )
-  const [bishopId, setBishopId] = useState(sessionStorage.getItem('bishopId'))
-  const [townId, setTownId] = useState(sessionStorage.getItem('townId'))
-  const [campusId, setCampusId] = useState(sessionStorage.getItem('campusId'))
+  const [bishopId, setBishopId] = useState(
+    sessionStorage.getItem('bishopId') ? sessionStorage.getItem('bishopId') : ''
+  )
+  const [townId, setTownId] = useState(
+    sessionStorage.getItem('townId') ? sessionStorage.getItem('townId') : ''
+  )
+  const [campusId, setCampusId] = useState(
+    sessionStorage.getItem('campusId') ? sessionStorage.getItem('campusId') : ''
+  )
   const [bacentaId, setBacentaId] = useState(
     sessionStorage.getItem('bacentaId')
+      ? sessionStorage.getItem('bacentaId')
+      : ''
   )
-  const [centreId, setCentreId] = useState(sessionStorage.getItem('centreId'))
-  const [sontaId, setSontaId] = useState(sessionStorage.getItem('sontaId'))
+  const [centreId, setCentreId] = useState(
+    sessionStorage.getItem('centreId') ? sessionStorage.getItem('centreId') : ''
+  )
+  const [sontaId, setSontaId] = useState(
+    sessionStorage.getItem('sontaId') ? sessionStorage.getItem('sontaId') : ''
+  )
   const [ministryId, setMinistryId] = useState(
     sessionStorage.getItem('ministryId')
+      ? sessionStorage.getItem('ministryId')
+      : ''
   )
-  const [memberId, setMemberId] = useState(sessionStorage.getItem('memberId'))
+  const [memberId, setMemberId] = useState(
+    sessionStorage.getItem('memberId') ? sessionStorage.getItem('memberId') : ''
+  )
   const [currentUser, setCurrentUser] = useState({
     id: '',
     firstName: '',

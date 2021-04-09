@@ -203,14 +203,6 @@ export const DisplayMemberDetails = () => {
                           )}
                         </div>
                       </div>
-                      <div className="col d-flex justify-content-center  mt-2">
-                        <button
-                          type="submit"
-                          className="btn btn-primary mt-2 p-3 card-text text-center"
-                        >
-                          Make Leader
-                        </button>
-                      </div>
                     </div>
                   </MemberCard>
                 </div>

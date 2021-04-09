@@ -9,14 +9,15 @@ export const NavBar = () => {
   const { church, capitalise, setFilters } = useContext(ChurchContext)
   const location = useLocation()
 
+  const atHome = church.church && location.pathname !== '/'
+  const showingMembers = location.pathname.endsWith('/members')
+
   return (
     <nav className="navbar navbar-dark navbar-expand fixed-top">
       <div className="navbar-nav">
         <NavLink label="Home" linkTo="/" icon="home" />
-        {church.church && (
-          <NavLink label="Bishop" linkTo="/dashboard" icon="bold" />
-        )}
-        {!location.pathname.endsWith('/members') && church.church ? (
+        {atHome && <NavLink label="Bishop" linkTo="/dashboard" icon="bold" />}
+        {!showingMembers && atHome ? (
           <NavLink
             linkTo="/members"
             label="Members"
@@ -38,7 +39,7 @@ export const NavBar = () => {
           </div>
         )}
 
-        {church.church && (
+        {atHome && (
           <>
             <NavLink
               linkTo={`/${church.church}/displayall`}
@@ -52,7 +53,7 @@ export const NavBar = () => {
             />
           </>
         )}
-        {location.pathname.endsWith('/members') && (
+        {showingMembers && (
           <div className="d-md-none">
             <NavLink linkTo="/filter-members" icon="filter" />
           </div>

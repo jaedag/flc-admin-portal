@@ -91,7 +91,7 @@ export const UpdateCentre = () => {
             oldLeaderId: centreData?.displayCentre?.leader.id,
             oldCampusTownId: '',
             newCampusTownId: '',
-            historyRecord: `${newLeaderInfo.firstName} ${newLeaderInfo.lastName} was transferred to become the new Centre Leader for ${initialValues.centreName}, replacing ${centreData?.displayCentre?.leader.firstName} ${centreData?.displayCentre?.leader.lastName}`,
+            historyRecord: `${newLeaderInfo.firstName} ${newLeaderInfo.lastName} was transferred to become the new Centre Leader for ${initialValues.centreName} replacing ${centreData?.displayCentre?.leader.firstName} ${centreData?.displayCentre?.leader.lastName}`,
           },
         })
       }
@@ -123,7 +123,6 @@ export const UpdateCentre = () => {
   })
   const [RemoveBacentaCentre] = useMutation(REMOVE_BACENTA_CENTRE, {
     onCompleted: (data) => {
-      console.log(data)
       //After removing the bacenta from a centre, then you log that change.
       LogBacentaHistory({
         variables: {
@@ -137,6 +136,7 @@ export const UpdateCentre = () => {
       })
     },
   })
+
   const [RemoveCentreTown] = useMutation(REMOVE_CENTRE_TOWN)
   const [RemoveCentreCampus] = useMutation(REMOVE_CENTRE_CAMPUS)
   const [AddCentreTown] = useMutation(ADD_CENTRE_TOWN, {

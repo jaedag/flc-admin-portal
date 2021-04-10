@@ -16,6 +16,7 @@ type Member {
   occupation: Occupation @relation(name: "HAS_OCCUPATION", direction: OUT)
   # Church Details
   history: [HistoryLog] @relation(name: "HAS_HISTORY", direction: OUT)
+  loggedHistory: [HistoryLog] @relation(name: "LOGGED_BY", direction: IN)
   bacenta: Bacenta @relation(name: "BELONGS_TO", direction: OUT)
   leadsBacenta: [Bacenta] @relation(name: "LEADS", direction: OUT)
   leadsCentre: [Centre] @relation(name: "LEADS", direction: OUT)
@@ -128,6 +129,7 @@ type HistoryLog {
   Centre: [Centre] @relation(name: "HAS_HISTORY", direction: IN)
   Campus: [Campus] @relation(name: "HAS_HISTORY", direction: IN)
   Town: [Town] @relation(name: "HAS_HISTORY", direction: IN)
+  loggedBy: Member @relation(name: "LOGGED_BY", direction: OUT)
 }
 
 # Campus-Centre, Town-Centre
@@ -346,7 +348,7 @@ type Query {
   townSontaCount(id: ID): Int!
     @cypher(
       statement: "MATCH (:Town {id:$id})-[:HAS_SONTA]->(s:Sonta) RETURN COUNT(s)"
-    ) 
+    )
   townMemberCount(id: ID): Int!
     @cypher(
       statement: "MATCH (:Town {id:$id})-[]-(:Centre)-[]->(:Bacenta)<-[:BELONGS_TO]-(m:Member) RETURN COUNT(DISTINCT m)"
@@ -1065,6 +1067,7 @@ type Mutation {
     leaderId: ID
     oldCentreId: ID
     newCentreId: ID
+    loggedBy: ID
   ): Bacenta
     @cypher(
       statement: """
@@ -1113,6 +1116,15 @@ type Mutation {
          RETURN COUNT(log)
        }
 
+       WITH log,b
+       CALL {
+         WITH log
+         WITH log WHERE $loggedBy IS NOT NULL
+         MATCH (m:Member {id: $loggedBy})
+         MERGE (m)<-[:LOGGED_BY]-(log)
+         RETURN COUNT(log)
+       }
+
        RETURN b
       """
     )
@@ -1123,6 +1135,7 @@ type Mutation {
     oldLeaderId: ID
     newCampusTownId: ID
     oldCampusTownId: ID
+    loggedBy: ID
   ): Centre
     @cypher(
       statement: """
@@ -1171,6 +1184,15 @@ type Mutation {
          RETURN COUNT(log)
        }
 
+       WITH log,c
+       CALL {
+         WITH log
+         WITH log WHERE $loggedBy IS NOT NULL
+         MATCH (m:Member {id: $loggedBy})
+         MERGE (m)<-[:LOGGED_BY]-(log)
+         RETURN COUNT(log)
+       }
+
        RETURN c
       """
     )
@@ -1181,55 +1203,65 @@ type Mutation {
     oldLeaderId: ID
     newBishopId: ID
     oldBishopId: ID
+    loggedBy: ID
   ): Campus
     @cypher(
       statement: """
-       MATCH  (c:Campus {id: $campusId})
-       CREATE (log:HistoryLog {id: apoc.create.uuid()})
-         SET log.historyRecord = $historyRecord,
-           log.timeStamp = time()
-       MERGE (t:TimeGraph {date: date()})
-       MERGE (c)-[r:HAS_HISTORY]->(log)
-       MERGE (log)-[:RECORDED_ON]->(t)
+      MATCH  (c:Campus {id: $campusId})
+      CREATE (log:HistoryLog {id: apoc.create.uuid()})
+        SET log.historyRecord = $historyRecord,
+          log.timeStamp = time()
+      MERGE (t:TimeGraph {date: date()})
+      MERGE (c)-[r:HAS_HISTORY]->(log)
+      MERGE (log)-[:RECORDED_ON]->(t)
 
-       WITH log,c
-       CALL{
+      WITH log,c
+      CALL{
+        WITH log
+        WITH log WHERE $leaderId IS NOT NULL
+      MATCH (l:Member {id: $leaderId})
+       OPTIONAL MATCH (oldl:Member {id: $oldLeaderId})
+        SET log :ServiceLog
+        WITH log, l,oldl
+      OPTIONAl MATCH ()-[r0:HAS_HISTORY]->(log)
+        SET r0.pointer = false
+        WITH log,l,oldl
+      CREATE (oldl)-[:HAS_HISTORY]->(log)
+      CREATE (l)-[r:HAS_HISTORY]->(log)
+         SET r.pointer = true
          WITH log
-         WITH log WHERE $leaderId IS NOT NULL
-       MATCH (l:Member {id: $leaderId})
-        OPTIONAL MATCH (oldl:Member {id: $oldLeaderId})
-         SET log :ServiceLog
-         WITH log, l,oldl
-       OPTIONAl MATCH ()-[r0:HAS_HISTORY]->(log)
-         SET r0.pointer = false
-         WITH log,l,oldl
-       CREATE (oldl)-[:HAS_HISTORY]->(log)
-       CREATE (l)-[r:HAS_HISTORY]->(log)
-          SET r.pointer = true
-          WITH log
-       RETURN COUNT(log)
-       }
+      RETURN COUNT(log)
+      }
 
 
-       WITH log,c
+      WITH log,c
+      CALL {
+        WITH log
+        WITH log WHERE $oldBishopId IS NOT NULL
+        MATCH (t:Member {id: $oldBishopId})
+        MERGE (t)-[:HAS_HISTORY]->(log)
+        RETURN COUNT(log)
+      }
+
+      WITH log,c
+      CALL {
+        WITH log
+        WITH log WHERE $newBishopId IS NOT NULL
+        MATCH (t:Member {id: $newBishopId})
+        MERGE (t)-[:HAS_HISTORY]->(log)
+        RETURN COUNT(log)
+      }
+
+      WITH log,c
        CALL {
          WITH log
-         WITH log WHERE $oldBishopId IS NOT NULL
-         MATCH (t:Member {id: $oldBishopId})
-         MERGE (t)-[:HAS_HISTORY]->(log)
+         WITH log WHERE $loggedBy IS NOT NULL
+         MATCH (m:Member {id: $loggedBy})
+         MERGE (m)<-[:LOGGED_BY]-(log)
          RETURN COUNT(log)
        }
 
-       WITH log,c
-       CALL {
-         WITH log
-         WITH log WHERE $newBishopId IS NOT NULL
-         MATCH (t:Member {id: $newBishopId})
-         MERGE (t)-[:HAS_HISTORY]->(log)
-         RETURN COUNT(log)
-       }
-
-       RETURN c
+      RETURN c
       """
     )
   LogTownHistory(
@@ -1239,55 +1271,65 @@ type Mutation {
     oldLeaderId: ID
     newBishopId: ID
     oldBishopId: ID
+    loggedBy: ID
   ): Town
     @cypher(
       statement: """
-       MATCH  (c:Town {id: $townId})
-       CREATE (log:HistoryLog {id: apoc.create.uuid()})
-         SET log.historyRecord = $historyRecord,
-           log.timeStamp = time()
-       MERGE (t:TimeGraph {date: date()})
-       MERGE (c)-[r:HAS_HISTORY]->(log)
-       MERGE (log)-[:RECORDED_ON]->(t)
+      MATCH  (c:Town {id: $townId})
+      CREATE (log:HistoryLog {id: apoc.create.uuid()})
+        SET log.historyRecord = $historyRecord,
+          log.timeStamp = time()
+      MERGE (t:TimeGraph {date: date()})
+      MERGE (c)-[r:HAS_HISTORY]->(log)
+      MERGE (log)-[:RECORDED_ON]->(t)
 
-       WITH log,c
-       CALL{
+      WITH log,c
+      CALL{
+        WITH log
+        WITH log WHERE $leaderId IS NOT NULL
+      MATCH (l:Member {id: $leaderId})
+       OPTIONAL MATCH (oldl:Member {id: $oldLeaderId})
+        SET log :ServiceLog
+        WITH log, l,oldl
+      OPTIONAl MATCH ()-[r0:HAS_HISTORY]->(log)
+        SET r0.pointer = false
+        WITH log,l,oldl
+      CREATE (oldl)-[:HAS_HISTORY]->(log)
+      CREATE (l)-[r:HAS_HISTORY]->(log)
+         SET r.pointer = true
          WITH log
-         WITH log WHERE $leaderId IS NOT NULL
-       MATCH (l:Member {id: $leaderId})
-        OPTIONAL MATCH (oldl:Member {id: $oldLeaderId})
-         SET log :ServiceLog
-         WITH log, l,oldl
-       OPTIONAl MATCH ()-[r0:HAS_HISTORY]->(log)
-         SET r0.pointer = false
-         WITH log,l,oldl
-       CREATE (oldl)-[:HAS_HISTORY]->(log)
-       CREATE (l)-[r:HAS_HISTORY]->(log)
-          SET r.pointer = true
-          WITH log
-       RETURN COUNT(log)
-       }
+      RETURN COUNT(log)
+      }
 
 
-       WITH log,c
+      WITH log,c
+      CALL {
+        WITH log
+        WITH log WHERE $oldBishopId IS NOT NULL
+        MATCH (t:Member {id: $oldBishopId})
+        MERGE (t)-[:HAS_HISTORY]->(log)
+        RETURN COUNT(log)
+      }
+
+      WITH log,c
+      CALL {
+        WITH log
+        WITH log WHERE $newBishopId IS NOT NULL
+        MATCH (t:Member {id: $newBishopId})
+        MERGE (t)-[:HAS_HISTORY]->(log)
+        RETURN COUNT(log)
+      }
+
+      WITH log,c
        CALL {
          WITH log
-         WITH log WHERE $oldBishopId IS NOT NULL
-         MATCH (t:Member {id: $oldBishopId})
-         MERGE (t)-[:HAS_HISTORY]->(log)
+         WITH log WHERE $loggedBy IS NOT NULL
+         MATCH (m:Member {id: $loggedBy})
+         MERGE (m)<-[:LOGGED_BY]-(log)
          RETURN COUNT(log)
        }
 
-       WITH log,c
-       CALL {
-         WITH log
-         WITH log WHERE $newBishopId IS NOT NULL
-         MATCH (t:Member {id: $newBishopId})
-         MERGE (t)-[:HAS_HISTORY]->(log)
-         RETURN COUNT(log)
-       }
-
-       RETURN c
+      RETURN c
       """
     )
 }

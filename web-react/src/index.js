@@ -40,7 +40,6 @@ import { UpdateCentre } from './pages/UpdateCentre'
 import { DisplaySontasByCampusTown } from './pages/DisplaySontasByCampusTown'
 import { UpdateBacenta } from './pages/UpdateBacenta'
 // import ProtectedRoute from './auth/ProtectedRoute'
-import Loading from './components/index/Loading'
 import { MemberFiltersMobile } from './pages/MemberFiltersMobile'
 import { MemberTableMobile } from './components/MemberTableMobile'
 
@@ -94,8 +93,6 @@ const AppWithApollo = () => {
 }
 
 const PastorsAdmin = () => {
-  const { isLoading } = useAuth0()
-
   const [church, setChurch] = useState(
     sessionStorage.getItem('church')
       ? JSON.parse(sessionStorage.getItem('church'))
@@ -130,13 +127,13 @@ const PastorsAdmin = () => {
     sessionStorage.getItem('memberId') ? sessionStorage.getItem('memberId') : ''
   )
   const [currentUser, setCurrentUser] = useState({
-    id: '',
-    firstName: '',
-    lastName: '',
-    email: '',
-    bishop: '',
-    constituency: '',
-    roles: [],
+    id: '3fc349a5-ce5f-4502-85c9-063622764c56',
+    firstName: 'John Dag',
+    lastName: 'Addy',
+    email: 'jaedagy@gmail.com',
+    bishop: '5c221a24-8f6f-4bff-82dd-81b9c2315400',
+    constituency: '58dfe3ae-83de-49fd-a11d-49043e375133',
+    roles: ['superadmin'],
   })
 
   const [searchKey, setSearchKey] = useState('a')
@@ -431,17 +428,6 @@ const PastorsAdmin = () => {
       ]
     }
 
-    //Code for finding duplicates
-    // let duplicates = [...yourArray]
-    // yourArrayWithoutDuplicates.forEach((item) => {
-    //   const i = duplicates.indexOf(item)
-    //   duplicates = duplicates
-    //     .slice(0, i)
-    //     .concat(duplicates.slice(i + 1, duplicates.length))
-    // })
-
-    // console.log("duplicates",duplicates) //[ 1, 5 ]
-
     return filteredData
   }
 
@@ -636,10 +622,6 @@ const PastorsAdmin = () => {
     if (card.link === '') {
       card.link = `/${card.__typename.toLowerCase()}/displaydetails`
     }
-  }
-
-  if (isLoading) {
-    return <Loading />
   }
 
   return (

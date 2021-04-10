@@ -86,6 +86,11 @@ export const DISPLAY_MEMBER = gql`
             formatted
           }
         }
+        loggedBy {
+          id
+          firstName
+          lastName
+        }
         historyRecord
       }
       leadsBacenta {
@@ -231,7 +236,11 @@ export const DISPLAY_BACENTA = gql`
               formatted
             }
           }
-
+          loggedBy {
+            id
+            firstName
+            lastName
+          }
           historyRecord
         }
       }
@@ -267,6 +276,11 @@ export const DISPLAY_SONTA = gql`
             date {
               formatted
             }
+          }
+          loggedBy {
+            id
+            firstName
+            lastName
           }
           historyRecord
         }
@@ -335,6 +349,11 @@ export const DISPLAY_CENTRE = gql`
             date {
               formatted
             }
+          }
+          loggedBy {
+            id
+            firstName
+            lastName
           }
           historyRecord
         }
@@ -407,6 +426,11 @@ export const DISPLAY_TOWN = gql`
               formatted
             }
           }
+          loggedBy {
+            id
+            firstName
+            lastName
+          }
           historyRecord
         }
       }
@@ -478,6 +502,11 @@ export const DISPLAY_CAMPUS = gql`
             date {
               formatted
             }
+          }
+          loggedBy {
+            id
+            firstName
+            lastName
           }
           historyRecord
         }

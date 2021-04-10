@@ -37,6 +37,7 @@ import {
   LOG_CENTRE_HISTORY,
   LOG_TOWN_HISTORY,
 } from '../queries/LogMutations'
+import { MemberContext } from '../contexts/MemberContext'
 
 export const UpdateTownCampus = () => {
   const {
@@ -50,6 +51,7 @@ export const UpdateTownCampus = () => {
     bishopId,
     setBishopId,
   } = useContext(ChurchContext)
+  const { currentUser } = useContext(MemberContext)
 
   const { data: campusData, loading: campusLoading } = useQuery(
     DISPLAY_CAMPUS,
@@ -132,6 +134,7 @@ export const UpdateTownCampus = () => {
               oldLeaderId: townData?.displayTown.leader.id,
               oldBishopId: '',
               newBishopId: '',
+              loggedBy: currentUser.id,
               historyRecord: `${newLeaderInfo.firstName} ${newLeaderInfo.lastName} was transferred to become the new Town CO for ${initialValues.campusTownName} replacing ${townData?.displayTown?.leader.firstName} ${townData?.displayTown?.leader.lastName}`,
             },
           })
@@ -170,6 +173,7 @@ export const UpdateTownCampus = () => {
               oldLeaderId: campusData?.displayCampus.leader.id,
               oldBishopId: '',
               newBishopId: '',
+              loggedBy: currentUser.id,
               historyRecord: `${newLeaderInfo.firstName} ${newLeaderInfo.lastName} was transferred to become the new Campu CO for ${initialValues.campusTownName} replacing ${campusData?.displayCampus?.leader.firstName} ${campusData?.displayCampus?.leader.lastName}`,
             },
           })
@@ -223,6 +227,7 @@ export const UpdateTownCampus = () => {
           oldLeaderId: '',
           newCampusTownId: newCampusId,
           oldCampusTownId: oldCampusId,
+          loggedBy: currentUser.id,
           historyRecord: historyRecord,
         },
       })
@@ -258,6 +263,7 @@ export const UpdateTownCampus = () => {
           oldLeaderId: '',
           newCampusTownId: newTownId,
           oldCampusTownId: oldTownId,
+          loggedBy: currentUser.id,
           historyRecord: historyRecord,
         },
       })
@@ -280,6 +286,7 @@ export const UpdateTownCampus = () => {
             oldLeaderId: '',
             newBishopId: data.AddCampusBishop.from.id,
             oldBishopId: campusData?.displayCampus?.bishop.id,
+            loggedBy: currentUser.id,
             historyRecord: recordIfNoOldBishop,
           },
         })
@@ -305,6 +312,7 @@ export const UpdateTownCampus = () => {
             oldLeaderId: '',
             newBishopId: data.AddCampusBishop.from.id,
             oldBishopId: campusData?.displayCampus?.bishop.id,
+            loggedBy: currentUser.id,
             historyRecord: recordIfOldBishop,
           },
         })
@@ -324,6 +332,7 @@ export const UpdateTownCampus = () => {
             oldLeaderId: '',
             newBishopId: data.AddTownBishop.from.id,
             oldBishopId: townData?.displayTown?.bishop.id,
+            loggedBy: currentUser.id,
             historyRecord: recordIfNoOldBishop,
           },
         })
@@ -349,6 +358,7 @@ export const UpdateTownCampus = () => {
             oldLeaderId: '',
             newBishopId: data.AddTownBishop.from.id,
             oldBishopId: townData?.displayTown?.bishop.id,
+            loggedBy: currentUser.id,
             historyRecord: recordIfOldBishop,
           },
         })
@@ -386,6 +396,7 @@ export const UpdateTownCampus = () => {
               oldLeaderId: '',
               oldBishopId: '',
               newBishopId: '',
+              loggedBy: currentUser.id,
               historyRecord: `The Campus name has been changed from ${initialValues.campusTownName} to ${values.campusTownName}`,
             },
           })
@@ -425,6 +436,7 @@ export const UpdateTownCampus = () => {
               oldLeaderId: '',
               oldBishopId: '',
               newBishopId: '',
+              loggedBy: currentUser.id,
               historyRecord: `The Town name has been changed from ${initialValues.campusTownName} to ${values.campusTownName}`,
             },
           })

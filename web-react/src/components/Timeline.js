@@ -1,10 +1,12 @@
 import React, { useContext } from 'react'
+import { useHistory } from 'react-router-dom'
 import { ChurchContext } from '../contexts/ChurchContext'
 
 export const Timeline = (props) => {
   const { record, limit, modifier } = props
 
-  const { parseDate } = useContext(ChurchContext)
+  const { parseDate, clickCard } = useContext(ChurchContext)
+  const history = useHistory()
 
   if (!record) {
     return null
@@ -30,6 +32,16 @@ export const Timeline = (props) => {
                         minimumIntegerDigits: 2,
                       }
                     )}`}
+                    <span
+                      className="font-weight-bold"
+                      onClick={() => {
+                        clickCard(element.HistoryLog?.loggedBy)
+                        history.push('/member/displaydetails')
+                      }}
+                    >
+                      {element.HistoryLog?.loggedBy &&
+                        ` by ${element.HistoryLog?.loggedBy?.firstName} ${element.HistoryLog?.loggedBy?.lastName}`}
+                    </span>
                   </small>
                 </p>
               </li>

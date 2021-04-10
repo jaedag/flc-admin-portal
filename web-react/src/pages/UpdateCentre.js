@@ -31,6 +31,7 @@ import {
 } from '../queries/LogMutations'
 import PlusSign from '../components/PlusSign'
 import MinusSign from '../components/MinusSign'
+import { MemberContext } from '../contexts/MemberContext'
 
 export const UpdateCentre = () => {
   const {
@@ -46,6 +47,7 @@ export const UpdateCentre = () => {
     campusId,
     bishopId,
   } = useContext(ChurchContext)
+  const { currentUser } = useContext(MemberContext)
 
   const { data: centreData, loading: centreLoading } = useQuery(
     DISPLAY_CENTRE,
@@ -111,6 +113,7 @@ export const UpdateCentre = () => {
             oldLeaderId: centreData?.displayCentre?.leader.id,
             oldCampusTownId: '',
             newCampusTownId: '',
+            loggedBy: currentUser.id,
             historyRecord: `${newLeaderInfo.firstName} ${newLeaderInfo.lastName} was transferred to become the new Centre Leader for ${initialValues.centreName} replacing ${centreData?.displayCentre?.leader.firstName} ${centreData?.displayCentre?.leader.lastName}`,
           },
         })
@@ -163,6 +166,7 @@ export const UpdateCentre = () => {
           oldLeaderId: '',
           newCentreId: newCentreId,
           oldCentreId: oldCentreId,
+          loggedBy: currentUser.id,
           historyRecord: historyRecord,
         },
       })
@@ -189,6 +193,7 @@ export const UpdateCentre = () => {
             oldLeaderId: '',
             newCampusTownId: newTown.AddCentreTown.from.id,
             oldCampusTownId: centreData?.displayCentre?.town.id,
+            loggedBy: currentUser.id,
             historyRecord: recordIfNoOldTown,
           },
         })
@@ -219,6 +224,7 @@ export const UpdateCentre = () => {
             oldLeaderId: '',
             newCampusTownId: newTown.AddCentreTown.from.id,
             oldCampusTownId: centreData?.displayCentre?.town.id,
+            loggedBy: currentUser.id,
             historyRecord: recordIfOldTown,
           },
         })
@@ -242,6 +248,7 @@ export const UpdateCentre = () => {
             oldLeaderId: '',
             newCampusTownId: newCampus.AddCentreCampus.from.id,
             oldCampusTownId: centreData?.displayCentre?.campus.id,
+            loggedBy: currentUser.id,
             historyRecord: recordIfNoOldCampus,
           },
         })
@@ -272,6 +279,7 @@ export const UpdateCentre = () => {
             oldLeaderId: '',
             newCampusTownId: newCampus.AddCentreCampus.from.id,
             oldCampusTownId: centreData?.displayCentre?.campus.id,
+            loggedBy: currentUser.id,
             historyRecord: recordIfOldCampus,
           },
         })
@@ -319,6 +327,7 @@ export const UpdateCentre = () => {
             oldLeaderId: '',
             oldCampusTownId: '',
             newCampusTownId: '',
+            loggedBy: currentUser.id,
             historyRecord: `The Centre name has been changed from ${initialValues.centreName} to ${values.centreName}`,
           },
         })
@@ -397,6 +406,7 @@ export const UpdateCentre = () => {
               oldLeaderId: '',
               newCentreId: centreId,
               oldCentreId: '',
+              loggedBy: currentUser.id,
               historyRecord: `${bacenta.name} 
               Bacenta has been moved to ${initialValues.centreName} Centre`,
             },

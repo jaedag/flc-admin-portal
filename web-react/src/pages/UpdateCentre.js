@@ -159,7 +159,6 @@ export const UpdateCentre = () => {
       })
     },
   })
-
   const [RemoveCentreTown] = useMutation(REMOVE_CENTRE_TOWN)
   const [RemoveCentreCampus] = useMutation(REMOVE_CENTRE_CAMPUS)
   const [AddCentreTown] = useMutation(ADD_CENTRE_TOWN, {

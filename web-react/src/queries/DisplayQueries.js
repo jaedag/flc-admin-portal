@@ -86,7 +86,6 @@ export const DISPLAY_MEMBER = gql`
             formatted
           }
         }
-
         historyRecord
       }
       leadsBacenta {

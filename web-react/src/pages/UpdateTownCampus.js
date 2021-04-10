@@ -113,6 +113,7 @@ export const UpdateTownCampus = () => {
   })
 
   console.log(LogCentreHistory)
+
   const [UpdateTown] = useMutation(
     UPDATE_TOWN_MUTATION,
     {
@@ -169,6 +170,7 @@ export const UpdateTownCampus = () => {
               oldLeaderId: campusData?.displayCampus.leader.id,
               oldBishopId: '',
               newBishopId: '',
+
               historyRecord: `${newLeaderInfo.firstName} ${newLeaderInfo.lastName} was transferred to become the new Campu CO for ${initialValues.campusTownName} replacing ${campusData?.displayCampus?.leader.firstName} ${campusData?.displayCampus?.leader.lastName}`,
             },
           })

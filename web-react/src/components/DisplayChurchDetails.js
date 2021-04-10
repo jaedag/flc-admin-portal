@@ -1,6 +1,5 @@
 import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
-import { useAuth0 } from '@auth0/auth0-react'
 import { DetailsCard } from './DetailsCard'
 import { NavBar } from './NavBar'
 import { MemberContext } from '../contexts/MemberContext'
@@ -27,7 +26,6 @@ export const DisplayChurchDetails = (props) => {
     breadcrumb,
   } = props
 
-  const { isAuthenticated } = useAuth0()
   const { setMemberId } = useContext(MemberContext)
   const { clickCard } = useContext(ChurchContext)
 
@@ -82,7 +80,7 @@ export const DisplayChurchDetails = (props) => {
             : null}
           <h3 className="mx-3 mt-3 font-weight-bold">
             {`${name} ${churchType}`}
-            {isAuthenticated && <EditButton link={editlink} />}
+            <EditButton link={editlink} />
           </h3>
           {admin && (
             <Link

@@ -1166,8 +1166,65 @@ type Mutation {
        CALL {
          WITH log
          WITH log WHERE $newCampusTownId IS NOT NULL
-         OPTIONAL MATCH (t:Town {id: $newCampusTownId})
-          MATCH (t {id: $oldCampusTownId}) WHERE t:Town OR t:Campus
+         MATCH (t {id: $newCampusTownId}) WHERE t:Town OR t:Campus
+         MERGE (t)-[:HAS_HISTORY]->(log)
+         RETURN COUNT(log)
+       }
+
+       RETURN c
+      """
+    )
+  LogCampusHistory(
+    campusId: ID!
+    historyRecord: String
+    leaderId: ID
+    oldLeaderId: ID
+    newBishopId: ID
+    oldBishopId: ID
+  ): Campus
+    @cypher(
+      statement: """
+       MATCH  (c:Campus {id: $campusId})
+       CREATE (log:HistoryLog {id: apoc.create.uuid()})
+         SET log.historyRecord = $historyRecord,
+           log.timeStamp = time()
+       MERGE (t:TimeGraph {date: date()})
+       MERGE (c)-[r:HAS_HISTORY]->(log)
+       MERGE (log)-[:RECORDED_ON]->(t)
+
+       WITH log,c
+       CALL{
+         WITH log
+         WITH log WHERE $leaderId IS NOT NULL
+       MATCH (l:Member {id: $leaderId})
+        OPTIONAL MATCH (oldl:Member {id: $oldLeaderId})
+         SET log :ServiceLog
+         WITH log, l,oldl
+       OPTIONAl MATCH ()-[r0:HAS_HISTORY]->(log)
+         SET r0.pointer = false
+         WITH log,l,oldl
+       CREATE (oldl)-[:HAS_HISTORY]->(log)
+       CREATE (l)-[r:HAS_HISTORY]->(log)
+          SET r.pointer = true
+          WITH log
+       RETURN COUNT(log)
+       }
+
+
+       WITH log,c
+       CALL {
+         WITH log
+         WITH log WHERE $oldBishopId IS NOT NULL
+         MATCH (t:Member {id: $oldBishopId})
+         MERGE (t)-[:HAS_HISTORY]->(log)
+         RETURN COUNT(log)
+       }
+
+       WITH log,c
+       CALL {
+         WITH log
+         WITH log WHERE $newBishopId IS NOT NULL
+         MATCH (t:Member {id: $newBishopId})
          MERGE (t)-[:HAS_HISTORY]->(log)
          RETURN COUNT(log)
        }

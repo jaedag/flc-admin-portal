@@ -401,6 +401,7 @@ export const DISPLAY_TOWN = gql`
             hour
             minute
           }
+
           created_at {
             date {
               formatted
@@ -472,6 +473,7 @@ export const DISPLAY_CAMPUS = gql`
             hour
             minute
           }
+
           created_at {
             date {
               formatted

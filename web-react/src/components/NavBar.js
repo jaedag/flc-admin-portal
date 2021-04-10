@@ -16,6 +16,7 @@ export const NavBar = () => {
     <nav className="navbar navbar-dark navbar-expand fixed-top">
       <div className="navbar-nav">
         <NavLink label="Home" linkTo="/" icon="home" />
+
         {atHome && <NavLink label="Bishop" linkTo="/dashboard" icon="bold" />}
         {!showingMembers && atHome ? (
           <NavLink
@@ -53,6 +54,7 @@ export const NavBar = () => {
             />
           </>
         )}
+
         {showingMembers && (
           <div className="d-md-none">
             <NavLink linkTo="/filter-members" icon="filter" />

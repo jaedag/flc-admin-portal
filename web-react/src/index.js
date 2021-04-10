@@ -458,6 +458,7 @@ const PastorsAdmin = () => {
           })
         )
         setBishopId(member.bishop?.id)
+        sessionStorage.setItem('bishopId', member.bishop?.id)
         break
       case 'Campus':
         setChurch({ church: 'campus', subChurch: 'centre' })
@@ -469,6 +470,7 @@ const PastorsAdmin = () => {
           })
         )
         setBishopId(member.bishop?.id)
+        sessionStorage.setItem('bishopId', member.bishop?.id)
         break
       case 'Centre':
         setChurch({
@@ -485,6 +487,10 @@ const PastorsAdmin = () => {
         setBishopId(
           member.campus ? member.campus.bishop.id : member.town.bishop.id
         )
+        sessionStorage.setItem(
+          'bishopId',
+          member.campus ? member.campus.bishop.id : member.town.bishop.id
+        )
         break
       case 'Bacenta':
         setChurch({ church: member.centre?.town ? 'town' : 'campus' })
@@ -495,6 +501,12 @@ const PastorsAdmin = () => {
           })
         )
         setBishopId(
+          member.centre?.town
+            ? member.centre?.town.bishop.id
+            : member.centre?.campus.bishop.id
+        )
+        sessionStorage.setItem(
+          'bishopId',
           member.centre?.town
             ? member.centre?.town.bishop.id
             : member.centre?.campus.bishop.id

@@ -8,6 +8,7 @@ import FormikControl from '../components/formik-components/FormikControl'
 import {
   BACENTA_DROPDOWN,
   GET_CAMPUSES,
+  GET_CAMPUS_CENTRES,
   GET_TOWNS,
   GET_TOWN_CENTRES,
 } from '../queries/ListQueries'
@@ -38,10 +39,12 @@ export const UpdateCentre = () => {
     capitalise,
     makeSelectOptions,
     phoneRegExp,
-    townId,
     centreId,
+    townId,
+    setTownId,
+    setCampusId,
+    campusId,
     bishopId,
-    setBishopId,
   } = useContext(ChurchContext)
 
   const { data: centreData, loading: centreLoading } = useQuery(
@@ -116,13 +119,19 @@ export const UpdateCentre = () => {
     refetchQueries: [
       { query: DISPLAY_CENTRE, variables: { id: centreId } },
       { query: GET_TOWN_CENTRES, variables: { id: townId } },
+      { query: GET_CAMPUS_CENTRES, variables: { id: campusId } },
       {
         query: GET_TOWN_CENTRES,
+        variables: { id: initialValues.campusTownSelect },
+      },
+      {
+        query: GET_CAMPUS_CENTRES,
         variables: { id: initialValues.campusTownSelect },
       },
     ],
   })
 
+  //Changes downwards.ie. Changes to the Bacentas underneath the Centre
   const [AddCentreBacentas] = useMutation(ADD_CENTRE_BACENTAS)
   const [RemoveBacentaCentre] = useMutation(REMOVE_BACENTA_CENTRE, {
     onCompleted: (data) => {
@@ -144,7 +153,7 @@ export const UpdateCentre = () => {
         historyRecord = `${data.RemoveBacentaCentre.to.name} 
       Bacenta has been moved to ${initialValues.centreName} Centre 
       from ${prevCentre.name} Centre`
-      } else console.log('no historyRecord')
+      }
 
       //After removing the bacenta from a centre, then you log that change.
       LogBacentaHistory({
@@ -159,6 +168,10 @@ export const UpdateCentre = () => {
       })
     },
   })
+
+
+  //Changes upwards. ie. Changes to the CampusTown the Centre is under
+
   const [RemoveCentreTown] = useMutation(REMOVE_CENTRE_TOWN)
   const [RemoveCentreCampus] = useMutation(REMOVE_CENTRE_CAMPUS)
   const [AddCentreTown] = useMutation(ADD_CENTRE_TOWN, {
@@ -181,69 +194,112 @@ export const UpdateCentre = () => {
             historyRecord: recordIfNoOldTown,
           },
         })
+      } else {
+        //If there is an old town
+
+        //Break Link to the Old Town
+        RemoveCentreTown({
+          variables: {
+            townId: initialValues.campusTownSelect,
+            centreId: centreId,
+          },
+        })
+
+        let recordIfOldTown = `${
+          initialValues.centreName
+        } Centre has been moved from ${
+          centreData?.displayCentre?.town.name
+        } ${capitalise(church.church)} to ${
+          newTown.AddCentreTown.from.name
+        } ${capitalise(church.church)}`
+
+        //After Adding the centre to a campus/town, then you log that change.
+        LogCentreHistory({
+          variables: {
+            centreId: centreId,
+            leaderId: '',
+            oldLeaderId: '',
+            newCampusTownId: newTown.AddCentreTown.from.id,
+            oldCampusTownId: centreData?.displayCentre?.town.id,
+            historyRecord: recordIfOldTown,
+          },
+        })
       }
-
-      //Break Link to the Old Town
-      RemoveCentreTown({
-        variables: {
-          townId: initialValues.campusTownSelect,
-          centreId: centreId,
-        },
-      })
-
-      let recordIfOldTown = `${
-        initialValues.centreName
-      } Centre has been moved from ${
-        centreData?.displayCentre?.town.name
-      } ${capitalise(church.church)} to ${
-        newTown.AddCentreTown.from.name
-      } ${capitalise(church.church)}`
-
-      //After Adding the centre to a campus/town, then you log that change.
-      LogCentreHistory({
-        variables: {
-          centreId: centreId,
-          leaderId: '',
-          oldLeaderId: '',
-          newCampusTownId: newTown.AddCentreTown.from.id,
-          oldCampusTownId: centreData?.displayCentre?.town.id,
-          historyRecord: recordIfOldTown,
-        },
-      })
     },
   })
   const [AddCentreCampus] = useMutation(ADD_CENTRE_CAMPUS, {
     onCompleted: (newCampus) => {
-      //After Adding the centre to a campus/Campus, then you log that change.
-      LogCentreHistory({
-        variables: {
-          centreId: centreId,
-          leaderId: '',
-          oldLeaderId: '',
-          oldCampusTownId: centreData?.displayCentre?.Campus.id,
-          newCampusTownId: newCampus.AddCentreCampus.from.id,
-          historyRecord: `${initialValues.centreName} has been moved from ${
-            centreData?.displayCentre?.Campus.name
-          } ${capitalise(church.church)} to ${
-            newCampus.AddCentreCampus.from.name
-          } ${capitalise(church.church)}`,
-        },
-      })
+      if (!centreData?.displayCentre?.campus.name) {
+        //If There is no old campus
+        let recordIfNoOldCampus = `${
+          initialValues.centreName
+        } Centre has been moved to ${
+          newCampus.AddCentreCampus.from.name
+        } ${capitalise(church.church)} `
+
+        LogCentreHistory({
+          variables: {
+            centreId: centreId,
+            leaderId: '',
+            oldLeaderId: '',
+            newCampusTownId: newCampus.AddCentreCampus.from.id,
+            oldCampusTownId: centreData?.displayCentre?.campus.id,
+            historyRecord: recordIfNoOldCampus,
+          },
+        })
+      } else {
+        //If there is an old Campus
+
+        //Break Link to the Old Campus
+        RemoveCentreCampus({
+          variables: {
+            campusId: initialValues.campusTownSelect,
+            centreId: centreId,
+          },
+        })
+
+        let recordIfOldCampus = `${
+          initialValues.centreName
+        } Centre has been moved from ${
+          centreData?.displayCentre?.campus.name
+        } ${capitalise(church.church)} to ${
+          newCampus.AddCentreCampus.from.name
+        } ${capitalise(church.church)}`
+
+        //After Adding the centre to a campus/town, then you log that change.
+        LogCentreHistory({
+          variables: {
+            centreId: centreId,
+            leaderId: '',
+            oldLeaderId: '',
+            newCampusTownId: newCampus.AddCentreCampus.from.id,
+            oldCampusTownId: centreData?.displayCentre?.campus.id,
+            historyRecord: recordIfOldCampus,
+          },
+        })
+      }
     },
   })
 
   if (centreLoading || townListLoading || campusListLoading) {
     return <LoadingScreen />
   } else if (centreData && (townListData || campusListData)) {
+    //Refactoring the Options into Something that can be read by my formik component
     const townOptions = townListData
       ? makeSelectOptions(townListData.townList)
       : []
     const campusOptions = campusListData
       ? makeSelectOptions(campusListData.campusList)
       : []
+
     //onSubmit receives the form state as argument
     const onSubmit = (values, onSubmitProps) => {
-      setBishopId(values.centreSelect)
+      if (church.church === 'town') {
+        setTownId(values.campusTownSelect)
+      }
+      if (church.church === 'campus') {
+        setCampusId(values.campusTownSelect)
+      }
 
       UpdateCentre({
         variables: {
@@ -254,10 +310,31 @@ export const UpdateCentre = () => {
         },
       })
 
-      //For the Logging of Stuff
+      //LOGS
+
+      //Log if Centre Name Changes
+      if (values.centreName !== initialValues.centreName) {
+        LogCentreHistory({
+          variables: {
+            centreId: centreId,
+            leaderId: '',
+            oldLeaderId: '',
+            oldCampusTownId: '',
+            newCampusTownId: '',
+            historyRecord: `The Centre name has been changed from ${initialValues.centreName} to ${values.centreName}`,
+          },
+        })
+      }
+
       //Log If The TownCampus Changes
       if (values.campusTownSelect !== initialValues.campusTownSelect) {
         if (church.church === 'town') {
+          RemoveCentreTown({
+            variables: {
+              campusId: initialValues.campusTownSelect,
+              centreId: centreId,
+            },
+          })
           AddCentreTown({
             variables: {
               townId: values.campusTownSelect,
@@ -280,20 +357,6 @@ export const UpdateCentre = () => {
         }
       }
 
-      //Log if Centre Name Changes
-      if (values.centreName !== initialValues.centreName) {
-        LogCentreHistory({
-          variables: {
-            centreId: centreId,
-            leaderId: '',
-            oldLeaderId: '',
-            oldCampusTownId: '',
-            newCampusTownId: '',
-            historyRecord: `The Centre name has been changed from ${initialValues.centreName} to ${values.centreName}`,
-          },
-        })
-      }
-
       //For the adding and removing of bacentas
       const oldBacentaList = initialValues.bacentas.map((bacenta) => {
         return bacenta.id
@@ -311,7 +374,6 @@ export const UpdateCentre = () => {
         return !oldBacentaList.includes(value.id)
       })
 
-      console.log(addBacentas)
       removeBacentas.forEach((bacenta) => {
         RemoveBacentaCentre({
           variables: {
@@ -321,7 +383,6 @@ export const UpdateCentre = () => {
         })
       })
       addBacentas.forEach((bacenta) => {
-        //Bacenta has no previous centre and is now joining. ie. RemoveBacentaCentre won't run
         if (bacenta.centre) {
           RemoveBacentaCentre({
             variables: {
@@ -330,6 +391,7 @@ export const UpdateCentre = () => {
             },
           })
         } else {
+          //Bacenta has no previous centre and is now joining. ie. RemoveBacentaCentre won't run
           LogBacentaHistory({
             variables: {
               bacentaId: bacenta.id,

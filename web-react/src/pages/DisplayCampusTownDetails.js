@@ -11,7 +11,6 @@ export const DisplayCampusTownDetails = () => {
     ChurchContext
   )
 
- 
   const { data: townData, loading: townLoading } = useQuery(DISPLAY_TOWN, {
     variables: { id: townId },
   })
@@ -26,7 +25,6 @@ export const DisplayCampusTownDetails = () => {
     // Spinner Icon for Loading Screens
     return <LoadingScreen />
   } else if (church.church === 'town' && townData) {
-
     let breadcrumb = [townData.displayTown?.bishop, townData.displayTown]
     return (
       <div>
@@ -87,6 +85,10 @@ export const DisplayCampusTownDetails = () => {
           subChurchSetter={setCentreId}
           buttons={campusData.displayCampus.centres}
           breadcrumb={breadcrumb && breadcrumb}
+          history={
+            campusData.displayCampus?.history.length !== 0 &&
+            campusData.displayCampus?.history
+          }
           editlink="/campus/editcampus"
         />
       </div>

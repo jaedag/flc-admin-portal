@@ -223,6 +223,7 @@ export const REMOVE_BACENTA_CENTRE = gql`
           id
           name
         }
+
       }
     }
   }
@@ -335,3 +336,4 @@ export const REMOVE_CAMPUS_BISHOP = gql`
     }
   }
 `
+

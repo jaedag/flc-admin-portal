@@ -113,7 +113,9 @@ export const UpdateBacenta = () => {
             leaderId: newLeaderInfo.id,
             oldCentreId: '',
             newCentreId: '',
+
             historyRecord: `${newLeaderInfo.firstName} ${newLeaderInfo.lastName} was transferred to become the new Bacenta Leader for ${initialValues.bacentaName} replacing ${bacentaData?.displayBacenta?.leader.firstName} ${bacentaData?.displayBacenta?.leader.lastName}`,
+
           },
         })
       }
@@ -127,7 +129,9 @@ export const UpdateBacenta = () => {
     ],
   })
 
+
   const [RemoveBacentaCentre] = useMutation(REMOVE_BACENTA_CENTRE)
+
 
   const [AddBacentaCentre] = useMutation(ADD_BACENTA_CENTRE, {
     onCompleted: (newCentre) => {

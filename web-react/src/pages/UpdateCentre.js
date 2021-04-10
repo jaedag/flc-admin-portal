@@ -51,6 +51,7 @@ export const UpdateCentre = () => {
     }
   )
 
+
   const { data: townListData, loading: townListLoading } = useQuery(GET_TOWNS, {
     variables: { id: bishopId },
   })
@@ -60,6 +61,7 @@ export const UpdateCentre = () => {
       variables: { id: bishopId },
     }
   )
+
 
   const history = useHistory()
 
@@ -109,6 +111,7 @@ export const UpdateCentre = () => {
             oldCampusTownId: '',
             newCampusTownId: '',
             historyRecord: `${newLeaderInfo.firstName} ${newLeaderInfo.lastName} was transferred to become the new Centre Leader for ${initialValues.centreName} replacing ${centreData?.displayCentre?.leader.firstName} ${centreData?.displayCentre?.leader.lastName}`,
+
           },
         })
       }
@@ -155,10 +158,13 @@ export const UpdateCentre = () => {
           newCentreId: newCentreId,
           oldCentreId: oldCentreId,
           historyRecord: historyRecord,
+
         },
       })
     },
   })
+
+
 
   const [RemoveCentreTown] = useMutation(REMOVE_CENTRE_TOWN)
   const [RemoveCentreCampus] = useMutation(REMOVE_CENTRE_CAMPUS)
@@ -209,6 +215,7 @@ export const UpdateCentre = () => {
           newCampusTownId: newTown.AddCentreTown.from.id,
           oldCampusTownId: centreData?.displayCentre?.town.id,
           historyRecord: recordIfOldTown,
+
         },
       })
     },

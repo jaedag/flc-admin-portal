@@ -144,7 +144,7 @@ export const UpdateCentre = () => {
         historyRecord = `${data.RemoveBacentaCentre.to.name} 
       Bacenta has been moved to ${initialValues.centreName} Centre 
       from ${prevCentre.name} Centre`
-      } else console.log('no historyRecord')
+      }
 
       //After removing the bacenta from a centre, then you log that change.
       LogBacentaHistory({
@@ -312,7 +312,6 @@ export const UpdateCentre = () => {
         return !oldBacentaList.includes(value.id)
       })
 
-      console.log(addBacentas)
       removeBacentas.forEach((bacenta) => {
         RemoveBacentaCentre({
           variables: {

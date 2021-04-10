@@ -68,29 +68,18 @@ export const UpdateTownCampus = () => {
 
   const history = useHistory()
 
+  const campusTownData = campusData
+    ? campusData.displayCampus
+    : townData
+    ? townData.displayTown
+    : ''
+
   const initialValues = {
-    campusTownName:
-      church.church === 'campus'
-        ? campusData?.displayCampus?.name
-        : townData?.displayTown?.name,
-    leaderName:
-      church.church === 'campus'
-        ? `${campusData?.displayCampus?.leader.firstName} ${campusData?.displayCampus?.leader.lastName} `
-        : `${townData?.displayTown?.leader.firstName} ${townData?.displayTown?.leader.lastName} `,
-    leaderWhatsapp:
-      church.church === 'campus'
-        ? `+${campusData?.displayCampus?.leader.whatsappNumber}`
-        : `+${townData?.displayTown?.leader.whatsappNumber}`,
-    bishopSelect:
-      church.church === 'campus'
-        ? campusData?.displayCampus?.bishop.id
-        : townData?.displayTown?.bishop.id,
-    centres:
-      church.church === 'campus'
-        ? campusData?.displayCampus?.centres
-        : townData?.displayTown?.centres
-        ? townData?.displayTown?.centres
-        : [''],
+    campusTownName: campusTownData?.name,
+    leaderName: `${campusTownData?.leader?.firstName} ${campusTownData?.leader?.lastName} `,
+    leaderWhatsapp: `+${campusTownData?.leader?.whatsappNumber}`,
+    bishopSelect: campusTownData?.leader?.bishop?.id,
+    centres: campusTownData?.centres?.length ? campusTownData.centres : [''],
   }
 
   const validationSchema = Yup.object({
@@ -623,9 +612,6 @@ export const UpdateTownCampus = () => {
                           const { push, remove, form } = fieldArrayProps
                           const { values } = form
                           const { centres } = values
-                          if (!centres) {
-                            return null
-                          }
 
                           return (
                             <div>

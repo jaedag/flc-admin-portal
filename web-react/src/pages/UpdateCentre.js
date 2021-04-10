@@ -76,7 +76,9 @@ export const UpdateCentre = () => {
       church.church === 'town'
         ? centreData?.displayCentre?.town?.id
         : centreData?.displayCentre?.campus?.id,
-    bacentas: centreData?.displayCentre?.bacentas,
+    bacentas: centreData?.displayCentre?.bacentas?.length
+      ? centreData.displayCentre?.bacentas
+      : [''],
   }
 
   const validationSchema = Yup.object({

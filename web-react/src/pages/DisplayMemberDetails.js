@@ -223,6 +223,18 @@ export const DisplayMemberDetails = () => {
                         </div>
                       </div>
                       <div className="row py-2">
+                        <div className="col ">
+                          <p className="text-secondary card-text">
+                            Middle Name
+                          </p>
+                        </div>
+                        <div className="col">
+                          <p className="font-weight-bold card-text">
+                            {memberData.displayMember.middleName}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="row py-2">
                         <div className="col">
                           <p className="text-secondary card-text">Last Name</p>
                         </div>

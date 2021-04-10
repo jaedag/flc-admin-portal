@@ -1,8 +1,8 @@
 type Member {
   id: ID! @id
-  firstName: String @search
+  firstName: String #@search
   middleName: String
-  lastName: String @search
+  lastName: String #@search
   email: String
   phoneNumber: String
   whatsappNumber: String #@unique

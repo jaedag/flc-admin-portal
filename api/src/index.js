@@ -3,11 +3,7 @@ import { resolvers } from './resolvers'
 import { ApolloServer } from 'apollo-server-express'
 import express from 'express'
 import neo4j from 'neo4j-driver'
-import {
-  makeAugmentedSchema,
-  searchSchema,
-  assertSchema,
-} from 'neo4j-graphql-js'
+import { makeAugmentedSchema, assertSchema } from 'neo4j-graphql-js'
 import dotenv from 'dotenv'
 import { initializeDatabase } from './initialize'
 // import jwt from 'express-jwt'
@@ -51,7 +47,6 @@ const driver = neo4j.driver(
   }
 )
 
-searchSchema({ schema, driver, debug: true })
 assertSchema({ schema, driver, debug: true })
 
 /*

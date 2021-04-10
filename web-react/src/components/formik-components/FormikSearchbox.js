@@ -42,6 +42,12 @@ function FormikSearchbox(props) {
           town: row.town,
           campus: row.campus,
           bishop: row.bishop,
+          leadsBacenta: row.leadsBacenta,
+          leadsCentre: row.leadsCentre,
+          leadsCampus: row.leadsCampus,
+          leadsTown: row.leadsTown,
+          townBishop: row.townBishop,
+          campusBishop: row.campusBishop,
           id: row.id,
         }))
       )

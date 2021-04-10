@@ -95,16 +95,20 @@ export const GLOBAL_SEARCH = gql`
       bacenta {
         name
         leader {
+          id
           firstName
           lastName
         }
         centre {
+          id
           town {
+            id
             bishop {
               id
             }
           }
           campus {
+            id
             bishop {
               id
             }
@@ -112,24 +116,29 @@ export const GLOBAL_SEARCH = gql`
         }
       }
       ministry {
+        id
         name
       }
       leadsCampus {
+        id
         name
         bishop {
           id
         }
       }
       leadsTown {
+        id
         name
         bishop {
           id
         }
       }
       townBishop {
+        id
         name
       }
       campusBishop {
+        id
         name
       }
     }

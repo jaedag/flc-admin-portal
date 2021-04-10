@@ -124,7 +124,6 @@ export const UpdateCentre = () => {
   })
 
   const [AddCentreBacentas] = useMutation(ADD_CENTRE_BACENTAS)
-
   const [RemoveBacentaCentre] = useMutation(REMOVE_BACENTA_CENTRE, {
     onCompleted: (data) => {
       let prevCentre = data.RemoveBacentaCentre?.from
@@ -144,7 +143,7 @@ export const UpdateCentre = () => {
         newCentreId = centreId
         historyRecord = `${data.RemoveBacentaCentre.to.name} 
       Bacenta has been moved to ${initialValues.centreName} Centre 
-      from ${prevCentre.name}`
+      from ${prevCentre.name} Centre`
       } else console.log('no historyRecord')
 
       //After removing the bacenta from a centre, then you log that change.

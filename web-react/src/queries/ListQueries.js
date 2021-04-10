@@ -67,6 +67,14 @@ export const CENTRE_DROPDOWN = gql`
     centreDropdown(centreName: $centreName, first: 8) {
       id
       name
+      campus {
+        id
+        name
+      }
+      town {
+        id
+        name
+      }
     }
   }
 `

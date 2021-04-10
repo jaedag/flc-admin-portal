@@ -57,6 +57,8 @@ function Combobox(props) {
                 name: row[`${suggestionText}`],
                 id: row[`${suggestionID}`],
                 centre: row.centre,
+                campus: row.campus,
+                town: row.town,
               }))
             )
           } catch (error) {

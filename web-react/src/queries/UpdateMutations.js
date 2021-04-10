@@ -156,6 +156,10 @@ export const REMOVE_CENTRE_TOWN = gql`
           name
         }
       }
+      to {
+        id
+        name
+      }
     }
   }
 `
@@ -170,6 +174,10 @@ export const REMOVE_CENTRE_CAMPUS = gql`
           id
           name
         }
+      }
+      to {
+        id
+        name
       }
     }
   }
@@ -327,6 +335,36 @@ export const REMOVE_CAMPUS_BISHOP = gql`
         id
         firstName
         lastName
+      }
+      to {
+        id
+        name
+      }
+    }
+  }
+`
+
+export const ADD_CAMPUS_CENTRES = gql`
+  mutation AddCampusCentres($campusId: ID!, $centreId: ID!) {
+    AddCampusCentres(from: { id: $campusId }, to: { id: $centreId }) {
+      from {
+        id
+        name
+      }
+      to {
+        id
+        name
+      }
+    }
+  }
+`
+
+export const ADD_TOWN_CENTRES = gql`
+  mutation AddTownCentres($townId: ID!, $centreId: ID!) {
+    AddTownCentres(from: { id: $townId }, to: { id: $centreId }) {
+      from {
+        id
+        name
       }
       to {
         id

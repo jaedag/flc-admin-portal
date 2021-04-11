@@ -3,9 +3,9 @@ import { useQuery } from '@apollo/client'
 import { useHistory } from 'react-router-dom'
 import { ChurchContext } from '../contexts/ChurchContext'
 import { GET_BISHOPS } from '../queries/ListQueries'
-import { NavBar } from '../components/NavBar'
+import { NavBar } from '../components/nav/NavBar'
 import Spinner from '../components/Spinner'
-import { AuthButton } from '../components/DashboardButton'
+import { AuthButton } from '../components/buttons/DashboardButton'
 import Logo from '../img/flc-logo-small.png'
 import { MemberContext } from '../contexts/MemberContext'
 import { GET_LOGGED_IN_USER } from '../queries/SearchQuery'
@@ -46,7 +46,7 @@ const BishopSelect = () => {
 
   if (loading) {
     return (
-      <React.Fragment>
+      <>
         <NavBar />
         <div className="container text-center my-5  d-none d-lg-block">
           <img
@@ -90,11 +90,11 @@ const BishopSelect = () => {
             </div>
           </div>
         </div>
-      </React.Fragment>
+      </>
     )
   } else if (data) {
     return (
-      <React.Fragment>
+      <>
         <NavBar />
         <div className="container text-center my-3">
           <img
@@ -139,11 +139,11 @@ const BishopSelect = () => {
             )
           })}
         </div>
-      </React.Fragment>
+      </>
     )
   } else {
     return (
-      <React.Fragment>
+      <>
         <div className="container body-container d-none d-lg-block">
           {/* <!--Web Logo and text--> */}
           <div className="row align-self-center">
@@ -187,7 +187,7 @@ const BishopSelect = () => {
             <div className="d-lg-none flex-grow-1" />
           </div>
         </div>
-      </React.Fragment>
+      </>
     )
   }
 }

@@ -1,0 +1,5 @@
+.user-navbar-img {
+    width: 40px;
+    border: 1px solid var(--infobar-color);
+    border-radius: 100px;
+  }

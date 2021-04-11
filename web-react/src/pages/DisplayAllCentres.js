@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { useQuery } from '@apollo/client'
 import { DisplayChurchList } from '../components/DisplayChurchList'
-import { NavBar } from '../components/NavBar'
+import { NavBar } from '../components/nav/NavBar'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
 import { GET_CAMPUS_CENTRES, GET_TOWN_CENTRES } from '../queries/ListQueries'
 import { ChurchContext } from '../contexts/ChurchContext'
@@ -36,7 +36,7 @@ export const DisplayAllCentres = () => {
     return <LoadingScreen />
   } else if (campusCentreData && church.church === 'campus') {
     return (
-      <div>
+      <>
         <NavBar />
         <div className="body-container container">
           <div className="mb-4 border-bottom">
@@ -92,11 +92,11 @@ export const DisplayAllCentres = () => {
             churchType="Centre"
           />
         </div>
-      </div>
+      </>
     )
   } else if (townCentreData && church.church === 'town') {
     return (
-      <div>
+      <>
         <NavBar />
         <div className="body-container container">
           <div className="mb-4 border-bottom">
@@ -148,7 +148,6 @@ export const DisplayAllCentres = () => {
 
           <DisplayChurchList
             data={townCentreData.townCentreList}
-            setter={setCentreId}
             churchType="Centre"
           />
           {/* <DisplayChurchList
@@ -157,7 +156,7 @@ export const DisplayAllCentres = () => {
             churchType="Sonta"
           /> */}
         </div>
-      </div>
+      </>
     )
   } else {
     return <ErrorScreen />

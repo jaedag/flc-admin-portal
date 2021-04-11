@@ -17,12 +17,13 @@ import {
   REMOVE_BACENTA_CENTRE,
   UPDATE_BACENTA,
 } from '../queries/UpdateMutations'
-import { NavBar } from '../components/NavBar'
+import { NavBar } from '../components/nav/NavBar'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
 import { ChurchContext } from '../contexts/ChurchContext'
 import { DISPLAY_BACENTA } from '../queries/DisplayQueries'
 import Spinner from '../components/Spinner'
 import { LOG_BACENTA_HISTORY } from '../queries/LogMutations'
+import { MemberContext } from '../contexts/MemberContext'
 
 export const UpdateBacenta = () => {
   const {
@@ -36,6 +37,7 @@ export const UpdateBacenta = () => {
     setCentreId,
     bacentaId,
   } = useContext(ChurchContext)
+  const { currentUser } = useContext(MemberContext)
 
   let townCampusIdVar
 
@@ -113,7 +115,7 @@ export const UpdateBacenta = () => {
             leaderId: newLeaderInfo.id,
             oldCentreId: '',
             newCentreId: '',
-
+            loggedBy: currentUser.id,
             historyRecord: `${newLeaderInfo.firstName} ${newLeaderInfo.lastName} was transferred to become the new Bacenta Leader for ${initialValues.bacentaName} replacing ${bacentaData?.displayBacenta?.leader.firstName} ${bacentaData?.displayBacenta?.leader.lastName}`,
           },
         })
@@ -151,6 +153,7 @@ export const UpdateBacenta = () => {
           oldCentreId: bacentaData?.displayBacenta?.centre
             ? bacentaData?.displayBacenta?.centre.id
             : null,
+          loggedBy: currentUser.id,
           historyRecord: `${initialValues.bacentaName} Bacenta has been moved from ${bacentaData?.displayBacenta?.centre.name} Centre to ${newCentre.AddBacentaCentre.from.name} Centre`,
         },
       })
@@ -201,6 +204,7 @@ export const UpdateBacenta = () => {
             oldLeaderId: '',
             oldCentreId: '',
             newCentreId: '',
+            loggedBy: currentUser.id,
             historyRecord: `The Bacenta name has been changed from ${initialValues.bacentaName} to ${values.bacentaName}`,
           },
         })
@@ -215,6 +219,7 @@ export const UpdateBacenta = () => {
             oldLeaderId: '',
             oldCentreId: '',
             newCentreId: '',
+            loggedBy: currentUser.id,
             historyRecord: `${values.bacentaName} has changed their meeting day from ${initialValues.meetingDay} to ${values.meetingDay}`,
           },
         })
@@ -232,6 +237,7 @@ export const UpdateBacenta = () => {
             oldLeaderId: '',
             oldCentreId: '',
             newCentreId: '',
+            loggedBy: currentUser.id,
             historyRecord: `${values.bacentaName} has changed their venue`,
           },
         })
@@ -243,7 +249,7 @@ export const UpdateBacenta = () => {
     }
 
     return (
-      <div>
+      <>
         <NavBar />
         <Formik
           initialValues={initialValues}
@@ -430,7 +436,7 @@ export const UpdateBacenta = () => {
             </div>
           )}
         </Formik>
-      </div>
+      </>
     )
   } else {
     return <ErrorScreen />

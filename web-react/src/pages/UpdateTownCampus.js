@@ -26,17 +26,18 @@ import {
   ADD_CAMPUS_CENTRES,
   ADD_TOWN_CENTRES,
 } from '../queries/UpdateMutations'
-import { NavBar } from '../components/NavBar'
+import { NavBar } from '../components/nav/NavBar'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
 import { ChurchContext } from '../contexts/ChurchContext'
 import { DISPLAY_CAMPUS, DISPLAY_TOWN } from '../queries/DisplayQueries'
-import PlusSign from '../components/PlusSign'
-import MinusSign from '../components/MinusSign'
+import PlusSign from '../components/buttons/PlusSign'
+import MinusSign from '../components/buttons/MinusSign'
 import {
   LOG_CAMPUS_HISTORY,
   LOG_CENTRE_HISTORY,
   LOG_TOWN_HISTORY,
 } from '../queries/LogMutations'
+import { MemberContext } from '../contexts/MemberContext'
 
 export const UpdateTownCampus = () => {
   const {
@@ -50,6 +51,7 @@ export const UpdateTownCampus = () => {
     bishopId,
     setBishopId,
   } = useContext(ChurchContext)
+  const { currentUser } = useContext(MemberContext)
 
   const { data: campusData, loading: campusLoading } = useQuery(
     DISPLAY_CAMPUS,
@@ -66,29 +68,18 @@ export const UpdateTownCampus = () => {
 
   const history = useHistory()
 
+  const campusTownData = campusData
+    ? campusData.displayCampus
+    : townData
+    ? townData.displayTown
+    : ''
+
   const initialValues = {
-    campusTownName:
-      church.church === 'campus'
-        ? campusData?.displayCampus?.name
-        : townData?.displayTown?.name,
-    leaderName:
-      church.church === 'campus'
-        ? `${campusData?.displayCampus?.leader.firstName} ${campusData?.displayCampus?.leader.lastName} `
-        : `${townData?.displayTown?.leader.firstName} ${townData?.displayTown?.leader.lastName} `,
-    leaderWhatsapp:
-      church.church === 'campus'
-        ? `+${campusData?.displayCampus?.leader.whatsappNumber}`
-        : `+${townData?.displayTown?.leader.whatsappNumber}`,
-    bishopSelect:
-      church.church === 'campus'
-        ? campusData?.displayCampus?.bishop.id
-        : townData?.displayTown?.bishop.id,
-    centres:
-      church.church === 'campus'
-        ? campusData?.displayCampus?.centres
-        : townData?.displayTown?.centres
-        ? townData?.displayTown?.centres
-        : [''],
+    campusTownName: campusTownData?.name,
+    leaderName: `${campusTownData?.leader?.firstName} ${campusTownData?.leader?.lastName} `,
+    leaderWhatsapp: `+${campusTownData?.leader?.whatsappNumber}`,
+    bishopSelect: campusTownData?.leader?.bishop?.id,
+    centres: campusTownData?.centres?.length ? campusTownData.centres : [''],
   }
 
   const validationSchema = Yup.object({
@@ -132,6 +123,7 @@ export const UpdateTownCampus = () => {
               oldLeaderId: townData?.displayTown.leader.id,
               oldBishopId: '',
               newBishopId: '',
+              loggedBy: currentUser.id,
               historyRecord: `${newLeaderInfo.firstName} ${newLeaderInfo.lastName} was transferred to become the new Town CO for ${initialValues.campusTownName} replacing ${townData?.displayTown?.leader.firstName} ${townData?.displayTown?.leader.lastName}`,
             },
           })
@@ -170,6 +162,7 @@ export const UpdateTownCampus = () => {
               oldLeaderId: campusData?.displayCampus.leader.id,
               oldBishopId: '',
               newBishopId: '',
+              loggedBy: currentUser.id,
               historyRecord: `${newLeaderInfo.firstName} ${newLeaderInfo.lastName} was transferred to become the new Campu CO for ${initialValues.campusTownName} replacing ${campusData?.displayCampus?.leader.firstName} ${campusData?.displayCampus?.leader.lastName}`,
             },
           })
@@ -223,6 +216,7 @@ export const UpdateTownCampus = () => {
           oldLeaderId: '',
           newCampusTownId: newCampusId,
           oldCampusTownId: oldCampusId,
+          loggedBy: currentUser.id,
           historyRecord: historyRecord,
         },
       })
@@ -258,6 +252,7 @@ export const UpdateTownCampus = () => {
           oldLeaderId: '',
           newCampusTownId: newTownId,
           oldCampusTownId: oldTownId,
+          loggedBy: currentUser.id,
           historyRecord: historyRecord,
         },
       })
@@ -280,6 +275,7 @@ export const UpdateTownCampus = () => {
             oldLeaderId: '',
             newBishopId: data.AddCampusBishop.from.id,
             oldBishopId: campusData?.displayCampus?.bishop.id,
+            loggedBy: currentUser.id,
             historyRecord: recordIfNoOldBishop,
           },
         })
@@ -305,6 +301,7 @@ export const UpdateTownCampus = () => {
             oldLeaderId: '',
             newBishopId: data.AddCampusBishop.from.id,
             oldBishopId: campusData?.displayCampus?.bishop.id,
+            loggedBy: currentUser.id,
             historyRecord: recordIfOldBishop,
           },
         })
@@ -324,6 +321,7 @@ export const UpdateTownCampus = () => {
             oldLeaderId: '',
             newBishopId: data.AddTownBishop.from.id,
             oldBishopId: townData?.displayTown?.bishop.id,
+            loggedBy: currentUser.id,
             historyRecord: recordIfNoOldBishop,
           },
         })
@@ -349,6 +347,7 @@ export const UpdateTownCampus = () => {
             oldLeaderId: '',
             newBishopId: data.AddTownBishop.from.id,
             oldBishopId: townData?.displayTown?.bishop.id,
+            loggedBy: currentUser.id,
             historyRecord: recordIfOldBishop,
           },
         })
@@ -386,6 +385,7 @@ export const UpdateTownCampus = () => {
               oldLeaderId: '',
               oldBishopId: '',
               newBishopId: '',
+              loggedBy: currentUser.id,
               historyRecord: `The Campus name has been changed from ${initialValues.campusTownName} to ${values.campusTownName}`,
             },
           })
@@ -425,6 +425,7 @@ export const UpdateTownCampus = () => {
               oldLeaderId: '',
               oldBishopId: '',
               newBishopId: '',
+              loggedBy: currentUser.id,
               historyRecord: `The Town name has been changed from ${initialValues.campusTownName} to ${values.campusTownName}`,
             },
           })
@@ -533,7 +534,7 @@ export const UpdateTownCampus = () => {
     }
 
     return (
-      <div>
+      <>
         <NavBar />
         <Formik
           initialValues={initialValues}
@@ -611,9 +612,6 @@ export const UpdateTownCampus = () => {
                           const { push, remove, form } = fieldArrayProps
                           const { values } = form
                           const { centres } = values
-                          if (!centres) {
-                            return null
-                          }
 
                           return (
                             <div>
@@ -641,21 +639,11 @@ export const UpdateTownCampus = () => {
                                     />
                                   </div>
                                   <div className="col d-flex">
-                                    <button
-                                      className="plus-button rounded mr-2"
-                                      type="button"
-                                      onClick={() => push()}
-                                    >
-                                      <PlusSign />
-                                    </button>
+                                    <PlusSign onClick={() => push()} />
                                     {index >= 0 && (
-                                      <button
-                                        className="plus-button rounded"
-                                        type="button"
+                                      <MinusSign
                                         onClick={() => remove(index)}
-                                      >
-                                        <MinusSign />
-                                      </button>
+                                      />
                                     )}
                                   </div>
                                 </div>
@@ -680,7 +668,7 @@ export const UpdateTownCampus = () => {
             </div>
           )}
         </Formik>
-      </div>
+      </>
     )
   } else {
     return <ErrorScreen />

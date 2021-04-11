@@ -12,7 +12,7 @@ import {
   GET_TOWNS,
 } from '../queries/ListQueries'
 import { CREATE_BACENTA_MUTATION } from '../queries/CreateMutations'
-import { NavBar } from '../components/NavBar'
+import { NavBar } from '../components/nav/NavBar'
 import { ChurchContext } from '../contexts/ChurchContext'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
 import Spinner from '../components/Spinner'
@@ -110,7 +110,7 @@ export const CreateBacenta = () => {
       : []
 
     return (
-      <div>
+      <>
         <NavBar />
         <Formik
           initialValues={initialValues}
@@ -283,7 +283,7 @@ export const CreateBacenta = () => {
             </div>
           )}
         </Formik>
-      </div>
+      </>
     )
   } else {
     return <ErrorScreen />

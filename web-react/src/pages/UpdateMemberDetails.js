@@ -8,14 +8,14 @@ import FormikControl from '../components/formik-components/FormikControl'
 import { UPDATE_MEMBER_MUTATION } from '../queries/UpdateMutations'
 import { DISPLAY_MEMBER } from '../queries/DisplayQueries'
 import { HeadingBar } from '../components/HeadingBar'
-import { NavBar } from '../components/NavBar'
+import { NavBar } from '../components/nav/NavBar'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
 import Spinner from '../components/Spinner'
 import { GET_MINISTRIES, BACENTA_DROPDOWN } from '../queries/ListQueries'
 import { MemberContext } from '../contexts/MemberContext'
 import { ChurchContext } from '../contexts/ChurchContext'
-import PlusSign from '../components/PlusSign'
-import MinusSign from '../components/MinusSign'
+import PlusSign from '../components/buttons/PlusSign'
+import MinusSign from '../components/buttons/MinusSign'
 
 export const UpdateMemberDetails = () => {
   const { memberId } = useContext(MemberContext)
@@ -196,7 +196,7 @@ export const UpdateMemberDetails = () => {
     const ministryOptions = makeSelectOptions(ministryListData.ministryList)
 
     return (
-      <div>
+      <>
         <NavBar />
         <Formik
           initialValues={initialValues}
@@ -421,23 +421,13 @@ export const UpdateMemberDetails = () => {
                                   </div>
                                   <div className="col d-flex">
                                     {index < 3 && (
-                                      <button
-                                        className="plus-button rounded mr-2"
-                                        type="button"
-                                        onClick={() => push()}
-                                      >
-                                        <PlusSign />
-                                      </button>
+                                      <PlusSign onClick={() => push()} />
                                     )}
 
                                     {index > 0 && (
-                                      <button
-                                        className="plus-button rounded"
-                                        type="button"
+                                      <MinusSign
                                         onClick={() => remove(index)}
-                                      >
-                                        <MinusSign />
-                                      </button>
+                                      />
                                     )}
                                   </div>
                                 </div>
@@ -480,21 +470,9 @@ export const UpdateMemberDetails = () => {
                                   />
                                 </div>
                                 <div className="col d-flex">
-                                  <button
-                                    className="plus-button rounded mr-2"
-                                    type="button"
-                                    onClick={() => push()}
-                                  >
-                                    <PlusSign />
-                                  </button>
+                                  <PlusSign onClick={() => push()} />
                                   {index > 0 && (
-                                    <button
-                                      className="plus-button rounded"
-                                      type="button"
-                                      onClick={() => remove(index)}
-                                    >
-                                      <MinusSign />
-                                    </button>
+                                    <MinusSign onClick={() => remove(index)} />
                                   )}
                                 </div>
                               </div>
@@ -521,7 +499,7 @@ export const UpdateMemberDetails = () => {
             </div>
           )}
         </Formik>
-      </div>
+      </>
     )
   }
 }

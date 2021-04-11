@@ -1,0 +1,11 @@
+.navbar {
+    background-color: var(--body-bg-color);
+    border-bottom: 1px solid var(--border-color);
+    height: 70px;
+  }
+
+  .nav-link {
+    color: var(--icon-color);
+    text-align: center;
+    font-size: 0.8rem;
+  }

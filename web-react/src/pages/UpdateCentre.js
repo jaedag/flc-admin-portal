@@ -21,7 +21,7 @@ import {
   REMOVE_CENTRE_CAMPUS,
   UPDATE_CENTRE_MUTATION,
 } from '../queries/UpdateMutations'
-import { NavBar } from '../components/NavBar'
+import { NavBar } from '../components/nav/NavBar'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
 import { ChurchContext } from '../contexts/ChurchContext'
 import { DISPLAY_CENTRE } from '../queries/DisplayQueries'
@@ -29,8 +29,9 @@ import {
   LOG_CENTRE_HISTORY,
   LOG_BACENTA_HISTORY,
 } from '../queries/LogMutations'
-import PlusSign from '../components/PlusSign'
-import MinusSign from '../components/MinusSign'
+import PlusSign from '../components/buttons/PlusSign'
+import MinusSign from '../components/buttons/MinusSign'
+import { MemberContext } from '../contexts/MemberContext'
 
 export const UpdateCentre = () => {
   const {
@@ -46,6 +47,7 @@ export const UpdateCentre = () => {
     campusId,
     bishopId,
   } = useContext(ChurchContext)
+  const { currentUser } = useContext(MemberContext)
 
   const { data: centreData, loading: centreLoading } = useQuery(
     DISPLAY_CENTRE,
@@ -74,7 +76,9 @@ export const UpdateCentre = () => {
       church.church === 'town'
         ? centreData?.displayCentre?.town?.id
         : centreData?.displayCentre?.campus?.id,
-    bacentas: centreData?.displayCentre?.bacentas,
+    bacentas: centreData?.displayCentre?.bacentas?.length
+      ? centreData.displayCentre?.bacentas
+      : [''],
   }
 
   const validationSchema = Yup.object({
@@ -111,6 +115,7 @@ export const UpdateCentre = () => {
             oldLeaderId: centreData?.displayCentre?.leader.id,
             oldCampusTownId: '',
             newCampusTownId: '',
+            loggedBy: currentUser.id,
             historyRecord: `${newLeaderInfo.firstName} ${newLeaderInfo.lastName} was transferred to become the new Centre Leader for ${initialValues.centreName} replacing ${centreData?.displayCentre?.leader.firstName} ${centreData?.displayCentre?.leader.lastName}`,
           },
         })
@@ -163,12 +168,12 @@ export const UpdateCentre = () => {
           oldLeaderId: '',
           newCentreId: newCentreId,
           oldCentreId: oldCentreId,
+          loggedBy: currentUser.id,
           historyRecord: historyRecord,
         },
       })
     },
   })
-
 
   //Changes upwards. ie. Changes to the CampusTown the Centre is under
 
@@ -191,6 +196,7 @@ export const UpdateCentre = () => {
             oldLeaderId: '',
             newCampusTownId: newTown.AddCentreTown.from.id,
             oldCampusTownId: centreData?.displayCentre?.town.id,
+            loggedBy: currentUser.id,
             historyRecord: recordIfNoOldTown,
           },
         })
@@ -221,6 +227,7 @@ export const UpdateCentre = () => {
             oldLeaderId: '',
             newCampusTownId: newTown.AddCentreTown.from.id,
             oldCampusTownId: centreData?.displayCentre?.town.id,
+            loggedBy: currentUser.id,
             historyRecord: recordIfOldTown,
           },
         })
@@ -244,6 +251,7 @@ export const UpdateCentre = () => {
             oldLeaderId: '',
             newCampusTownId: newCampus.AddCentreCampus.from.id,
             oldCampusTownId: centreData?.displayCentre?.campus.id,
+            loggedBy: currentUser.id,
             historyRecord: recordIfNoOldCampus,
           },
         })
@@ -274,6 +282,7 @@ export const UpdateCentre = () => {
             oldLeaderId: '',
             newCampusTownId: newCampus.AddCentreCampus.from.id,
             oldCampusTownId: centreData?.displayCentre?.campus.id,
+            loggedBy: currentUser.id,
             historyRecord: recordIfOldCampus,
           },
         })
@@ -321,6 +330,7 @@ export const UpdateCentre = () => {
             oldLeaderId: '',
             oldCampusTownId: '',
             newCampusTownId: '',
+            loggedBy: currentUser.id,
             historyRecord: `The Centre name has been changed from ${initialValues.centreName} to ${values.centreName}`,
           },
         })
@@ -399,6 +409,7 @@ export const UpdateCentre = () => {
               oldLeaderId: '',
               newCentreId: centreId,
               oldCentreId: '',
+              loggedBy: currentUser.id,
               historyRecord: `${bacenta.name} 
               Bacenta has been moved to ${initialValues.centreName} Centre`,
             },
@@ -419,7 +430,7 @@ export const UpdateCentre = () => {
     }
 
     return (
-      <div>
+      <>
         <NavBar />
         <Formik
           initialValues={initialValues}
@@ -526,21 +537,11 @@ export const UpdateCentre = () => {
                                     />
                                   </div>
                                   <div className="col d-flex">
-                                    <button
-                                      className="plus-button rounded mr-2"
-                                      type="button"
-                                      onClick={() => push()}
-                                    >
-                                      <PlusSign />
-                                    </button>
+                                    <PlusSign onClick={() => push()} />
                                     {index >= 0 && (
-                                      <button
-                                        className="plus-button rounded"
-                                        type="button"
+                                      <MinusSign
                                         onClick={() => remove(index)}
-                                      >
-                                        <MinusSign />
-                                      </button>
+                                      />
                                     )}
                                   </div>
                                 </div>
@@ -565,7 +566,7 @@ export const UpdateCentre = () => {
             </div>
           )}
         </Formik>
-      </div>
+      </>
     )
   } else {
     return <ErrorScreen />

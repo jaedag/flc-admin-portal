@@ -14,11 +14,11 @@ import {
   CREATE_TOWN_MUTATION,
   CREATE_CAMPUS_MUTATION,
 } from '../queries/CreateMutations'
-import { NavBar } from '../components/NavBar'
+import { NavBar } from '../components/nav/NavBar'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
 import { ChurchContext } from '../contexts/ChurchContext'
-import PlusSign from '../components/PlusSign'
-import MinusSign from '../components/MinusSign'
+import PlusSign from '../components/buttons/PlusSign'
+import MinusSign from '../components/buttons/MinusSign'
 
 function AddTownCampus() {
   const {
@@ -115,7 +115,7 @@ function AddTownCampus() {
     }
 
     return (
-      <div>
+      <>
         <NavBar />
         <Formik
           initialValues={initialValues}
@@ -217,21 +217,11 @@ function AddTownCampus() {
                                     />
                                   </div>
                                   <div className="col d-flex">
-                                    <button
-                                      className="plus-button rounded mr-2"
-                                      type="button"
-                                      onClick={() => push()}
-                                    >
-                                      <PlusSign />
-                                    </button>
+                                    <PlusSign onClick={() => push()} />
                                     {index > 0 && (
-                                      <button
-                                        className="plus-button rounded"
-                                        type="button"
+                                      <MinusSign
                                         onClick={() => remove(index)}
-                                      >
-                                        <MinusSign />
-                                      </button>
+                                      />
                                     )}
                                   </div>
                                 </div>
@@ -256,7 +246,7 @@ function AddTownCampus() {
             </div>
           )}
         </Formik>
-      </div>
+      </>
     )
   }
 }

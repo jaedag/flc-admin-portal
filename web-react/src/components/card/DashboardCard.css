@@ -1,0 +1,11 @@
+.dashboard-card {
+  height: 200px;
+  display: flex;
+  justify-content: center;
+}
+
+@media (max-width: 767.98px) {
+  .dashboard-card {
+    height: auto;
+  }
+}

@@ -4,6 +4,7 @@ import { Formik, Form } from 'formik'
 import FormikControl from '../components/formik-components/FormikControl'
 import { GET_MINISTRIES } from '../queries/ListQueries'
 import { ChurchContext } from '../contexts/ChurchContext'
+import './SideBar.css'
 
 export const SideBar = () => {
   const { setFilters } = useContext(ChurchContext)

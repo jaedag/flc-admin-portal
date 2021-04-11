@@ -4,7 +4,7 @@ import { MembersGrid } from '../../components/MembersGrid'
 import { GET_BACENTA_MEMBERS } from '../../queries/GridQueries'
 import { ChurchContext } from '../../contexts/ChurchContext'
 
-export const GridBacentaMembers = () => {
+export const BacentaMembers = () => {
   const { bacentaId } = useContext(ChurchContext)
   const { data, loading, error } = useQuery(GET_BACENTA_MEMBERS, {
     variables: { id: bacentaId },

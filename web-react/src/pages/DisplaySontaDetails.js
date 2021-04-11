@@ -7,7 +7,7 @@ import { DISPLAY_SONTA } from '../queries/DisplayQueries'
 import { ChurchContext } from '../contexts/ChurchContext'
 
 export const DisplaySontaDetails = () => {
-  const { sontaId } = useContext(ChurchContext)
+  const { sontaId, church } = useContext(ChurchContext)
 
   const { data: sontaData, loading: sontaLoading } = useQuery(DISPLAY_SONTA, {
     variables: { id: sontaId },
@@ -17,23 +17,40 @@ export const DisplaySontaDetails = () => {
     // Spinner Icon for Loading Screens
     return <LoadingScreen />
   } else if (sontaData) {
+    const { displaySonta, sontaBasontaLeaderList, sontaMemberCount } = sontaData
+
+    let breadcrumb
+    if (church.church === 'town') {
+      breadcrumb = [displaySonta.town.bishop, displaySonta.town, displaySonta]
+    }
+    if (church.church === 'campus') {
+      breadcrumb = [
+        displaySonta.campus.bishop,
+        displaySonta.campus,
+        displaySonta,
+      ]
+    }
+
     return (
-      <div>
+      <>
         <NavBar />
         <DisplayChurchDetails
-          name={sontaData.displaySonta?.name}
+          name={displaySonta?.name}
           leaderTitle="Sonta Leader"
-          leaderName={`${sontaData.displaySonta?.leader.firstName} ${sontaData.displaySonta?.leader.lastName}`}
-          leaderId={sontaData.displaySonta?.leader.id}
-          membership={sontaData.sontaMemberCount}
+          leaderName={`${displaySonta?.leader.firstName} ${displaySonta?.leader.lastName}`}
+          leaderId={displaySonta?.leader.id}
           churchHeading="No of Basonta Leaders"
-          churchNo={sontaData.sontaBasontaLeaderList.length}
-          subChurch=""
-          subChurchSetter=""
           churchType={`Sonta`}
+          subChurch="Basonta Leaders"
+          membership={sontaMemberCount}
+          churchNo={sontaBasontaLeaderList.length}
+          editlink="/sonta/editsonta"
+          history={displaySonta?.history.length !== 0 && displaySonta?.history}
+          breadcrumb={breadcrumb}
           buttons={['']}
+          basontaLeaders={sontaBasontaLeaderList}
         />
-      </div>
+      </>
     )
   } else {
     return <ErrorScreen />

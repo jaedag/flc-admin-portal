@@ -15,7 +15,6 @@ export const DisplayAllSontas = () => {
     campusId,
     setTownId,
     setCampusId,
-    setSontaId,
   } = useContext(ChurchContext)
 
   const { data: townCentreData, loading: townLoading } = useQuery(
@@ -36,7 +35,7 @@ export const DisplayAllSontas = () => {
     return <LoadingScreen />
   } else if (campusCentreData && church.church === 'campus') {
     return (
-      <div>
+      <>
         <NavBar />
         <div className="body-container container">
           <div className="mb-4 border-bottom">
@@ -86,15 +85,14 @@ export const DisplayAllSontas = () => {
 
           <DisplayChurchList
             data={campusCentreData.campusSontaList}
-            setter={setSontaId}
             churchType="Sonta"
           />
         </div>
-      </div>
+      </>
     )
   } else if (townCentreData && church.church === 'town') {
     return (
-      <div>
+      <>
         <NavBar />
         <div className="body-container container">
           <div className="mb-4 border-bottom">
@@ -144,11 +142,10 @@ export const DisplayAllSontas = () => {
 
           <DisplayChurchList
             data={townCentreData.townSontaList}
-            setter={setSontaId}
             churchType="Sonta"
           />
         </div>
-      </div>
+      </>
     )
   } else {
     return <ErrorScreen />

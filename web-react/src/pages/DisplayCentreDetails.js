@@ -7,7 +7,7 @@ import { DISPLAY_CENTRE } from '../queries/DisplayQueries'
 import { ChurchContext } from '../contexts/ChurchContext'
 
 export const DisplayCentreDetails = () => {
-  const { centreId, setBacentaId } = useContext(ChurchContext)
+  const { centreId } = useContext(ChurchContext)
   const { data: centreData, loading: centreLoading } = useQuery(
     DISPLAY_CENTRE,
     {
@@ -29,33 +29,31 @@ export const DisplayCentreDetails = () => {
     ]
 
     return (
-      <div>
+      <>
         <NavBar />
         <DisplayChurchDetails
           name={displayCentre?.name}
-          // leaderTitle={displayCentre.leader.title[0].Title.title}
           leaderTitle="Centre Leader"
-          membership={centreMemberCount}
           leaderName={
             displayCentre?.leader
               ? `${displayCentre.leader.firstName} ${displayCentre.leader.lastName}`
               : '-'
           }
-          leaderId={displayCentre?.leader ? displayCentre.leader.id : null}
+          leaderId={displayCentre?.leader.id}
           churchHeading="No of Bacentas"
           churchType="Centre"
           subChurch="Bacenta"
-          subChurchSetter={setBacentaId}
+          membership={centreMemberCount}
           churchNo={centreBacentaCount}
-          buttons={displayCentre ? displayCentre.bacentas : []}
           editlink="/centre/editcentre"
           history={
             centreData.displayCentre?.history.length !== 0 &&
             centreData.displayCentre?.history
           }
           breadcrumb={breadcrumb && breadcrumb}
+          buttons={displayCentre ? displayCentre.bacentas : []}
         />
-      </div>
+      </>
     )
   } else {
     return <ErrorScreen />

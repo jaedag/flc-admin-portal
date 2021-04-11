@@ -135,3 +135,37 @@ export const LOG_TOWN_HISTORY = gql`
     }
   }
 `
+
+export const LOG_SONTA_HISTORY = gql`
+  mutation LogSontaHistory(
+    $sontaId: ID!
+    $historyRecord: String
+    $oldLeaderId: ID
+    $leaderId: ID
+    $oldCampusTownId: ID
+    $newCampusTownId: ID
+    $loggedBy: ID
+  ) {
+    LogCentreHistory(
+      sontaId: $sontaId
+      historyRecord: $historyRecord
+      leaderId: $leaderId
+      oldLeaderId: $oldLeaderId
+      oldCampusTownId: $oldCampusTownId
+      newCampusTownId: $newCampusTownId
+      loggedBy: $loggedBy
+    ) {
+      id
+      name
+      history {
+        HistoryLog {
+          historyRecord
+          timeStamp {
+            formatted
+          }
+        }
+        pointer
+      }
+    }
+  }
+`

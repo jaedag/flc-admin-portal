@@ -20,7 +20,7 @@ export const AuthButton = () => {
   return (
     <div>
       {!isAuthenticated && (
-        <React.Fragment>
+        <>
           <button
             className="btn btn-primary text-nowrap px-4 d-none d-md-inline"
             onClick={() => loginWithRedirect()}
@@ -31,10 +31,10 @@ export const AuthButton = () => {
             className="fas fa-sign-in-alt fa-2x d-md-none"
             onClick={() => loginWithRedirect()}
           />
-        </React.Fragment>
+        </>
       )}
       {isAuthenticated && (
-        <React.Fragment>
+        <>
           <button
             className="btn btn-primary text-nowrap px-4 d-none d-md-inline"
             onClick={() => logout({ returnTo: window.location.origin })}
@@ -45,7 +45,7 @@ export const AuthButton = () => {
             className="fas fa-sign-out-alt fa-2x d-md-none"
             onClick={() => logout({ returnTo: window.location.origin })}
           />
-        </React.Fragment>
+        </>
       )}
     </div>
   )

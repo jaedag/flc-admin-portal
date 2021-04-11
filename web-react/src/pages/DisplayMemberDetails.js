@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 import { useQuery } from '@apollo/client'
 import { useHistory } from 'react-router-dom'
 import { NavBar } from '../components/NavBar'
-import { MemberCard } from '../components/MemberCard'
+import { MemberDetailsCard } from '../components/MemberDetailsCard'
 import { DISPLAY_MEMBER } from '../queries/DisplayQueries'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
 import { MemberContext } from '../contexts/MemberContext'
@@ -141,7 +141,7 @@ export const DisplayMemberDetails = () => {
             <div className="col">
               <div className="row">
                 <div className="col">
-                  <MemberCard
+                  <MemberDetailsCard
                     editlink="/member/editmember"
                     title={`${memberData.displayMember.firstName} ${memberData.displayMember.lastName}`}
                   >
@@ -204,13 +204,13 @@ export const DisplayMemberDetails = () => {
                         </div>
                       </div>
                     </div>
-                  </MemberCard>
+                  </MemberDetailsCard>
                 </div>
               </div>
               <div className="row">
                 <div className="col">
                   {/* Bio Information */}
-                  <MemberCard title="Bio" editlink="/member/editmember">
+                  <MemberDetailsCard title="Bio" editlink="/member/editmember">
                     <div className="container p-2">
                       <div className="row py-2">
                         <div className="col ">
@@ -343,7 +343,7 @@ export const DisplayMemberDetails = () => {
                         </div>
                       </div>
                     </div>
-                  </MemberCard>
+                  </MemberDetailsCard>
                 </div>
               </div>
             </div>
@@ -353,14 +353,14 @@ export const DisplayMemberDetails = () => {
               {memberData.displayMember.history[0] ? (
                 <div className="row">
                   <div className="col">
-                    <MemberCard title="History Timeline" editlink="#">
+                    <MemberDetailsCard title="History Timeline" editlink="#">
                       <div className="row">
                         <Timeline
                           record={memberData.displayMember.history}
                           limit={3}
                         />
                       </div>
-                    </MemberCard>
+                    </MemberDetailsCard>
                   </div>
                 </div>
               ) : null}
@@ -368,7 +368,7 @@ export const DisplayMemberDetails = () => {
               {/* Current Church Status */}
               <div className="row">
                 <div className="col">
-                  <MemberCard
+                  <MemberDetailsCard
                     title="Current Church Activity"
                     editlink="/member/editmember"
                   >
@@ -453,7 +453,7 @@ export const DisplayMemberDetails = () => {
                         </div>
                       ) : null}
                     </div>
-                  </MemberCard>
+                  </MemberDetailsCard>
                 </div>
               </div>
             </div>

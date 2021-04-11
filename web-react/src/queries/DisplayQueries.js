@@ -265,6 +265,24 @@ export const DISPLAY_SONTA = gql`
           }
         }
       }
+      town {
+        id
+        name
+        bishop {
+          id
+          firstName
+          lastName
+        }
+      }
+      campus {
+        id
+        name
+        bishop {
+          id
+          firstName
+          lastName
+        }
+      }
       history {
         HistoryLog {
           id
@@ -287,7 +305,6 @@ export const DISPLAY_SONTA = gql`
       }
     }
     sontaMemberCount(id: $id)
-
     sontaBasontaLeaderList(id: $id) {
       id
       firstName
@@ -371,6 +388,18 @@ export const DISPLAY_TOWN = gql`
       centres {
         id
         name
+        town {
+          name
+          bishop {
+            id
+          }
+        }
+        campus {
+          name
+          bishop {
+            id
+          }
+        }
       }
       sontas {
         id
@@ -413,7 +442,7 @@ export const DISPLAY_TOWN = gql`
           }
         }
       }
-      history {
+      history(first: 10) {
         HistoryLog {
           id
           timeStamp {
@@ -448,6 +477,18 @@ export const DISPLAY_CAMPUS = gql`
       centres {
         id
         name
+        town {
+          name
+          bishop {
+            id
+          }
+        }
+        campus {
+          name
+          bishop {
+            id
+          }
+        }
       }
       sontas {
         id
@@ -490,7 +531,7 @@ export const DISPLAY_CAMPUS = gql`
           }
         }
       }
-      history {
+      history(first: 10) {
         HistoryLog {
           id
           timeStamp {

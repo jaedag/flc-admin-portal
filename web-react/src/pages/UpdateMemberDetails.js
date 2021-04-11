@@ -196,7 +196,7 @@ export const UpdateMemberDetails = () => {
     const ministryOptions = makeSelectOptions(ministryListData.ministryList)
 
     return (
-      <div>
+      <>
         <NavBar />
         <Formik
           initialValues={initialValues}
@@ -521,7 +521,7 @@ export const UpdateMemberDetails = () => {
             </div>
           )}
         </Formik>
-      </div>
+      </>
     )
   }
 }

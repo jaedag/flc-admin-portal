@@ -1,11 +1,12 @@
 import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { DetailsCard } from './DetailsCard'
-import { NavBar } from './NavBar'
 import { MemberContext } from '../contexts/MemberContext'
 import { ChurchContext } from '../contexts/ChurchContext'
 import { Timeline } from './Timeline'
 import { EditButton } from './EditButton'
+import { MemberDisplayCard } from '../components/MemberDisplayCard'
+import { ChurchButton } from '../components/buttons/ChurchButton'
 
 export const DisplayChurchDetails = (props) => {
   const {
@@ -16,11 +17,11 @@ export const DisplayChurchDetails = (props) => {
     admin,
     churchHeading,
     subChurch,
-    subChurchSetter,
     churchType,
     churchNo,
     membership,
     buttons,
+    basontaLeaders,
     editlink,
     history,
     breadcrumb,
@@ -30,8 +31,7 @@ export const DisplayChurchDetails = (props) => {
   const { clickCard } = useContext(ChurchContext)
 
   return (
-    <div>
-      <NavBar />
+    <>
       <div className=" py-2 top-heading title-bar mt-4">
         <div className="container ">
           {breadcrumb
@@ -120,7 +120,7 @@ export const DisplayChurchDetails = (props) => {
         </div>
       </div>
       {subChurch && buttons[0] ? (
-        <React.Fragment>
+        <>
           <div className="container">
             <hr className="hr-line" />
 
@@ -149,22 +149,7 @@ export const DisplayChurchDetails = (props) => {
                     }
                     return (
                       <td className="col-auto" key={index}>
-                        <Link
-                          to={
-                            subChurch
-                              ? `/${subChurch.toLowerCase()}/displaydetails`
-                              : null
-                          }
-                        >
-                          <button
-                            className="card-buttons py-2 px-3 text-center text-nowrap text-white"
-                            onClick={() => {
-                              subChurchSetter(church.id)
-                            }}
-                          >
-                            {church.name}
-                          </button>
-                        </Link>
+                        <ChurchButton church={church} />{' '}
                       </td>
                     )
                   })}
@@ -172,7 +157,45 @@ export const DisplayChurchDetails = (props) => {
               </tbody>
             </table>
           </div>
-        </React.Fragment>
+        </>
+      ) : null}
+
+      {subChurch && basontaLeaders?.length ? (
+        <>
+          <div className="container">
+            <hr className="hr-line" />
+
+            <div className="row justify-content-between">
+              <div className="col">
+                <p className="text-secondary">{`${subChurch}`}</p>
+              </div>
+              <div className="col-auto">
+                <Link
+                  className="card text-secondary px-1"
+                  to={`/${subChurch.toLowerCase()}/displayall`}
+                >
+                  View All
+                </Link>
+              </div>
+            </div>
+          </div>
+          <div className="container card-button-row">
+            <table>
+              <tbody>
+                <tr>
+                  {basontaLeaders &&
+                    basontaLeaders.map((leader, index) => {
+                      return (
+                        <td className="col-auto" key={index}>
+                          <MemberDisplayCard member={leader} />
+                        </td>
+                      )
+                    })}
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </>
       ) : null}
 
       {history && (
@@ -181,6 +204,6 @@ export const DisplayChurchDetails = (props) => {
           <Timeline record={history} modifier="church" limit={5} />
         </div>
       )}
-    </div>
+    </>
   )
 }

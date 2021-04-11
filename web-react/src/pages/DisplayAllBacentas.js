@@ -9,7 +9,7 @@ import { ChurchContext } from '../contexts/ChurchContext'
 import { MemberContext } from '../contexts/MemberContext'
 
 export const DisplayAllBacentas = () => {
-  const { centreId, setBacentaId } = useContext(ChurchContext)
+  const { centreId } = useContext(ChurchContext)
   const { setMemberId } = useContext(MemberContext)
 
   const { data: bacentaData, loading: bacentaLoading } = useQuery(
@@ -24,7 +24,7 @@ export const DisplayAllBacentas = () => {
     return <LoadingScreen />
   } else if (bacentaData) {
     return (
-      <div>
+      <>
         <NavBar />
         <div className="body-container container">
           <div className="mb-4">
@@ -47,11 +47,10 @@ export const DisplayAllBacentas = () => {
           </div>
           <DisplayChurchList
             data={bacentaData.centreBacentaList}
-            setter={setBacentaId}
             churchType="Bacenta"
           />
         </div>
-      </div>
+      </>
     )
   } else {
     return <ErrorScreen />

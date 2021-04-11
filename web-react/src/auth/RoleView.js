@@ -6,7 +6,7 @@ const RoleView = (props) => {
   const { currentUser } = useContext(MemberContext)
 
   if (authRoles.some((r) => currentUser.roles.includes(r))) {
-    return <React.Fragment>{children}</React.Fragment>
+    return <>{children}</>
   } else {
     return null
   }

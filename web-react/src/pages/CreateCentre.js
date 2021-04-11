@@ -98,7 +98,7 @@ function CreateCentre() {
     }
 
     return (
-      <div>
+      <>
         <NavBar />
         <Formik
           initialValues={initialValues}
@@ -231,7 +231,7 @@ function CreateCentre() {
             </div>
           )}
         </Formik>
-      </div>
+      </>
     )
   } else if (townListLoading || campusListLoading) {
     return <LoadingScreen />

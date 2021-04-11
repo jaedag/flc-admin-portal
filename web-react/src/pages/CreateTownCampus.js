@@ -115,7 +115,7 @@ function AddTownCampus() {
     }
 
     return (
-      <div>
+      <>
         <NavBar />
         <Formik
           initialValues={initialValues}
@@ -256,7 +256,7 @@ function AddTownCampus() {
             </div>
           )}
         </Formik>
-      </div>
+      </>
     )
   }
 }

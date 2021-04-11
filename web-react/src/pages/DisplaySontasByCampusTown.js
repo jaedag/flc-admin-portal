@@ -24,7 +24,7 @@ export const DisplaySontasByCampusTown = () => {
     return <LoadingScreen />
   } else if (sontaData && church.church === 'campus') {
     return (
-      <div>
+      <>
         <NavBar />
         <div className="body-container container">
           <div className="mb-4 border-bottom">
@@ -73,11 +73,11 @@ export const DisplaySontasByCampusTown = () => {
             )
           })}
         </div>
-      </div>
+      </>
     )
   } else if (sontaData && church.church === 'town') {
     return (
-      <div>
+      <>
         <NavBar />
         <div className="body-container container">
           <div className="mb-4 border-bottom">
@@ -126,7 +126,7 @@ export const DisplaySontasByCampusTown = () => {
             )
           })}
         </div>
-      </div>
+      </>
     )
   } else {
     return <ErrorScreen />

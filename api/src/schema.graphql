@@ -71,6 +71,11 @@ type HasCentreHistory @relation(name: "HAS_HISTORY") {
   to: HistoryLog
   pointer: Boolean
 }
+type HasSontaHistory @relation(name: "HAS_HISTORY") {
+  from: Sonta
+  to: HistoryLog
+  pointer: Boolean
+}
 type HasCampusHistory @relation(name: "HAS_HISTORY") {
   from: Campus
   to: HistoryLog
@@ -129,6 +134,7 @@ type HistoryLog {
   Centre: [Centre] @relation(name: "HAS_HISTORY", direction: IN)
   Campus: [Campus] @relation(name: "HAS_HISTORY", direction: IN)
   Town: [Town] @relation(name: "HAS_HISTORY", direction: IN)
+  Sonta: [Sonta] @relation(name: "HAS_HISTORY", direction: IN)
   loggedBy: Member @relation(name: "LOGGED_BY", direction: OUT)
 }
 
@@ -207,7 +213,8 @@ type Sonta {
   basonta: [Basonta] @relation(name: "HAS_BASONTA", direction: OUT)
   ministry: Ministry @relation(name: "HAS_SONTA", direction: IN)
   town: Town @relation(name: "HAS_SONTA", direction: IN)
-  campus: [Campus] @relation(name: "HAS_SONTA", direction: IN)
+  history: [HasSontaHistory]
+  campus: Campus @relation(name: "HAS_SONTA", direction: IN)
 }
 type Basonta {
   id: ID @id
@@ -1330,6 +1337,74 @@ type Mutation {
        }
 
       RETURN c
+      """
+    )
+  LogSontaHistory(
+    sontaId: ID!
+    historyRecord: String
+    leaderId: ID
+    oldLeaderId: ID
+    newCampusTownId: ID
+    oldCampusTownId: ID
+    loggedBy: ID
+  ): Sonta
+    @cypher(
+      statement: """
+       MATCH  (c:Sonta {id: $sontaId})
+       CREATE (log:HistoryLog {id: apoc.create.uuid()})
+         SET log.historyRecord = $historyRecord,
+           log.timeStamp = time()
+       MERGE (t:TimeGraph {date: date()})
+       MERGE (c)-[r:HAS_HISTORY]->(log)
+       MERGE (log)-[:RECORDED_ON]->(t)
+
+       WITH log,c
+       CALL{
+         WITH log
+         WITH log WHERE $leaderId IS NOT NULL
+       MATCH (l:Member {id: $leaderId})
+      OPTIONAL MATCH (oldl:Member {id: $oldLeaderId})
+         SET log :ServiceLog
+         WITH log, l,oldl
+       OPTIONAl MATCH ()-[r0:HAS_HISTORY]->(log)
+         SET r0.pointer = false
+         WITH log,l,oldl
+       CREATE (oldl)-[:HAS_HISTORY]->(log)
+       CREATE (l)-[r:HAS_HISTORY]->(log)
+          SET r.pointer = true
+          WITH log
+       RETURN COUNT(log)
+       }
+
+
+       WITH log,c
+       CALL {
+         WITH log
+         WITH log WHERE $oldCampusTownId IS NOT NULL
+         MATCH (t {id: $oldCampusTownId}) WHERE t:Town OR t:Campus
+         MERGE (t)-[:HAS_HISTORY]->(log)
+         RETURN COUNT(log)
+       }
+
+       WITH log,c
+       CALL {
+         WITH log
+         WITH log WHERE $newCampusTownId IS NOT NULL
+         MATCH (t {id: $newCampusTownId}) WHERE t:Town OR t:Campus
+         MERGE (t)-[:HAS_HISTORY]->(log)
+         RETURN COUNT(log)
+       }
+
+       WITH log,c
+       CALL {
+         WITH log
+         WITH log WHERE $loggedBy IS NOT NULL
+         MATCH (m:Member {id: $loggedBy})
+         MERGE (m)<-[:LOGGED_BY]-(log)
+         RETURN COUNT(log)
+       }
+
+       RETURN c
       """
     )
 }

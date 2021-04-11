@@ -376,6 +376,7 @@ div:nth-child(55) > div {
 }
 
 .card-button-row {
+  padding-left: 0px;
   overflow-x: auto;
 }
 

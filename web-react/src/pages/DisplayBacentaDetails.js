@@ -35,7 +35,7 @@ export const DisplayBacentaDetails = () => {
     }
 
     return (
-      <div>
+      <>
         <NavBar />
         <DisplayChurchDetails
           name={bacentaData.displayBacenta?.name}
@@ -58,7 +58,7 @@ export const DisplayBacentaDetails = () => {
           }
           breadcrumb={breadcrumb && breadcrumb}
         />
-      </div>
+      </>
     )
   } else {
     return <ErrorScreen />

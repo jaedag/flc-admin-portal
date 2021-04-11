@@ -110,7 +110,7 @@ export const CreateBacenta = () => {
       : []
 
     return (
-      <div>
+      <>
         <NavBar />
         <Formik
           initialValues={initialValues}
@@ -283,7 +283,7 @@ export const CreateBacenta = () => {
             </div>
           )}
         </Formik>
-      </div>
+      </>
     )
   } else {
     return <ErrorScreen />

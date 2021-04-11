@@ -33,7 +33,7 @@ export const MemberTable = (props) => {
   } else {
     return (
       // Web View Full Screen without filters applied
-      <React.Fragment>
+      <>
         <div className="container member-grid d-none d-lg-block">
           <div className="row">
             {memberData.map((soul, index) => {
@@ -111,7 +111,7 @@ export const MemberTable = (props) => {
             )
           })}
         </div>
-      </React.Fragment>
+      </>
     )
   }
 }

@@ -4,7 +4,7 @@ import { useQuery } from '@apollo/client'
 import { BISH_DASHBOARD_COUNTS } from '../queries/CountQueries'
 import { NavBar } from '../components/NavBar'
 import { DashboardCard } from '../components/DashboardCard'
-import { DashboardButton } from '../components/DashboardButton'
+import { DashboardButton } from '../components/buttons/DashboardButton'
 import { ChurchContext } from '../contexts/ChurchContext'
 
 const BishopDashboard = () => {
@@ -56,7 +56,7 @@ const BishopDashboard = () => {
   }
 
   return (
-    <div>
+    <>
       <NavBar />
       <div className="container ">
         <h4 className="pt-4">{bishopName}</h4>
@@ -138,7 +138,7 @@ const BishopDashboard = () => {
           </div>
         </div>
       </div>
-    </div>
+    </>
   )
 }
 

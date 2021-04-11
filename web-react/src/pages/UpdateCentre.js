@@ -430,7 +430,7 @@ export const UpdateCentre = () => {
     }
 
     return (
-      <div>
+      <>
         <NavBar />
         <Formik
           initialValues={initialValues}
@@ -576,7 +576,7 @@ export const UpdateCentre = () => {
             </div>
           )}
         </Formik>
-      </div>
+      </>
     )
   } else {
     return <ErrorScreen />

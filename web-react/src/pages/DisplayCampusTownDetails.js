@@ -7,9 +7,7 @@ import { DISPLAY_TOWN, DISPLAY_CAMPUS } from '../queries/DisplayQueries'
 import { ChurchContext } from '../contexts/ChurchContext'
 
 export const DisplayCampusTownDetails = () => {
-  const { church, capitalise, townId, campusId, setCentreId } = useContext(
-    ChurchContext
-  )
+  const { church, capitalise, townId, campusId } = useContext(ChurchContext)
 
   const { data: townData, loading: townLoading } = useQuery(DISPLAY_TOWN, {
     variables: { id: townId },
@@ -27,7 +25,7 @@ export const DisplayCampusTownDetails = () => {
   } else if (church.church === 'town' && townData) {
     let breadcrumb = [townData.displayTown?.bishop, townData.displayTown]
     return (
-      <div>
+      <>
         <NavBar />
         <DisplayChurchDetails
           name={townData.displayTown.name}
@@ -44,7 +42,6 @@ export const DisplayCampusTownDetails = () => {
           admin={townData.displayTown.admin}
           churchType={`${capitalise(church.church)}`}
           subChurch={`${capitalise(church.subChurch)}`}
-          subChurchSetter={setCentreId}
           buttons={townData.displayTown.centres}
           editlink="/town/edittown"
           history={
@@ -53,7 +50,7 @@ export const DisplayCampusTownDetails = () => {
           }
           breadcrumb={breadcrumb && breadcrumb}
         />
-      </div>
+      </>
     )
   } else if (church.church === 'campus' && campusData) {
     let breadcrumb = [
@@ -61,7 +58,7 @@ export const DisplayCampusTownDetails = () => {
       campusData.displayCampus,
     ]
     return (
-      <div>
+      <>
         <NavBar />
         <DisplayChurchDetails
           name={campusData.displayCampus.name}
@@ -82,7 +79,6 @@ export const DisplayCampusTownDetails = () => {
           admin={campusData.displayCampus.admin}
           churchType={`${capitalise(church.church)}`}
           subChurch="Centre"
-          subChurchSetter={setCentreId}
           buttons={campusData.displayCampus.centres}
           breadcrumb={breadcrumb && breadcrumb}
           history={
@@ -91,7 +87,7 @@ export const DisplayCampusTownDetails = () => {
           }
           editlink="/campus/editcampus"
         />
-      </div>
+      </>
     )
   } else {
     return <ErrorScreen />

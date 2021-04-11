@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom'
 import { ChurchContext } from '../contexts/ChurchContext'
 import Spinner from './Spinner'
 import userIcon from '../img/user.png'
+import './MemberTable.css'
 
 export const MemberTable = (props) => {
   const {

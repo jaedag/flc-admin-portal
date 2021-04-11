@@ -5,7 +5,7 @@ import { ChurchContext } from '../contexts/ChurchContext'
 import Spinner from './Spinner'
 import { GET_BISHOP_MEMBERS } from '../queries/GridQueries'
 import userIcon from '../img/user.png'
-import { NavBar } from './NavBar'
+import { NavBar } from './nav/NavBar'
 
 export const MemberTableMobile = () => {
   const { memberFilter, filters, bishopId } = useContext(ChurchContext)

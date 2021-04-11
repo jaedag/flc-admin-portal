@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import './DashboardCard.css'
 
 export const DashboardCard = (props) => {
   let icon = ''

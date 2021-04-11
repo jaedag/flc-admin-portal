@@ -17,7 +17,7 @@ import {
   REMOVE_BACENTA_CENTRE,
   UPDATE_BACENTA,
 } from '../queries/UpdateMutations'
-import { NavBar } from '../components/NavBar'
+import { NavBar } from '../components/nav/NavBar'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
 import { ChurchContext } from '../contexts/ChurchContext'
 import { DISPLAY_BACENTA } from '../queries/DisplayQueries'

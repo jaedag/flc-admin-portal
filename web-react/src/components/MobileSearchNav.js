@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom'
 import { Formik, Form } from 'formik'
 import FormikControl from '../components/formik-components/FormikControl'
 import { SearchContext } from '../contexts/MemberContext'
+import './MobileSearchNav.css'
 
 export const MobileSearchNav = () => {
   let history = useHistory()

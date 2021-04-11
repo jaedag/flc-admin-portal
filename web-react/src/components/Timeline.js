@@ -1,6 +1,7 @@
 import React, { useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import { ChurchContext } from '../contexts/ChurchContext'
+import './Timeline.css'
 
 export const Timeline = (props) => {
   const { record, limit, modifier } = props

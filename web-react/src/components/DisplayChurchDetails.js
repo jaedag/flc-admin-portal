@@ -7,6 +7,7 @@ import { Timeline } from './Timeline'
 import { EditButton } from './EditButton'
 import { MemberDisplayCard } from '../components/MemberDisplayCard'
 import { ChurchButton } from '../components/buttons/ChurchButton'
+import './DisplayChurchDetails.css'
 
 export const DisplayChurchDetails = (props) => {
   const {

@@ -7,7 +7,7 @@ import FormikControl from '../components/formik-components/FormikControl'
 
 import { CREATE_MEMBER_MUTATION } from '../queries/CreateMutations'
 import { HeadingBar } from '../components/HeadingBar'
-import { NavBar } from '../components/NavBar'
+import { NavBar } from '../components/nav/NavBar'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
 import Spinner from '../components/Spinner'
 import { GET_MINISTRIES, BACENTA_DROPDOWN } from '../queries/ListQueries'
@@ -419,13 +419,7 @@ export const CreateMember = () => {
                                   </div>
                                   <div className="col d-flex">
                                     {index > 0 && (
-                                      <button
-                                        className="plus-button rounded"
-                                        type="button"
-                                        onClick={() => remove(index)}
-                                      >
-                                        <PlusSign />
-                                      </button>
+                                      <MinusSign onClick={() => remove()} />
                                     )}
                                   </div>
                                 </div>
@@ -468,23 +462,9 @@ export const CreateMember = () => {
                                   />
                                 </div>
                                 <div className="col d-flex">
-                                  <button
-                                    className="plus-button rounded mr-2"
-                                    type="button"
-                                    onClick={() => {
-                                      push()
-                                    }}
-                                  >
-                                    <PlusSign />
-                                  </button>
+                                  <PlusSign onClick={() => push()} />
                                   {index > 0 && (
-                                    <button
-                                      className="plus-button rounded"
-                                      type="button"
-                                      onClick={() => remove(index)}
-                                    >
-                                      <MinusSign />
-                                    </button>
+                                    <MinusSign onClick={() => remove(index)} />
                                   )}
                                 </div>
                               </div>

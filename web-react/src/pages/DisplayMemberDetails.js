@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { useQuery } from '@apollo/client'
 import { useHistory } from 'react-router-dom'
-import { NavBar } from '../components/NavBar'
+import { NavBar } from '../components/nav/NavBar'
 import { MemberDetailsCard } from '../components/MemberDetailsCard'
 import { DISPLAY_MEMBER } from '../queries/DisplayQueries'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'

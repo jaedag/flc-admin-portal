@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react'
 import Autosuggest from 'react-autosuggest'
+import './react-autosuggest.css'
 import { useQuery } from '@apollo/client'
 import { ErrorMessage } from 'formik'
 import TextError from './TextError'

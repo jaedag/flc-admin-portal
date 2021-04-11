@@ -29,8 +29,8 @@ import {
   LOG_CENTRE_HISTORY,
   LOG_BACENTA_HISTORY,
 } from '../queries/LogMutations'
-import PlusSign from '../components/PlusSign'
-import MinusSign from '../components/MinusSign'
+import PlusSign from '../components/buttons/PlusSign'
+import MinusSign from '../components/buttons/MinusSign'
 import { MemberContext } from '../contexts/MemberContext'
 
 export const UpdateCentre = () => {

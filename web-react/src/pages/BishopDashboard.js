@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom'
 import { useQuery } from '@apollo/client'
 import { BISH_DASHBOARD_COUNTS } from '../queries/CountQueries'
 import { NavBar } from '../components/nav/NavBar'
-import { DashboardCard } from '../components/DashboardCard'
+import { DashboardCard } from '../components/card/DashboardCard'
 import { DashboardButton } from '../components/buttons/DashboardButton'
 import { ChurchContext } from '../contexts/ChurchContext'
 

@@ -13,11 +13,11 @@ import { Auth0Provider, useAuth0 } from '@auth0/auth0-react'
 import './index.css'
 import BishopSelect from './pages/BishopSelect'
 import BishopDashboard from './pages/BishopDashboard'
-import { GridBishopMembers } from './pages/GridPages/GridBishopMembers'
-import { GridCampusTownMembers } from './pages/GridPages/GridCampusTownMembers'
-import { GridCentreMembers } from './pages/GridPages/GridCentreMembers'
-import { GridBacentaMembers } from './pages/GridPages/GridBacentaMembers'
-import { GridSontaMembers } from './pages/GridPages/GridSontaMembers'
+import { BishopMembers } from './pages/grids/BishopMembers'
+import { CampusTownMembers } from './pages/grids/CampusTownMembers'
+import { CentreMembers } from './pages/grids/CentreMembers'
+import { BacentaMembers } from './pages/grids/BacentaMembers.js'
+import { SontaMembers } from './pages/grids/SontaMembers'
 import { SearchPageMobile } from './pages/SearchPageMobile'
 import { DisplayMemberDetails } from './pages/DisplayMemberDetails'
 import { CreateMember } from './pages/CreateMember'
@@ -670,30 +670,18 @@ const PastorsAdmin = () => {
                 component={MemberFiltersMobile}
                 exact
               />
-              <Route path="/members" component={GridBishopMembers} exact />
+              <Route path="/members" component={BishopMembers} exact />
               <Route
                 path="/campus/members"
-                component={GridCampusTownMembers}
+                component={CampusTownMembers}
                 exact
               />
-              <Route
-                path="/town/members"
-                component={GridCampusTownMembers}
-                exact
-              />
-              <Route
-                path="/centre/members"
-                component={GridCentreMembers}
-                exact
-              />
-              <Route
-                path="/bacenta/members"
-                component={GridBacentaMembers}
-                exact
-              />
-              <Route path="/sonta/members" component={GridSontaMembers} exact />
+              <Route path="/town/members" component={CampusTownMembers} exact />
+              <Route path="/centre/members" component={CentreMembers} exact />
+              <Route path="/bacenta/members" component={BacentaMembers} exact />
+              <Route path="/sonta/members" component={SontaMembers} exact />
               <Route path="/mb-members" component={MemberTableMobile} exact />
-              <Route path="/pastors" component={GridBishopMembers} exact />
+              <Route path="/pastors" component={BishopMembers} exact />
               <Route path="/member/addmember" component={CreateMember} exact />
               <Route
                 path="/member/editmember"

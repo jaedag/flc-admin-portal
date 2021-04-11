@@ -4,7 +4,7 @@ import { MembersGrid } from '../../components/MembersGrid'
 import { GET_CAMPUSTOWN_MEMBERS } from '../../queries/GridQueries'
 import { ChurchContext } from '../../contexts/ChurchContext'
 
-export const GridCampusTownMembers = () => {
+export const CampusTownMembers = () => {
   const { campusId, townId, church } = useContext(ChurchContext)
 
   const { data, loading, error } = useQuery(GET_CAMPUSTOWN_MEMBERS, {

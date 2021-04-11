@@ -11,8 +11,8 @@ import { HeadingBar } from '../components/HeadingBar'
 import { NavBar } from '../components/nav/NavBar'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
 import { ChurchContext } from '../context/ChurchContext'
-import PlusSign from '../components/PlusSign'
-import MinusSign from '../components/MinusSign'
+import PlusSign from '../components/buttons/PlusSign'
+import MinusSign from '../components/buttons/MinusSign'
 
 export const AddLeadershipHistory = () => {
   const initialValues = {

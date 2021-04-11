@@ -2,13 +2,13 @@ import React, { useContext } from 'react'
 import { useQuery } from '@apollo/client'
 import { useHistory } from 'react-router-dom'
 import { NavBar } from '../components/nav/NavBar'
-import { MemberDetailsCard } from '../components/MemberDetailsCard'
+import { MemberDetailsCard } from '../components/card/MemberDetailsCard'
 import { DISPLAY_MEMBER } from '../queries/DisplayQueries'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
 import { MemberContext } from '../contexts/MemberContext'
 import { ChurchContext } from '../contexts/ChurchContext'
 import userIcon from '../img/user.png'
-import { Timeline } from '../components/Timeline'
+import { Timeline } from '../components/timeline/Timeline'
 
 export const DisplayMemberDetails = () => {
   const monthNames = [

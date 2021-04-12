@@ -324,6 +324,16 @@ export const DISPLAY_CENTRE = gql`
         centre {
           id
           name
+          town {
+            bishop {
+              id
+            }
+          }
+          campus {
+            bishop {
+              id
+            }
+          }
         }
       }
       town {

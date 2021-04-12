@@ -11,9 +11,10 @@ function SearchBox() {
     searchKey: Yup.string().required(''),
   })
 
-  const onSubmit = (values, onSubmitProps) => {
+  const onSubmit = (onSubmitProps) => {
     onSubmitProps.resetForm()
   }
+
   return (
     <Formik
       initialValues={initialValues}
@@ -31,7 +32,6 @@ function SearchBox() {
                 setFieldValue={formik.setFieldValue}
                 aria-describedby="Global Search"
               />
-
               <button
                 className="btn btn-primary nav-search-button m-0"
                 type="submit"

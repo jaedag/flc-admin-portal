@@ -1,0 +1,587 @@
+type Member {
+  id: ID! @id
+  firstName: String #@search
+  middleName: String
+  lastName: String #@search
+  email: String
+  phoneNumber: String
+  whatsappNumber: String #@unique
+  pictureUrl: String
+  gender: Gender @relation(name: "HAS_GENDER", direction: OUT)
+  maritalStatus: MaritalStatus
+    @relation(name: "HAS_MARITAL_STATUS", direction: OUT)
+  dob: TimeGraph @relation(name: "WAS_BORN_ON", direction: OUT)
+  title: [HasTitle]
+  ministry: Ministry @relation(name: "BELONGS_TO", direction: OUT)
+  occupation: Occupation @relation(name: "HAS_OCCUPATION", direction: OUT)
+  # Church Details
+  history: [HistoryLog] @relation(name: "HAS_HISTORY", direction: OUT)
+  loggedHistory: [HistoryLog] @relation(name: "LOGGED_BY", direction: IN)
+  bacenta: Bacenta @relation(name: "BELONGS_TO", direction: OUT)
+  leadsBacenta: [Bacenta] @relation(name: "LEADS", direction: OUT)
+  leadsCentre: [Centre] @relation(name: "LEADS", direction: OUT)
+  leadsMinistry: [Ministry] @relation(name: "LEADS", direction: OUT)
+  leadsSonta: [Sonta] @relation(name: "LEADS", direction: OUT)
+  leadsBasonta: [Basonta] @relation(name: "LEADS", direction: OUT)
+  leadsTown: [Town] @relation(name: "LEADS", direction: OUT)
+  leadsCampus: [Campus] @relation(name: "LEADS", direction: OUT)
+  townBishop: [Town] @relation(name: "HAS_TOWN", direction: OUT)
+  campusBishop: [Campus] @relation(name: "HAS_CAMPUS", direction: OUT)
+  isBishopAdminFor: [Member] @relation(name: "IS_ADMIN_FOR", direction: OUT)
+  isCampusAdminFor: [Campus] @relation(name: "IS_ADMIN_FOR", direction: OUT)
+  isTownAdminFor: [Town] @relation(name: "IS_ADMIN_FOR", direction: OUT)
+  hasAdmin: Member @relation(name: "IS_ADMIN_FOR", direction: IN)
+}
+
+type Gender {
+  gender: String
+  members: [Member] @relation(name: "HAS_GENDER", direction: IN)
+}
+
+type MaritalStatus {
+  status: String
+  members: [Member] @relation(name: "HAS_MARITAL_STATUS", direction: IN)
+}
+
+type Occupation {
+  occupation: String
+  members: [Member] @relation(name: "HAS_OCCUPATION", direction: IN)
+}
+
+type Title {
+  title: String! #Pastor, Reverend, Apostle, Bishop (Mother)
+  members: [HasTitle]
+}
+
+type HasTitle @relation(name: "HAS_TITLE") {
+  from: Member
+  to: Title
+  yearAppointed: Date
+  status: String #active or inactive
+  numberofTimesRemoved: Int
+}
+
+type HasBacentaHistory @relation(name: "HAS_HISTORY") {
+  from: Bacenta
+  to: HistoryLog
+  pointer: Boolean
+}
+type HasCentreHistory @relation(name: "HAS_HISTORY") {
+  from: Centre
+  to: HistoryLog
+  pointer: Boolean
+}
+type HasSontaHistory @relation(name: "HAS_HISTORY") {
+  from: Sonta
+  to: HistoryLog
+  pointer: Boolean
+}
+type HasCampusHistory @relation(name: "HAS_HISTORY") {
+  from: Campus
+  to: HistoryLog
+  pointer: Boolean
+}
+type HasTownHistory @relation(name: "HAS_HISTORY") {
+  from: Town
+  to: HistoryLog
+  pointer: Boolean
+}
+
+type TimeGraph {
+  date: Date @index
+  memberDob: Member @relation(name: "WAS_BORN_ON", direction: IN)
+  # titleAppointmentDate: Member @relation(name: "APPOINTED_ON", direction: IN)
+  leaderHistoryStartDate: TimeGraph
+    @relation(name: "LEADER_STARTED_ON", direction: OUT)
+  leaderHistoryEndDate: TimeGraph
+    @relation(name: "LEADER_ENDED_ON", direction: OUT)
+  historyDate: TimeGraph @relation(name: "RECORDED_ON", direction: OUT)
+  serviceDate: [ServiceRecords] @relation(name: "SERVICE_DATE", direction: IN)
+}
+
+# type LeaderHistory {
+#   created_at: DateTime
+#   historyRecord: String
+#   historyDate: TimeGraph
+#     @relation(name: "LEADER_STARTED_ON", direction: OUT)
+#   historyEndDate: TimeGraph @relation(name: "LEADER_ENDED_ON", direction: OUT)
+#   leaders: Member @relation(name: "HAS_LEADERSHIP_HISTORY", direction: IN)
+#   bacentaerviceRecords: [ServiceRecords]
+#     @relation(name: "HAS_RECORDS", direction: OUT)
+# }
+
+type ServiceRecords {
+  created_at: DateTime
+  bacenta: Bacenta @relation(name: "HAS_RECORDS", direction: IN)
+  centre: Centre @relation(name: "HAS_RECORDS", direction: IN)
+  campus: Campus @relation(name: "HAS_RECORDS", direction: IN)
+  town: Town @relation(name: "HAS_RECORDS", direction: IN)
+  serviceDate: TimeGraph @relation(name: "SERVICE_DATE", direction: OUT)
+  attendance: Int
+  income: Float
+  treasurer1ID: String!
+  treasurer2ID: String!
+  leaderHistory: HistoryLog @relation(name: "HAS_RECORDS", direction: IN)
+}
+
+type HistoryLog {
+  id: ID @id
+  timeStamp: Time
+  historyRecord: String #leader was transferred to
+  created_at: TimeGraph @relation(name: "RECORDED_ON", direction: OUT)
+  leaders: [Member] @relation(name: "HAS_HISTORY", direction: IN)
+  Bacenta: [Bacenta] @relation(name: "HAS_HISTORY", direction: IN)
+  Centre: [Centre] @relation(name: "HAS_HISTORY", direction: IN)
+  Campus: [Campus] @relation(name: "HAS_HISTORY", direction: IN)
+  Town: [Town] @relation(name: "HAS_HISTORY", direction: IN)
+  Sonta: [Sonta] @relation(name: "HAS_HISTORY", direction: IN)
+  loggedBy: Member @relation(name: "LOGGED_BY", direction: OUT)
+}
+
+# Campus-Centre, Town-Centre
+type Campus {
+  id: ID @id
+  name: String
+  leader: Member @relation(name: "LEADS", direction: IN)
+  sontas: [Sonta] @relation(name: "HAS_SONTA", direction: OUT)
+  centres: [Centre] @relation(name: "HAS_CENTRE", direction: OUT)
+  bishop: Member @relation(name: "HAS_CAMPUS", direction: IN)
+  admin: Member @relation(name: "IS_ADMIN_FOR", direction: IN)
+  history: [HasCampusHistory]
+  serviceRecords: [ServiceRecords]
+    @relation(name: "HAS_RECORDS", direction: OUT)
+}
+
+type Town {
+  id: ID @id
+  name: String
+  leader: Member @relation(name: "LEADS", direction: IN)
+  sontas: [Sonta] @relation(name: "HAS_SONTA", direction: OUT)
+  centres: [Centre] @relation(name: "HAS_CENTRE", direction: OUT)
+  bishop: Member @relation(name: "HAS_TOWN", direction: IN)
+  admin: Member @relation(name: "IS_ADMIN_FOR", direction: IN)
+  history: [HasTownHistory]
+  serviceRecords: [ServiceRecords]
+    @relation(name: "HAS_RECORDS", direction: OUT)
+}
+
+type Centre {
+  id: ID @id
+  name: String #
+  leader: Member @relation(name: "LEADS", direction: IN)
+  bacentas: [Bacenta] @relation(name: "HAS_BACENTA", direction: OUT)
+  basontas: Basonta @relation(name: "HAS_BASONTA", direction: OUT)
+  town: Town @relation(name: "HAS_CENTRE", direction: IN)
+  campus: Campus @relation(name: "HAS_CENTRE", direction: IN)
+  history: [HasCentreHistory]
+  serviceRecords: [ServiceRecords]
+    @relation(name: "HAS_RECORDS", direction: OUT)
+}
+
+# Shared Units: Bacenta, Bacenta, Sonta
+type Bacenta {
+  id: ID @id
+  name: String #
+  centre: Centre @relation(name: "HAS_BACENTA", direction: IN)
+  location: Point
+  leader: Member @relation(name: "LEADS", direction: IN)
+  members: [Member] @relation(name: "BELONGS_TO", direction: IN)
+  meetingDay: ServiceDay @relation(name: "MEETS_ON_DAY", direction: OUT)
+  history: [HasBacentaHistory]
+  serviceRecords: [ServiceRecords]
+    @relation(name: "HAS_RECORDS", direction: OUT)
+}
+
+type ServiceDay {
+  day: String!
+  dayNum: Int
+  bacenta: Bacenta @relation(name: "MEETS_ON_DAY", direction: IN)
+}
+
+type Ministry {
+  id: ID @id
+  name: String
+  sonta: [Sonta] @relation(name: "HAS_SONTA", direction: OUT)
+  leader: Member @relation(name: "LEADS", direction: IN)
+  members: [Member] @relation(name: "BELONGS_TO", direction: IN)
+}
+
+type Sonta {
+  id: ID @id
+  name: String
+  leader: Member @relation(name: "LEADS", direction: IN)
+  basonta: [Basonta] @relation(name: "HAS_BASONTA", direction: OUT)
+  ministry: Ministry @relation(name: "HAS_SONTA", direction: IN)
+  town: Town @relation(name: "HAS_SONTA", direction: IN)
+  history: [HasSontaHistory]
+  campus: Campus @relation(name: "HAS_SONTA", direction: IN)
+}
+type Basonta {
+  id: ID @id
+  name: String
+  leader: Member @relation(name: "LEADS", direction: IN)
+  centre: Centre @relation(name: "HAS_BASONTA", direction: IN)
+}
+
+#Query Definitions
+type Query {
+  #At the Federal Level
+  bishopsList: [Member]
+    @cypher(
+      statement: "MATCH ()<-[:HAS_CAMPUS|:HAS_TOWN]-(m:Member) RETURN DISTINCT m"
+    )
+  bishopsListCampus: [Member]
+    @cypher(statement: "MATCH ()<-[:HAS_CAMPUS]-(m:Member) RETURN DISTINCT m")
+  bishopsListTown: [Member]
+    @cypher(statement: "MATCH ()<-[:HAS_TOWN]-(m:Member) RETURN DISTINCT m")
+  ministryList: [Ministry] @cypher(statement: "MATCH (m:Ministry) RETURN m")
+  memberCount: Int!
+    @cypher(statement: "MATCH (m:Member) RETURN COUNT(DISTINCT m)")
+  centreCount: Int!
+    @cypher(statement: "MATCH (b:Centre) RETURN COUNT(DISTINCT c)")
+  bacentaCount: Int!
+    @cypher(statement: "MATCH (b:Bacenta) RETURN COUNT( DISTINCT b)")
+  federalPastorList(id: ID): [Member]
+    @cypher(statement: "MATCH (t:Title)<-[:HAS_TITLE]-(m:Member) RETURN m")
+
+  #At the Episcopal Level
+  bishopCampusTownCount(id: ID): Int!
+    @cypher(
+      statement: "MATCH (:Member {id: $id})-[:HAS_TOWN|:HAS_CAMPUS]->(t) RETURN COUNT(DISTINCT t)"
+    )
+  bishopCentreCount(id: ID): Int!
+    @cypher(
+      statement: "MATCH (:Member {id: $id})-[:HAS_TOWN|:HAS_CAMPUS]->()-[:HAS_CENTRE]-(c) RETURN COUNT(DISTINCT c)"
+    )
+  bishopBacentaCount(id: ID): Int!
+    @cypher(
+      statement: "MATCH (:Member {id: $id})-[:HAS_TOWN|:HAS_CAMPUS]->()-[:HAS_CENTRE]-()-[:HAS_BACENTA]-(b) RETURN COUNT(DISTINCT b)"
+    )
+  bishopBacentaDropdown(id: ID, bacentaName: String): [Bacenta]
+    @cypher(
+      statement: "MATCH (b:Bacenta)<-[]-(:Centre)<-[:HAS_CENTRE]-()<-[:HAS_TOWN|:HAS_CAMPUS]-(:Member {id: $id}) WHERE toLower(b.name) CONTAINS toLower($bacentaName) RETURN b"
+    )
+  bishopsSontaMemberList(id: ID): [Member]!
+    @cypher(
+      statement: """
+      MATCH (:Member {id: $id})-[:HAS_TOWN|:HAS_CAMPUS]->()-[:HAS_CENTRE]->()-[:HAS_BACENTA]->()<-[:BELONGS_TO]-(m:Member)-[:BELONGS_TO]->(s)
+      RETURN m
+      """
+    )
+  bishopSontaMemberCount(id: ID): Int!
+    @cypher(
+      statement: """
+      MATCH (:Member {id: $id})-[:HAS_TOWN|:HAS_CAMPUS]->()-[:HAS_CENTRE]->()-[:HAS_BACENTA]->()<-[:BELONGS_TO]-(m:Member)-[:BELONGS_TO]->(s)
+      RETURN COUNT(DISTINCT m)
+      """
+    )
+  bishopSontaMemberCountList(bishopId: ID): [Ministry]!
+    @cypher(
+      statement: """
+      MATCH (:Member {id: $bishopId})-[:HAS_TOWN|:HAS_CAMPUS]->()-[:HAS_CENTRE]->()-[:HAS_BACENTA]->()<-[:BELONGS_TO]-(m:Member)-[:BELONGS_TO]->(s:Ministry)
+      RETURN s, COUNT(DISTINCT m)
+      """
+    )
+  bishopPastorCount(id: ID): Int!
+    @cypher(
+      statement: "MATCH (t:Title)<-[:HAS_TITLE]-(m:Member)-[:BELONGS_TO]->()<-[:HAS_BACENTA]-()-[:HAS_CENTRE]-()-[:HAS_TOWN|:HAS_CAMPUS]-(:Member {id: $id}) RETURN COUNT( DISTINCT m)"
+    )
+  bishopPastorList(id: ID): [Member]
+    @cypher(
+      statement: "MATCH (t:Title)<-[:HAS_TITLE]-(m:Member)-[:BELONGS_TO]->()<-[:HAS_BACENTA]-()<-[:HAS_CENTRE]-()<-[:HAS_TOWN|:HAS_CAMPUS]-(:Member {id: $id}) RETURN m"
+    )
+  bishopMemberList(id: ID): [Member]!
+    @cypher(
+      statement: """
+      MATCH (:Member {id: $id})-[:HAS_TOWN|:HAS_CAMPUS]->(t)
+      MATCH (t)-[:HAS_CENTRE]->(com)
+      MATCH (com)-[:HAS_BACENTA]->(c)
+      MATCH (c)<-[:BELONGS_TO*]-(m:Member)
+      RETURN m
+      """
+    )
+  bishopMemberCount(id: ID): Int!
+    @cypher(
+      statement: """
+      MATCH (:Member {id: $id})-[:HAS_TOWN|:HAS_CAMPUS]->(t)
+      MATCH (t)-[:HAS_CENTRE]->(com)
+      MATCH (com)-[:HAS_BACENTA]->(c)
+      MATCH (c)<-[:BELONGS_TO*]-(m:Member)
+      RETURN COUNT(DISTINCT m)
+      """
+    )
+  campusMemberList(id: ID): [Member]
+    @cypher(
+      statement: """
+      MATCH (:Campus {id:$id})-[:HAS_CENTRE]->()-[:HAS_BACENTA]->()<-[:BELONGS_TO]-(c:Member)
+      RETURN DISTINCT c
+      """
+    )
+  townMemberList(id: ID): [Member]
+    @cypher(
+      statement: """
+      MATCH (:Town {id:$id})-[:HAS_CENTRE]->()-[:HAS_BACENTA]->()<-[:BELONGS_TO]-(t:Member)
+      RETURN DISTINCT t
+      """
+    )
+
+  #At the Town Level
+  displayTown(id: ID): Town
+    @cypher(statement: "MATCH (t:Town {id:$id}) RETURN t")
+  townList(id: ID): [Town]
+    @cypher(
+      statement: "MATCH (ttl:Title {title:'Bishop'})<-[:HAS_TITLE]-(a:Member {id:$id})-[:HAS_TOWN]->(t:Town) RETURN t"
+    )
+  townBacentaList(id: ID): [Bacenta]
+    @cypher(
+      statement: "MATCH (t:Town {id: $id})-[:HAS_CENTRE]->(:Centre)-[:HAS_BACENTA]-> (c:Bacenta) RETURN c"
+    )
+  townSontaList(id: ID): [Sonta]
+    @cypher(
+      statement: "MATCH (t:Town {id: $id})-[:HAS_SONTA]->(s:Sonta)  RETURN s"
+    )
+  townCentreList(id: ID): [Centre]
+    @cypher(
+      statement: "MATCH (t:Town {id:$id})-[:HAS_CENTRE]->(c:Centre) RETURN c"
+    )
+  townCentreCount(id: ID): Int!
+    @cypher(
+      statement: "MATCH(:Town {id:$id})-[:HAS_CENTRE]->(c:Centre) RETURN COUNT(c)"
+    )
+  townBacentaCount(id: ID): Int!
+    @cypher(
+      statement: "MATCH (:Town {id:$id})-[]-()-[:HAS_BACENTA]->(cen:Bacenta) RETURN COUNT(cen)"
+    )
+  townSontaCount(id: ID): Int!
+    @cypher(
+      statement: "MATCH (:Town {id:$id})-[:HAS_SONTA]->(s:Sonta) RETURN COUNT(s)"
+    )
+  townMemberCount(id: ID): Int!
+    @cypher(
+      statement: "MATCH (:Town {id:$id})-[]-(:Centre)-[]->(:Bacenta)<-[:BELONGS_TO]-(m:Member) RETURN COUNT(DISTINCT m)"
+    )
+  townSontaMemberCount(id: ID): Int!
+    @cypher(
+      statement: "MATCH (:Town {id: $id})-[]-(:Centre)-[]->(:Bacenta)<-[:BELONGS_TO]-(m:Member) MATCH (m)-[:BELONGS_TO]->(:Ministry) RETURN COUNT(DISTINCT m)"
+    )
+
+  #At the Campus Level
+  displayCampus(id: ID): Campus
+    @cypher(statement: "MATCH (t:Campus {id:$id}) RETURN t")
+  campusList(id: ID): [Campus]
+    @cypher(
+      statement: "MATCH (ttl:Title {title:'Bishop'})<-[:HAS_TITLE]-(a:Member {id:$id})-[:HAS_CAMPUS]->(c:Campus) RETURN c"
+    )
+  campusBacentaList(id: ID): [Bacenta]
+    @cypher(
+      statement: "MATCH (t:Campus {id: $id})-[:HAS_CENTRE]->(:Centre)-[:HAS_BACENTA]-> (c:Bacenta) RETURN c"
+    )
+  campusSontaList(id: ID): [Sonta]
+    @cypher(
+      statement: "MATCH (t:Campus {id: $id})-[:HAS_SONTA]->(s:Sonta)  RETURN s"
+    )
+  campusCentreList(id: ID): [Centre]
+    @cypher(
+      statement: "MATCH (t:Campus {id:$id})-[:HAS_CENTRE]->(c:Centre) RETURN c"
+    )
+  campusCentreCount(id: ID): Int!
+    @cypher(
+      statement: "MATCH(:Campus {id:$id})-[:HAS_CENTRE]->(c:Centre) RETURN COUNT(c)"
+    )
+  campusBacentaCount(id: ID): Int!
+    @cypher(
+      statement: "MATCH (:Campus {id:$id})-[]-()-[:HAS_BACENTA]->(cen:Bacenta) RETURN COUNT(cen)"
+    )
+  campusSontaCount(id: ID): Int!
+    @cypher(
+      statement: "MATCH (:Campus {id:$id})-[:HAS_MINISTRY]->(s:Sonta) RETURN COUNT(s)"
+    )
+  campusMemberCount(id: ID): Int!
+    @cypher(
+      statement: "MATCH (:Campus {id:$id})-[]-(:Centre)-[]->(:Bacenta)<-[:BELONGS_TO]-(m:Member) RETURN COUNT(DISTINCT m)"
+    )
+  campusSontaMemberCount(id: ID): Int!
+    @cypher(
+      statement: "MATCH (:Campus {id: $id})-[]-(:Centre)-[]->(:Bacenta)<-[:BELONGS_TO]-(m:Member) MATCH (m)-[:BELONGS_TO]->(:Ministry) RETURN COUNT(DISTINCT m)"
+    )
+
+  #At the Centre Level
+  displayCentre(id: ID): Centre
+    @cypher(statement: "MATCH (c:Centre {id:$id}) RETURN c")
+  centreDropdown(centreName: String): [Centre]
+    @cypher(
+      statement: "MATCH (c:Centre) WHERE toLower(c.name) CONTAINS toLower($centreName) RETURN c"
+    )
+  centreBacentaList(id: ID): [Bacenta]
+    @cypher(
+      statement: """
+      MATCH (b:Bacenta)
+      WHERE (:Centre {id:$id})-[:HAS_BACENTA]->(b)
+      RETURN b
+      """
+    )
+  centreBacentaCount(id: ID): Int!
+    @cypher(
+      statement: "MATCH (:Centre {id:$id})-[:HAS_BACENTA]->(cen:Bacenta) RETURN COUNT(cen)"
+    )
+  centreSontaCount(id: ID): Int!
+    @cypher(
+      statement: "MATCH (s:Sonta)<-[:HAS_MINISTRY]-(:Centre {name:$centre}) RETURN COUNT(s)"
+    )
+  centreMemberCount(id: ID): Int!
+    @cypher(
+      statement: "MATCH (:Centre {id:$id})-[:HAS_BACENTA]->(c:Bacenta)<-[:BELONGS_TO]-(m:Member) RETURN COUNT(DISTINCT m)"
+    )
+  centreMemberList(id: ID): [Member]
+    @cypher(
+      statement: """
+      MATCH (:Centre {id: $id})-[:HAS_BACENTA]->()<-[:BELONGS_TO]-(m:Member)
+      RETURN m
+      """
+    )
+
+  #At the Bacenta Level
+  displayBacenta(id: ID): Bacenta
+    @cypher(statement: "MATCH (c:Bacenta{id:$id}) RETURN c")
+  bacentaMemberCount(id: ID): Int
+    @cypher(
+      statement: "MATCH (c:Bacenta{id:$id}) MATCH (c)<-[:BELONGS_TO]-(m:Member) RETURN COUNT(DISTINCT m)"
+    )
+  bacentaMemberList(id: ID): [Member]
+    @cypher(
+      statement: """
+      MATCH (:Bacenta {id:$id})<-[:BELONGS_TO]-(m:Member)
+      RETURN m
+      """
+    )
+  bacentaDropdown(bacentaName: String): [Bacenta]
+    @cypher(
+      statement: "MATCH (c:Bacenta) WHERE toLower(c.name) CONTAINS toLower($bacentaName) RETURN c"
+    )
+
+  #At the Ministry Level
+  displayMinistry(id: ID): Ministry
+    @cypher(statement: "MATCH (m:Ministry {id: $id}) RETURN m")
+  sontaTownList(bishopId: ID, ministryId: ID): [Town]
+    @cypher(
+      statement: """
+      MATCH (n:Ministry {id: $ministryId})<-[:BELONGS_TO]-(m:Member)
+      MATCH (m)-[:BELONGS_TO]->(:Bacenta)<-[:HAS_BACENTA]-()<-[:HAS_CENTRE]-(e)
+      MATCH (e)<-[:HAS_TOWN|HAS_CAMPUS]-(:Member {id: $bishopId})
+      RETURN DISTINCT e,n
+      """
+    )
+
+  #At the Sonta Level
+  displaySonta(id: ID): Sonta
+    @cypher(statement: "MATCH (s:Sonta {id: $id}) RETURN s")
+  sontaList: [Sonta] @cypher(statement: "MATCH (s:Sonta) RETURN s")
+  townSontaLeader(bishopId: ID): [Member]
+    @cypher(
+      statement: """
+      MATCH (n:Ministry)<-[:BELONGS_TO]-(m:Member)
+      MATCH (m)-[:BELONGS_TO]->(:Bacenta)<-[:HAS_BACENTA]-()<-[:HAS_CENTRE]-(e)
+      MATCH (e)<-[:HAS_TOWN|HAS_CAMPUS]-(:Member {id: $bishopId})
+      MATCH (n)-[:HAS_SONTA]->(s:Sonta {id:$sontaId})<-[:LEADS]-(l:Member)
+      WHERE s.name CONTAINS e.name
+         RETURN DISTINCT l
+      """
+    )
+  sontaMemberList(id: ID): [Member]
+    @cypher(
+      statement: """
+      MATCH (s:Sonta {id: $id})
+      MATCH (s)<-[:HAS_SONTA]-()-[:HAS_CENTRE]->()-[:HAS_BACENTA]->()<-[:BELONGS_TO]-(m:Member)
+      RETURN m
+      """
+    )
+  sontaMemberCount(id: ID): Int!
+    @cypher(
+      statement: """
+      MATCH (s:Sonta {id: $id})
+      MATCH (s)<-[:HAS_SONTA]-()-[:HAS_CENTRE]->()-[:HAS_BACENTA]->()<-[:BELONGS_TO]-(m:Member)
+      RETURN COUNT(m)
+      """
+    )
+  sontaBasontaLeaderList(id: ID): [Member]
+    @cypher(
+      statement: """
+      MATCH (s:Sonta {id: $id})
+      MATCH (b:Basonta)<-[:HAS_BASONTA]-(s)
+      MATCH (b)<-[:LEADS]-(m)
+      RETURN m
+      """
+    )
+
+  #Members
+  # Display Member basecd on ID
+  displayMember(id: ID): Member
+    @cypher(statement: "MATCH (m:Member {id:$id}) RETURN m")
+  memberByEmail(email: String): Member
+    @cypher(statement: "MATCH (m:Member {email:$email}) RETURN m")
+
+  #Fuzzy Search
+  globalMemberSearch(searchKey: String!): [Member]
+    @cypher(
+      statement: """
+      MATCH (m:Member)
+      WHERE toLower(m.firstName) = toLower($searchKey)
+      OR toLower(m.lastName) = toLower($searchKey)
+      OR toLower(m.firstName) STARTS WITH toLower($searchKey)
+      OR toLower(m.lastName) STARTS WITH toLower($searchKey)
+      OR toLower(m.firstName) CONTAINS toLower($searchKey)
+      OR toLower(m.lastName) CONTAINS toLower($searchKey)
+      OR toLower(m.firstName+ " " + m.lastName) CONTAINS toLower($searchKey)
+      RETURN m
+      """
+    )
+  globalBacentaSearch(searchKey: String!): [Bacenta]
+    @cypher(
+      statement: """
+      MATCH (b:Bacenta)
+      WHERE toLower(b.name) STARTS WITH toLower($searchKey)
+      OR toLower(b.name) CONTAINS toLower($searchKey)
+      RETURN b
+      """
+    )
+  globalCentreSearch(searchKey: String!): [Centre]
+    @cypher(
+      statement: """
+      MATCH (c:Centre)
+      WHERE toLower(c.name) STARTS WITH toLower($searchKey)
+      OR toLower(c.name) CONTAINS toLower($searchKey)
+      RETURN c
+      """
+    )
+  globalCampusSearch(searchKey: String!): [Campus]
+    @cypher(
+      statement: """
+      MATCH (c:Campus)
+      WHERE toLower(c.name) STARTS WITH toLower($searchKey)
+      OR toLower(c.name) CONTAINS toLower($searchKey)
+      RETURN c
+      """
+    )
+  globalSontaSearch(searchKey: String!): [Sonta]
+    @cypher(
+      statement: """
+      MATCH (c:Sonta)
+      WHERE toLower(c.name) STARTS WITH toLower($searchKey)
+      OR toLower(c.name) CONTAINS toLower($searchKey)
+      RETURN c
+      """
+    )
+  globalTownSearch(searchKey: String!): [Town]
+    @cypher(
+      statement: """
+      MATCH (c:Town)
+      WHERE toLower(c.name) STARTS WITH toLower($searchKey)
+      OR toLower(c.name) CONTAINS toLower($searchKey)
+      RETURN c
+      """
+    )
+  occupationList(searchKey: String!): [Occupation]
+    @cypher(
+      statement: "MATCH (o:Occupation) WHERE toLower(o.occupation) CONTAINS toLower($searchKey) RETURN o"
+    )
+}

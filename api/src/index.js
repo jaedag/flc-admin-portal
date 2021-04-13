@@ -1,7 +1,4 @@
-import {
-  typeDefs as Types,
-  directoryTypeDefs as Directory,
-} from './schema/graphql-schema'
+import { typeDefs } from './graphql-schema'
 import { resolvers } from './resolvers'
 import { ApolloServer } from 'apollo-server-express'
 import express from 'express'
@@ -25,7 +22,7 @@ const app = express()
  */
 
 const schema = makeAugmentedSchema({
-  typeDefs: `${Types} ${Directory}`,
+  typeDefs,
   resolvers,
   config: {
     query: true,

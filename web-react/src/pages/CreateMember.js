@@ -4,7 +4,6 @@ import { useQuery, useMutation } from '@apollo/client'
 import { Formik, Form, FieldArray } from 'formik'
 import * as Yup from 'yup'
 import FormikControl from '../components/formik-components/FormikControl'
-
 import { CREATE_MEMBER_MUTATION } from '../queries/CreateMutations'
 import { HeadingBar } from '../components/HeadingBar'
 import { NavBar } from '../components/nav/NavBar'
@@ -75,12 +74,12 @@ export const CreateMember = () => {
   const { setMemberId } = useContext(MemberContext)
 
   const validationSchema = Yup.object({
-    firstName: Yup.string().required('This is a required field'),
-    lastName: Yup.string().required('This is a required field'),
-    gender: Yup.string().required('This is a required field'),
+    firstName: Yup.string().required('First Name is a required field'),
+    lastName: Yup.string().required('Last Name is a required field'),
+    gender: Yup.string().required('Gender is a required field'),
     email: Yup.string().email('Please enter a valid email address'),
-    maritalStatus: Yup.string().required('This is a required field'),
-    dob: Yup.string().required('This is a required field'),
+    maritalStatus: Yup.string().required('Marital Status is a required field'),
+    dob: Yup.string().required('Date of Birth is a required field'),
     phoneNumber: Yup.string()
       .matches(
         phoneRegExp,
@@ -91,8 +90,8 @@ export const CreateMember = () => {
       phoneRegExp,
       `Phone Number must start with + and country code (eg. '+233')`
     ),
-    // bacenta: Yup.string().required('This is a required field'),
-    // ministry: Yup.string().required('This is a required field'),
+    bacenta: Yup.string().required('Bacenta is a required field'),
+    ministry: Yup.string().required('Ministry is a required field'),
   })
 
   //All of the Hooks!
@@ -235,8 +234,8 @@ export const CreateMember = () => {
                         Please note that * are required to submit the form
                       </small>
                     </p>
-                    <div className="form-row row-cols-2">
-                      <div className="col">
+                    <div className="form-row row-cols-1 row-cols-md-2">
+                      <div className="col-10">
                         <FormikControl
                           label="First Name*"
                           className="form-control"
@@ -246,7 +245,7 @@ export const CreateMember = () => {
                           aria-describedby="firstNameHelp"
                         />
                       </div>
-                      <div className="col">
+                      <div className="col-10">
                         <FormikControl
                           label="Middle Name"
                           className="form-control"
@@ -256,7 +255,7 @@ export const CreateMember = () => {
                           aria-describedby="middleNameHelp"
                         />
                       </div>
-                      <div className="col">
+                      <div className="col-10">
                         <FormikControl
                           label="Last Name*"
                           className="form-control"
@@ -266,7 +265,7 @@ export const CreateMember = () => {
                           aria-describedby="lastNameHelp"
                         />
                       </div>
-                      <div className="col">
+                      <div className="col-10">
                         <FormikControl
                           label="Gender*"
                           className="form-control"
@@ -277,30 +276,30 @@ export const CreateMember = () => {
                           defaultOption="Gender"
                         />
                       </div>
-                      <div className="col">
+                      <div className="col-10">
                         <FormikControl
                           label="Phone Number*"
                           className="form-control"
                           control="input"
-                          placeholder="Enter phone number"
+                          placeholder="Eg. +233 241 23 456"
                           id="phoneNumber"
                           name="phoneNumber"
                         />
                       </div>
-                      <div className="col">
+                      <div className="col-10">
                         <FormikControl
                           label="WhatsApp Number*"
                           className="form-control"
                           control="input"
-                          placeholder="Enter Your WhatsApp number"
+                          placeholder="Eg. +233 241 23 456"
                           id="whatsappNumber"
                           name="whatsappNumber"
                         />
                       </div>
                     </div>
 
-                    <div className="form-row row-cols-2">
-                      <div className="col">
+                    <div className="form-row row-cols-1 row-cols-md-2">
+                      <div className="col-10">
                         <FormikControl
                           label="Marital Status*"
                           className="form-control"
@@ -311,7 +310,7 @@ export const CreateMember = () => {
                           defaultOption="Marital Status"
                         />
                       </div>
-                      <div className="col">
+                      <div className="col-10">
                         <FormikControl
                           label="Occupation"
                           className="form-control"
@@ -323,9 +322,9 @@ export const CreateMember = () => {
                       </div>
                     </div>
                     <div className="form-row">
-                      <div className="col-8">
+                      <div className="col-10">
                         <FormikControl
-                          label="Email Address"
+                          label="Email Address*"
                           className="form-control"
                           control="input"
                           name="email"
@@ -333,9 +332,10 @@ export const CreateMember = () => {
                           aria-describedby="emailHelp"
                         />
                       </div>
-                      <div className="col-8">
+                      <div className="col-10">
                         <small htmlFor="dateofbirth" className="form-text ">
-                          Date of Birth
+                          Date of Birth*{' '}
+                          <i className="text-secondary">(Day/Month/Year)</i>
                         </small>
                         <FormikControl
                           className="form-control"
@@ -354,13 +354,13 @@ export const CreateMember = () => {
                   <div className="col my-4">
                     <HeadingBar title="Church Info" />
 
-                    <div className="form-row row-cols-2">
-                      <div className="col">
+                    <div className="form-row row-cols-1 row-cols-md-2">
+                      <div className="col-10">
                         <FormikControl
                           control="combobox"
                           label="Bacenta*"
                           name="bacenta"
-                          // label="Bacenta"
+                          modifier="id-only"
                           placeholder="Bacenta"
                           setFieldValue={formik.setFieldValue}
                           optionsQuery={BACENTA_DROPDOWN}
@@ -371,7 +371,7 @@ export const CreateMember = () => {
                           aria-describedby="Bacenta Name"
                         />
                       </div>
-                      <div className="col">
+                      <div className="col-10">
                         <FormikControl
                           className="form-control"
                           label="Ministry*"
@@ -398,8 +398,8 @@ export const CreateMember = () => {
                           <div>
                             {pastoralAppointment.map(
                               (pastoralAppointment, index) => (
-                                <div key={index} className="form-row row-cols">
-                                  <div className="col">
+                                <div key={index} className="form-row">
+                                  <div className="col-auto">
                                     <FormikControl
                                       className="form-control"
                                       control="select"

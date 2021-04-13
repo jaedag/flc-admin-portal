@@ -363,6 +363,7 @@ export const UpdateMemberDetails = () => {
                         <FormikControl
                           control="combobox"
                           name="bacenta"
+                          modifier="id-only"
                           initValue={initialValues.bacenta}
                           placeholder="Bacenta name"
                           setFieldValue={formik.setFieldValue}

@@ -96,8 +96,8 @@ type Mutation {
         log.id =  apoc.create.uuid(),
         log.timeStamp = time(),
         log.historyRecord = $townName +' Church was started'
-      MERGE (t:TimeGraph {date: date()})
-      	  MERGE (log)-[:RECORDED_ON]->(t)
+      MERGE (tg:TimeGraph {date: date()})
+      	  MERGE (log)-[:RECORDED_ON]->(tg)
       WITH t
       MATCH (m:Member {whatsappNumber: $lWhatsappNumber})
       MERGE (m)-[:LEADS]->(t)
@@ -135,8 +135,8 @@ type Mutation {
         log.id =  apoc.create.uuid(),
         log.timeStamp = time(),
         log.historyRecord = $campusName +' Church was started'
-      MERGE (t:TimeGraph {date: date(date())})
-      	  MERGE (log)-[:RECORDED_ON]->(t)
+      MERGE (tg:TimeGraph {date: date(date())})
+      	  MERGE (log)-[:RECORDED_ON]->(tg)
       WITH t
       MATCH (m:Member {whatsappNumber: $lWhatsappNumber})
       MERGE (m)-[:LEADS]->(t)

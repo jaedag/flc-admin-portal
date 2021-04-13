@@ -1,9 +1,10 @@
 import React from 'react'
 import './PlusMinusSign.css'
 
-function PlusSign() {
+function PlusSign(props) {
+  const { ...rest } = props
   return (
-    <button className="plusminus-button rounded mr-2" type="button">
+    <button {...rest} className="plusminus-button rounded mr-2" type="button">
       <svg
         aria-hidden="true"
         focusable="false"

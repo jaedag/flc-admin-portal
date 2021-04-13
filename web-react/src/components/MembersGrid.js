@@ -57,7 +57,7 @@ export const MembersGrid = (props) => {
           <SideBar />
         </div>
 
-        <div className="col-9 px-2">
+        <div className="col col-md-9 px-2">
           {title ? (
             <h3 className="text-center font-weight-bold mt-3 mb-0">{title}</h3>
           ) : null}

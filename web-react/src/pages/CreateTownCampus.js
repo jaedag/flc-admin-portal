@@ -201,6 +201,7 @@ function AddTownCampus() {
                                     <FormikControl
                                       control="combobox"
                                       name={`centres[${index}]`}
+                                      modifier="id-only"
                                       placeholder={`${capitalise(
                                         church.subChurch
                                       )} Name`}

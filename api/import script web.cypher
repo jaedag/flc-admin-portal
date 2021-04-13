@@ -91,43 +91,6 @@ WITH line,m WHERE line.Occupation is not null
 MERGE(O:Occupation {occupation: line.Occupation})
 MERGE(m)-[:HAS_OCCUPATION]->(O);
 
-//Import Data from Pastors
-LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/e/2PACX-1vQG-QT7oyKMRL-vFKbsa1bDf0n6X6IEZnJO73nme0-Qca-QXSAeVJbhHaNmMIARkDtvnMuDNmauuUDy/pub?output=csv" as line
-MERGE (m:Member {whatsappNumber: line.`Mobile`})
-	SET 
-    m.id = apoc.create.uuid(),
-    m.firstName = line.`First  Name`,
-    m.middleName = line.`Middlename`,
-    m.lastName = line.`Last  Name`,
-    m.phoneNumber = line.`Phone Number`,
-    m.email = line.`Emailaddress`,
-    m.areaOfResidence = line.`Area of Residence`
-
-with line,m WHERE line.Gender is not null
-MERGE(g: Gender {gender: line.Gender})
-MERGE(m)-[:HAS_GENDER]->(g)
-
-
-with line,m WHERE line.`Marital Status (Single/Married/Divorced/Widow/Widower)` is not null
-MERGE (ms: MaritalStatus {status: line.`Marital Status (Single/Married/Divorced/Widow/Widower)`})
-MERGE(m)-[:HAS_MARITAL_STATUS]->(ms)
-
-WITH line,m
-WHERE line.`Date Of Birth (Dd/Mm/Yyyy)`is not null
-MERGE (dob: TimeGraph {date: date(line.`Date Of Birth (Dd/Mm/Yyyy)`)})
-MERGE (m)-[:WAS_BORN_ON]->(dob)
-
-WITH line,m WHERE line.Occupation is not null
-MERGE(O:Occupation {occupation: line.Occupation})
-MERGE(m)-[:HAS_OCCUPATION]->(O)
-
-WITH line,m
-MERGE (t:Title {title: 'Pastor'})
-MERGE (m)-[r:HAS_TITLE]->(t)
-SET 
-r.yearAppointed = line.`Year Appointed`,
-r.status = line.`Pastorstatus`;
-
 :auto USING PERIODIC COMMIT 500
 LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/e/2PACX-1vSwWmJJoyWNd6TBMAE74gxSnss94IC8my0lz5KUmggmwAOfsIOoNIvXH_Iq2sUYi86ULcGingtgE2ze/pub?output=csv" as line
 MATCH (m:Member {whatsappNumber: line.`WhatsApp Number (if different)`})

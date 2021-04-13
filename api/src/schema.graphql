@@ -5,7 +5,7 @@ type Member {
   lastName: String #@search
   email: String
   phoneNumber: String
-  whatsappNumber: String #@unique
+  whatsappNumber: String @index #@unique
   pictureUrl: String
   gender: Gender @relation(name: "HAS_GENDER", direction: OUT)
   maritalStatus: MaritalStatus
@@ -57,7 +57,7 @@ type HasTitle @relation(name: "HAS_TITLE") {
   from: Member
   to: Title
   yearAppointed: Date
-  status: String #active or inactive
+  status: Boolean #active or inactive
   numberofTimesRemoved: Int
 }
 
@@ -668,12 +668,7 @@ type Mutation {
       """
     )
 
-  CreateTown(
-    townName: String
-    lWhatsappNumber: String
-    id: ID
-    centres: [ID]
-  ): Town
+  CreateTown(townName: String, lWhatsappNumber: String, id: ID): Town
     @cypher(
       statement: """
       CREATE (t:Town {name:$townName})
@@ -692,27 +687,10 @@ type Mutation {
       MERGE (a:Member {id: $id})
       MERGE (a)-[:HAS_TOWN]->(t)
 
-      WITH t
-         CALL {
-         	WITH t
-         	WITH t  WHERE $centres IS NOT NULL
-         	UNWIND $centres AS x
-             MATCH (c:Centre {id:x})
-             OPTIONAL MATCH (t1)-[r:HAS_CENTRE]->(c)
-             DELETE r
-             MERGE (t)-[:HAS_CENTRE]->(c)
-         	RETURN count(t)
-         	}
-
       RETURN t
       """
     )
-  CreateCampus(
-    campusName: String
-    lWhatsappNumber: String
-    id: ID
-    centres: [ID]
-  ): Campus
+  CreateCampus(campusName: String, lWhatsappNumber: String, id: ID): Campus
     @cypher(
       statement: """
       CREATE (t:Campus {name:$campusName})
@@ -731,18 +709,6 @@ type Mutation {
       MERGE (a:Member {id: $id})
       MERGE (a)-[:HAS_CAMPUS]->(t)
 
-      WITH t
-         CALL {
-         	WITH t
-         	WITH t  WHERE $centres IS NOT NULL
-         	UNWIND $centres AS x
-             MATCH (c:Centre {id:x})
-             OPTIONAL MATCH (t1)-[r:HAS_CENTRE]->(c)
-             DELETE r
-             MERGE (t)-[:HAS_CENTRE]->(c)
-         	RETURN count(t)
-         	}
-
       RETURN t
       """
     )
@@ -750,7 +716,6 @@ type Mutation {
     centreName: String
     lWhatsappNumber: String
     townCampusId: ID
-    bacentas: [ID]
   ): Centre
     @cypher(
       statement: """
@@ -770,25 +735,31 @@ type Mutation {
       MERGE (t)-[:HAS_CENTRE]->(c)
       MERGE (m)-[:LEADS]->(c)
 
-
-      WITH c
-         CALL {
-             WITH c
-             WITH c  WHERE $bacentas IS NOT NULL
-             UNWIND $bacentas AS x
-             MATCH (b:Bacenta {id:x})
-             OPTIONAL MATCH (c1)-[r:HAS_BACENTA]->(b)
-             DELETE r
-             MERGE (c)-[:HAS_BACENTA]->(b)
-             RETURN count(c)
-             }
+       WITH c
+        CALL {
+         	WITH c
+          WITH c WHERE $lWhatsappNumber IS NOT NULL
+          MATCH (m:Member {whatsappNumber: $lWhatsappNumber})
+          CREATE (log:HistoryLog:ServiceLog)
+           SET
+            log.id = apoc.create.uuid(),
+            log.timeStamp = time(),
+            log.historyRecord = m.firstName + ' ' +m.lastName + ' started ' + $centreName +' Centre'
+          MERGE (t:TimeGraph {date: date()})
+      	    MERGE (log)-[:RECORDED_ON]->(t)
+            MERGE (log)<-[:HAS_HISTORY]-(m)
+            MERGE (log)<-[r:HAS_HISTORY]-(c)
+          MERGE (m)-[:LEADS]->(c)
+            SET r.pointer = true
+         	RETURN count(c)
+         	}
 
       RETURN c
       """
     )
   CreateBacenta(
     bacentaName: String!
-    lWhatsappNumber: String
+    lWhatsappNumber: String!
     centreId: ID
     meetingDay: String!
     venueLongitude: Float
@@ -807,21 +778,24 @@ type Mutation {
       MERGE (b)-[:MEETS_ON_DAY]->(md)
 
 
-      WITH b
+      WITH b,c
         CALL {
          	WITH b
           WITH b WHERE $lWhatsappNumber IS NOT NULL
           MATCH (m:Member {whatsappNumber: $lWhatsappNumber})
+         MATCH (c:Centre {id: $centreId})
           CREATE (log:HistoryLog:ServiceLog)
            SET
             log.id = apoc.create.uuid(),
             log.timeStamp = time(),
-            log.historyRecord = m.firstName + ' ' +m.lastName + ' started ' + $bacentaName +' Bacenta'
+            log.historyRecord = m.firstName + ' ' +m.lastName + ' started ' + $bacentaName +' Bacenta under '+ c.name + 'Centre'
+          
           MERGE (t:TimeGraph {date: date()})
       	    MERGE (log)-[:RECORDED_ON]->(t)
             MERGE (log)<-[:HAS_HISTORY]-(m)
+             MERGE (log)<-[:HAS_HISTORY]-(c)
             MERGE (log)<-[r:HAS_HISTORY]-(b)
-          MERGE (m)-[:LEADS]->(b)
+            MERGE (m)-[:LEADS]->(b)
             SET r.pointer = true
          	RETURN count(b)
          	}
@@ -1018,7 +992,7 @@ type Mutation {
       WITH c
          CALL {
          	WITH c
-      		OPTIONAL MATCH (b{id: $campusTownID})
+      		OPTIONAL MATCH (b{id: $campusTownID}) WHERE b:Campus OR b:Town
 
             OPTIONAL MATCH (c)<-[r:HAS_CENTRE]-()
             DELETE r

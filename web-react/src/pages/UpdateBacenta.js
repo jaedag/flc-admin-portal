@@ -134,13 +134,15 @@ export const UpdateBacenta = () => {
 
   const [AddBacentaCentre] = useMutation(ADD_BACENTA_CENTRE, {
     onCompleted: (newCentre) => {
-      //Remove Link to the old Bacenta
-      RemoveBacentaCentre({
-        variables: {
-          centreId: initialValues.centreSelect,
-          bacentaId: bacentaId,
-        },
-      })
+      if (initialValues.centreSelect) {
+        //Remove Link to the old Bacenta
+        RemoveBacentaCentre({
+          variables: {
+            centreId: initialValues.centreSelect,
+            bacentaId: bacentaId,
+          },
+        })
+      }
       //After Adding the bacenta to a centre, then you log that change.
       LogBacentaHistory({
         variables: {
@@ -271,11 +273,7 @@ export const UpdateBacenta = () => {
                             control="select"
                             name="townCampusSelect"
                             label={`Select a ${capitalise(church.church)}`}
-                            options={
-                              church.church === 'town'
-                                ? townOptions
-                                : campusOptions
-                            }
+                            options={townOptions ?? campusOptions}
                             onChange={(e) => {
                               formik.setFieldValue(
                                 'townCampusSelect',

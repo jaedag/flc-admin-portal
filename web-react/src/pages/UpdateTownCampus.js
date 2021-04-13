@@ -68,11 +68,7 @@ export const UpdateTownCampus = () => {
 
   const history = useHistory()
 
-  const campusTownData = campusData
-    ? campusData.displayCampus
-    : townData
-    ? townData.displayTown
-    : ''
+  const campusTownData = campusData?.displayCampus ?? townData?.displayTown
 
   const initialValues = {
     campusTownName: campusTownData?.name,

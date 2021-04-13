@@ -38,6 +38,30 @@ export const CREATE_MEMBER_MUTATION = gql`
   }
 `
 
+export const ADD_MEMBER_TITLE_MUTATION = gql`
+  mutation AddMemberTitle(
+    $memberId: ID!
+    $title: String!
+    $status: Boolean
+    $date: String
+  ) {
+    AddMemberTitle(
+      from: { id: $memberId }
+      to: { title: $title }
+      data: { status: $status, yearAppointed: { formatted: $date } }
+    ) {
+      from {
+        id
+        firstName
+        lastName
+      }
+      to {
+        title
+      }
+    }
+  }
+`
+
 export const ADD_LEADER_HISTORY_MUTATION = gql`
   mutation($id: ID, $pastoralHistory: [pastoralHistory]) {
     AddLeaderHistory(id: $id, pastoralHistory: $pastoralHistory) {
@@ -49,18 +73,10 @@ export const ADD_LEADER_HISTORY_MUTATION = gql`
   }
 `
 
-export const ADD_LEADER_TITLE_MUTATION = gql`
-  mutation($id: ID!, $pastoralAppointment: [pastoralAppointment]) {
-    CreateLeaderTitle(id: $id, pastoralAppointment: $pastoralAppointment) {
-      title
-    }
-  }
-`
-
 export const CREATE_BACENTA_MUTATION = gql`
   mutation CreateBacenta(
     $bacentaName: String!
-    $lWhatsappNumber: String
+    $lWhatsappNumber: String!
     $centreId: ID
     $meetingDay: String!
     $venueLongitude: Float
@@ -85,13 +101,11 @@ export const CREATE_CENTRE_MUTATION = gql`
     $centreName: String
     $lWhatsappNumber: String
     $townCampusId: ID
-    $bacentas: [ID]
   ) {
     CreateCentre(
       centreName: $centreName
       lWhatsappNumber: $lWhatsappNumber
       townCampusId: $townCampusId
-      bacentas: $bacentas
     ) {
       id
       name
@@ -100,17 +114,11 @@ export const CREATE_CENTRE_MUTATION = gql`
 `
 
 export const CREATE_TOWN_MUTATION = gql`
-  mutation CreateTown(
-    $townName: String
-    $lWhatsappNumber: String
-    $id: ID
-    $centres: [ID]
-  ) {
+  mutation CreateTown($townName: String, $lWhatsappNumber: String, $id: ID) {
     CreateTown(
       townName: $townName
       lWhatsappNumber: $lWhatsappNumber
       id: $id
-      centres: $centres
     ) {
       id
       name
@@ -123,13 +131,11 @@ export const CREATE_CAMPUS_MUTATION = gql`
     $campusName: String
     $lWhatsappNumber: String
     $id: ID
-    $centres: [ID]
   ) {
     CreateCampus(
       campusName: $campusName
       lWhatsappNumber: $lWhatsappNumber
       id: $id
-      centres: $centres
     ) {
       id
       name

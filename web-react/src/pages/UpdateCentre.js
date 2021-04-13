@@ -339,6 +339,7 @@ export const UpdateCentre = () => {
       //Log If The TownCampus Changes
       if (values.campusTownSelect !== initialValues.campusTownSelect) {
         if (church.church === 'town') {
+          console.log(initialValues.campusTownSelect)
           RemoveCentreTown({
             variables: {
               campusId: initialValues.campusTownSelect,

@@ -4,7 +4,10 @@ import { useQuery, useMutation } from '@apollo/client'
 import { Formik, Form, FieldArray } from 'formik'
 import * as Yup from 'yup'
 import FormikControl from '../components/formik-components/FormikControl'
-import { CREATE_MEMBER_MUTATION } from '../queries/CreateMutations'
+import {
+  ADD_MEMBER_TITLE_MUTATION,
+  CREATE_MEMBER_MUTATION,
+} from '../queries/CreateMutations'
 import { HeadingBar } from '../components/HeadingBar'
 import { NavBar } from '../components/nav/NavBar'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
@@ -72,6 +75,7 @@ export const CreateMember = () => {
     ChurchContext
   )
   const { setMemberId } = useContext(MemberContext)
+  let pastoralAppointment
 
   const validationSchema = Yup.object({
     firstName: Yup.string().required('First Name is a required field'),
@@ -101,9 +105,20 @@ export const CreateMember = () => {
     error: ministryListError,
   } = useQuery(GET_MINISTRIES)
 
+  const [AddMemberTitle] = useMutation(ADD_MEMBER_TITLE_MUTATION)
+  console.log(AddMemberTitle)
   const [CreateMember] = useMutation(CREATE_MEMBER_MUTATION, {
     onCompleted: (newMemberData) => {
       setMemberId(newMemberData.CreateMember.id)
+
+      // pastoralAppointment.map((apppointmentDetails)=>{
+      //   AddMemberTitle({variables:{
+      //     memberId: newMemberData.CreateMember.id,
+      //     title: apppointmentDetails.title,
+      //     status: true,
+      //     date: apppointmentDetails.date
+      //   }})
+      // })
     },
   })
 
@@ -133,6 +148,7 @@ export const CreateMember = () => {
   }
 
   const onSubmit = async (values, onSubmitProps) => {
+    const { setSubmitting, resetForm } = onSubmitProps
     // Variables that are not controlled by formik
     values.pictureUrl = image
 
@@ -140,7 +156,7 @@ export const CreateMember = () => {
     values.phoneNumber = parsePhoneNum(values.phoneNumber)
     values.whatsappNumber = parsePhoneNum(values.whatsappNumber)
 
-    values.pastoralAppointment = values.pastoralAppointment.filter(
+    pastoralAppointment = values.pastoralAppointment.filter(
       (pastoralAppointment) => {
         if (pastoralAppointment.date) {
           return pastoralAppointment
@@ -148,6 +164,7 @@ export const CreateMember = () => {
         return null
       }
     )
+    console.log(pastoralAppointment)
 
     CreateMember({
       variables: {
@@ -166,13 +183,13 @@ export const CreateMember = () => {
         bacenta: values.bacenta,
         ministry: values.ministry,
 
-        pastoralAppointment: values.pastoralAppointment,
-        pastoralHistory: values.pastoralHistory,
+        // pastoralAppointment: values.pastoralAppointment,
+        // pastoralHistory: values.pastoralHistory,
       },
     })
 
-    onSubmitProps.setSubmitting(false)
-    onSubmitProps.resetForm()
+    setSubmitting(false)
+    resetForm()
     history.push('/member/displaydetails')
   }
 

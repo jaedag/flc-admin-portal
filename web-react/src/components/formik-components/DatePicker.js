@@ -17,14 +17,14 @@ function DatePicker(props) {
       <Field name={name}>
         {({ field, form }) => {
           const { setFieldValue } = form
-          const { value } = field
+          // const { value } = field
 
           return (
             <DateView
               id={name}
               {...field}
               {...rest}
-              selected={value}
+              isClearable
               onChange={(val) => setFieldValue(name, val)}
             />
           )

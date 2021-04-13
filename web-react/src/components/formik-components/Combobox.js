@@ -10,6 +10,7 @@ function Combobox(props) {
     label,
     name,
     dataset,
+    modifier,
     initValue,
     queryVariable,
     suggestionText,
@@ -74,7 +75,11 @@ function Combobox(props) {
             event.preventDefault()
           }
           setSearchString(suggestion.name)
-          setFieldValue(`${name}`, suggestion)
+          if (modifier === 'id-only') {
+            setFieldValue(`${name}`, suggestion.id)
+          } else {
+            setFieldValue(`${name}`, suggestion)
+          }
         }}
         getSuggestionValue={(suggestion) => suggestion.name}
         highlightFirstSuggestion={true}

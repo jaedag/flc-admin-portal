@@ -125,6 +125,10 @@
   border-color: none;
 }
 
+a:hover {
+  text-decoration: none;
+}
+
 .btn-primary:disabled {
   background-color: var(--infobar-color);
   color: white;

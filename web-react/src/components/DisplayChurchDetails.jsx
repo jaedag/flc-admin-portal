@@ -5,8 +5,8 @@ import { MemberContext } from '../contexts/MemberContext'
 import { ChurchContext } from '../contexts/ChurchContext'
 import { Timeline } from './timeline/Timeline.jsx'
 import { EditButton } from './buttons/EditButton.jsx'
-import { MemberDisplayCard } from '../components/MemberDisplayCard'
-import { ChurchButton } from '../components/buttons/ChurchButton.jsx'
+import { MemberDisplayCard } from './card/MemberDisplayCard'
+import { ChurchButton } from './buttons/ChurchButton.jsx'
 import './DisplayChurchDetails.css'
 
 export const DisplayChurchDetails = (props) => {

@@ -5,6 +5,7 @@ import { BISH_DASHBOARD_COUNTS } from '../queries/CountQueries'
 import { NavBar } from '../components/nav/NavBar.jsx'
 import { DashboardCard } from '../components/card/DashboardCard.jsx'
 import { DashboardButton } from '../components/buttons/DashboardButton.jsx'
+import DropdoownButton from '../components/buttons/DropdownButton'
 import { ChurchContext } from '../contexts/ChurchContext'
 import { capitalise, plural } from '../global-utils'
 
@@ -24,6 +25,24 @@ const BishopDashboard = () => {
     sontaMemberCount
   const loadingText = 'Loading...'
   const errorText = 'Error!'
+  const listItems = [
+    {
+      link: '/member/addmember',
+      buttonText: 'Register Member',
+    },
+    {
+      link: '/bacenta/addbacenta',
+      buttonText: 'Start a Bacenta',
+    },
+    {
+      link: '/centre/addcentre',
+      buttonText: 'Start a Centre',
+    },
+    {
+      link: `/${church.church}/add${church.church}`,
+      buttonText: `Add ${capitalise(church.church)}`,
+    },
+  ]
 
   if (loading) {
     bishopName = loadingText
@@ -52,10 +71,9 @@ const BishopDashboard = () => {
   return (
     <>
       <NavBar />
-      <div className="container ">
+      <div className="container px-4">
         <h4 className="pt-4">{bishopName}</h4>
         <p
-          className="pb-4"
           onClick={() => {
             clickCard(data.displayMember?.hasAdmin)
             history.push('/member/displaydetails')
@@ -63,6 +81,11 @@ const BishopDashboard = () => {
         >
           {data?.displayMember?.hasAdmin ? { adminName } : null}
         </p>
+        <div className="row justify-content-end pb-4">
+          <div className="col-auto mr-1 d-md-none">
+            <DropdoownButton items={listItems} />
+          </div>
+        </div>
         <div className="row row-cols-md-2 row-cols-lg-4">
           <div className="col-sm-12 col-md">
             <DashboardCard
@@ -104,31 +127,16 @@ const BishopDashboard = () => {
             />
           </div>
         </div>
-
-        <div className="row justify-content-center mt-5">
-          <div className="col-sm-12 col-md-auto">
-            <DashboardButton
-              btnText="Register Member"
-              btnLink="/member/addmember"
-            />
-          </div>
-          <div className="col-sm-12 col-md-auto">
-            <DashboardButton
-              btnText="Start a Bacenta"
-              btnLink="/bacenta/addbacenta"
-            />
-          </div>
-          <div className="col-sm-12 col-md-auto">
-            <DashboardButton
-              btnText="Start a Centre"
-              btnLink="/centre/addcentre"
-            />
-          </div>
-          <div className="col-sm-12 col-md-auto">
-            <DashboardButton
-              btnText={`Add ${capitalise(church.church)}`}
-              btnLink={`/${church.church}/add${church.church}`}
-            />
+        <div className="d-none d-md-block">
+          <div className="row justify-content-center mt-5">
+            {listItems.map((item, index) => (
+              <div key={index} className="col-sm-12 col-lg-auto">
+                <DashboardButton
+                  btnText={item.buttonText}
+                  btnLink={item.link}
+                />
+              </div>
+            ))}
           </div>
         </div>
       </div>

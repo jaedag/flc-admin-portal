@@ -7,7 +7,7 @@ function Textarea(props) {
   return (
     <div>
       {label ? (
-        <label className="labels" htmlFor={name}>
+        <label className="label" htmlFor={name}>
           {label}
         </label>
       ) : null}

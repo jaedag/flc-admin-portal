@@ -2,20 +2,14 @@ import React, { useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useQuery } from '@apollo/client'
 import { BISH_DASHBOARD_COUNTS } from '../queries/CountQueries'
-import { NavBar } from '../components/nav/NavBar'
-import { DashboardCard } from '../components/card/DashboardCard'
-import { DashboardButton } from '../components/buttons/DashboardButton'
+import { NavBar } from '../components/nav/NavBar.jsx'
+import { DashboardCard } from '../components/card/DashboardCard.jsx'
+import { DashboardButton } from '../components/buttons/DashboardButton.jsx'
 import { ChurchContext } from '../contexts/ChurchContext'
+import { capitalise, plural } from '../global-utils'
 
 const BishopDashboard = () => {
-  const {
-    church,
-    capitalise,
-    plural,
-    setFilters,
-    clickCard,
-    bishopId,
-  } = useContext(ChurchContext)
+  const { church, setFilters, clickCard, bishopId } = useContext(ChurchContext)
   const { data, loading } = useQuery(BISH_DASHBOARD_COUNTS, {
     variables: { id: bishopId },
   })

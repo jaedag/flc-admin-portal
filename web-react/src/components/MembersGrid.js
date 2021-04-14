@@ -1,13 +1,14 @@
 import React, { useContext, useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { NavBar } from './nav/NavBar'
+import { NavBar } from './nav/NavBar.jsx'
 import { SideBar } from './SideBar'
 import { MemberTable } from './MemberTable'
 import { ChurchContext } from '../contexts/ChurchContext'
+import { memberFilter } from './member-filter-utils'
 
 export const MembersGrid = (props) => {
   const { memberData, memberError, memberLoading, title } = props
-  const { memberFilter, filters } = useContext(ChurchContext)
+  const { filters } = useContext(ChurchContext)
   const [offset, setOffset] = useState(0)
   const [dimensions, setDimensions] = React.useState({
     height: window.innerHeight,
@@ -18,7 +19,7 @@ export const MembersGrid = (props) => {
     ((dimensions.height - 96 - 30) * (0.75 * dimensions.width - 46)) /
       (160 * 126)
   )
-  //NavBar takes 70px of the height and side bar takes 25% of the width
+  //NavBar.jsx takes 70px of the height and side bar takes 25% of the width
   const memberDataLoaded = memberData ? memberFilter(memberData, filters) : null
 
   //debouncing function

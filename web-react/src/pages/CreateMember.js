@@ -3,20 +3,25 @@ import { useHistory } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/client'
 import { Formik, Form, FieldArray } from 'formik'
 import * as Yup from 'yup'
-import FormikControl from '../components/formik-components/FormikControl'
+import {
+  makeSelectOptions,
+  parsePhoneNum,
+  PHONE_NUM_REGEX_VALIDATION,
+} from '../global-utils'
+import FormikControl from '../components/formik-components/FormikControl.jsx'
 import {
   ADD_MEMBER_TITLE_MUTATION,
   CREATE_MEMBER_MUTATION,
 } from '../queries/CreateMutations'
 import { HeadingBar } from '../components/HeadingBar'
-import { NavBar } from '../components/nav/NavBar'
+import { NavBar } from '../components/nav/NavBar.jsx'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
 import Spinner from '../components/Spinner'
 import { GET_MINISTRIES, BACENTA_DROPDOWN } from '../queries/ListQueries'
 import { ChurchContext } from '../contexts/ChurchContext'
 import { MemberContext } from '../contexts/MemberContext'
-import PlusSign from '../components/buttons/PlusSign'
-import MinusSign from '../components/buttons/MinusSign'
+import PlusSign from '../components/buttons/PlusSign.jsx'
+import MinusSign from '../components/buttons/MinusSign.jsx'
 
 export const CreateMember = () => {
   const initialValues = {
@@ -71,12 +76,7 @@ export const CreateMember = () => {
     { key: 'Bishop', value: 'Bishop' },
   ]
 
-  const {
-    phoneRegExp,
-    parsePhoneNum,
-    makeSelectOptions,
-    clickCard,
-  } = useContext(ChurchContext)
+  const { clickCard } = useContext(ChurchContext)
   const { setMemberId } = useContext(MemberContext)
 
   const validationSchema = Yup.object({
@@ -88,12 +88,12 @@ export const CreateMember = () => {
     dob: Yup.string().required('Date of Birth is a required field'),
     phoneNumber: Yup.string()
       .matches(
-        phoneRegExp,
+        PHONE_NUM_REGEX_VALIDATION,
         `Phone Number must start with + and country code (eg. '+233')`
       )
       .required('Phone Number is required'),
     whatsappNumber: Yup.string().matches(
-      phoneRegExp,
+      PHONE_NUM_REGEX_VALIDATION,
       `Phone Number must start with + and country code (eg. '+233')`
     ),
     bacenta: Yup.string().required('Bacenta is a required field'),

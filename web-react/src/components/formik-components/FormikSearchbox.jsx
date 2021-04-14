@@ -3,9 +3,9 @@ import Autosuggest from 'react-autosuggest'
 import './react-autosuggest.css'
 import { useQuery } from '@apollo/client'
 import { ErrorMessage } from 'formik'
-import TextError from './TextError'
+import TextError from './TextError.jsx'
 import { useHistory } from 'react-router-dom'
-import { GLOBAL_SEARCH } from '../../queries/SearchQuery'
+import { GLOBAL_SEARCH } from '../../queries/SearchQuery.js'
 import { ChurchContext } from '../../contexts/ChurchContext'
 
 function FormikSearchbox(props) {
@@ -23,6 +23,7 @@ function FormikSearchbox(props) {
       searchKey: debouncedText.trim(),
     },
     onCompleted: (data) => {
+      
       combinedData = [
         ...data.globalMemberSearch,
         ...data.globalCampusSearch,

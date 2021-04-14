@@ -1,5 +1,5 @@
 import React from 'react'
-import { NavBar } from './nav/NavBar'
+import { NavBar } from './nav/NavBar.jsx'
 import SpinnerPage from '../components/SpinnerPage'
 
 export const ErrorScreen = () => {

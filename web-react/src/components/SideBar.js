@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from 'react'
 import { useLocation, useHistory } from 'react-router-dom'
 import { Formik, Form } from 'formik'
-import FormikControl from '../components/formik-components/FormikControl'
+import FormikControl from '../components/formik-components/FormikControl.jsx'
 import { GET_MINISTRIES } from '../queries/ListQueries'
 import { ChurchContext } from '../contexts/ChurchContext'
 import './SideBar.css'

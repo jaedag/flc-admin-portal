@@ -1,8 +1,8 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import { Field, ErrorMessage } from 'formik'
-import TextError from './TextError'
+import { makeSelectOptions } from '../../global-utils'
+import TextError from './TextError.jsx'
 import { useQuery } from '@apollo/client'
-import { ChurchContext } from '../../contexts/ChurchContext'
 
 function SelectWithQuery(props) {
   const {
@@ -16,7 +16,6 @@ function SelectWithQuery(props) {
     defaultOption,
     ...rest
   } = props
-  const { makeSelectOptions } = useContext(ChurchContext)
 
   const { data } = useQuery(optionsQuery, {
     variables: {

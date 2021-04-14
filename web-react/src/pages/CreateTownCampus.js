@@ -3,7 +3,13 @@ import { useHistory } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/client'
 import { Formik, Form, FieldArray } from 'formik'
 import * as Yup from 'yup'
-import FormikControl from '../components/formik-components/FormikControl'
+import {
+  capitalise,
+  makeSelectOptions,
+  parsePhoneNum,
+  PHONE_NUM_REGEX_VALIDATION,
+} from '../global-utils'
+import FormikControl from '../components/formik-components/FormikControl.jsx'
 import {
   GET_BISHOPS,
   GET_TOWNS,
@@ -14,24 +20,16 @@ import {
   CREATE_TOWN_MUTATION,
   CREATE_CAMPUS_MUTATION,
 } from '../queries/CreateMutations'
-import { NavBar } from '../components/nav/NavBar'
+import { NavBar } from '../components/nav/NavBar.jsx'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
 import { ChurchContext } from '../contexts/ChurchContext'
-import PlusSign from '../components/buttons/PlusSign'
-import MinusSign from '../components/buttons/MinusSign'
+import PlusSign from '../components/buttons/PlusSign.jsx'
+import MinusSign from '../components/buttons/MinusSign.jsx'
 
 function AddTownCampus() {
-  const {
-    church,
-    capitalise,
-    makeSelectOptions,
-    parsePhoneNum,
-    phoneRegExp,
-    bishopId,
-    setTownId,
-    setCampusId,
-    setBishopId,
-  } = useContext(ChurchContext)
+  const { church, bishopId, setTownId, setCampusId, setBishopId } = useContext(
+    ChurchContext
+  )
 
   const history = useHistory()
 
@@ -48,7 +46,7 @@ function AddTownCampus() {
       `${capitalise(church.church)} Name is a required field`
     ),
     leaderWhatsapp: Yup.string().matches(
-      phoneRegExp,
+      PHONE_NUM_REGEX_VALIDATION,
       `Phone Number must start with + and country code (eg. '+233')`
     ),
   })

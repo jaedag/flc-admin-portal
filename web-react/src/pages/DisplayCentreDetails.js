@@ -1,9 +1,9 @@
 import React, { useContext } from 'react'
 import { useQuery } from '@apollo/client'
 import { DisplayChurchDetails } from '../components/DisplayChurchDetails'
-import { NavBar } from '../components/nav/NavBar'
+import { NavBar } from '../components/nav/NavBar.jsx'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
-import { DISPLAY_CENTRE } from '../queries/DisplayQueries'
+import { DISPLAY_CENTRE } from '../queries/ReadQueries'
 import { ChurchContext } from '../contexts/ChurchContext'
 
 export const DisplayCentreDetails = () => {

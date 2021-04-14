@@ -1,0 +1,98 @@
+//Global Constants
+export const PHONE_NUM_REGEX_VALIDATION = /^[+][(]{0,1}[1-9]{1,4}[)]{0,1}[-\s/0-9]*$/
+export const MONTH_NAMES = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'June',
+  'July',
+  'Aug',
+  'Sept',
+  'Oct',
+  'Nov',
+  'Dec',
+]
+
+export const capitalise = (str) => {
+  return str?.charAt(0).toUpperCase() + str?.slice(1)
+}
+export const plural = (church) => {
+  switch (church) {
+    case 'town':
+      return 'towns'
+    case 'campus':
+      return 'campuses'
+    case 'senior high school':
+      return 'senior high schools'
+    default:
+      return
+  }
+}
+
+export const parsePhoneNum = (phoneNumber) => {
+  return phoneNumber
+    .replace(/\s/g, '')
+    .replace('+', '')
+    .replace('(', '')
+    .replace(')', '')
+}
+
+export const makeSelectOptions = (data) => {
+  return data.map((data) => ({
+    value: data.id,
+    key: data.name ? data.name : data.firstName + ' ' + data.lastName,
+  }))
+}
+
+export const parseDate = (date) => {
+  //Receives the current date and returns text "Today, Yesterday,etc"
+
+  // Get today's date
+  let todaysDate = new Date()
+
+  // Create date from input value
+  let inputDate = new Date(date)
+
+  // call setHours to take the time out of the comparison
+  if (inputDate.toDateString() === todaysDate.toDateString()) {
+    // Date equals today's date
+    return 'Today'
+  } else if (inputDate.getDate() === todaysDate.getDate() - 1) {
+    // Date equals yesterday's date
+    return 'Yesterday'
+  }
+  return inputDate.toDateString()
+}
+
+export const getNameWithTitle = (displayMember) => {
+  let displayName = {
+    name: `${displayMember.firstName} ${displayMember.lastName}`,
+    title: '',
+  }
+
+  if (displayMember.title.length) {
+    if (displayMember.gender.gender === 'Female') {
+      switch (displayMember.title[0].Title.title) {
+        case 'Pastor':
+          displayName.title = 'Lady Pastor'
+          break
+        case 'Reverend':
+          displayName.title = 'Lady Reverend'
+          break
+        case 'Bishop':
+          displayName.title = 'Elect Mother'
+          break
+        default:
+          break
+      }
+    } else {
+      displayName.title = displayMember.title[0].Title.title
+    }
+
+    return `${displayName.title} ${displayName.name}`
+  } else {
+    return displayName.name
+  }
+}

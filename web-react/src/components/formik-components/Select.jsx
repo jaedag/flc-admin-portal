@@ -1,6 +1,6 @@
 import React from 'react'
 import { Field, ErrorMessage } from 'formik'
-import TextError from './TextError'
+import TextError from './TextError.jsx'
 
 function Select(props) {
   const { label, name, options, defaultOption, ...rest } = props

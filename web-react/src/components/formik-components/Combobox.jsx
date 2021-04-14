@@ -3,16 +3,16 @@ import Autosuggest from 'react-autosuggest'
 import './react-autosuggest.css'
 import { useQuery } from '@apollo/client'
 import { ErrorMessage } from 'formik'
-import TextError from './TextError'
+import TextError from './TextError.jsx'
 
-function Combobox2(props) {
+function Combobox(props) {
   const {
     label,
     name,
     dataset,
-    queryVariable1,
-    queryVariable2,
-    variable1,
+    modifier,
+    initValue,
+    queryVariable,
     suggestionText,
     suggestionID,
     placeholder,
@@ -20,13 +20,12 @@ function Combobox2(props) {
     setFieldValue,
   } = props
 
-  const [searchString, setSearchString] = useState('')
+  const [searchString, setSearchString] = useState(initValue ? initValue : '')
   const [suggestions, setSuggestions] = useState([])
 
   const { data } = useQuery(optionsQuery, {
     variables: {
-      [`${queryVariable1}`]: variable1,
-      [`${queryVariable2}`]: searchString,
+      [`${queryVariable}`]: searchString,
     },
   })
 
@@ -59,6 +58,9 @@ function Combobox2(props) {
               data[`${dataset}`].map((row) => ({
                 name: row[`${suggestionText}`],
                 id: row[`${suggestionID}`],
+                centre: row.centre,
+                campus: row.campus,
+                town: row.town,
               }))
             )
           } catch (error) {
@@ -73,7 +75,11 @@ function Combobox2(props) {
             event.preventDefault()
           }
           setSearchString(suggestion.name)
-          setFieldValue(`${name}`, suggestion.id)
+          if (modifier === 'id-only') {
+            setFieldValue(`${name}`, suggestion.id)
+          } else {
+            setFieldValue(`${name}`, suggestion)
+          }
         }}
         getSuggestionValue={(suggestion) => suggestion.name}
         highlightFirstSuggestion={true}
@@ -86,4 +92,4 @@ function Combobox2(props) {
   )
 }
 
-export default Combobox2
+export default Combobox

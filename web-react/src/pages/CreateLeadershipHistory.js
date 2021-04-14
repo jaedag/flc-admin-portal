@@ -3,16 +3,16 @@ import { useHistory } from 'react-router-dom'
 
 import { useQuery, useMutation } from '@apollo/client'
 import { Formik, Form, FieldArray } from 'formik'
-import FormikControl from '../components/formik-components/FormikControl'
+import FormikControl from '../components/formik-components/FormikControl.jsx'
 
 import { ADD_LEADER_HISTORY_MUTATION } from '../queries/CreateMutations'
-import { DISPLAY_MEMBER } from '../queries/DisplayQueries'
+import { DISPLAY_MEMBER } from '../queries/ReadQueries'
 import { HeadingBar } from '../components/HeadingBar'
-import { NavBar } from '../components/nav/NavBar'
+import { NavBar } from '../components/nav/NavBar.jsx'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
 import { ChurchContext } from '../context/ChurchContext'
-import PlusSign from '../components/buttons/PlusSign'
-import MinusSign from '../components/buttons/MinusSign'
+import PlusSign from '../components/buttons/PlusSign.jsx'
+import MinusSign from '../components/buttons/MinusSign.jsx'
 
 export const AddLeadershipHistory = () => {
   const initialValues = {

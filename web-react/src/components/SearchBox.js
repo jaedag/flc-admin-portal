@@ -1,6 +1,6 @@
 import React from 'react'
 import { Formik, Form } from 'formik'
-import FormikControl from './formik-components/FormikControl'
+import FormikControl from './formik-components/FormikControl.jsx'
 import * as Yup from 'yup'
 
 function SearchBox() {

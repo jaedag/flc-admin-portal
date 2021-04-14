@@ -231,18 +231,27 @@ type Query {
       statement: "MATCH ()<-[:HAS_CAMPUS|:HAS_TOWN]-(bishop:Member) RETURN DISTINCT bishop"
     )
   bishopsListCampus: [Member]
-    @cypher(statement: "MATCH ()<-[:HAS_CAMPUS]-(bishop:Member) RETURN DISTINCT bishop")
+    @cypher(
+      statement: "MATCH ()<-[:HAS_CAMPUS]-(bishop:Member) RETURN DISTINCT bishop"
+    )
   bishopsListTown: [Member]
-    @cypher(statement: "MATCH ()<-[:HAS_TOWN]-(bishop:Member) RETURN DISTINCT bishop")
-  ministryList: [Ministry] @cypher(statement: "MATCH (ministry:Ministry) RETURN ministry")
+    @cypher(
+      statement: "MATCH ()<-[:HAS_TOWN]-(bishop:Member) RETURN DISTINCT bishop"
+    )
+  ministryList: [Ministry]
+    @cypher(statement: "MATCH (ministry:Ministry) RETURN ministry")
   memberCount: Int!
     @cypher(statement: "MATCH (member:Member) RETURN COUNT(DISTINCT member)")
   centreCount: Int!
     @cypher(statement: "MATCH (centre:Centre) RETURN COUNT(DISTINCT centre)")
   bacentaCount: Int!
-    @cypher(statement: "MATCH (bacenta:Bacenta) RETURN COUNT( DISTINCT bacenta)")
+    @cypher(
+      statement: "MATCH (bacenta:Bacenta) RETURN COUNT( DISTINCT bacenta)"
+    )
   federalPastorList(id: ID): [Member]
-    @cypher(statement: "MATCH (:Title)<-[:HAS_TITLE]-(member:Member) RETURN member")
+    @cypher(
+      statement: "MATCH (:Title)<-[:HAS_TITLE]-(member:Member) RETURN member"
+    )
 
   #At the Episcopal Level
   bishopCampusTownCount(id: ID): Int!
@@ -416,7 +425,7 @@ type Query {
     @cypher(
       statement: """
       MATCH (bacenta:Bacenta)
-      WHERE (:Centre {id:$id})-[:HAS_BACENTA]->(b)
+      WHERE (:Centre {id:$id})-[:HAS_BACENTA]->(bacenta)
       RETURN bacenta
       """
     )
@@ -516,9 +525,9 @@ type Query {
   #Members
   # Display Member basecd on ID
   displayMember(id: ID): Member
-    @cypher(statement: "MATCH (m:Member {id:$id}) RETURN m")
+    @cypher(statement: "MATCH (member:Member {id:$id}) RETURN member")
   memberByEmail(email: String): Member
-    @cypher(statement: "MATCH (m:Member {email:$email}) RETURN m")
+    @cypher(statement: "MATCH (member:Member {email:$email}) RETURN member")
 
   #Fuzzy Search
   globalMemberSearch(searchKey: String!): [Member]
@@ -532,7 +541,7 @@ type Query {
       OR toLower(member.firstName) CONTAINS toLower($searchKey)
       OR toLower(member.lastName) CONTAINS toLower($searchKey)
       OR toLower(member.firstName+ " " + member.lastName) CONTAINS toLower($searchKey)
-      RETURN m
+      RETURN member
       """
     )
   globalBacentaSearch(searchKey: String!): [Bacenta]
@@ -733,7 +742,7 @@ type Mutation {
        MATCH (leader:Member {whatsappNumber: $lWhatsappNumber})
        MATCH (campusTown {id:$townCampusId}) WHERE campusTown:Town OR campusTown:Campus
        UNWIND labels(campusTown) AS typename
-       
+
        CREATE (log:HistoryLog:ServiceLog)
         SET
          log.id = apoc.create.uuid(),
@@ -1046,9 +1055,9 @@ type Mutation {
        WITH log,bacenta
        CALL{
          WITH log
-         WITH log WHERE $newLeader IS NOT NULL
+         WITH log WHERE $newLeaderId IS NOT NULL
       OPTIONAL MATCH (oldLeader:Member {id: $oldLeaderId})
-       MATCH (newLeader:Member {id: $newLeader})
+       MATCH (newLeader:Member {id: $newLeaderId})
          SET log :ServiceLog
          WITH log, newLeader, oldLeader
        OPTIONAl MATCH ()-[r0:HAS_HISTORY]->(log)

@@ -3,8 +3,13 @@ import { useHistory } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/client'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
-import FormikControl from '../components/formik-components/FormikControl'
-
+import {
+  capitalise,
+  makeSelectOptions,
+  parsePhoneNum,
+  PHONE_NUM_REGEX_VALIDATION,
+} from '../global-utils'
+import FormikControl from '../components/formik-components/FormikControl.jsx'
 import {
   GET_CENTRE_BACENTAS,
   GET_CAMPUS_CENTRES,
@@ -16,27 +21,19 @@ import {
   ADD_BACENTA_CENTRE,
   REMOVE_BACENTA_CENTRE,
   UPDATE_BACENTA,
-} from '../queries/UpdateMutations'
-import { NavBar } from '../components/nav/NavBar'
+} from '../queries//UpdateMutations'
+import { NavBar } from '../components/nav/NavBar.jsx'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
 import { ChurchContext } from '../contexts/ChurchContext'
-import { DISPLAY_BACENTA } from '../queries/DisplayQueries'
+import { DISPLAY_BACENTA } from '../queries/ReadQueries'
 import Spinner from '../components/Spinner'
 import { LOG_BACENTA_HISTORY } from '../queries/LogMutations'
 import { MemberContext } from '../contexts/MemberContext'
 
 export const UpdateBacenta = () => {
-  const {
-    church,
-    makeSelectOptions,
-    parsePhoneNum,
-    capitalise,
-    phoneRegExp,
-    bishopId,
-    centreId,
-    setCentreId,
-    bacentaId,
-  } = useContext(ChurchContext)
+  const { church, bishopId, centreId, setCentreId, bacentaId } = useContext(
+    ChurchContext
+  )
   const { currentUser } = useContext(MemberContext)
 
   let townCampusIdVar
@@ -77,7 +74,7 @@ export const UpdateBacenta = () => {
       `${capitalise(church.subChurch)} Name is a required field`
     ),
     leaderWhatsapp: Yup.string().matches(
-      phoneRegExp,
+      PHONE_NUM_REGEX_VALIDATION,
       `Phone Number must start with + and country code (eg. '+233')`
     ),
   })

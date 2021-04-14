@@ -3,11 +3,12 @@ import { useLocation } from 'react-router-dom'
 import SearchBox from '../SearchBox'
 import UserProfile from '../UserProfile'
 import { ChurchContext } from '../../contexts/ChurchContext'
-import NavLink from './NavLink'
+import NavLink from './NavLink.jsx'
 import './NavBar.css'
+import { capitalise } from '../../global-utils'
 
 export const NavBar = () => {
-  const { church, capitalise, setFilters } = useContext(ChurchContext)
+  const { church, setFilters } = useContext(ChurchContext)
   const location = useLocation()
 
   const atHome = church.church && location.pathname !== '/'

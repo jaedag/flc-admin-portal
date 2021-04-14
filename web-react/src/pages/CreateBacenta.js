@@ -3,7 +3,13 @@ import { useHistory } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/client'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
-import FormikControl from '../components/formik-components/FormikControl'
+import {
+  capitalise,
+  makeSelectOptions,
+  parsePhoneNum,
+  PHONE_NUM_REGEX_VALIDATION,
+} from '../global-utils'
+import FormikControl from '../components/formik-components/FormikControl.jsx'
 
 import {
   GET_CAMPUSES,
@@ -12,7 +18,7 @@ import {
   GET_TOWNS,
 } from '../queries/ListQueries'
 import { CREATE_BACENTA_MUTATION } from '../queries/CreateMutations'
-import { NavBar } from '../components/nav/NavBar'
+import { NavBar } from '../components/nav/NavBar.jsx'
 import { ChurchContext } from '../contexts/ChurchContext'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
 import Spinner from '../components/Spinner'
@@ -29,15 +35,7 @@ export const CreateBacenta = () => {
     venueLongitude: '',
   }
 
-  const {
-    church,
-    capitalise,
-    makeSelectOptions,
-    parsePhoneNum,
-    bishopId,
-    setBacentaId,
-    phoneRegExp,
-  } = useContext(ChurchContext)
+  const { church, bishopId, setBacentaId } = useContext(ChurchContext)
 
   let townCampusIdVar
   const serviceDayOptions = [
@@ -53,7 +51,7 @@ export const CreateBacenta = () => {
     leaderName: Yup.string().required('This is a required field'),
     leaderWhatsapp: Yup.string()
       .matches(
-        phoneRegExp,
+        PHONE_NUM_REGEX_VALIDATION,
         `Phone Number must start with + and country code (eg. '+233')`
       )
       .required('Phone Number is required'),
@@ -131,16 +129,10 @@ export const CreateBacenta = () => {
                             className="form-control"
                             control="select"
                             name="townSelect"
-                            options={
-                              church.church === 'town'
-                                ? townOptions
-                                : campusOptions
-                            }
+                            options={townOptions ?? campusOptions}
                             onChange={(e) => {
                               formik.setFieldValue('townSelect', e.target.value)
                               townCampusIdVar = e.target.value
-
-                              console.log('Town', townCampusIdVar)
                             }}
                             defaultOption={`Select a ${capitalise(
                               church.church

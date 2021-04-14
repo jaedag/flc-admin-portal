@@ -25,6 +25,8 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-optional-chaining": "^7.13.8",
+    "@testing-library/jest-dom": "^5.11.10",
+    "@testing-library/react": "^11.2.6",
     "http-proxy-middleware": "^0.20.0"
   },
   "browserslist": [

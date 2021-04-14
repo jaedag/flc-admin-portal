@@ -1,13 +1,14 @@
 import React, { useContext } from 'react'
 import { useQuery } from '@apollo/client'
+import { capitalise } from '../global-utils'
 import { DisplayChurchDetails } from '../components/DisplayChurchDetails'
-import { NavBar } from '../components/nav/NavBar'
+import { NavBar } from '../components/nav/NavBar.jsx'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
-import { DISPLAY_TOWN, DISPLAY_CAMPUS } from '../queries/DisplayQueries'
+import { DISPLAY_TOWN, DISPLAY_CAMPUS } from '../queries/ReadQueries'
 import { ChurchContext } from '../contexts/ChurchContext'
 
 export const DisplayCampusTownDetails = () => {
-  const { church, capitalise, townId, campusId } = useContext(ChurchContext)
+  const { church, townId, campusId } = useContext(ChurchContext)
 
   const { data: townData, loading: townLoading } = useQuery(DISPLAY_TOWN, {
     variables: { id: townId },

@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/client'
 import { Formik, Form, FieldArray } from 'formik'
 import * as Yup from 'yup'
-import FormikControl from '../components/formik-components/FormikControl'
+import FormikControl from '../components/formik-components/FormikControl.jsx'
 
 import {
   GET_CAMPUSES,
@@ -11,13 +11,19 @@ import {
   BISHOP_BACENTA_DROPDOWN,
   GET_CAMPUS_CENTRES,
   GET_TOWN_CENTRES,
-} from '../queries/ListQueries'
+} from '../queries/ListQueries.js'
 import { CREATE_CENTRE_MUTATION } from '../queries/CreateMutations'
-import { NavBar } from '../components/nav/NavBar'
+import { NavBar } from '../components/nav/NavBar.jsx'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
 import { ChurchContext } from '../contexts/ChurchContext'
-import PlusSign from '../components/buttons/PlusSign'
-import MinusSign from '../components/buttons/MinusSign'
+import PlusSign from '../components/buttons/PlusSign.jsx'
+import MinusSign from '../components/buttons/MinusSign.jsx'
+import {
+  capitalise,
+  makeSelectOptions,
+  parsePhoneNum,
+  PHONE_NUM_REGEX_VALIDATION,
+} from '../global-utils'
 
 function CreateCentre() {
   const initialValues = {
@@ -28,17 +34,9 @@ function CreateCentre() {
     bacentas: [''],
   }
 
-  const {
-    church,
-    capitalise,
-    phoneRegExp,
-    parsePhoneNum,
-    makeSelectOptions,
-    bishopId,
-    setTownId,
-    setCampusId,
-    setCentreId,
-  } = useContext(ChurchContext)
+  const { church, bishopId, setTownId, setCampusId, setCentreId } = useContext(
+    ChurchContext
+  )
   const history = useHistory()
 
   const validationSchema = Yup.object({
@@ -46,7 +44,7 @@ function CreateCentre() {
     leaderWhatsapp: Yup.string()
       .required('Phone Number is required')
       .matches(
-        phoneRegExp,
+        PHONE_NUM_REGEX_VALIDATION,
         `Phone Number must start with + and country code (eg. '+233')`
       ),
   })

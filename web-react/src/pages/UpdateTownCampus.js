@@ -3,7 +3,13 @@ import { useHistory } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/client'
 import { Formik, Form, FieldArray } from 'formik'
 import * as Yup from 'yup'
-import FormikControl from '../components/formik-components/FormikControl'
+import {
+  capitalise,
+  makeSelectOptions,
+  parsePhoneNum,
+  PHONE_NUM_REGEX_VALIDATION,
+} from '../global-utils'
+import FormikControl from '../components/formik-components/FormikControl.jsx'
 
 import {
   GET_BISHOPS,
@@ -25,32 +31,23 @@ import {
   REMOVE_CENTRE_TOWN,
   ADD_CAMPUS_CENTRES,
   ADD_TOWN_CENTRES,
-} from '../queries/UpdateMutations'
-import { NavBar } from '../components/nav/NavBar'
+} from '../queries/UpdateMutations.js'
+import { NavBar } from '../components/nav/NavBar.jsx'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
 import { ChurchContext } from '../contexts/ChurchContext'
-import { DISPLAY_CAMPUS, DISPLAY_TOWN } from '../queries/DisplayQueries'
-import PlusSign from '../components/buttons/PlusSign'
-import MinusSign from '../components/buttons/MinusSign'
+import { DISPLAY_CAMPUS, DISPLAY_TOWN } from '../queries/ReadQueries'
+import PlusSign from '../components/buttons/PlusSign.jsx'
+import MinusSign from '../components/buttons/MinusSign.jsx'
 import {
-  LOG_CAMPUS_HISTORY,
+  LOG_CAMPUSTOWN_HISTORY,
   LOG_CENTRE_HISTORY,
-  LOG_TOWN_HISTORY,
 } from '../queries/LogMutations'
 import { MemberContext } from '../contexts/MemberContext'
 
 export const UpdateTownCampus = () => {
-  const {
-    church,
-    parsePhoneNum,
-    capitalise,
-    makeSelectOptions,
-    phoneRegExp,
-    campusId,
-    townId,
-    bishopId,
-    setBishopId,
-  } = useContext(ChurchContext)
+  const { church, campusId, townId, bishopId, setBishopId } = useContext(
+    ChurchContext
+  )
   const { currentUser } = useContext(MemberContext)
 
   const { data: campusData, loading: campusLoading } = useQuery(
@@ -68,11 +65,7 @@ export const UpdateTownCampus = () => {
 
   const history = useHistory()
 
-  const campusTownData = campusData
-    ? campusData.displayCampus
-    : townData
-    ? townData.displayTown
-    : ''
+  const campusTownData = campusData?.displayCampus ?? townData?.displayTown
 
   const initialValues = {
     campusTownName: campusTownData?.name,
@@ -87,16 +80,16 @@ export const UpdateTownCampus = () => {
       `${capitalise(church.church)} Name is a required field`
     ),
     leaderWhatsapp: Yup.string().matches(
-      phoneRegExp,
+      PHONE_NUM_REGEX_VALIDATION,
       `Phone Number must start with + and country code (eg. '+233')`
     ),
   })
 
-  const [LogTownHistory] = useMutation(LOG_TOWN_HISTORY, {
-    refetchQueries: [{ query: DISPLAY_TOWN, variables: { id: townId } }],
-  })
-  const [LogCampusHistory] = useMutation(LOG_CAMPUS_HISTORY, {
-    refetchQueries: [{ query: DISPLAY_CAMPUS, variables: { id: campusId } }],
+  const [LogCampusTownHistory] = useMutation(LOG_CAMPUSTOWN_HISTORY, {
+    refetchQueries: [
+      { query: DISPLAY_CAMPUS, variables: { id: campusId } },
+      { query: DISPLAY_TOWN, variables: { id: townId } },
+    ],
   })
   const [LogCentreHistory] = useMutation(LOG_CENTRE_HISTORY, {
     refetchQueries: [
@@ -116,10 +109,10 @@ export const UpdateTownCampus = () => {
           parsePhoneNum(newLeaderInfo.whatsappNumber) !==
           parsePhoneNum(initialValues.leaderWhatsapp)
         ) {
-          LogTownHistory({
+          LogCampusTownHistory({
             variables: {
               townId: townId,
-              leaderId: newLeaderInfo.id,
+              newLeaderId: newLeaderInfo.id,
               oldLeaderId: townData?.displayTown.leader.id,
               oldBishopId: '',
               newBishopId: '',
@@ -155,10 +148,10 @@ export const UpdateTownCampus = () => {
           parsePhoneNum(newLeaderInfo.whatsappNumber) !==
           parsePhoneNum(initialValues.leaderWhatsapp)
         ) {
-          LogCampusHistory({
+          LogCampusTownHistory({
             variables: {
-              campusId: campusId,
-              leaderId: newLeaderInfo.id,
+              campusTownId: campusId,
+              newLeaderId: newLeaderInfo.id,
               oldLeaderId: campusData?.displayCampus.leader.id,
               oldBishopId: '',
               newBishopId: '',
@@ -212,7 +205,7 @@ export const UpdateTownCampus = () => {
       LogCentreHistory({
         variables: {
           centreId: data.RemoveCentreCampus?.to.id,
-          leaderId: '',
+          newLeaderId: '',
           oldLeaderId: '',
           newCampusTownId: newCampusId,
           oldCampusTownId: oldCampusId,
@@ -248,7 +241,7 @@ export const UpdateTownCampus = () => {
       LogCentreHistory({
         variables: {
           centreId: data.RemoveCentreTown?.to.id,
-          leaderId: '',
+          newLeaderId: '',
           oldLeaderId: '',
           newCampusTownId: newTownId,
           oldCampusTownId: oldTownId,
@@ -268,10 +261,10 @@ export const UpdateTownCampus = () => {
         //If There is no old Bishop
         let recordIfNoOldBishop = `${initialValues.campusTownName} Campus has been moved to Bishop ${data.AddCampusBishop.from.firstName} ${data.AddCampusBishop.from.firstName}`
 
-        LogCampusHistory({
+        LogCampusTownHistory({
           variables: {
-            campusId: campusId,
-            leaderId: '',
+            campusTownId: campusId,
+            newLeaderId: '',
             oldLeaderId: '',
             newBishopId: data.AddCampusBishop.from.id,
             oldBishopId: campusData?.displayCampus?.bishop.id,
@@ -294,10 +287,10 @@ export const UpdateTownCampus = () => {
         to Bishop ${data.AddCampusBishop.from.firstName} ${data.AddCampusBishop.from.lastName} `
 
         //After Adding the campus to a bishop, then you log that change.
-        LogCampusHistory({
+        LogCampusTownHistory({
           variables: {
-            campusId: campusId,
-            leaderId: '',
+            campusTownId: campusId,
+            newLeaderId: '',
             oldLeaderId: '',
             newBishopId: data.AddCampusBishop.from.id,
             oldBishopId: campusData?.displayCampus?.bishop.id,
@@ -314,10 +307,10 @@ export const UpdateTownCampus = () => {
         //If There is no old Bishop
         let recordIfNoOldBishop = `${initialValues.campusTownName} Town has been moved to Bishop ${data.AddTownBishop.from.firstName} ${data.AddTownBishop.from.firstName}`
 
-        LogTownHistory({
+        LogCampusTownHistory({
           variables: {
             townId: townId,
-            leaderId: '',
+            newLeaderId: '',
             oldLeaderId: '',
             newBishopId: data.AddTownBishop.from.id,
             oldBishopId: townData?.displayTown?.bishop.id,
@@ -340,10 +333,10 @@ export const UpdateTownCampus = () => {
         to Bishop ${data.AddTownBishop.from.firstName} ${data.AddTownBishop.from.lastName} `
 
         //After Adding the campus to a bishop, then you log that change.
-        LogTownHistory({
+        LogCampusTownHistory({
           variables: {
             townId: townId,
-            leaderId: '',
+            newLeaderId: '',
             oldLeaderId: '',
             newBishopId: data.AddTownBishop.from.id,
             oldBishopId: townData?.displayTown?.bishop.id,
@@ -378,10 +371,10 @@ export const UpdateTownCampus = () => {
 
         //Log if Campus Name Changes
         if (values.campusTownName !== initialValues.campusTownName) {
-          LogCampusHistory({
+          LogCampusTownHistory({
             variables: {
-              campusId: campusId,
-              leaderId: '',
+              campusTownId: campusId,
+              newLeaderId: '',
               oldLeaderId: '',
               oldBishopId: '',
               newBishopId: '',
@@ -418,10 +411,10 @@ export const UpdateTownCampus = () => {
 
         //Log if Town Name Changes
         if (values.campusTownName !== initialValues.campusTownName) {
-          LogTownHistory({
+          LogCampusTownHistory({
             variables: {
               townId: townId,
-              leaderId: '',
+              newLeaderId: '',
               oldLeaderId: '',
               oldBishopId: '',
               newBishopId: '',
@@ -500,7 +493,7 @@ export const UpdateTownCampus = () => {
           LogCentreHistory({
             variables: {
               centreId: centre.id,
-              leaderId: '',
+              newLeaderId: '',
               oldLeaderId: '',
               newCampusTownId: church.church === 'campus' ? campusId : townId,
               oldCampusTownId: '',

@@ -3,8 +3,13 @@ import { useHistory } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/client'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
-import FormikControl from '../components/formik-components/FormikControl'
-
+import {
+  capitalise,
+  makeSelectOptions,
+  parsePhoneNum,
+  PHONE_NUM_REGEX_VALIDATION,
+} from '../global-utils'
+import FormikControl from '../components/formik-components/FormikControl.jsx'
 import {
   GET_CENTRE_BACENTAS,
   GET_CAMPUS_CENTRES,
@@ -16,27 +21,19 @@ import {
   ADD_BACENTA_CENTRE,
   REMOVE_BACENTA_CENTRE,
   UPDATE_BACENTA,
-} from '../queries/UpdateMutations'
-import { NavBar } from '../components/nav/NavBar'
+} from '../queries//UpdateMutations'
+import { NavBar } from '../components/nav/NavBar.jsx'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
 import { ChurchContext } from '../contexts/ChurchContext'
-import { DISPLAY_BACENTA } from '../queries/DisplayQueries'
+import { DISPLAY_BACENTA } from '../queries/ReadQueries'
 import Spinner from '../components/Spinner'
 import { LOG_BACENTA_HISTORY } from '../queries/LogMutations'
 import { MemberContext } from '../contexts/MemberContext'
 
 export const UpdateBacenta = () => {
-  const {
-    church,
-    makeSelectOptions,
-    parsePhoneNum,
-    capitalise,
-    phoneRegExp,
-    bishopId,
-    centreId,
-    setCentreId,
-    bacentaId,
-  } = useContext(ChurchContext)
+  const { church, bishopId, centreId, setCentreId, bacentaId } = useContext(
+    ChurchContext
+  )
   const { currentUser } = useContext(MemberContext)
 
   let townCampusIdVar
@@ -55,19 +52,13 @@ export const UpdateBacenta = () => {
     bacentaName: bacentaData?.displayBacenta?.name,
     leaderName: `${bacentaData?.displayBacenta?.leader.firstName} ${bacentaData?.displayBacenta?.leader.lastName} `,
     leaderWhatsapp: `+${bacentaData?.displayBacenta?.leader.whatsappNumber}`,
-
     townCampusSelect:
-      church.church === 'town'
-        ? bacentaData?.displayBacenta?.centre?.town?.id
-        : bacentaData?.displayBacenta?.centre?.campus?.id,
+      bacentaData?.displayBacenta?.centre?.town?.id ??
+      bacentaData?.displayBacenta?.centre?.campus?.id,
     centreSelect: bacentaData?.displayBacenta?.centre?.id,
     meetingDay: bacentaData?.displayBacenta?.meetingDay?.day,
-    venueLatitude: bacentaData?.displayBacenta?.location?.latitude
-      ? bacentaData?.displayBacenta?.location?.latitude
-      : '',
-    venueLongitude: bacentaData?.displayBacenta?.location?.longitude
-      ? bacentaData?.displayBacenta?.location?.longitude
-      : '',
+    venueLatitude: bacentaData?.displayBacenta?.location?.latitude ?? '',
+    venueLongitude: bacentaData?.displayBacenta?.location?.longitude ?? '',
   }
 
   const serviceDayOptions = [
@@ -83,7 +74,7 @@ export const UpdateBacenta = () => {
       `${capitalise(church.subChurch)} Name is a required field`
     ),
     leaderWhatsapp: Yup.string().matches(
-      phoneRegExp,
+      PHONE_NUM_REGEX_VALIDATION,
       `Phone Number must start with + and country code (eg. '+233')`
     ),
   })
@@ -112,7 +103,7 @@ export const UpdateBacenta = () => {
           variables: {
             bacentaId: bacentaId,
             oldLeaderId: bacentaData?.displayBacenta?.leader.id,
-            leaderId: newLeaderInfo.id,
+            newLeaderId: newLeaderInfo.id,
             oldCentreId: '',
             newCentreId: '',
             loggedBy: currentUser.id,
@@ -134,18 +125,21 @@ export const UpdateBacenta = () => {
 
   const [AddBacentaCentre] = useMutation(ADD_BACENTA_CENTRE, {
     onCompleted: (newCentre) => {
-      //Remove Link to the old Bacenta
-      RemoveBacentaCentre({
-        variables: {
-          centreId: initialValues.centreSelect,
-          bacentaId: bacentaId,
-        },
-      })
+      if (initialValues.centreSelect) {
+        //Remove Link to the old Bacenta
+        RemoveBacentaCentre({
+          variables: {
+            centreId: initialValues.centreSelect,
+            bacentaId: bacentaId,
+          },
+        })
+      }
+      console.log(newCentre)
       //After Adding the bacenta to a centre, then you log that change.
       LogBacentaHistory({
         variables: {
           bacentaId: bacentaId,
-          leaderId: '',
+          newLeaderId: '',
           oldLeaderId: '',
           newCentreId: newCentre.AddBacentaCentre.from
             ? newCentre.AddBacentaCentre.from.id
@@ -162,7 +156,7 @@ export const UpdateBacenta = () => {
 
   if (bacentaLoading) {
     return <LoadingScreen />
-  } else if (bacentaData) {
+  } else if (bacentaData && campusListData && townListData) {
     const townOptions = townListData
       ? makeSelectOptions(townListData.townList)
       : []
@@ -200,7 +194,7 @@ export const UpdateBacenta = () => {
         LogBacentaHistory({
           variables: {
             bacentaId: bacentaId,
-            leaderId: '',
+            newLeaderId: '',
             oldLeaderId: '',
             oldCentreId: '',
             newCentreId: '',
@@ -215,7 +209,7 @@ export const UpdateBacenta = () => {
         LogBacentaHistory({
           variables: {
             bacentaId: bacentaId,
-            leaderId: '',
+            newLeaderId: '',
             oldLeaderId: '',
             oldCentreId: '',
             newCentreId: '',
@@ -233,7 +227,7 @@ export const UpdateBacenta = () => {
         LogBacentaHistory({
           variables: {
             bacentaId: bacentaId,
-            leaderId: '',
+            newLeaderId: '',
             oldLeaderId: '',
             oldCentreId: '',
             newCentreId: '',
@@ -272,9 +266,7 @@ export const UpdateBacenta = () => {
                             name="townCampusSelect"
                             label={`Select a ${capitalise(church.church)}`}
                             options={
-                              church.church === 'town'
-                                ? townOptions
-                                : campusOptions
+                              townOptions.length ? townOptions : campusOptions
                             }
                             onChange={(e) => {
                               formik.setFieldValue(
@@ -305,9 +297,7 @@ export const UpdateBacenta = () => {
                                 : 'campusCentreList'
                             }
                             varValue={
-                              townCampusIdVar
-                                ? townCampusIdVar
-                                : initialValues.townCampusSelect
+                              townCampusIdVar ?? initialValues.townCampusSelect
                             }
                             onChange={(e) => {
                               formik.setFieldValue(

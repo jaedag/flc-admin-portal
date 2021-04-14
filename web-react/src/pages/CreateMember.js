@@ -3,17 +3,25 @@ import { useHistory } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/client'
 import { Formik, Form, FieldArray } from 'formik'
 import * as Yup from 'yup'
-import FormikControl from '../components/formik-components/FormikControl'
-import { CREATE_MEMBER_MUTATION } from '../queries/CreateMutations'
+import {
+  makeSelectOptions,
+  parsePhoneNum,
+  PHONE_NUM_REGEX_VALIDATION,
+} from '../global-utils'
+import FormikControl from '../components/formik-components/FormikControl.jsx'
+import {
+  ADD_MEMBER_TITLE_MUTATION,
+  CREATE_MEMBER_MUTATION,
+} from '../queries/CreateMutations'
 import { HeadingBar } from '../components/HeadingBar'
-import { NavBar } from '../components/nav/NavBar'
+import { NavBar } from '../components/nav/NavBar.jsx'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
 import Spinner from '../components/Spinner'
 import { GET_MINISTRIES, BACENTA_DROPDOWN } from '../queries/ListQueries'
 import { ChurchContext } from '../contexts/ChurchContext'
 import { MemberContext } from '../contexts/MemberContext'
-import PlusSign from '../components/buttons/PlusSign'
-import MinusSign from '../components/buttons/MinusSign'
+import PlusSign from '../components/buttons/PlusSign.jsx'
+import MinusSign from '../components/buttons/MinusSign.jsx'
 
 export const CreateMember = () => {
   const initialValues = {
@@ -68,9 +76,7 @@ export const CreateMember = () => {
     { key: 'Bishop', value: 'Bishop' },
   ]
 
-  const { phoneRegExp, parsePhoneNum, makeSelectOptions } = useContext(
-    ChurchContext
-  )
+  const { clickCard } = useContext(ChurchContext)
   const { setMemberId } = useContext(MemberContext)
 
   const validationSchema = Yup.object({
@@ -82,12 +88,12 @@ export const CreateMember = () => {
     dob: Yup.string().required('Date of Birth is a required field'),
     phoneNumber: Yup.string()
       .matches(
-        phoneRegExp,
+        PHONE_NUM_REGEX_VALIDATION,
         `Phone Number must start with + and country code (eg. '+233')`
       )
       .required('Phone Number is required'),
     whatsappNumber: Yup.string().matches(
-      phoneRegExp,
+      PHONE_NUM_REGEX_VALIDATION,
       `Phone Number must start with + and country code (eg. '+233')`
     ),
     bacenta: Yup.string().required('Bacenta is a required field'),
@@ -101,8 +107,15 @@ export const CreateMember = () => {
     error: ministryListError,
   } = useQuery(GET_MINISTRIES)
 
+  const [AddMemberTitle] = useMutation(ADD_MEMBER_TITLE_MUTATION, {
+    onCompleted: (details) => {
+      console.log(details)
+    },
+  })
+
   const [CreateMember] = useMutation(CREATE_MEMBER_MUTATION, {
     onCompleted: (newMemberData) => {
+      clickCard(newMemberData.CreateMember)
       setMemberId(newMemberData.CreateMember.id)
     },
   })
@@ -133,6 +146,7 @@ export const CreateMember = () => {
   }
 
   const onSubmit = async (values, onSubmitProps) => {
+    const { setSubmitting, resetForm } = onSubmitProps
     // Variables that are not controlled by formik
     values.pictureUrl = image
 
@@ -140,7 +154,7 @@ export const CreateMember = () => {
     values.phoneNumber = parsePhoneNum(values.phoneNumber)
     values.whatsappNumber = parsePhoneNum(values.whatsappNumber)
 
-    values.pastoralAppointment = values.pastoralAppointment.filter(
+    let pastoralAppointment = values.pastoralAppointment.filter(
       (pastoralAppointment) => {
         if (pastoralAppointment.date) {
           return pastoralAppointment
@@ -166,13 +180,24 @@ export const CreateMember = () => {
         bacenta: values.bacenta,
         ministry: values.ministry,
 
-        pastoralAppointment: values.pastoralAppointment,
-        pastoralHistory: values.pastoralHistory,
+        // pastoralAppointment: values.pastoralAppointment,
+        // pastoralHistory: values.pastoralHistory,
       },
+    }).then((res) => {
+      pastoralAppointment.forEach((apppointmentDetails) => {
+        AddMemberTitle({
+          variables: {
+            memberId: res.data.CreateMember.id,
+            title: apppointmentDetails.title,
+            status: true,
+            date: apppointmentDetails.date,
+          },
+        })
+      })
     })
 
-    onSubmitProps.setSubmitting(false)
-    onSubmitProps.resetForm()
+    setSubmitting(false)
+    resetForm()
     history.push('/member/displaydetails')
   }
 

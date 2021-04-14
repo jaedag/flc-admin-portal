@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth0 } from '@auth0/auth0-react'
-import { AuthButton } from './buttons/DashboardButton'
+import { AuthButton } from './buttons/DashboardButton.jsx'
 import './UserProfile.css'
 
 function UserProfile() {

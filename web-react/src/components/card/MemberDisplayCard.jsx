@@ -1,8 +1,8 @@
 import React, { useContext } from 'react'
 import { useHistory } from 'react-router-dom'
-import { ChurchContext } from '../contexts/ChurchContext'
-import user from '../img/user.png'
-import bussolid from '../img/bus-solid.svg'
+import { ChurchContext } from '../../contexts/ChurchContext'
+import user from '../../img/user.png'
+import bussolid from '../../img/bus-solid.svg'
 
 export const MemberDisplayCard = (props) => {
   const { member, ...rest } = props

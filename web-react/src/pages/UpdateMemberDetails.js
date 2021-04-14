@@ -3,25 +3,27 @@ import { useHistory } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/client'
 import { Formik, Form, FieldArray } from 'formik'
 import * as Yup from 'yup'
-import FormikControl from '../components/formik-components/FormikControl'
+import {
+  makeSelectOptions,
+  parsePhoneNum,
+  PHONE_NUM_REGEX_VALIDATION,
+} from '../global-utils'
+import FormikControl from '../components/formik-components/FormikControl.jsx'
 
-import { UPDATE_MEMBER_MUTATION } from '../queries/UpdateMutations'
-import { DISPLAY_MEMBER } from '../queries/DisplayQueries'
+import { UPDATE_MEMBER_MUTATION } from '../queries//UpdateMutations'
+import { DISPLAY_MEMBER } from '../queries/ReadQueries'
 import { HeadingBar } from '../components/HeadingBar'
-import { NavBar } from '../components/nav/NavBar'
+import { NavBar } from '../components/nav/NavBar.jsx'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
 import Spinner from '../components/Spinner'
 import { GET_MINISTRIES, BACENTA_DROPDOWN } from '../queries/ListQueries'
 import { MemberContext } from '../contexts/MemberContext'
-import { ChurchContext } from '../contexts/ChurchContext'
-import PlusSign from '../components/buttons/PlusSign'
-import MinusSign from '../components/buttons/MinusSign'
+import PlusSign from '../components/buttons/PlusSign.jsx'
+import MinusSign from '../components/buttons/MinusSign.jsx'
 
 export const UpdateMemberDetails = () => {
   const { memberId } = useContext(MemberContext)
-  const { phoneRegExp, parsePhoneNum, makeSelectOptions } = useContext(
-    ChurchContext
-  )
+
   const {
     data: memberData,
     error: memberError,
@@ -105,12 +107,12 @@ export const UpdateMemberDetails = () => {
     gender: Yup.string().required('This is a required field'),
     email: Yup.string().email('Please enter a valid email address'),
     phoneNumber: Yup.string().matches(
-      phoneRegExp,
+      PHONE_NUM_REGEX_VALIDATION,
       `Phone Number must start with + and country code (eg. '+233')`
     ),
     whatsappNumber: Yup.string()
       .matches(
-        phoneRegExp,
+        PHONE_NUM_REGEX_VALIDATION,
         `Phone Number must start with + and country code (eg. '+233')`
       )
       .required('WhatsApp Number is required'),

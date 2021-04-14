@@ -1,15 +1,17 @@
 import React, { useContext, useState } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import { useQuery } from '@apollo/client'
+import { memberFilter } from './member-filter-utils'
 import { ChurchContext } from '../contexts/ChurchContext'
 import Spinner from './Spinner'
 import { GET_BISHOP_MEMBERS } from '../queries/GridQueries'
 import userIcon from '../img/user.png'
-import { NavBar } from './nav/NavBar'
+import { NavBar } from './nav/NavBar.jsx'
 
 export const MemberTableMobile = () => {
-  const { memberFilter, filters, bishopId } = useContext(ChurchContext)
+  const { filters, bishopId } = useContext(ChurchContext)
   const [offset, setOffset] = useState(0)
+
   let numberOfRecords = 10
   const {
     data: memberData,

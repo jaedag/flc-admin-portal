@@ -328,6 +328,18 @@ export const GET_CENTRE_BACENTAS = gql`
           firstName
           lastName
         }
+        town {
+          id
+          bishop {
+            id
+          }
+        }
+        campus {
+          id
+          bishop {
+            id
+          }
+        }
       }
     }
   }

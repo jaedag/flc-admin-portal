@@ -1,12 +1,12 @@
 import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
-import { DetailsCard } from './card/DetailsCard'
+import { DetailsCard } from './card/DetailsCard.jsx'
 import { MemberContext } from '../contexts/MemberContext'
 import { ChurchContext } from '../contexts/ChurchContext'
-import { Timeline } from './timeline/Timeline'
-import { EditButton } from './buttons/EditButton'
-import { MemberDisplayCard } from '../components/MemberDisplayCard'
-import { ChurchButton } from '../components/buttons/ChurchButton'
+import { Timeline } from './timeline/Timeline.jsx'
+import { EditButton } from './buttons/EditButton.jsx'
+import { MemberDisplayCard } from './card/MemberDisplayCard'
+import { ChurchButton } from './buttons/ChurchButton.jsx'
 import './DisplayChurchDetails.css'
 
 export const DisplayChurchDetails = (props) => {

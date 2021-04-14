@@ -3,7 +3,13 @@ import { useHistory } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/client'
 import { Formik, Form, FieldArray } from 'formik'
 import * as Yup from 'yup'
-import FormikControl from '../components/formik-components/FormikControl'
+import {
+  capitalise,
+  makeSelectOptions,
+  parsePhoneNum,
+  PHONE_NUM_REGEX_VALIDATION,
+} from '../global-utils'
+import FormikControl from '../components/formik-components/FormikControl.jsx'
 
 import {
   BACENTA_DROPDOWN,
@@ -20,26 +26,22 @@ import {
   REMOVE_CENTRE_TOWN,
   REMOVE_CENTRE_CAMPUS,
   UPDATE_CENTRE_MUTATION,
-} from '../queries/UpdateMutations'
-import { NavBar } from '../components/nav/NavBar'
+} from '../queries//UpdateMutations'
+import { NavBar } from '../components/nav/NavBar.jsx'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
 import { ChurchContext } from '../contexts/ChurchContext'
-import { DISPLAY_CENTRE } from '../queries/DisplayQueries'
+import { DISPLAY_CENTRE } from '../queries/ReadQueries'
 import {
   LOG_CENTRE_HISTORY,
   LOG_BACENTA_HISTORY,
 } from '../queries/LogMutations'
-import PlusSign from '../components/buttons/PlusSign'
-import MinusSign from '../components/buttons/MinusSign'
+import PlusSign from '../components/buttons/PlusSign.jsx'
+import MinusSign from '../components/buttons/MinusSign.jsx'
 import { MemberContext } from '../contexts/MemberContext'
 
 export const UpdateCentre = () => {
   const {
     church,
-    parsePhoneNum,
-    capitalise,
-    makeSelectOptions,
-    phoneRegExp,
     centreId,
     townId,
     setTownId,
@@ -86,7 +88,7 @@ export const UpdateCentre = () => {
       `${capitalise(church.subChurch)} Name is a required field`
     ),
     leaderWhatsapp: Yup.string().matches(
-      phoneRegExp,
+      PHONE_NUM_REGEX_VALIDATION,
       `Phone Number must start with + and country code (eg. '+233')`
     ),
   })
@@ -111,7 +113,7 @@ export const UpdateCentre = () => {
         LogCentreHistory({
           variables: {
             centreId: centreId,
-            leaderId: newLeaderInfo.id,
+            newLeaderId: newLeaderInfo.id,
             oldLeaderId: centreData?.displayCentre?.leader.id,
             oldCampusTownId: '',
             newCampusTownId: '',
@@ -164,7 +166,7 @@ export const UpdateCentre = () => {
       LogBacentaHistory({
         variables: {
           bacentaId: data.RemoveBacentaCentre?.to.id,
-          leaderId: '',
+          newLeaderId: '',
           oldLeaderId: '',
           newCentreId: newCentreId,
           oldCentreId: oldCentreId,
@@ -192,7 +194,7 @@ export const UpdateCentre = () => {
         LogCentreHistory({
           variables: {
             centreId: centreId,
-            leaderId: '',
+            newLeaderId: '',
             oldLeaderId: '',
             newCampusTownId: newTown.AddCentreTown.from.id,
             oldCampusTownId: centreData?.displayCentre?.town.id,
@@ -223,7 +225,7 @@ export const UpdateCentre = () => {
         LogCentreHistory({
           variables: {
             centreId: centreId,
-            leaderId: '',
+            newLeaderId: '',
             oldLeaderId: '',
             newCampusTownId: newTown.AddCentreTown.from.id,
             oldCampusTownId: centreData?.displayCentre?.town.id,
@@ -247,7 +249,7 @@ export const UpdateCentre = () => {
         LogCentreHistory({
           variables: {
             centreId: centreId,
-            leaderId: '',
+            newLeaderId: '',
             oldLeaderId: '',
             newCampusTownId: newCampus.AddCentreCampus.from.id,
             oldCampusTownId: centreData?.displayCentre?.campus.id,
@@ -278,7 +280,7 @@ export const UpdateCentre = () => {
         LogCentreHistory({
           variables: {
             centreId: centreId,
-            leaderId: '',
+            newLeaderId: '',
             oldLeaderId: '',
             newCampusTownId: newCampus.AddCentreCampus.from.id,
             oldCampusTownId: centreData?.displayCentre?.campus.id,
@@ -326,7 +328,7 @@ export const UpdateCentre = () => {
         LogCentreHistory({
           variables: {
             centreId: centreId,
-            leaderId: '',
+            newLeaderId: '',
             oldLeaderId: '',
             oldCampusTownId: '',
             newCampusTownId: '',
@@ -339,6 +341,7 @@ export const UpdateCentre = () => {
       //Log If The TownCampus Changes
       if (values.campusTownSelect !== initialValues.campusTownSelect) {
         if (church.church === 'town') {
+          console.log(initialValues.campusTownSelect)
           RemoveCentreTown({
             variables: {
               campusId: initialValues.campusTownSelect,
@@ -405,7 +408,7 @@ export const UpdateCentre = () => {
           LogBacentaHistory({
             variables: {
               bacentaId: bacenta.id,
-              leaderId: '',
+              newLeaderId: '',
               oldLeaderId: '',
               newCentreId: centreId,
               oldCentreId: '',

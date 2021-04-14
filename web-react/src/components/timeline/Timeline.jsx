@@ -2,11 +2,12 @@ import React, { useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import './Timeline.css'
+import { parseDate } from '../../global-utils'
 
 export const Timeline = (props) => {
   const { record, limit, modifier } = props
 
-  const { parseDate, clickCard } = useContext(ChurchContext)
+  const { clickCard } = useContext(ChurchContext)
   const history = useHistory()
 
   if (!record) {

@@ -1,21 +1,17 @@
 import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { useQuery } from '@apollo/client'
+import { capitalise } from '../global-utils'
 import { DisplayChurchList } from '../components/DisplayChurchList'
-import { NavBar } from '../components/nav/NavBar'
+import { NavBar } from '../components/nav/NavBar.jsx'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
 import { GET_CAMPUS_CENTRES, GET_TOWN_CENTRES } from '../queries/ListQueries'
 import { ChurchContext } from '../contexts/ChurchContext'
 
 export const DisplayAllSontas = () => {
-  const {
-    capitalise,
-    church,
-    townId,
-    campusId,
-    setTownId,
-    setCampusId,
-  } = useContext(ChurchContext)
+  const { church, townId, campusId, setTownId, setCampusId } = useContext(
+    ChurchContext
+  )
 
   const { data: townCentreData, loading: townLoading } = useQuery(
     GET_TOWN_CENTRES,

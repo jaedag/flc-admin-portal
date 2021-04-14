@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Formik, Form } from 'formik'
-import FormikControl from '../components/formik-components/FormikControl'
+import FormikControl from '../components/formik-components/FormikControl.jsx'
 import { SearchContext } from '../contexts/MemberContext'
 import './MobileSearchNav.css'
 

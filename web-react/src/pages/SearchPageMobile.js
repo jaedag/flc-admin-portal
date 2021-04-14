@@ -1,17 +1,13 @@
 import React, { useContext } from 'react'
-
 import { useQuery } from '@apollo/client'
 import { MobileSearchNav } from '../components/MobileSearchNav'
 import { GLOBAL_SEARCH } from '../queries/SearchQuery'
 import { SearchContext } from '../contexts/MemberContext'
-
 import Spinner from '../components/Spinner'
-
-import { MemberDisplayCard } from '../components/MemberDisplayCard'
+import { MemberDisplayCard } from '../components/card/MemberDisplayCard.jsx'
 
 export const SearchPageMobile = () => {
   const { searchKey } = useContext(SearchContext)
-  // const { setMemberId } = useContext(MemberContext)
 
   const { data: searchData, loading: searchLoading } = useQuery(GLOBAL_SEARCH, {
     variables: {

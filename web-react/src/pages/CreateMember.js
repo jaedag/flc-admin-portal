@@ -71,11 +71,13 @@ export const CreateMember = () => {
     { key: 'Bishop', value: 'Bishop' },
   ]
 
-  const { phoneRegExp, parsePhoneNum, makeSelectOptions } = useContext(
-    ChurchContext
-  )
+  const {
+    phoneRegExp,
+    parsePhoneNum,
+    makeSelectOptions,
+    clickCard,
+  } = useContext(ChurchContext)
   const { setMemberId } = useContext(MemberContext)
-  let pastoralAppointment
 
   const validationSchema = Yup.object({
     firstName: Yup.string().required('First Name is a required field'),
@@ -105,20 +107,16 @@ export const CreateMember = () => {
     error: ministryListError,
   } = useQuery(GET_MINISTRIES)
 
-  const [AddMemberTitle] = useMutation(ADD_MEMBER_TITLE_MUTATION)
-  console.log(AddMemberTitle)
+  const [AddMemberTitle] = useMutation(ADD_MEMBER_TITLE_MUTATION, {
+    onCompleted: (details) => {
+      console.log(details)
+    },
+  })
+
   const [CreateMember] = useMutation(CREATE_MEMBER_MUTATION, {
     onCompleted: (newMemberData) => {
+      clickCard(newMemberData.CreateMember)
       setMemberId(newMemberData.CreateMember.id)
-
-      // pastoralAppointment.map((apppointmentDetails)=>{
-      //   AddMemberTitle({variables:{
-      //     memberId: newMemberData.CreateMember.id,
-      //     title: apppointmentDetails.title,
-      //     status: true,
-      //     date: apppointmentDetails.date
-      //   }})
-      // })
     },
   })
 
@@ -156,7 +154,7 @@ export const CreateMember = () => {
     values.phoneNumber = parsePhoneNum(values.phoneNumber)
     values.whatsappNumber = parsePhoneNum(values.whatsappNumber)
 
-    pastoralAppointment = values.pastoralAppointment.filter(
+    let pastoralAppointment = values.pastoralAppointment.filter(
       (pastoralAppointment) => {
         if (pastoralAppointment.date) {
           return pastoralAppointment
@@ -164,7 +162,6 @@ export const CreateMember = () => {
         return null
       }
     )
-    console.log(pastoralAppointment)
 
     CreateMember({
       variables: {
@@ -186,6 +183,17 @@ export const CreateMember = () => {
         // pastoralAppointment: values.pastoralAppointment,
         // pastoralHistory: values.pastoralHistory,
       },
+    }).then((res) => {
+      pastoralAppointment.forEach((apppointmentDetails) => {
+        AddMemberTitle({
+          variables: {
+            memberId: res.data.CreateMember.id,
+            title: apppointmentDetails.title,
+            status: true,
+            date: apppointmentDetails.date,
+          },
+        })
+      })
     })
 
     setSubmitting(false)

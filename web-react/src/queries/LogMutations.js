@@ -5,7 +5,7 @@ export const LOG_BACENTA_HISTORY = gql`
     $bacentaId: ID!
     $historyRecord: String
     $oldLeaderId: ID
-    $leaderId: ID
+    $newLeaderId: ID
     $oldCentreId: ID
     $newCentreId: ID
     $loggedBy: ID
@@ -14,7 +14,7 @@ export const LOG_BACENTA_HISTORY = gql`
       bacentaId: $bacentaId
       historyRecord: $historyRecord
       oldLeaderId: $oldLeaderId
-      leaderId: $leaderId
+      newLeaderId: $newLeaderId
       oldCentreId: $oldCentreId
       newCentreId: $newCentreId
       loggedBy: $loggedBy
@@ -39,7 +39,7 @@ export const LOG_CENTRE_HISTORY = gql`
     $centreId: ID!
     $historyRecord: String
     $oldLeaderId: ID
-    $leaderId: ID
+    $newLeaderId: ID
     $oldCampusTownId: ID
     $newCampusTownId: ID
     $loggedBy: ID
@@ -47,7 +47,7 @@ export const LOG_CENTRE_HISTORY = gql`
     LogCentreHistory(
       centreId: $centreId
       historyRecord: $historyRecord
-      leaderId: $leaderId
+      newLeaderId: $leaderId
       oldLeaderId: $oldLeaderId
       oldCampusTownId: $oldCampusTownId
       newCampusTownId: $newCampusTownId
@@ -68,54 +68,20 @@ export const LOG_CENTRE_HISTORY = gql`
   }
 `
 
-export const LOG_CAMPUS_HISTORY = gql`
-  mutation LogCampusHistory(
-    $campusId: ID!
+export const LOG_CAMPUSTOWN_HISTORY = gql`
+  mutation LogCampusTownHistory(
+    $campusTownId: ID!
     $historyRecord: String
     $oldLeaderId: ID
-    $leaderId: ID
+    $newLeaderId: ID
     $oldBishopId: ID
     $newBishopId: ID
     $loggedBy: ID
   ) {
-    LogCampusHistory(
-      campusId: $campusId
+    LogCampusTownHistory(
+      campusTownId: $campusTownId
       historyRecord: $historyRecord
-      leaderId: $leaderId
-      oldLeaderId: $oldLeaderId
-      oldBishopId: $oldBishopId
-      newBishopId: $newBishopId
-      loggedBy: $loggedBy
-    ) {
-      id
-      name
-      history {
-        HistoryLog {
-          historyRecord
-          timeStamp {
-            formatted
-          }
-        }
-        pointer
-      }
-    }
-  }
-`
-
-export const LOG_TOWN_HISTORY = gql`
-  mutation LogTownHistory(
-    $townId: ID!
-    $historyRecord: String
-    $oldLeaderId: ID
-    $leaderId: ID
-    $oldBishopId: ID
-    $newBishopId: ID
-    $loggedBy: ID
-  ) {
-    LogTownHistory(
-      townId: $townId
-      historyRecord: $historyRecord
-      leaderId: $leaderId
+      newLeaderId: $newLeaderId
       oldLeaderId: $oldLeaderId
       oldBishopId: $oldBishopId
       newBishopId: $newBishopId
@@ -146,7 +112,7 @@ export const LOG_SONTA_HISTORY = gql`
     $newCampusTownId: ID
     $loggedBy: ID
   ) {
-    LogCentreHistory(
+    LogSontaHistory(
       sontaId: $sontaId
       historyRecord: $historyRecord
       leaderId: $leaderId

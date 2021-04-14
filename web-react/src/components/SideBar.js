@@ -8,12 +8,14 @@ import './SideBar.css'
 
 export const SideBar = () => {
   const { setFilters } = useContext(ChurchContext)
+  const location = useLocation()
+  const history = useHistory()
 
   const initialValues = {
     gender: '',
     maritalStatus: '',
     occupation: '',
-    leaderTitle: [],
+    leaderTitle: location.pathname === '/pastors' ? ['Pastors'] : [],
     leaderRank: [],
     ministry: '',
   }
@@ -23,10 +25,11 @@ export const SideBar = () => {
       gender: '',
       maritalStatus: '',
       occupation: '',
-      leaderTitle: [],
+      leaderTitle: location.pathname === '/pastors' ? ['Pastors'] : [],
       leaderRank: [],
       ministry: '',
     })
+
     // eslint-disable-next-line
   }, [])
 
@@ -53,8 +56,6 @@ export const SideBar = () => {
     { key: 'Bishops', value: 'Bishops' },
   ]
 
-  const location = useLocation()
-  const history = useHistory()
   const onSubmit = (values, onSubmitProps) => {
     onSubmitProps.setSubmitting(true)
     setFilters(values)

@@ -55,19 +55,13 @@ export const UpdateBacenta = () => {
     bacentaName: bacentaData?.displayBacenta?.name,
     leaderName: `${bacentaData?.displayBacenta?.leader.firstName} ${bacentaData?.displayBacenta?.leader.lastName} `,
     leaderWhatsapp: `+${bacentaData?.displayBacenta?.leader.whatsappNumber}`,
-
     townCampusSelect:
-      church.church === 'town'
-        ? bacentaData?.displayBacenta?.centre?.town?.id
-        : bacentaData?.displayBacenta?.centre?.campus?.id,
+      bacentaData?.displayBacenta?.centre?.town?.id ??
+      bacentaData?.displayBacenta?.centre?.campus?.id,
     centreSelect: bacentaData?.displayBacenta?.centre?.id,
     meetingDay: bacentaData?.displayBacenta?.meetingDay?.day,
-    venueLatitude: bacentaData?.displayBacenta?.location?.latitude
-      ? bacentaData?.displayBacenta?.location?.latitude
-      : '',
-    venueLongitude: bacentaData?.displayBacenta?.location?.longitude
-      ? bacentaData?.displayBacenta?.location?.longitude
-      : '',
+    venueLatitude: bacentaData?.displayBacenta?.location?.latitude ?? '',
+    venueLongitude: bacentaData?.displayBacenta?.location?.longitude ?? '',
   }
 
   const serviceDayOptions = [
@@ -112,7 +106,7 @@ export const UpdateBacenta = () => {
           variables: {
             bacentaId: bacentaId,
             oldLeaderId: bacentaData?.displayBacenta?.leader.id,
-            leaderId: newLeaderInfo.id,
+            newLeaderId: newLeaderInfo.id,
             oldCentreId: '',
             newCentreId: '',
             loggedBy: currentUser.id,
@@ -143,11 +137,12 @@ export const UpdateBacenta = () => {
           },
         })
       }
+      console.log(newCentre)
       //After Adding the bacenta to a centre, then you log that change.
       LogBacentaHistory({
         variables: {
           bacentaId: bacentaId,
-          leaderId: '',
+          newLeaderId: '',
           oldLeaderId: '',
           newCentreId: newCentre.AddBacentaCentre.from
             ? newCentre.AddBacentaCentre.from.id
@@ -164,7 +159,7 @@ export const UpdateBacenta = () => {
 
   if (bacentaLoading) {
     return <LoadingScreen />
-  } else if (bacentaData) {
+  } else if (bacentaData && campusListData && townListData) {
     const townOptions = townListData
       ? makeSelectOptions(townListData.townList)
       : []
@@ -202,7 +197,7 @@ export const UpdateBacenta = () => {
         LogBacentaHistory({
           variables: {
             bacentaId: bacentaId,
-            leaderId: '',
+            newLeaderId: '',
             oldLeaderId: '',
             oldCentreId: '',
             newCentreId: '',
@@ -217,7 +212,7 @@ export const UpdateBacenta = () => {
         LogBacentaHistory({
           variables: {
             bacentaId: bacentaId,
-            leaderId: '',
+            newLeaderId: '',
             oldLeaderId: '',
             oldCentreId: '',
             newCentreId: '',
@@ -235,7 +230,7 @@ export const UpdateBacenta = () => {
         LogBacentaHistory({
           variables: {
             bacentaId: bacentaId,
-            leaderId: '',
+            newLeaderId: '',
             oldLeaderId: '',
             oldCentreId: '',
             newCentreId: '',
@@ -273,7 +268,9 @@ export const UpdateBacenta = () => {
                             control="select"
                             name="townCampusSelect"
                             label={`Select a ${capitalise(church.church)}`}
-                            options={townOptions ?? campusOptions}
+                            options={
+                              townOptions.length ? townOptions : campusOptions
+                            }
                             onChange={(e) => {
                               formik.setFieldValue(
                                 'townCampusSelect',
@@ -303,9 +300,7 @@ export const UpdateBacenta = () => {
                                 : 'campusCentreList'
                             }
                             varValue={
-                              townCampusIdVar
-                                ? townCampusIdVar
-                                : initialValues.townCampusSelect
+                              townCampusIdVar ?? initialValues.townCampusSelect
                             }
                             onChange={(e) => {
                               formik.setFieldValue(

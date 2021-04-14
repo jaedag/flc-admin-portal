@@ -131,16 +131,10 @@ export const CreateBacenta = () => {
                             className="form-control"
                             control="select"
                             name="townSelect"
-                            options={
-                              church.church === 'town'
-                                ? townOptions
-                                : campusOptions
-                            }
+                            options={townOptions ?? campusOptions}
                             onChange={(e) => {
                               formik.setFieldValue('townSelect', e.target.value)
                               townCampusIdVar = e.target.value
-
-                              console.log('Town', townCampusIdVar)
                             }}
                             defaultOption={`Select a ${capitalise(
                               church.church

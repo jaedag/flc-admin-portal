@@ -293,3 +293,8 @@ MATCH (s)<-[:HAS_SONTA]-()-[:HAS_CENTRE]->()-[:HAS_BASONTA]->(b)
 WHERE b.name CONTAINS m.name
 MERGE (s)-[r:HAS_BASONTA]->(b)
 RETURN r;
+
+// Create Title Options
+CREATE (p:Title{title:"Pastor"})
+CREATE (r:Title{title:"Reverend"})
+RETURN p,r

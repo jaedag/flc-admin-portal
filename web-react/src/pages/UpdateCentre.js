@@ -111,7 +111,7 @@ export const UpdateCentre = () => {
         LogCentreHistory({
           variables: {
             centreId: centreId,
-            leaderId: newLeaderInfo.id,
+            newLeaderId: newLeaderInfo.id,
             oldLeaderId: centreData?.displayCentre?.leader.id,
             oldCampusTownId: '',
             newCampusTownId: '',
@@ -164,7 +164,7 @@ export const UpdateCentre = () => {
       LogBacentaHistory({
         variables: {
           bacentaId: data.RemoveBacentaCentre?.to.id,
-          leaderId: '',
+          newLeaderId: '',
           oldLeaderId: '',
           newCentreId: newCentreId,
           oldCentreId: oldCentreId,
@@ -192,7 +192,7 @@ export const UpdateCentre = () => {
         LogCentreHistory({
           variables: {
             centreId: centreId,
-            leaderId: '',
+            newLeaderId: '',
             oldLeaderId: '',
             newCampusTownId: newTown.AddCentreTown.from.id,
             oldCampusTownId: centreData?.displayCentre?.town.id,
@@ -223,7 +223,7 @@ export const UpdateCentre = () => {
         LogCentreHistory({
           variables: {
             centreId: centreId,
-            leaderId: '',
+            newLeaderId: '',
             oldLeaderId: '',
             newCampusTownId: newTown.AddCentreTown.from.id,
             oldCampusTownId: centreData?.displayCentre?.town.id,
@@ -247,7 +247,7 @@ export const UpdateCentre = () => {
         LogCentreHistory({
           variables: {
             centreId: centreId,
-            leaderId: '',
+            newLeaderId: '',
             oldLeaderId: '',
             newCampusTownId: newCampus.AddCentreCampus.from.id,
             oldCampusTownId: centreData?.displayCentre?.campus.id,
@@ -278,7 +278,7 @@ export const UpdateCentre = () => {
         LogCentreHistory({
           variables: {
             centreId: centreId,
-            leaderId: '',
+            newLeaderId: '',
             oldLeaderId: '',
             newCampusTownId: newCampus.AddCentreCampus.from.id,
             oldCampusTownId: centreData?.displayCentre?.campus.id,
@@ -326,7 +326,7 @@ export const UpdateCentre = () => {
         LogCentreHistory({
           variables: {
             centreId: centreId,
-            leaderId: '',
+            newLeaderId: '',
             oldLeaderId: '',
             oldCampusTownId: '',
             newCampusTownId: '',
@@ -406,7 +406,7 @@ export const UpdateCentre = () => {
           LogBacentaHistory({
             variables: {
               bacentaId: bacenta.id,
-              leaderId: '',
+              newLeaderId: '',
               oldLeaderId: '',
               newCentreId: centreId,
               oldCentreId: '',

@@ -122,7 +122,6 @@ export const DisplayMemberDetails = () => {
     if (memberData.displayMember.townBishop[0]) {
       updateRank(memberData.displayMember, 'bishop')
     }
-    // console.log(rank)
 
     return (
       <div className="container pt-5">
@@ -143,7 +142,11 @@ export const DisplayMemberDetails = () => {
                 <div className="col">
                   <MemberDetailsCard
                     editlink="/member/editmember"
-                    title={`${memberData.displayMember.firstName} ${memberData.displayMember.lastName}`}
+                    title={
+                      memberData.displayMember.title[0]
+                        ? `${memberData.displayMember.title[0].Title.title} ${memberData.displayMember.firstName} ${memberData.displayMember.lastName}`
+                        : `${memberData.displayMember.firstName} ${memberData.displayMember.lastName}`
+                    }
                   >
                     <div className="row row-cols-1 my-2">
                       <div className="col d-flex justify-content-center">
@@ -160,8 +163,6 @@ export const DisplayMemberDetails = () => {
 
                       <div className="col d-flex justify-content-center mt-2">
                         <h5 className="font-weight-bold ">
-                          {memberData.displayMember.title.title}
-
                           {`${memberData.displayMember.firstName} ${memberData.displayMember.lastName}`}
                         </h5>
                       </div>

@@ -34,6 +34,24 @@ export const CREATE_MEMBER_MUTATION = gql`
       id
       firstName
       lastName
+      bacenta {
+        id
+        centre {
+          id
+          town {
+            id
+            bishop {
+              id
+            }
+          }
+          campus {
+            id
+            bishop {
+              id
+            }
+          }
+        }
+      }
     }
   }
 `
@@ -98,9 +116,9 @@ export const CREATE_BACENTA_MUTATION = gql`
 
 export const CREATE_CENTRE_MUTATION = gql`
   mutation CreateCentre(
-    $centreName: String
-    $lWhatsappNumber: String
-    $townCampusId: ID
+    $centreName: String!
+    $lWhatsappNumber: String!
+    $townCampusId: ID!
   ) {
     CreateCentre(
       centreName: $centreName

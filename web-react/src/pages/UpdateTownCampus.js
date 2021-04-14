@@ -33,7 +33,7 @@ import { DISPLAY_CAMPUS, DISPLAY_TOWN } from '../queries/DisplayQueries'
 import PlusSign from '../components/buttons/PlusSign'
 import MinusSign from '../components/buttons/MinusSign'
 import {
-  LOG_CAMPUS_HISTORY,
+  LOG_CAMPUSTOWN_HISTORY,
   LOG_CENTRE_HISTORY,
   LOG_TOWN_HISTORY,
 } from '../queries/LogMutations'
@@ -91,7 +91,7 @@ export const UpdateTownCampus = () => {
   const [LogTownHistory] = useMutation(LOG_TOWN_HISTORY, {
     refetchQueries: [{ query: DISPLAY_TOWN, variables: { id: townId } }],
   })
-  const [LogCampusHistory] = useMutation(LOG_CAMPUS_HISTORY, {
+  const [LogCampusTownHistory] = useMutation(LOG_CAMPUSTOWN_HISTORY, {
     refetchQueries: [{ query: DISPLAY_CAMPUS, variables: { id: campusId } }],
   })
   const [LogCentreHistory] = useMutation(LOG_CENTRE_HISTORY, {
@@ -151,10 +151,10 @@ export const UpdateTownCampus = () => {
           parsePhoneNum(newLeaderInfo.whatsappNumber) !==
           parsePhoneNum(initialValues.leaderWhatsapp)
         ) {
-          LogCampusHistory({
+          LogCampusTownHistory({
             variables: {
-              campusId: campusId,
-              leaderId: newLeaderInfo.id,
+              campusTownId: campusId,
+              newLeaderId: newLeaderInfo.id,
               oldLeaderId: campusData?.displayCampus.leader.id,
               oldBishopId: '',
               newBishopId: '',
@@ -208,7 +208,7 @@ export const UpdateTownCampus = () => {
       LogCentreHistory({
         variables: {
           centreId: data.RemoveCentreCampus?.to.id,
-          leaderId: '',
+          newLeaderId: '',
           oldLeaderId: '',
           newCampusTownId: newCampusId,
           oldCampusTownId: oldCampusId,
@@ -244,7 +244,7 @@ export const UpdateTownCampus = () => {
       LogCentreHistory({
         variables: {
           centreId: data.RemoveCentreTown?.to.id,
-          leaderId: '',
+          newLeaderId: '',
           oldLeaderId: '',
           newCampusTownId: newTownId,
           oldCampusTownId: oldTownId,
@@ -264,10 +264,10 @@ export const UpdateTownCampus = () => {
         //If There is no old Bishop
         let recordIfNoOldBishop = `${initialValues.campusTownName} Campus has been moved to Bishop ${data.AddCampusBishop.from.firstName} ${data.AddCampusBishop.from.firstName}`
 
-        LogCampusHistory({
+        LogCampusTownHistory({
           variables: {
-            campusId: campusId,
-            leaderId: '',
+            campusTownId: campusId,
+            newLeaderId: '',
             oldLeaderId: '',
             newBishopId: data.AddCampusBishop.from.id,
             oldBishopId: campusData?.displayCampus?.bishop.id,
@@ -290,10 +290,10 @@ export const UpdateTownCampus = () => {
         to Bishop ${data.AddCampusBishop.from.firstName} ${data.AddCampusBishop.from.lastName} `
 
         //After Adding the campus to a bishop, then you log that change.
-        LogCampusHistory({
+        LogCampusTownHistory({
           variables: {
-            campusId: campusId,
-            leaderId: '',
+            campusTownId: campusId,
+            newLeaderId: '',
             oldLeaderId: '',
             newBishopId: data.AddCampusBishop.from.id,
             oldBishopId: campusData?.displayCampus?.bishop.id,
@@ -374,10 +374,10 @@ export const UpdateTownCampus = () => {
 
         //Log if Campus Name Changes
         if (values.campusTownName !== initialValues.campusTownName) {
-          LogCampusHistory({
+          LogCampusTownHistory({
             variables: {
-              campusId: campusId,
-              leaderId: '',
+              campusTownId: campusId,
+              newLeaderId: '',
               oldLeaderId: '',
               oldBishopId: '',
               newBishopId: '',
@@ -496,7 +496,7 @@ export const UpdateTownCampus = () => {
           LogCentreHistory({
             variables: {
               centreId: centre.id,
-              leaderId: '',
+              newLeaderId: '',
               oldLeaderId: '',
               newCampusTownId: church.church === 'campus' ? campusId : townId,
               oldCampusTownId: '',

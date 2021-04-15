@@ -18,7 +18,7 @@ const BishopSelect = () => {
   const { data, loading } = useQuery(GET_BISHOPS)
   const [memberByEmail] = useLazyQuery(GET_LOGGED_IN_USER, {
     onCompleted: (data) => {
-      determineChurch(data.memberByEmail)
+      determineChurch(data?.memberByEmail)
       setCurrentUser({
         ...currentUser,
         id: data.memberByEmail.id,

@@ -127,13 +127,13 @@ const PastorsAdmin = () => {
     sessionStorage.getItem('memberId') ? sessionStorage.getItem('memberId') : ''
   )
   const [currentUser, setCurrentUser] = useState({
-    id: '3fc349a5-ce5f-4502-85c9-063622764c56',
-    firstName: 'John Dag',
-    lastName: 'Addy',
-    email: 'jaedagy@gmail.com',
-    bishop: '5c221a24-8f6f-4bff-82dd-81b9c2315400',
-    constituency: '58dfe3ae-83de-49fd-a11d-49043e375133',
-    roles: ['superadmin'],
+    id: '',
+    firstName: '',
+    lastName: '',
+    email: '',
+    bishop: '',
+    constituency: '',
+    roles: [''],
   })
 
   const [searchKey, setSearchKey] = useState('a')

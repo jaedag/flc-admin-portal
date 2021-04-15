@@ -56,7 +56,6 @@ CREATE INDEX FOR (n:TimeGraph) ON (n.date);
 
 
 // Create the Members
-:auto USING PERIODIC COMMIT 1000
 LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/e/2PACX-1vSwWmJJoyWNd6TBMAE74gxSnss94IC8my0lz5KUmggmwAOfsIOoNIvXH_Iq2sUYi86ULcGingtgE2ze/pub?output=csv" as line
 MERGE (m:Member {whatsappNumber: line.`WhatsApp Number (if different)`})
 	ON CREATE SET 
@@ -72,32 +71,40 @@ with line,m WHERE line.Gender is not null
 MERGE(g: Gender {gender: line.Gender})
 MERGE(m)-[:HAS_GENDER]->(g)
 
-
 with line,m WHERE line.`Marital Status` is not null
 MERGE (ms: MaritalStatus {status: line.`Marital Status`})
-MERGE(m)-[:HAS_MARITAL_STATUS]->(ms)
+MERGE(m)-[:HAS_MARITAL_STATUS]->(ms);
 
+LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/e/2PACX-1vSwWmJJoyWNd6TBMAE74gxSnss94IC8my0lz5KUmggmwAOfsIOoNIvXH_Iq2sUYi86ULcGingtgE2ze/pub?output=csv" as line
+MATCH (m:Member {whatsappNumber: line.`WhatsApp Number (if different)`})
 with line,m WHERE line.`Centre Code` is not null
 MERGE (b:Bacenta {code:  line.`Centre Code`})
-MERGE (m)-[:BELONGS_TO]->(b)
+MERGE (m)-[:BELONGS_TO]->(b);
 
+LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/e/2PACX-1vSwWmJJoyWNd6TBMAE74gxSnss94IC8my0lz5KUmggmwAOfsIOoNIvXH_Iq2sUYi86ULcGingtgE2ze/pub?output=csv" as line
+MATCH (m:Member {whatsappNumber: line.`WhatsApp Number (if different)`})
 with line, m  WHERE line.`Ministry` is not null
 MERGE(son: Ministry {name:line.`Ministry`})
  ON CREATE SET 
     son.id = apoc.create.uuid()
-MERGE(m)-[:BELONGS_TO]->(son)
+MERGE(m)-[:BELONGS_TO]->(son);
 
+LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/e/2PACX-1vSwWmJJoyWNd6TBMAE74gxSnss94IC8my0lz5KUmggmwAOfsIOoNIvXH_Iq2sUYi86ULcGingtgE2ze/pub?output=csv" as line
+MATCH (m:Member {whatsappNumber: line.`WhatsApp Number (if different)`})
 WITH line,m WHERE line.Occupation is not null
 MERGE(O:Occupation {occupation: line.Occupation})
 MERGE(m)-[:HAS_OCCUPATION]->(O);
 
-:auto USING PERIODIC COMMIT 500
 LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/e/2PACX-1vSwWmJJoyWNd6TBMAE74gxSnss94IC8my0lz5KUmggmwAOfsIOoNIvXH_Iq2sUYi86ULcGingtgE2ze/pub?output=csv" as line
-MATCH (m:Member {whatsappNumber: line.`WhatsApp Number (if different)`})
+WITH line WHERE line.`Date of Birth` is not null
+CREATE  (dob: TimeGraph {date: date(line.`Date of Birth`)});
 
-WITH line,m WHERE line.`Date of Birth` is not null
-MERGE (dob: TimeGraph {date: date(line.`Date of Birth`)})
-MERGE (m)-[:WAS_BORN_ON]->(dob);
+
+LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/e/2PACX-1vSwWmJJoyWNd6TBMAE74gxSnss94IC8my0lz5KUmggmwAOfsIOoNIvXH_Iq2sUYi86ULcGingtgE2ze/pub?output=csv" as line
+WITH line WHERE line.`Date of Birth` is not null
+MATCH (m:Member {whatsappNumber: line.`WhatsApp Number (if different)`})
+MATCH (dob: TimeGraph {date: date(line.`Date of Birth`)})
+CREATE (m)-[:WAS_BORN_ON]->(dob);
 
 // Create the Churches with 
 LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/e/2PACX-1vTOjWaKQk38jZYy0hASTI_hSRZR99AC9RJ-AP1YSvks8bex_v7KRI_81uwSriazP2xKSbq6QHVENvZa/pub?output=csv" as line
@@ -169,15 +176,6 @@ MERGE (l)-[:LEADS]->(b)
 with line,b
 MERGE(sDay: ServiceDay {day: apoc.text.capitalizeAll(toLower(line.`SERVICE DAY`))} )
 MERGE (sDay)<-[:MEETS_ON_DAY]-(b);
-
-// LOAD CSV WITH HEADERS FROM "file:///Members.csv" as line
-// WITH line 
-// WHERE line.`Attending Church or FLOW Church` is not null
-// MATCH (m:Member {whatsappNumber: line.`WhatsApp Number (if different)`})
-// MERGE(f:FlowChurch {name: line.`Attending Church or FLOW Church`})
-// MERGE (m)-[:BELONGS_TO_FLOWCHURCH]->(f)
-// MERGE (a:Member {firstName:'Frank',lastName:'Opoku'})
-// MERGE (f)<-[:HAS_FLOW_CHURCH]-(a);
 
 LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/e/2PACX-1vTu60_Lgyo45by9Ax3xEd02f2QDpRCP0FDtMrUcqjAZWAABVeHrlx9tZWk9mCLTX-E8GEUOBPOyYlFd/pub?output=csv" as line
 MATCH (m:Member {whatsappNumber: line.`Whatsapp Number`})
@@ -297,4 +295,13 @@ RETURN r;
 // Create Title Options
 CREATE (p:Title{title:"Pastor"})
 CREATE (r:Title{title:"Reverend"})
-RETURN p,r
+RETURN p,r;
+
+DROP CONSTRAINT ON (m:Member) ASSERT m.id IS UNIQUE;
+DROP CONSTRAINT ON (b:Bacenta) ASSERT b.id IS UNIQUE;
+DROP CONSTRAINT ON (b:Centre) ASSERT b.id IS UNIQUE;
+DROP CONSTRAINT ON (b:Town) ASSERT b.id IS UNIQUE;
+DROP CONSTRAINT ON (b:Campus) ASSERT b.id IS UNIQUE;
+// DROP CONSTRAINT ON (m:Member) ASSERT m.whatsappNumber IS UNIQUE;
+DROP INDEX FOR (n:Member) ON (n.whatsappNumber);
+DROP INDEX FOR (n:TimeGraph) ON (n.date);

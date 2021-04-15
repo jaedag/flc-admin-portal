@@ -424,7 +424,7 @@ export const DisplayMemberDetails = () => {
                             </div>
                             <div className="col">
                               <p className="font-weight-bold card-text">
-                                {displayMember.title[0].yearAppointed.year}
+                                {`${displayMember.title[0].yearAppointed.year}`}
                               </p>
                             </div>
                           </div>

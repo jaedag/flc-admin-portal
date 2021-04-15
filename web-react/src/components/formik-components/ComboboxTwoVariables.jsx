@@ -30,7 +30,6 @@ function ComboboxTwoVariables(props) {
       [`${queryVariable2}`]: debouncedText,
     },
     onCompleted: (data) => {
-      console.log('Query', data)
       setSuggestions(
         data[`${dataset}`].map((row) => ({
           name: row[`${suggestionText}`],

@@ -54,7 +54,8 @@ function FormikSearchbox(props) {
   useEffect(() => {
     const timerId = setTimeout(() => {
       globalSearch({ variables: { searchKey: searchString.trim() } })
-    }, 200)
+    }, 500)
+
     return () => {
       clearTimeout(timerId)
     }
@@ -82,25 +83,6 @@ function FormikSearchbox(props) {
         suggestions={suggestions}
         onSuggestionsFetchRequested={async ({ value }) => {
           if (!value) {
-            setSuggestions([])
-          }
-          try {
-            // setSuggestions(
-            //   combinedData.map((row) => ({
-            //     name: row.name,
-            //     __typename: row.__typename,
-            //     firstName: row.firstName,
-            //     lastName: row.lastName,
-            //     id: row.id,
-            //     bacenta: row.bacenta,
-            //     townBishop: row.townBishop,
-            //     campusBishop: row.campusBishop,
-            //     townGS0: row.leadsTown,
-            //     leadsCampus: row.leadsCampus,
-            //   }))
-            // )
-            // console.log(suggestions)
-          } catch (error) {
             setSuggestions([])
           }
         }}

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react'
-import { useQuery } from '@apollo/client'
+import { useQuery, useLazyQuery } from '@apollo/client'
 import { useHistory } from 'react-router-dom'
 import { ChurchContext } from '../contexts/ChurchContext'
 import { GET_BISHOPS } from '../queries/ListQueries'
@@ -16,10 +16,7 @@ const BishopSelect = () => {
   const { currentUser, setCurrentUser } = useContext(MemberContext)
   const { user, isAuthenticated } = useAuth0()
   const { data, loading } = useQuery(GET_BISHOPS)
-  useQuery(GET_LOGGED_IN_USER, {
-    variables: {
-      email: currentUser?.email,
-    },
+  const [memberByEmail] = useLazyQuery(GET_LOGGED_IN_USER, {
     onCompleted: (data) => {
       determineChurch(data.memberByEmail)
       setCurrentUser({
@@ -33,7 +30,14 @@ const BishopSelect = () => {
       })
     },
   })
+
   useEffect(() => {
+    user &&
+      memberByEmail({
+        variables: {
+          email: currentUser?.email,
+        },
+      })
     setCurrentUser({
       ...currentUser,
       email: user?.email,

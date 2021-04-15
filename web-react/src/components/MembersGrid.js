@@ -5,6 +5,7 @@ import { SideBar } from './SideBar'
 import { MemberTable } from './MemberTable'
 import { ChurchContext } from '../contexts/ChurchContext'
 import { memberFilter } from './member-filter-utils'
+import { debounce } from '../global-utils'
 
 export const MembersGrid = (props) => {
   const { memberData, memberError, memberLoading, title } = props
@@ -22,19 +23,6 @@ export const MembersGrid = (props) => {
   //NavBar.jsx takes 70px of the height and side bar takes 25% of the width
   const memberDataLoaded = memberData ? memberFilter(memberData, filters) : null
 
-  //debouncing function
-  function debounce(fn, ms) {
-    let timer
-    return () => {
-      clearTimeout(timer)
-      timer = setTimeout(() => {
-        timer = null
-        fn.apply(this, arguments)
-      }, ms)
-    }
-  }
-
-  // console.log(numberOfRecords)
   useEffect(() => {
     const debouncedHandleResize = debounce(function handleResize() {
       setDimensions({

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Autosuggest from 'react-autosuggest'
 import './react-autosuggest.css'
 import { useQuery } from '@apollo/client'
@@ -22,12 +22,33 @@ function Combobox(props) {
 
   const [searchString, setSearchString] = useState(initValue ? initValue : '')
   const [suggestions, setSuggestions] = useState([])
+  const [debouncedText, setDebouncedText] = useState('')
 
-  const { data } = useQuery(optionsQuery, {
+  useQuery(optionsQuery, {
     variables: {
-      [`${queryVariable}`]: searchString,
+      [`${queryVariable}`]: debouncedText,
+    },
+    onCompleted: (data) => {
+      setSuggestions(
+        data[`${dataset}`].map((row) => ({
+          name: row[`${suggestionText}`],
+          id: row[`${suggestionID}`],
+          centre: row.centre,
+          campus: row.campus,
+          town: row.town,
+        }))
+      )
     },
   })
+
+  useEffect(() => {
+    const timerId = setTimeout(() => {
+      setDebouncedText(searchString)
+    }, 500)
+    return () => {
+      clearTimeout(timerId)
+    }
+  }, [searchString])
 
   return (
     <div>
@@ -51,19 +72,6 @@ function Combobox(props) {
         suggestions={suggestions}
         onSuggestionsFetchRequested={async ({ value }) => {
           if (!value) {
-            setSuggestions([])
-          }
-          try {
-            setSuggestions(
-              data[`${dataset}`].map((row) => ({
-                name: row[`${suggestionText}`],
-                id: row[`${suggestionID}`],
-                centre: row.centre,
-                campus: row.campus,
-                town: row.town,
-              }))
-            )
-          } catch (error) {
             setSuggestions([])
           }
         }}

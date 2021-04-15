@@ -66,6 +66,20 @@ export const parseDate = (date) => {
   return inputDate.toDateString()
 }
 
+//debouncing function
+export function debounce(func, wait) {
+  let timerId
+  return () => {
+    clearTimeout(timerId)
+    //Clears timer if code has not yet executed
+
+    timerId = setTimeout(() => {
+      timerId = null //Nullifies timer ID Not sure why?
+      func.apply(this, arguments) //pass in the arguments to the function and the scope
+    }, wait)
+  }
+}
+
 export const getNameWithTitle = (displayMember) => {
   let displayName = {
     name: `${displayMember.firstName} ${displayMember.lastName}`,

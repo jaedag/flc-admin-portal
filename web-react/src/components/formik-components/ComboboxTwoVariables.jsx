@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Autosuggest from 'react-autosuggest'
 import './react-autosuggest.css'
 import { useQuery } from '@apollo/client'
@@ -22,13 +22,31 @@ function ComboboxTwoVariables(props) {
 
   const [searchString, setSearchString] = useState('')
   const [suggestions, setSuggestions] = useState([])
+  const [debouncedText, setDebouncedText] = useState('')
 
-  const { data } = useQuery(optionsQuery, {
+  useQuery(optionsQuery, {
     variables: {
       [`${queryVariable1}`]: variable1,
-      [`${queryVariable2}`]: searchString,
+      [`${queryVariable2}`]: debouncedText,
+    },
+    onCompleted: (data) => {
+      setSuggestions(
+        data[`${dataset}`].map((row) => ({
+          name: row[`${suggestionText}`],
+          id: row[`${suggestionID}`],
+        }))
+      )
     },
   })
+
+  useEffect(() => {
+    const timerId = setTimeout(() => {
+      setDebouncedText(searchString)
+    }, 500)
+    return () => {
+      clearTimeout(timerId)
+    }
+  }, [searchString])
 
   return (
     <div>
@@ -54,16 +72,7 @@ function ComboboxTwoVariables(props) {
           if (!value) {
             setSuggestions([])
           }
-          try {
-            setSuggestions(
-              data[`${dataset}`].map((row) => ({
-                name: row[`${suggestionText}`],
-                id: row[`${suggestionID}`],
-              }))
-            )
-          } catch (error) {
-            setSuggestions([])
-          }
+          setSuggestions([])
         }}
         onSuggestionsClearRequested={() => {
           setSuggestions([])

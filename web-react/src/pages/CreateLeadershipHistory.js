@@ -7,7 +7,7 @@ import FormikControl from '../components/formik-components/FormikControl.jsx'
 
 import { ADD_LEADER_HISTORY_MUTATION } from '../queries/CreateMutations'
 import { DISPLAY_MEMBER } from '../queries/ReadQueries'
-import { HeadingBar } from '../components/HeadingBar'
+import { HeadingBar } from '../components/HeadingBar.jsx'
 import { NavBar } from '../components/nav/NavBar.jsx'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
 import { ChurchContext } from '../context/ChurchContext'

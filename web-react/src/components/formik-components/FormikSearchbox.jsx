@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react'
 import Autosuggest from 'react-autosuggest'
 import './react-autosuggest.css'
-import { useQuery } from '@apollo/client'
+import { useLazyQuery } from '@apollo/client'
 import { ErrorMessage } from 'formik'
 import TextError from './TextError.jsx'
 import { useHistory } from 'react-router-dom'
@@ -14,14 +14,10 @@ function FormikSearchbox(props) {
   const [searchString, setSearchString] = useState('')
   const [suggestions, setSuggestions] = useState([])
   const { clickCard } = useContext(ChurchContext)
-  const [debouncedText, setDebouncedText] = useState('')
   const history = useHistory()
 
   let combinedData
-  useQuery(GLOBAL_SEARCH, {
-    variables: {
-      searchKey: debouncedText.trim(),
-    },
+  const [globalSearch] = useLazyQuery(GLOBAL_SEARCH, {
     onCompleted: (data) => {
       combinedData = [
         ...data.globalMemberSearch,
@@ -57,12 +53,12 @@ function FormikSearchbox(props) {
 
   useEffect(() => {
     const timerId = setTimeout(() => {
-      setDebouncedText(searchString)
+      globalSearch({ variables: { searchKey: searchString.trim() } })
     }, 200)
     return () => {
       clearTimeout(timerId)
     }
-  }, [searchString])
+  }, [searchString, globalSearch])
 
   return (
     <div>

@@ -145,11 +145,7 @@ export const CreateMember = () => {
     const { setSubmitting, resetForm } = onSubmitProps
     // Variables that are not controlled by formik
     values.pictureUrl = image
-
-    //Formatting of phone number fields
-    values.phoneNumber = parsePhoneNum(values.phoneNumber)
-    values.whatsappNumber = parsePhoneNum(values.whatsappNumber)
-
+    console.log(values)
     let pastoralAppointment = values.pastoralAppointment.filter(
       (pastoralAppointment) => {
         if (pastoralAppointment.date) {
@@ -165,8 +161,8 @@ export const CreateMember = () => {
         middleName: values.middleName,
         lastName: values.lastName,
         gender: values.gender,
-        phoneNumber: values.phoneNumber,
-        whatsappNumber: values.whatsappNumber,
+        phoneNumber: parsePhoneNum(values.phoneNumber),
+        whatsappNumber: parsePhoneNum(values.whatsappNumber),
         email: values.email,
         dob: values.dob,
         maritalStatus: values.maritalStatus,

@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import ReactDOM from 'react-dom'
-import registerServiceWorker from './registerServiceWorker'
+// import registerServiceWorker from './registerServiceWorker'
 import { Route, Switch, BrowserRouter as Router } from 'react-router-dom'
 import {
   ApolloProvider,
@@ -505,4 +505,4 @@ const Main = () => (
 )
 
 ReactDOM.render(<Main />, document.getElementById('root'))
-registerServiceWorker()
+// registerServiceWorker()

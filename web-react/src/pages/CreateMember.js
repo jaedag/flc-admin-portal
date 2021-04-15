@@ -13,7 +13,7 @@ import {
   ADD_MEMBER_TITLE_MUTATION,
   CREATE_MEMBER_MUTATION,
 } from '../queries/CreateMutations'
-import { HeadingBar } from '../components/HeadingBar'
+import { HeadingBar } from '../components/HeadingBar.jsx'
 import { NavBar } from '../components/nav/NavBar.jsx'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
 import Spinner from '../components/Spinner'
@@ -107,18 +107,14 @@ export const CreateMember = () => {
     error: ministryListError,
   } = useQuery(GET_MINISTRIES)
 
-  const [AddMemberTitle] = useMutation(ADD_MEMBER_TITLE_MUTATION, {
-    onCompleted: (details) => {
-      console.log(details)
-    },
-  })
-
   const [CreateMember] = useMutation(CREATE_MEMBER_MUTATION, {
     onCompleted: (newMemberData) => {
       clickCard(newMemberData.CreateMember)
       setMemberId(newMemberData.CreateMember.id)
     },
   })
+
+  const [AddMemberTitle] = useMutation(ADD_MEMBER_TITLE_MUTATION)
 
   const [image, setImage] = useState('')
   const [loading, setLoading] = useState(false)

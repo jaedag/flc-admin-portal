@@ -194,8 +194,10 @@ export const CreateBacenta = () => {
                           />
                         </div>
                       </div>
-                      <div className="row row-cols-2 d-flex align-items-center" />
-                      <small className="text-muted">Enter Your Location</small>
+                      <small className="text-muted">
+                        Enter The Coordinates for the Service Venue
+                      </small>
+
                       <div className="row row-cols-2 d-flex align-items-center">
                         <div className="col">
                           <FormikControl
@@ -257,7 +259,7 @@ export const CreateBacenta = () => {
                       </div>
                       <small className="text-muted">
                         Click this button if you are currently at your bacenta
-                        location
+                        service venue
                       </small>
                     </div>
                   </div>

@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { ChurchContext } from '../contexts/ChurchContext'
 
-export const DisplayChurchList = (props) => {
+const DisplayChurchList = (props) => {
   const { data, churchType } = props
   const { clickCard } = useContext(ChurchContext)
 
@@ -36,3 +36,5 @@ export const DisplayChurchList = (props) => {
     </div>
   )
 }
+
+export default DisplayChurchList

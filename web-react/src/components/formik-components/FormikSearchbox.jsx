@@ -55,6 +55,7 @@ function FormikSearchbox(props) {
     const timerId = setTimeout(() => {
       globalSearch({ variables: { searchKey: searchString.trim() } })
     }, 500)
+
     return () => {
       clearTimeout(timerId)
     }

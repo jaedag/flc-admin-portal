@@ -42,7 +42,7 @@ function ComboboxTwoVariables(props) {
   useEffect(() => {
     const timerId = setTimeout(() => {
       setDebouncedText(searchString)
-    }, 500)
+    }, 200)
     return () => {
       clearTimeout(timerId)
     }

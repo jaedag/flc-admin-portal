@@ -16,13 +16,15 @@ import { HeadingBar } from '../components/HeadingBar.jsx'
 import { NavBar } from '../components/nav/NavBar.jsx'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
 import Spinner from '../components/Spinner'
-import { GET_MINISTRIES, BACENTA_DROPDOWN } from '../queries/ListQueries'
+import { GET_MINISTRIES, BISHOP_BACENTA_DROPDOWN } from '../queries/ListQueries'
 import { MemberContext } from '../contexts/MemberContext'
 import PlusSign from '../components/buttons/PlusSign.jsx'
 import MinusSign from '../components/buttons/MinusSign.jsx'
+import { ChurchContext } from '../contexts/ChurchContext'
 
 export const UpdateMemberDetails = () => {
   const { memberId } = useContext(MemberContext)
+  const { bishopId } = useContext(ChurchContext)
 
   const {
     data: memberData,
@@ -33,42 +35,44 @@ export const UpdateMemberDetails = () => {
   })
 
   const initialValues = {
-    firstName: memberData.displayMember.firstName
-      ? memberData.displayMember.firstName
+    firstName: memberData?.displayMember.firstName
+      ? memberData?.displayMember.firstName
       : '',
-    middleName: memberData.displayMember.middleName
-      ? memberData.displayMember.middleName
+    middleName: memberData?.displayMember.middleName
+      ? memberData?.displayMember.middleName
       : '',
-    lastName: memberData.displayMember.lastName
-      ? memberData.displayMember.lastName
+    lastName: memberData?.displayMember.lastName
+      ? memberData?.displayMember.lastName
       : '',
-    gender: memberData.displayMember.gender
-      ? memberData.displayMember.gender.gender
+    gender: memberData?.displayMember.gender
+      ? memberData?.displayMember.gender.gender
       : '',
-    phoneNumber: memberData.displayMember.phoneNumber
-      ? `+${memberData.displayMember.phoneNumber}`
+    phoneNumber: memberData?.displayMember.phoneNumber
+      ? `+${memberData?.displayMember.phoneNumber}`
       : '',
-    whatsappNumber: memberData.displayMember.whatsappNumber
-      ? `+${memberData.displayMember.whatsappNumber}`
+    whatsappNumber: memberData?.displayMember.whatsappNumber
+      ? `+${memberData?.displayMember.whatsappNumber}`
       : '',
-    email: memberData.displayMember.email ? memberData.displayMember.email : '',
-    dob: memberData.displayMember.dob
-      ? memberData.displayMember.dob.date.formatted
+    email: memberData?.displayMember.email
+      ? memberData?.displayMember.email
+      : '',
+    dob: memberData?.displayMember.dob
+      ? memberData?.displayMember.dob.date.formatted
       : null,
-    maritalStatus: memberData.displayMember.maritalStatus
-      ? memberData.displayMember.maritalStatus.status
+    maritalStatus: memberData?.displayMember.maritalStatus
+      ? memberData?.displayMember.maritalStatus.status
       : '',
-    occupation: memberData.displayMember.occupation
-      ? memberData.displayMember.occupation.occupation
+    occupation: memberData?.displayMember.occupation
+      ? memberData?.displayMember.occupation.occupation
       : '',
-    pictureUrl: memberData.displayMember.pictureUrl
-      ? memberData.displayMember.pictureUrl
+    pictureUrl: memberData?.displayMember.pictureUrl
+      ? memberData?.displayMember.pictureUrl
       : '',
-    bacenta: memberData.displayMember.bacenta
-      ? memberData.displayMember.bacenta.name
+    bacenta: memberData?.displayMember.bacenta
+      ? memberData?.displayMember.bacenta.name
       : '',
-    ministry: memberData.displayMember.ministry
-      ? memberData.displayMember.ministry.id
+    ministry: memberData?.displayMember.ministry
+      ? memberData?.displayMember.ministry.id
       : '',
 
     pastoralHistory: [
@@ -159,7 +163,6 @@ export const UpdateMemberDetails = () => {
     if (image) {
       values.pictureUrl = image
     }
-
     //Formatting of phone number fields
     values.phoneNumber = parsePhoneNum(values.phoneNumber)
     values.whatsappNumber = parsePhoneNum(values.whatsappNumber)
@@ -250,15 +253,17 @@ export const UpdateMemberDetails = () => {
                     <div className="form-row row-cols-2">
                       <div className="col">
                         <FormikControl
+                          label="First Name*"
                           className="form-control"
                           control="input"
                           name="firstName"
-                          placeholder="First Name*"
+                          placeholder="First Name"
                           aria-describedby="firstNameHelp"
                         />
                       </div>
                       <div className="col">
                         <FormikControl
+                          label="Middle Name"
                           className="form-control"
                           control="input"
                           name="middleName"
@@ -268,6 +273,7 @@ export const UpdateMemberDetails = () => {
                       </div>
                       <div className="col">
                         <FormikControl
+                          label="Last Name*"
                           className="form-control"
                           control="input"
                           name="lastName"
@@ -277,6 +283,7 @@ export const UpdateMemberDetails = () => {
                       </div>
                       <div className="col">
                         <FormikControl
+                          label="Gender*"
                           className="form-control"
                           control="select"
                           name="gender"
@@ -287,18 +294,20 @@ export const UpdateMemberDetails = () => {
                       </div>
                       <div className="col">
                         <FormikControl
+                          label="Phone Number*"
                           className="form-control"
                           control="input"
-                          placeholder="Enter phone number"
+                          placeholder="Eg. +233 241 23 456"
                           id="phoneNumber"
                           name="phoneNumber"
                         />
                       </div>
                       <div className="col">
                         <FormikControl
+                          label="WhatsApp Number*"
                           className="form-control"
                           control="input"
-                          placeholder="Enter Your WhatsApp number"
+                          placeholder="Eg. +233 241 23 456"
                           id="whatsappNumber"
                           name="whatsappNumber"
                         />
@@ -308,6 +317,7 @@ export const UpdateMemberDetails = () => {
                     <div className="form-row row-cols-2">
                       <div className="col">
                         <FormikControl
+                          label="Marital Status*"
                           className="form-control"
                           control="select"
                           name="maritalStatus"
@@ -318,6 +328,7 @@ export const UpdateMemberDetails = () => {
                       </div>
                       <div className="col">
                         <FormikControl
+                          label="Occupation"
                           className="form-control"
                           control="input"
                           name="occupation"
@@ -329,6 +340,7 @@ export const UpdateMemberDetails = () => {
                     <div className="form-row">
                       <div className="col-8">
                         <FormikControl
+                          label="Email Address*"
                           className="form-control"
                           control="input"
                           name="email"
@@ -337,11 +349,9 @@ export const UpdateMemberDetails = () => {
                         />
                       </div>
                       <div className="col-8">
-                        <small
-                          htmlFor="dateofbirth"
-                          className="form-text text-muted"
-                        >
-                          Date of Birth
+                        <small htmlFor="dateofbirth" className="form-text ">
+                          Date of Birth*{' '}
+                          <i className="text-secondary">(Day/Month/Year)</i>
                         </small>
                         <FormikControl
                           className="form-control"
@@ -363,23 +373,26 @@ export const UpdateMemberDetails = () => {
                     <div className="form-row row-cols-2">
                       <div className="col">
                         <FormikControl
-                          control="combobox"
+                          control="combobox2"
                           name="bacenta"
-                          modifier="id-only"
-                          initValue={initialValues.bacenta}
-                          placeholder="Bacenta name"
+                          label="Bacenta*"
+                          placeholder={memberData.displayMember.bacenta.name}
                           setFieldValue={formik.setFieldValue}
-                          optionsQuery={BACENTA_DROPDOWN}
-                          queryVariable="bacentaName"
+                          optionsQuery={BISHOP_BACENTA_DROPDOWN}
+                          queryVariable1="id"
+                          variable1={bishopId}
+                          queryVariable2="bacentaName"
                           suggestionText="name"
                           suggestionID="id"
-                          dataset="bacentaDropdown"
-                          aria-describedby="bacenta Name"
+                          dataset="bishopBacentaDropdown"
+                          aria-describedby="Bacenta Name"
+                          className="form-control"
                         />
                       </div>
                       <div className="col">
                         <FormikControl
                           className="form-control"
+                          label="Ministry*"
                           control="select"
                           name="ministry"
                           options={ministryOptions}

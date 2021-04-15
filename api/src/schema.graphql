@@ -2,10 +2,10 @@ type Member {
   id: ID! @id
   firstName: String @index #@search
   middleName: String
-  lastName: String #@search
+  lastName: String @index
   email: String
   phoneNumber: String
-  whatsappNumber: String @index #@unique
+  whatsappNumber: String @unique
   pictureUrl: String
   gender: Gender @relation(name: "HAS_GENDER", direction: OUT)
   maritalStatus: MaritalStatus
@@ -141,7 +141,7 @@ type HistoryLog {
 # Campus-Centre, Town-Centre
 type Campus {
   id: ID @id
-  name: String
+  name: String @index
   leader: Member @relation(name: "LEADS", direction: IN)
   sontas: [Sonta] @relation(name: "HAS_SONTA", direction: OUT)
   centres: [Centre] @relation(name: "HAS_CENTRE", direction: OUT)
@@ -154,7 +154,7 @@ type Campus {
 
 type Town {
   id: ID @id
-  name: String
+  name: String @index
   leader: Member @relation(name: "LEADS", direction: IN)
   sontas: [Sonta] @relation(name: "HAS_SONTA", direction: OUT)
   centres: [Centre] @relation(name: "HAS_CENTRE", direction: OUT)
@@ -167,7 +167,7 @@ type Town {
 
 type Centre {
   id: ID @id
-  name: String #
+  name: String @index
   leader: Member @relation(name: "LEADS", direction: IN)
   bacentas: [Bacenta] @relation(name: "HAS_BACENTA", direction: OUT)
   basontas: Basonta @relation(name: "HAS_BASONTA", direction: OUT)
@@ -181,7 +181,7 @@ type Centre {
 # Shared Units: Bacenta, Bacenta, Sonta
 type Bacenta {
   id: ID @id
-  name: String #
+  name: String @index
   centre: Centre @relation(name: "HAS_BACENTA", direction: IN)
   location: Point
   leader: Member @relation(name: "LEADS", direction: IN)
@@ -200,7 +200,7 @@ type ServiceDay {
 
 type Ministry {
   id: ID @id
-  name: String
+  name: String @index
   sonta: [Sonta] @relation(name: "HAS_SONTA", direction: OUT)
   leader: Member @relation(name: "LEADS", direction: IN)
   members: [Member] @relation(name: "BELONGS_TO", direction: IN)
@@ -208,7 +208,7 @@ type Ministry {
 
 type Sonta {
   id: ID @id
-  name: String
+  name: String @index
   leader: Member @relation(name: "LEADS", direction: IN)
   basonta: [Basonta] @relation(name: "HAS_BASONTA", direction: OUT)
   ministry: Ministry @relation(name: "HAS_SONTA", direction: IN)
@@ -218,7 +218,7 @@ type Sonta {
 }
 type Basonta {
   id: ID @id
-  name: String
+  name: String @index
   leader: Member @relation(name: "LEADS", direction: IN)
   centre: Centre @relation(name: "HAS_BASONTA", direction: IN)
 }
@@ -661,9 +661,10 @@ type Mutation {
          	WITH member
          	WITH member  WHERE $bacenta IS NOT NULL
          	MATCH (bacenta:Bacenta {id: $bacenta})
-      	MERGE (m)-[:BELONGS_TO]-> (bacenta)
+      	  MERGE (member)-[:BELONGS_TO]->(bacenta)
          	RETURN count(member)
          	}
+
       WITH member
       CALL {
          	WITH member

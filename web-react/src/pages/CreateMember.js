@@ -17,7 +17,7 @@ import { HeadingBar } from '../components/HeadingBar.jsx'
 import { NavBar } from '../components/nav/NavBar.jsx'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
 import Spinner from '../components/Spinner'
-import { GET_MINISTRIES, BACENTA_DROPDOWN } from '../queries/ListQueries'
+import { GET_MINISTRIES, BISHOP_BACENTA_DROPDOWN } from '../queries/ListQueries'
 import { ChurchContext } from '../contexts/ChurchContext'
 import { MemberContext } from '../contexts/MemberContext'
 import PlusSign from '../components/buttons/PlusSign.jsx'
@@ -76,7 +76,7 @@ export const CreateMember = () => {
     { key: 'Bishop', value: 'Bishop' },
   ]
 
-  const { clickCard } = useContext(ChurchContext)
+  const { clickCard, bishopId } = useContext(ChurchContext)
   const { setMemberId } = useContext(MemberContext)
 
   const validationSchema = Yup.object({
@@ -378,18 +378,20 @@ export const CreateMember = () => {
                     <div className="form-row row-cols-1 row-cols-md-2">
                       <div className="col-10">
                         <FormikControl
-                          control="combobox"
-                          label="Bacenta*"
+                          control="combobox2"
                           name="bacenta"
-                          modifier="id-only"
+                          label="Bacenta*"
                           placeholder="Bacenta"
                           setFieldValue={formik.setFieldValue}
-                          optionsQuery={BACENTA_DROPDOWN}
-                          queryVariable="bacentaName"
+                          optionsQuery={BISHOP_BACENTA_DROPDOWN}
+                          queryVariable1="id"
+                          variable1={bishopId}
+                          queryVariable2="bacentaName"
                           suggestionText="name"
                           suggestionID="id"
-                          dataset="bacentaDropdown"
+                          dataset="bishopBacentaDropdown"
                           aria-describedby="Bacenta Name"
+                          className="form-control"
                         />
                       </div>
                       <div className="col-10">

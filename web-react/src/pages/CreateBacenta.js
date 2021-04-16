@@ -90,11 +90,11 @@ export const CreateBacenta = () => {
         venueLongitude: parseFloat(values.venueLongitude),
         venueLatitude: parseFloat(values.venueLatitude),
       },
+    }).then(() => {
+      // console.log('Form data', values)
+      onSubmitProps.setSubmitting(false)
+      onSubmitProps.resetForm()
     })
-
-    // console.log('Form data', values)
-    onSubmitProps.setSubmitting(false)
-    onSubmitProps.resetForm()
   }
 
   if (townListLoading || campusListLoading) {
@@ -129,7 +129,11 @@ export const CreateBacenta = () => {
                             className="form-control"
                             control="select"
                             name="townSelect"
-                            options={townOptions ?? campusOptions}
+                            options={
+                              church.church === 'town'
+                                ? townOptions
+                                : campusOptions
+                            }
                             onChange={(e) => {
                               formik.setFieldValue('townSelect', e.target.value)
                               townCampusIdVar = e.target.value
@@ -242,7 +246,6 @@ export const CreateBacenta = () => {
                                     .getElementById('venueLatitude')
                                     .blur()
                                   setPositionLoading(false)
-                                  //console.log(formik.values)
                                 }
                               )
                             }}

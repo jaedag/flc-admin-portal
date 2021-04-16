@@ -145,7 +145,7 @@ export const CreateMember = () => {
     const { setSubmitting, resetForm } = onSubmitProps
     // Variables that are not controlled by formik
     values.pictureUrl = image
-    console.log(values)
+
     let pastoralAppointment = values.pastoralAppointment.filter(
       (pastoralAppointment) => {
         if (pastoralAppointment.date) {
@@ -171,9 +171,6 @@ export const CreateMember = () => {
 
         bacenta: values.bacenta,
         ministry: values.ministry,
-
-        // pastoralAppointment: values.pastoralAppointment,
-        // pastoralHistory: values.pastoralHistory,
       },
     }).then((res) => {
       pastoralAppointment.forEach((apppointmentDetails) => {

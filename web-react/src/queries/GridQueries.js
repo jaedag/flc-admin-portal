@@ -8,9 +8,11 @@ export const GET_FEDERAL_MEMBERS = gql`
       lastName
       pictureUrl
       bacenta {
+        id
         name
       }
       ministry {
+        id
         name
       }
       maritalStatus {
@@ -67,9 +69,11 @@ export const GET_FEDERAL_PASTORS = gql`
       lastName
       pictureUrl
       bacenta {
+        id
         name
       }
       ministry {
+        id
         name
       }
       maritalStatus {
@@ -131,9 +135,11 @@ export const GET_BISHOP_MEMBERS = gql`
       lastName
       pictureUrl
       bacenta {
+        id
         name
       }
       ministry {
+        id
         name
       }
       maritalStatus {
@@ -152,30 +158,39 @@ export const GET_BISHOP_MEMBERS = gql`
         }
       }
       leadsBacenta {
+        id
         name
       }
       leadsCentre {
+        id
         name
       }
       leadsMinistry {
+        id
         name
       }
       leadsSonta {
+        id
         name
       }
       leadsBasonta {
+        id
         name
       }
       leadsTown {
+        id
         name
       }
       leadsCampus {
+        id
         name
       }
       townBishop {
+        id
         name
       }
       campusBishop {
+        id
         name
       }
     }

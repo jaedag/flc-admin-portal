@@ -82,7 +82,20 @@ const AppWithApollo = () => {
 
   const client = new ApolloClient({
     link: authLink.concat(httpLink),
-    cache: new InMemoryCache(),
+    cache: new InMemoryCache({
+      typePolicies: {
+        Query: {
+          fields: {
+            displayMember(_, { args, toReference }) {
+              return toReference({
+                __typename: 'Member',
+                id: args.id,
+              })
+            },
+          },
+        },
+      },
+    }),
   })
 
   return (
@@ -331,7 +344,7 @@ const PastorsAdmin = () => {
         sessionStorage.setItem('campusId', card.id)
         break
       default:
-        console.log("We don't have this type")
+        break
     }
 
     if (card.link === '') {

@@ -93,6 +93,7 @@ export const GLOBAL_SEARCH = gql`
       lastName
       pictureUrl
       bacenta {
+        id
         name
         leader {
           id

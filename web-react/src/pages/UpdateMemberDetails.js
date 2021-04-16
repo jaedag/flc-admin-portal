@@ -163,9 +163,6 @@ export const UpdateMemberDetails = () => {
     if (image) {
       values.pictureUrl = image
     }
-    //Formatting of phone number fields
-    values.phoneNumber = parsePhoneNum(values.phoneNumber)
-    values.whatsappNumber = parsePhoneNum(values.whatsappNumber)
 
     UpdateMemberDetails({
       variables: {
@@ -174,8 +171,8 @@ export const UpdateMemberDetails = () => {
         middleName: values.middleName,
         lastName: values.lastName,
         gender: values.gender,
-        phoneNumber: values.phoneNumber,
-        whatsappNumber: values.whatsappNumber,
+        phoneNumber: parsePhoneNum(values.phoneNumber),
+        whatsappNumber: parsePhoneNum(values.whatsappNumber),
         email: values.email,
         dob: values.dob,
         maritalStatus: values.maritalStatus,

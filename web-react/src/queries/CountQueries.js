@@ -3,6 +3,7 @@ import { gql } from '@apollo/client'
 export const BISH_DASHBOARD_COUNTS = gql`
   query bishDashboardData($id: ID) {
     displayMember(id: $id) {
+      id
       firstName
       lastName
       hasAdmin {
@@ -10,8 +11,11 @@ export const BISH_DASHBOARD_COUNTS = gql`
         firstName
         lastName
         bacenta {
+          id
           centre {
+            id
             town {
+              id
               name
               bishop {
                 id

@@ -3,6 +3,7 @@ import { gql } from '@apollo/client'
 export const DISPLAY_BISHOP_NAME = gql`
   query displayMember($id: ID) {
     displayMember(id: $id) {
+      id
       firstName
       lastName
     }
@@ -14,6 +15,7 @@ export const DISPLAY_MEMBER = gql`
     displayMember(id: $id) {
       id
       firstName
+      middleName
       lastName
       email
       phoneNumber
@@ -34,12 +36,14 @@ export const DISPLAY_MEMBER = gql`
         }
       }
       bacenta {
+        id
         name
         leader {
           firstName
           lastName
         }
         centre {
+          id
           name
           town {
             name
@@ -49,8 +53,10 @@ export const DISPLAY_MEMBER = gql`
             }
           }
           campus {
+            id
             name
             bishop {
+              id
               firstName
               lastName
             }
@@ -420,14 +426,18 @@ export const DISPLAY_TOWN = gql`
         firstName
         lastName
         bacenta {
+          id
           centre {
+            id
             town {
+              id
               name
               bishop {
                 id
               }
             }
             campus {
+              id
               name
               bishop {
                 id
@@ -514,14 +524,18 @@ export const DISPLAY_CAMPUS = gql`
         firstName
         lastName
         bacenta {
+          id
           centre {
+            id
             town {
+              id
               name
               bishop {
                 id
               }
             }
             campus {
+              id
               name
               bishop {
                 id

@@ -5,7 +5,7 @@ type Member {
   lastName: String @index
   email: String
   phoneNumber: String
-  whatsappNumber: String @unique
+  whatsappNumber: String #@unique
   pictureUrl: String
   gender: Gender @relation(name: "HAS_GENDER", direction: OUT)
   maritalStatus: MaritalStatus
@@ -684,6 +684,7 @@ type Mutation {
        CREATE (town:Town {name:$townName})
          	SET
       	town.id = apoc.create.uuid()
+      WITH town
       MATCH (leader:Member {whatsappNumber: $lWhatsappNumber})
       MATCH (bishop:Member {id: $id})
 
@@ -710,6 +711,7 @@ type Mutation {
       CREATE (campus:Campus {name:$campusName})
          	SET
       	campus.id = apoc.create.uuid()
+      WITH campus
       MATCH (leader:Member {whatsappNumber: $lWhatsappNumber})
       MATCH (bishop:Member {id: $id})
 
@@ -740,6 +742,7 @@ type Mutation {
       CREATE (centre:Centre {name:$centreName})
          	SET
       	centre.id = apoc.create.uuid()
+      WITH centre
        MATCH (leader:Member {whatsappNumber: $lWhatsappNumber})
        MATCH (campusTown {id:$townCampusId}) WHERE campusTown:Town OR campusTown:Campus
        UNWIND labels(campusTown) AS typename
@@ -775,6 +778,7 @@ type Mutation {
          	SET
       	bacenta.id = apoc.create.uuid()
 
+      WITH bacenta
       MATCH (centre:Centre {id: $centreId})
       MATCH (meetingDay:ServiceDay {day: $meetingDay})
       MATCH (leader:Member {whatsappNumber: $lWhatsappNumber})

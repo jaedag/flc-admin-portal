@@ -95,7 +95,7 @@ export const CREATE_BACENTA_MUTATION = gql`
   mutation CreateBacenta(
     $bacentaName: String!
     $lWhatsappNumber: String!
-    $centreId: ID
+    $centreId: ID!
     $meetingDay: String!
     $venueLongitude: Float
     $venueLatitude: Float

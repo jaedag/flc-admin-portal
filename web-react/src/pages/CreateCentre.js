@@ -54,10 +54,6 @@ function CreateCentre() {
       { query: GET_CAMPUS_CENTRES, variables: { id: bishopId } },
       { query: GET_TOWN_CENTRES, variables: { id: bishopId } },
     ],
-    onCompleted: (newCentreData) => {
-      setCentreId(newCentreData.CreateCentre.id)
-      history.push('/centre/displaydetails')
-    },
   })
 
   const { data: townListData, loading: townListLoading } = useQuery(GET_TOWNS, {
@@ -89,10 +85,12 @@ function CreateCentre() {
           townCampusId: values.campusTownSelect,
           bacentas: values.bacentas,
         },
+      }).then((res) => {
+        setCentreId(res.CreateCentre.id)
+        onSubmitProps.setSubmitting(false)
+        onSubmitProps.resetForm()
+        history.push('/centre/displaydetails')
       })
-
-      onSubmitProps.setSubmitting(false)
-      onSubmitProps.resetForm()
     }
 
     return (

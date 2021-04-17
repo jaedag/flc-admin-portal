@@ -14,7 +14,6 @@ function ComboboxTwoVariables(props) {
     queryVariable2,
     variable1,
     suggestionText,
-    suggestionID,
     placeholder,
     optionsQuery,
     setFieldValue,
@@ -33,7 +32,9 @@ function ComboboxTwoVariables(props) {
       setSuggestions(
         data[`${dataset}`].map((row) => ({
           name: row[`${suggestionText}`],
-          id: row[`${suggestionID}`],
+          id: row.id,
+          firstName: row.firstName,
+          lastName: row.lastName,
         }))
       )
     },
@@ -81,13 +82,24 @@ function ComboboxTwoVariables(props) {
           if (method === 'enter') {
             event.preventDefault()
           }
-          setSearchString(suggestion.name)
+
+          setDebouncedText(suggestion.name)
           setFieldValue(`${name}`, suggestion.id)
         }}
-        getSuggestionValue={(suggestion) => suggestion.name}
+        getSuggestionValue={(suggestion) =>
+          `${
+            suggestion.name
+              ? suggestion.name
+              : suggestion.firstName + ' ' + suggestion.lastName
+          }`
+        }
         highlightFirstSuggestion={true}
         renderSuggestion={(suggestion) => (
-          <div className="combobox-control">{suggestion.name}</div>
+          <div className="combobox-control">{`${
+            suggestion.name
+              ? suggestion.name
+              : suggestion.firstName + ' ' + suggestion.lastName
+          }`}</div>
         )}
       />
       <ErrorMessage name={name} component={TextError} />

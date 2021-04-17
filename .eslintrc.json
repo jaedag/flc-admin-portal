@@ -23,7 +23,7 @@
   "plugins": ["react", "prettier"],
   "rules": {
     "prettier/prettier": "error",
-    "react/prop-types": "warn",
+    "react/prop-types": "off",
     "no-console": "error"
   }
 }

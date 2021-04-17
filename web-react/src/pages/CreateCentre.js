@@ -11,6 +11,7 @@ import {
   BISHOP_BACENTA_DROPDOWN,
   GET_CAMPUS_CENTRES,
   GET_TOWN_CENTRES,
+  BISHOP_MEMBER_DROPDOWN,
 } from '../queries/ListQueries.js'
 import { CREATE_CENTRE_MUTATION } from '../queries/CreateMutations'
 import { NavBar } from '../components/nav/NavBar.jsx'
@@ -18,18 +19,12 @@ import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
 import { ChurchContext } from '../contexts/ChurchContext'
 import PlusSign from '../components/buttons/PlusSign.jsx'
 import MinusSign from '../components/buttons/MinusSign.jsx'
-import {
-  capitalise,
-  makeSelectOptions,
-  parsePhoneNum,
-  PHONE_NUM_REGEX_VALIDATION,
-} from '../global-utils'
+import { capitalise, makeSelectOptions } from '../global-utils'
 
 function CreateCentre() {
   const initialValues = {
     centreName: '',
-    leaderName: '',
-    leaderWhatsapp: '',
+    leaderId: '',
     campusTownSelect: '',
     bacentas: [''],
   }
@@ -41,15 +36,12 @@ function CreateCentre() {
 
   const validationSchema = Yup.object({
     centreName: Yup.string().required('Centre Name is a required field'),
-    leaderWhatsapp: Yup.string()
-      .required('Phone Number is required')
-      .matches(
-        PHONE_NUM_REGEX_VALIDATION,
-        `Phone Number must start with + and country code (eg. '+233')`
-      ),
   })
 
   const [CreateCentre] = useMutation(CREATE_CENTRE_MUTATION, {
+    onCompleted: (data) => {
+      setCentreId(data.CreateCentre.id)
+    },
     refetchQueries: [
       { query: GET_CAMPUS_CENTRES, variables: { id: bishopId } },
       { query: GET_TOWN_CENTRES, variables: { id: bishopId } },
@@ -81,12 +73,11 @@ function CreateCentre() {
       CreateCentre({
         variables: {
           centreName: values.centreName,
-          lWhatsappNumber: parsePhoneNum(values.leaderWhatsapp),
+          leaderId: values.leaderId,
           townCampusId: values.campusTownSelect,
           bacentas: values.bacentas,
         },
-      }).then((res) => {
-        setCentreId(res.CreateCentre.id)
+      }).then(() => {
         onSubmitProps.setSubmitting(false)
         onSubmitProps.resetForm()
         history.push('/centre/displaydetails')
@@ -140,23 +131,23 @@ function CreateCentre() {
                       <div className="row d-flex align-items-center">
                         <div className="col">
                           <FormikControl
+                            control="combobox2"
+                            name="leaderId"
+                            placeholder="Select a Leader"
+                            setFieldValue={formik.setFieldValue}
+                            optionsQuery={BISHOP_MEMBER_DROPDOWN}
+                            queryVariable1="id"
+                            variable1={bishopId}
+                            queryVariable2="nameSearch"
+                            suggestionText="name"
+                            suggestionID="id"
+                            dataset="bishopMemberDropdown"
+                            aria-describedby="Bishop Member List"
                             className="form-control"
-                            control="input"
-                            name="leaderName"
-                            placeholder="Name of Centre Leader"
                           />
                         </div>
                       </div>
-                      <div className="form-row row-cols-3">
-                        <div className="col-9">
-                          <FormikControl
-                            className="form-control"
-                            control="input"
-                            name="leaderWhatsapp"
-                            placeholder="Enter Leader WhatsApp No"
-                          />
-                        </div>
-                      </div>
+
                       <small className="pt-2">
                         List any Bacentas that are being moved to this Centre
                       </small>

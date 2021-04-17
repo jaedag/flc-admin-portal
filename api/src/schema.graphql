@@ -309,6 +309,15 @@ type Query {
       RETURN member
       """
     )
+  bishopMemberDropdown(id: ID, nameSearch: String): [Member]
+    @cypher(
+      statement: """
+      MATCH (bishop:Member {id: $id})-[:HAS_CAMPUS|:HAS_TOWN]->()-[:HAS_CENTRE]->(:Centre)-[:HAS_BACENTA]->(bacenta:Bacenta)
+      MATCH (bacenta)<-[:BELONGS_TO]-(member:Member)
+      WHERE toLower(member.firstName+ " " + member.lastName) CONTAINS toLower($nameSearch)
+      RETURN member
+      """
+    )
   bishopMemberCount(id: ID): Int!
     @cypher(
       statement: """
@@ -523,13 +532,29 @@ type Query {
     )
 
   #Members
-  # Display Member basecd on ID
+  # Display Member based on ID
   displayMember(id: ID): Member
     @cypher(statement: "MATCH (member:Member {id:$id}) RETURN member")
   memberByEmail(email: String): Member
     @cypher(statement: "MATCH (member:Member {email:$email}) RETURN member")
 
   #Fuzzy Search
+  memberGridList(
+    gender: String
+    maritalStatus: String
+    ministryId: ID
+    leaderTitle: String
+    leaderRank: String
+  ): [Member]
+    @cypher(
+      statement: """
+      MATCH (member:Member)
+      WHERE (member)-[:HAS_GENDER]->(:Gender{gender:$gender})
+      OR (member)-[:HAS_MARITAL_STATUS]->(:MaritalStatus{status:$maritalStatus})
+      RETURN member
+      """
+    )
+
   globalMemberSearch(searchKey: String!): [Member]
     @cypher(
       statement: """
@@ -734,7 +759,7 @@ type Mutation {
     )
   CreateCentre(
     centreName: String!
-    lWhatsappNumber: String!
+    leaderId: ID!
     townCampusId: ID!
   ): Centre
     @cypher(
@@ -743,7 +768,7 @@ type Mutation {
          	SET
       	centre.id = apoc.create.uuid()
       WITH centre
-       MATCH (leader:Member {whatsappNumber: $lWhatsappNumber})
+       MATCH (leader:Member {id: $leaderId})
        MATCH (campusTown {id:$townCampusId}) WHERE campusTown:Town OR campusTown:Campus
        UNWIND labels(campusTown) AS typename
 

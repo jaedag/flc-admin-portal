@@ -117,12 +117,12 @@ export const CREATE_BACENTA_MUTATION = gql`
 export const CREATE_CENTRE_MUTATION = gql`
   mutation CreateCentre(
     $centreName: String!
-    $lWhatsappNumber: String!
+    $leaderId: ID!
     $townCampusId: ID!
   ) {
     CreateCentre(
       centreName: $centreName
-      lWhatsappNumber: $lWhatsappNumber
+      leaderId: $leaderId
       townCampusId: $townCampusId
     ) {
       id

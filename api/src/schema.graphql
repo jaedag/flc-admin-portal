@@ -299,6 +299,15 @@ type Query {
     @cypher(
       statement: "MATCH (title:Title)<-[:HAS_TITLE]-(member:Member)-[:BELONGS_TO]->()<-[:HAS_BACENTA]-()<-[:HAS_CENTRE]-()<-[:HAS_TOWN|:HAS_CAMPUS]-(:Member {id: $id}) RETURN member"
     )
+  bishopCentreDropdown(id: ID!, nameSearch: String!): [Centre]
+    @cypher(
+      statement: """
+      MATCH (:Member {id: $id})-[:HAS_TOWN|:HAS_CAMPUS]->(campusTown)
+      MATCH (campusTown)-[:HAS_CENTRE]->(centre)
+      WHERE toLower(centre.name) CONTAINS toLower($nameSearch)
+      RETURN centre
+      """
+    )
   bishopMemberList(id: ID): [Member]!
     @cypher(
       statement: """
@@ -703,21 +712,21 @@ type Mutation {
       """
     )
 
-  CreateTown(townName: String, lWhatsappNumber: String, id: ID): Town
+  CreateTown(townName: String!, leaderId: ID!, id: ID!): Town
     @cypher(
       statement: """
        CREATE (town:Town {name:$townName})
          	SET
       	town.id = apoc.create.uuid()
       WITH town
-      MATCH (leader:Member {whatsappNumber: $lWhatsappNumber})
+      MATCH (leader:Member {id: $leaderId})
       MATCH (bishop:Member {id: $id})
 
        CREATE (log:HistoryLog)
         SET
         log.id =  apoc.create.uuid(),
         log.timeStamp = time(),
-        log.historyRecord = leader.firstName + ' ' +leader.lastName + ' started ' + $townName +' Town Church under Bishop '+ bishop.firstName+ ' ' + bishop.lastName+
+        log.historyRecord = leader.firstName + ' ' +leader.lastName + ' started ' + $townName +' Town Church under Bishop '+ bishop.firstName+ ' ' + bishop.lastName
       MERGE (date:TimeGraph {date: date(date())})
       MERGE (bishop)-[:HAS_TOWN]->(town)
       MERGE (leader)-[:LEADS]->(town)
@@ -730,21 +739,21 @@ type Mutation {
       RETURN town
       """
     )
-  CreateCampus(campusName: String, lWhatsappNumber: String, id: ID): Campus
+  CreateCampus(campusName: String!, leaderId: ID!, id: ID!): Campus
     @cypher(
       statement: """
       CREATE (campus:Campus {name:$campusName})
          	SET
       	campus.id = apoc.create.uuid()
       WITH campus
-      MATCH (leader:Member {whatsappNumber: $lWhatsappNumber})
+      MATCH (leader:Member {id: $leaderId})
       MATCH (bishop:Member {id: $id})
 
        CREATE (log:HistoryLog)
         SET
         log.id =  apoc.create.uuid(),
         log.timeStamp = time(),
-        log.historyRecord = leader.firstName + ' ' +leader.lastName + ' started ' + $campusName +' Campus Church under Bishop '+ bishop.firstName+ ' ' + bishop.lastName+
+        log.historyRecord = leader.firstName + ' ' +leader.lastName + ' started ' + $campusName +' Campus Church under Bishop '+ bishop.firstName+ ' ' + bishop.lastName
       MERGE (date:TimeGraph {date: date(date())})
       MERGE (bishop)-[:HAS_CAMPUS]->(campus)
       MERGE (leader)-[:LEADS]->(campus)
@@ -757,11 +766,7 @@ type Mutation {
       RETURN campus
       """
     )
-  CreateCentre(
-    centreName: String!
-    leaderId: ID!
-    townCampusId: ID!
-  ): Centre
+  CreateCentre(centreName: String!, leaderId: ID!, townCampusId: ID!): Centre
     @cypher(
       statement: """
       CREATE (centre:Centre {name:$centreName})
@@ -791,7 +796,7 @@ type Mutation {
     )
   CreateBacenta(
     bacentaName: String!
-    lWhatsappNumber: String!
+    leaderId: ID!
     centreId: ID!
     meetingDay: String!
     venueLongitude: Float
@@ -806,7 +811,7 @@ type Mutation {
       WITH bacenta
       MATCH (centre:Centre {id: $centreId})
       MATCH (meetingDay:ServiceDay {day: $meetingDay})
-      MATCH (leader:Member {whatsappNumber: $lWhatsappNumber})
+      MATCH (leader:Member {id: $leaderId})
 
         CREATE (log:HistoryLog:ServiceLog)
          SET

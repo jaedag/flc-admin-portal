@@ -47,6 +47,7 @@ const BishopSelect = () => {
   }, [isAuthenticated])
 
   const history = useHistory()
+  const version = 'v0.1.0'
 
   if (loading) {
     return (
@@ -59,7 +60,9 @@ const BishopSelect = () => {
             className="img-fluid mx-auto"
             style={{ maxWidth: '30%' }}
           />
-          <h3>FLC Admin Dashboard</h3>
+          <h3>
+            FLC Admin Dashboard<sub>{version}</sub>
+          </h3>
           <h5 className="text-secondary">Loading...</h5>
           <div className="spinner-border-center full-center" role="status">
             <Spinner />
@@ -107,9 +110,13 @@ const BishopSelect = () => {
             className="img-fluid mx-auto"
             style={{ maxWidth: '30%' }}
           />
-          {currentUser?.roles.includes('superadmin') && (
-            <h3>FLC Admin Dashboard</h3>
-          )}
+
+          <h3>
+            FLC Admin Dashboard{' '}
+            <sup>
+              <small>{version}</small>
+            </sup>
+          </h3>
 
           <h5 className="text-secondary">Select Your Bishop</h5>
         </div>

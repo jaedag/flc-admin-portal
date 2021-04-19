@@ -38,6 +38,7 @@ export const BACENTA_DROPDOWN = gql`
           name
         }
         town {
+          id
           name
         }
       }
@@ -89,12 +90,30 @@ export const CENTRE_DROPDOWN = gql`
   }
 `
 
+export const BISHOP_CENTRE_DROPDOWN = gql`
+  query($id: ID!, $nameSearch: String!) {
+    bishopCentreDropdown(id: $id, nameSearch: $nameSearch, first: 8) {
+      id
+      name
+      campus {
+        id
+        name
+      }
+      town {
+        id
+        name
+      }
+    }
+  }
+`
+
 export const GET_TOWN_CENTRES = gql`
   query($id: ID) {
     townCentreList(id: $id) {
       id
       name
       town {
+        id
         name
         leader {
           id
@@ -223,6 +242,7 @@ export const GET_CAMPUSES = gql`
           bacenta {
             centre {
               town {
+                id
                 name
                 bishop {
                   id
@@ -267,6 +287,7 @@ export const GET_TOWNS = gql`
           bacenta {
             centre {
               town {
+                id
                 name
                 bishop {
                   id
@@ -294,6 +315,7 @@ export const GET_BISHOPS = gql`
       lastName
       pictureUrl
       townBishop {
+        id
         name
       }
       campusBishop {

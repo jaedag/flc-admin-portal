@@ -60,7 +60,7 @@ function ComboboxTwoVariables(props) {
         inputProps={{
           placeholder: placeholder,
           id: name,
-          autoComplete: 'off',
+          autoComplete: 'on',
           value: searchString,
           name: name,
           className: 'form-control',

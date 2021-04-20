@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Autosuggest from 'react-autosuggest'
 import './react-autosuggest.css'
-import { useQuery } from '@apollo/client'
+import { useLazyQuery } from '@apollo/client'
 import { ErrorMessage } from 'formik'
 import TextError from './TextError.jsx'
 
@@ -19,15 +19,11 @@ function ComboboxTwoVariables(props) {
     setFieldValue,
   } = props
 
-  const [searchString, setSearchString] = useState('')
+  const [searchString, setSearchString] = useState(props.initialValue ?? '')
   const [suggestions, setSuggestions] = useState([])
   const [debouncedText, setDebouncedText] = useState('')
 
-  useQuery(optionsQuery, {
-    variables: {
-      [`${queryVariable1}`]: variable1,
-      [`${queryVariable2}`]: debouncedText,
-    },
+  const [query] = useLazyQuery(optionsQuery, {
     onCompleted: (data) => {
       setSuggestions(
         data[`${dataset}`].map((row) => ({
@@ -44,9 +40,16 @@ function ComboboxTwoVariables(props) {
     const timerId = setTimeout(() => {
       setDebouncedText(searchString)
     }, 200)
+    query({
+      variables: {
+        [`${queryVariable1}`]: variable1,
+        [`${queryVariable2}`]: debouncedText?.trim(),
+      },
+    })
     return () => {
       clearTimeout(timerId)
     }
+    // eslint-disable-next-line
   }, [searchString])
 
   return (
@@ -73,7 +76,16 @@ function ComboboxTwoVariables(props) {
           if (!value) {
             setSuggestions([])
           }
-          setSuggestions([])
+          try {
+            query({
+              variables: {
+                [`${queryVariable1}`]: variable1,
+                [`${queryVariable2}`]: debouncedText.trim(),
+              },
+            })
+          } catch {
+            setSuggestions([])
+          }
         }}
         onSuggestionsClearRequested={() => {
           setSuggestions([])
@@ -102,7 +114,8 @@ function ComboboxTwoVariables(props) {
           }`}</div>
         )}
       />
-      <ErrorMessage name={name} component={TextError} />
+      {props.error && <TextError>{props.error}</TextError>}
+      {!props.error ?? <ErrorMessage name={name} component={TextError} />}
     </div>
   )
 }

@@ -1,6 +1,8 @@
 # The App: Where Are We Going?
 Requirements Engineering
 
+The initial phases of this application are meant to serve the needs of the First Love Church in Accra.
+
 ## PHASE 1: Directory (Filemaker Replacement - State of the Flock Part 1)
 1. Be able to hold all membership and leadership records (Bacenta and Basonta).
 2. Be able to search and filter all membership records based on selected criteria.
@@ -31,9 +33,7 @@ Requirements Engineering
 2. Accept Bacenta Records of Attendance, Cost, Offering Raised, Amount Paid from the Church
 3. Close Down any Bacenta/IC that busses under 8 for four consecutive weeks
 4. Registration of ICs
-5. Graduate IC to Bacenta after bussing above 8 for 
-
-4 consecutive weeks. 
+5. Graduate IC to Bacenta after bussing above 8 for 4 consecutive weeks. 
 6. Accept IC Records of Attendance, Cost, Offering Raised, Amount Paid from the Church
 7. IC Training Attendance Tracking. Attendance to be filled by IC Trainers.
 

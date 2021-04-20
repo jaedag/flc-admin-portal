@@ -113,7 +113,6 @@ export const CreateBacenta = () => {
                 <div className="form-group">
                   <div className="row row-cols-1 row-cols-md-2">
                     {/* <!-- Basic Info Div --> */}
-
                     <div className="col mb-2">
                       <div className="form-row row-cols-2">
                         <div className="col-8">
@@ -188,6 +187,7 @@ export const CreateBacenta = () => {
                             dataset="bishopMemberDropdown"
                             aria-describedby="Bishop Member List"
                             className="form-control"
+                            error={formik.errors.leaderId}
                           />
                         </div>
                       </div>

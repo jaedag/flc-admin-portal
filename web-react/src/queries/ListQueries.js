@@ -14,6 +14,7 @@ export const ALL_MEMBERS = gql`
 export const GET_BACENTA_LEADERS = gql`
   {
     townList(firstName: $firstName, lastName: $lastName) {
+      id
       centres {
         bacentas {
           bacentaLeader {
@@ -53,9 +54,11 @@ export const BISHOP_BACENTA_DROPDOWN = gql`
       name
       centre {
         campus {
+          id
           name
         }
         town {
+          id
           name
         }
       }

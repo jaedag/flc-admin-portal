@@ -40,7 +40,12 @@ function AddTownCampus() {
     campusTownName: Yup.string().required(
       `${capitalise(church.church)} Name is a required field`
     ),
-    leaderId: Yup.string().required('Please choose a leader'),
+    leaderId: Yup.string().required(
+      'Please choose a leader from the drop down'
+    ),
+    centres: Yup.array().of(
+      Yup.string().required('Please pick a centre from the dropdown')
+    ),
   })
 
   const [CreateTown] = useMutation(CREATE_TOWN_MUTATION, {
@@ -164,6 +169,7 @@ function AddTownCampus() {
                             dataset="bishopMemberDropdown"
                             aria-describedby="Bishop Member List"
                             className="form-control"
+                            error={formik.errors.leaderId}
                           />
                         </div>
                       </div>
@@ -200,6 +206,10 @@ function AddTownCampus() {
                                       dataset="bishopCentreDropdown"
                                       aria-describedby="Centre Name"
                                       className="form-control"
+                                      error={
+                                        formik.errors.centres &&
+                                        formik.errors.centres[index]
+                                      }
                                     />
                                   </div>
                                   <div className="col d-flex">

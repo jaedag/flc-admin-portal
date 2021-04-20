@@ -926,9 +926,9 @@ type Mutation {
 
   UpdateTown(
     townId: ID!
-    townName: String
-    lWhatsappNumber: String
-    bishopId: ID
+    townName: String!
+    leaderId: ID!
+    bishopId: ID!
   ): Town
     @cypher(
       statement: """
@@ -938,7 +938,7 @@ type Mutation {
       WITH town
          CALL {
           WITH town
-          MATCH (leader:Member {whatsappNumber: $lWhatsappNumber})
+          MATCH (leader:Member {id: $leaderId})
           OPTIONAL MATCH (town)<-[r:LEADS]-()
           DELETE r
           MERGE (leader)-[:LEADS]->(town)
@@ -951,7 +951,7 @@ type Mutation {
           MATCH (bishop:Member {id: $bishopId})
           OPTIONAL MATCH (town)<-[r:HAS_TOWN]-()
           DELETE r
-          MERGE (bishop)-[:HAS_TOWN]->(t)
+          MERGE (bishop)-[:HAS_TOWN]->(town)
          	RETURN count(town)
          	}
 
@@ -959,11 +959,10 @@ type Mutation {
       """
     )
   UpdateCampus(
-    campusId: ID
-    campusName: String
-    lWhatsappNumber: String
-    bishopId: ID
-    centres: [ID]
+    campusId: ID!
+    campusName: String!
+    leaderId: ID!
+    bishopId: ID!
   ): Campus
     @cypher(
       statement: """
@@ -973,7 +972,7 @@ type Mutation {
       WITH campus
          CALL {
          	WITH campus
-             MATCH (leader:Member {whatsappNumber: $lWhatsappNumber})
+             MATCH (leader:Member {id: $leaderId})
              OPTIONAL MATCH (t)<-[r:LEADS]-()
              DELETE r
              MERGE (leader)-[:LEADS]->(campus)
@@ -997,7 +996,7 @@ type Mutation {
   UpdateCentre(
     centreId: ID
     centreName: String
-    lWhatsappNumber: String
+    leaderId: ID
     campusTownID: ID
   ): Centre
     @cypher(
@@ -1009,7 +1008,7 @@ type Mutation {
          CALL {
          	WITH centre
 
-            MATCH (leader:Member {whatsappNumber: $lWhatsappNumber})
+            MATCH (leader:Member {id: $leaderId})
             OPTIONAL MATCH (centre)<-[r:LEADS]-()
             DELETE r
             MERGE (leader)-[:LEADS]->(centre)
@@ -1034,7 +1033,7 @@ type Mutation {
     id: ID
     name: String
     meetingDay: String
-    lWhatsappNumber: String
+    leaderId: ID
     venueLongitude: Float
     venueLatitude: Float
   ): Bacenta
@@ -1047,8 +1046,8 @@ type Mutation {
               WITH bacenta
                     CALL {
                      	WITH bacenta
-                      WITH bacenta WHERE $lWhatsappNumber IS NOT NULL
-                      MATCH (leader:Member {whatsappNumber: $lWhatsappNumber})
+                      WITH bacenta WHERE $leaderId IS NOT NULL
+                      MATCH (leader:Member {id: $leaderId})
                       OPTIONAL MATCH (bacenta)<-[r:LEADS]-()
                       DELETE r
                       MERGE (leader)-[:LEADS]->(bacenta)

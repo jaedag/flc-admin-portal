@@ -47,7 +47,7 @@ const BishopSelect = () => {
   }, [isAuthenticated])
 
   const history = useHistory()
-  const version = 'v0.1.0'
+  const version = 'v0.1.1'
 
   if (loading) {
     return (

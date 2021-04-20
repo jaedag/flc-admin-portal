@@ -47,7 +47,7 @@ export const LOG_CENTRE_HISTORY = gql`
     LogCentreHistory(
       centreId: $centreId
       historyRecord: $historyRecord
-      newLeaderId: $leaderId
+      newLeaderId: $newLeaderId
       oldLeaderId: $oldLeaderId
       oldCampusTownId: $oldCampusTownId
       newCampusTownId: $newCampusTownId
@@ -107,7 +107,7 @@ export const LOG_SONTA_HISTORY = gql`
     $sontaId: ID!
     $historyRecord: String
     $oldLeaderId: ID
-    $leaderId: ID
+    $newLeaderId: ID
     $oldCampusTownId: ID
     $newCampusTownId: ID
     $loggedBy: ID
@@ -115,7 +115,7 @@ export const LOG_SONTA_HISTORY = gql`
     LogSontaHistory(
       sontaId: $sontaId
       historyRecord: $historyRecord
-      leaderId: $leaderId
+      newLeaderId: $newLeaderId
       oldLeaderId: $oldLeaderId
       oldCampusTownId: $oldCampusTownId
       newCampusTownId: $newCampusTownId

@@ -92,30 +92,39 @@ export const GET_FEDERAL_PASTORS = gql`
         }
       }
       leadsBacenta {
+        id
         name
       }
       leadsCentre {
+        id
         name
       }
       leadsMinistry {
+        id
         name
       }
       leadsSonta {
+        id
         name
       }
       leadsBasonta {
+        id
         name
       }
       leadsTown {
+        id
         name
       }
       leadsCampus {
+        id
         name
       }
       townBishop {
+        id
         name
       }
       campusBishop {
+        id
         name
       }
     }
@@ -230,30 +239,39 @@ export const GET_CAMPUSTOWN_MEMBERS = gql`
         }
       }
       leadsBacenta {
+        id
         name
       }
       leadsCentre {
+        id
         name
       }
       leadsMinistry {
+        id
         name
       }
       leadsSonta {
+        id
         name
       }
       leadsBasonta {
+        id
         name
       }
       leadsTown {
+        id
         name
       }
       leadsCampus {
+        id
         name
       }
       townBishop {
+        id
         name
       }
       campusBishop {
+        id
         name
       }
     }
@@ -288,30 +306,39 @@ export const GET_CAMPUSTOWN_MEMBERS = gql`
         }
       }
       leadsBacenta {
+        id
         name
       }
       leadsCentre {
+        id
         name
       }
       leadsMinistry {
+        id
         name
       }
       leadsSonta {
+        id
         name
       }
       leadsBasonta {
+        id
         name
       }
       leadsTown {
+        id
         name
       }
       leadsCampus {
+        id
         name
       }
       townBishop {
+        id
         name
       }
       campusBishop {
+        id
         name
       }
     }
@@ -413,30 +440,39 @@ export const GET_BACENTA_MEMBERS = gql`
         }
       }
       leadsBacenta {
+        id
         name
       }
       leadsCentre {
+        id
         name
       }
       leadsMinistry {
+        id
         name
       }
       leadsSonta {
+        id
         name
       }
       leadsBasonta {
+        id
         name
       }
       leadsTown {
+        id
         name
       }
       leadsCampus {
+        id
         name
       }
       townBishop {
+        id
         name
       }
       campusBishop {
+        id
         name
       }
     }
@@ -476,30 +512,39 @@ export const GET_SONTA_MEMBERS = gql`
         }
       }
       leadsBacenta {
+        id
         name
       }
       leadsCentre {
+        id
         name
       }
       leadsMinistry {
+        id
         name
       }
       leadsSonta {
+        id
         name
       }
       leadsBasonta {
+        id
         name
       }
       leadsTown {
+        id
         name
       }
       leadsCampus {
+        id
         name
       }
       townBishop {
+        id
         name
       }
       campusBishop {
+        id
         name
       }
     }

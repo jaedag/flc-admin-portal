@@ -3,12 +3,7 @@ import { useHistory } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/client'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
-import {
-  capitalise,
-  makeSelectOptions,
-  parsePhoneNum,
-  PHONE_NUM_REGEX_VALIDATION,
-} from '../global-utils'
+import { capitalise, makeSelectOptions } from '../global-utils'
 import FormikControl from '../components/formik-components/FormikControl.jsx'
 import {
   GET_CENTRE_BACENTAS,
@@ -16,6 +11,7 @@ import {
   GET_TOWN_CENTRES,
   GET_TOWNS,
   GET_CAMPUSES,
+  BISHOP_MEMBER_DROPDOWN,
 } from '../queries/ListQueries'
 import {
   ADD_BACENTA_CENTRE,
@@ -50,8 +46,8 @@ export const UpdateBacenta = () => {
 
   const initialValues = {
     bacentaName: bacentaData?.displayBacenta?.name,
+    leaderSelect: bacentaData?.displayBacenta?.leader.id,
     leaderName: `${bacentaData?.displayBacenta?.leader.firstName} ${bacentaData?.displayBacenta?.leader.lastName} `,
-    leaderWhatsapp: `+${bacentaData?.displayBacenta?.leader.whatsappNumber}`,
     townCampusSelect:
       bacentaData?.displayBacenta?.centre?.town?.id ??
       bacentaData?.displayBacenta?.centre?.campus?.id,
@@ -73,9 +69,8 @@ export const UpdateBacenta = () => {
     bacentaName: Yup.string().required(
       `${capitalise(church.subChurch)} Name is a required field`
     ),
-    leaderWhatsapp: Yup.string().matches(
-      PHONE_NUM_REGEX_VALIDATION,
-      `Phone Number must start with + and country code (eg. '+233')`
+    leaderSelect: Yup.string().required(
+      'Please select a leader from the dropdown'
     ),
   })
 
@@ -95,10 +90,7 @@ export const UpdateBacenta = () => {
       let newLeaderInfo = updatedInfo.UpdateBacenta?.leader
       //Log if the Leader Changes
 
-      if (
-        parsePhoneNum(newLeaderInfo.whatsappNumber) !==
-        parsePhoneNum(initialValues.leaderWhatsapp)
-      ) {
+      if (newLeaderInfo.id !== initialValues.leaderSelect) {
         LogBacentaHistory({
           variables: {
             bacentaId: bacentaId,
@@ -134,7 +126,7 @@ export const UpdateBacenta = () => {
           },
         })
       }
-      console.log(newCentre)
+
       //After Adding the bacenta to a centre, then you log that change.
       LogBacentaHistory({
         variables: {
@@ -172,7 +164,7 @@ export const UpdateBacenta = () => {
         variables: {
           id: bacentaId,
           name: values.bacentaName,
-          lWhatsappNumber: parsePhoneNum(values.leaderWhatsapp),
+          leaderId: values.leaderSelect,
           meetingDay: values.meetingDay,
           venueLongitude: parseFloat(values.venueLongitude),
           venueLatitude: parseFloat(values.venueLongitude),
@@ -331,18 +323,21 @@ export const UpdateBacenta = () => {
                         </div>
                         <div className="col-9">
                           <FormikControl
+                            control="combobox2"
+                            name="leaderSelect"
+                            initialValue={initialValues.leaderName}
+                            placeholder="Select a Leader"
+                            setFieldValue={formik.setFieldValue}
+                            optionsQuery={BISHOP_MEMBER_DROPDOWN}
+                            queryVariable1="id"
+                            variable1={bishopId}
+                            queryVariable2="nameSearch"
+                            suggestionText="name"
+                            suggestionID="id"
+                            dataset="bishopMemberDropdown"
+                            aria-describedby="Bishop Member List"
                             className="form-control"
-                            control="input"
-                            name="leaderName"
-                            placeholder="Leader Name"
-                          />
-                        </div>
-                        <div className="col-9">
-                          <FormikControl
-                            className="form-control"
-                            control="input"
-                            name="leaderWhatsapp"
-                            placeholder="Leader WhatsApp No."
+                            error={formik.errors.leaderSelect}
                           />
                         </div>
                       </div>

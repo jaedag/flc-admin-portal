@@ -36,6 +36,10 @@ function CreateCentre() {
 
   const validationSchema = Yup.object({
     centreName: Yup.string().required('Centre Name is a required field'),
+    leaderId: Yup.string().required('Please choose a leader from the dropdown'),
+    bacentas: Yup.array().of(
+      Yup.string().required('Please pick a bacenta from the dropdown')
+    ),
   })
 
   const [CreateCentre] = useMutation(CREATE_CENTRE_MUTATION, {
@@ -144,6 +148,7 @@ function CreateCentre() {
                             dataset="bishopMemberDropdown"
                             aria-describedby="Bishop Member List"
                             className="form-control"
+                            error={formik.errors.leaderId}
                           />
                         </div>
                       </div>
@@ -176,6 +181,10 @@ function CreateCentre() {
                                       dataset="bishopBacentaDropdown"
                                       aria-describedby="Bacenta Name"
                                       className="form-control"
+                                      error={
+                                        formik.errors.bacentas &&
+                                        formik.errors.bacentas[index]
+                                      }
                                     />
                                   </div>
                                   <div className="col d-flex">

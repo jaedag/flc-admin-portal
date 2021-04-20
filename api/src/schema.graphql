@@ -766,6 +766,7 @@ type Mutation {
       RETURN campus
       """
     )
+
   CreateCentre(centreName: String!, leaderId: ID!, townCampusId: ID!): Centre
     @cypher(
       statement: """

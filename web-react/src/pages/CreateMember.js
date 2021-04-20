@@ -183,11 +183,10 @@ export const CreateMember = () => {
           },
         })
       })
+      setSubmitting(false)
+      resetForm()
+      history.push('/member/displaydetails')
     })
-
-    setSubmitting(false)
-    resetForm()
-    history.push('/member/displaydetails')
   }
 
   if (ministryListLoading) {

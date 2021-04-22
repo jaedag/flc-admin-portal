@@ -1,5 +1,5 @@
 import React from 'react'
-import { AuthButton } from '../components/DashboardButton.jsx'
+import { AuthButton } from '../components/buttons/DashboardButton.jsx'
 
 export const Login = () => {
   return (

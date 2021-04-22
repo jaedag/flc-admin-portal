@@ -974,7 +974,7 @@ type Mutation {
          CALL {
          	WITH campus
              MATCH (leader:Member {id: $leaderId})
-             OPTIONAL MATCH (t)<-[r:LEADS]-()
+             OPTIONAL MATCH (campus)<-[r:LEADS]-()
              DELETE r
              MERGE (leader)-[:LEADS]->(campus)
          	RETURN count(campus)
@@ -1227,17 +1227,24 @@ type Mutation {
         WITH log
         WITH log WHERE $newLeaderId IS NOT NULL
       MATCH (newLeader:Member {id: $newLeaderId})
-       OPTIONAL MATCH (oldLeader:Member {id: $oldLeaderId})
         SET log :ServiceLog
-        WITH log, newLeader,oldLeader
+        WITH log, newLeader
       OPTIONAl MATCH ()-[r0:HAS_HISTORY]->(log)
         SET r0.pointer = false
-        WITH log,newLeader,oldLeader
-      CREATE (oldLeader)-[:HAS_HISTORY]->(log)
+        WITH log,newLeader
       CREATE (newLeader)-[r:HAS_HISTORY]->(log)
          SET r.pointer = true
          WITH log
       RETURN COUNT(log)
+      }
+
+      WITH log,campusTown
+      CALL {
+        WITH log
+        WITH log WHERE $oldLeaderId IS NOT NULL
+        MATCH (oldLeader:Member {id: $oldLeaderId})
+        CREATE (oldLeader)-[:HAS_HISTORY]->(log)
+        RETURN COUNT(log)
       }
 
 

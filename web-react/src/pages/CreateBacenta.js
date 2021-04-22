@@ -47,8 +47,16 @@ export const CreateBacenta = () => {
       'Please choose a leader from the drop down'
     ),
     meetingDay: Yup.string().required('Meeting Day is a required field'),
-    venueLatitude: Yup.string().required('Please fill in your location info'),
-    venueLongitude: Yup.string().required('Please fill in your location info'),
+    venueLatitude: Yup.string()
+      .required('Please fill in your location info')
+      .test('is-decimal', 'Please enter valid coordinates', (value) =>
+        (value + '').match(/^\d*\.{1}\d*$/)
+      ),
+    venueLongitude: Yup.string()
+      .required('Please fill in your location info')
+      .test('is-decimal', 'Please enter valid coordinates', (value) =>
+        (value + '').match(/^\d*\.{1}\d*$/)
+      ),
   })
 
   const history = useHistory()

@@ -4,6 +4,11 @@ import { Formik, Form } from 'formik'
 import FormikControl from '../components/formik-components/FormikControl.jsx'
 import { GET_MINISTRIES } from '../queries/ListQueries'
 import { ChurchContext } from '../contexts/ChurchContext'
+import {
+  GENDER_OPTIONS,
+  MARITAL_STATUS_OPTIONS,
+  TITLE_OPTIONS,
+} from '../global-utils'
 import './SideBar.css'
 
 export const SideBar = () => {
@@ -15,7 +20,7 @@ export const SideBar = () => {
     gender: '',
     maritalStatus: '',
     occupation: '',
-    leaderTitle: location.pathname === '/pastors' ? ['Pastors'] : [],
+    leaderTitle: location.pathname === '/pastors' ? ['Pastor'] : [],
     leaderRank: [],
     ministry: '',
   }
@@ -25,7 +30,7 @@ export const SideBar = () => {
       gender: '',
       maritalStatus: '',
       occupation: '',
-      leaderTitle: location.pathname === '/pastors' ? ['Pastors'] : [],
+      leaderTitle: location.pathname === '/pastors' ? ['Pastor'] : [],
       leaderRank: [],
       ministry: '',
     })
@@ -33,27 +38,12 @@ export const SideBar = () => {
     // eslint-disable-next-line
   }, [])
 
-  const genderOptions = [
-    { key: 'Male', value: 'Male' },
-    { key: 'Female', value: 'Female' },
-  ]
-  const maritalStatusOptions = [
-    { key: 'Single', value: 'Single' },
-    { key: 'Married', value: 'Married' },
-  ]
-
   const leaderOptions = [
     { key: 'CO', value: 'CO' },
     { key: 'Centre Leader', value: 'Centre Leader' },
     { key: 'Sonta Leader', value: 'Sonta Leader' },
     { key: 'Bacenta Leader', value: 'Bacenta Leader' },
     { key: 'Basonta Leader', value: 'Basonta Leader' },
-  ]
-
-  const leaderTitleOptions = [
-    { key: 'Pastors', value: 'Pastors' },
-    { key: 'Reverends', value: 'Reverends' },
-    { key: 'Bishops', value: 'Bishops' },
   ]
 
   const onSubmit = (values, onSubmitProps) => {
@@ -95,7 +85,7 @@ export const SideBar = () => {
                       className="form-control"
                       control="radio"
                       name="gender"
-                      options={genderOptions}
+                      options={GENDER_OPTIONS}
                     />
                   </div>
                   <div className="col pb-2">
@@ -104,7 +94,7 @@ export const SideBar = () => {
                       className="form-control"
                       control="radio"
                       name="maritalStatus"
-                      options={maritalStatusOptions}
+                      options={MARITAL_STATUS_OPTIONS}
                     />
                   </div>
                   {/* <div className="col pb-2">
@@ -157,7 +147,7 @@ export const SideBar = () => {
                       className="form-control"
                       name="leaderTitle"
                       control="checkbox"
-                      options={leaderTitleOptions}
+                      options={TITLE_OPTIONS}
                     />
                   </div>
                 </div>

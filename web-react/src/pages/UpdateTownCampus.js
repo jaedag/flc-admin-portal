@@ -120,7 +120,9 @@ export const UpdateTownCampus = () => {
             variables: {
               campusTownId: townId,
               newLeaderId: newLeaderInfo.id,
-              oldLeaderId: townData?.displayTown?.leader?.id,
+              oldLeaderId: townData?.displayTown?.leader
+                ? townData.displayTown.leader?.id
+                : '',
               oldBishopId: '',
               newBishopId: '',
               loggedBy: currentUser.id,
@@ -162,7 +164,9 @@ export const UpdateTownCampus = () => {
             variables: {
               campusTownId: campusId,
               newLeaderId: newLeaderInfo.id,
-              oldLeaderId: campusData?.displayCampus.leader?.id,
+              oldLeaderId: campusData?.displayCampus.leader
+                ? campusData?.displayCampus.leader?.id
+                : '',
               oldBishopId: '',
               newBishopId: '',
               loggedBy: currentUser.id,

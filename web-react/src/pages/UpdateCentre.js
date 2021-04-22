@@ -22,7 +22,7 @@ import {
   REMOVE_CENTRE_TOWN,
   REMOVE_CENTRE_CAMPUS,
   UPDATE_CENTRE_MUTATION,
-} from '../queries//UpdateMutations'
+} from '../queries/UpdateMutations'
 import { NavBar } from '../components/nav/NavBar.jsx'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
 import { ChurchContext } from '../contexts/ChurchContext'

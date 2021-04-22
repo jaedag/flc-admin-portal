@@ -42,6 +42,7 @@ import { UpdateBacenta } from './pages/UpdateBacenta'
 // import ProtectedRoute from './auth/ProtectedRoute'
 import { MemberFiltersMobile } from './pages/MemberFiltersMobile'
 import { MemberTableMobile } from './components/MemberTableMobile'
+import UserProfilePage from './pages/UserProfilePage'
 
 const AppWithApollo = () => {
   const [accessToken, setAccessToken] = useState()
@@ -385,6 +386,7 @@ const PastorsAdmin = () => {
             <Switch>
               <Route path="/" component={BishopSelect} exact />
               <Route path="/dashboard" component={BishopDashboard} exact />
+              <Route path="/user-profile" component={UserProfilePage} exact />
               <Route path="/member-search" component={SearchPageMobile} exact />
               <Route
                 path="/filter-members"

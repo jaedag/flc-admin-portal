@@ -16,6 +16,7 @@ function UserProfileIcon() {
       setCurrentUser({
         ...currentUser,
         id: data.memberByEmail.id,
+        picture: data.memberByEmail.pictureUrl,
         firstName: data.memberByEmail.firstName,
         lastName: data.memberByEmail.lastName,
         constituency: data.memberByEmail.bacenta.centre?.town
@@ -51,12 +52,12 @@ function UserProfileIcon() {
           <span>
             <img
               className="user-navbar-img "
-              src={user ? user.picture : null}
-              alt={user ? user.name : null}
+              src={currentUser ? currentUser.picture : null}
+              alt={currentUser ? currentUser.firstName : null}
             />
           </span>
           <span className="d-none d-md-inline">
-            {user ? user.given_name : `Admin`}
+            {currentUser ? currentUser.firstName : `Admin`}
           </span>
         </Link>
       )}

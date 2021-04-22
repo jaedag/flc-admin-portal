@@ -299,6 +299,15 @@ type Query {
     @cypher(
       statement: "MATCH (title:Title)<-[:HAS_TITLE]-(member:Member)-[:BELONGS_TO]->()<-[:HAS_BACENTA]-()<-[:HAS_CENTRE]-()<-[:HAS_TOWN|:HAS_CAMPUS]-(:Member {id: $id}) RETURN member"
     )
+  bishopCentreDropdown(id: ID!, nameSearch: String!): [Centre]
+    @cypher(
+      statement: """
+      MATCH (:Member {id: $id})-[:HAS_TOWN|:HAS_CAMPUS]->(campusTown)
+      MATCH (campusTown)-[:HAS_CENTRE]->(centre)
+      WHERE toLower(centre.name) CONTAINS toLower($nameSearch)
+      RETURN centre
+      """
+    )
   bishopMemberList(id: ID): [Member]!
     @cypher(
       statement: """
@@ -703,21 +712,21 @@ type Mutation {
       """
     )
 
-  CreateTown(townName: String, lWhatsappNumber: String, id: ID): Town
+  CreateTown(townName: String!, leaderId: ID!, id: ID!): Town
     @cypher(
       statement: """
        CREATE (town:Town {name:$townName})
          	SET
       	town.id = apoc.create.uuid()
       WITH town
-      MATCH (leader:Member {whatsappNumber: $lWhatsappNumber})
+      MATCH (leader:Member {id: $leaderId})
       MATCH (bishop:Member {id: $id})
 
        CREATE (log:HistoryLog)
         SET
         log.id =  apoc.create.uuid(),
         log.timeStamp = time(),
-        log.historyRecord = leader.firstName + ' ' +leader.lastName + ' started ' + $townName +' Town Church under Bishop '+ bishop.firstName+ ' ' + bishop.lastName+
+        log.historyRecord = leader.firstName + ' ' +leader.lastName + ' started ' + $townName +' Town Church under Bishop '+ bishop.firstName+ ' ' + bishop.lastName
       MERGE (date:TimeGraph {date: date(date())})
       MERGE (bishop)-[:HAS_TOWN]->(town)
       MERGE (leader)-[:LEADS]->(town)
@@ -730,21 +739,21 @@ type Mutation {
       RETURN town
       """
     )
-  CreateCampus(campusName: String, lWhatsappNumber: String, id: ID): Campus
+  CreateCampus(campusName: String!, leaderId: ID!, id: ID!): Campus
     @cypher(
       statement: """
       CREATE (campus:Campus {name:$campusName})
          	SET
       	campus.id = apoc.create.uuid()
       WITH campus
-      MATCH (leader:Member {whatsappNumber: $lWhatsappNumber})
+      MATCH (leader:Member {id: $leaderId})
       MATCH (bishop:Member {id: $id})
 
        CREATE (log:HistoryLog)
         SET
         log.id =  apoc.create.uuid(),
         log.timeStamp = time(),
-        log.historyRecord = leader.firstName + ' ' +leader.lastName + ' started ' + $campusName +' Campus Church under Bishop '+ bishop.firstName+ ' ' + bishop.lastName+
+        log.historyRecord = leader.firstName + ' ' +leader.lastName + ' started ' + $campusName +' Campus Church under Bishop '+ bishop.firstName+ ' ' + bishop.lastName
       MERGE (date:TimeGraph {date: date(date())})
       MERGE (bishop)-[:HAS_CAMPUS]->(campus)
       MERGE (leader)-[:LEADS]->(campus)
@@ -757,11 +766,8 @@ type Mutation {
       RETURN campus
       """
     )
-  CreateCentre(
-    centreName: String!
-    leaderId: ID!
-    townCampusId: ID!
-  ): Centre
+
+  CreateCentre(centreName: String!, leaderId: ID!, townCampusId: ID!): Centre
     @cypher(
       statement: """
       CREATE (centre:Centre {name:$centreName})
@@ -791,7 +797,7 @@ type Mutation {
     )
   CreateBacenta(
     bacentaName: String!
-    lWhatsappNumber: String!
+    leaderId: ID!
     centreId: ID!
     meetingDay: String!
     venueLongitude: Float
@@ -806,7 +812,7 @@ type Mutation {
       WITH bacenta
       MATCH (centre:Centre {id: $centreId})
       MATCH (meetingDay:ServiceDay {day: $meetingDay})
-      MATCH (leader:Member {whatsappNumber: $lWhatsappNumber})
+      MATCH (leader:Member {id: $leaderId})
 
         CREATE (log:HistoryLog:ServiceLog)
          SET
@@ -921,9 +927,9 @@ type Mutation {
 
   UpdateTown(
     townId: ID!
-    townName: String
-    lWhatsappNumber: String
-    bishopId: ID
+    townName: String!
+    leaderId: ID!
+    bishopId: ID!
   ): Town
     @cypher(
       statement: """
@@ -933,7 +939,7 @@ type Mutation {
       WITH town
          CALL {
           WITH town
-          MATCH (leader:Member {whatsappNumber: $lWhatsappNumber})
+          MATCH (leader:Member {id: $leaderId})
           OPTIONAL MATCH (town)<-[r:LEADS]-()
           DELETE r
           MERGE (leader)-[:LEADS]->(town)
@@ -946,7 +952,7 @@ type Mutation {
           MATCH (bishop:Member {id: $bishopId})
           OPTIONAL MATCH (town)<-[r:HAS_TOWN]-()
           DELETE r
-          MERGE (bishop)-[:HAS_TOWN]->(t)
+          MERGE (bishop)-[:HAS_TOWN]->(town)
          	RETURN count(town)
          	}
 
@@ -954,11 +960,10 @@ type Mutation {
       """
     )
   UpdateCampus(
-    campusId: ID
-    campusName: String
-    lWhatsappNumber: String
-    bishopId: ID
-    centres: [ID]
+    campusId: ID!
+    campusName: String!
+    leaderId: ID!
+    bishopId: ID!
   ): Campus
     @cypher(
       statement: """
@@ -968,8 +973,8 @@ type Mutation {
       WITH campus
          CALL {
          	WITH campus
-             MATCH (leader:Member {whatsappNumber: $lWhatsappNumber})
-             OPTIONAL MATCH (t)<-[r:LEADS]-()
+             MATCH (leader:Member {id: $leaderId})
+             OPTIONAL MATCH (campus)<-[r:LEADS]-()
              DELETE r
              MERGE (leader)-[:LEADS]->(campus)
          	RETURN count(campus)
@@ -992,7 +997,7 @@ type Mutation {
   UpdateCentre(
     centreId: ID
     centreName: String
-    lWhatsappNumber: String
+    leaderId: ID
     campusTownID: ID
   ): Centre
     @cypher(
@@ -1004,7 +1009,7 @@ type Mutation {
          CALL {
          	WITH centre
 
-            MATCH (leader:Member {whatsappNumber: $lWhatsappNumber})
+            MATCH (leader:Member {id: $leaderId})
             OPTIONAL MATCH (centre)<-[r:LEADS]-()
             DELETE r
             MERGE (leader)-[:LEADS]->(centre)
@@ -1029,7 +1034,7 @@ type Mutation {
     id: ID
     name: String
     meetingDay: String
-    lWhatsappNumber: String
+    leaderId: ID
     venueLongitude: Float
     venueLatitude: Float
   ): Bacenta
@@ -1042,8 +1047,8 @@ type Mutation {
               WITH bacenta
                     CALL {
                      	WITH bacenta
-                      WITH bacenta WHERE $lWhatsappNumber IS NOT NULL
-                      MATCH (leader:Member {whatsappNumber: $lWhatsappNumber})
+                      WITH bacenta WHERE $leaderId IS NOT NULL
+                      MATCH (leader:Member {id: $leaderId})
                       OPTIONAL MATCH (bacenta)<-[r:LEADS]-()
                       DELETE r
                       MERGE (leader)-[:LEADS]->(bacenta)
@@ -1222,17 +1227,24 @@ type Mutation {
         WITH log
         WITH log WHERE $newLeaderId IS NOT NULL
       MATCH (newLeader:Member {id: $newLeaderId})
-       OPTIONAL MATCH (oldLeader:Member {id: $oldLeaderId})
         SET log :ServiceLog
-        WITH log, newLeader,oldLeader
+        WITH log, newLeader
       OPTIONAl MATCH ()-[r0:HAS_HISTORY]->(log)
         SET r0.pointer = false
-        WITH log,newLeader,oldLeader
-      CREATE (oldLeader)-[:HAS_HISTORY]->(log)
+        WITH log,newLeader
       CREATE (newLeader)-[r:HAS_HISTORY]->(log)
          SET r.pointer = true
          WITH log
       RETURN COUNT(log)
+      }
+
+      WITH log,campusTown
+      CALL {
+        WITH log
+        WITH log WHERE $oldLeaderId IS NOT NULL
+        MATCH (oldLeader:Member {id: $oldLeaderId})
+        CREATE (oldLeader)-[:HAS_HISTORY]->(log)
+        RETURN COUNT(log)
       }
 
 

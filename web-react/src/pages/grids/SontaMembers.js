@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import { useQuery } from '@apollo/client'
-import { MembersGrid } from '../../components/MembersGrid'
+import { MembersGrid } from '../../components/MembersGrid.jsx'
 import { GET_SONTA_MEMBERS } from '../../queries/GridQueries'
 import { ChurchContext } from '../../contexts/ChurchContext'
 
@@ -11,7 +11,6 @@ export const SontaMembers = () => {
     variables: { id: sontaId },
   })
 
-  console.log(error)
   return (
     <MembersGrid
       title={data ? `${data.displaySonta?.name} Sonta` : null}

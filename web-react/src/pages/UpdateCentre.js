@@ -3,16 +3,12 @@ import { useHistory } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/client'
 import { Formik, Form, FieldArray } from 'formik'
 import * as Yup from 'yup'
-import {
-  capitalise,
-  makeSelectOptions,
-  parsePhoneNum,
-  PHONE_NUM_REGEX_VALIDATION,
-} from '../global-utils'
+import { capitalise, makeSelectOptions } from '../global-utils'
 import FormikControl from '../components/formik-components/FormikControl.jsx'
 
 import {
   BACENTA_DROPDOWN,
+  BISHOP_MEMBER_DROPDOWN,
   GET_CAMPUSES,
   GET_CAMPUS_CENTRES,
   GET_TOWNS,
@@ -26,7 +22,7 @@ import {
   REMOVE_CENTRE_TOWN,
   REMOVE_CENTRE_CAMPUS,
   UPDATE_CENTRE_MUTATION,
-} from '../queries//UpdateMutations'
+} from '../queries/UpdateMutations'
 import { NavBar } from '../components/nav/NavBar.jsx'
 import { ErrorScreen, LoadingScreen } from '../components/StatusScreens'
 import { ChurchContext } from '../contexts/ChurchContext'
@@ -73,7 +69,7 @@ export const UpdateCentre = () => {
   const initialValues = {
     centreName: centreData?.displayCentre?.name,
     leaderName: `${centreData?.displayCentre?.leader.firstName} ${centreData?.displayCentre?.leader.lastName} `,
-    leaderWhatsapp: `+${centreData?.displayCentre?.leader.whatsappNumber}`,
+    leaderSelect: centreData?.displayCentre?.leader.id,
     campusTownSelect:
       church.church === 'town'
         ? centreData?.displayCentre?.town?.id
@@ -87,9 +83,11 @@ export const UpdateCentre = () => {
     centreName: Yup.string().required(
       `${capitalise(church.subChurch)} Name is a required field`
     ),
-    leaderWhatsapp: Yup.string().matches(
-      PHONE_NUM_REGEX_VALIDATION,
-      `Phone Number must start with + and country code (eg. '+233')`
+    leaderSelect: Yup.string().required(
+      'Please select a leader from the dropdown'
+    ),
+    bacentas: Yup.array().of(
+      Yup.string().required('Please pick a bacenta from the dropdown')
     ),
   })
 
@@ -106,10 +104,7 @@ export const UpdateCentre = () => {
       let newLeaderInfo = updatedInfo.UpdateCentre?.leader
       //Log if the Leader Changes
 
-      if (
-        parsePhoneNum(newLeaderInfo.whatsappNumber) !==
-        parsePhoneNum(initialValues.leaderWhatsapp)
-      ) {
+      if (newLeaderInfo.id !== initialValues.leaderSelect) {
         LogCentreHistory({
           variables: {
             centreId: centreId,
@@ -316,7 +311,7 @@ export const UpdateCentre = () => {
         variables: {
           centreId: centreId,
           centreName: values.centreName,
-          lWhatsappNumber: parsePhoneNum(values.leaderWhatsapp),
+          leaderId: values.leaderSelect,
           campusTownID: values.campusTownSelect,
         },
       })
@@ -341,7 +336,6 @@ export const UpdateCentre = () => {
       //Log If The TownCampus Changes
       if (values.campusTownSelect !== initialValues.campusTownSelect) {
         if (church.church === 'town') {
-          console.log(initialValues.campusTownSelect)
           RemoveCentreTown({
             variables: {
               campusId: initialValues.campusTownSelect,
@@ -492,10 +486,21 @@ export const UpdateCentre = () => {
                       <div className="form-row row-cols-3">
                         <div className="col-9">
                           <FormikControl
+                            control="combobox2"
+                            name="leaderSelect"
+                            initialValue={initialValues.leaderName}
+                            placeholder="Select a Leader"
+                            setFieldValue={formik.setFieldValue}
+                            optionsQuery={BISHOP_MEMBER_DROPDOWN}
+                            queryVariable1="id"
+                            variable1={bishopId}
+                            queryVariable2="nameSearch"
+                            suggestionText="name"
+                            suggestionID="id"
+                            dataset="bishopMemberDropdown"
+                            aria-describedby="Bishop Member List"
                             className="form-control"
-                            control="input"
-                            name="leaderWhatsapp"
-                            placeholder="Enter Leader WhatsApp No"
+                            error={formik.errors.leaderSelect}
                           />
                         </div>
                       </div>
@@ -524,11 +529,8 @@ export const UpdateCentre = () => {
                                     <FormikControl
                                       control="combobox"
                                       name={`bacentas[${index}]`}
-                                      placeholder={
-                                        bacenta
-                                          ? bacenta.name
-                                          : 'Enter Bacenta Name'
-                                      }
+                                      initialValue={bacenta.name}
+                                      placeholder="Enter Bacenta Name"
                                       setFieldValue={formik.setFieldValue}
                                       optionsQuery={BACENTA_DROPDOWN}
                                       queryVariable="bacentaName"
@@ -537,6 +539,10 @@ export const UpdateCentre = () => {
                                       dataset="bacentaDropdown"
                                       aria-describedby="Bacenta Name"
                                       className="form-control"
+                                      error={
+                                        formik.errors.bacentas &&
+                                        formik.errors.bacentas[index]
+                                      }
                                     />
                                   </div>
                                   <div className="col d-flex">

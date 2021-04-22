@@ -43,14 +43,14 @@ export const UPDATE_MEMBER_MUTATION = gql`
 export const UPDATE_TOWN_MUTATION = gql`
   mutation UpdateTown(
     $townId: ID!
-    $townName: String
-    $lWhatsappNumber: String
-    $bishopId: ID
+    $townName: String!
+    $leaderId: ID!
+    $bishopId: ID!
   ) {
     UpdateTown(
       townId: $townId
       townName: $townName
-      lWhatsappNumber: $lWhatsappNumber
+      leaderId: $leaderId
       bishopId: $bishopId
     ) {
       id
@@ -67,15 +67,15 @@ export const UPDATE_TOWN_MUTATION = gql`
 
 export const UPDATE_CAMPUS_MUTATION = gql`
   mutation UpdateCampus(
-    $campusId: ID
-    $campusName: String
-    $lWhatsappNumber: String
-    $bishopId: ID
+    $campusId: ID!
+    $campusName: String!
+    $leaderId: ID!
+    $bishopId: ID!
   ) {
     UpdateCampus(
       campusId: $campusId
       campusName: $campusName
-      lWhatsappNumber: $lWhatsappNumber
+      leaderId: $leaderId
       bishopId: $bishopId
     ) {
       id
@@ -94,13 +94,13 @@ export const UPDATE_CENTRE_MUTATION = gql`
   mutation UpdateCentre(
     $centreId: ID
     $centreName: String
-    $lWhatsappNumber: String
+    $leaderId: ID
     $campusTownID: ID
   ) {
     UpdateCentre(
       centreId: $centreId
       centreName: $centreName
-      lWhatsappNumber: $lWhatsappNumber
+      leaderId: $leaderId
       campusTownID: $campusTownID
     ) {
       id
@@ -240,7 +240,7 @@ export const UPDATE_BACENTA = gql`
   mutation UpdateBacenta(
     $id: ID
     $name: String
-    $lWhatsappNumber: String
+    $leaderId: ID
     $meetingDay: String
     $venueLatitude: Float
     $venueLongitude: Float
@@ -248,7 +248,7 @@ export const UPDATE_BACENTA = gql`
     UpdateBacenta(
       id: $id
       name: $name
-      lWhatsappNumber: $lWhatsappNumber
+      leaderId: $leaderId
       meetingDay: $meetingDay
       venueLatitude: $venueLatitude
       venueLongitude: $venueLongitude

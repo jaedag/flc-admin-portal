@@ -3,12 +3,7 @@ import { useHistory } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/client'
 import { Formik, Form, FieldArray } from 'formik'
 import * as Yup from 'yup'
-import {
-  capitalise,
-  makeSelectOptions,
-  parsePhoneNum,
-  PHONE_NUM_REGEX_VALIDATION,
-} from '../global-utils'
+import { capitalise, makeSelectOptions } from '../global-utils'
 import FormikControl from '../components/formik-components/FormikControl.jsx'
 
 import {
@@ -18,6 +13,7 @@ import {
   GET_TOWN_CENTRES,
   GET_TOWNS,
   GET_CAMPUSES,
+  BISHOP_MEMBER_DROPDOWN,
 } from '../queries/ListQueries'
 import { BISH_DASHBOARD_COUNTS } from '../queries/CountQueries'
 import {
@@ -65,13 +61,18 @@ export const UpdateTownCampus = () => {
 
   const history = useHistory()
 
-  const campusTownData = campusData?.displayCampus ?? townData?.displayTown
+  const campusTownData =
+    church.church === 'campus'
+      ? campusData?.displayCampus
+      : townData?.displayTown
 
   const initialValues = {
     campusTownName: campusTownData?.name,
-    leaderName: `${campusTownData?.leader?.firstName} ${campusTownData?.leader?.lastName} `,
-    leaderWhatsapp: `+${campusTownData?.leader?.whatsappNumber}`,
-    bishopSelect: campusTownData?.leader?.bishop?.id,
+    leaderName:
+      campusTownData?.leader &&
+      `${campusTownData?.leader?.firstName} ${campusTownData?.leader?.lastName} `,
+    leaderSelect: campusTownData?.leader?.id,
+    bishopSelect: campusTownData?.bishop?.id,
     centres: campusTownData?.centres?.length ? campusTownData.centres : [''],
   }
 
@@ -79,10 +80,12 @@ export const UpdateTownCampus = () => {
     campusTownName: Yup.string().required(
       `${capitalise(church.church)} Name is a required field`
     ),
-    leaderWhatsapp: Yup.string().matches(
-      PHONE_NUM_REGEX_VALIDATION,
-      `Phone Number must start with + and country code (eg. '+233')`
+    leaderSelect: Yup.string().required(
+      'Please select a leader from the dropdown'
     ),
+    // centres: Yup.array().of(
+    //   Yup.string().required('Please pick a centre from the dropdown')
+    // ),
   })
 
   const [LogCampusTownHistory] = useMutation(LOG_CAMPUSTOWN_HISTORY, {
@@ -103,21 +106,27 @@ export const UpdateTownCampus = () => {
     {
       onCompleted: (updatedInfo) => {
         let newLeaderInfo = updatedInfo.UpdateTown?.leader
+        let historyRecord
+        if (townData?.displayTown?.leader) {
+          historyRecord = `${newLeaderInfo.firstName} ${newLeaderInfo.lastName} was transferred to become the new Town CO for ${initialValues.campusTownName} replacing ${townData?.displayTown?.leader.firstName} ${townData?.displayTown?.leader.lastName}`
+        }
+        if (!townData?.displayTown?.leader) {
+          historyRecord = `${newLeaderInfo.firstName} ${newLeaderInfo.lastName} was transferred to become the new Town CO for ${initialValues.campusTownName}`
+        }
 
         //Log if the Leader Changes
-        if (
-          parsePhoneNum(newLeaderInfo.whatsappNumber) !==
-          parsePhoneNum(initialValues.leaderWhatsapp)
-        ) {
+        if (newLeaderInfo.id !== initialValues.leaderSelect) {
           LogCampusTownHistory({
             variables: {
-              townId: townId,
+              campusTownId: townId,
               newLeaderId: newLeaderInfo.id,
-              oldLeaderId: townData?.displayTown.leader.id,
+              oldLeaderId: townData?.displayTown?.leader
+                ? townData.displayTown.leader?.id
+                : '',
               oldBishopId: '',
               newBishopId: '',
               loggedBy: currentUser.id,
-              historyRecord: `${newLeaderInfo.firstName} ${newLeaderInfo.lastName} was transferred to become the new Town CO for ${initialValues.campusTownName} replacing ${townData?.displayTown?.leader.firstName} ${townData?.displayTown?.leader.lastName}`,
+              historyRecord: historyRecord,
             },
           })
         }
@@ -142,21 +151,26 @@ export const UpdateTownCampus = () => {
     {
       onCompleted: (updatedInfo) => {
         let newLeaderInfo = updatedInfo.UpdateCampus?.leader
-
+        let historyRecord
+        if (campusData?.displayCampus?.leader) {
+          historyRecord = `${newLeaderInfo.firstName} ${newLeaderInfo.lastName} was transferred to become the new Campus CO for ${initialValues.campusTownName} replacing ${campusData?.displayCampus?.leader.firstName} ${campusData?.displayCampus?.leader.lastName}`
+        }
+        if (!campusData?.displayCampus?.leader) {
+          historyRecord = `${newLeaderInfo.firstName} ${newLeaderInfo.lastName} was transferred to become the new Campus CO for ${initialValues.campusTownName}`
+        }
         //Log if the Leader Changes
-        if (
-          parsePhoneNum(newLeaderInfo.whatsappNumber) !==
-          parsePhoneNum(initialValues.leaderWhatsapp)
-        ) {
+        if (newLeaderInfo.id !== initialValues.leaderSelect) {
           LogCampusTownHistory({
             variables: {
               campusTownId: campusId,
               newLeaderId: newLeaderInfo.id,
-              oldLeaderId: campusData?.displayCampus.leader.id,
+              oldLeaderId: campusData?.displayCampus.leader
+                ? campusData?.displayCampus.leader?.id
+                : '',
               oldBishopId: '',
               newBishopId: '',
               loggedBy: currentUser.id,
-              historyRecord: `${newLeaderInfo.firstName} ${newLeaderInfo.lastName} was transferred to become the new Campu CO for ${initialValues.campusTownName} replacing ${campusData?.displayCampus?.leader.firstName} ${campusData?.displayCampus?.leader.lastName}`,
+              historyRecord: historyRecord,
             },
           })
         }
@@ -309,7 +323,7 @@ export const UpdateTownCampus = () => {
 
         LogCampusTownHistory({
           variables: {
-            townId: townId,
+            campusTownId: townId,
             newLeaderId: '',
             oldLeaderId: '',
             newBishopId: data.AddTownBishop.from.id,
@@ -335,7 +349,7 @@ export const UpdateTownCampus = () => {
         //After Adding the campus to a bishop, then you log that change.
         LogCampusTownHistory({
           variables: {
-            townId: townId,
+            campusTownId: townId,
             newLeaderId: '',
             oldLeaderId: '',
             newBishopId: data.AddTownBishop.from.id,
@@ -364,7 +378,7 @@ export const UpdateTownCampus = () => {
           variables: {
             campusId: campusId,
             campusName: values.campusTownName,
-            lWhatsappNumber: parsePhoneNum(values.leaderWhatsapp),
+            leaderId: values.leaderSelect,
             bishopId: values.bishopSelect,
           },
         })
@@ -404,7 +418,7 @@ export const UpdateTownCampus = () => {
           variables: {
             townId: townId,
             townName: values.campusTownName,
-            lWhatsappNumber: parsePhoneNum(values.leaderWhatsapp),
+            leaderId: values.leaderSelect,
             bishopId: values.bishopSelect,
           },
         })
@@ -413,7 +427,7 @@ export const UpdateTownCampus = () => {
         if (values.campusTownName !== initialValues.campusTownName) {
           LogCampusTownHistory({
             variables: {
-              townId: townId,
+              campusTownId: townId,
               newLeaderId: '',
               oldLeaderId: '',
               oldBishopId: '',
@@ -573,25 +587,25 @@ export const UpdateTownCampus = () => {
                       <div className="row d-flex align-items-center">
                         <div className="col">
                           <FormikControl
+                            control="combobox2"
+                            name="leaderSelect"
+                            initialValue={initialValues.leaderName}
+                            placeholder="Select a Leader"
+                            setFieldValue={formik.setFieldValue}
+                            optionsQuery={BISHOP_MEMBER_DROPDOWN}
+                            queryVariable1="id"
+                            variable1={bishopId}
+                            queryVariable2="nameSearch"
+                            suggestionText="name"
+                            suggestionID="id"
+                            dataset="bishopMemberDropdown"
+                            aria-describedby="Bishop Member List"
                             className="form-control"
-                            control="input"
-                            name="leaderName"
-                            placeholder={`Name of ${capitalise(
-                              church.church
-                            )} CO`}
+                            error={formik.errors.leaderSelect}
                           />
                         </div>
                       </div>
-                      <div className="form-row row-cols-3">
-                        <div className="col-9">
-                          <FormikControl
-                            className="form-control"
-                            control="input"
-                            name="leaderWhatsapp"
-                            placeholder="Enter Leader WhatsApp No"
-                          />
-                        </div>
-                      </div>
+
                       <small className="pt-2">
                         {`Select any ${
                           church.church === 'town' ? 'Centres' : 'centres'
@@ -614,11 +628,8 @@ export const UpdateTownCampus = () => {
                                     <FormikControl
                                       control="combobox"
                                       name={`centres[${index}]`}
-                                      placeholder={
-                                        centre
-                                          ? centre.name
-                                          : 'Enter Centre Name'
-                                      }
+                                      initialValue={centre.name}
+                                      placeholder="Enter Centre Name"
                                       setFieldValue={formik.setFieldValue}
                                       optionsQuery={CENTRE_DROPDOWN}
                                       queryVariable={`${church.subChurch}Name`}

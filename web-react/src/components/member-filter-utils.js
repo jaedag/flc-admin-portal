@@ -186,7 +186,7 @@ export const memberFilter = (memberData, filters) => {
     bishops: [],
   }
 
-  if (filters.leaderTitle.includes('Pastors')) {
+  if (filters.leaderTitle.includes('Pastor')) {
     leaderTitleData.pastors = filterFor(
       filteredData,
       'title',
@@ -195,7 +195,7 @@ export const memberFilter = (memberData, filters) => {
       'title'
     )
   }
-  if (filters.leaderTitle.includes('Reverends')) {
+  if (filters.leaderTitle.includes('Reverend')) {
     leaderTitleData.reverends = filterFor(
       filteredData,
       'title',
@@ -204,7 +204,7 @@ export const memberFilter = (memberData, filters) => {
       'title'
     )
   }
-  if (filters.leaderTitle.includes('Bishops')) {
+  if (filters.leaderTitle.includes('Bishop')) {
     leaderTitleData.bishops = filterFor(
       filteredData,
       'title',

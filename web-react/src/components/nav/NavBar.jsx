@@ -1,11 +1,11 @@
 import React, { useContext } from 'react'
 import { useLocation } from 'react-router-dom'
 import SearchBox from '../SearchBox'
-import UserProfile from '../UserProfile'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import NavLink from './NavLink.jsx'
 import './NavBar.css'
 import { capitalise } from '../../global-utils'
+import UserProfileIcon from '../UserProfileIcon'
 
 export const NavBar = () => {
   const { church, setFilters } = useContext(ChurchContext)
@@ -73,7 +73,7 @@ export const NavBar = () => {
           </div>
 
           <div className="col">
-            <UserProfile />
+            <UserProfileIcon />
           </div>
         </div>
       </div>

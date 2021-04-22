@@ -3,18 +3,14 @@ import { useHistory } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/client'
 import { Formik, Form, FieldArray } from 'formik'
 import * as Yup from 'yup'
-import {
-  capitalise,
-  makeSelectOptions,
-  parsePhoneNum,
-  PHONE_NUM_REGEX_VALIDATION,
-} from '../global-utils'
+import { capitalise, makeSelectOptions } from '../global-utils'
 import FormikControl from '../components/formik-components/FormikControl.jsx'
 import {
   GET_BISHOPS,
   GET_TOWNS,
   GET_CAMPUSES,
-  CENTRE_DROPDOWN,
+  BISHOP_MEMBER_DROPDOWN,
+  BISHOP_CENTRE_DROPDOWN,
 } from '../queries/ListQueries'
 import {
   CREATE_TOWN_MUTATION,
@@ -35,8 +31,7 @@ function AddTownCampus() {
 
   const initialValues = {
     campusTownName: '',
-    leaderName: '',
-    leaderWhatsapp: '',
+    leaderId: '',
     bishopSelect: '',
     centres: [''],
   }
@@ -45,9 +40,11 @@ function AddTownCampus() {
     campusTownName: Yup.string().required(
       `${capitalise(church.church)} Name is a required field`
     ),
-    leaderWhatsapp: Yup.string().matches(
-      PHONE_NUM_REGEX_VALIDATION,
-      `Phone Number must start with + and country code (eg. '+233')`
+    leaderId: Yup.string().required(
+      'Please choose a leader from the drop down'
+    ),
+    centres: Yup.array().of(
+      Yup.string().required('Please pick a centre from the dropdown')
     ),
   })
 
@@ -92,7 +89,7 @@ function AddTownCampus() {
         CreateTown({
           variables: {
             townName: values.campusTownName,
-            lWhatsappNumber: parsePhoneNum(values.leaderWhatsapp),
+            leaderId: values.leaderId,
             id: values.bishopSelect,
             centres: values.centres,
           },
@@ -101,7 +98,7 @@ function AddTownCampus() {
         CreateCampus({
           variables: {
             campusName: values.campusTownName,
-            lWhatsappNumber: values.leaderWhatsapp,
+            leaderId: values.leaderId,
             id: values.bishopSelect,
             centres: values.centres,
           },
@@ -159,25 +156,24 @@ function AddTownCampus() {
                       <div className="row d-flex align-items-center">
                         <div className="col">
                           <FormikControl
+                            control="combobox2"
+                            name="leaderId"
+                            placeholder="Select a Leader"
+                            setFieldValue={formik.setFieldValue}
+                            optionsQuery={BISHOP_MEMBER_DROPDOWN}
+                            queryVariable1="id"
+                            variable1={bishopId}
+                            queryVariable2="nameSearch"
+                            suggestionText="name"
+                            suggestionID="id"
+                            dataset="bishopMemberDropdown"
+                            aria-describedby="Bishop Member List"
                             className="form-control"
-                            control="input"
-                            name="leaderName"
-                            placeholder={`Name of ${capitalise(
-                              church.church
-                            )} CO`}
+                            error={formik.errors.leaderId}
                           />
                         </div>
                       </div>
-                      <div className="form-row row-cols-3">
-                        <div className="col-9">
-                          <FormikControl
-                            className="form-control"
-                            control="input"
-                            name="leaderWhatsapp"
-                            placeholder="Enter Leader WhatsApp No"
-                          />
-                        </div>
-                      </div>
+
                       <small className="pt-2">
                         {`Select any ${
                           church.church === 'town' ? 'Centres' : 'centres'
@@ -197,22 +193,23 @@ function AddTownCampus() {
                                 <div key={index} className="form-row row-cols">
                                   <div className="col-9">
                                     <FormikControl
-                                      control="combobox"
+                                      control="combobox2"
                                       name={`centres[${index}]`}
-                                      modifier="id-only"
-                                      placeholder={`${capitalise(
-                                        church.subChurch
-                                      )} Name`}
+                                      placeholder="Centre Name"
                                       setFieldValue={formik.setFieldValue}
-                                      optionsQuery={CENTRE_DROPDOWN}
-                                      queryVariable={`${church.subChurch}Name`}
+                                      optionsQuery={BISHOP_CENTRE_DROPDOWN}
+                                      queryVariable1="id"
+                                      variable1={bishopId}
+                                      queryVariable2="nameSearch"
                                       suggestionText="name"
                                       suggestionID="id"
-                                      dataset={`${church.subChurch}Dropdown`}
-                                      aria-describedby={`${capitalise(
-                                        church.subChurch
-                                      )} Name`}
+                                      dataset="bishopCentreDropdown"
+                                      aria-describedby="Centre Name"
                                       className="form-control"
+                                      error={
+                                        formik.errors.centres &&
+                                        formik.errors.centres[index]
+                                      }
                                     />
                                   </div>
                                   <div className="col d-flex">

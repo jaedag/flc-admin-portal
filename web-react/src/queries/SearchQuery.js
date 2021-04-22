@@ -32,6 +32,7 @@ export const GLOBAL_SEARCH = gql`
       id
       name
       town {
+        id
         bishop {
           id
         }
@@ -60,11 +61,13 @@ export const GLOBAL_SEARCH = gql`
       id
       name
       town {
+        id
         bishop {
           id
         }
       }
       campus {
+        id
         bishop {
           id
         }
@@ -75,11 +78,13 @@ export const GLOBAL_SEARCH = gql`
       name
       centre {
         town {
+          id
           bishop {
             id
           }
         }
         campus {
+          id
           bishop {
             id
           }

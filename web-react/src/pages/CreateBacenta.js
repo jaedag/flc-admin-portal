@@ -3,12 +3,7 @@ import { useHistory } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/client'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
-import {
-  capitalise,
-  makeSelectOptions,
-  parsePhoneNum,
-  PHONE_NUM_REGEX_VALIDATION,
-} from '../global-utils'
+import { capitalise, makeSelectOptions } from '../global-utils'
 import FormikControl from '../components/formik-components/FormikControl.jsx'
 
 import {
@@ -16,6 +11,7 @@ import {
   GET_TOWN_CENTRES,
   GET_CAMPUS_CENTRES,
   GET_TOWNS,
+  BISHOP_MEMBER_DROPDOWN,
 } from '../queries/ListQueries'
 import { CREATE_BACENTA_MUTATION } from '../queries/CreateMutations'
 import { NavBar } from '../components/nav/NavBar.jsx'
@@ -26,8 +22,7 @@ import Spinner from '../components/Spinner'
 export const CreateBacenta = () => {
   const initialValues = {
     bacentaName: '',
-    leaderName: '',
-    leaderWhatsapp: '',
+    leaderId: '',
     townSelect: '',
     centreSelect: '',
     meetingDay: '',
@@ -48,16 +43,20 @@ export const CreateBacenta = () => {
 
   const validationSchema = Yup.object({
     bacentaName: Yup.string().required('Bacenta Name is a required field'),
-    leaderName: Yup.string().required('This is a required field'),
-    leaderWhatsapp: Yup.string()
-      .matches(
-        PHONE_NUM_REGEX_VALIDATION,
-        `Phone Number must start with + and country code (eg. '+233')`
-      )
-      .required('Phone Number is required'),
+    leaderId: Yup.string().required(
+      'Please choose a leader from the drop down'
+    ),
     meetingDay: Yup.string().required('Meeting Day is a required field'),
-    venueLatitude: Yup.string().required('Please fill in your location info'),
-    venueLongitude: Yup.string().required('Please fill in your location info'),
+    venueLatitude: Yup.string()
+      .required('Please fill in your location info')
+      .test('is-decimal', 'Please enter valid coordinates', (value) =>
+        (value + '').match(/^\d*\.{1}\d*$/)
+      ),
+    venueLongitude: Yup.string()
+      .required('Please fill in your location info')
+      .test('is-decimal', 'Please enter valid coordinates', (value) =>
+        (value + '').match(/^\d*\.{1}\d*$/)
+      ),
   })
 
   const history = useHistory()
@@ -84,7 +83,7 @@ export const CreateBacenta = () => {
     CreateBacenta({
       variables: {
         bacentaName: values.bacentaName,
-        lWhatsappNumber: parsePhoneNum(values.leaderWhatsapp),
+        leaderId: values.leaderId,
         centreId: values.centreSelect,
         meetingDay: values.meetingDay,
         venueLongitude: parseFloat(values.venueLongitude),
@@ -183,18 +182,20 @@ export const CreateBacenta = () => {
                         </div>
                         <div className="col-9">
                           <FormikControl
+                            control="combobox2"
+                            name="leaderId"
+                            placeholder="Select a Leader"
+                            setFieldValue={formik.setFieldValue}
+                            optionsQuery={BISHOP_MEMBER_DROPDOWN}
+                            queryVariable1="id"
+                            variable1={bishopId}
+                            queryVariable2="nameSearch"
+                            suggestionText="name"
+                            suggestionID="id"
+                            dataset="bishopMemberDropdown"
+                            aria-describedby="Bishop Member List"
                             className="form-control"
-                            control="input"
-                            name="leaderName"
-                            placeholder="Leader Name"
-                          />
-                        </div>
-                        <div className="col-9">
-                          <FormikControl
-                            className="form-control"
-                            control="input"
-                            name="leaderWhatsapp"
-                            placeholder="Leader WhatsApp No."
+                            error={formik.errors.leaderId}
                           />
                         </div>
                       </div>

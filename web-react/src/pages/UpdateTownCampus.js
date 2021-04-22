@@ -8,12 +8,12 @@ import FormikControl from '../components/formik-components/FormikControl.jsx'
 
 import {
   GET_BISHOPS,
-  CENTRE_DROPDOWN,
   GET_CAMPUS_CENTRES,
   GET_TOWN_CENTRES,
   GET_TOWNS,
   GET_CAMPUSES,
   BISHOP_MEMBER_DROPDOWN,
+  BISHOP_CENTRE_DROPDOWN,
 } from '../queries/ListQueries'
 import { BISH_DASHBOARD_COUNTS } from '../queries/CountQueries'
 import {
@@ -83,9 +83,9 @@ export const UpdateTownCampus = () => {
     leaderSelect: Yup.string().required(
       'Please select a leader from the dropdown'
     ),
-    // centres: Yup.array().of(
-    //   Yup.string().required('Please pick a centre from the dropdown')
-    // ),
+    centres: Yup.array().of(
+      Yup.object().required('Please pick a centre from the dropdown')
+    ),
   })
 
   const [LogCampusTownHistory] = useMutation(LOG_CAMPUSTOWN_HISTORY, {
@@ -626,20 +626,26 @@ export const UpdateTownCampus = () => {
                                 <div key={index} className="form-row row-cols">
                                   <div className="col-9">
                                     <FormikControl
-                                      control="combobox"
+                                      control="combobox2"
                                       name={`centres[${index}]`}
-                                      initialValue={centre.name}
+                                      initialValue={centre?.name}
                                       placeholder="Enter Centre Name"
                                       setFieldValue={formik.setFieldValue}
-                                      optionsQuery={CENTRE_DROPDOWN}
-                                      queryVariable={`${church.subChurch}Name`}
+                                      optionsQuery={BISHOP_CENTRE_DROPDOWN}
+                                      queryVariable1="id"
+                                      variable1={bishopId}
+                                      queryVariable2={`${church.subChurch}Name`}
                                       suggestionText="name"
                                       suggestionID="id"
-                                      dataset={`${church.subChurch}Dropdown`}
+                                      dataset="bishopCentreDropdown"
                                       aria-describedby={`${capitalise(
                                         church.subChurch
                                       )} Name`}
                                       className="form-control"
+                                      error={
+                                        formik.errors.centres &&
+                                        formik.errors.centres[index]
+                                      }
                                     />
                                   </div>
                                   <div className="col d-flex">

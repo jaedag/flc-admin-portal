@@ -7,7 +7,7 @@ import { capitalise, makeSelectOptions } from '../global-utils'
 import FormikControl from '../components/formik-components/FormikControl.jsx'
 
 import {
-  BACENTA_DROPDOWN,
+  BISHOP_BACENTA_DROPDOWN,
   BISHOP_MEMBER_DROPDOWN,
   GET_CAMPUSES,
   GET_CAMPUS_CENTRES,
@@ -68,8 +68,10 @@ export const UpdateCentre = () => {
 
   const initialValues = {
     centreName: centreData?.displayCentre?.name,
-    leaderName: `${centreData?.displayCentre?.leader.firstName} ${centreData?.displayCentre?.leader.lastName} `,
-    leaderSelect: centreData?.displayCentre?.leader.id,
+    leaderName: centreData?.displayCentre?.leader
+      ? `${centreData?.displayCentre?.leader.firstName} ${centreData?.displayCentre?.leader.lastName}`
+      : '',
+    leaderSelect: centreData?.displayCentre?.leader?.id,
     campusTownSelect:
       church.church === 'town'
         ? centreData?.displayCentre?.town?.id
@@ -87,7 +89,7 @@ export const UpdateCentre = () => {
       'Please select a leader from the dropdown'
     ),
     bacentas: Yup.array().of(
-      Yup.string().required('Please pick a bacenta from the dropdown')
+      Yup.object().required('Please pick a bacenta from the dropdown')
     ),
   })
 
@@ -527,16 +529,18 @@ export const UpdateCentre = () => {
                                 <div key={index} className="form-row row-cols">
                                   <div className="col-9">
                                     <FormikControl
-                                      control="combobox"
+                                      control="combobox2"
                                       name={`bacentas[${index}]`}
-                                      initialValue={bacenta.name}
+                                      initialValue={bacenta?.name}
                                       placeholder="Enter Bacenta Name"
                                       setFieldValue={formik.setFieldValue}
-                                      optionsQuery={BACENTA_DROPDOWN}
-                                      queryVariable="bacentaName"
+                                      optionsQuery={BISHOP_BACENTA_DROPDOWN}
+                                      queryVariable1="id"
+                                      variable1={bishopId}
+                                      queryVariable2="bacentaName"
                                       suggestionText="name"
                                       suggestionID="id"
-                                      dataset="bacentaDropdown"
+                                      dataset="bishopBacentaDropdown"
                                       aria-describedby="Bacenta Name"
                                       className="form-control"
                                       error={

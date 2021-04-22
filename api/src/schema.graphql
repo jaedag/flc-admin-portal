@@ -3,9 +3,9 @@ type Member {
   firstName: String @index #@search
   middleName: String
   lastName: String @index
-  email: String
+  email: String @unique
   phoneNumber: String
-  whatsappNumber: String #@unique
+  whatsappNumber: String @unique
   pictureUrl: String
   gender: Gender @relation(name: "HAS_GENDER", direction: OUT)
   maritalStatus: MaritalStatus

@@ -5,8 +5,11 @@ import { Formik, Form, FieldArray } from 'formik'
 import * as Yup from 'yup'
 import {
   makeSelectOptions,
+  MARITAL_STATUS_OPTIONS,
+  TITLE_OPTIONS,
   parsePhoneNum,
   PHONE_NUM_REGEX_VALIDATION,
+  GENDER_OPTIONS,
 } from '../global-utils'
 import FormikControl from '../components/formik-components/FormikControl.jsx'
 import {
@@ -61,21 +64,6 @@ export const CreateMember = () => {
     ],
   }
 
-  const genderOptions = [
-    { key: 'Male', value: 'Male' },
-    { key: 'Female', value: 'Female' },
-  ]
-  const maritalStatusOptions = [
-    { key: 'Single', value: 'Single' },
-    { key: 'Married', value: 'Married' },
-  ]
-
-  const titleOptions = [
-    { key: 'Pastor', value: 'Pastor' },
-    { key: 'Reverend', value: 'Reverend' },
-    { key: 'Bishop', value: 'Bishop' },
-  ]
-
   const { clickCard, bishopId } = useContext(ChurchContext)
   const { setMemberId } = useContext(MemberContext)
 
@@ -85,7 +73,9 @@ export const CreateMember = () => {
     gender: Yup.string().required('Gender is a required field'),
     email: Yup.string().email('Please enter a valid email address'),
     maritalStatus: Yup.string().required('Marital Status is a required field'),
-    dob: Yup.string().required('Date of Birth is a required field'),
+    dob: Yup.date()
+      .max(new Date(), "You can't be born after today")
+      .required('Date of Birth is a required field'),
     phoneNumber: Yup.string()
       .matches(
         PHONE_NUM_REGEX_VALIDATION,
@@ -96,7 +86,7 @@ export const CreateMember = () => {
       PHONE_NUM_REGEX_VALIDATION,
       `Phone Number must start with + and country code (eg. '+233')`
     ),
-    bacenta: Yup.string().required('Bacenta is a required field'),
+    bacenta: Yup.string().required('Please pick a bacenta from the dropdown'),
     ministry: Yup.string().required('Ministry is a required field'),
   })
 
@@ -285,7 +275,7 @@ export const CreateMember = () => {
                           control="select"
                           name="gender"
                           placeholder="Gender"
-                          options={genderOptions}
+                          options={GENDER_OPTIONS}
                           defaultOption="Gender"
                         />
                       </div>
@@ -319,7 +309,7 @@ export const CreateMember = () => {
                           control="select"
                           name="maritalStatus"
                           placeholder="Marital Status"
-                          options={maritalStatusOptions}
+                          options={MARITAL_STATUS_OPTIONS}
                           defaultOption="Marital Status"
                         />
                       </div>
@@ -384,6 +374,7 @@ export const CreateMember = () => {
                           dataset="bishopBacentaDropdown"
                           aria-describedby="Bacenta Name"
                           className="form-control"
+                          error={formik.errors.bacenta && formik.errors.bacenta}
                         />
                       </div>
                       <div className="col-10">
@@ -418,7 +409,7 @@ export const CreateMember = () => {
                                     <FormikControl
                                       className="form-control"
                                       control="select"
-                                      options={titleOptions}
+                                      options={TITLE_OPTIONS}
                                       defaultOption="Title"
                                       name={`pastoralAppointment[${index}].title`}
                                     />

@@ -318,8 +318,6 @@ export const UpdateCentre = () => {
         },
       })
 
-      //LOGS
-
       //Log if Centre Name Changes
       if (values.centreName !== initialValues.centreName) {
         LogCentreHistory({

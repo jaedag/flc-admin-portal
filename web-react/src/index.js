@@ -142,6 +142,7 @@ const PastorsAdmin = () => {
   )
   const [currentUser, setCurrentUser] = useState({
     id: '',
+    picture: '',
     firstName: '',
     lastName: '',
     email: '',

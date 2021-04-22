@@ -12,6 +12,7 @@ CREATE (m:Member {whatsappNumber:line.`WhatsApp Number (if different)`})
     m.lastName = apoc.text.capitalizeAll(toLower(trim(line.`Last Name`))),
     m.phoneNumber = line.`Phone Number`,
     m.areaOfResidence = line.`Area of Residence`,
+    m.emailAddress = line.`Email`,
     m.pictureUrl   = line.pictureUrl
 
    
@@ -65,6 +66,7 @@ MERGE (m:Member {whatsappNumber: line.`WhatsApp Number (if different)`})
     m.lastName = line.`Last Name`,
     m.phoneNumber = line.`Phone Number`,
     m.areaOfResidence = line.`Area of Residence`,
+    m.email = line.`Email`,
     m.pictureUrl = line.picture
 
 with line,m WHERE line.Gender is not null

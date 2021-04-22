@@ -15,7 +15,7 @@ const BishopSelect = () => {
   const { data, loading } = useQuery(GET_BISHOPS)
 
   const history = useHistory()
-  const version = 'v0.1.2'
+  const version = 'v0.1.3'
 
   if (loading) {
     return (
@@ -29,7 +29,10 @@ const BishopSelect = () => {
             style={{ maxWidth: '30%' }}
           />
           <h3>
-            FLC Admin Dashboard<sub>{version}</sub>
+            FLC Admin Dashboard{' '}
+            <sup>
+              <small>{version}</small>
+            </sup>
           </h3>
           <h5 className="text-secondary">Loading...</h5>
           <div className="spinner-border-center full-center" role="status">

@@ -1,6 +1,7 @@
 import React from 'react'
 import { Field, ErrorMessage } from 'formik'
 import TextError from './TextError.jsx'
+import './Input.css'
 
 function Input(props) {
   const { label, name, ...rest } = props

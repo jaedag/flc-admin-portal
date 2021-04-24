@@ -355,7 +355,7 @@ const UserProfilePage = () => {
                           control="combobox2"
                           name="bacenta"
                           label="Bacenta*"
-                          initialValue={memberData.displayMember.bacenta.name}
+                          initialValue={memberData.displayMember.bacenta?.name}
                           placeholder="Choose a Bacenta"
                           setFieldValue={formik.setFieldValue}
                           optionsQuery={BISHOP_BACENTA_DROPDOWN}

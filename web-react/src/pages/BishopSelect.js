@@ -15,8 +15,7 @@ const BishopSelect = () => {
   const { data, loading } = useQuery(GET_BISHOPS)
 
   const history = useHistory()
-  const version = 'v0.1.4'
-
+  const version = 'v0.1.5'
 
   if (loading) {
     return (

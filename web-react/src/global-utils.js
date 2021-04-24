@@ -30,6 +30,14 @@ export const TITLE_OPTIONS = [
   { key: 'Bishop', value: 'Bishop' },
 ]
 
+export const SERVICE_DAY_OPTIONS = [
+  { key: 'Tuesday', value: 'Tuesday' },
+  { key: 'Wednesday', value: 'Wednesday' },
+  { key: 'Thursday', value: 'Thursday' },
+  { key: 'Friday', value: 'Friday' },
+  { key: 'Saturday', value: 'Saturday' },
+]
+
 export const capitalise = (str) => {
   return str?.charAt(0).toUpperCase() + str?.slice(1)
 }

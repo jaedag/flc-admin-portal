@@ -3,7 +3,11 @@ import { useHistory } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/client'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
-import { capitalise, makeSelectOptions } from '../global-utils'
+import {
+  capitalise,
+  makeSelectOptions,
+  SERVICE_DAY_OPTIONS,
+} from '../global-utils'
 import FormikControl from '../components/formik-components/FormikControl.jsx'
 
 import {
@@ -33,13 +37,6 @@ export const CreateBacenta = () => {
   const { church, bishopId, setBacentaId } = useContext(ChurchContext)
 
   let townCampusIdVar
-  const serviceDayOptions = [
-    { key: 'Tuesday', value: 'Tuesday' },
-    { key: 'Wednesday', value: 'Wednesday' },
-    { key: 'Thursday', value: 'Thursday' },
-    { key: 'Friday', value: 'Friday' },
-    { key: 'Saturday', value: 'Saturday' },
-  ]
 
   const validationSchema = Yup.object({
     bacentaName: Yup.string().required('Bacenta Name is a required field'),
@@ -176,7 +173,7 @@ export const CreateBacenta = () => {
                             className="form-control"
                             control="select"
                             name="meetingDay"
-                            options={serviceDayOptions}
+                            options={SERVICE_DAY_OPTIONS}
                             defaultOption="Pick a Service Day"
                           />
                         </div>

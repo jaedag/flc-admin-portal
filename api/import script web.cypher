@@ -51,8 +51,19 @@ CREATE CONSTRAINT ON (b:Bacenta) ASSERT b.id IS UNIQUE;
 CREATE CONSTRAINT ON (b:Centre) ASSERT b.id IS UNIQUE;
 CREATE CONSTRAINT ON (b:Town) ASSERT b.id IS UNIQUE;
 CREATE CONSTRAINT ON (b:Campus) ASSERT b.id IS UNIQUE;
-// CREATE CONSTRAINT ON (m:Member) ASSERT m.whatsappNumber IS UNIQUE;
-CREATE INDEX FOR (n:Member) ON (n.whatsappNumber);
+CREATE CONSTRAINT ON (b:HistoryLog) ASSERT b.id IS UNIQUE;
+CREATE CONSTRAINT ON (b:Ministry) ASSERT b.id IS UNIQUE;
+CREATE CONSTRAINT ON (b:Sonta) ASSERT b.id IS UNIQUE;
+
+CREATE CONSTRAINT ON (m:Member) ASSERT m.whatsappNumber IS UNIQUE;
+CREATE CONSTRAINT ON (m:Member) ASSERT m.email IS UNIQUE;
+CREATE INDEX FOR (n:Member) ON (n.firstName);
+CREATE INDEX FOR (n:Member) ON (n.lastName);
+CREATE INDEX FOR (n:Bacenta) ON (n.name);
+CREATE INDEX FOR (n:Centre) ON (n.name);
+CREATE INDEX FOR (n:Campus) ON (n.name);
+CREATE INDEX FOR (n:Town) ON (n.name);
+CREATE INDEX FOR (n:Sonta) ON (n.name);
 CREATE INDEX FOR (n:TimeGraph) ON (n.date);
 
 

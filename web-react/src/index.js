@@ -345,10 +345,16 @@ const PastorsAdmin = () => {
         setCampusId(card.id)
         sessionStorage.setItem('campusId', card.id)
         break
+      case 'Basonta':
+        setSontaId(card.sonta.id)
+        sessionStorage.setItem('sontaId', card.sonta.id)
+        break
       default:
         break
     }
-
+    if (card.__typename === 'Basonta') {
+      card.link = '/sonta/displaydetails'
+    }
     if (card.link === '') {
       card.link = `/${card.__typename.toLowerCase()}/displaydetails`
     }

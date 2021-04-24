@@ -175,6 +175,9 @@ export const DISPLAY_MEMBER = gql`
       leadsBasonta {
         id
         name
+        sonta {
+          id
+        }
       }
       leadsMinistry {
         id

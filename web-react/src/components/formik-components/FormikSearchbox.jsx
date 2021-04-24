@@ -55,12 +55,13 @@ function FormikSearchbox(props) {
   useEffect(() => {
     const timerId = setTimeout(() => {
       setDebouncedText(searchString)
+      globalSearch({ variables: { searchKey: debouncedText.trim() } })
     }, 200)
 
     return () => {
       clearTimeout(timerId)
     }
-  }, [searchString, globalSearch])
+  }, [searchString, globalSearch, debouncedText])
 
   return (
     <div>

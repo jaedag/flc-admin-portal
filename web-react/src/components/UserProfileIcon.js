@@ -19,9 +19,9 @@ function UserProfileIcon() {
         picture: data.memberByEmail.pictureUrl,
         firstName: data.memberByEmail.firstName,
         lastName: data.memberByEmail.lastName,
-        constituency: data.memberByEmail.bacenta.centre?.town
-          ? data.memberByEmail.bacenta.centre?.town.id
-          : data.memberByEmail.bacenta.centre?.campus.id,
+        constituency: data.memberByEmail.bacenta?.centre?.town
+          ? data.memberByEmail.bacenta?.centre?.town.id
+          : data.memberByEmail.bacenta?.centre?.campus.id,
       })
     },
   })

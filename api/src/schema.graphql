@@ -221,6 +221,7 @@ type Basonta {
   name: String @index
   leader: Member @relation(name: "LEADS", direction: IN)
   centre: Centre @relation(name: "HAS_BASONTA", direction: IN)
+  sonta: Sonta @relation(name: "HAS_BASONTA", direction: IN)
 }
 
 #Query Definitions
@@ -268,7 +269,7 @@ type Query {
     )
   bishopBacentaDropdown(id: ID, bacentaName: String): [Bacenta]
     @cypher(
-      statement: "MATCH (bacenta:Bacenta)<-[]-(:Centre)<-[:HAS_CENTRE]-()<-[:HAS_TOWN|:HAS_CAMPUS]-(:Member {id: $id}) WHERE toLower(bacenta.name) CONTAINS toLower($bacentaName) RETURN bacenta"
+      statement: "MATCH (bacenta:Bacenta)<-[]-(:Centre)<-[:HAS_CENTRE]-()<-[:HAS_TOWN|:HAS_CAMPUS]-(:Member {id: $id}) WHERE toLower(bacenta.name) CONTAINS toLower($bacentaName) RETURN bacenta LIMIT 5"
     )
   bishopsSontaMemberList(id: ID): [Member]!
     @cypher(
@@ -305,7 +306,7 @@ type Query {
       MATCH (:Member {id: $id})-[:HAS_TOWN|:HAS_CAMPUS]->(campusTown)
       MATCH (campusTown)-[:HAS_CENTRE]->(centre)
       WHERE toLower(centre.name) CONTAINS toLower($nameSearch)
-      RETURN centre
+      RETURN centre LIMIT 5
       """
     )
   bishopMemberList(id: ID): [Member]!
@@ -324,7 +325,7 @@ type Query {
       MATCH (bishop:Member {id: $id})-[:HAS_CAMPUS|:HAS_TOWN]->()-[:HAS_CENTRE]->(:Centre)-[:HAS_BACENTA]->(bacenta:Bacenta)
       MATCH (bacenta)<-[:BELONGS_TO]-(member:Member)
       WHERE toLower(member.firstName+ " " + member.lastName) CONTAINS toLower($nameSearch)
-      RETURN member
+      RETURN member LIMIT 5
       """
     )
   bishopMemberCount(id: ID): Int!
@@ -437,7 +438,7 @@ type Query {
     @cypher(statement: "MATCH (centre:Centre {id:$id}) RETURN centre")
   centreDropdown(centreName: String): [Centre]
     @cypher(
-      statement: "MATCH (centre:Centre) WHERE toLower(centre.name) CONTAINS toLower($centreName) RETURN centre"
+      statement: "MATCH (centre:Centre) WHERE toLower(centre.name) CONTAINS toLower($centreName) RETURN centre LIMIT 5"
     )
   centreBacentaList(id: ID): [Bacenta]
     @cypher(
@@ -483,7 +484,7 @@ type Query {
     )
   bacentaDropdown(bacentaName: String): [Bacenta]
     @cypher(
-      statement: "MATCH (bacenta:Bacenta) WHERE toLower(bacenta.name) CONTAINS toLower($bacentaName) RETURN bacenta"
+      statement: "MATCH (bacenta:Bacenta) WHERE toLower(bacenta.name) CONTAINS toLower($bacentaName) RETURN bacenta LIMIT 5"
     )
 
   #At the Ministry Level
@@ -575,7 +576,7 @@ type Query {
       OR toLower(member.firstName) CONTAINS toLower($searchKey)
       OR toLower(member.lastName) CONTAINS toLower($searchKey)
       OR toLower(member.firstName+ " " + member.lastName) CONTAINS toLower($searchKey)
-      RETURN member
+      RETURN member LIMIT 5
       """
     )
   globalBacentaSearch(searchKey: String!): [Bacenta]
@@ -584,7 +585,7 @@ type Query {
       MATCH (bacenta:Bacenta)
       WHERE toLower(bacenta.name) STARTS WITH toLower($searchKey)
       OR toLower(bacenta.name) CONTAINS toLower($searchKey)
-      RETURN bacenta
+      RETURN bacenta LIMIT 5
       """
     )
   globalCentreSearch(searchKey: String!): [Centre]
@@ -593,7 +594,7 @@ type Query {
       MATCH (centre:Centre)
       WHERE toLower(centre.name) STARTS WITH toLower($searchKey)
       OR toLower(centre.name) CONTAINS toLower($searchKey)
-      RETURN centre
+      RETURN centre LIMIT 5
       """
     )
   globalCampusSearch(searchKey: String!): [Campus]
@@ -602,7 +603,7 @@ type Query {
       MATCH (campus:Campus)
       WHERE toLower(campus.name) STARTS WITH toLower($searchKey)
       OR toLower(campus.name) CONTAINS toLower($searchKey)
-      RETURN campus
+      RETURN campus LIMIT 5
       """
     )
   globalSontaSearch(searchKey: String!): [Sonta]
@@ -611,7 +612,7 @@ type Query {
       MATCH (sonta:Sonta)
       WHERE toLower(sonta.name) STARTS WITH toLower($searchKey)
       OR toLower(sonta.name) CONTAINS toLower($searchKey)
-      RETURN sonta
+      RETURN sonta LIMIT 5
       """
     )
   globalTownSearch(searchKey: String!): [Town]
@@ -620,12 +621,12 @@ type Query {
       MATCH (town:Town)
       WHERE toLower(town.name) STARTS WITH toLower($searchKey)
       OR toLower(town.name) CONTAINS toLower($searchKey)
-      RETURN town
+      RETURN town LIMIT 5
       """
     )
   occupationList(searchKey: String!): [Occupation]
     @cypher(
-      statement: "MATCH (o:Occupation) WHERE toLower(o.occupation) CONTAINS toLower($searchKey) RETURN o"
+      statement: "MATCH (occupation:Occupation) WHERE toLower(occupation.occupation) CONTAINS toLower($searchKey) RETURN occupation"
     )
 }
 

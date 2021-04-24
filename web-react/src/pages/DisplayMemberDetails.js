@@ -75,6 +75,7 @@ export const DisplayMemberDetails = () => {
         rank[`${ch}Leader`].push({
           name: church.name,
           centre: church.centre,
+          sonta: church.sonta,
           campus: church.campus,
           town: church.town,
           bishop: church.bishop,
@@ -164,13 +165,13 @@ export const DisplayMemberDetails = () => {
                             //Rank Discussions */}
                             Object.entries(rank).map((rank) => {
                               return rank[1].map((place, i) => {
-                                // console.log(place)
                                 let leader
                                 if (place.__typename === ('Campus' || 'Town')) {
                                   leader = 'CO'
                                 } else {
                                   leader = 'Leader'
                                 }
+
                                 return (
                                   <span
                                     key={i}

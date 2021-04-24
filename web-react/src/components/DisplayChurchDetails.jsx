@@ -37,6 +37,15 @@ export const DisplayChurchDetails = (props) => {
         <div className="container ">
           {breadcrumb
             ? breadcrumb.map((bread, i) => {
+                let breadname
+                if (bread.__typename === 'Sonta') {
+                  bread.campus &&
+                    (breadname = bread.name.replace(bread.campus.name, ''))
+                  bread.town &&
+                    (breadname = bread.name.replace(bread.town.name, ''))
+                } else {
+                  breadname = bread.name
+                }
                 if (i === breadcrumb.length - 1) {
                   return (
                     <small
@@ -47,12 +56,9 @@ export const DisplayChurchDetails = (props) => {
                           : `/${bread?.__typename.toLowerCase()}/displaydetails`
                       }
                       className="label text-secondary"
-                      // onClick={() => {
-                      //   clickCard(bread)
-                      // }}
                     >
                       {bread?.name
-                        ? `${bread?.name} ${bread?.__typename}`
+                        ? `${breadname} ${bread?.__typename}`
                         : `Bishop ${bread?.firstName} ${bread?.lastName}`}
                     </small>
                   )

@@ -182,8 +182,8 @@ type Centre {
 type Bacenta {
   id: ID @id
   name: String @index
-  centre: Centre @relation(name: "HAS_BACENTA", direction: IN)
   location: Point
+  centre: Centre @relation(name: "HAS_BACENTA", direction: IN)
   leader: Member @relation(name: "LEADS", direction: IN)
   members: [Member] @relation(name: "BELONGS_TO", direction: IN)
   meetingDay: ServiceDay @relation(name: "MEETS_ON_DAY", direction: OUT)
@@ -1069,6 +1069,7 @@ type Mutation {
       RETURN bacenta
       """
     )
+  #DIFFERENT LOG HISTORY MUTATIONS
   LogBacentaHistory(
     bacentaId: ID!
     historyRecord: String
@@ -1345,6 +1346,44 @@ type Mutation {
        }
 
        RETURN sonta
+      """
+    )
+
+  #CHURCH CONVERSIONS
+  MakeBacentaIntoCentre(bacentaId: ID!): Centre
+    @cypher(
+      statement: """
+      MATCH (bacenta:Bacenta {id:$bacentaId})
+      CREATE (newBacenta:Bacenta {id:apoc.create.uuid()})
+       SET newBacenta.name = bacenta.name,
+       newBacenta.location = bacenta.location
+      CREATE (log:HistoryLog {id:apoc.create.uuid()})
+        SET log.timeStamp = time(),
+        log.historyRecord = bacenta.name + ' was made into a Centre with '+ newBacenta.name+' as a bacenta under it.'
+
+      WITH newBacenta, log, bacenta
+      MATCH (bacenta)<-[hasBacenta:HAS_BACENTA]-(:Centre)<-[:HAS_CENTRE]-(campusTown)
+      MATCH (bacenta)-[meetsOnDay:MEETS_ON_DAY]->(meetingDay)
+      MATCH (bacenta)<-[belongsTo:BELONGS_TO]-(member:Member)
+      MATCH (bacenta)<-[:LEADS]-(leader:Member)
+
+      MERGE (date:TimeGraph {date:date()})
+      MERGE (campusTown)-[:HAS_CENTRE]->(bacenta)
+      MERGE (newBacenta)-[:MEETS_ON_DAY]->(meetingDay)
+      MERGE (newBacenta)<-[:LEADS]-(leader)
+      MERGE (member)-[:BELONGS_TO]->(newBacenta)
+      MERGE (bacenta)-[:HAS_BACENTA]->(newBacenta)
+
+      DELETE hasBacenta,meetsOnDay,belongsTo
+      
+      MERGE (log)-[:RECORDED_ON]->(date)
+      MERGE (bacenta)-[:HAS_HISTORY]->(log)
+      MERGE (newBacenta)-[:HAS_HISTORY]->(log)
+
+      SET bacenta:Centre
+      REMOVE bacenta.location
+      REMOVE bacenta:Bacenta
+      RETURN bacenta
       """
     )
 }

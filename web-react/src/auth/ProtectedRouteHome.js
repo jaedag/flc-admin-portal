@@ -4,7 +4,9 @@ import { withAuthenticationRequired } from '@auth0/auth0-react'
 import { UnauthMsg } from './UnauthMsg'
 import Loading from '../components/index/Loading'
 import { MemberContext } from '../contexts/MemberContext'
+import BishopDashboard from '../pages/BishopDashboard'
 import { ChurchContext } from '../contexts/ChurchContext'
+import { DisplayCampusTownDetails } from '../pages/DisplayCampusTownDetails'
 
 const ProtectedRoute = ({ component, roles, ...args }) => {
   const { currentUser } = useContext(MemberContext)
@@ -32,6 +34,14 @@ const ProtectedRoute = ({ component, roles, ...args }) => {
         {...args}
       />
     )
+  } else if (currentUser.roles.includes('bishopAdmin')) {
+    //if the user does not have permission but is a Bishop's Admin
+
+    return <BishopDashboard />
+  } else if (currentUser.roles.includes('coAdmin')) {
+    //If the user does not have permission but is a CO Admin
+
+    return <DisplayCampusTownDetails />
   } else {
     return <UnauthMsg />
   }

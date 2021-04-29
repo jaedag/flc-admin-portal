@@ -27,6 +27,10 @@ const schema = makeAugmentedSchema({
   config: {
     query: true,
     mutation: true,
+    auth: {
+      isAuthenticated: true,
+      hasScope: true,
+    },
   },
 })
 
@@ -104,5 +108,6 @@ const host = process.env.GRAPHQL_SERVER_HOST || '0.0.0.0'
 server.applyMiddleware({ app, path })
 
 app.listen({ host, port, path }, () => {
+  // eslint-disable-next-line
   console.log(`GraphQL server ready at http://${host}:${port}${path}`)
 })

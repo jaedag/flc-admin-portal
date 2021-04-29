@@ -25,6 +25,7 @@ const BishopDashboard = () => {
     sontaMemberCount
   const loadingText = 'Loading...'
   const errorText = 'Error!'
+  const churchStream = church.church
   const listItems = [
     {
       link: '/member/addmember',
@@ -39,8 +40,8 @@ const BishopDashboard = () => {
       buttonText: 'Start a Centre',
     },
     {
-      link: `/${church.church}/add${church.church}`,
-      buttonText: `Add ${capitalise(church.church)}`,
+      link: `/${churchStream}/add${churchStream}`,
+      buttonText: `Add ${capitalise(churchStream)}`,
     },
   ]
 
@@ -56,7 +57,7 @@ const BishopDashboard = () => {
     memberCount = `${data.bishopMemberCount} Members`
     pastorCount = `${data.bishopPastorCount} Pastors`
     campusTownCount = `${data.bishopCampusTownCount} ${capitalise(
-      plural(church.church)
+      plural(churchStream)
     )} | ${data.bishopCentreCount} Centres`
     bacentaCount = `${data.bishopBacentaCount} Bacentas`
     sontaMemberCount = `${data.bishopSontaMemberCount} Members in Ministries`
@@ -113,17 +114,17 @@ const BishopDashboard = () => {
           </div>
           <div className="col-sm-12 col-md">
             <DashboardCard
-              name={capitalise(plural(church.church))}
+              name={capitalise(plural(churchStream))}
               detail1={campusTownCount}
               detail2={bacentaCount}
-              cardLink={`/${church.church}/displayall`}
+              cardLink={`/${churchStream}/displayall`}
             />
           </div>
           <div className="col-sm-12 col-md">
             <DashboardCard
               name="Ministries"
               detail1={sontaMemberCount}
-              cardLink={`${church.church}/display-sontas`}
+              cardLink={`${churchStream}/display-sontas`}
             />
           </div>
         </div>

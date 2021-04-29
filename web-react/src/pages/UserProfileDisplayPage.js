@@ -11,22 +11,22 @@ import userIcon from '../img/user.png'
 import { Timeline } from '../components/timeline/Timeline.jsx'
 import { getNameWithTitle, MONTH_NAMES, capitalise } from '../global-utils'
 
-export const DisplayMemberDetails = () => {
-  const { memberId } = useContext(MemberContext)
+export const UserProfileDisplayPage = () => {
+  const { currentUser } = useContext(MemberContext)
   const { church, determineStream, clickCard } = useContext(ChurchContext)
   const history = useHistory()
 
   const { data: memberData, loading: memberLoading } = useQuery(
     DISPLAY_MEMBER,
     {
-      variables: { id: memberId },
+      variables: { id: currentUser.id },
     }
   )
 
   if (memberLoading) {
     // Spinner Icon for Loading Screens
     return <LoadingScreen />
-  } else if (memberData && memberId) {
+  } else if (memberData && currentUser.id) {
     const { displayMember } = memberData
 
     let nameAndTitle = getNameWithTitle(displayMember)
@@ -131,7 +131,7 @@ export const DisplayMemberDetails = () => {
               <div className="row">
                 <div className="col">
                   <MemberDetailsCard
-                    editlink="/member/editmember"
+                    editlink="/user-profile/edit"
                     title={nameAndTitle}
                   >
                     <div className="row row-cols-1 my-2">
@@ -197,7 +197,7 @@ export const DisplayMemberDetails = () => {
               <div className="row">
                 <div className="col">
                   {/* Bio Information */}
-                  <MemberDetailsCard title="Bio" editlink="/member/editmember">
+                  <MemberDetailsCard title="Bio" editlink="/user-profile/edit">
                     <div className="container p-2">
                       <div className="row py-2">
                         <div className="col ">
@@ -352,7 +352,7 @@ export const DisplayMemberDetails = () => {
                 <div className="col">
                   <MemberDetailsCard
                     title="Current Church Activity"
-                    editlink="/member/editmember"
+                    editlink="/user-profile/edit"
                   >
                     <div className="container p-2">
                       <div className="row mb-2">

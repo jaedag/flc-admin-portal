@@ -39,10 +39,13 @@ import { CreateBacenta } from './pages/CreateBacenta'
 import { UpdateCentre } from './pages/UpdateCentre'
 import { DisplaySontasByCampusTown } from './pages/DisplaySontasByCampusTown'
 import { UpdateBacenta } from './pages/UpdateBacenta'
-// import ProtectedRoute from './auth/ProtectedRoute'
+import ProtectedRoute from './auth/ProtectedRoute'
+import ProtectedRouteHome from './auth/ProtectedRouteHome'
+import ProtectedMembersRoute from './auth/ProtectedMembersRoute'
 import { MemberFiltersMobile } from './pages/MemberFiltersMobile'
 import { MemberTableMobile } from './components/MemberTableMobile'
-import UserProfilePage from './pages/UserProfilePage'
+import { UserProfileDisplayPage } from './pages/UserProfileDisplayPage'
+import UserProfileEditPage from './pages/UserProfileEditPage'
 
 const AppWithApollo = () => {
   const [accessToken, setAccessToken] = useState()
@@ -145,8 +148,9 @@ const PastorsAdmin = () => {
     picture: '',
     firstName: '',
     lastName: '',
-    email: '',
     bishop: '',
+    church: {},
+    email: '',
     constituency: '',
     roles: [''],
   })
@@ -161,7 +165,7 @@ const PastorsAdmin = () => {
     ministry: '',
   })
 
-  const determineChurch = (member) => {
+  const determineStream = (member) => {
     //switch case for other church types
     switch (member?.__typename) {
       case 'Town':
@@ -318,7 +322,7 @@ const PastorsAdmin = () => {
   }
 
   const clickCard = (card) => {
-    determineChurch(card)
+    determineStream(card)
 
     switch (card.__typename) {
       case 'Member':
@@ -365,7 +369,7 @@ const PastorsAdmin = () => {
       <ChurchContext.Provider
         value={{
           clickCard,
-          determineChurch,
+          determineStream,
           filters,
           setFilters,
           church,
@@ -391,118 +395,219 @@ const PastorsAdmin = () => {
         >
           <SearchContext.Provider value={{ searchKey, setSearchKey }}>
             <Switch>
-              <Route path="/" component={BishopSelect} exact />
-              <Route path="/dashboard" component={BishopDashboard} exact />
-              <Route path="/user-profile" component={UserProfilePage} exact />
-              <Route path="/member-search" component={SearchPageMobile} exact />
+              <ProtectedRouteHome
+                path="/"
+                roles={['superAdmin']}
+                component={BishopSelect}
+                exact
+              />
+              <ProtectedRouteHome
+                path="/dashboard"
+                component={BishopDashboard}
+                roles={['superAdmin', 'bishopAdmin']}
+                exact
+              />
               <Route
+                roles={['all']}
+                path="/user-profile"
+                component={UserProfileDisplayPage}
+                exact
+              />
+              <Route
+                roles={['all']}
+                path="/user-profile/edit"
+                component={UserProfileEditPage}
+                exact
+              />
+              <ProtectedRoute
+                roles={['all']}
+                path="/member-search"
+                component={SearchPageMobile}
+                exact
+              />
+              <ProtectedRoute
+                roles={['all']}
                 path="/filter-members"
                 component={MemberFiltersMobile}
                 exact
               />
-              <Route path="/members" component={BishopMembers} exact />
-              <Route
+              <ProtectedMembersRoute
+                roles={['superAdmin', 'bishopAdmin']}
+                path="/members"
+                component={BishopMembers}
+                exact
+              />
+              <ProtectedMembersRoute
+                roles={['superAdmin', 'bishopAdmin', 'coAdmin']}
                 path="/campus/members"
                 component={CampusTownMembers}
                 exact
               />
-              <Route path="/town/members" component={CampusTownMembers} exact />
-              <Route path="/centre/members" component={CentreMembers} exact />
-              <Route path="/bacenta/members" component={BacentaMembers} exact />
-              <Route path="/sonta/members" component={SontaMembers} exact />
-              <Route path="/mb-members" component={MemberTableMobile} exact />
-              <Route path="/pastors" component={BishopMembers} exact />
-              <Route path="/member/addmember" component={CreateMember} exact />
-              <Route
+              <ProtectedMembersRoute
+                roles={['superAdmin', 'bishopAdmin', 'coAdmin']}
+                path="/town/members"
+                component={CampusTownMembers}
+                exact
+              />
+              <ProtectedMembersRoute
+                roles={['superAdmin', 'bishopAdmin', 'coAdmin']}
+                path="/centre/members"
+                component={CentreMembers}
+                exact
+              />
+              <ProtectedMembersRoute
+                roles={['superAdmin', 'bishopAdmin', 'coAdmin']}
+                path="/bacenta/members"
+                component={BacentaMembers}
+                exact
+              />
+              <ProtectedMembersRoute
+                roles={['superAdmin', 'bishopAdmin', 'coAdmin']}
+                path="/sonta/members"
+                component={SontaMembers}
+                exact
+              />
+              <ProtectedMembersRoute
+                roles={['superAdmin', 'bishopAdmin', 'coAdmin']}
+                path="/mb-members"
+                component={MemberTableMobile}
+                exact
+              />
+              <ProtectedRoute path="/pastors" component={BishopMembers} exact />
+              <ProtectedRoute
+                roles={['superAdmin', 'bishopAdmin', 'coAdmin']}
+                path="/member/addmember"
+                component={CreateMember}
+                exact
+              />
+              <ProtectedRoute
+                roles={['superAdmin', 'bishopAdmin', 'coAdmin']}
                 path="/member/editmember"
                 component={UpdateMemberDetails}
                 exact
               />
-              <Route
+              <ProtectedRoute
+                roles={['all']}
                 path="/member/displaydetails"
                 component={DisplayMemberDetails}
                 exact
               />
-              <Route
+              <ProtectedRoute
+                roles={['all']}
                 path="/sonta/displaydetails"
                 component={DisplaySontaDetails}
                 exact
               />
-              <Route
+              <ProtectedRoute
+                roles={['superAdmin', 'bishopAdmin', 'coAdmin']}
                 path="/bacenta/addbacenta"
                 component={CreateBacenta}
                 exact
               />
-              <Route
+              <ProtectedRoute
+                roles={['superAdmin', 'bishopAdmin', 'coAdmin']}
                 path="/bacenta/editbacenta"
                 component={UpdateBacenta}
                 exact
               />
-              <Route
+              <ProtectedRoute
+                roles={['all']}
                 path="/bacenta/displaydetails"
                 component={DisplayBacentaDetails}
                 exact
               />
-              <Route
+              <ProtectedRoute
+                roles={['all']}
                 path="/bacenta/displayall"
                 component={DisplayAllBacentas}
                 exact
               />
-              <Route
+              <ProtectedRoute
+                roles={['all']}
                 path="/centre/displaydetails"
                 component={DisplayCentreDetails}
                 exact
               />
-              <Route path="/centre/addcentre" component={CreateCentre} exact />
-              <Route path="/centre/editcentre" component={UpdateCentre} exact />
-              <Route
+              <ProtectedRoute
+                roles={['superAdmin', 'bishopAdmin', 'coAdmin']}
+                path="/centre/addcentre"
+                component={CreateCentre}
+                exact
+              />
+              <ProtectedRoute
+                roles={['superAdmin', 'bishopAdmin', 'coAdmin']}
+                path="/centre/editcentre"
+                component={UpdateCentre}
+                exact
+              />
+              <ProtectedRoute
+                roles={['all']}
                 path="/centre/displayall"
                 component={DisplayAllCentres}
                 exact
               />
-              <Route
+              <ProtectedRoute
+                roles={['all']}
                 path="/sonta/displayall"
                 component={DisplayAllSontas}
                 exact
               />
-              <Route
+              <ProtectedRoute
+                roles={['all']}
                 path="/town/display-sontas"
                 component={DisplaySontasByCampusTown}
                 exact
               />
-              <Route
+              <ProtectedRoute
+                roles={['all']}
                 path="/campus/display-sontas"
                 component={DisplaySontasByCampusTown}
                 exact
               />
-              <Route
+              <ProtectedRoute
+                roles={['all']}
                 path="/town/displayall"
                 component={DisplayAllTownCampuses}
                 exact
               />
-              <Route
+              <ProtectedRoute
+                roles={['all']}
                 path="/town/displaydetails"
                 component={DisplayCampusTownDetails}
                 exact
               />
-              <Route
+              <ProtectedRoute
+                roles={['all']}
                 path="/campus/displayall"
                 component={DisplayAllTownCampuses}
                 exact
               />
-              <Route
+              <ProtectedRoute
+                roles={['all']}
                 path="/campus/displaydetails"
                 component={DisplayCampusTownDetails}
                 exact
               />
-              <Route path="/town/addtown" component={CreateTownCampus} exact />
-              <Route
+              <ProtectedRoute
+                roles={['superAdmin', 'bishopAdmin']}
+                path="/town/addtown"
+                component={CreateTownCampus}
+                exact
+              />
+              <ProtectedRoute
+                roles={['superAdmin', 'bishopAdmin']}
                 path="/campus/addcampus"
                 component={CreateTownCampus}
                 exact
               />
-              <Route path="/town/edittown" component={UpdateTownCampus} exact />
-              <Route
+              <ProtectedRoute
+                roles={['superAdmin', 'bishopAdmin']}
+                path="/town/edittown"
+                component={UpdateTownCampus}
+                exact
+              />
+              <ProtectedRoute
+                roles={['superAdmin', 'bishopAdmin']}
                 path="/campus/editcampus"
                 component={UpdateTownCampus}
                 exact

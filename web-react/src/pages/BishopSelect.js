@@ -5,17 +5,16 @@ import { ChurchContext } from '../contexts/ChurchContext'
 import { GET_BISHOPS } from '../queries/ListQueries'
 import { NavBar } from '../components/nav/NavBar.jsx'
 import Spinner from '../components/Spinner'
-import { AuthButton } from '../components/buttons/DashboardButton.jsx'
 import Logo from '../img/flc-logo-small.png'
 import { MemberContext } from '../contexts/MemberContext'
 
 const BishopSelect = () => {
-  const { determineChurch } = useContext(ChurchContext)
+  const { determineStream } = useContext(ChurchContext)
   const { currentUser } = useContext(MemberContext)
   const { data, loading } = useQuery(GET_BISHOPS)
 
   const history = useHistory()
-  const version = 'v0.1.5'
+  const version = 'v0.1.6'
 
   if (loading) {
     return (
@@ -98,7 +97,7 @@ const BishopSelect = () => {
                 key={index}
                 className="col-sm-12 col-lg card mobile-search-card p-2 m-1"
                 onClick={() => {
-                  determineChurch(soul)
+                  determineStream(soul)
                   history.push('/dashboard')
                 }}
               >
@@ -125,51 +124,15 @@ const BishopSelect = () => {
     )
   } else {
     return (
-      <>
-        <div className="container body-container d-none d-lg-block">
-          {/* <!--Web Logo and text--> */}
-          <div className="row align-self-center">
-            {/* <!--Sign In--> */}
-
-            <form className="login-page-lg">
-              <div className="m-5">
-                <div className="col-auto my-3 align-items-center">
-                  <img src={Logo} alt="logo" className="img-fluid" />
-                  <div className="d-none d-lg-block">
-                    First Love Church is a church full of young people on fire
-                    for the Lord
-                  </div>
-                </div>
-                <AuthButton />
-              </div>
-            </form>
+      <div className="container body-container">
+        {/* <!--Web Logo and text--> */}
+        <div className="row d-flex align-items-center justify-content-center">
+          <div className="col-12 col-lg-6 justify-content-center">
+            {`There seems to be an issue with your login credentials. Please contact the system administrator for more details`}
+            <div></div>
           </div>
         </div>
-
-        {/* <!--Mobile--> */}
-        <div className="row d-flex align-items-center justify-content-center d-lg-none">
-          <div className="col-12 col-lg-6">
-            <img
-              src={Logo}
-              alt="logo"
-              className="img-fluid mx-auto d-block d-lg-none"
-              style={{ maxWidth: '30%' }}
-            />
-            <div className="d-lg-none h2 text-center text-white">FLC Admin</div>
-            <div className="col-auto my-3 align-items-center">
-              First Love Church is a church full of young people on fire for the
-              Lord
-            </div>
-            <div className="col-auto">
-              <AuthButton />
-            </div>
-          </div>
-
-          <div className="col-12 col-lg-6 d-flex justify-content-center my-3 ">
-            <div className="d-lg-none flex-grow-1" />
-          </div>
-        </div>
-      </>
+      </div>
     )
   }
 }

@@ -11,7 +11,7 @@ export const NavBar = () => {
   const { church, setFilters } = useContext(ChurchContext)
   const location = useLocation()
 
-  const atHome = church.church && location.pathname !== '/'
+  const atHome = church?.church && location.pathname !== '/'
   const showingMembers = location.pathname.endsWith('/members')
 
   return (

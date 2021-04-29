@@ -49,6 +49,7 @@ export const DISPLAY_MEMBER = gql`
             id
             name
             bishop {
+              id
               firstName
               lastName
             }

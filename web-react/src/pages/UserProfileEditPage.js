@@ -1,4 +1,5 @@
 import React, { useState, useContext } from 'react'
+import { useHistory } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/client'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
@@ -11,7 +12,7 @@ import {
 } from '../global-utils'
 import FormikControl from '../components/formik-components/FormikControl.jsx'
 
-import { UPDATE_MEMBER_MUTATION } from '../queries//UpdateMutations'
+import { UPDATE_MEMBER_MUTATION } from '../queries/UpdateMutations'
 import { DISPLAY_MEMBER } from '../queries/ReadQueries'
 import { HeadingBar } from '../components/HeadingBar.jsx'
 import { NavBar } from '../components/nav/NavBar.jsx'
@@ -21,9 +22,10 @@ import { GET_MINISTRIES, BISHOP_BACENTA_DROPDOWN } from '../queries/ListQueries'
 import { MemberContext } from '../contexts/MemberContext'
 import { ChurchContext } from '../contexts/ChurchContext'
 
-const UserProfilePage = () => {
+const UserProfileEditPage = () => {
   const { currentUser } = useContext(MemberContext)
   const { bishopId } = useContext(ChurchContext)
+  const history = useHistory()
 
   const {
     data: memberData,
@@ -170,6 +172,7 @@ const UserProfilePage = () => {
     })
 
     onSubmitProps.setSubmitting(false)
+    history.push(`/user-profile`)
   }
 
   if (memberError || ministryListError || currentUser.id === '') {
@@ -406,4 +409,4 @@ const UserProfilePage = () => {
   }
 }
 
-export default UserProfilePage
+export default UserProfileEditPage

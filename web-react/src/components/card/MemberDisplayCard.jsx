@@ -6,7 +6,7 @@ import bussolid from '../../img/bus-solid.svg'
 
 export const MemberDisplayCard = (props) => {
   const { member, ...rest } = props
-  const { determineChurch, clickCard } = useContext(ChurchContext)
+  const { determineStream, clickCard } = useContext(ChurchContext)
   const history = useHistory()
   let icon
 
@@ -38,7 +38,7 @@ export const MemberDisplayCard = (props) => {
       {...rest}
       className="card mobile-search-card p-2 py-3 my-4"
       onClick={() => {
-        determineChurch(member)
+        determineStream(member)
         clickCard(member)
         history.push(`/${member.__typename.toLowerCase()}/displaydetails`)
       }}

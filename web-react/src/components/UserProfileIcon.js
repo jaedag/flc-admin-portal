@@ -12,32 +12,34 @@ function UserProfileIcon() {
   const { currentUser, setCurrentUser } = useContext(MemberContext)
   const [memberByEmail] = useLazyQuery(GET_LOGGED_IN_USER, {
     onCompleted: (data) => {
-      // determineChurch(data?.memberByEmail)
+      // determineStream(data.memberByEmail)
+      const isTown = data.memberByEmail.bacenta.centre?.town
+
       setCurrentUser({
         ...currentUser,
         id: data.memberByEmail.id,
-        picture: data.memberByEmail.pictureUrl,
         firstName: data.memberByEmail.firstName,
         lastName: data.memberByEmail.lastName,
-        constituency: data.memberByEmail.bacenta?.centre?.town
-          ? data.memberByEmail.bacenta?.centre?.town.id
-          : data.memberByEmail.bacenta?.centre?.campus.id,
+        picture: data.memberByEmail.pictureUrl,
+        bishop: isTown
+          ? data.memberByEmail.bacenta.centre?.town.bishop.id
+          : data.memberByEmail.bacenta.centre?.campus.bishop.id,
+        constituency: isTown
+          ? data.memberByEmail.bacenta.centre?.town.id
+          : data.memberByEmail.bacenta.centre?.campus.id,
+        church: isTown
+          ? { church: 'town', subChurch: 'centre' }
+          : { church: 'campus', subChurch: 'centre' },
+        email: user?.email,
+        roles: user ? user[`https://flcadmin.netlify.app/roles`] : [],
       })
     },
   })
 
   useEffect(() => {
-    user &&
-      memberByEmail({
-        variables: {
-          email: user.email,
-        },
-      })
-    setCurrentUser({
-      ...currentUser,
-      email: user?.email,
-      roles: user ? user[`https://flcadmin.netlify.app/roles`] : [],
-    })
+    if (!currentUser.email?.length) {
+      user && memberByEmail({ variables: { email: user.email } })
+    }
     // eslint-disable-next-line
   }, [isAuthenticated])
 

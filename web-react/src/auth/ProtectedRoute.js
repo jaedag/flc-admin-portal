@@ -2,9 +2,9 @@ import React, { useContext, useEffect } from 'react'
 import { Route } from 'react-router-dom'
 import { withAuthenticationRequired } from '@auth0/auth0-react'
 import { UnauthMsg } from './UnauthMsg'
-import Loading from '../components/index/Loading'
 import { MemberContext } from '../contexts/MemberContext'
 import { ChurchContext } from '../contexts/ChurchContext'
+import { LoadingScreen } from '../components/StatusScreens'
 
 const ProtectedRoute = ({ component, roles, ...args }) => {
   const { currentUser } = useContext(MemberContext)
@@ -26,7 +26,7 @@ const ProtectedRoute = ({ component, roles, ...args }) => {
         component={withAuthenticationRequired(component, {
           // eslint-disable-next-line react/display-name
           onRedirecting: () => {
-            return <Loading />
+            return <LoadingScreen />
           },
         })}
         {...args}

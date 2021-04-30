@@ -20,7 +20,6 @@
     "csv-parse": "^4.15.3",
     "dotenv": "^7.0.0",
     "express-jwt": "^6.0.0",
-    "neo4j-driver": "^4.2.3",
     "neo4j-graphql-js": "^2.19.2",
     "node-fetch": "^2.6.1",
     "react": "^16.14.0"

@@ -10,12 +10,7 @@ export const UnauthMsg = () => {
   const atHome = location.pathname === '/'
 
   if (atHome) {
-    return (
-      <>
-        <NavBar />
-        <Login />
-      </>
-    )
+    return <Login />
   } else {
     return (
       <React.Fragment>

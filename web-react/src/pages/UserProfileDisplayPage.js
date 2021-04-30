@@ -10,6 +10,7 @@ import { ChurchContext } from '../contexts/ChurchContext'
 import userIcon from '../img/user.png'
 import { Timeline } from '../components/timeline/Timeline.jsx'
 import { getNameWithTitle, MONTH_NAMES, capitalise } from '../global-utils'
+import { AuthButton } from '../components/buttons/DashboardButton.jsx'
 
 export const UserProfileDisplayPage = () => {
   const { currentUser } = useContext(MemberContext)
@@ -117,14 +118,22 @@ export const UserProfileDisplayPage = () => {
       <div className="container pt-5">
         <NavBar />
         <div className="container pt-2">
-          <div className="row mb-4">
+          <div className="row justify-content-between">
             <div className="col">
               <h3 className="font-weight-bold mb-3">
                 Display Member Information
               </h3>
+            </div>
+            <div className="col-auto d-none d-md-block">
+              <AuthButton />
+            </div>
+          </div>
+          <div className="row mb-4">
+            <div className="col">
               <p className="infobar">Basic Info</p>
             </div>
           </div>
+
           <div className="row row-cols-1 row-cols-md-2">
             {/* Member Picture Profile Page */}
             <div className="col">
@@ -435,6 +444,11 @@ export const UserProfileDisplayPage = () => {
                   </MemberDetailsCard>
                 </div>
               </div>
+            </div>
+          </div>
+          <div className="row justify-content-center my-2 mb-4">
+            <div className="col-auto ">
+              <AuthButton mobileFullSize="true" />
             </div>
           </div>
         </div>

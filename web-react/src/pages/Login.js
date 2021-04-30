@@ -1,5 +1,6 @@
 import React from 'react'
 import { AuthButton } from '../components/buttons/DashboardButton.jsx'
+import UserProfileIcon from '../components/UserProfileIcon.js'
 import Logo from '../img/flc-logo-small.png'
 
 export const Login = () => {
@@ -19,7 +20,7 @@ export const Login = () => {
                   the Lord
                 </div>
               </div>
-              <AuthButton />
+              <UserProfileIcon />
             </div>
           </form>
         </div>
@@ -40,7 +41,7 @@ export const Login = () => {
             Lord
           </div>
           <div className="col-auto">
-            <AuthButton />
+            <AuthButton mobileFullSize="true" />
           </div>
         </div>
 

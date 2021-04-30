@@ -1,4 +1,4 @@
-type Member {
+type Member @isAuthenticated {
   id: ID! @id
   firstName: String @index #@search
   middleName: String
@@ -139,7 +139,7 @@ type HistoryLog {
 }
 
 # Campus-Centre, Town-Centre
-type Campus {
+type Campus @isAuthenticated {
   id: ID @id
   name: String @index
   leader: Member @relation(name: "LEADS", direction: IN)
@@ -152,7 +152,7 @@ type Campus {
     @relation(name: "HAS_RECORDS", direction: OUT)
 }
 
-type Town {
+type Town @isAuthenticated {
   id: ID @id
   name: String @index
   leader: Member @relation(name: "LEADS", direction: IN)
@@ -165,7 +165,7 @@ type Town {
     @relation(name: "HAS_RECORDS", direction: OUT)
 }
 
-type Centre {
+type Centre @isAuthenticated {
   id: ID @id
   name: String @index
   leader: Member @relation(name: "LEADS", direction: IN)
@@ -179,7 +179,7 @@ type Centre {
 }
 
 # Shared Units: Bacenta, Bacenta, Sonta
-type Bacenta {
+type Bacenta @isAuthenticated {
   id: ID @id
   name: String @index
   location: Point
@@ -198,7 +198,7 @@ type ServiceDay {
   bacenta: Bacenta @relation(name: "MEETS_ON_DAY", direction: IN)
 }
 
-type Ministry {
+type Ministry @isAuthenticated {
   id: ID @id
   name: String @index
   sonta: [Sonta] @relation(name: "HAS_SONTA", direction: OUT)

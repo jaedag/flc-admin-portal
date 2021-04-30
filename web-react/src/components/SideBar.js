@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext } from 'react'
 import { useLocation, useHistory } from 'react-router-dom'
 import { Formik, Form } from 'formik'
 import FormikControl from '../components/formik-components/FormikControl.jsx'
@@ -24,19 +24,6 @@ export const SideBar = () => {
     leaderRank: [],
     ministry: '',
   }
-
-  useEffect(() => {
-    setFilters({
-      gender: '',
-      maritalStatus: '',
-      occupation: '',
-      leaderTitle: location.pathname === '/pastors' ? ['Pastor'] : [],
-      leaderRank: [],
-      ministry: '',
-    })
-
-    // eslint-disable-next-line
-  }, [])
 
   const leaderOptions = [
     { key: 'CO', value: 'CO' },

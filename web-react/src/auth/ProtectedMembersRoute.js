@@ -28,9 +28,7 @@ const ProtectedMembersRoute = ({ component, roles, ...args }) => {
       <Route
         component={withAuthenticationRequired(component, {
           // eslint-disable-next-line react/display-name
-          onRedirecting: () => {
-            return <LoadingScreen />
-          },
+          onRedirecting: () => <LoadingScreen />,
         })}
         {...args}
       />
@@ -39,7 +37,7 @@ const ProtectedMembersRoute = ({ component, roles, ...args }) => {
     //if the user does not have permission but is a Bishop's Admin
 
     return <BishopMembers />
-  } else if (currentUser.roles.includes('coAdmin')) {
+  } else if (currentUser.roles.includes('constituencyAdmin')) {
     //If the user does not have permission but is a CO Admin
 
     return <CampusTownMembers />

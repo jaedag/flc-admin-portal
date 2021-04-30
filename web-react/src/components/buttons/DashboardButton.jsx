@@ -12,39 +12,48 @@ export const DashboardButton = (props) => {
   )
 }
 
-export const AuthButton = () => {
+export const AuthButton = (props) => {
   const { loginWithRedirect, logout, isAuthenticated } = useAuth0()
+  const { mobileFullSize } = props
 
   return (
-    <div>
+    <>
       {!isAuthenticated && (
         <>
           <button
-            className="btn btn-primary text-nowrap px-4 d-none d-md-inline"
+            className={`btn btn-primary text-nowrap px-4 ${
+              !mobileFullSize && `d-none d-md-inline`
+            }`}
             onClick={() => loginWithRedirect()}
           >
             Log In
           </button>
-          <i
-            className="fas fa-sign-in-alt fa-2x d-md-none"
-            onClick={() => loginWithRedirect()}
-          />
+          {!mobileFullSize && (
+            <i
+              className="fas fa-sign-in-alt fa-2x d-md-none"
+              onClick={() => loginWithRedirect()}
+            />
+          )}
         </>
       )}
       {isAuthenticated && (
         <>
           <button
-            className="btn btn-primary text-nowrap px-4 d-none d-md-inline"
+            className={`btn btn-primary text-nowrap px-4 ${
+              !mobileFullSize && `d-none d-md-inline`
+            }`}
             onClick={() => logout({ returnTo: window.location.origin })}
           >
             Log Out
           </button>
-          <i
-            className="fas fa-sign-out-alt fa-2x d-md-none"
-            onClick={() => logout({ returnTo: window.location.origin })}
-          />
+          {!mobileFullSize && (
+            <i
+              className="fas fa-sign-out-alt fa-2x d-md-none"
+              onClick={() => logout({ returnTo: window.location.origin })}
+            />
+          )}
         </>
       )}
-    </div>
+    </>
   )
 }

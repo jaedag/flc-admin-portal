@@ -5,6 +5,7 @@ import { UnauthMsg } from './UnauthMsg'
 import { MemberContext } from '../contexts/MemberContext'
 import { ChurchContext } from '../contexts/ChurchContext'
 import { LoadingScreen } from '../components/StatusScreens'
+import { isAuthorised } from '../global-utils'
 
 const ProtectedRoute = ({ component, roles, ...args }) => {
   const { currentUser } = useContext(MemberContext)
@@ -19,7 +20,7 @@ const ProtectedRoute = ({ component, roles, ...args }) => {
     setChurch(currentUser.church)
   }, [currentUser, setBishopId, setTownId, setCampusId, setChurch])
 
-  if (roles.some((r) => currentUser.roles.includes(r))) {
+  if (isAuthorised(roles, currentUser.roles)) {
     //if the user has permission to access the route
     return (
       <Route

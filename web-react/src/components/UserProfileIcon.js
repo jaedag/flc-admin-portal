@@ -6,13 +6,13 @@ import { AuthButton } from './buttons/DashboardButton.jsx'
 import './UserProfileIcon.css'
 import { GET_LOGGED_IN_USER } from '../queries/SearchQuery'
 import { MemberContext } from '../contexts/MemberContext.js'
+import userIcon from '../img/user.png'
 
 function UserProfileIcon() {
   const { user, isAuthenticated } = useAuth0()
   const { currentUser, setCurrentUser } = useContext(MemberContext)
   const [memberByEmail] = useLazyQuery(GET_LOGGED_IN_USER, {
     onCompleted: (data) => {
-      // determineStream(data.memberByEmail)
       const isTown = data.memberByEmail.bacenta.centre?.town
 
       setCurrentUser({
@@ -44,7 +44,7 @@ function UserProfileIcon() {
   }, [isAuthenticated])
 
   return (
-    <div>
+    <>
       {isAuthenticated && (
         <Link
           className="nav-item nav-link d-flex align-items-center flex-column p-0 pb-2"
@@ -54,7 +54,7 @@ function UserProfileIcon() {
           <span>
             <img
               className="user-navbar-img "
-              src={currentUser ? currentUser.picture : null}
+              src={currentUser?.picture ? currentUser.picture : userIcon}
               alt={currentUser ? currentUser.firstName : null}
             />
           </span>
@@ -68,7 +68,7 @@ function UserProfileIcon() {
           <AuthButton />
         </div>
       )}
-    </div>
+    </>
   )
 }
 

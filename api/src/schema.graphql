@@ -206,7 +206,7 @@ type Ministry @isAuthenticated {
   members: [Member] @relation(name: "BELONGS_TO", direction: IN)
 }
 
-type Sonta {
+type Sonta @isAuthenticated {
   id: ID @id
   name: String @index
   leader: Member @relation(name: "LEADS", direction: IN)
@@ -228,23 +228,19 @@ type Basonta {
 type Query {
   #At the Federal Level
   bishopsList: [Member]
-    @isAuthenticated
     @hasScope(scopes: ["Bishop:Read"])
     @cypher(
       statement: "MATCH ()<-[:HAS_CAMPUS|:HAS_TOWN]-(bishop:Member) RETURN DISTINCT bishop"
     )
   bishopsListCampus: [Member]
-    @isAuthenticated
     @cypher(
       statement: "MATCH ()<-[:HAS_CAMPUS]-(bishop:Member) RETURN DISTINCT bishop"
     )
   bishopsListTown: [Member]
-    @isAuthenticated
     @cypher(
       statement: "MATCH ()<-[:HAS_TOWN]-(bishop:Member) RETURN DISTINCT bishop"
     )
   ministryList: [Ministry]
-    @isAuthenticated
     @cypher(statement: "MATCH (ministry:Ministry) RETURN ministry")
   memberCount: Int!
     @cypher(statement: "MATCH (member:Member) RETURN COUNT(DISTINCT member)")

@@ -61,13 +61,23 @@ export const Timeline = (props) => {
                 <p className="timeline-text">
                   {element.historyRecord}
                   <br />
-                  <small className="text-secondary">{`${parseDate(
-                    element.created_at?.date.formatted
-                  )} at ${
-                    element.timeStamp.hour
-                  }:${element.timeStamp.minute.toLocaleString('en-US', {
-                    minimumIntegerDigits: 2,
-                  })}`}</small>
+                  <small className="text-secondary">
+                    {`${parseDate(element.created_at?.date.formatted)} at ${
+                      element.timeStamp.hour
+                    }:${element.timeStamp.minute.toLocaleString('en-US', {
+                      minimumIntegerDigits: 2,
+                    })}`}
+                    <span
+                      className="font-weight-bold"
+                      onClick={() => {
+                        clickCard(element.HistoryLog?.loggedBy)
+                        history.push('/member/displaydetails')
+                      }}
+                    >
+                      {element?.loggedBy &&
+                        ` by ${element?.loggedBy?.firstName} ${element?.loggedBy?.lastName}`}
+                    </span>
+                  </small>
                 </p>
               </li>
             )

@@ -7,10 +7,12 @@ import { DashboardCard } from '../components/card/DashboardCard.jsx'
 import { DashboardButton } from '../components/buttons/DashboardButton.jsx'
 import DropdoownButton from '../components/buttons/DropdownButton'
 import { ChurchContext } from '../contexts/ChurchContext'
-import { capitalise, plural } from '../global-utils'
+import { capitalise, isAuthorised, plural } from '../global-utils'
+import { MemberContext } from '../contexts/MemberContext'
 
 const BishopDashboard = () => {
   const { church, setFilters, clickCard, bishopId } = useContext(ChurchContext)
+  const { currentUser } = useContext(MemberContext)
   const { data, loading } = useQuery(BISH_DASHBOARD_COUNTS, {
     variables: { id: bishopId },
   })
@@ -30,18 +32,22 @@ const BishopDashboard = () => {
     {
       link: '/member/addmember',
       buttonText: 'Register Member',
+      roles: ['all'],
     },
     {
       link: '/bacenta/addbacenta',
       buttonText: 'Start a Bacenta',
+      roles: ['federalAdmin', 'bishopAdmin', 'constituencyAdmin'],
     },
     {
       link: '/centre/addcentre',
       buttonText: 'Start a Centre',
+      roles: ['federalAdmin', 'bishopAdmin', 'constituencyAdmin'],
     },
     {
       link: `/${churchStream}/add${churchStream}`,
       buttonText: `Add ${capitalise(churchStream)}`,
+      roles: ['federalAdmin', 'bishopAdmin'],
     },
   ]
 
@@ -132,10 +138,12 @@ const BishopDashboard = () => {
           <div className="row justify-content-center mt-5">
             {listItems.map((item, index) => (
               <div key={index} className="col-sm-12 col-lg-auto">
-                <DashboardButton
-                  btnText={item.buttonText}
-                  btnLink={item.link}
-                />
+                {isAuthorised(item.roles, currentUser.roles) && (
+                  <DashboardButton
+                    btnText={item.buttonText}
+                    btnLink={item.link}
+                  />
+                )}
               </div>
             ))}
           </div>

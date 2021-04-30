@@ -39,7 +39,7 @@ const ProtectedRoute = ({ component, roles, ...args }) => {
     //if the user does not have permission but is a Bishop's Admin
 
     return <BishopDashboard />
-  } else if (currentUser.roles.includes('coAdmin')) {
+  } else if (currentUser.roles.includes('constituencyAdmin')) {
     //If the user does not have permission but is a CO Admin
 
     return <DisplayCampusTownDetails />

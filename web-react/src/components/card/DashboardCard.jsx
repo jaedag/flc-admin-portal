@@ -28,7 +28,7 @@ export const DashboardCard = (props) => {
         <span
           className={`fas fa-${icon} fa-4x d-none d-md-block pb-3 icon-color text-center`}
         />
-        <h5 className="card-title text-nowrap text-white">{name}</h5>
+        <h5 className="card-title text-nowrap text-white">{`${name}`}</h5>
         <span className="card-text text-muted">{detail1}</span>
         <br />
         <span className="card-text text-muted">{detail2}</span>

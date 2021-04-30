@@ -397,14 +397,14 @@ const PastorsAdmin = () => {
             <Switch>
               <ProtectedRouteHome
                 path="/"
-                roles={['superAdmin']}
+                roles={['federalAdmin']}
                 component={BishopSelect}
                 exact
               />
               <ProtectedRouteHome
                 path="/dashboard"
                 component={BishopDashboard}
-                roles={['superAdmin', 'bishopAdmin']}
+                roles={['federalAdmin', 'bishopAdmin']}
                 exact
               />
               <Route
@@ -432,56 +432,56 @@ const PastorsAdmin = () => {
                 exact
               />
               <ProtectedMembersRoute
-                roles={['superAdmin', 'bishopAdmin']}
+                roles={['federalAdmin', 'bishopAdmin']}
                 path="/members"
                 component={BishopMembers}
                 exact
               />
               <ProtectedMembersRoute
-                roles={['superAdmin', 'bishopAdmin', 'coAdmin']}
+                roles={['federalAdmin', 'bishopAdmin', 'constituencyAdmin']}
                 path="/campus/members"
                 component={CampusTownMembers}
                 exact
               />
               <ProtectedMembersRoute
-                roles={['superAdmin', 'bishopAdmin', 'coAdmin']}
+                roles={['federalAdmin', 'bishopAdmin', 'constituencyAdmin']}
                 path="/town/members"
                 component={CampusTownMembers}
                 exact
               />
               <ProtectedMembersRoute
-                roles={['superAdmin', 'bishopAdmin', 'coAdmin']}
+                roles={['federalAdmin', 'bishopAdmin', 'constituencyAdmin']}
                 path="/centre/members"
                 component={CentreMembers}
                 exact
               />
               <ProtectedMembersRoute
-                roles={['superAdmin', 'bishopAdmin', 'coAdmin']}
+                roles={['federalAdmin', 'bishopAdmin', 'constituencyAdmin']}
                 path="/bacenta/members"
                 component={BacentaMembers}
                 exact
               />
               <ProtectedMembersRoute
-                roles={['superAdmin', 'bishopAdmin', 'coAdmin']}
+                roles={['federalAdmin', 'bishopAdmin', 'constituencyAdmin']}
                 path="/sonta/members"
                 component={SontaMembers}
                 exact
               />
               <ProtectedMembersRoute
-                roles={['superAdmin', 'bishopAdmin', 'coAdmin']}
+                roles={['federalAdmin', 'bishopAdmin', 'constituencyAdmin']}
                 path="/mb-members"
                 component={MemberTableMobile}
                 exact
               />
               <ProtectedRoute path="/pastors" component={BishopMembers} exact />
               <ProtectedRoute
-                roles={['superAdmin', 'bishopAdmin', 'coAdmin']}
+                roles={['federalAdmin', 'bishopAdmin', 'constituencyAdmin']}
                 path="/member/addmember"
                 component={CreateMember}
                 exact
               />
               <ProtectedRoute
-                roles={['superAdmin', 'bishopAdmin', 'coAdmin']}
+                roles={['federalAdmin', 'bishopAdmin', 'constituencyAdmin']}
                 path="/member/editmember"
                 component={UpdateMemberDetails}
                 exact
@@ -499,13 +499,13 @@ const PastorsAdmin = () => {
                 exact
               />
               <ProtectedRoute
-                roles={['superAdmin', 'bishopAdmin', 'coAdmin']}
+                roles={['federalAdmin', 'bishopAdmin', 'constituencyAdmin']}
                 path="/bacenta/addbacenta"
                 component={CreateBacenta}
                 exact
               />
               <ProtectedRoute
-                roles={['superAdmin', 'bishopAdmin', 'coAdmin']}
+                roles={['federalAdmin', 'bishopAdmin', 'constituencyAdmin']}
                 path="/bacenta/editbacenta"
                 component={UpdateBacenta}
                 exact
@@ -529,13 +529,13 @@ const PastorsAdmin = () => {
                 exact
               />
               <ProtectedRoute
-                roles={['superAdmin', 'bishopAdmin', 'coAdmin']}
+                roles={['federalAdmin', 'bishopAdmin', 'constituencyAdmin']}
                 path="/centre/addcentre"
                 component={CreateCentre}
                 exact
               />
               <ProtectedRoute
-                roles={['superAdmin', 'bishopAdmin', 'coAdmin']}
+                roles={['federalAdmin', 'bishopAdmin', 'constituencyAdmin']}
                 path="/centre/editcentre"
                 component={UpdateCentre}
                 exact
@@ -589,25 +589,25 @@ const PastorsAdmin = () => {
                 exact
               />
               <ProtectedRoute
-                roles={['superAdmin', 'bishopAdmin']}
+                roles={['federalAdmin', 'bishopAdmin']}
                 path="/town/addtown"
                 component={CreateTownCampus}
                 exact
               />
               <ProtectedRoute
-                roles={['superAdmin', 'bishopAdmin']}
+                roles={['federalAdmin', 'bishopAdmin']}
                 path="/campus/addcampus"
                 component={CreateTownCampus}
                 exact
               />
               <ProtectedRoute
-                roles={['superAdmin', 'bishopAdmin']}
+                roles={['federalAdmin', 'bishopAdmin']}
                 path="/town/edittown"
                 component={UpdateTownCampus}
                 exact
               />
               <ProtectedRoute
-                roles={['superAdmin', 'bishopAdmin']}
+                roles={['federalAdmin', 'bishopAdmin']}
                 path="/campus/editcampus"
                 component={UpdateTownCampus}
                 exact

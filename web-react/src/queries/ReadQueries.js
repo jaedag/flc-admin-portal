@@ -223,6 +223,11 @@ export const DISPLAY_BACENTA = gql`
         campus {
           id
           name
+          bishop {
+            id
+            firstName
+            lastName
+          }
         }
       }
       leader {

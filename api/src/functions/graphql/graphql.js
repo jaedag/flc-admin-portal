@@ -21,7 +21,17 @@ const driver = neo4j.driver(
 )
 
 const server = new ApolloServer({
-  schema: makeAugmentedSchema({ typeDefs }),
+  schema: makeAugmentedSchema({
+    typeDefs,
+    config: {
+      query: true,
+      mutation: true,
+      auth: {
+        isAuthenticated: true,
+        hasScope: true,
+      },
+    },
+  }),
   context: { driver, neo4jDatabase: process.env.NEO4J_DATABASE },
 })
 

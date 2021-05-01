@@ -79,17 +79,20 @@ const BishopDashboard = () => {
     <>
       <NavBar />
       <div className="container px-4">
-        <h4 className="pt-4">{bishopName}</h4>
-        <p
-          onClick={() => {
-            clickCard(data.displayMember?.hasAdmin)
-            history.push('/member/displaydetails')
-          }}
-        >
-          {data?.displayMember?.hasAdmin ? { adminName } : null}
-        </p>
-        <div className="row justify-content-end pb-4">
-          <div className="col-auto mr-1 d-md-none">
+        <div className="row justify-content-end pt-4">
+          <div className="col">
+            <h4>{bishopName}</h4>
+            <p
+              onClick={() => {
+                clickCard(data.displayMember?.hasAdmin)
+                history.push('/member/displaydetails')
+              }}
+            >
+              {data?.displayMember?.hasAdmin ? { adminName } : null}
+            </p>
+          </div>
+
+          <div className="col-auto mr-1 align-self-center d-md-none">
             <DropdoownButton items={listItems} />
           </div>
         </div>

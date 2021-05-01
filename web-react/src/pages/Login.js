@@ -36,11 +36,11 @@ export const Login = () => {
             style={{ maxWidth: '30%' }}
           />
           <div className="d-lg-none h2 text-center text-white">FLC Admin</div>
-          <div className="col-auto my-3 align-items-center">
+          <div className="col-auto my-3 align-items-center text-center">
             First Love Church is a church full of young people on fire for the
             Lord
           </div>
-          <div className="col-auto">
+          <div className="col-auto text-center">
             <AuthButton mobileFullSize="true" />
           </div>
         </div>

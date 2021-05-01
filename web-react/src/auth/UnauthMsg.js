@@ -1,6 +1,5 @@
 import React from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
-import { AuthButton } from '../components/buttons/DashboardButton'
 import { NavBar } from '../components/nav/NavBar'
 import { Login } from '../pages/Login'
 
@@ -32,7 +31,6 @@ export const UnauthMsg = () => {
                 >
                   Click Here To Go Back
                 </button>
-                <AuthButton />
               </div>
             </div>
           </div>

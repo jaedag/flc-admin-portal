@@ -48,16 +48,19 @@ import { UserProfileDisplayPage } from './pages/UserProfileDisplayPage'
 import UserProfileEditPage from './pages/UserProfileEditPage'
 
 const AppWithApollo = () => {
-  const [accessToken, setAccessToken] = useState()
+  const [accessToken, setAccessToken] = useState(
+    
+  )
   const { getAccessTokenSilently } = useAuth0()
 
   const getAccessToken = useCallback(async () => {
     try {
       const token = await getAccessTokenSilently()
-
+      console.log('token', token)
       setAccessToken(token)
       sessionStorage.setItem('token', token)
     } catch (err) {
+      console.log('Error', err)
       // loginWithRedirect()
     }
   }, [getAccessTokenSilently])
@@ -72,9 +75,7 @@ const AppWithApollo = () => {
 
   const authLink = setContext((_, { headers }) => {
     // get the authentication token from local storage if it exists
-    const token = sessionStorage.getItem('token')
-      ? sessionStorage.getItem('token')
-      : accessToken
+    const token = sessionStorage.getItem('token') || accessToken
 
     // return the headers to the context so httpLink can read them
     return {

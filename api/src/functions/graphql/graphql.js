@@ -33,7 +33,7 @@ const server = new ApolloServer({
     },
   }),
   context: ({ req }) => ({
-    token: req.headers['auth-token'],
+    token: req.headers['Authorization'],
     req,
     driver,
     neo4jDatabase: process.env.NEO4J_DATABASE,

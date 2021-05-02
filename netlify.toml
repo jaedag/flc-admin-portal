@@ -5,6 +5,9 @@
 
 [dev]
   command = "npm start"
+  port=8000 # destination port to use in browser. Lambda dev server is started on same port
+  targetPort=3000 # port that local rollup server is running on
+  framework= "#custom"
 
 
   NEO4J_URI = "Neo4j URI (ex: bolt://localhost:7687)"

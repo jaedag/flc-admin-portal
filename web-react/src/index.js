@@ -54,6 +54,7 @@ const AppWithApollo = () => {
   const getAccessToken = useCallback(async () => {
     try {
       const token = await getAccessTokenSilently()
+
       setAccessToken(token)
       sessionStorage.setItem('token', token)
     } catch (err) {

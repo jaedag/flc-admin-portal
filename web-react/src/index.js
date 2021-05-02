@@ -48,19 +48,16 @@ import { UserProfileDisplayPage } from './pages/UserProfileDisplayPage'
 import UserProfileEditPage from './pages/UserProfileEditPage'
 
 const AppWithApollo = () => {
-  const [accessToken, setAccessToken] = useState(
-    
-  )
+  const [accessToken, setAccessToken] = useState()
   const { getAccessTokenSilently } = useAuth0()
 
   const getAccessToken = useCallback(async () => {
     try {
       const token = await getAccessTokenSilently()
-      console.log('token', token)
+
       setAccessToken(token)
       sessionStorage.setItem('token', token)
     } catch (err) {
-      console.log('Error', err)
       // loginWithRedirect()
     }
   }, [getAccessTokenSilently])

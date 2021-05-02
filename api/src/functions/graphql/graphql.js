@@ -32,9 +32,12 @@ const server = new ApolloServer({
       },
     },
   }),
-  context: ({ req }) => {
-    return { req, driver, neo4jDatabase: process.env.NEO4J_DATABASE }
-  },
+  context: ({ req }) => ({
+    token: req.headers['auth-token'],
+    req,
+    driver,
+    neo4jDatabase: process.env.NEO4J_DATABASE,
+  }),
 })
 
 exports.handler = server.createHandler()

@@ -32,13 +32,10 @@ const server = new ApolloServer({
       },
     },
   }),
-  context: ({ event, context }) => ({
-    headers: event.headers,
-    functionName: context.functionName,
-    neo4jDatabase: process.env.NEO4J_DATABASE,
+  context: ({ req }) => ({
+    req,
     driver,
-    event,
-    context,
+    neo4jDatabase: process.env.NEO4J_DATABASE,
   }),
 })
 

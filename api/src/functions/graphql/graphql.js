@@ -33,18 +33,11 @@ const server = new ApolloServer({
     },
   }),
   context: ({ event, context }) => ({
-    headers: event.headers,
-    functionName: context.functionName,
-    event,
+    req: event,
     context,
     driver,
     neo4jDatabase: process.env.NEO4J_DATABASE,
   }),
 })
 
-exports.handler = server.createHandler({
-  cors: {
-    origin: true,
-    credentials: true,
-  },
-})
+exports.handler = server.createHandler()

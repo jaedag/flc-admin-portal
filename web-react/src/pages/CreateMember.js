@@ -25,6 +25,7 @@ import { ChurchContext } from '../contexts/ChurchContext'
 import { MemberContext } from '../contexts/MemberContext'
 import PlusSign from '../components/buttons/PlusSign.jsx'
 import MinusSign from '../components/buttons/MinusSign.jsx'
+import RoleView from '../auth/RoleView'
 
 export const CreateMember = () => {
   const initialValues = {
@@ -392,105 +393,111 @@ export const CreateMember = () => {
                   {/* <!-- End of Church Info Section--> */}
 
                   {/* <!-- Beginning of Pastoral Appointments Section--> */}
-                  <div className="col my-4">
-                    <HeadingBar title="Pastoral Appointments (if any)" />
-                    <FieldArray name="pastoralAppointment">
-                      {(fieldArrayProps) => {
-                        const { remove, form } = fieldArrayProps
-                        const { values } = form
-                        const { pastoralAppointment } = values
+                  <RoleView roles={['federalAdmin', 'bishopAdmin']}>
+                    <div className="col my-4">
+                      <HeadingBar title="Pastoral Appointments (if any)" />
+                      <FieldArray name="pastoralAppointment">
+                        {(fieldArrayProps) => {
+                          const { remove, form } = fieldArrayProps
+                          const { values } = form
+                          const { pastoralAppointment } = values
 
-                        return (
-                          <div>
-                            {pastoralAppointment.map(
-                              (pastoralAppointment, index) => (
-                                <div key={index} className="form-row">
-                                  <div className="col-auto">
+                          return (
+                            <div>
+                              {pastoralAppointment.map(
+                                (pastoralAppointment, index) => (
+                                  <div key={index} className="form-row">
+                                    <div className="col-auto">
+                                      <FormikControl
+                                        className="form-control"
+                                        control="select"
+                                        options={TITLE_OPTIONS}
+                                        defaultOption="Title"
+                                        name={`pastoralAppointment[${index}].title`}
+                                      />
+                                    </div>
+                                    <div className="col">
+                                      <FormikControl
+                                        className="form-control"
+                                        placeholder="Date"
+                                        control="input"
+                                        type="date"
+                                        name={`pastoralAppointment[${index}].date`}
+                                      />
+                                    </div>
+                                    <div className="col d-flex">
+                                      {index > 0 && (
+                                        <MinusSign onClick={() => remove()} />
+                                      )}
+                                    </div>
+                                  </div>
+                                )
+                              )}
+                            </div>
+                          )
+                        }}
+                      </FieldArray>
+                    </div>
+                  </RoleView>
+                  {/* <!--End of Pastoral Appointments Section--> */}
+
+                  {/* <!--Beginning of Pastoral History Section--> */}
+                  <RoleView roles={['federalAdmin', 'bishopAdmin']}>
+                    <div className="col my-4">
+                      <HeadingBar title="Pastoral History" />
+                      <FieldArray name="pastoralHistory">
+                        {(fieldArrayProps) => {
+                          const { push, remove, form } = fieldArrayProps
+                          const { values } = form
+                          const { pastoralHistory } = values
+
+                          return (
+                            <div>
+                              {pastoralHistory.map((pastoralHistory, index) => (
+                                <div key={index} className="form-row row-cols">
+                                  <div className="col-7">
                                     <FormikControl
                                       className="form-control"
-                                      control="select"
-                                      options={TITLE_OPTIONS}
-                                      defaultOption="Title"
-                                      name={`pastoralAppointment[${index}].title`}
+                                      placeholder="History Entry"
+                                      control="input"
+                                      name={`pastoralHistory[${index}].historyRecord`}
                                     />
                                   </div>
                                   <div className="col">
                                     <FormikControl
                                       className="form-control"
-                                      placeholder="Date"
+                                      placeholder="Year"
                                       control="input"
-                                      type="date"
-                                      name={`pastoralAppointment[${index}].date`}
+                                      name={`pastoralHistory[${index}].historyDate`}
                                     />
                                   </div>
                                   <div className="col d-flex">
+                                    <PlusSign onClick={() => push()} />
                                     {index > 0 && (
-                                      <MinusSign onClick={() => remove()} />
+                                      <MinusSign
+                                        onClick={() => remove(index)}
+                                      />
                                     )}
                                   </div>
                                 </div>
-                              )
-                            )}
-                          </div>
-                        )
-                      }}
-                    </FieldArray>
-                  </div>
-                  {/* <!--End of Pastoral Appointments Section--> */}
-
-                  {/* <!--Beginning of Pastoral History Section--> */}
-                  <div className="col my-4">
-                    <HeadingBar title="Pastoral History" />
-                    <FieldArray name="pastoralHistory">
-                      {(fieldArrayProps) => {
-                        const { push, remove, form } = fieldArrayProps
-                        const { values } = form
-                        const { pastoralHistory } = values
-
-                        return (
-                          <div>
-                            {pastoralHistory.map((pastoralHistory, index) => (
-                              <div key={index} className="form-row row-cols">
-                                <div className="col-7">
-                                  <FormikControl
-                                    className="form-control"
-                                    placeholder="History Entry"
-                                    control="input"
-                                    name={`pastoralHistory[${index}].historyRecord`}
-                                  />
-                                </div>
-                                <div className="col">
-                                  <FormikControl
-                                    className="form-control"
-                                    placeholder="Year"
-                                    control="input"
-                                    name={`pastoralHistory[${index}].historyDate`}
-                                  />
-                                </div>
-                                <div className="col d-flex">
-                                  <PlusSign onClick={() => push()} />
-                                  {index > 0 && (
-                                    <MinusSign onClick={() => remove(index)} />
-                                  )}
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        )
-                      }}
-                    </FieldArray>
-                    <div className="row mt-4">
-                      <div className="col d-flex justify-content-center">
-                        <button
-                          type="submit"
-                          disabled={!formik.isValid || formik.isSubmitting}
-                          className="btn btn-primary btn-medium my-3 text-center"
-                        >
-                          Submit
-                        </button>
+                              ))}
+                            </div>
+                          )
+                        }}
+                      </FieldArray>
+                      <div className="row mt-4">
+                        <div className="col d-flex justify-content-center">
+                          <button
+                            type="submit"
+                            disabled={!formik.isValid || formik.isSubmitting}
+                            className="btn btn-primary btn-medium my-3 text-center"
+                          >
+                            Submit
+                          </button>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  </RoleView>
                   {/* <!--End of Pastoral History Section--> */}
                 </div>
               </Form>

@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "React app for GRANDstack Starter",
   "dependencies": {
-    "@apollo/client": "^3.3.16",
+    "@apollo/client": "^3.3.15",
     "@auth0/auth0-react": "^1.4.0",
     "classnames": "^2.3.1",
     "formik": "^2.2.6",

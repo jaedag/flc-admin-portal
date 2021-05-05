@@ -1,4 +1,5 @@
-// import { neo4jgraphql } from 'neo4j-graphql-js'
+// eslint-disable-next-line
+import { neo4jgraphql } from 'neo4j-graphql-js'
 import fs from 'fs'
 import path from 'path'
 

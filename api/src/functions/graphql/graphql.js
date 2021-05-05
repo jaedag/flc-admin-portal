@@ -8,7 +8,7 @@ const jwt = require('jsonwebtoken')
 
 // This module is copied during the build step
 // Be sure to run `npm run build`
-const { typeDefs } = require('.././graphql-schema')
+const { typeDefs } = require('../..graphql-schema')
 
 const driver = neo4j.driver(
   process.env.NEO4J_URI || 'bolt://localhost:7687',
@@ -37,6 +37,8 @@ assertSchema({ schema, driver, debug: true })
 
 const server = new ApolloServer({
   schema,
+  introspection: true,
+  playground: true,
   context: async ({ event }) => {
     const token = event.headers?.authorization?.slice(7)
     // let userId

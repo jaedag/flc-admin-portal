@@ -8,7 +8,7 @@ import { capitalise } from '../../global-utils'
 import UserProfileIcon from '../UserProfileIcon'
 
 export const NavBar = () => {
-  const { church, setFilters } = useContext(ChurchContext)
+  const { church } = useContext(ChurchContext)
   const location = useLocation()
 
   const atHome = church?.church && location.pathname !== '/'
@@ -21,21 +21,7 @@ export const NavBar = () => {
 
         {atHome && <NavLink label="Bishop" linkTo="/dashboard" icon="bold" />}
         {!showingMembers && atHome ? (
-          <NavLink
-            linkTo="/members"
-            label="Members"
-            icon="users"
-            onClick={() => {
-              setFilters({
-                gender: '',
-                maritalStatus: '',
-                occupation: '',
-                leaderRank: [],
-                leaderTitle: [],
-                ministry: '',
-              })
-            }}
-          />
+          <NavLink linkTo="/members" label="Members" icon="users" />
         ) : (
           <div className="d-none d-md-block">
             <NavLink linkTo="/members" label="Members" icon="users" />

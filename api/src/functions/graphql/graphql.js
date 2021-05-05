@@ -2,13 +2,13 @@
 // as a lambda function
 
 const { ApolloServer } = require('apollo-server-lambda')
-const { makeAugmentedSchema, assertSchema } = require('neo4j-graphql-js')
+const { makeAugmentedSchema } = require('neo4j-graphql-js')
 const neo4j = require('neo4j-driver')
 const jwt = require('jsonwebtoken')
 
 // This module is copied during the build step
 // Be sure to run `npm run build`
-const { typeDefs } = require('./graphql-schema')
+const { typeDefs } = require('../../graphql-schema')
 
 const driver = neo4j.driver(
   process.env.NEO4J_URI || 'bolt://localhost:7687',
@@ -33,7 +33,7 @@ const schema = makeAugmentedSchema({
   },
 })
 
-assertSchema({ schema, driver, debug: true })
+// assertSchema({ schema, driver, debug: true })
 
 const server = new ApolloServer({
   schema,

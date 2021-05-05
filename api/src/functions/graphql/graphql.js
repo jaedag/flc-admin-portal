@@ -2,7 +2,7 @@
 // as a lambda function
 
 const { ApolloServer } = require('apollo-server-lambda')
-const { makeAugmentedSchema } = require('neo4j-graphql-js')
+const { makeAugmentedSchema, assertSchema } = require('neo4j-graphql-js')
 const neo4j = require('neo4j-driver')
 const jwt = require('jsonwebtoken')
 
@@ -33,7 +33,7 @@ const schema = makeAugmentedSchema({
   },
 })
 
-// assertSchema({ schema, driver, debug: true })
+assertSchema({ schema, driver, debug: true })
 
 const server = new ApolloServer({
   schema,

@@ -37,8 +37,6 @@ assertSchema({ schema, driver, debug: true })
 
 const server = new ApolloServer({
   schema,
-  introspection: true,
-  playground: true,
   context: async ({ event }) => {
     const token = event.headers?.authorization?.slice(7)
     // let userId
@@ -80,4 +78,4 @@ const server = new ApolloServer({
   },
 })
 
-exports.handler = server.createHandler()
+exports.graphqlHandler = server.createHandler()

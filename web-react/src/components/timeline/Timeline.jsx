@@ -4,7 +4,7 @@ import { ChurchContext } from '../../contexts/ChurchContext'
 import './Timeline.css'
 import { parseDate } from '../../global-utils'
 
-export const Timeline = (props) => {
+const Timeline = (props) => {
   const { record, limit, modifier } = props
 
   const { clickCard } = useContext(ChurchContext)
@@ -86,3 +86,5 @@ export const Timeline = (props) => {
     )
   }
 }
+
+export default Timeline

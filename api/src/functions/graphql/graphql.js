@@ -66,7 +66,9 @@ const server = new ApolloServer({
     })
 
     const decoded = await authResult
-
+    console.log('event', event)
+    console.log('driver', driver)
+    console.log('decoded.sub', decoded.sub)
     return {
       driver,
       req: event,
@@ -78,4 +80,4 @@ const server = new ApolloServer({
   },
 })
 
-exports.graphqlHandler = server.createHandler()
+exports.handler = server.createHandler()

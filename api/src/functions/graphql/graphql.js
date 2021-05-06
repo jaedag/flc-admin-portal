@@ -36,7 +36,7 @@ const schema = makeAugmentedSchema({
 assertSchema({ schema, driver, debug: true })
 
 const server = new ApolloServer({
-  schema,
+  schema: schema,
   context: async ({ event }) => {
     const token = event.headers?.authorization?.slice(7)
     // let userId

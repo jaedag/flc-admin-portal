@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { useQuery } from '@apollo/client'
 import { capitalise } from '../../global-utils'
-import { DisplayChurchDetails } from '../../components/DisplayChurchDetails'
+import { DisplayChurchDetails } from '../../components/DisplayChurchDetails/DisplayChurchDetails'
 import { NavBar } from '../../components/nav/NavBar'
 import { ErrorScreen, LoadingScreen } from '../../components/StatusScreens.jsx'
 import { DISPLAY_TOWN, DISPLAY_CAMPUS } from '../../queries/ReadQueries'

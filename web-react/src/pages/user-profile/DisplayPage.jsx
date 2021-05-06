@@ -8,7 +8,7 @@ import { ErrorScreen, LoadingScreen } from '../../components/StatusScreens.jsx'
 import { MemberContext } from '../../contexts/MemberContext'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import userIcon from '../../img/user.png'
-import { Timeline } from '../../components/timeline/Timeline'
+import Timeline from '../../components/Timeline/Timeline'
 import { getNameWithTitle, MONTH_NAMES, capitalise } from '../../global-utils'
 import { AuthButton } from '../../components/buttons/DashboardButton'
 

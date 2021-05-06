@@ -76,8 +76,8 @@ const server = new ApolloServer({
       neo4jDatabase: process.env.NEO4J_DATABASE,
     }
   },
-  // introspection: true,
-  // playground: true,
+  introspection: true,
+  playground: true,
 })
 
 exports.handler = server.createHandler()

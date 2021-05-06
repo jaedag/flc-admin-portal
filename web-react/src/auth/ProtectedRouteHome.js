@@ -3,10 +3,10 @@ import { Route } from 'react-router-dom'
 import { withAuthenticationRequired } from '@auth0/auth0-react'
 import { UnauthMsg } from './UnauthMsg'
 import { MemberContext } from '../contexts/MemberContext'
-import BishopDashboard from '../pages/BishopDashboard'
+import BishopDashboard from '../pages/BishopDashboard.jsx'
 import { ChurchContext } from '../contexts/ChurchContext'
-import { DisplayCampusTownDetails } from '../pages/DisplayCampusTownDetails'
-import { LoadingScreen } from '../components/StatusScreens'
+import { DisplayCampusTownDetails } from '../pages/display/DetailsCampusTown.jsx'
+import { LoadingScreen } from '../components/StatusScreens.jsx'
 import { isAuthorised } from '../global-utils'
 
 const ProtectedRoute = ({ component, roles, ...args }) => {

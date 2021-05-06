@@ -1,13 +1,13 @@
 import React from 'react'
-import Input from './Input.jsx'
-import Textarea from './Textarea.jsx'
-import Select from './Select.jsx'
-import SelectWithQuery from './SelectWithQuery.jsx'
-import RadioButtons from './RadioButtons.jsx'
-import CheckboxGroup from './CheckboxGroup.jsx'
-import Combobox from './Combobox.jsx'
-import ComboboxTwoVariables from './ComboboxTwoVariables.jsx'
-import FormikSearchbox from './FormikSearchbox.jsx'
+import Input from './Input'
+import Textarea from './Textarea'
+import Select from './Select'
+import SelectWithQuery from './SelectWithQuery'
+import RadioButtons from './RadioButtons'
+import CheckboxGroup from './CheckboxGroup'
+import Combobox from './Combobox'
+import ComboboxTwoVariables from './ComboboxTwoVariables'
+import FormikSearchbox from './FormikSearchbox'
 
 function FormikControl(props) {
   const { control, ...rest } = props

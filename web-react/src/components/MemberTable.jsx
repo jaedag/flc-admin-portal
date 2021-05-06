@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import { ChurchContext } from '../contexts/ChurchContext'
-import Spinner from './Spinner'
+import Spinner from './Spinner.jsx'
 import userIcon from '../img/user.png'
 import './MemberTable.css'
 

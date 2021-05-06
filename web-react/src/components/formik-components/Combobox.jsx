@@ -3,7 +3,7 @@ import Autosuggest from 'react-autosuggest'
 import './react-autosuggest.css'
 import { useLazyQuery } from '@apollo/client'
 import { ErrorMessage } from 'formik'
-import TextError from './TextError.jsx'
+import TextError from './TextError'
 
 function Combobox(props) {
   const {

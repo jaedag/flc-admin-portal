@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { NavBar } from './nav/NavBar.jsx'
-import { SideBar } from './SideBar'
+import { NavBar } from './nav/NavBar'
+import { SideBar } from './SideBar.jsx'
 import { MemberTable } from './MemberTable.jsx'
 import { ChurchContext } from '../contexts/ChurchContext'
 import { memberFilter } from './member-filter-utils'
@@ -20,7 +20,7 @@ export const MembersGrid = (props) => {
     ((dimensions.height - 96 - 30) * (0.75 * dimensions.width - 46)) /
       (160 * 126)
   )
-  //NavBar.jsx takes 70px of the height and side bar takes 25% of the width
+  //NavBar takes 70px of the height and side bar takes 25% of the width
   const memberDataLoaded = memberData ? memberFilter(memberData, filters) : null
 
   useEffect(() => {

@@ -4,7 +4,7 @@ import { withAuthenticationRequired } from '@auth0/auth0-react'
 import { UnauthMsg } from './UnauthMsg'
 import { MemberContext } from '../contexts/MemberContext'
 import { ChurchContext } from '../contexts/ChurchContext'
-import { LoadingScreen } from '../components/StatusScreens'
+import { LoadingScreen } from '../components/StatusScreens.jsx'
 import { isAuthorised } from '../global-utils'
 
 const ProtectedRoute = ({ component, roles, ...args }) => {

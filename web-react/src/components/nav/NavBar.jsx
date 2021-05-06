@@ -1,11 +1,11 @@
 import React, { useContext } from 'react'
 import { useLocation } from 'react-router-dom'
-import SearchBox from '../SearchBox'
+import SearchBox from '../SearchBox.jsx'
 import { ChurchContext } from '../../contexts/ChurchContext'
-import NavLink from './NavLink.jsx'
+import NavLink from './NavLink'
 import './NavBar.css'
 import { capitalise } from '../../global-utils'
-import UserProfileIcon from '../UserProfileIcon'
+import UserProfileIcon from '../UserProfileIcon.jsx'
 
 export const NavBar = () => {
   const { church } = useContext(ChurchContext)

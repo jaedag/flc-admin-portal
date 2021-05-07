@@ -17,8 +17,9 @@ import {
   CREATE_MEMBER_MUTATION,
 } from '../../queries/CreateMutations'
 import { HeadingBar } from '../../components/HeadingBar/HeadingBar'
-import { NavBar } from '../../components/nav/NavBar'
-import { ErrorScreen, LoadingScreen } from '../../components/StatusScreens.jsx'
+import NavBar from '../../components/nav/NavBar'
+import ErrorScreen from '../../components/ErrorScreen'
+import LoadingScreen from '../../components/LoadingScreen'
 import Spinner from '../../components/Spinner.jsx'
 import {
   GET_MINISTRIES,
@@ -30,7 +31,7 @@ import PlusSign from '../../components/buttons/PlusSign'
 import MinusSign from '../../components/buttons/MinusSign'
 import RoleView from '../../auth/RoleView.jsx'
 
-export const CreateMember = () => {
+const CreateMember = () => {
   const initialValues = {
     firstName: '',
     middleName: '',
@@ -511,3 +512,5 @@ export const CreateMember = () => {
     )
   }
 }
+
+export default CreateMember

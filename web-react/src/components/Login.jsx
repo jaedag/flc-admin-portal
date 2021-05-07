@@ -1,9 +1,9 @@
 import React from 'react'
-import { AuthButton } from './buttons/DashboardButton'
+import AuthButton from './buttons/AuthButton'
 import UserProfileIcon from './UserProfileIcon.jsx'
 import Logo from '../img/flc-logo-small.png'
 
-export const Login = () => {
+const Login = () => {
   return (
     <>
       <div className="container body-container d-none d-lg-block">
@@ -52,3 +52,5 @@ export const Login = () => {
     </>
   )
 }
+
+export default Login

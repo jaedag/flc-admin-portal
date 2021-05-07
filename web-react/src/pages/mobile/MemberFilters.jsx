@@ -1,8 +1,8 @@
 import React from 'react'
-import { SideBar } from '../../components/SideBar.jsx'
-import { NavBar } from '../../components/nav/NavBar'
+import SideBar from '../../components/SideBar.jsx'
+import NavBar from '../../components/nav/NavBar'
 
-export const MemberFiltersMobile = () => {
+const MemberFiltersMobile = () => {
   return (
     <>
       <NavBar />
@@ -10,3 +10,5 @@ export const MemberFiltersMobile = () => {
     </>
   )
 }
+
+export default MemberFiltersMobile

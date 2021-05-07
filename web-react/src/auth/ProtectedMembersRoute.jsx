@@ -4,9 +4,9 @@ import { withAuthenticationRequired } from '@auth0/auth0-react'
 import { UnauthMsg } from './UnauthMsg'
 import { MemberContext } from '../contexts/MemberContext'
 import { ChurchContext } from '../contexts/ChurchContext'
-import { BishopMembers } from '../pages/grids/BishopMembers.jsx'
-import { CampusTownMembers } from '../pages/grids/CampusTownMembers.jsx'
-import { LoadingScreen } from '../components/StatusScreens.jsx'
+import BishopMembers from '../pages/grids/BishopMembers.jsx'
+import CampusTownMembers from '../pages/grids/CampusTownMembers.jsx'
+import LoadingScreen from '../components/LoadingScreen'
 import { isAuthorised } from '../global-utils'
 
 const ProtectedMembersRoute = ({ component, roles, ...args }) => {

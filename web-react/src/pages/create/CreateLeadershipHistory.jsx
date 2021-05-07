@@ -8,13 +8,14 @@ import FormikControl from '../../components/formik-components/FormikControl'
 import { ADD_LEADER_HISTORY_MUTATION } from '../../queries/CreateMutations'
 import { DISPLAY_MEMBER } from '../../queries/ReadQueries'
 import { HeadingBar } from '../../components/HeadingBar'
-import { NavBar } from '../../components/nav/NavBar'
-import { ErrorScreen, LoadingScreen } from '../../components/StatusScreens.jsx'
+import NavBar from '../../components/nav/NavBar'
+import ErrorScreen from '../../components/ErrorScreen'
+import LoadingScreen from '../../components/LoadingScreen'
 import { ChurchContext } from '../context/ChurchContext'
 import PlusSign from '../../components/buttons/PlusSign'
 import MinusSign from '../../components/buttons/MinusSign'
 
-export const AddLeadershipHistory = () => {
+const CreateLeadershipHistory = () => {
   const initialValues = {
     pastoralHistory: [
       {
@@ -127,3 +128,5 @@ export const AddLeadershipHistory = () => {
     </div>
   )
 }
+
+export default CreateLeadershipHistory

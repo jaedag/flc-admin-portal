@@ -6,9 +6,9 @@ import { ChurchContext } from '../contexts/ChurchContext'
 import Spinner from './Spinner.jsx'
 import { GET_BISHOP_MEMBERS } from '../queries/GridQueries'
 import userIcon from '../img/user.png'
-import { NavBar } from './nav/NavBar'
+import NavBar from './nav/NavBar'
 
-export const MemberTableMobile = () => {
+const MemberTableMobile = () => {
   const { filters, bishopId } = useContext(ChurchContext)
   const [offset, setOffset] = useState(0)
 
@@ -137,3 +137,5 @@ export const MemberTableMobile = () => {
     /* Mobile View */
   )
 }
+
+export default MemberTableMobile

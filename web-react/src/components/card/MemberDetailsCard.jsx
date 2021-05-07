@@ -1,9 +1,9 @@
 import React from 'react'
 import { useAuth0 } from '@auth0/auth0-react'
-import { EditButton } from '../buttons/EditButton'
+import EditButton from '../buttons/EditButton'
 import './MemberDetailsCard.css'
 
-export const MemberDetailsCard = (props) => {
+const MemberDetailsCard = (props) => {
   const { title, editlink } = props
   const { isAuthenticated } = useAuth0()
 
@@ -23,3 +23,5 @@ export const MemberDetailsCard = (props) => {
     </div>
   )
 }
+
+export default MemberDetailsCard

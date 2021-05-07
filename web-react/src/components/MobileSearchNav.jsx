@@ -5,12 +5,12 @@ import FormikControl from './formik-components/FormikControl'
 import { SearchContext } from '../contexts/MemberContext'
 import './MobileSearchNav.css'
 
-export const MobileSearchNav = () => {
+const MobileSearchNav = () => {
   let history = useHistory()
-  const { setSearchKey } = useContext(SearchContext)
+  const { searchKey, setSearchKey } = useContext(SearchContext)
 
   const initialValues = {
-    searchKey: '',
+    searchKey: searchKey || '',
   }
 
   const onSubmit = (values) => {
@@ -53,3 +53,5 @@ export const MobileSearchNav = () => {
     </nav>
   )
 }
+
+export default MobileSearchNav

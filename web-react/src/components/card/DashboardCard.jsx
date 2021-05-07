@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import './DashboardCard.css'
 
-export const DashboardCard = (props) => {
+const DashboardCard = (props) => {
   let icon = ''
   const { name, detail1, detail2, cardLink } = props
 
@@ -42,11 +42,11 @@ export const DashboardCard = (props) => {
           <span className={`icon-color fas fa-${icon} fa-3x`} />
           {/* </div> */}
           <div className="media-body ml-4">
-            <h6 className="m-0 text-white">{name}</h6>
+            <h6 className="m-0 text-white">{`${name}`}</h6>
             <p className="text-secondary m-0">
-              {detail1}
+              {`${detail1}`}
               <br />
-              {detail2}
+              {detail2 && `${detail2}`}
             </p>
           </div>
         </div>
@@ -54,3 +54,5 @@ export const DashboardCard = (props) => {
     </>
   )
 }
+
+export default DashboardCard

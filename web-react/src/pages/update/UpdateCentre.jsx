@@ -23,8 +23,9 @@ import {
   REMOVE_CENTRE_CAMPUS,
   UPDATE_CENTRE_MUTATION,
 } from '../../queries/UpdateMutations'
-import { NavBar } from '../../components/nav/NavBar'
-import { ErrorScreen, LoadingScreen } from '../../components/StatusScreens.jsx'
+import NavBar from '../../components/nav/NavBar'
+import ErrorScreen from '../../components/ErrorScreen'
+import LoadingScreen from '../../components/LoadingScreen'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import { DISPLAY_CENTRE } from '../../queries/ReadQueries'
 import {
@@ -35,7 +36,7 @@ import PlusSign from '../../components/buttons/PlusSign'
 import MinusSign from '../../components/buttons/MinusSign'
 import { MemberContext } from '../../contexts/MemberContext'
 
-export const UpdateCentre = () => {
+const UpdateCentre = () => {
   const {
     church,
     centreId,
@@ -583,3 +584,5 @@ export const UpdateCentre = () => {
     return <ErrorScreen />
   }
 }
+
+export default UpdateCentre

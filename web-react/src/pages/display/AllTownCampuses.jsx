@@ -2,13 +2,14 @@ import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { useQuery } from '@apollo/client'
 import DisplayChurchList from '../../components/DisplayChurchList'
-import { NavBar } from '../../components/nav/NavBar'
-import { ErrorScreen, LoadingScreen } from '../../components/StatusScreens.jsx'
+import NavBar from '../../components/nav/NavBar'
+import ErrorScreen from '../../components/ErrorScreen'
+import LoadingScreen from '../../components/LoadingScreen'
 import { GET_TOWNS, GET_CAMPUSES } from '../../queries/ListQueries'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import { BISHOP_MEMBER_COUNT } from '../../queries/CountQueries'
 
-export const DisplayAllTownCampuses = () => {
+const DisplayAllTownCampuses = () => {
   const { clickCard, church, bishopId } = useContext(ChurchContext)
 
   const { data: townData, loading: townLoading } = useQuery(GET_TOWNS, {
@@ -129,3 +130,5 @@ export const DisplayAllTownCampuses = () => {
     return <ErrorScreen />
   }
 }
+
+export default DisplayAllTownCampuses

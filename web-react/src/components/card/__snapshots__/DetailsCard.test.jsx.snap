@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders 1`] = `
+<DocumentFragment>
+  <div>
+    <div
+      class="container-fluid card detail-card m-3"
+    >
+      <span
+        class="text-secondary"
+      />
+      <h2
+        class="font-weight-bold"
+      />
+    </div>
+  </div>
+</DocumentFragment>
+`;

@@ -1,13 +1,14 @@
 import React, { useContext } from 'react'
 import { useQuery } from '@apollo/client'
 import { capitalise } from '../../global-utils'
-import { DisplayChurchDetails } from '../../components/DisplayChurchDetails/DisplayChurchDetails'
-import { NavBar } from '../../components/nav/NavBar'
-import { ErrorScreen, LoadingScreen } from '../../components/StatusScreens.jsx'
+import DisplayChurchDetails from '../../components/DisplayChurchDetails/DisplayChurchDetails'
+import NavBar from '../../components/nav/NavBar'
+import ErrorScreen from '../../components/ErrorScreen'
+import LoadingScreen from '../../components/LoadingScreen'
 import { DISPLAY_TOWN, DISPLAY_CAMPUS } from '../../queries/ReadQueries'
 import { ChurchContext } from '../../contexts/ChurchContext'
 
-export const DisplayCampusTownDetails = () => {
+const DisplayCampusTownDetails = () => {
   const { church, townId, campusId } = useContext(ChurchContext)
 
   const { data: townData, loading: townLoading } = useQuery(DISPLAY_TOWN, {
@@ -94,3 +95,5 @@ export const DisplayCampusTownDetails = () => {
     return <ErrorScreen />
   }
 }
+
+export default DisplayCampusTownDetails

@@ -28,8 +28,9 @@ import {
   ADD_CAMPUS_CENTRES,
   ADD_TOWN_CENTRES,
 } from '../../queries/UpdateMutations.js'
-import { NavBar } from '../../components/nav/NavBar'
-import { ErrorScreen, LoadingScreen } from '../../components/StatusScreens.jsx'
+import NavBar from '../../components/nav/NavBar'
+import ErrorScreen from '../../components/ErrorScreen'
+import LoadingScreen from '../../components/LoadingScreen'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import { DISPLAY_CAMPUS, DISPLAY_TOWN } from '../../queries/ReadQueries'
 import PlusSign from '../../components/buttons/PlusSign'
@@ -40,7 +41,7 @@ import {
 } from '../../queries/LogMutations'
 import { MemberContext } from '../../contexts/MemberContext'
 
-export const UpdateTownCampus = () => {
+const UpdateTownCampus = () => {
   const { church, campusId, townId, bishopId, setBishopId } = useContext(
     ChurchContext
   )
@@ -684,3 +685,5 @@ export const UpdateTownCampus = () => {
     return <ErrorScreen />
   }
 }
+
+export default UpdateTownCampus

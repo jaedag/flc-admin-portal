@@ -1,15 +1,15 @@
 import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
-import { DetailsCard } from '../card/DetailsCard'
+import DetailsCard from '../card/DetailsCard'
 import { MemberContext } from '../../contexts/MemberContext'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import Timeline from '../Timeline/Timeline'
-import { EditButton } from '../buttons/EditButton'
-import { MemberDisplayCard } from '../card/MemberDisplayCard'
-import { ChurchButton } from '../buttons/ChurchButton'
+import EditButton from '../buttons/EditButton'
+import MemberDisplayCard from '../card/MemberDisplayCard'
+import ChurchButton from '../buttons/ChurchButton'
 import './DisplayChurchDetails.css'
 
-export const DisplayChurchDetails = (props) => {
+const DisplayChurchDetails = (props) => {
   const {
     name,
     leaderTitle,
@@ -214,3 +214,5 @@ export const DisplayChurchDetails = (props) => {
     </>
   )
 }
+
+export default DisplayChurchDetails

@@ -2,13 +2,14 @@ import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { useQuery } from '@apollo/client'
 import DisplayChurchList from '../../components/DisplayChurchList'
-import { NavBar } from '../../components/nav/NavBar'
-import { ErrorScreen, LoadingScreen } from '../../components/StatusScreens.jsx'
+import NavBar from '../../components/nav/NavBar'
+import ErrorScreen from '../../components/ErrorScreen'
+import LoadingScreen from '../../components/LoadingScreen'
 import { GET_CENTRE_BACENTAS } from '../../queries/ListQueries'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import { MemberContext } from '../../contexts/MemberContext'
 
-export const DisplayAllBacentas = () => {
+const DisplayAllBacentas = () => {
   const { centreId } = useContext(ChurchContext)
   const { setMemberId } = useContext(MemberContext)
 
@@ -56,3 +57,5 @@ export const DisplayAllBacentas = () => {
     return <ErrorScreen />
   }
 }
+
+export default DisplayAllBacentas

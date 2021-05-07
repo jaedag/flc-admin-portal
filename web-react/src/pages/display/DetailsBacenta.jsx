@@ -1,12 +1,13 @@
 import React, { useContext } from 'react'
 import { useQuery } from '@apollo/client'
-import { DisplayChurchDetails } from '../../components/DisplayChurchDetails/DisplayChurchDetails'
-import { NavBar } from '../../components/nav/NavBar'
-import { ErrorScreen, LoadingScreen } from '../../components/StatusScreens.jsx'
+import DisplayChurchDetails from '../../components/DisplayChurchDetails/DisplayChurchDetails'
+import NavBar from '../../components/nav/NavBar'
+import ErrorScreen from '../../components/ErrorScreen'
+import LoadingScreen from '../../components/LoadingScreen'
 import { DISPLAY_BACENTA } from '../../queries/ReadQueries'
 import { ChurchContext } from '../../contexts/ChurchContext'
 
-export const DisplayBacentaDetails = () => {
+const DisplayBacentaDetails = () => {
   const { bacentaId } = useContext(ChurchContext)
 
   const { data: bacentaData, loading: bacentaLoading } = useQuery(
@@ -64,3 +65,5 @@ export const DisplayBacentaDetails = () => {
     return <ErrorScreen />
   }
 }
+
+export default DisplayBacentaDetails

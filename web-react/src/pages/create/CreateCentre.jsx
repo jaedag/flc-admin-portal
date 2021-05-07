@@ -14,8 +14,9 @@ import {
   BISHOP_MEMBER_DROPDOWN,
 } from '../../queries/ListQueries.js'
 import { CREATE_CENTRE_MUTATION } from '../../queries/CreateMutations'
-import { NavBar } from '../../components/nav/NavBar'
-import { ErrorScreen, LoadingScreen } from '../../components/StatusScreens.jsx'
+import NavBar from '../../components/nav/NavBar'
+import ErrorScreen from '../../components/ErrorScreen'
+import LoadingScreen from '../../components/LoadingScreen'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import PlusSign from '../../components/buttons/PlusSign'
 import MinusSign from '../../components/buttons/MinusSign'

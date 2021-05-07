@@ -5,8 +5,8 @@ import { UnauthMsg } from './UnauthMsg'
 import { MemberContext } from '../contexts/MemberContext'
 import BishopDashboard from '../pages/BishopDashboard.jsx'
 import { ChurchContext } from '../contexts/ChurchContext'
-import { DisplayCampusTownDetails } from '../pages/display/DetailsCampusTown.jsx'
-import { LoadingScreen } from '../components/StatusScreens.jsx'
+import DisplayCampusTownDetails from '../pages/display/DetailsCampusTown.jsx'
+import LoadingScreen from '../components/LoadingScreen'
 import { isAuthorised } from '../global-utils'
 
 const ProtectedRoute = ({ component, roles, ...args }) => {

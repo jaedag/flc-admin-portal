@@ -2,10 +2,10 @@ import React, { useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useQuery } from '@apollo/client'
 import { BISH_DASHBOARD_COUNTS } from '../queries/CountQueries'
-import { NavBar } from '../components/nav/NavBar'
-import { DashboardCard } from '../components/card/DashboardCard'
-import { DashboardButton } from '../components/buttons/DashboardButton'
-import DropdoownButton from '../components/buttons/DropdownButton'
+import NavBar from '../components/nav/NavBar'
+import DashboardCard from '../components/card/DashboardCard'
+import DashboardButton from '../components/buttons/DashboardButton'
+import DropdownButton from '../components/buttons/DropdownButton'
 import { ChurchContext } from '../contexts/ChurchContext'
 import { capitalise, isAuthorised, plural } from '../global-utils'
 import { MemberContext } from '../contexts/MemberContext'
@@ -79,18 +79,20 @@ const BishopDashboard = () => {
     <>
       <NavBar />
       <div className="container px-4">
-        <h4 className="pt-4">{bishopName}</h4>
-        <p
-          onClick={() => {
-            clickCard(data.displayMember?.hasAdmin)
-            history.push('/member/displaydetails')
-          }}
-        >
-          {data?.displayMember?.hasAdmin ? { adminName } : null}
-        </p>
-        <div className="row justify-content-end pb-4">
-          <div className="col-auto mr-1 d-md-none">
-            <DropdoownButton items={listItems} />
+        <div className="row justify-content-between py-3">
+          <div className="col">
+            <h4>{bishopName}</h4>
+            <p
+              onClick={() => {
+                clickCard(data.displayMember?.hasAdmin)
+                history.push('/member/displaydetails')
+              }}
+            >
+              {data?.displayMember?.hasAdmin ? { adminName } : null}
+            </p>
+          </div>
+          <div className="col-auto align-self-center mr-1 d-md-none">
+            <DropdownButton items={listItems} />
           </div>
         </div>
         <div className="row row-cols-md-2 row-cols-lg-4">

@@ -4,7 +4,7 @@ import { ChurchContext } from '../../contexts/ChurchContext'
 import user from '../../img/user.png'
 import bussolid from '../../img/bus-solid.svg'
 
-export const MemberDisplayCard = (props) => {
+const MemberDisplayCard = (props) => {
   const { member, ...rest } = props
   const { determineStream, clickCard } = useContext(ChurchContext)
   const history = useHistory()
@@ -94,3 +94,5 @@ export const MemberDisplayCard = (props) => {
     </div>
   )
 }
+
+export default MemberDisplayCard

@@ -9,7 +9,7 @@ import LoadingScreen from '../../components/LoadingScreen'
 import { MemberContext } from '../../contexts/MemberContext'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import userIcon from '../../img/user.png'
-import Timeline from '../../components/Timeline/Timeline.jsx'
+import Timeline from '../../components/Timelines/Timeline.jsx'
 import { getNameWithTitle, MONTH_NAMES, capitalise } from '../../global-utils'
 
 const DisplayMemberDetails = () => {

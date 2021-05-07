@@ -1,8 +1,7 @@
 import React from 'react'
-import { NavBar } from './nav/NavBar'
-import SpinnerPage from './SpinnerPage.jsx'
+import NavBar from './nav/NavBar'
 
-export const ErrorScreen = () => {
+const ErrorScreen = () => {
   return (
     <>
       <NavBar />
@@ -15,11 +14,4 @@ export const ErrorScreen = () => {
   )
 }
 
-export const LoadingScreen = () => {
-  return (
-    <>
-      <NavBar />
-      <SpinnerPage />
-    </>
-  )
-}
+export default ErrorScreen

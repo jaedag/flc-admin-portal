@@ -5,7 +5,7 @@ import Spinner from './Spinner.jsx'
 import userIcon from '../img/user.png'
 import './MemberTable.css'
 
-export const MemberTable = (props) => {
+const MemberTable = (props) => {
   const {
     memberData,
     memberError,
@@ -116,3 +116,5 @@ export const MemberTable = (props) => {
     )
   }
 }
+
+export default MemberTable

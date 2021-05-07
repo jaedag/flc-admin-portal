@@ -11,7 +11,7 @@ import {
 } from '../global-utils'
 import './SideBar.css'
 
-export const SideBar = () => {
+const SideBar = () => {
   const { setFilters } = useContext(ChurchContext)
   const location = useLocation()
   const history = useHistory()
@@ -175,3 +175,5 @@ export const SideBar = () => {
     </nav>
   )
 }
+
+export default SideBar

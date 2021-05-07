@@ -13,43 +13,43 @@ import { Auth0Provider, useAuth0 } from '@auth0/auth0-react'
 import './index.css'
 import BishopSelect from './pages/BishopSelect.jsx'
 import BishopDashboard from './pages/BishopDashboard.jsx'
-import { BishopMembers } from './pages/grids/BishopMembers.jsx'
-import { CampusTownMembers } from './pages/grids/CampusTownMembers.jsx'
-import { CentreMembers } from './pages/grids/CentreMembers.jsx'
-import { BacentaMembers } from './pages/grids/BacentaMembers.jsx'
-import { SontaMembers } from './pages/grids/SontaMembers.jsx'
-import { SearchPageMobile } from './pages/mobile/SearchPage'
-import { DisplayMemberDetails } from './pages/display/DetailsMember'
-import { CreateMember } from './pages/create/CreateMember'
-import { UpdateMemberDetails } from './pages/update/UpdateMemberDetails.jsx'
-import { CreateBacenta } from './pages/create/CreateBacenta'
+import BishopMembers from './pages/grids/BishopMembers.jsx'
+import CampusTownMembers from './pages/grids/CampusTownMembers.jsx'
+import CentreMembers from './pages/grids/CentreMembers.jsx'
+import BacentaMembers from './pages/grids/BacentaMembers.jsx'
+import SontaMembers from './pages/grids/SontaMembers.jsx'
+import SearchPageMobile from './pages/mobile/SearchPage'
+import DisplayMemberDetails from './pages/display/DetailsMember'
+import CreateMember from './pages/create/CreateMember'
+import UpdateMemberDetails from './pages/update/UpdateMemberDetails.jsx'
+import CreateBacenta from './pages/create/CreateBacenta'
 import CreateCentre from './pages/create/CreateCentre.jsx'
 import CreateTownCampus from './pages/create/CreateTownCampus'
-import { UpdateTownCampus } from './pages/update/UpdateTownCampus.jsx'
-import { DisplayBacentaDetails } from './pages/display/DetailsBacenta'
-import { DisplayCentreDetails } from './pages/display/DetailsCentre'
-import { DisplayCampusTownDetails } from './pages/display/DetailsCampusTown.jsx'
+import UpdateTownCampus from './pages/update/UpdateTownCampus.jsx'
+import DisplayBacentaDetails from './pages/display/DetailsBacenta'
+import DisplayCentreDetails from './pages/display/DetailsCentre'
+import DisplayCampusTownDetails from './pages/display/DetailsCampusTown.jsx'
 import DisplaySontaDetails from './pages/display/DetailsSonta.jsx'
 import { MemberContext, SearchContext } from './contexts/MemberContext'
 import { ChurchContext } from './contexts/ChurchContext'
-import { DisplayAllBacentas } from './pages/display/AllBacentas'
-import { DisplayAllCentres } from './pages/display/AllCentres'
-import { DisplayAllSontas } from './pages/display/AllSontas'
-import { DisplayAllTownCampuses } from './pages/display/AllTownCampuses'
-import { UpdateCentre } from './pages/update/UpdateCentre'
-import { DisplaySontasByCampusTown } from './pages/display/SontasByCampusTown'
-import { UpdateBacenta } from './pages/update/UpdateBacenta'
+import DisplayAllBacentas from './pages/display/AllBacentas'
+import DisplayAllCentres from './pages/display/AllCentres'
+import DisplayAllSontas from './pages/display/AllSontas'
+import DisplayAllTownCampuses from './pages/display/AllTownCampuses'
+import UpdateCentre from './pages/update/UpdateCentre'
+import DisplaySontasByCampusTown from './pages/display/SontasByCampusTown'
+import UpdateBacenta from './pages/update/UpdateBacenta'
 import ProtectedRoute from './auth/ProtectedRoute.jsx'
 import ProtectedRouteHome from './auth/ProtectedRouteHome.jsx'
 import ProtectedMembersRoute from './auth/ProtectedMembersRoute.jsx'
-import { MemberFiltersMobile } from './pages/mobile/MemberFilters'
-import { MemberTableMobile } from './components/MemberTableMobile.jsx'
-import { UserProfileDisplayPage } from './pages/user-profile/DisplayPage'
+import MemberFiltersMobile from './pages/mobile/MemberFilters'
+import MemberTableMobile from './components/MemberTableMobile.jsx'
+import UserProfileDisplayPage from './pages/user-profile/DisplayPage'
 import UserProfileEditPage from './pages/user-profile/EditPage'
 
 const AppWithApollo = () => {
   const [accessToken, setAccessToken] = useState()
-  const { getAccessTokenSilently } = useAuth0()
+  const { getAccessTokenSilently, loginWithRedirect } = useAuth0()
 
   const getAccessToken = useCallback(async () => {
     try {
@@ -58,7 +58,7 @@ const AppWithApollo = () => {
       setAccessToken(token)
       sessionStorage.setItem('token', token)
     } catch (err) {
-      // loginWithRedirect()
+      loginWithRedirect()
     }
   }, [getAccessTokenSilently])
 

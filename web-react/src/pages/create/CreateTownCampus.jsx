@@ -16,13 +16,14 @@ import {
   CREATE_TOWN_MUTATION,
   CREATE_CAMPUS_MUTATION,
 } from '../../queries/CreateMutations'
-import { NavBar } from '../../components/nav/NavBar'
-import { ErrorScreen, LoadingScreen } from '../../components/StatusScreens.jsx'
+import NavBar from '../../components/nav/NavBar'
+import ErrorScreen from '../../components/ErrorScreen'
+import LoadingScreen from '../../components/LoadingScreen'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import PlusSign from '../../components/buttons/PlusSign'
 import MinusSign from '../../components/buttons/MinusSign'
 
-function AddTownCampus() {
+function CreateTownCampus() {
   const { church, bishopId, setTownId, setCampusId, setBishopId } = useContext(
     ChurchContext
   )
@@ -247,4 +248,4 @@ function AddTownCampus() {
   }
 }
 
-export default AddTownCampus
+export default CreateTownCampus

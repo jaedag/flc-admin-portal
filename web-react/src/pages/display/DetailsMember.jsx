@@ -1,17 +1,18 @@
 import React, { useContext } from 'react'
 import { useQuery } from '@apollo/client'
 import { useHistory } from 'react-router-dom'
-import { NavBar } from '../../components/nav/NavBar'
-import { MemberDetailsCard } from '../../components/card/MemberDetailsCard'
+import NavBar from '../../components/nav/NavBar'
+import MemberDetailsCard from '../../components/card/MemberDetailsCard'
 import { DISPLAY_MEMBER } from '../../queries/ReadQueries'
-import { ErrorScreen, LoadingScreen } from '../../components/StatusScreens.jsx'
+import ErrorScreen from '../../components/ErrorScreen'
+import LoadingScreen from '../../components/LoadingScreen'
 import { MemberContext } from '../../contexts/MemberContext'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import userIcon from '../../img/user.png'
 import Timeline from '../../components/Timeline/Timeline'
 import { getNameWithTitle, MONTH_NAMES, capitalise } from '../../global-utils'
 
-export const DisplayMemberDetails = () => {
+const DisplayMemberDetails = () => {
   const { memberId } = useContext(MemberContext)
   const { church, determineStream, clickCard } = useContext(ChurchContext)
   const history = useHistory()
@@ -444,3 +445,5 @@ export const DisplayMemberDetails = () => {
     return <ErrorScreen />
   }
 }
+
+export default DisplayMemberDetails

@@ -15,8 +15,9 @@ import FormikControl from '../../components/formik-components/FormikControl'
 import { UPDATE_MEMBER_MUTATION } from '../../queries/UpdateMutations'
 import { DISPLAY_MEMBER } from '../../queries/ReadQueries'
 import { HeadingBar } from '../../components/HeadingBar/HeadingBar'
-import { NavBar } from '../../components/nav/NavBar'
-import { ErrorScreen, LoadingScreen } from '../../components/StatusScreens.jsx'
+import NavBar from '../../components/nav/NavBar'
+import ErrorScreen from '../../components/ErrorScreen'
+import LoadingScreen from '../../components/LoadingScreen'
 import Spinner from '../../components/Spinner.jsx'
 import {
   GET_MINISTRIES,

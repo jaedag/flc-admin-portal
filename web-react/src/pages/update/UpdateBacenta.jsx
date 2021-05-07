@@ -18,15 +18,16 @@ import {
   REMOVE_BACENTA_CENTRE,
   UPDATE_BACENTA,
 } from '../../queries/UpdateMutations'
-import { NavBar } from '../../components/nav/NavBar'
-import { ErrorScreen, LoadingScreen } from '../../components/StatusScreens.jsx'
+import NavBar from '../../components/nav/NavBar'
+import ErrorScreen from '../../components/ErrorScreen'
+import LoadingScreen from '../../components/LoadingScreen'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import { DISPLAY_BACENTA } from '../../queries/ReadQueries'
 import Spinner from '../../components/Spinner.jsx'
 import { LOG_BACENTA_HISTORY } from '../../queries/LogMutations'
 import { MemberContext } from '../../contexts/MemberContext'
 
-export const UpdateBacenta = () => {
+const UpdateBacenta = () => {
   const { church, bishopId, centreId, setCentreId, bacentaId } = useContext(
     ChurchContext
   )
@@ -427,3 +428,5 @@ export const UpdateBacenta = () => {
     return <ErrorScreen />
   }
 }
+
+export default UpdateBacenta

@@ -1,13 +1,13 @@
 import React, { useContext, useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { NavBar } from './nav/NavBar'
-import { SideBar } from './SideBar.jsx'
-import { MemberTable } from './MemberTable.jsx'
+import NavBar from './nav/NavBar'
+import SideBar from './SideBar.jsx'
+import MemberTable from './MemberTable.jsx'
 import { ChurchContext } from '../contexts/ChurchContext'
 import { memberFilter } from './member-filter-utils'
 import { debounce } from '../global-utils'
 
-export const MembersGrid = (props) => {
+const MembersGrid = (props) => {
   const { memberData, memberError, memberLoading, title } = props
   const { filters } = useContext(ChurchContext)
   const [offset, setOffset] = useState(0)
@@ -108,3 +108,5 @@ export const MembersGrid = (props) => {
     </div>
   )
 }
+
+export default MembersGrid

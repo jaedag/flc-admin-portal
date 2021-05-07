@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth0 } from '@auth0/auth0-react'
 import { useLazyQuery } from '@apollo/client'
-import { AuthButton } from './buttons/DashboardButton'
+import AuthButton from './buttons/AuthButton'
 import './UserProfileIcon.css'
 import { GET_LOGGED_IN_USER } from '../queries/SearchQuery'
 import { MemberContext } from '../contexts/MemberContext.js'
@@ -40,6 +40,7 @@ function UserProfileIcon() {
     if (!currentUser.email?.length) {
       user && memberByEmail({ variables: { email: user.email } })
     }
+
     // eslint-disable-next-line
   }, [isAuthenticated])
 
@@ -49,7 +50,6 @@ function UserProfileIcon() {
         <Link
           className="nav-item nav-link d-flex align-items-center flex-column p-0 pb-2"
           to="/user-profile"
-          // onClick={() => logout({ returnTo: window.location.origin })}
         >
           <span>
             <img

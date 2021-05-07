@@ -1,7 +1,7 @@
 import React from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
-import { NavBar } from '../components/nav/NavBar'
-import { Login } from '../components/Login'
+import NavBar from '../components/nav/NavBar'
+import Login from '../components/Login'
 
 export const UnauthMsg = () => {
   const history = useHistory()

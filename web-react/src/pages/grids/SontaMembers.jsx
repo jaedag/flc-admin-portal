@@ -1,10 +1,10 @@
 import React, { useContext } from 'react'
 import { useQuery } from '@apollo/client'
-import { MembersGrid } from '../../components/MembersGrid'
+import MembersGrid from '../../components/MembersGrid'
 import { GET_SONTA_MEMBERS } from '../../queries/GridQueries'
 import { ChurchContext } from '../../contexts/ChurchContext'
 
-export const SontaMembers = () => {
+const SontaMembers = () => {
   const { sontaId } = useContext(ChurchContext)
 
   const { data, loading, error } = useQuery(GET_SONTA_MEMBERS, {
@@ -20,3 +20,5 @@ export const SontaMembers = () => {
     />
   )
 }
+
+export default SontaMembers

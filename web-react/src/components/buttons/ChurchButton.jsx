@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import './ChurchButton.css'
 
-export const ChurchButton = (props) => {
+const ChurchButton = (props) => {
   const { church } = props
   const { clickCard } = useContext(ChurchContext)
 
@@ -20,3 +20,5 @@ export const ChurchButton = (props) => {
     </Link>
   )
 }
+
+export default ChurchButton

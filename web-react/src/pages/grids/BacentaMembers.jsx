@@ -1,10 +1,10 @@
 import React, { useContext } from 'react'
 import { useQuery } from '@apollo/client'
-import { MembersGrid } from '../../components/MembersGrid'
+import MembersGrid from '../../components/MembersGrid'
 import { GET_BACENTA_MEMBERS } from '../../queries/GridQueries'
 import { ChurchContext } from '../../contexts/ChurchContext'
 
-export const BacentaMembers = () => {
+const BacentaMembers = () => {
   const { bacentaId } = useContext(ChurchContext)
   const { data, loading, error } = useQuery(GET_BACENTA_MEMBERS, {
     variables: { id: bacentaId },
@@ -19,3 +19,5 @@ export const BacentaMembers = () => {
     />
   )
 }
+
+export default BacentaMembers

@@ -18,12 +18,13 @@ import {
   BISHOP_MEMBER_DROPDOWN,
 } from '../../queries/ListQueries'
 import { CREATE_BACENTA_MUTATION } from '../../queries/CreateMutations'
-import { NavBar } from '../../components/nav/NavBar'
+import NavBar from '../../components/nav/NavBar'
 import { ChurchContext } from '../../contexts/ChurchContext'
-import { ErrorScreen, LoadingScreen } from '../../components/StatusScreens.jsx'
+import ErrorScreen from '../../components/ErrorScreen'
+import LoadingScreen from '../../components/LoadingScreen'
 import Spinner from '../../components/Spinner.jsx'
 
-export const CreateBacenta = () => {
+const CreateBacenta = () => {
   const initialValues = {
     bacentaName: '',
     leaderId: '',
@@ -284,3 +285,5 @@ export const CreateBacenta = () => {
     return <ErrorScreen />
   }
 }
+
+export default CreateBacenta

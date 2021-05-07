@@ -7,7 +7,7 @@ import './NavBar.css'
 import { capitalise } from '../../global-utils'
 import UserProfileIcon from '../UserProfileIcon.jsx'
 
-export const NavBar = () => {
+const NavBar = () => {
   const { church } = useContext(ChurchContext)
   const location = useLocation()
 
@@ -66,3 +66,5 @@ export const NavBar = () => {
     </nav>
   )
 }
+
+export default NavBar

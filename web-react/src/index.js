@@ -49,7 +49,7 @@ import UserProfileEditPage from './pages/user-profile/EditPage'
 
 const AppWithApollo = () => {
   const [accessToken, setAccessToken] = useState()
-  const { getAccessTokenSilently, loginWithRedirect } = useAuth0()
+  const { getAccessTokenSilently } = useAuth0()
 
   const getAccessToken = useCallback(async () => {
     try {
@@ -58,7 +58,7 @@ const AppWithApollo = () => {
       setAccessToken(token)
       sessionStorage.setItem('token', token)
     } catch (err) {
-      loginWithRedirect()
+      // loginWithRedirect()
     }
   }, [getAccessTokenSilently])
 

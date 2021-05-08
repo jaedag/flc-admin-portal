@@ -37,7 +37,7 @@ assertSchema({ schema, driver, debug: true })
 
 const server = new ApolloServer({
   schema: schema,
-  context: async ({ event }) => {
+  context: async ({ event, context }) => {
     const token = event.headers?.authorization?.slice(7)
     // let userId
 
@@ -73,6 +73,10 @@ const server = new ApolloServer({
       cypherParams: {
         userId: decoded.sub,
       },
+      headers: event.headers,
+      functionName: context.functionName,
+      event,
+      context,
       neo4jDatabase: process.env.NEO4J_DATABASE,
     }
   },
@@ -80,9 +84,4 @@ const server = new ApolloServer({
   playground: true,
 })
 
-exports.handler = server.createHandler({
-  cors: {
-    origin: '*',
-    credentials: true,
-  },
-})
+exports.handler = server.createHandler()

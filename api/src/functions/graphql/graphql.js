@@ -5,7 +5,6 @@ const { ApolloServer } = require('apollo-server-lambda')
 const { makeAugmentedSchema, assertSchema } = require('neo4j-graphql-js')
 const neo4j = require('neo4j-driver')
 const jwt = require('jsonwebtoken')
-const jwksClient = require('jwks-rsa')
 
 // This module is copied during the build step
 // Be sure to run `npm run build`
@@ -36,18 +35,6 @@ const schema = makeAugmentedSchema({
 
 assertSchema({ schema, driver, debug: true })
 
-// Verify using getPublicKey callback
-// Example uses https://github.com/auth0/node-jwks-rsa as a way to fetch the keys.
-const client = jwksClient({
-  jwksUri: 'https://flcadmin.us.auth0.com/.well-known/jwks.json',
-})
-function getPublicKey(header, callback) {
-  client.getSigningKey(header.kid, function (err, key) {
-    var signingKey = key.publicKey || key.rsaPublicKey
-    callback(null, signingKey)
-  })
-}
-
 const server = new ApolloServer({
   schema: schema,
   context: async ({ event }) => {
@@ -63,7 +50,7 @@ const server = new ApolloServer({
     const authResult = new Promise((resolve, reject) => {
       jwt.verify(
         token,
-        getPublicKey,
+        process.env.JWT_SECRET,
         {
           algorithms: ['RS256'],
         },
@@ -93,4 +80,9 @@ const server = new ApolloServer({
   playground: true,
 })
 
-exports.handler = server.createHandler()
+exports.handler = server.createHandler({
+  cors: {
+    origin: '*',
+    credentials: true,
+  },
+})

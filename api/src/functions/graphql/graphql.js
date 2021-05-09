@@ -37,6 +37,10 @@ assertSchema({ schema, driver, debug: true })
 const server = new ApolloServer({
   schema: schema,
   context: ({ event }) => {
+    if (!event) {
+      return { driver }
+    }
+
     return {
       driver,
       req: event,

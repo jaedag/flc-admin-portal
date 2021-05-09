@@ -22,14 +22,14 @@ const driver = neo4j.driver(
 
 const schema = makeAugmentedSchema({
   typeDefs,
-  config: {
-    query: true,
-    mutation: true,
-    auth: {
-      isAuthenticated: true,
-      // hasScope: true,
-    },
-  },
+  // config: {
+  //   query: true,
+  //   mutation: true,
+  //   auth: {
+  //     isAuthenticated: true,
+  //     hasScope: true,
+  //   },
+  // },
 })
 
 assertSchema({ schema, driver, debug: true })
@@ -37,10 +37,6 @@ assertSchema({ schema, driver, debug: true })
 const server = new ApolloServer({
   schema: schema,
   context: ({ event }) => {
-    if (!event) {
-      return { driver }
-    }
-
     return {
       driver,
       req: event,

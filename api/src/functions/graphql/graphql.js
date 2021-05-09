@@ -4,7 +4,6 @@
 const { ApolloServer } = require('apollo-server-lambda')
 const { makeAugmentedSchema, assertSchema } = require('neo4j-graphql-js')
 const neo4j = require('neo4j-driver')
-const jwt = require('jsonwebtoken')
 
 // This module is copied during the build step
 // Be sure to run `npm run build`
@@ -37,51 +36,14 @@ assertSchema({ schema, driver, debug: true })
 
 const server = new ApolloServer({
   schema: schema,
-  context: async ({ event, context }) => {
-    const token = event.headers?.authorization?.slice(7)
-    // let userId
-
-    if (!token) {
-      return {
-        driver,
-      }
-    }
-
-    const authResult = new Promise((resolve, reject) => {
-      jwt.verify(
-        token,
-        process.env.JWT_SECRET,
-        {
-          algorithms: ['RS256'],
-        },
-        (error, decoded) => {
-          if (error) {
-            reject({ error })
-          }
-          if (decoded) {
-            resolve(decoded)
-          }
-        }
-      )
-    })
-
-    const decoded = await authResult
-
+  context: ({ event }) => {
     return {
       driver,
       req: event,
-      cypherParams: {
-        userId: decoded.sub,
-      },
-      headers: event.headers,
-      functionName: context.functionName,
-      event,
-      context,
-      neo4jDatabase: process.env.NEO4J_DATABASE,
     }
   },
-  introspection: true,
-  playground: true,
+  // introspection: true,
+  // playground: true,
 })
-console.log(server)
+
 exports.handler = server.createHandler()

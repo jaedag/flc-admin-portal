@@ -109,15 +109,15 @@ export function debounce(func, wait) {
   }
 }
 
-export const getNameWithTitle = (displayMember) => {
+export const getNameWithTitle = (Member) => {
   let displayName = {
-    name: `${displayMember.firstName} ${displayMember.lastName}`,
+    name: `${Member.firstName} ${Member.lastName}`,
     title: '',
   }
 
-  if (displayMember.title.length) {
-    if (displayMember.gender.gender === 'Female') {
-      switch (displayMember.title[0].Title.title) {
+  if (Member.title.length) {
+    if (Member.gender.gender === 'Female') {
+      switch (Member.title[0].Title.title) {
         case 'Pastor':
           displayName.title = 'Lady Pastor'
           break
@@ -131,7 +131,7 @@ export const getNameWithTitle = (displayMember) => {
           break
       }
     } else {
-      displayName.title = displayMember.title[0].Title.title
+      displayName.title = Member.title[0].Title.title
     }
 
     return `${displayName.title} ${displayName.name}`

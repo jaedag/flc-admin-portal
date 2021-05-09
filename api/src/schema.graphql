@@ -228,7 +228,6 @@ type Basonta {
 type Query {
   #At the Federal Level
   bishopsList: [Member]
-    @hasScope(scopes: ["Bishop:Read"])
     @cypher(
       statement: "MATCH ()<-[:HAS_CAMPUS|:HAS_TOWN]-(bishop:Member) RETURN DISTINCT bishop"
     )
@@ -650,7 +649,6 @@ type Mutation {
     ministry: String
     pictureUrl: String!
   ): Member
-    @hasScope(scopes: ["Member:Create"])
     @cypher(
       statement: """
       CREATE (member:Member {whatsappNumber:$whatsappNumber})
@@ -716,7 +714,6 @@ type Mutation {
     )
 
   CreateTown(townName: String!, leaderId: ID!, id: ID!): Town
-    @hasScope(scopes: ["Town:Create"])
     @cypher(
       statement: """
        CREATE (town:Town {name:$townName})
@@ -744,7 +741,6 @@ type Mutation {
       """
     )
   CreateCampus(campusName: String!, leaderId: ID!, id: ID!): Campus
-    @hasScope(scopes: ["Campus:Create"])
     @cypher(
       statement: """
       CREATE (campus:Campus {name:$campusName})
@@ -773,7 +769,6 @@ type Mutation {
     )
 
   CreateCentre(centreName: String!, leaderId: ID!, townCampusId: ID!): Centre
-    @hasScope(scopes: ["Centre:Create"])
     @cypher(
       statement: """
       CREATE (centre:Centre {name:$centreName})
@@ -809,7 +804,6 @@ type Mutation {
     venueLongitude: Float
     venueLatitude: Float
   ): Bacenta
-    @hasScope(scopes: ["Bacenta:Create"])
     @cypher(
       statement: """
       CREATE (bacenta:Bacenta {name:$bacentaName,location: point({latitude:toFloat($venueLatitude), longitude:toFloat($venueLongitude), crs:'WGS-84'})})
@@ -857,7 +851,6 @@ type Mutation {
     ministry: String
     pictureUrl: String!
   ): Member
-    @hasScope(scopes: ["Member:Update"])
     @cypher(
       statement: """
       MATCH (member:Member {id:$id})
@@ -939,7 +932,6 @@ type Mutation {
     leaderId: ID!
     bishopId: ID!
   ): Town
-    @hasScope(scopes: ["Town:Update"])
     @cypher(
       statement: """
       MATCH (town:Town {id: $townId})
@@ -974,7 +966,6 @@ type Mutation {
     leaderId: ID!
     bishopId: ID!
   ): Campus
-    @hasScope(scopes: ["Campus:Update"])
     @cypher(
       statement: """
       MATCH (campus:Campus {id: $campusId})
@@ -1010,7 +1001,6 @@ type Mutation {
     leaderId: ID
     campusTownID: ID
   ): Centre
-    @hasScope(scopes: ["Centre:Update"])
     @cypher(
       statement: """
       MATCH (centre:Centre {id: $centreId})
@@ -1049,7 +1039,6 @@ type Mutation {
     venueLongitude: Float
     venueLatitude: Float
   ): Bacenta
-    @hasScope(scopes: ["Bacenta:Update"])
     @cypher(
       statement: """
                MATCH (bacenta:Bacenta {id: $id})

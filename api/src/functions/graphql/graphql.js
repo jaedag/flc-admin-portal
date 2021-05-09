@@ -83,5 +83,5 @@ const server = new ApolloServer({
   introspection: true,
   playground: true,
 })
-
+console.log(server)
 exports.handler = server.createHandler()

@@ -547,6 +547,7 @@ type Query {
   displayMember(id: ID): Member
     @cypher(statement: "MATCH (member:Member {id:$id}) RETURN member")
   memberByEmail(email: String): Member
+    @hasScope(scopes: ["Member:Read"])
     @cypher(statement: "MATCH (member:Member {email:$email}) RETURN member")
 
   #Fuzzy Search

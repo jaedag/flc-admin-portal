@@ -8,6 +8,7 @@ import EditButton from '../buttons/EditButton'
 import MemberDisplayCard from '../card/MemberDisplayCard'
 import ChurchButton from '../buttons/ChurchButton'
 import './DisplayChurchDetails.css'
+import RoleView from '../../auth/RoleView'
 
 const DisplayChurchDetails = (props) => {
   const {
@@ -87,7 +88,11 @@ const DisplayChurchDetails = (props) => {
             : null}
           <h3 className="mx-3 mt-3 font-weight-bold">
             {`${name} ${churchType}`}
-            <EditButton link={editlink} />
+            <RoleView
+              roles={['federalAdmin', 'bishopAdmin', 'constituencyAdmin']}
+            >
+              <EditButton link={editlink} />
+            </RoleView>
           </h3>
           {admin && (
             <Link

@@ -8,6 +8,7 @@ import ErrorScreen from '../../components/ErrorScreen'
 import LoadingScreen from '../../components/LoadingScreen'
 import { GET_CAMPUS_CENTRES, GET_TOWN_CENTRES } from '../../queries/ListQueries'
 import { ChurchContext } from '../../contexts/ChurchContext'
+import RoleView from '../../auth/RoleView'
 
 const DisplayAllCentres = () => {
   const {
@@ -57,14 +58,18 @@ const DisplayAllCentres = () => {
                   } ${capitalise(church.church)}`}</h4>
                 </Link>
               </div>
-              <div className="col-auto">
-                <Link
-                  to="/centre/addcentre"
-                  className="btn btn-primary text-nowrap"
-                >
-                  Add Centre
-                </Link>
-              </div>
+              <RoleView
+                roles={['federalAdmin', 'bishopAdmin', 'constituencyAdmin']}
+              >
+                <div className="col-auto">
+                  <Link
+                    to="/centre/addcentre"
+                    className="btn btn-primary text-nowrap"
+                  >
+                    Add Centre
+                  </Link>
+                </div>
+              </RoleView>
             </div>
             <div className="row">
               <div className="col">
@@ -117,14 +122,18 @@ const DisplayAllCentres = () => {
                   } ${capitalise(church.church)}`}</h4>
                 </Link>
               </div>
-              <div className="col-auto">
-                <Link
-                  to="/centre/addcentre"
-                  className="btn btn-primary text-nowrap"
-                >
-                  Add Centre
-                </Link>
-              </div>
+              <RoleView
+                roles={['federalAdmin', 'bishopAdmin', 'constituencyAdmin']}
+              >
+                <div className="col-auto">
+                  <Link
+                    to="/centre/addcentre"
+                    className="btn btn-primary text-nowrap"
+                  >
+                    Add Centre
+                  </Link>
+                </div>
+              </RoleView>
             </div>
             <div className="row">
               <div className="col">

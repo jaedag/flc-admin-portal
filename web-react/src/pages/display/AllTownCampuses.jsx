@@ -8,6 +8,7 @@ import LoadingScreen from '../../components/LoadingScreen'
 import { GET_TOWNS, GET_CAMPUSES } from '../../queries/ListQueries'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import { BISHOP_MEMBER_COUNT } from '../../queries/CountQueries'
+import RoleView from '../../auth/RoleView'
 
 const DisplayAllTownCampuses = () => {
   const { clickCard, church, bishopId } = useContext(ChurchContext)
@@ -60,11 +61,13 @@ const DisplayAllTownCampuses = () => {
                   </Link>
                 ) : null}
               </div>
-              <div className="col-auto">
-                <Link to="/town/addtown" className="btn btn-primary">
-                  Add Town
-                </Link>
-              </div>
+              <RoleView roles={['federalAdmin', 'bishopAdmin']}>
+                <div className="col-auto">
+                  <Link to="/town/addtown" className="btn btn-primary">
+                    Add Town
+                  </Link>
+                </div>
+              </RoleView>
             </div>
 
             <div className="row justify-content-between">
@@ -107,11 +110,13 @@ const DisplayAllTownCampuses = () => {
                   </Link>
                 ) : null}
               </div>
-              <div className="col-auto">
-                <Link to="/campus/addcampus" className="btn btn-primary">
-                  Add Campus
-                </Link>
-              </div>
+              <RoleView roles={['federalAdmin', 'bishopAdmin']}>
+                <div className="col-auto">
+                  <Link to="/campus/addcampus" className="btn btn-primary">
+                    Add Campus
+                  </Link>
+                </div>
+              </RoleView>
             </div>
 
             <div className="row justify-content-between">

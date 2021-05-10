@@ -2,6 +2,7 @@ import React from 'react'
 import { useAuth0 } from '@auth0/auth0-react'
 import EditButton from '../buttons/EditButton'
 import './MemberDetailsCard.css'
+import RoleView from '../../auth/RoleView'
 
 const MemberDetailsCard = (props) => {
   const { title, editlink } = props
@@ -15,7 +16,11 @@ const MemberDetailsCard = (props) => {
         </div>
         {isAuthenticated && (
           <div className="col-auto my-auto d-flex justify-content-end">
-            <EditButton link={editlink} />
+            <RoleView
+              roles={['federalAdmin', 'bishopAdmin', 'constituencyAdmin']}
+            >
+              <EditButton link={editlink} />
+            </RoleView>
           </div>
         )}
       </div>

@@ -129,7 +129,6 @@ const BishopSelect = () => {
         <div className="row d-flex align-items-center justify-content-center">
           <div className="col-12 col-lg-6 justify-content-center">
             {`There seems to be an issue with your login credentials. Please contact the system administrator for more details`}
-            <div></div>
           </div>
         </div>
       </div>

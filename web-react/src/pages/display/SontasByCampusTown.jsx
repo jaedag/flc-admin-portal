@@ -8,6 +8,7 @@ import LoadingScreen from '../../components/LoadingScreen'
 import { GET_SONTAS_BY_CAMPUSTOWN } from '../../queries/ListQueries'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import { MemberContext } from '../../contexts/MemberContext'
+import RoleView from '../../auth/RoleView'
 
 const DisplaySontasByCampusTown = () => {
   const { church, bishopId, setSontaId } = useContext(ChurchContext)
@@ -41,14 +42,18 @@ const DisplaySontasByCampusTown = () => {
                   <h4>{`${sontaData.campusList[0].bishop.firstName} ${sontaData.campusList[0].bishop.lastName}'s Sontas`}</h4>
                 </Link>
               </div>
-              <div className="col-auto">
-                <Link
-                  to="/centre/addcentre"
-                  className="btn btn-primary text-nowrap"
-                >
-                  Add Centre
-                </Link>
-              </div>
+              <RoleView
+                roles={['federalAdmin', 'bishopAdmin', 'constituencyAdmin']}
+              >
+                <div className="col-auto">
+                  <Link
+                    to="/centre/addcentre"
+                    className="btn btn-primary text-nowrap"
+                  >
+                    Add Centre
+                  </Link>
+                </div>
+              </RoleView>
             </div>
 
             <div className="row justify-content-between">
@@ -94,14 +99,18 @@ const DisplaySontasByCampusTown = () => {
                   <h4>{`${sontaData.townList[0].bishop.firstName} ${sontaData.townList[0].bishop.lastName}'s Sontas`}</h4>
                 </Link>
               </div>
-              <div className="col-auto">
-                <Link
-                  to="/centre/addcentre"
-                  className="btn btn-primary text-nowrap"
-                >
-                  Add Centre
-                </Link>
-              </div>
+              <RoleView
+                roles={['federalAdmin', 'bishopAdmin', 'constituencyAdmin']}
+              >
+                <div className="col-auto">
+                  <Link
+                    to="/centre/addcentre"
+                    className="btn btn-primary text-nowrap"
+                  >
+                    Add Centre
+                  </Link>
+                </div>
+              </RoleView>
             </div>
 
             <div className="row justify-content-between">

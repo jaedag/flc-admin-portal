@@ -30,15 +30,15 @@ function UserProfileIcon() {
         church: isTown
           ? { church: 'town', subChurch: 'centre' }
           : { church: 'campus', subChurch: 'centre' },
-        email: user?.email,
+        emailAddress: user?.email,
         roles: user ? user[`https://flcadmin.netlify.app/roles`] : [],
       })
     },
   })
 
   useEffect(() => {
-    if (!currentUser.email?.length) {
-      user && memberByEmail({ variables: { email: user.email } })
+    if (!currentUser?.emailAddress?.length) {
+      user && memberByEmail({ variables: { emailAddress: user.email } })
     }
 
     // eslint-disable-next-line

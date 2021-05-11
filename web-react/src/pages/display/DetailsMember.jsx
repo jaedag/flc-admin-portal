@@ -41,6 +41,8 @@ const DisplayMemberDetails = () => {
       basontaLeader: [],
       centreLeader: [],
       bacentaLeader: [],
+      bishopAdmin: [],
+      constituencyAdmin: [],
     }
 
     const updateRank = (member, churchType) => {
@@ -63,6 +65,45 @@ const DisplayMemberDetails = () => {
               church: church,
               id: church.id,
               __typename: church.__typename,
+            })
+            return null
+          })
+          return
+        }
+      }
+
+      if (churchType === 'bishopAdmin') {
+        member.isBishopAdminFor.map((adminFor) => {
+          rank.bishopAdmin.push({
+            bishop: true,
+            name: `Bishop ${adminFor.firstName} ${adminFor.lastName}`,
+            id: adminFor.id,
+            __typename: 'Bishop',
+          })
+          return null
+        })
+        return
+      }
+
+      if (churchType === 'constituencyAdmin') {
+        if (member.isCampusAdminFor[0]) {
+          member.isCampusAdminFor.map((adminFor) => {
+            rank.constituencyAdmin.push({
+              constituency: true,
+              name: `${adminFor.name}`,
+              id: adminFor.id,
+              __typename: adminFor.__typename,
+            })
+            return null
+          })
+          return
+        } else if (member.isTownAdminFor[0]) {
+          member.isTownAdminFor.map((adminFor) => {
+            rank.constituencyAdmin.push({
+              constituency: true,
+              name: `${adminFor.name}`,
+              id: adminFor.id,
+              __typename: adminFor.__typename,
             })
             return null
           })
@@ -113,6 +154,18 @@ const DisplayMemberDetails = () => {
     if (displayMember.townBishop[0]) {
       updateRank(displayMember, 'bishop')
     }
+    if (displayMember.campusBishop[0]) {
+      updateRank(displayMember, 'bishop')
+    }
+    if (displayMember.isBishopAdminFor[0]) {
+      updateRank(displayMember, 'bishopAdmin')
+    }
+    if (displayMember.isCampusAdminFor[0]) {
+      updateRank(displayMember, 'constituencyAdmin')
+    }
+    if (displayMember.isTownAdminFor[0]) {
+      updateRank(displayMember, 'constituencyAdmin')
+    }
 
     return (
       <div className="container pt-5">
@@ -155,7 +208,8 @@ const DisplayMemberDetails = () => {
                       </div>
                       <div className="col d-flex justify-content-center mb-2">
                         <div className="font-weight-light card-text text-center">
-                          {displayMember.townBishop[0] ? (
+                          {displayMember.townBishop[0] ||
+                          displayMember.campusBishop[0] ? (
                             <span
                               onClick={() => {
                                 determineStream(displayMember)
@@ -169,6 +223,9 @@ const DisplayMemberDetails = () => {
                                 let leader
                                 if (place.__typename === ('Campus' || 'Town')) {
                                   leader = 'CO'
+                                }
+                                if (place.bishop || place.constituency) {
+                                  leader = 'Admin'
                                 } else {
                                   leader = 'Leader'
                                 }
@@ -240,7 +297,7 @@ const DisplayMemberDetails = () => {
                         </div>
                         <div className="col-6">
                           <p className="font-weight-bold card-text text-truncate">
-                            {displayMember.email}
+                            {displayMember.emailAddress}
                           </p>
                         </div>
                       </div>

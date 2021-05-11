@@ -55,6 +55,20 @@ export const GET_FEDERAL_MEMBERS = gql`
         name
       }
       campusBishop {
+        id
+        name
+      }
+      isBishopAdminFor {
+        id
+        firstName
+        lastName
+      }
+      isCampusAdminFor {
+        id
+        name
+      }
+      isTownAdminFor {
+        id
         name
       }
     }
@@ -124,6 +138,19 @@ export const GET_FEDERAL_PASTORS = gql`
         name
       }
       campusBishop {
+        id
+        name
+      }
+      isBishopAdminFor {
+        id
+        firstName
+        lastName
+      }
+      isCampusAdminFor {
+        id
+        name
+      }
+      isTownAdminFor {
         id
         name
       }
@@ -202,6 +229,19 @@ export const GET_BISHOP_MEMBERS = gql`
         id
         name
       }
+      isBishopAdminFor {
+        id
+        firstName
+        lastName
+      }
+      isCampusAdminFor {
+        id
+        name
+      }
+      isTownAdminFor {
+        id
+        name
+      }
     }
   }
 `
@@ -274,6 +314,19 @@ export const GET_CAMPUSTOWN_MEMBERS = gql`
         id
         name
       }
+      isBishopAdminFor {
+        id
+        firstName
+        lastName
+      }
+      isCampusAdminFor {
+        id
+        name
+      }
+      isTownAdminFor {
+        id
+        name
+      }
     }
     displayCampus(id: $id) {
       id
@@ -341,6 +394,19 @@ export const GET_CAMPUSTOWN_MEMBERS = gql`
         id
         name
       }
+      isBishopAdminFor {
+        id
+        firstName
+        lastName
+      }
+      isCampusAdminFor {
+        id
+        name
+      }
+      isTownAdminFor {
+        id
+        name
+      }
     }
   }
 `
@@ -402,6 +468,20 @@ export const GET_CENTRE_MEMBERS = gql`
         name
       }
       campusBishop {
+        id
+        name
+      }
+      isBishopAdminFor {
+        id
+        firstName
+        lastName
+      }
+      isCampusAdminFor {
+        id
+        name
+      }
+      isTownAdminFor {
+        id
         name
       }
     }
@@ -475,6 +555,19 @@ export const GET_BACENTA_MEMBERS = gql`
         id
         name
       }
+      isBishopAdminFor {
+        id
+        firstName
+        lastName
+      }
+      isCampusAdminFor {
+        id
+        name
+      }
+      isTownAdminFor {
+        id
+        name
+      }
     }
   }
 `
@@ -544,6 +637,19 @@ export const GET_SONTA_MEMBERS = gql`
         name
       }
       campusBishop {
+        id
+        name
+      }
+      isBishopAdminFor {
+        id
+        firstName
+        lastName
+      }
+      isCampusAdminFor {
+        id
+        name
+      }
+      isTownAdminFor {
         id
         name
       }

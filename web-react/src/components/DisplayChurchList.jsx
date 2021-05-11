@@ -28,6 +28,9 @@ const DisplayChurchList = (props) => {
                     ? `${church.leader.firstName} ${church.leader.lastName}`
                     : null}
                 </h6>
+                {church.admin && (
+                  <p className="card-text text-muted">{`Admin: ${church.admin.firstName}`}</p>
+                )}
               </div>
             </Link>
           )

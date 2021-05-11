@@ -114,6 +114,7 @@ const PastorsAdmin = () => {
       ? JSON.parse(sessionStorage.getItem('church'))
       : { church: '', subChurch: '' }
   )
+
   const [bishopId, setBishopId] = useState(
     sessionStorage.getItem('bishopId') ? sessionStorage.getItem('bishopId') : ''
   )
@@ -149,7 +150,7 @@ const PastorsAdmin = () => {
     lastName: '',
     bishop: '',
     church: {},
-    email: '',
+    emailAddress: '',
     constituency: '',
     roles: [''],
   })
@@ -234,7 +235,7 @@ const PastorsAdmin = () => {
       default:
     }
 
-    if (!member.bacenta) {
+    if (!member?.bacenta) {
       if (!member.townBishop) {
         return
       }
@@ -472,7 +473,12 @@ const PastorsAdmin = () => {
                 component={MemberTableMobile}
                 exact
               />
-              <ProtectedRoute path="/pastors" component={BishopMembers} exact />
+              <ProtectedRoute
+                roles={['all']}
+                path="/pastors"
+                component={BishopMembers}
+                exact
+              />
               <ProtectedRoute
                 roles={['federalAdmin', 'bishopAdmin', 'constituencyAdmin']}
                 path="/member/addmember"

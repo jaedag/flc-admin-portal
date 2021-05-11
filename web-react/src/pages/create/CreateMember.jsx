@@ -39,7 +39,7 @@ const CreateMember = () => {
     gender: '',
     phoneNumber: '',
     whatsappNumber: '',
-    email: '',
+    emailAddress: '',
     dob: '',
     maritalStatus: '',
     occupation: '',
@@ -76,7 +76,9 @@ const CreateMember = () => {
     firstName: Yup.string().required('First Name is a required field'),
     lastName: Yup.string().required('Last Name is a required field'),
     gender: Yup.string().required('Gender is a required field'),
-    email: Yup.string().email('Please enter a valid email address'),
+    emailAddress: Yup.string().email(
+      'Please enter a valid emailAddress address'
+    ),
     maritalStatus: Yup.string().required('Marital Status is a required field'),
     dob: Yup.date()
       .max(new Date(), "You can't be born after today")
@@ -158,7 +160,7 @@ const CreateMember = () => {
         gender: values.gender,
         phoneNumber: parsePhoneNum(values.phoneNumber),
         whatsappNumber: parsePhoneNum(values.whatsappNumber),
-        email: values.email,
+        emailAddress: values.emailAddress,
         dob: values.dob,
         maritalStatus: values.maritalStatus,
         occupation: values.occupation,
@@ -335,7 +337,7 @@ const CreateMember = () => {
                           label="Email Address*"
                           className="form-control"
                           control="input"
-                          name="email"
+                          name="emailAddress"
                           placeholder="Enter Email Address"
                           aria-describedby="emailHelp"
                         />

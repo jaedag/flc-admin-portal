@@ -11,7 +11,9 @@ import { capitalise, isAuthorised, plural } from '../global-utils'
 import { MemberContext } from '../contexts/MemberContext'
 
 const BishopDashboard = () => {
-  const { church, setFilters, clickCard, bishopId } = useContext(ChurchContext)
+  const { church, setFilters, clickCard, bishopId, setBishopId } = useContext(
+    ChurchContext
+  )
   const { currentUser } = useContext(MemberContext)
   const { data, loading } = useQuery(BISH_DASHBOARD_COUNTS, {
     variables: { id: bishopId },
@@ -85,10 +87,11 @@ const BishopDashboard = () => {
             <p
               onClick={() => {
                 clickCard(data.displayMember?.hasAdmin)
+                setBishopId(data.displayMember?.id)
                 history.push('/member/displaydetails')
               }}
             >
-              {data?.displayMember?.hasAdmin ? { adminName } : null}
+              {data?.displayMember?.hasAdmin ? adminName : null}
             </p>
           </div>
           <div className="col-auto align-self-center mr-1 d-md-none">

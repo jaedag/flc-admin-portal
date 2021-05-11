@@ -249,7 +249,7 @@ const UserProfileDisplayPage = () => {
                         </div>
                         <div className="col-6">
                           <p className="font-weight-bold card-text text-truncate">
-                            {displayMember.email}
+                            {displayMember.emailAddress}
                           </p>
                         </div>
                       </div>

@@ -275,6 +275,11 @@ export const GET_TOWNS = gql`
         firstName
         lastName
       }
+      admin {
+        id
+        firstName
+        lastName
+      }
       sontas {
         id
         name

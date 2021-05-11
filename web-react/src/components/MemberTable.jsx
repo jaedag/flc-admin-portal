@@ -43,7 +43,6 @@ const MemberTable = (props) => {
               } else if (index >= offset + numberOfRecords - 1) {
                 return null
               }
-
               return (
                 <div className="col-auto " key={index}>
                   <div

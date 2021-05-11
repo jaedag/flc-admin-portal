@@ -3,7 +3,7 @@ type Member {
   firstName: String @index #@search
   middleName: String
   lastName: String @index
-  email: String @unique
+  emailAddress: String @unique
   phoneNumber: String
   whatsappNumber: String @unique
   pictureUrl: String
@@ -31,6 +31,9 @@ type Member {
   isCampusAdminFor: [Campus] @relation(name: "IS_ADMIN_FOR", direction: OUT)
   isTownAdminFor: [Town] @relation(name: "IS_ADMIN_FOR", direction: OUT)
   hasAdmin: Member @relation(name: "IS_ADMIN_FOR", direction: IN)
+  #OTHER WORKS
+  was_treasurer_for: [ServiceRecord]!
+    @relation(name: "WAS_TREASURER_FOR", direction: OUT)
 }
 
 type Gender {
@@ -96,7 +99,7 @@ type TimeGraph {
   leaderHistoryEndDate: TimeGraph
     @relation(name: "LEADER_ENDED_ON", direction: OUT)
   historyDate: TimeGraph @relation(name: "RECORDED_ON", direction: OUT)
-  serviceDate: [ServiceRecords] @relation(name: "SERVICE_DATE", direction: IN)
+  serviceDate: [ServiceRecord] @relation(name: "SERVICE_HELD_ON", direction: IN)
 }
 
 # type LeaderHistory {
@@ -106,22 +109,17 @@ type TimeGraph {
 #     @relation(name: "LEADER_STARTED_ON", direction: OUT)
 #   historyEndDate: TimeGraph @relation(name: "LEADER_ENDED_ON", direction: OUT)
 #   leaders: Member @relation(name: "HAS_LEADERSHIP_HISTORY", direction: IN)
-#   bacentaerviceRecords: [ServiceRecords]
-#     @relation(name: "HAS_RECORDS", direction: OUT)
+#   bacentaerviceRecords: [ServiceRecord]
+#     @relation(name: "HAS_RECORD", direction: OUT)
 # }
 
-type ServiceRecords {
+type ServiceRecord {
   created_at: DateTime
-  bacenta: Bacenta @relation(name: "HAS_RECORDS", direction: IN)
-  centre: Centre @relation(name: "HAS_RECORDS", direction: IN)
-  campus: Campus @relation(name: "HAS_RECORDS", direction: IN)
-  town: Town @relation(name: "HAS_RECORDS", direction: IN)
-  serviceDate: TimeGraph @relation(name: "SERVICE_DATE", direction: OUT)
-  attendance: Int
+  serviceDate: TimeGraph @relation(name: "SERVICE_HELD_ON", direction: OUT)
+  attendance: Int!
   income: Float
-  treasurer1ID: String!
-  treasurer2ID: String!
-  leaderHistory: HistoryLog @relation(name: "HAS_RECORDS", direction: IN)
+  treasurers: [Member]! @relation(name: "WAS_TREASURER_FOR", direction: IN)
+  historyLog: HistoryLog @relation(name: "HAS_RECORD", direction: IN)
 }
 
 type HistoryLog {
@@ -148,8 +146,7 @@ type Campus {
   bishop: Member @relation(name: "HAS_CAMPUS", direction: IN)
   admin: Member @relation(name: "IS_ADMIN_FOR", direction: IN)
   history: [HasCampusHistory]
-  serviceRecords: [ServiceRecords]
-    @relation(name: "HAS_RECORDS", direction: OUT)
+  serviceRecord: [ServiceRecord] @relation(name: "HAS_RECORD", direction: OUT)
 }
 
 type Town {
@@ -161,8 +158,7 @@ type Town {
   bishop: Member @relation(name: "HAS_TOWN", direction: IN)
   admin: Member @relation(name: "IS_ADMIN_FOR", direction: IN)
   history: [HasTownHistory]
-  serviceRecords: [ServiceRecords]
-    @relation(name: "HAS_RECORDS", direction: OUT)
+  serviceRecord: [ServiceRecord] @relation(name: "HAS_RECORD", direction: OUT)
 }
 
 type Centre {
@@ -174,8 +170,7 @@ type Centre {
   town: Town @relation(name: "HAS_CENTRE", direction: IN)
   campus: Campus @relation(name: "HAS_CENTRE", direction: IN)
   history: [HasCentreHistory]
-  serviceRecords: [ServiceRecords]
-    @relation(name: "HAS_RECORDS", direction: OUT)
+  serviceRecord: [ServiceRecord] @relation(name: "HAS_RECORD", direction: OUT)
 }
 
 # Shared Units: Bacenta, Bacenta, Sonta
@@ -188,8 +183,7 @@ type Bacenta {
   members: [Member] @relation(name: "BELONGS_TO", direction: IN)
   meetingDay: ServiceDay @relation(name: "MEETS_ON_DAY", direction: OUT)
   history: [HasBacentaHistory]
-  serviceRecords: [ServiceRecords]
-    @relation(name: "HAS_RECORDS", direction: OUT)
+  serviceRecord: [ServiceRecord] @relation(name: "HAS_RECORD", direction: OUT)
 }
 
 type ServiceDay {
@@ -312,30 +306,51 @@ type Query {
   bishopMemberList(id: ID): [Member]!
     @cypher(
       statement: """
-      MATCH (:Member {id: $id})-[:HAS_TOWN|:HAS_CAMPUS]->(campusTown)
+      MATCH (bishop:Member {id: $id})-[:HAS_TOWN|:HAS_CAMPUS]->(campusTown)
       MATCH (campusTown)-[:HAS_CENTRE]->(centre)
       MATCH (centre)-[:HAS_BACENTA]->(bacenta)
-      MATCH (bacenta)<-[:BELONGS_TO*]-(member:Member)
-      RETURN member
+      OPTIONAL MATCH (bacenta)<-[:BELONGS_TO*]-(member:Member)
+      OPTIONAL MATCH (bacenta)<-[:LEADS]-(bacentaLeader:Member)
+      OPTIONAL MATCH (centre)<-[:LEADS]-(centreLeader:Member)
+      OPTIONAL MATCH (campusTown)<-[:LEADS]-(constituencyOverseer:Member)
+      OPTIONAL MATCH (bishop)<-[:IS_ADMIN_FOR]-(admin:Member)
+       OPTIONAL MATCH (campusTown)<-[:IS_ADMIN_FOR]-(constituencyAdmin:Member)
+      UNWIND [member,bacentaLeader,centreLeader,constituencyOverseer,admin,constituencyAdmin] as members
+      WITH members WHERE members IS NOT NULL
+      RETURN DISTINCT members
       """
     )
   bishopMemberDropdown(id: ID, nameSearch: String): [Member]
     @cypher(
       statement: """
-      MATCH (bishop:Member {id: $id})-[:HAS_CAMPUS|:HAS_TOWN]->()-[:HAS_CENTRE]->(:Centre)-[:HAS_BACENTA]->(bacenta:Bacenta)
-      MATCH (bacenta)<-[:BELONGS_TO]-(member:Member)
-      WHERE toLower(member.firstName+ " " + member.lastName) CONTAINS toLower($nameSearch)
-      RETURN member LIMIT 5
+      MATCH (bishop:Member {id: $id})-[:HAS_CAMPUS|:HAS_TOWN]->(campusTown)-[:HAS_CENTRE]->(centre:Centre)-[:HAS_BACENTA]->(bacenta:Bacenta)
+      OPTIONAL MATCH (bacenta)<-[:BELONGS_TO]-(member:Member)
+      OPTIONAL MATCH (bacenta)<-[:LEADS]-(bacentaLeader:Member)
+      OPTIONAL MATCH (centre)<-[:LEADS]-(centreLeader:Member)
+      OPTIONAL MATCH (campusTown)<-[:LEADS]-(constituencyOverseer:Member)
+      OPTIONAL MATCH (bishop)<-[:IS_ADMIN_FOR]-(admin:Member)
+      OPTIONAL MATCH (campusTown)<-[:IS_ADMIN_FOR]-(constituencyAdmin:Member)
+      UNWIND [member,bacentaLeader,centreLeader,constituencyOverseer,admin,constituencyAdmin] as members
+      WITH members WHERE members IS NOT NULL
+      AND toLower(members.firstName+ " " + members.lastName) CONTAINS toLower($nameSearch)
+      RETURN DISTINCT members LIMIT 5
       """
     )
   bishopMemberCount(id: ID): Int!
     @cypher(
       statement: """
-      MATCH (:Member {id: $id})-[:HAS_TOWN|:HAS_CAMPUS]->(campusTown)
+      MATCH (bishop:Member {id: $id})-[:HAS_TOWN|:HAS_CAMPUS]->(campusTown)
       MATCH (campusTown)-[:HAS_CENTRE]->(centre)
       MATCH (centre)-[:HAS_BACENTA]->(bacenta)
-      MATCH (bacenta)<-[:BELONGS_TO*]-(member:Member)
-      RETURN COUNT(DISTINCT member)
+      OPTIONAL MATCH (bacenta)<-[:BELONGS_TO*]-(member:Member)
+      OPTIONAL MATCH (bacenta)<-[:LEADS]-(bacentaLeader:Member)
+      OPTIONAL MATCH (centre)<-[:LEADS]-(centreLeader:Member)
+      OPTIONAL MATCH (campusTown)<-[:LEADS]-(constituencyOverseer:Member)
+      OPTIONAL MATCH (bishop)<-[:IS_ADMIN_FOR]-(admin:Member)
+      OPTIONAL MATCH (campusTown)<-[:IS_ADMIN_FOR]-(constituencyAdmin:Member)
+      UNWIND [member,bacentaLeader,centreLeader,constituencyOverseer,admin,constituencyAdmin] as members
+      WITH members WHERE members IS NOT NULL
+      RETURN COUNT(DISTINCT members)
       """
     )
   campusMemberList(id: ID): [Member]
@@ -545,8 +560,10 @@ type Query {
   # Display Member based on ID
   displayMember(id: ID): Member
     @cypher(statement: "MATCH (member:Member {id:$id}) RETURN member")
-  memberByEmail(email: String): Member
-    @cypher(statement: "MATCH (member:Member {email:$email}) RETURN member")
+  memberByEmail(emailAddress: String): Member
+    @cypher(
+      statement: "MATCH (member:Member {emailAddress:$emailAddress}) RETURN member"
+    )
 
   #Fuzzy Search
   memberGridList(
@@ -638,7 +655,7 @@ type Mutation {
     firstName: String!
     middleName: String
     lastName: String!
-    email: String
+    emailAddress: String
     phoneNumber: String!
     whatsappNumber: String
     dob: String!
@@ -657,7 +674,7 @@ type Mutation {
       	member.firstName = $firstName,
       	member.middleName = $middleName,
       	member.lastName = $lastName,
-      	member.email = $email,
+      	member.emailAddress = $emailAddress,
       	member.phoneNumber = $phoneNumber,
       	member.pictureUrl = $pictureUrl
       CREATE (log:HistoryLog)<-[:HAS_HISTORY]-(b)
@@ -840,7 +857,7 @@ type Mutation {
     firstName: String!
     middleName: String
     lastName: String!
-    email: String
+    emailAddress: String
     phoneNumber: String!
     whatsappNumber: String
     dob: String
@@ -858,7 +875,7 @@ type Mutation {
       	member.firstName = $firstName,
       	member.middleName = $middleName,
       	member.lastName = $lastName,
-      	member.email = $email,
+      	member.emailAddress = $emailAddress,
       	member.phoneNumber = $phoneNumber,
       	member.pictureUrl = $pictureUrl
 
@@ -1346,6 +1363,36 @@ type Mutation {
        }
 
        RETURN sonta
+      """
+    )
+
+  #SERVICE RECORDS MUTATIONS
+  CreateBacentaServiceRecord(
+    bacentaId: ID!
+    serviceDate: String!
+    attendance: Int!
+    income: Float
+    treasurer1: ID!
+    treasurer2: ID!
+  ): ServiceRecord
+    @cypher(
+      statement: """
+      CREATE (serviceRecord:ServiceRecord {created_at:datetime()})
+        SET serviceRecord.attendance = $attendance,
+        serviceRecord.incoome = $income
+      WITH serviceRecord
+      MATCH (treasurer1:Member {id:$treasurer1})
+      MATCH (treasurer2:Member {id:$treasurer2})
+      MATCH (bacenta:Bacenta {id:$bacentaId})<-[has_history:HAS_HISTORY]-(log:HistoryLog) WHERE has_history.pointer = true
+
+
+      MERGE (serviceDate:TimeGraph {date:date($serviceDate)})
+      MERGE (serviceRecord)-[:SERVICE_HELD_ON]->(serviceDate)
+      MERGE (log)-[:HAS_RECORD]->(serviceRecord)
+      MERGE (treasurer1)-[:WAS_TREASURER_FOR]->(serviceRecord)
+      MERGE (treasurer2)-[:WAS_TREASURER_FOR]->(serviceRecord)
+
+      RETURN serviceRecord
       """
     )
 

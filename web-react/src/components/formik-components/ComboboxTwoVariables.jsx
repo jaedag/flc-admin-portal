@@ -26,12 +26,14 @@ function ComboboxTwoVariables(props) {
   const [query] = useLazyQuery(optionsQuery, {
     onCompleted: (data) => {
       setSuggestions(
-        data[`${dataset}`].map((row) => ({
-          name: row[`${suggestionText}`],
-          id: row.id,
-          firstName: row.firstName,
-          lastName: row.lastName,
-        }))
+        data[`${dataset}`].map((row) => {
+          return {
+            name: row[`${suggestionText}`],
+            id: row.id,
+            firstName: row.firstName,
+            lastName: row.lastName,
+          }
+        })
       )
     },
   })

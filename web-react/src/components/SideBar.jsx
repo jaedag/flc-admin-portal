@@ -12,25 +12,27 @@ import {
 import './SideBar.css'
 
 const SideBar = () => {
-  const { setFilters } = useContext(ChurchContext)
+  const { setFilters, filters } = useContext(ChurchContext)
   const location = useLocation()
   const history = useHistory()
+  const atPastors = location.pathname === '/pastors'
 
   const initialValues = {
-    gender: '',
-    maritalStatus: '',
-    occupation: '',
-    leaderTitle: location.pathname === '/pastors' ? ['Pastor'] : [],
-    leaderRank: [],
-    ministry: '',
+    gender: filters.gender || '',
+    maritalStatus: filters.maritalStatus || '',
+    occupation: filters.occupation || '',
+    leaderTitle: atPastors ? ['Pastor'] : filters.leaderTitle || [],
+    leaderRank: filters.leaderRank || [],
+    ministry: filters.ministry || '',
   }
 
-  const leaderOptions = [
+  const LEADER_OPTIONS = [
     { key: 'CO', value: 'CO' },
     { key: 'Centre Leader', value: 'Centre Leader' },
     { key: 'Sonta Leader', value: 'Sonta Leader' },
     { key: 'Bacenta Leader', value: 'Bacenta Leader' },
     { key: 'Basonta Leader', value: 'Basonta Leader' },
+    { key: 'Admin', value: 'Admin' },
   ]
 
   const onSubmit = (values, onSubmitProps) => {
@@ -123,7 +125,7 @@ const SideBar = () => {
                       className="form-control"
                       name="leaderRank"
                       control="checkbox"
-                      options={leaderOptions}
+                      options={LEADER_OPTIONS}
                     />
                   </div>
                   <div className="col pb-2">

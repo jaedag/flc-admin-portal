@@ -66,7 +66,7 @@ CREATE INDEX FOR (n:Town) ON (n.name);
 CREATE INDEX FOR (n:Sonta) ON (n.name);
 CREATE INDEX FOR (n:TimeGraph) ON (n.date);
 
-
+ 
 // Create the Members
 LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/e/2PACX-1vTlR9HQjNMNVpi1qtn2RK9PL47Y8hipuf3nIyrb5QZArLckhkErQYwwRdF71mLhISZO0-YonYwzu6xX/pub?output=csv" as line
 MERGE (m:Member {whatsappNumber: line.`WhatsApp Number (if different)`})

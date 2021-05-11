@@ -138,6 +138,7 @@ export const memberFilter = (memberData, filters) => {
 
   //Filter for Leadership Rank
   let leaderData = {
+    admins: [],
     basontaLeaders: [],
     sontaLeaders: [],
     bacentaLeaders: [],
@@ -145,6 +146,18 @@ export const memberFilter = (memberData, filters) => {
     cOs: [],
   }
 
+  if (filters.leaderRank.includes('Admin')) {
+    leaderData.admins = filteredData.filter((member) => {
+      if (
+        member.isTownAdminFor[0] ||
+        member.isCampusAdminFor[0] ||
+        member.isBishopAdminFor[0]
+      ) {
+        return member
+      }
+      return null
+    })
+  }
   if (filters.leaderRank.includes('Basonta Leader')) {
     leaderData.basontaLeaders = filterFor(filteredData, 'leadsBasonta')
   }
@@ -170,6 +183,7 @@ export const memberFilter = (memberData, filters) => {
   if (filters.leaderRank[0]) {
     filteredData = [
       ...new Set([
+        ...leaderData.admins,
         ...leaderData.basontaLeaders,
         ...leaderData.sontaLeaders,
         ...leaderData.bacentaLeaders,

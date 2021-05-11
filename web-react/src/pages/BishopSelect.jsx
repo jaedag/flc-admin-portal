@@ -91,27 +91,27 @@ const BishopSelect = () => {
           <h5 className="text-secondary">Select Your Bishop</h5>
         </div>
         <div className="row row-cols-sm-1 row-cols-lg-4 d-flex justify-content-center px-5">
-          {data.bishopsList.map((soul, index) => {
+          {data.bishopsList.map((bishop, index) => {
             return (
               <div
                 key={index}
                 className="col-sm-12 col-lg card mobile-search-card p-2 m-1"
                 onClick={() => {
-                  determineStream(soul)
+                  determineStream(bishop)
                   history.push('/dashboard')
                 }}
               >
                 <div className="media">
                   <img
                     className="mr-3 rounded-circle img-search"
-                    src={soul.pictureUrl}
-                    alt={`${soul.firstName} ${soul.lastName}`}
+                    src={bishop.pictureUrl}
+                    alt={`${bishop.firstName} ${bishop.lastName}`}
                   />
                   <div className="media-body">
-                    <h5 className="mt-0">{`${soul.firstName} ${soul.lastName}`}</h5>
+                    <h5 className="mt-0">{`${bishop.firstName} ${bishop.lastName}`}</h5>
                     <div>
                       <span className="text-muted">
-                        {soul.townBishop[0] ? 'Town' : 'Campus'}
+                        {bishop.townBishop[0] ? 'Town' : 'Campus'}
                       </span>
                     </div>
                   </div>

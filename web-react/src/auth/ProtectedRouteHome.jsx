@@ -16,10 +16,12 @@ const ProtectedRoute = ({ component, roles, ...args }) => {
   )
 
   useEffect(() => {
-    setBishopId(currentUser.bishop)
+    if (!currentUser.roles.includes('federalAdmin')) {
+      setBishopId(currentUser.bishop)
+      setChurch(currentUser.church)
+    }
     setTownId(currentUser.constituency)
     setCampusId(currentUser.constituency)
-    setChurch(currentUser.church)
   }, [currentUser, setBishopId, setTownId, setCampusId, setChurch])
 
   if (isAuthorised(roles, currentUser.roles)) {

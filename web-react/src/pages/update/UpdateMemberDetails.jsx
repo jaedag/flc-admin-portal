@@ -59,8 +59,8 @@ const UpdateMemberDetails = () => {
     whatsappNumber: memberData?.displayMember.whatsappNumber
       ? `+${memberData?.displayMember.whatsappNumber}`
       : '',
-    email: memberData?.displayMember.email
-      ? memberData?.displayMember.email
+    emailAddress: memberData?.displayMember.emailAddress
+      ? memberData?.displayMember.emailAddress
       : '',
     dob: memberData?.displayMember.dob
       ? memberData?.displayMember.dob.date.formatted
@@ -101,7 +101,9 @@ const UpdateMemberDetails = () => {
     firstName: Yup.string().required('First Name is a required field'),
     lastName: Yup.string().required('Last Name is a required field'),
     gender: Yup.string().required('Gender is a required field'),
-    email: Yup.string().email('Please enter a valid email address'),
+    emailAddress: Yup.string().email(
+      'Please enter a valid emailAddress address'
+    ),
     maritalStatus: Yup.string().required('Marital Status is a required field'),
     dob: Yup.date()
       .max(new Date(), "You can't be born after today")
@@ -171,7 +173,7 @@ const UpdateMemberDetails = () => {
         gender: values.gender,
         phoneNumber: parsePhoneNum(values.phoneNumber),
         whatsappNumber: parsePhoneNum(values.whatsappNumber),
-        email: values.email,
+        emailAddress: values.emailAddress,
         dob: values.dob,
         maritalStatus: values.maritalStatus,
         occupation: values.occupation,
@@ -338,7 +340,7 @@ const UpdateMemberDetails = () => {
                           label="Email Address*"
                           className="form-control"
                           control="input"
-                          name="email"
+                          name="emailAddress"
                           placeholder="Enter Email Address"
                           aria-describedby="emailHelp"
                         />
@@ -371,7 +373,10 @@ const UpdateMemberDetails = () => {
                           control="combobox2"
                           name="bacenta"
                           label="Bacenta*"
-                          placeholder={memberData.displayMember.bacenta.name}
+                          placeholder={
+                            memberData.displayMember?.bacenta?.name ??
+                            'Bacenta Name'
+                          }
                           setFieldValue={formik.setFieldValue}
                           optionsQuery={BISHOP_BACENTA_DROPDOWN}
                           queryVariable1="id"

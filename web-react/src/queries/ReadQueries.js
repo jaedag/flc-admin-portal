@@ -17,7 +17,7 @@ export const DISPLAY_MEMBER = gql`
       firstName
       middleName
       lastName
-      email
+      emailAddress
       phoneNumber
       whatsappNumber
       pictureUrl
@@ -189,6 +189,19 @@ export const DISPLAY_MEMBER = gql`
         name
       }
       campusBishop {
+        id
+        name
+      }
+      isBishopAdminFor {
+        id
+        firstName
+        lastName
+      }
+      isCampusAdminFor {
+        id
+        name
+      }
+      isTownAdminFor {
         id
         name
       }

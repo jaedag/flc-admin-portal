@@ -181,7 +181,7 @@ type Bacenta {
   centre: Centre @relation(name: "HAS_BACENTA", direction: IN)
   leader: Member @relation(name: "LEADS", direction: IN)
   members: [Member] @relation(name: "BELONGS_TO", direction: IN)
-  meetingDay: ServiceDay @relation(name: "MEETS_ON_DAY", direction: OUT)
+  meetingDay: ServiceDay @relation(name: "MEETS_ON", direction: OUT)
   history: [HasBacentaHistory]
   serviceRecord: [ServiceRecord] @relation(name: "HAS_RECORD", direction: OUT)
 }
@@ -189,7 +189,7 @@ type Bacenta {
 type ServiceDay {
   day: String!
   dayNum: Int
-  bacenta: Bacenta @relation(name: "MEETS_ON_DAY", direction: IN)
+  bacenta: Bacenta @relation(name: "MEETS_ON", direction: IN)
 }
 
 type Ministry {
@@ -813,6 +813,38 @@ type Mutation {
       RETURN centre
       """
     )
+  CreateSonta(ministryId: ID!, leaderId: ID!, townCampusId: ID!): Sonta
+    @cypher(
+      statement: """
+      CREATE (sonta:Sonta)
+         	SET
+      	sonta.id = apoc.create.uuid()
+      WITH sonta
+       MATCH (leader:Member {id: $leaderId})
+       MATCH (ministry:Ministry {id:$ministryId})
+       MATCH (campusTown {id:$townCampusId}) WHERE campusTown:Town OR campusTown:Campus
+       UNWIND labels(campusTown) AS typename
+       SET sonta.name = campusTown.name + " " + ministry.name
+
+       CREATE (log:HistoryLog:ServiceLog)
+        SET
+         log.id = apoc.create.uuid(),
+         log.timeStamp = time(),
+         log.historyRecord = leader.firstName + ' ' +leader.lastName + ' started ' + sonta.name +' Sonta under '+ campusTown.name+ ' '+typename
+       MERGE (date:TimeGraph {date: date()})
+       MERGE (ministry)-[:HAS_SONTA]->(sonta)
+       MERGE (campusTown)-[:HAS_SONTA]->(sonta)
+       MERGE (leader)-[:LEADS]->(sonta)
+
+       MERGE (log)-[:RECORDED_ON]->(date)
+       MERGE (campusTown)-[:HAS_HISTORY]->(log)
+       MERGE (sonta)-[:HAS_HISTORY]->(log)
+       MERGE (ministry)-[:HAS_HISTORY]->(log)
+       MERGE (leader)-[r:HAS_HISTORY]->(log)
+         SET r.pointer = true
+      RETURN sonta
+      """
+    )
   CreateBacenta(
     bacentaName: String!
     leaderId: ID!
@@ -839,7 +871,7 @@ type Mutation {
           log.historyRecord = leader.firstName + ' ' +leader.lastName + ' started ' + $bacentaName +' Bacenta under '+ centre.name + ' Centre'
         MERGE (date:TimeGraph {date: date()})
         MERGE (centre)-[:HAS_BACENTA]->(bacenta)
-        MERGE (bacenta)-[:MEETS_ON_DAY]->(meetingDay)
+        MERGE (bacenta)-[:MEETS_ON]->(meetingDay)
         MERGE (leader)-[:LEADS]->(bacenta)
 
         MERGE (log)-[:RECORDED_ON]->(date)
@@ -1077,9 +1109,9 @@ type Mutation {
                      	WITH bacenta
                       WITH bacenta WHERE $meetingDay IS NOT NULL
                       MATCH (meetingDay:ServiceDay {day: $meetingDay})
-                      OPTIONAL MATCH (bacenta)<-[r:MEETS_ON_DAY]-()
+                      OPTIONAL MATCH (bacenta)<-[r:MEETS_ON]-()
                       DELETE r
-                      MERGE (bacenta)-[:MEETS_ON_DAY]->(meetingDay)
+                      MERGE (bacenta)-[:MEETS_ON]->(meetingDay)
                      	RETURN count(bacenta)
                      	}
 
@@ -1410,13 +1442,13 @@ type Mutation {
 
       WITH newBacenta, log, bacenta
       MATCH (bacenta)<-[hasBacenta:HAS_BACENTA]-(:Centre)<-[:HAS_CENTRE]-(campusTown)
-      MATCH (bacenta)-[meetsOnDay:MEETS_ON_DAY]->(meetingDay)
+      MATCH (bacenta)-[meetsOnDay:MEETS_ON]->(meetingDay)
       MATCH (bacenta)<-[belongsTo:BELONGS_TO]-(member:Member)
       MATCH (bacenta)<-[:LEADS]-(leader:Member)
 
       MERGE (date:TimeGraph {date:date()})
       MERGE (campusTown)-[:HAS_CENTRE]->(bacenta)
-      MERGE (newBacenta)-[:MEETS_ON_DAY]->(meetingDay)
+      MERGE (newBacenta)-[:MEETS_ON]->(meetingDay)
       MERGE (newBacenta)<-[:LEADS]-(leader)
       MERGE (member)-[:BELONGS_TO]->(newBacenta)
       MERGE (bacenta)-[:HAS_BACENTA]->(newBacenta)

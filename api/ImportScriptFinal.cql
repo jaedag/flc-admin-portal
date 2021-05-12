@@ -26,6 +26,19 @@ CREATE (:Gender {gender:"Male"})
 CREATE (g:Gender {gender:"Female"})
 RETURN g;
 
+//Create Ministry Options
+CREATE (m:Ministry {name:"Greater Love Choir", id:apoc.create.uuid()})
+CREATE (:Ministry {name:"Dancing Stars", id:apoc.create.uuid()})
+CREATE (:Ministry {name:"Film Stars", id:apoc.create.uuid()})
+CREATE (:Ministry {name:"Airport Stars", id:apoc.create.uuid()})
+CREATE (:Ministry {name:"Ushers", id:apoc.create.uuid()})
+CREATE (:Ministry {name:"Understanding Campaign", id:apoc.create.uuid()})
+CREATE (:Ministry {name:"Telepastors", id:apoc.create.uuid()})
+CREATE (:Ministry {name:"Arrivals", id:apoc.create.uuid()})
+CREATE (:Ministry {name:"Communion Stars", id:apoc.create.uuid()})
+CREATE (:Ministry {name:"Seeing and Hearing", id:apoc.create.uuid()})
+RETURN m;
+
 //Import Bishops data
 LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/e/2PACX-1vQux_Dxr5gR6v8JiJvBtFRm997O9PJEhRhdHduHA5arLyP96PrxvtYCbGMNf3qRcUTRe2O94TrdPtPf/pub?gid=1980829198&single=true&output=csv" as line
 CREATE (m:Member {whatsappNumber:line.`WhatsApp Number (if different)`})
@@ -39,7 +52,6 @@ CREATE (m:Member {whatsappNumber:line.`WhatsApp Number (if different)`})
     m.emailAddress = line.`Email`,
     m.pictureUrl   = line.pictureUrl
 
-   
 with line,m WHERE line.Gender is not null
  MERGE (title:Title{title:"Bishop"})
 MERGE (m)-[:HAS_TITLE]->(title)
@@ -51,7 +63,7 @@ MERGE (ms: MaritalStatus {status: line.`Marital Status`})
 MERGE(m)-[:HAS_MARITAL_STATUS]->(ms)
 
 with line, m  WHERE line.`Ministry` is not null
-MERGE(son: Ministry {name:line.`Ministry`})
+MATCH (son: Ministry {name:line.`Ministry`})
     ON CREATE SET 
     son.id = apoc.create.uuid()
 MERGE(m)-[:BELONGS_TO]->(son)
@@ -94,7 +106,7 @@ MERGE (centre:Centre {name:line.Centre})
 ON CREATE SET centre.id = apoc.create.uuid()
 
 WITH centre,line
-MATCH (campusTown) WHERE campusTown.name=trim(line.Campus)
+MATCH (campusTown {name:trim(line.Campus)}) WHERE campusTown:Town or campusTown:Campus
 MERGE (campusTown)-[:HAS_CENTRE]->(centre)
 RETURN campusTown;
 
@@ -147,7 +159,7 @@ RETURN campusTown;
 
 LOAD CSV WITH HEADERS FROM "http://localhost:11001/project-7c59cf57-dda9-4c33-b7b1-0bb425793d00/CampusTownImport.csv" as line WITH line WHERE line.Admin is NOT NULL
 
-MERGE (admin:Member {emailAddress:line.`Admin Email Address`})
+MERGE (admin:Member {emailAddress:toLower(line.`Admin Email Address`)})
 ON CREATE SET admin.firstName = line.`Admin`,
 admin.id = apoc.create.uuid()
 
@@ -157,7 +169,7 @@ MERGE (admin)-[:IS_ADMIN_FOR]->(campusTown)
 RETURN campusTown;
 
 LOAD CSV WITH HEADERS FROM "http://localhost:11001/project-7c59cf57-dda9-4c33-b7b1-0bb425793d00/bishopsAdmins.csv" as line WITH line WHERE line.Admin is NOT NULL
-MERGE (admin:Member {emailAddress:line.`Admin Email Address`})
+MERGE (admin:Member {emailAddress:toLower(line.`Admin Email Address`)})
 ON CREATE SET admin.firstName = line.`Admin`,
 admin.id = apoc.create.uuid()
 

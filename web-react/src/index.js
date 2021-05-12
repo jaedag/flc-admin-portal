@@ -46,6 +46,7 @@ import MemberFiltersMobile from './pages/mobile/MemberFilters'
 import MemberTableMobile from './components/MemberTableMobile.jsx'
 import UserProfileDisplayPage from './pages/user-profile/DisplayPage'
 import UserProfileEditPage from './pages/user-profile/EditPage'
+import CreateSonta from './pages/create/CreateSonta'
 
 const AppWithApollo = () => {
   const [accessToken, setAccessToken] = useState()
@@ -537,6 +538,12 @@ const PastorsAdmin = () => {
                 roles={['federalAdmin', 'bishopAdmin', 'constituencyAdmin']}
                 path="/centre/addcentre"
                 component={CreateCentre}
+                exact
+              />
+              <Route
+                roles={['federalAdmin', 'bishopAdmin', 'constituencyAdmin']}
+                path="/sonta/addsonta"
+                component={CreateSonta}
                 exact
               />
               <ProtectedRoute

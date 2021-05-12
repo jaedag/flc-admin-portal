@@ -132,6 +132,19 @@ export const CREATE_CENTRE_MUTATION = gql`
   }
 `
 
+export const CREATE_SONTA_MUTATION = gql`
+  mutation CreateSonta($ministryId: ID!, $leaderId: ID!, $townCampusId: ID!) {
+    CreateSonta(
+      ministryId: $ministryId
+      leaderId: $leaderId
+      townCampusId: $townCampusId
+    ) {
+      id
+      name
+    }
+  }
+`
+
 export const CREATE_TOWN_MUTATION = gql`
   mutation CreateTown($townName: String!, $leaderId: ID!, $id: ID!) {
     CreateTown(townName: $townName, leaderId: $leaderId, id: $id) {

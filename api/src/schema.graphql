@@ -346,9 +346,9 @@ type Query {
       OPTIONAL MATCH (bacenta)<-[:LEADS]-(bacentaLeader:Member)
       OPTIONAL MATCH (centre)<-[:LEADS]-(centreLeader:Member)
       OPTIONAL MATCH (campusTown)<-[:LEADS]-(constituencyOverseer:Member)
-      OPTIONAL MATCH (bishop)<-[:IS_ADMIN_FOR]-(admin:Member)
+      OPTIONAL MATCH (bishop)<-[:IS_ADMIN_FOR]-(bishopAdmin:Member)
       OPTIONAL MATCH (campusTown)<-[:IS_ADMIN_FOR]-(constituencyAdmin:Member)
-      UNWIND [member,bacentaLeader,centreLeader,constituencyOverseer,admin,constituencyAdmin] as members
+      UNWIND [member,bacentaLeader,centreLeader,constituencyOverseer,bishopAdmin,constituencyAdmin] as members
       WITH members WHERE members IS NOT NULL
       RETURN COUNT(DISTINCT members)
       """
@@ -356,15 +356,29 @@ type Query {
   campusMemberList(id: ID): [Member]
     @cypher(
       statement: """
-      MATCH (:Campus {id:$id})-[:HAS_CENTRE]->()-[:HAS_BACENTA]->()<-[:BELONGS_TO]-(member:Member)
-      RETURN DISTINCT member
+      MATCH (campusTown:Campus {id:$id})-[:HAS_CENTRE]->(centre:Centre)-[:HAS_BACENTA]->(bacenta:Bacenta)
+      OPTIONAL MATCH (bacenta)<-[:BELONGS_TO*]-(member:Member)
+      OPTIONAL MATCH (bacenta)<-[:LEADS]-(bacentaLeader:Member)
+      OPTIONAL MATCH (centre)<-[:LEADS]-(centreLeader:Member)
+      OPTIONAL MATCH (campusTown)<-[:LEADS]-(constituencyOverseer:Member)
+       OPTIONAL MATCH (campusTown)<-[:IS_ADMIN_FOR]-(constituencyAdmin:Member)
+      UNWIND [member,bacentaLeader,centreLeader,constituencyOverseer,constituencyAdmin] as members
+      WITH members WHERE members IS NOT NULL
+      RETURN DISTINCT members
       """
     )
   townMemberList(id: ID): [Member]
     @cypher(
       statement: """
-      MATCH (:Town {id:$id})-[:HAS_CENTRE]->()-[:HAS_BACENTA]->()<-[:BELONGS_TO]-(member:Member)
-      RETURN DISTINCT member
+      MATCH (campusTown:Town {id:$id})-[:HAS_CENTRE]->(centre:Centre)-[:HAS_BACENTA]->(bacenta:Bacenta)
+      OPTIONAL MATCH (bacenta)<-[:BELONGS_TO*]-(member:Member)
+      OPTIONAL MATCH (bacenta)<-[:LEADS]-(bacentaLeader:Member)
+      OPTIONAL MATCH (centre)<-[:LEADS]-(centreLeader:Member)
+      OPTIONAL MATCH (campusTown)<-[:LEADS]-(constituencyOverseer:Member)
+       OPTIONAL MATCH (campusTown)<-[:IS_ADMIN_FOR]-(constituencyAdmin:Member)
+      UNWIND [member,bacentaLeader,centreLeader,constituencyOverseer,constituencyAdmin] as members
+      WITH members WHERE members IS NOT NULL
+      RETURN DISTINCT members
       """
     )
 
@@ -401,7 +415,17 @@ type Query {
     )
   townMemberCount(id: ID): Int!
     @cypher(
-      statement: "MATCH (:Town {id:$id})-[]-(:Centre)-[]->(:Bacenta)<-[:BELONGS_TO]-(member:Member) RETURN COUNT(DISTINCT member)"
+      statement: """
+      MATCH (campusTown:Town {id:$id})-[:HAS_CENTRE]->(centre:Centre)-[:HAS_BACENTA]->(bacenta:Bacenta)
+      OPTIONAL MATCH (bacenta)<-[:BELONGS_TO*]-(member:Member)
+      OPTIONAL MATCH (bacenta)<-[:LEADS]-(bacentaLeader:Member)
+      OPTIONAL MATCH (centre)<-[:LEADS]-(centreLeader:Member)
+      OPTIONAL MATCH (campusTown)<-[:LEADS]-(constituencyOverseer:Member)
+       OPTIONAL MATCH (campusTown)<-[:IS_ADMIN_FOR]-(constituencyAdmin:Member)
+      UNWIND [member,bacentaLeader,centreLeader,constituencyOverseer,constituencyAdmin] as members
+      WITH members WHERE members IS NOT NULL
+      RETURN COUNT(DISTINCT members)
+      """
     )
   townSontaMemberCount(id: ID): Int!
     @cypher(
@@ -441,7 +465,17 @@ type Query {
     )
   campusMemberCount(id: ID): Int!
     @cypher(
-      statement: "MATCH (:Campus {id:$id})-[]-(:Centre)-[]->(:Bacenta)<-[:BELONGS_TO]-(member:Member) RETURN COUNT(DISTINCT member)"
+      statement: """
+      MATCH (campusTown:Campus {id:$id})-[:HAS_CENTRE]->(centre:Centre)-[:HAS_BACENTA]->(bacenta:Bacenta)
+      OPTIONAL MATCH (bacenta)<-[:BELONGS_TO*]-(member:Member)
+      OPTIONAL MATCH (bacenta)<-[:LEADS]-(bacentaLeader:Member)
+      OPTIONAL MATCH (centre)<-[:LEADS]-(centreLeader:Member)
+      OPTIONAL MATCH (campusTown)<-[:LEADS]-(constituencyOverseer:Member)
+       OPTIONAL MATCH (campusTown)<-[:IS_ADMIN_FOR]-(constituencyAdmin:Member)
+      UNWIND [member,bacentaLeader,centreLeader,constituencyOverseer,constituencyAdmin] as members
+      WITH members WHERE members IS NOT NULL
+      RETURN COUNT(DISTINCT members)
+      """
     )
   campusSontaMemberCount(id: ID): Int!
     @cypher(

@@ -75,7 +75,7 @@ const DisplayMemberDetails = () => {
       if (churchType === 'bishopAdmin') {
         member.isBishopAdminFor.map((adminFor) => {
           rank.bishopAdmin.push({
-            bishop: true,
+            admin: true,
             name: `Bishop ${adminFor.firstName} ${adminFor.lastName}`,
             id: adminFor.id,
             __typename: 'Bishop',
@@ -221,13 +221,18 @@ const DisplayMemberDetails = () => {
                             Object.entries(rank).map((rank) => {
                               return rank[1].map((place, i) => {
                                 let leader
-                                if (place.__typename === ('Campus' || 'Town')) {
+
+                                if (
+                                  place.__typename === 'Campus' ||
+                                  place.__typename === 'Town'
+                                ) {
                                   leader = 'CO'
-                                }
-                                if (place.bishop || place.constituency) {
-                                  leader = 'Admin'
                                 } else {
                                   leader = 'Leader'
+                                }
+
+                                if (place.bAdmin || place.constituency) {
+                                  leader = 'Admin'
                                 }
 
                                 return (

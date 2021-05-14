@@ -64,8 +64,6 @@ MERGE(m)-[:HAS_MARITAL_STATUS]->(ms)
 
 with line, m  WHERE line.`Ministry` is not null
 MATCH (son: Ministry {name:line.`Ministry`})
-    ON CREATE SET 
-    son.id = apoc.create.uuid()
 MERGE(m)-[:BELONGS_TO]->(son)
 
 WITH line,m
@@ -83,7 +81,7 @@ WHERE line.Occupation is not null
 MERGE(O:Occupation {occupation: line.Occupation})
 MERGE(m)-[:HAS_OCCUPATION]->(O);
 
-LOAD CSV WITH HEADERS FROM "http://localhost:11001/project-7c59cf57-dda9-4c33-b7b1-0bb425793d00/CampusTownImport.csv" as line WITH line WHERE line.`Constituency Stream`= "Campus"
+LOAD CSV WITH HEADERS FROM "https://www.dropbox.com/s/irororaq96tkhmo/CampusTownImport.csv?dl=1" as line WITH line WHERE line.`Constituency Stream`= "Campus"
 MERGE (campus:Campus {name:trim(line.`Constituencies`)})
 ON CREATE SET campus.id = apoc.create.uuid()
 
@@ -92,7 +90,7 @@ MATCH (bishop:Member) WHERE bishop.lastName = line.Bishop
 MERGE (bishop)-[:HAS_CAMPUS]->(campus)
 RETURN bishop;
 
-LOAD CSV WITH HEADERS FROM "http://localhost:11001/project-7c59cf57-dda9-4c33-b7b1-0bb425793d00/CampusTownImport.csv" as line WITH line WHERE line.`Constituency Stream`= "Town"
+LOAD CSV WITH HEADERS FROM "https://www.dropbox.com/s/irororaq96tkhmo/CampusTownImport.csv?dl=1" as line WITH line WHERE line.`Constituency Stream`= "Town"
 MERGE (town:Town {name:trim(line.`Constituencies`)})
 ON CREATE SET town.id = apoc.create.uuid()
 
@@ -101,7 +99,7 @@ MATCH (bishop:Member) WHERE bishop.lastName = line.Bishop
 MERGE (bishop)-[:HAS_TOWN]->(town)
 RETURN bishop;
 
-LOAD CSV WITH HEADERS FROM "http://localhost:11001/project-7c59cf57-dda9-4c33-b7b1-0bb425793d00/BacentaImport.csv" as line WITH line WHERE line.Bishop is NOT NULL
+LOAD CSV WITH HEADERS FROM "https://www.dropbox.com/s/czittplt9ytazgp/BacentaImport.csv?dl=1" as line WITH line WHERE line.Bishop is NOT NULL
 MERGE (centre:Centre {name:line.Centre})
 ON CREATE SET centre.id = apoc.create.uuid()
 
@@ -110,7 +108,7 @@ MATCH (campusTown {name:trim(line.Campus)}) WHERE campusTown:Town or campusTown:
 MERGE (campusTown)-[:HAS_CENTRE]->(centre)
 RETURN campusTown;
 
-LOAD CSV WITH HEADERS FROM "http://localhost:11001/project-7c59cf57-dda9-4c33-b7b1-0bb425793d00/BacentaImport.csv" as line WITH line WHERE line.Bishop is NOT NULL
+LOAD CSV WITH HEADERS FROM "https://www.dropbox.com/s/czittplt9ytazgp/BacentaImport.csv?dl=1" as line WITH line WHERE line.Bishop is NOT NULL
 CREATE (bacenta:Bacenta {name: line.Bacenta})
 SET bacenta.id = apoc.create.uuid(),
 bacenta.code = line.CODE,
@@ -124,7 +122,7 @@ MERGE (centre)-[:HAS_BACENTA]->(bacenta)
 MERGE (bacenta)-[:MEETS_ON]->(serviceDay)
 RETURN centre;
 
-LOAD CSV WITH HEADERS FROM "http://localhost:11001/project-7c59cf57-dda9-4c33-b7b1-0bb425793d00/BacentaImport.csv" as line WITH line WHERE line.`Phone Number` is NOT NULL
+LOAD CSV WITH HEADERS FROM "https://www.dropbox.com/s/czittplt9ytazgp/BacentaImport.csv?dl=1" as line WITH line WHERE line.`Phone Number` is NOT NULL
 MERGE (leader:Member {whatsappNumber:line.`Phone Number`})
 ON CREATE SET leader.firstName= line.`Bacenta Leader First Name`,
 leader.lastName = line.`Bacenta Leader Lst Name`,
@@ -134,7 +132,7 @@ WITH leader,line
 MATCH (bacenta:Bacenta) WHERE bacenta.name = line.Bacenta
 MERGE (leader)-[:LEADS]->(bacenta);
 
-LOAD CSV WITH HEADERS FROM "http://localhost:11001/project-7c59cf57-dda9-4c33-b7b1-0bb425793d00/CentreImport.csv" as line WITH line WHERE line.`Centre Leader Phone Number` is NOT NULL
+LOAD CSV WITH HEADERS FROM "https://www.dropbox.com/s/r9vnrypwmtpve0x/CentreImport.csv?dl=1" as line WITH line WHERE line.`Centre Leader Phone Number` is NOT NULL
 MERGE (leader:Member {whatsappNumber:line.`Centre Leader Phone Number`})
 ON CREATE SET leader.firstName = line.`Centre Leader First Name`,
 leader.lastName = line.`Centre Leader Last Name`,
@@ -145,7 +143,7 @@ MATCH (centre:Centre) WHERE centre.name = line.`Centre Name`
 MERGE (leader)-[:LEADS]->(centre)
 RETURN leader;
 
-LOAD CSV WITH HEADERS FROM "http://localhost:11001/project-7c59cf57-dda9-4c33-b7b1-0bb425793d00/CampusTownImport.csv" as line WITH line WHERE line.Constituencies is NOT NULL
+LOAD CSV WITH HEADERS FROM "https://www.dropbox.com/s/irororaq96tkhmo/CampusTownImport.csv?dl=1" as line WITH line WHERE line.Constituencies is NOT NULL
 MERGE (leader:Member {whatsappNumber:line.`CO Phone Number`})
 ON CREATE SET leader.firstName = line.`CO First Name`,
 leader.lastName = line.`CO Last Name`,
@@ -157,24 +155,24 @@ MERGE (leader)-[:LEADS]->(campusTown)
 RETURN campusTown;
 
 
-LOAD CSV WITH HEADERS FROM "http://localhost:11001/project-7c59cf57-dda9-4c33-b7b1-0bb425793d00/CampusTownImport.csv" as line WITH line WHERE line.Admin is NOT NULL
-
+LOAD CSV WITH HEADERS FROM "https://www.dropbox.com/s/irororaq96tkhmo/CampusTownImport.csv?dl=1" as line WITH line WHERE line.Admin is NOT NULL
 MERGE (admin:Member {emailAddress:toLower(line.`Admin Email Address`)})
 ON CREATE SET admin.firstName = line.`Admin`,
 admin.id = apoc.create.uuid()
 
 WITH line,admin
-MATCH (campusTown) WHERE campusTown.name = line.Constituencies 
+MATCH (campusTown) WHERE campusTown.name = line.Constituencies
+// MATCH (campusTown) WHERE campusTown:Campus OR campusTown:Town
 MERGE (admin)-[:IS_ADMIN_FOR]->(campusTown)
 RETURN campusTown;
 
-LOAD CSV WITH HEADERS FROM "http://localhost:11001/project-7c59cf57-dda9-4c33-b7b1-0bb425793d00/bishopsAdmins.csv" as line WITH line WHERE line.Admin is NOT NULL
+LOAD CSV WITH HEADERS FROM "https://www.dropbox.com/s/e04310p1zi55i7g/bishopsAdmins.csv?dl=1" as line WITH line WHERE line.Admin is NOT NULL
 MERGE (admin:Member {emailAddress:toLower(line.`Admin Email Address`)})
 ON CREATE SET admin.firstName = line.`Admin`,
 admin.id = apoc.create.uuid()
 
 WITH line,admin
-MATCH (bishop:Member) WHERE bishop.lastName = line.Bishop 
+MATCH (bishop:Member) WHERE bishop.lastName = line.Bishop  AND bishop.firstName = line.BishopFirst
 MERGE (admin)-[:IS_ADMIN_FOR]->(bishop)
 RETURN bishop;
 

@@ -102,7 +102,7 @@ const DisplayChurchDetails = (props) => {
               }}
               className="mx-3 mb-2 text-muted font-weight-bold"
             >
-              {admin.firstName} {admin.lastName}
+              {`Admin:`} {admin.firstName} {admin.lastName}
             </Link>
           )}
         </div>

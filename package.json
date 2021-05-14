@@ -28,16 +28,14 @@
     }
   },
   "lint-staged": {
-    "*.js": [
-      "prettier --write",
-      "eslint --fix"
-    ],
-    "*.jsx": [
+    "*.{js,jsx}": [
       "prettier --write",
       "eslint --fix"
     ]
   },
-  "eslintIgnore":["*.test.jsx"],
+  "eslintIgnore": [
+    "*.test.jsx"
+  ],
   "dependencies": {
     "react": "^17.0.1",
     "react-autosuggest": "^10.1.0"

@@ -472,18 +472,6 @@ const UpdateCentre = () => {
                           />
                         </div>
                       </div>
-                      <div className="row d-flex align-items-center">
-                        <div className="col">
-                          <FormikControl
-                            className="form-control"
-                            control="input"
-                            name="leaderName"
-                            placeholder={`Name of ${capitalise(
-                              church.subChurch
-                            )} CO`}
-                          />
-                        </div>
-                      </div>
                       <div className="form-row row-cols-3">
                         <div className="col-9">
                           <FormikControl

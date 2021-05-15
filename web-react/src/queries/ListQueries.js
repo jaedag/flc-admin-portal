@@ -126,6 +126,9 @@ export const GET_TOWN_CENTRES = gql`
         sontas {
           name
         }
+        bishop {
+          id
+        }
       }
       leader {
         firstName
@@ -158,6 +161,9 @@ export const GET_CAMPUS_CENTRES = gql`
         }
         sontas {
           name
+        }
+        bishop {
+          id
         }
       }
       leader {

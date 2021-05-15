@@ -132,7 +132,7 @@ WITH leader,line
 MATCH (bacenta:Bacenta) WHERE bacenta.name = line.Bacenta
 MERGE (leader)-[:LEADS]->(bacenta);
 
-LOAD CSV WITH HEADERS FROM "https://www.dropbox.com/s/r9vnrypwmtpve0x/CentreImport.csv?dl=1" as line WITH line WHERE line.`Centre Leader Phone Number` is NOT NULL
+LOAD CSV WITH HEADERS FROM "https://www.dropbox.com/s/decceymk8vg71cx/CentreImport.csv?dl=1" as line WITH line WHERE line.`Centre Leader Phone Number` is NOT NULL
 MERGE (leader:Member {whatsappNumber:line.`Centre Leader Phone Number`})
 ON CREATE SET leader.firstName = line.`Centre Leader First Name`,
 leader.lastName = line.`Centre Leader Last Name`,
@@ -184,8 +184,7 @@ MERGE (m:Member {whatsappNumber: "233264248700"})
     m.lastName = "Addy",
     m.phoneNumber = "233264248700",
     m.areaOfResidence = "East Legon Hills",
-    m.emailAddress = "jaedagy@gmail.com",
-    m.pictureUrl = "https://res.cloudinary.com/firstlovecenter/image/upload/v1618329763/admin-portal/frqkvq20g0ilfueoxb87.jpg"
+    m.emailAddress = "jaedagy@gmail.com"
 
 WITH m
 MATCH (g: Gender {gender: "Male"})

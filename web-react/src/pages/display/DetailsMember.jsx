@@ -231,7 +231,7 @@ const DisplayMemberDetails = () => {
                                   leader = 'Leader'
                                 }
 
-                                if (place.bAdmin || place.constituency) {
+                                if (place.admin || place.constituency) {
                                   leader = 'Admin'
                                 }
 

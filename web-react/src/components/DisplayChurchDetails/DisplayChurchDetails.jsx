@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { Link } from 'react-router-dom'
 import DetailsCard from '../card/DetailsCard'
 import { MemberContext } from '../../contexts/MemberContext'
@@ -9,6 +9,18 @@ import MemberDisplayCard from '../card/MemberDisplayCard'
 import ChurchButton from '../buttons/ChurchButton'
 import './DisplayChurchDetails.css'
 import RoleView from '../../auth/RoleView'
+import { Form, Formik } from 'formik'
+import * as Yup from 'yup'
+import Popup from '../popup/Popup'
+import { BISHOP_MEMBER_DROPDOWN } from '../../queries/ListQueries'
+import { useMutation } from '@apollo/client'
+import {
+  MAKE_TOWN_ADMIN,
+  MAKE_CAMPUS_ADMIN,
+  REMOVE_TOWN_ADMIN,
+  REMOVE_CAMPUS_ADMIN,
+} from '../../queries/AdminMutations'
+import FormikControl from '../formik-components/FormikControl'
 
 const DisplayChurchDetails = (props) => {
   const {
@@ -30,7 +42,62 @@ const DisplayChurchDetails = (props) => {
   } = props
 
   const { setMemberId } = useContext(MemberContext)
-  const { clickCard } = useContext(ChurchContext)
+  const { clickCard, campusId, townId, bishopId } = useContext(ChurchContext)
+  //Change Admin Initialised
+
+  const [AddTownAdmin] = useMutation(MAKE_TOWN_ADMIN)
+  const [RemoveTownAdmin] = useMutation(REMOVE_TOWN_ADMIN)
+  const [AddCampusAdmin] = useMutation(MAKE_CAMPUS_ADMIN)
+  const [RemoveCampusAdmin] = useMutation(REMOVE_CAMPUS_ADMIN)
+  const [isOpen, setIsOpen] = useState(false)
+  const togglePopup = () => {
+    setIsOpen(!isOpen)
+  }
+  const initialValues = {
+    adminName: admin ? `${admin?.firstName} ${admin.lastName}` : '',
+    adminSelect: admin.id ?? '',
+  }
+  const validationSchema = Yup.object({
+    adminSelect: Yup.string().required(
+      'Please select an Admin from the dropdown'
+    ),
+  })
+  const onSubmit = (values, onSubmitProps) => {
+    if (churchType === 'Town') {
+      RemoveTownAdmin({
+        variables: {
+          townId: townId,
+          adminId: initialValues.adminSelect,
+        },
+      })
+
+      AddTownAdmin({
+        variables: {
+          townId: townId,
+          adminId: values.adminSelect,
+        },
+      })
+    } else if (churchType === 'Campus') {
+      RemoveCampusAdmin({
+        variables: {
+          campusId: campusId,
+          adminId: initialValues.adminSelect,
+        },
+      })
+
+      AddCampusAdmin({
+        variables: {
+          campusId: campusId,
+          adminId: values.adminSelect,
+        },
+      })
+    }
+
+    onSubmitProps.setSubmitting(false)
+    onSubmitProps.resetForm()
+    togglePopup()
+  }
+  //End of Admin Change
 
   return (
     <>
@@ -104,6 +171,64 @@ const DisplayChurchDetails = (props) => {
             >
               {`Admin:`} {admin.firstName} {admin.lastName}
             </Link>
+          )}
+          <RoleView roles={['federalAdmin', 'bishopAdmin']}>
+            <input
+              type="button"
+              className={`btn btn-primary text-nowrap`}
+              value="Change Admin"
+              onClick={togglePopup}
+            />
+          </RoleView>
+          {isOpen && (
+            <Popup
+              content={
+                <>
+                  <b>Change {`${churchHeading}'s`} Admin</b>
+                  <p>Are you sure you want to Log Out?</p>
+
+                  <Formik
+                    initialValues={initialValues}
+                    validationSchema={validationSchema}
+                    onSubmit={onSubmit}
+                  >
+                    {(formik) => (
+                      <Form>
+                        <div className="form-row">
+                          <div className="col-9">
+                            <FormikControl
+                              control="combobox2"
+                              name="adminSelect"
+                              initialValue={initialValues.adminName}
+                              placeholder="Select an Admin"
+                              setFieldValue={formik.setFieldValue}
+                              optionsQuery={BISHOP_MEMBER_DROPDOWN}
+                              queryVariable1="id"
+                              variable1={bishopId}
+                              queryVariable2="nameSearch"
+                              suggestionText="name"
+                              suggestionID="id"
+                              dataset="bishopMemberDropdown"
+                              aria-describedby="Bishop Member List"
+                              className="form-control"
+                              error={formik.errors.admin}
+                            />
+                          </div>
+                        </div>
+                        <button
+                          type="submit"
+                          disabled={!formik.isValid || formik.isSubmitting}
+                          className={`btn btn-primary text-nowrap px-4`}
+                        >
+                          Confirm Change
+                        </button>
+                      </Form>
+                    )}
+                  </Formik>
+                </>
+              }
+              handleClose={togglePopup}
+            />
           )}
         </div>
       </div>

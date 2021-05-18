@@ -47,8 +47,8 @@ const UpdateBacenta = () => {
 
   const initialValues = {
     bacentaName: bacentaData?.displayBacenta?.name,
-    leaderSelect: bacentaData?.displayBacenta?.leader.id,
-    leaderName: `${bacentaData?.displayBacenta?.leader.firstName} ${bacentaData?.displayBacenta?.leader.lastName} `,
+    leaderSelect: bacentaData?.displayBacenta?.leader?.id,
+    leaderName: `${bacentaData?.displayBacenta?.leader?.firstName} ${bacentaData?.displayBacenta?.leader?.lastName} `,
     townCampusSelect:
       bacentaData?.displayBacenta?.centre?.town?.id ??
       bacentaData?.displayBacenta?.centre?.campus?.id,

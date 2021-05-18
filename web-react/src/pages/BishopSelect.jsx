@@ -14,7 +14,7 @@ const BishopSelect = () => {
   const { data, loading } = useQuery(GET_BISHOPS)
 
   const history = useHistory()
-  const version = 'v0.1.9'
+  const version = 'v0.2.0'
 
   if (loading) {
     return (
@@ -73,6 +73,7 @@ const BishopSelect = () => {
     return (
       <>
         <NavBar />
+
         <div className="container text-center my-3">
           <img
             src={Logo}

@@ -20,13 +20,13 @@ function UserProfileIcon() {
         id: data.memberByEmail.id,
         firstName: data.memberByEmail.firstName,
         lastName: data.memberByEmail.lastName,
-        picture: data.memberByEmail.pictureUrl,
+        picture: data.memberByEmail?.pictureUrl ?? null,
         bishop: isTown
-          ? data.memberByEmail.bacenta.centre?.town.bishop.id
-          : data.memberByEmail.bacenta.centre?.campus.bishop.id,
+          ? data.memberByEmail.bacenta?.centre?.town.bishop.id
+          : data.memberByEmail.bacenta?.centre?.campus.bishop.id,
         constituency: isTown
-          ? data.memberByEmail.bacenta.centre?.town.id
-          : data.memberByEmail.bacenta.centre?.campus.id,
+          ? data.memberByEmail.bacenta?.centre?.town.id
+          : data.memberByEmail.bacenta?.centre?.campus.id,
         church: isTown
           ? { church: 'town', subChurch: 'centre' }
           : { church: 'campus', subChurch: 'centre' },

@@ -77,7 +77,6 @@ MERGE (m)-[:BELONGS_TO]->(b)
 
 WITH line,m
 WHERE line.Occupation is not null
-// MATCH (m:Member {whatsappNumber: line.`WhatsApp Number (if different)`})
 MERGE(O:Occupation {occupation: line.Occupation})
 MERGE(m)-[:HAS_OCCUPATION]->(O);
 
@@ -109,7 +108,7 @@ MERGE (campusTown)-[:HAS_CENTRE]->(centre)
 RETURN campusTown;
 
 LOAD CSV WITH HEADERS FROM "https://www.dropbox.com/s/czittplt9ytazgp/BacentaImport.csv?dl=1" as line WITH line WHERE line.Bishop is NOT NULL
-CREATE (bacenta:Bacenta {name: line.Bacenta})
+MERGE (bacenta:Bacenta {name: line.Bacenta})
 SET bacenta.id = apoc.create.uuid(),
 bacenta.code = line.CODE,
 bacenta.venueLatitude = line.Latitude,
@@ -153,7 +152,6 @@ WITH line,leader
 MATCH (campusTown) WHERE campusTown.name = line.Constituencies 
 MERGE (leader)-[:LEADS]->(campusTown)
 RETURN campusTown;
-
 
 LOAD CSV WITH HEADERS FROM "https://www.dropbox.com/s/irororaq96tkhmo/CampusTownImport.csv?dl=1" as line WITH line WHERE line.Admin is NOT NULL
 MERGE (admin:Member {emailAddress:toLower(line.`Admin Email Address`)})

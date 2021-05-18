@@ -49,7 +49,7 @@ const DisplayBacentaDetails = () => {
           leaderId={bacentaData.displayBacenta?.leader?.id}
           membership={bacentaData.bacentaMemberCount}
           churchHeading="Meeting Day"
-          churchNo={bacentaData.displayBacenta?.meetingDay.day}
+          churchNo={bacentaData.displayBacenta?.meetingDay?.day}
           churchType="Bacenta"
           buttons={['']}
           editlink="/bacenta/editbacenta"

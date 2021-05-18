@@ -1,6 +1,6 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import { useQuery } from '@apollo/client'
+import { useMutation, useQuery } from '@apollo/client'
 import { BISH_DASHBOARD_COUNTS } from '../queries/CountQueries'
 import NavBar from '../components/nav/NavBar'
 import DashboardCard from '../components/card/DashboardCard'
@@ -9,15 +9,66 @@ import DropdownButton from '../components/buttons/DropdownButton'
 import { ChurchContext } from '../contexts/ChurchContext'
 import { capitalise, isAuthorised, plural } from '../global-utils'
 import { MemberContext } from '../contexts/MemberContext'
+import Popup from '../components/popup/Popup'
+import RoleView from '../auth/RoleView'
+import { BISHOP_MEMBER_DROPDOWN } from '../queries/ListQueries'
+import { Form, Formik } from 'formik'
+import * as Yup from 'yup'
+import FormikControl from '../components/formik-components/FormikControl'
+import {
+  MAKE_BISHOP_ADMIN,
+  REMOVE_BISHOP_ADMIN,
+} from '../queries/AdminMutations'
 
 const BishopDashboard = () => {
   const { church, setFilters, clickCard, bishopId, setBishopId } = useContext(
     ChurchContext
   )
+
   const { currentUser } = useContext(MemberContext)
   const { data, loading } = useQuery(BISH_DASHBOARD_COUNTS, {
     variables: { id: bishopId },
   })
+
+  //Change Admin Initialised
+  const [isOpen, setIsOpen] = useState(false)
+  const [AddMemberHasAdmin] = useMutation(MAKE_BISHOP_ADMIN)
+  const [RemoveMemberHasAdmin] = useMutation(REMOVE_BISHOP_ADMIN)
+  const togglePopup = () => {
+    setIsOpen(!isOpen)
+  }
+  const initialValues = {
+    adminName: data?.displayMember?.hasAdmin
+      ? `${data.displayMember?.hasAdmin?.firstName} ${data.displayMember?.hasAdmin?.lastName}`
+      : '',
+    adminSelect: data?.displayMember?.hasAdmin.id ?? '',
+  }
+  const validationSchema = Yup.object({
+    adminSelect: Yup.string().required(
+      'Please select an Admin from the dropdown'
+    ),
+  })
+  const onSubmit = (values, onSubmitProps) => {
+    RemoveMemberHasAdmin({
+      variables: {
+        bishopId: bishopId,
+        adminId: initialValues.adminSelect,
+      },
+    })
+
+    AddMemberHasAdmin({
+      variables: {
+        bishopId: bishopId,
+        adminId: values.adminSelect,
+      },
+    })
+
+    onSubmitProps.setSubmitting(false)
+    onSubmitProps.resetForm()
+    togglePopup()
+  }
+  //End of Admin Change
+
   const history = useHistory()
 
   let bishopName,
@@ -60,7 +111,7 @@ const BishopDashboard = () => {
     campusTownCount = loadingText
     sontaMemberCount = loadingText
   } else if (data) {
-    bishopName = `${data.displayMember?.firstName} ${data.displayMember?.lastName} 's Church`
+    bishopName = `${data.displayMember?.firstName} ${data.displayMember?.lastName}`
     adminName = `Admin: ${data.displayMember?.hasAdmin?.firstName} ${data.displayMember?.hasAdmin?.lastName}`
     memberCount = `${data.bishopMemberCount} Members`
     pastorCount = `${data.bishopPastorCount} Pastors`
@@ -83,7 +134,7 @@ const BishopDashboard = () => {
       <div className="container px-4">
         <div className="row justify-content-between py-3">
           <div className="col">
-            <h4>{bishopName}</h4>
+            <h4>{`${bishopName}'s`} Church</h4>
             <p
               onClick={() => {
                 clickCard(data.displayMember?.hasAdmin)
@@ -93,6 +144,64 @@ const BishopDashboard = () => {
             >
               {data?.displayMember?.hasAdmin ? adminName : null}
             </p>
+            <RoleView roles={['federalAdmin']}>
+              <input
+                type="button"
+                className={`btn btn-primary text-nowrap`}
+                value="Change Admin"
+                onClick={togglePopup}
+              />
+            </RoleView>
+            {isOpen && (
+              <Popup
+                content={
+                  <>
+                    <b>{`Change Bishop ${bishopName}'s Admin`}</b>
+                    <p>Are you sure you want to Log Out?</p>
+
+                    <Formik
+                      initialValues={initialValues}
+                      validationSchema={validationSchema}
+                      onSubmit={onSubmit}
+                    >
+                      {(formik) => (
+                        <Form>
+                          <div className="form-row">
+                            <div className="col-9">
+                              <FormikControl
+                                control="combobox2"
+                                name="adminSelect"
+                                initialValue={initialValues.adminName}
+                                placeholder="Select an Admin"
+                                setFieldValue={formik.setFieldValue}
+                                optionsQuery={BISHOP_MEMBER_DROPDOWN}
+                                queryVariable1="id"
+                                variable1={bishopId}
+                                queryVariable2="nameSearch"
+                                suggestionText="name"
+                                suggestionID="id"
+                                dataset="bishopMemberDropdown"
+                                aria-describedby="Bishop Member List"
+                                className="form-control"
+                                error={formik.errors.admin}
+                              />
+                            </div>
+                          </div>
+                          <button
+                            type="submit"
+                            disabled={!formik.isValid || formik.isSubmitting}
+                            className={`btn btn-primary text-nowrap px-4`}
+                          >
+                            Confirm Change
+                          </button>
+                        </Form>
+                      )}
+                    </Formik>
+                  </>
+                }
+                handleClose={togglePopup}
+              />
+            )}
           </div>
           <div className="col-auto align-self-center mr-1 d-md-none">
             <DropdownButton items={listItems} />

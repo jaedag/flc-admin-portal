@@ -28,7 +28,7 @@ type Member {
   leadsCampus: [Campus] @relation(name: "LEADS", direction: OUT)
   townBishop: [Town] @relation(name: "HAS_TOWN", direction: OUT)
   campusBishop: [Campus] @relation(name: "HAS_CAMPUS", direction: OUT)
-  isBishopAdminFor: [Member] @relation(name: "IS_ADMIN_FOR", direction: OUT)
+  isBishopAdminFor: [Member] @relation(name: "IS_ADMIN_FOR", direction: OUT) #@neo4j_ignore
   isCampusAdminFor: [Campus] @relation(name: "IS_ADMIN_FOR", direction: OUT)
   isTownAdminFor: [Town] @relation(name: "IS_ADMIN_FOR", direction: OUT)
   hasAdmin: Member @relation(name: "IS_ADMIN_FOR", direction: IN)

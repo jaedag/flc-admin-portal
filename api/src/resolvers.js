@@ -37,13 +37,13 @@ export const resolvers = {
     },
   },
   Mutation: {
-    AddMemberIsBishopAdminFor: async (object, args, context, resolveInfo) => {
+    AddMemberIsBishopAdminFor: async (object, args, context) => {
       const session = context.driver.session()
 
       await session.run(matchMemberQuery, args).then((response) => {
         let member = {}
         response.records[0].keys.forEach(
-          (key, i) => (result[key] = response.records[0]._fields[i])
+          (key, i) => (member[key] = response.records[0]._fields[i])
         )
 
         //Check if Member has Auth0 ID

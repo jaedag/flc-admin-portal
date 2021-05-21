@@ -1,5 +1,6 @@
 type Member {
   id: ID! @id
+  auth_id: String @neo4j_ignore
   firstName: String @index #@search
   middleName: String
   lastName: String @index

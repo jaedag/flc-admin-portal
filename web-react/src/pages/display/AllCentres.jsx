@@ -133,6 +133,14 @@ const DisplayAllCentres = () => {
                     Add Centre
                   </Link>
                 </div>
+                <div className="col-auto">
+                  <Link
+                    to="/sonta/addsonta"
+                    className="btn btn-primary text-nowrap"
+                  >
+                    Add Sonta
+                  </Link>
+                </div>
               </RoleView>
             </div>
             <div className="row">

@@ -11,7 +11,7 @@ import './DisplayChurchDetails.css'
 import RoleView from '../../auth/RoleView'
 import { Form, Formik } from 'formik'
 import * as Yup from 'yup'
-import Popup from '../popup/Popup'
+import Popup from '../Popup/Popup'
 import { BISHOP_MEMBER_DROPDOWN } from '../../queries/ListQueries'
 import { useMutation } from '@apollo/client'
 import {
@@ -185,7 +185,7 @@ const DisplayChurchDetails = (props) => {
               content={
                 <>
                   <b>Change {`${churchHeading}'s`} Admin</b>
-                  <p>Are you sure you want to Log Out?</p>
+                  <p>Please enter the name of the new administrator</p>
 
                   <Formik
                     initialValues={initialValues}

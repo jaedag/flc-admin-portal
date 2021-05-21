@@ -9,7 +9,7 @@ import DropdownButton from '../components/buttons/DropdownButton'
 import { ChurchContext } from '../contexts/ChurchContext'
 import { capitalise, isAuthorised, plural } from '../global-utils'
 import { MemberContext } from '../contexts/MemberContext'
-import Popup from '../components/popup/Popup'
+import Popup from '../components/Popup/Popup'
 import RoleView from '../auth/RoleView'
 import { BISHOP_MEMBER_DROPDOWN } from '../queries/ListQueries'
 import { Form, Formik } from 'formik'
@@ -157,7 +157,7 @@ const BishopDashboard = () => {
                 content={
                   <>
                     <b>{`Change Bishop ${bishopName}'s Admin`}</b>
-                    <p>Are you sure you want to Log Out?</p>
+                    <p>Please enter the name of the new administrator</p>
 
                     <Formik
                       initialValues={initialValues}

@@ -22,11 +22,11 @@ function UserProfileIcon() {
         lastName: data.memberByEmail.lastName,
         picture: data.memberByEmail?.pictureUrl ?? null,
         bishop: isTown
-          ? data.memberByEmail.bacenta?.centre?.town.bishop.id
-          : data.memberByEmail.bacenta?.centre?.campus.bishop.id,
+          ? data.memberByEmail?.bacenta?.centre?.town.bishop.id
+          : data.memberByEmail?.bacenta?.centre?.campus.bishop.id,
         constituency: isTown
-          ? data.memberByEmail.bacenta?.centre?.town.id
-          : data.memberByEmail.bacenta?.centre?.campus.id,
+          ? data.memberByEmail?.bacenta?.centre?.town.id
+          : data.memberByEmail?.bacenta?.centre?.campus.id,
         church: isTown
           ? { church: 'town', subChurch: 'centre' }
           : { church: 'campus', subChurch: 'centre' },
@@ -40,6 +40,7 @@ function UserProfileIcon() {
     if (!currentUser?.emailAddress?.length) {
       user && memberByEmail({ variables: { emailAddress: user.email } })
     }
+    // console.log('user', user)
 
     // eslint-disable-next-line
   }, [isAuthenticated])

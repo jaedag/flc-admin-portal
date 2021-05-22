@@ -1,10 +1,10 @@
 type Member {
   id: ID! @id
-  auth_id: String @neo4j_ignore
+  auth_id: String
   firstName: String @index #@search
   middleName: String
   lastName: String @index
-  emailAddress: String @unique
+  email: String @unique
   phoneNumber: String
   whatsappNumber: String @unique
   pictureUrl: String
@@ -595,10 +595,8 @@ type Query {
   # Display Member based on ID
   displayMember(id: ID): Member
     @cypher(statement: "MATCH (member:Member {id:$id}) RETURN member")
-  memberByEmail(emailAddress: String): Member
-    @cypher(
-      statement: "MATCH (member:Member {emailAddress:$emailAddress}) RETURN member"
-    )
+  memberByEmail(email: String): Member
+    @cypher(statement: "MATCH (member:Member {email:$email}) RETURN member")
 
   #Fuzzy Search
   memberGridList(
@@ -690,7 +688,7 @@ type Mutation {
     firstName: String!
     middleName: String
     lastName: String!
-    emailAddress: String
+    email: String
     phoneNumber: String!
     whatsappNumber: String
     dob: String!
@@ -709,7 +707,7 @@ type Mutation {
       	member.firstName = $firstName,
       	member.middleName = $middleName,
       	member.lastName = $lastName,
-      	member.emailAddress = $emailAddress,
+      	member.email = $email,
       	member.phoneNumber = $phoneNumber,
       	member.pictureUrl = $pictureUrl
       CREATE (log:HistoryLog)<-[:HAS_HISTORY]-(b)
@@ -924,7 +922,7 @@ type Mutation {
     firstName: String!
     middleName: String
     lastName: String!
-    emailAddress: String
+    email: String
     phoneNumber: String!
     whatsappNumber: String
     dob: String
@@ -942,7 +940,7 @@ type Mutation {
       	member.firstName = $firstName,
       	member.middleName = $middleName,
       	member.lastName = $lastName,
-      	member.emailAddress = $emailAddress,
+      	member.email = $email,
       	member.phoneNumber = $phoneNumber,
       	member.pictureUrl = $pictureUrl
 

@@ -58,8 +58,8 @@ const UserProfileEditPage = () => {
     whatsappNumber: memberData?.displayMember.whatsappNumber
       ? `+${memberData?.displayMember.whatsappNumber}`
       : '',
-    emailAddress: memberData?.displayMember.emailAddress
-      ? memberData?.displayMember.emailAddress
+    email: memberData?.displayMember.email
+      ? memberData?.displayMember.email
       : '',
     dob: memberData?.displayMember.dob
       ? memberData?.displayMember.dob.date.formatted
@@ -98,9 +98,7 @@ const UserProfileEditPage = () => {
     firstName: Yup.string().required('This is a required field'),
     lastName: Yup.string().required('This is a required field'),
     gender: Yup.string().required('This is a required field'),
-    emailAddress: Yup.string().email(
-      'Please enter a valid emailAddress address'
-    ),
+    email: Yup.string().email('Please enter a valid email address'),
     phoneNumber: Yup.string().matches(
       PHONE_NUM_REGEX_VALIDATION,
       `Phone Number must start with + and country code (eg. '+233')`
@@ -166,7 +164,7 @@ const UserProfileEditPage = () => {
         gender: values.gender,
         phoneNumber: parsePhoneNum(values.phoneNumber),
         whatsappNumber: parsePhoneNum(values.whatsappNumber),
-        emailAddress: values.emailAddress,
+        email: values.email,
         dob: values.dob,
         maritalStatus: values.maritalStatus,
         occupation: values.occupation,
@@ -332,7 +330,7 @@ const UserProfileEditPage = () => {
                           label="Email Address*"
                           className="form-control"
                           control="input"
-                          name="emailAddress"
+                          name="email"
                           placeholder="Enter Email Address"
                           aria-describedby="emailHelp"
                         />

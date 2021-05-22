@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client'
 
 export const GET_LOGGED_IN_USER = gql`
-  query memberByEmail($emailAddress: String) {
-    memberByEmail(emailAddress: $emailAddress) {
+  query memberByEmail($email: String) {
+    memberByEmail(email: $email) {
       id
       firstName
       lastName

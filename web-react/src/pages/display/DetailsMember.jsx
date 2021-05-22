@@ -302,7 +302,7 @@ const DisplayMemberDetails = () => {
                         </div>
                         <div className="col-6">
                           <p className="font-weight-bold card-text text-truncate">
-                            {displayMember.emailAddress}
+                            {displayMember.email}
                           </p>
                         </div>
                       </div>

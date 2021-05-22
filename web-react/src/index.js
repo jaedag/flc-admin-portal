@@ -151,7 +151,7 @@ const PastorsAdmin = () => {
     lastName: '',
     bishop: '',
     church: {},
-    emailAddress: '',
+    email: '',
     constituency: '',
     roles: [''],
   })

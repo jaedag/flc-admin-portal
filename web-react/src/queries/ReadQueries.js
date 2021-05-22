@@ -17,7 +17,7 @@ export const DISPLAY_MEMBER = gql`
       firstName
       middleName
       lastName
-      emailAddress
+      email
       phoneNumber
       whatsappNumber
       pictureUrl

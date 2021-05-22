@@ -59,8 +59,8 @@ const UpdateMemberDetails = () => {
     whatsappNumber: memberData?.displayMember.whatsappNumber
       ? `+${memberData?.displayMember.whatsappNumber}`
       : '',
-    emailAddress: memberData?.displayMember.emailAddress
-      ? memberData?.displayMember.emailAddress
+    email: memberData?.displayMember.email
+      ? memberData?.displayMember.email
       : '',
     dob: memberData?.displayMember.dob
       ? memberData?.displayMember.dob.date.formatted
@@ -101,9 +101,7 @@ const UpdateMemberDetails = () => {
     firstName: Yup.string().required('First Name is a required field'),
     lastName: Yup.string().required('Last Name is a required field'),
     gender: Yup.string().required('Gender is a required field'),
-    emailAddress: Yup.string().email(
-      'Please enter a valid emailAddress address'
-    ),
+    email: Yup.string().email('Please enter a valid email address'),
     maritalStatus: Yup.string().required('Marital Status is a required field'),
     dob: Yup.date()
       .max(new Date(), "You can't be born after today")
@@ -173,7 +171,7 @@ const UpdateMemberDetails = () => {
         gender: values.gender,
         phoneNumber: parsePhoneNum(values.phoneNumber),
         whatsappNumber: parsePhoneNum(values.whatsappNumber),
-        emailAddress: values.emailAddress,
+        email: values.email,
         dob: values.dob,
         maritalStatus: values.maritalStatus,
         occupation: values.occupation,
@@ -340,7 +338,7 @@ const UpdateMemberDetails = () => {
                           label="Email Address*"
                           className="form-control"
                           control="input"
-                          name="emailAddress"
+                          name="email"
                           placeholder="Enter Email Address"
                           aria-describedby="emailHelp"
                         />

@@ -10,6 +10,7 @@ export const initializeDatabase = (driver) => {
   }
 
   executeQuery(driver).catch((error) => {
+    // eslint-disable-next-line
     console.error('Database initialization failed to complete\n', error.message)
   })
 }

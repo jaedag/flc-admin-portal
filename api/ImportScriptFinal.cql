@@ -49,7 +49,7 @@ CREATE (m:Member {whatsappNumber:line.`WhatsApp Number (if different)`})
     m.lastName = apoc.text.capitalizeAll(toLower(trim(line.`Last Name`))),
     m.phoneNumber = line.`Phone Number`,
     m.areaOfResidence = line.`Area of Residence`,
-    m.emailAddress = line.`Email`,
+    m.email = line.`Email`,
     m.pictureUrl   = line.pictureUrl
 
 with line,m WHERE line.Gender is not null
@@ -154,7 +154,7 @@ MERGE (leader)-[:LEADS]->(campusTown)
 RETURN campusTown;
 
 LOAD CSV WITH HEADERS FROM "https://www.dropbox.com/s/irororaq96tkhmo/CampusTownImport.csv?dl=1" as line WITH line WHERE line.Admin is NOT NULL
-MERGE (admin:Member {emailAddress:toLower(line.`Admin Email Address`)})
+MERGE (admin:Member {email:toLower(line.`Admin Email Address`)})
 ON CREATE SET admin.firstName = line.`Admin`,
 admin.id = apoc.create.uuid()
 
@@ -165,7 +165,7 @@ MERGE (admin)-[:IS_ADMIN_FOR]->(campusTown)
 RETURN campusTown;
 
 LOAD CSV WITH HEADERS FROM "https://www.dropbox.com/s/e04310p1zi55i7g/bishopsAdmins.csv?dl=1" as line WITH line WHERE line.Admin is NOT NULL
-MERGE (admin:Member {emailAddress:toLower(line.`Admin Email Address`)})
+MERGE (admin:Member {email:toLower(line.`Admin Email Address`)})
 ON CREATE SET admin.firstName = line.`Admin`,
 admin.id = apoc.create.uuid()
 
@@ -182,7 +182,7 @@ MERGE (m:Member {whatsappNumber: "233264248700"})
     m.lastName = "Addy",
     m.phoneNumber = "233264248700",
     m.areaOfResidence = "East Legon Hills",
-    m.emailAddress = "jaedagy@gmail.com"
+    m.email = "jaedagy@gmail.com"
 
 WITH m
 MATCH (g: Gender {gender: "Male"})

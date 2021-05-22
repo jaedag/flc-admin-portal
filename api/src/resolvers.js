@@ -1,17 +1,117 @@
 const dotenv = require('dotenv')
 const axios = require('axios').default
+const cypher = require('./resolver-queries')
 
 dotenv.config()
 
-const matchMemberQuery = `MATCH (member:Member {id:$from.id}) MATCH (member)-[:IS_ADMIN_FOR|:LEADS]->() 
-  RETURN 
-  member.id AS id,
-  member.auth_id AS auth_id,
-  member.firstName AS firstName, 
-  member.lastName AS lastName,
-  member.emailAddress AS emailAddress,
-  member.phoneNumber AS phoneNumber,
-  member.pictureUrl AS pictureUrl`
+const baseURL = 'https://flcadmin.us.auth0.com/'
+let authToken
+let authRoles = {}
+
+const getTokenConfig = {
+  method: 'post',
+  url: 'https://flcadmin.us.auth0.com/oauth/token',
+  headers: { 'content-type': 'application/json' },
+  data: {
+    client_id: '4LofGKzEk2nFCbVRgG9YScD5AaT7WFFF',
+    client_secret: process.env.AUTH_CLIENT_SECRET,
+    audience: 'https://flcadmin.us.auth0.com/api/v2/',
+    grant_type: 'client_credentials',
+  },
+}
+
+axios(getTokenConfig)
+  .then(async (res) => {
+    authToken = res.data.access_token
+
+    const getRolesConfig = {
+      method: 'get',
+      baseURL: baseURL,
+      url: `/api/v2/roles`,
+      headers: {
+        autho: '',
+        Authorization: `Bearer ${authToken}`,
+      },
+    }
+
+    axios(getRolesConfig).then((res) => {
+      res.data.forEach(
+        (role) =>
+          (authRoles[role.name] = {
+            id: role.id,
+            name: role.name,
+            description: role.description,
+          })
+      )
+    })
+  })
+  .catch((err) =>
+    console.error('There was an erroor obtaining auth token', err)
+  )
+
+const createAuthUserConfig = (member) => ({
+  method: 'post',
+  baseURL: baseURL,
+  url: `/api/v2/users`,
+  headers: {
+    autho: '',
+    Authorization: `Bearer ${authToken}`,
+  },
+  data: {
+    connection: 'flcadmin',
+    email: member.email,
+    user_metadata: {
+      admin: true,
+    },
+    given_name: member.firstName,
+    family_name: member.lastName,
+    name: `${member.firstName} ${member.lastName}`,
+    picture: member.pictureUrl ?? '',
+    user_id: member.id,
+    password: 'rAndoMLetteRs',
+  },
+})
+
+const getAuthIdConfig = (member) => ({
+  method: 'get',
+  baseURL: baseURL,
+  url: `/api/v2/users-by-email?email=${member.email}`,
+  headers: {
+    autho: '',
+    Authorization: `Bearer ${authToken}`,
+  },
+})
+const getUserRoles = (memberId) => ({
+  method: 'get',
+  baseURL: baseURL,
+  url: `/api/v2/users/auth0%7C${memberId}/roles`,
+  headers: {
+    autho: '',
+    Authorization: `Bearer ${authToken}`,
+  },
+})
+const setUserRoles = (memberId, roles) => ({
+  method: 'post',
+  baseURL: baseURL,
+  url: `/api/v2/users/auth0%7C${memberId}/roles`,
+  headers: {
+    autho: '',
+    Authorization: `Bearer ${authToken}`,
+  },
+  data: {
+    roles: roles,
+  },
+})
+
+const assignRoles = (userId, userRoles, rolesToAssign) => {
+  if (!userRoles.includes(rolesToAssign[0])) {
+    // const assignRoles = [authRoles[roleToAssign].id]
+    //If the person is NOT a co Admin
+    axios(setUserRoles(userId, rolesToAssign)).catch((err) =>
+      console.error('There was an error assigning role', err.response.data)
+    )
+  }
+}
 
 export const resolvers = {
   // Resolver Parameters
@@ -20,66 +120,164 @@ export const resolvers = {
   // Context: Context object, database connection, API, etc
   // GraphQLResolveInfo
 
-  Member: {
-    auth_id: async (member) => {
-      const config = {
-        method: 'get',
-        url: `https://flcadmin.us.auth0.com/api/v2/users-by-email?email=${member.emailAddress}`,
-        headers: {
-          autho: '',
-          Authorization: `Bearer ${process.env.AUTH_API_TOKEN}`,
-        },
-      }
-
-      const response = await axios(config)
-
-      return response.data[0]?.identities[0]?.user_id
-    },
-  },
   Mutation: {
-    AddMemberIsBishopAdminFor: async (object, args, context) => {
+    MergeMemberIsBishopAdminFor: async (object, args, context) => {
       const session = context.driver.session()
+      let admin = {}
+      let bishop = { id: args.to.id }
 
-      await session.run(matchMemberQuery, args).then((response) => {
-        let member = {}
-        response.records[0].keys.forEach(
-          (key, i) => (member[key] = response.records[0]._fields[i])
+      await session
+        .run(cypher.matchMemberQuery, args)
+        .then(async (response) => {
+          session.run(cypher.mergeMemberIsBishopAdminFor, {
+            adminId: args.from.id,
+            bishopId: args.to.id,
+          })
+
+          // Rearrange member object
+          response.records[0].keys.forEach(
+            (key, i) => (admin[key] = response.records[0]._fields[i])
+          )
+
+          //Check for AuthID of Admin
+          axios(getAuthIdConfig(admin))
+            .then(async (res) => {
+              admin.auth_id = res.data[0]?.identities[0]?.user_id
+
+              if (!admin.auth_id) {
+                //If admin Does Not Have Auth0 Profile, Create One
+                axios(createAuthUserConfig(admin))
+                  .then((res) => {
+                    const auth_id = res.data[0]?.identities[0]?.user_id
+                    const roles = []
+                    assignRoles(auth_id, roles, [authRoles.bishopAdmin.id])
+                  })
+                  .catch(
+                    console.error((err) =>
+                      console.error('Error Creating User', err.response.data)
+                    )
+                  )
+              } else if (admin.auth_id) {
+                //Check auth0 roles and add roles 'bishopAdmin'
+                axios(getUserRoles(admin.auth_id)).then((res) => {
+                  const roles = res.data.map((role) => role.name)
+
+                  if (!roles.includes('bishopAdmin')) {
+                    const assignRoles = [authRoles.bishopAdmin.id]
+
+                    //If the person is NOT a bishops Admin
+                    axios(getUserRoles(admin.auth_id))
+                      .then((res) => {
+                        const roles = res.data.map((role) => role.name)
+
+                        assignRoles(admin.auth_id, roles, [
+                          authRoles.bishopAdmin.id,
+                        ])
+                      })
+                      .catch((error) =>
+                        console.error(
+                          'getUserRoles Failed to Run. Check Error',
+                          error
+                        )
+                      )
+                  }
+                })
+              }
+            })
+            .then(async () =>
+              //Write Auth0 ID of Admin to Neo4j DB
+              session.run(cypher.setMemberAuthId, {
+                id: admin.id,
+                auth_id: admin.auth_id,
+              })
+            )
+            .then(async () =>
+              //Create Relationship Between admin and bishops
+              session.run(cypher.mergeMemberIsBishopAdminFor, {
+                adminId: args.from.id,
+                bishopId: args.to.id,
+              })
+            )
+        })
+
+      return {
+        from: admin,
+        to: bishop,
+      }
+    },
+    MergeMemberIsTownAdminFor: async (object, args, context) => {
+      const session = context.driver.session()
+      let admin = {}
+      let town = { id: args.to.id }
+
+      await session
+        .run(cypher.matchMemberQuery, args)
+        .then(async (response) => {
+          // Rearrange member object
+          response.records[0].keys.forEach(
+            (key, i) => (admin[key] = response.records[0]._fields[i])
+          )
+
+          //Check for AuthID of Admin
+          axios(getAuthIdConfig(admin))
+            .then(async (res) => {
+              admin.auth_id = res.data[0]?.identities[0]?.user_id
+
+              console.log(admin)
+              if (!admin.auth_id) {
+                //If admin Does Not Have Auth0 Profile, Create One
+                axios(createAuthUserConfig(admin))
+                  .then((res) => {
+                    const auth_id = res.data[0]?.identities[0]?.user_id
+                    const roles = []
+                    assignRoles(auth_id, roles, [
+                      authRoles.constituencyAdmin.id,
+                    ])
+                  })
+                  .catch((err) => console.error('Error Creating User', err))
+              } else if (admin.auth_id) {
+                //Check auth0 roles and add roles 'constituencyAdmin'
+                axios(getUserRoles(admin.auth_id))
+                  .then((res) => {
+                    const roles = res.data.map((role) => role.name)
+
+                    assignRoles(admin.auth_id, roles, [
+                      authRoles.constituencyAdmin.id,
+                    ])
+                  })
+                  .catch((error) =>
+                    console.error(
+                      'getUserRoles Failed to Run. Check Error',
+                      error
+                    )
+                  )
+              }
+            })
+            .then(async () =>
+              //Write Auth0 ID of Admin to Neo4j DB
+              session.run(cypher.setMemberAuthId, {
+                id: admin.id,
+                auth_id: admin.auth_id,
+              })
+            )
+            .catch((err) =>
+              console.error(
+                'There was an error obtaining the auth Id ',
+                err.response
+              )
+            )
+        })
+        .then(async () =>
+          session.run(cypher.mergeMemberIsTownAdminFor, {
+            adminId: args.from.id,
+            townId: args.to.id,
+          })
         )
 
-        //Check if Member has Auth0 ID
-        //If not, create auth0 profile
-        if (!member.auth_id) {
-          const config = {
-            method: 'post',
-            url: `https://flcadmin.us.auth0.com/api/v2/users`,
-            headers: {
-              autho: '',
-              Authorization: `Bearer ${process.env.AUTH_API_TOKEN}`,
-            },
-            body: {
-              email: member.emailAddress,
-              phoneNumber: member.phoneNumber,
-              user_metadata: {
-                admin: true,
-              },
-              given_name: member.firstName,
-              family_name: member.lastName,
-              name: `${member.firstName} ${member.lastName}`,
-              picture: member.pictureUrl,
-              user_id: member.id,
-              password: 'rAndoMLetteRs',
-            },
-          }
-
-          axios(config).then((res) => {
-            console.log('Axios Response', res)
-          })
-        } else {
-          //Check if Member is Already Admin/Leader
-          console.log('check user metadata')
-          //Check auth0 roles and add roles 'bishopAdmin'
-        }
-      })
+      return {
+        from: admin,
+        to: town,
+      }
     },
   },
 }

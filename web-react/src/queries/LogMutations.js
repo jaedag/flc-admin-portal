@@ -8,7 +8,6 @@ export const LOG_BACENTA_HISTORY = gql`
     $newLeaderId: ID
     $oldCentreId: ID
     $newCentreId: ID
-    $loggedBy: ID
   ) {
     LogBacentaHistory(
       bacentaId: $bacentaId
@@ -17,7 +16,6 @@ export const LOG_BACENTA_HISTORY = gql`
       newLeaderId: $newLeaderId
       oldCentreId: $oldCentreId
       newCentreId: $newCentreId
-      loggedBy: $loggedBy
     ) {
       id
       name
@@ -42,7 +40,6 @@ export const LOG_CENTRE_HISTORY = gql`
     $newLeaderId: ID
     $oldCampusTownId: ID
     $newCampusTownId: ID
-    $loggedBy: ID
   ) {
     LogCentreHistory(
       centreId: $centreId
@@ -51,7 +48,6 @@ export const LOG_CENTRE_HISTORY = gql`
       oldLeaderId: $oldLeaderId
       oldCampusTownId: $oldCampusTownId
       newCampusTownId: $newCampusTownId
-      loggedBy: $loggedBy
     ) {
       id
       name
@@ -76,7 +72,6 @@ export const LOG_CAMPUSTOWN_HISTORY = gql`
     $newLeaderId: ID
     $oldBishopId: ID
     $newBishopId: ID
-    $loggedBy: ID
   ) {
     LogCampusTownHistory(
       campusTownId: $campusTownId
@@ -85,7 +80,6 @@ export const LOG_CAMPUSTOWN_HISTORY = gql`
       oldLeaderId: $oldLeaderId
       oldBishopId: $oldBishopId
       newBishopId: $newBishopId
-      loggedBy: $loggedBy
     ) {
       id
       name
@@ -110,7 +104,6 @@ export const LOG_SONTA_HISTORY = gql`
     $newLeaderId: ID
     $oldCampusTownId: ID
     $newCampusTownId: ID
-    $loggedBy: ID
   ) {
     LogSontaHistory(
       sontaId: $sontaId
@@ -119,7 +112,6 @@ export const LOG_SONTA_HISTORY = gql`
       oldLeaderId: $oldLeaderId
       oldCampusTownId: $oldCampusTownId
       newCampusTownId: $newCampusTownId
-      loggedBy: $loggedBy
     ) {
       id
       name

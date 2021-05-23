@@ -155,7 +155,8 @@ RETURN campusTown;
 
 LOAD CSV WITH HEADERS FROM "https://www.dropbox.com/s/irororaq96tkhmo/CampusTownImport.csv?dl=1" as line WITH line WHERE line.Admin is NOT NULL
 MERGE (admin:Member {email:toLower(line.`Admin Email Address`)})
-ON CREATE SET admin.firstName = line.`Admin`,
+ON CREATE SET admin.firstName = split(line.`Admin`," ")[0],
+admin.lastName = split(line.`Admin`," ")[1],
 admin.id = apoc.create.uuid()
 
 WITH line,admin
@@ -166,7 +167,8 @@ RETURN campusTown;
 
 LOAD CSV WITH HEADERS FROM "https://www.dropbox.com/s/e04310p1zi55i7g/bishopsAdmins.csv?dl=1" as line WITH line WHERE line.Admin is NOT NULL
 MERGE (admin:Member {email:toLower(line.`Admin Email Address`)})
-ON CREATE SET admin.firstName = line.`Admin`,
+ON CREATE SET admin.firstName = split(line.`Admin`," ")[0],
+admin.lastName = split(line.`Admin`," ")[1],
 admin.id = apoc.create.uuid()
 
 WITH line,admin
@@ -177,6 +179,7 @@ RETURN bishop;
 MERGE (m:Member {whatsappNumber: "233264248700"})
 	SET 
     m.id = apoc.create.uuid(),
+    m.auth_id="auth0|6089feb8e1e3e700697f7eff",
     m.firstName = "John-Dag",
     m.middleName = "Nii",
     m.lastName = "Addy",

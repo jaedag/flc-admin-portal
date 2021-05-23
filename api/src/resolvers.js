@@ -45,9 +45,7 @@ axios(getTokenConfig)
       )
     })
   })
-  .catch((err) =>
-    console.error('There was an erroor obtaining auth token', err)
-  )
+  .catch((err) => console.error('There was an error obtaining auth token', err))
 
 const createAuthUserConfig = (member) => ({
   method: 'post',
@@ -84,7 +82,7 @@ const getAuthIdConfig = (member) => ({
 const getUserRoles = (memberId) => ({
   method: 'get',
   baseURL: baseURL,
-  url: `/api/v2/users/auth0%7C${memberId}/roles`,
+  url: `/api/v2/users/${memberId}/roles`,
   headers: {
     autho: '',
     Authorization: `Bearer ${authToken}`,
@@ -93,7 +91,7 @@ const getUserRoles = (memberId) => ({
 const setUserRoles = (memberId, roles) => ({
   method: 'post',
   baseURL: baseURL,
-  url: `/api/v2/users/auth0%7C${memberId}/roles`,
+  url: `/api/v2/users/${memberId}/roles`,
   headers: {
     autho: '',
     Authorization: `Bearer ${authToken}`,
@@ -129,11 +127,6 @@ export const resolvers = {
       await session
         .run(cypher.matchMemberQuery, args)
         .then(async (response) => {
-          session.run(cypher.mergeMemberIsBishopAdminFor, {
-            adminId: args.from.id,
-            bishopId: args.to.id,
-          })
-
           // Rearrange member object
           response.records[0].keys.forEach(
             (key, i) => (admin[key] = response.records[0]._fields[i])
@@ -142,13 +135,13 @@ export const resolvers = {
           //Check for AuthID of Admin
           axios(getAuthIdConfig(admin))
             .then(async (res) => {
-              admin.auth_id = res.data[0]?.identities[0]?.user_id
+              admin.auth_id = res.data[0]?.user_id
 
               if (!admin.auth_id) {
                 //If admin Does Not Have Auth0 Profile, Create One
                 axios(createAuthUserConfig(admin))
                   .then((res) => {
-                    const auth_id = res.data[0]?.identities[0]?.user_id
+                    const auth_id = res.data[0]?.user_id
                     const roles = []
                     assignRoles(auth_id, roles, [authRoles.bishopAdmin.id])
                   })
@@ -186,16 +179,11 @@ export const resolvers = {
             })
             .then(async () =>
               //Write Auth0 ID of Admin to Neo4j DB
-              session.run(cypher.setMemberAuthId, {
+              session.run(cypher.setBishopAdmin, {
                 id: admin.id,
-                auth_id: admin.auth_id,
-              })
-            )
-            .then(async () =>
-              //Create Relationship Between admin and bishops
-              session.run(cypher.mergeMemberIsBishopAdminFor, {
-                adminId: args.from.id,
                 bishopId: args.to.id,
+                auth_id: admin.auth_id,
+                cypherParams: context.cypherParams,
               })
             )
         })
@@ -221,14 +209,13 @@ export const resolvers = {
           //Check for AuthID of Admin
           axios(getAuthIdConfig(admin))
             .then(async (res) => {
-              admin.auth_id = res.data[0]?.identities[0]?.user_id
+              admin.auth_id = res.data[0]?.user_id
 
-              console.log(admin)
               if (!admin.auth_id) {
                 //If admin Does Not Have Auth0 Profile, Create One
                 axios(createAuthUserConfig(admin))
                   .then((res) => {
-                    const auth_id = res.data[0]?.identities[0]?.user_id
+                    const auth_id = res.data[0]?.user_id
                     const roles = []
                     assignRoles(auth_id, roles, [
                       authRoles.constituencyAdmin.id,
@@ -255,28 +242,87 @@ export const resolvers = {
             })
             .then(async () =>
               //Write Auth0 ID of Admin to Neo4j DB
-              session.run(cypher.setMemberAuthId, {
-                id: admin.id,
+              session.run(cypher.setTownAdmin, {
+                adminId: admin.id,
+                townId: args.to.id,
                 auth_id: admin.auth_id,
+                cypherParams: context.cypherParams,
               })
             )
             .catch((err) =>
-              console.error(
-                'There was an error obtaining the auth Id ',
-                err.response
-              )
+              console.error('There was an error obtaining the auth Id ', err)
             )
         })
-        .then(async () =>
-          session.run(cypher.mergeMemberIsTownAdminFor, {
-            adminId: args.from.id,
-            townId: args.to.id,
-          })
-        )
 
       return {
         from: admin,
         to: town,
+      }
+    },
+    MergeMemberIsCampusAdminFor: async (object, args, context) => {
+      const session = context.driver.session()
+      let admin = {}
+      let campus = { id: args.to.id }
+
+      await session
+        .run(cypher.matchMemberQuery, args)
+        .then(async (response) => {
+          // Rearrange member object
+          response.records[0].keys.forEach(
+            (key, i) => (admin[key] = response.records[0]._fields[i])
+          )
+
+          //Check for AuthID of Admin
+          axios(getAuthIdConfig(admin))
+            .then(async (res) => {
+              admin.auth_id = res.data[0]?.user_id
+
+              if (!admin.auth_id) {
+                //If admin Does Not Have Auth0 Profile, Create One
+                axios(createAuthUserConfig(admin))
+                  .then((res) => {
+                    const auth_id = res.data[0]?.user_id
+                    const roles = []
+                    assignRoles(auth_id, roles, [
+                      authRoles.constituencyAdmin.id,
+                    ])
+                  })
+                  .catch((err) => console.error('Error Creating User', err))
+              } else if (admin.auth_id) {
+                //Check auth0 roles and add roles 'constituencyAdmin'
+                axios(getUserRoles(admin.auth_id))
+                  .then((res) => {
+                    const roles = res.data.map((role) => role.name)
+
+                    assignRoles(admin.auth_id, roles, [
+                      authRoles.constituencyAdmin.id,
+                    ])
+                  })
+                  .catch((error) =>
+                    console.error(
+                      'getUserRoles Failed to Run. Check Error',
+                      error
+                    )
+                  )
+              }
+            })
+            .then(async () =>
+              //Write Auth0 ID of Admin to Neo4j DB
+              session.run(cypher.setCampusAdmin, {
+                adminId: admin.id,
+                campusId: args.to.id,
+                auth_id: admin.auth_id,
+                cypherParams: context.cypherParams,
+              })
+            )
+            .catch((err) =>
+              console.error('There was an error obtaining the auth Id ', err)
+            )
+        })
+
+      return {
+        from: admin,
+        to: campus,
       }
     },
   },

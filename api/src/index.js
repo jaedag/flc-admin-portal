@@ -6,6 +6,7 @@ import { makeAugmentedSchema, assertSchema } from 'neo4j-graphql-js'
 import dotenv from 'dotenv'
 import { initializeDatabase } from './initialize'
 import { resolvers } from './resolvers'
+import jwt from 'express-jwt'
 
 // set environment variables from .env
 dotenv.config()
@@ -79,7 +80,14 @@ init(driver)
  */
 const server = new ApolloServer({
   context: ({ req }) => {
-    return { req, driver, neo4jDatabase: process.env.NEO4J_DATABASE }
+    return {
+      req,
+      driver,
+      cypherParams: {
+        user_authId: req?.user?.sub,
+      },
+      neo4jDatabase: process.env.NEO4J_DATABASE,
+    }
   },
   schema: schema,
   introspection: true,
@@ -90,6 +98,14 @@ const server = new ApolloServer({
 const port = process.env.GRAPHQL_SERVER_PORT || 4001
 const path = process.env.GRAPHQL_SERVER_PATH || '/graphql'
 const host = process.env.GRAPHQL_SERVER_HOST || '0.0.0.0'
+
+app.use(
+  jwt({
+    secret: process.env.JWT_SECRET,
+    algorithms: ['RS256'],
+    credentialsRequired: false,
+  })
+)
 
 /*
  * Optionally, apply Express middleware for authentication, etc

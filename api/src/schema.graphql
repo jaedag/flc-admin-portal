@@ -1,6 +1,6 @@
 type Member {
   id: ID! @id
-  auth_id: String
+  auth_id: String @index
   firstName: String @index #@search
   middleName: String
   lastName: String @index
@@ -715,14 +715,20 @@ type Mutation {
         log.id =  apoc.create.uuid(),
         log.timeStamp = time(),
         log.historyRecord = $firstName + $lastName+' was registered on '+toString(date())
+
       MERGE (date:TimeGraph {date: date()})
-      	  MERGE (log)-[:RECORDED_ON]->(date)
+
+      WITH member, log
+      MATCH (currentUser:Member {auth_id:$cypherParams.user_authId})
+      MERGE (log)-[:RECORDED_ON]->(date)
+      MERGE (log)-[:LOGGED_BY]->(currentUser)
+
       WITH member
       MATCH (maritalStatus:MaritalStatus {status:$maritalStatus})
       MATCH (gender:Gender {gender: $gender})
 
-        MERGE (member)-[:HAS_MARITAL_STATUS]-> (maritalStatus)
-        MERGE (member)-[:HAS_GENDER]-> (gender)
+      MERGE (member)-[:HAS_MARITAL_STATUS]-> (maritalStatus)
+      MERGE (member)-[:HAS_GENDER]-> (gender)
 
       WITH member
          CALL {
@@ -771,6 +777,7 @@ type Mutation {
       	town.id = apoc.create.uuid()
       WITH town
       MATCH (leader:Member {id: $leaderId})
+      MATCH (currentUser:Member {auth_id:$cypherParams.user_authId})
       MATCH (bishop:Member {id: $id})
 
        CREATE (log:HistoryLog)
@@ -782,6 +789,7 @@ type Mutation {
       MERGE (bishop)-[:HAS_TOWN]->(town)
       MERGE (leader)-[:LEADS]->(town)
 
+      MERGE (log)-[:LOGGED_BY]->(currentUser)
       MERGE (log)-[:RECORDED_ON]->(date)
       MERGE (bishop)-[:HAS_HISTORY]->(log)
       MERGE (town)-[:HAS_HISTORY]->(log)
@@ -798,6 +806,7 @@ type Mutation {
       	campus.id = apoc.create.uuid()
       WITH campus
       MATCH (leader:Member {id: $leaderId})
+      MATCH (currentUser:Member {auth_id:$cypherParams.user_authId})
       MATCH (bishop:Member {id: $id})
 
        CREATE (log:HistoryLog)
@@ -809,6 +818,7 @@ type Mutation {
       MERGE (bishop)-[:HAS_CAMPUS]->(campus)
       MERGE (leader)-[:LEADS]->(campus)
 
+      MERGE (log)-[:LOGGED_BY]->(currentUser)
       MERGE (log)-[:RECORDED_ON]->(date)
       MERGE (bishop)-[:HAS_HISTORY]->(log)
       MERGE (campus)-[:HAS_HISTORY]->(log)
@@ -826,6 +836,7 @@ type Mutation {
       	centre.id = apoc.create.uuid()
       WITH centre
        MATCH (leader:Member {id: $leaderId})
+       MATCH (currentUser:Member {auth_id:$cypherParams.user_authId})
        MATCH (campusTown {id:$townCampusId}) WHERE campusTown:Town OR campusTown:Campus
        UNWIND labels(campusTown) AS typename
 
@@ -838,6 +849,7 @@ type Mutation {
        MERGE (campusTown)-[:HAS_CENTRE]->(centre)
        MERGE (leader)-[:LEADS]->(centre)
 
+       MERGE (log)-[:LOGGED_BY]->(currentUser)
        MERGE (log)-[:RECORDED_ON]->(date)
        MERGE (campusTown)-[:HAS_HISTORY]->(log)
        MERGE (centre)-[:HAS_HISTORY]->(log)
@@ -854,6 +866,7 @@ type Mutation {
       	sonta.id = apoc.create.uuid()
       WITH sonta
        MATCH (leader:Member {id: $leaderId})
+       MATCH (currentUser:Member {auth_id:$cypherParams.user_authId})
        MATCH (ministry:Ministry {id:$ministryId})
        MATCH (campusTown {id:$townCampusId}) WHERE campusTown:Town OR campusTown:Campus
        UNWIND labels(campusTown) AS typename
@@ -869,6 +882,7 @@ type Mutation {
        MERGE (campusTown)-[:HAS_SONTA]->(sonta)
        MERGE (leader)-[:LEADS]->(sonta)
 
+       MERGE (log)-[:LOGGED_BY]->(currentUser)
        MERGE (log)-[:RECORDED_ON]->(date)
        MERGE (campusTown)-[:HAS_HISTORY]->(log)
        MERGE (sonta)-[:HAS_HISTORY]->(log)
@@ -896,6 +910,7 @@ type Mutation {
       MATCH (centre:Centre {id: $centreId})
       MATCH (meetingDay:ServiceDay {day: $meetingDay})
       MATCH (leader:Member {id: $leaderId})
+      MATCH (currentUser:Member {auth_id:$cypherParams.user_authId})
 
         CREATE (log:HistoryLog:ServiceLog)
          SET
@@ -907,6 +922,7 @@ type Mutation {
         MERGE (bacenta)-[:MEETS_ON]->(meetingDay)
         MERGE (leader)-[:LEADS]->(bacenta)
 
+        MERGE (log)-[:LOGGED_BY]->(currentUser)
         MERGE (log)-[:RECORDED_ON]->(date)
         MERGE (leader)-[r:HAS_HISTORY]->(log)
         MERGE (centre)-[:HAS_HISTORY]->(log)
@@ -1159,17 +1175,18 @@ type Mutation {
     newLeaderId: ID
     oldCentreId: ID
     newCentreId: ID
-    loggedBy: ID
   ): Bacenta
     @cypher(
       statement: """
        MATCH  (bacenta:Bacenta {id: $bacentaId})
+       MATCH (admin:Member {auth_id: $cypherParams.user_authId})
        CREATE (log:HistoryLog {id: apoc.create.uuid()})
          SET log.historyRecord = $historyRecord,
            log.timeStamp = time()
        MERGE (date:TimeGraph {date: date()})
        MERGE (bacenta)-[r:HAS_HISTORY]->(log)
        MERGE (log)-[:RECORDED_ON]->(date)
+       MERGE (log)-[:LOGGED_BY]->(admin)
 
        WITH log,bacenta
        CALL{
@@ -1207,15 +1224,6 @@ type Mutation {
          RETURN COUNT(log)
        }
 
-       WITH log,bacenta
-       CALL {
-         WITH log
-         WITH log WHERE $loggedBy IS NOT NULL
-         MATCH (admin:Member {id: $loggedBy})
-         MERGE (log)-[:LOGGED_BY]->(admin)
-         RETURN COUNT(log)
-       }
-
        RETURN bacenta
       """
     )
@@ -1226,17 +1234,18 @@ type Mutation {
     oldLeaderId: ID
     newCampusTownId: ID
     oldCampusTownId: ID
-    loggedBy: ID
   ): Centre
     @cypher(
       statement: """
        MATCH  (centre:Centre {id: $centreId})
+       MATCH (admin:Member {auth_id: $cypherParams.user_authId})
        CREATE (log:HistoryLog {id: apoc.create.uuid()})
          SET log.historyRecord = $historyRecord,
            log.timeStamp = time()
        MERGE (date:TimeGraph {date: date()})
        MERGE (centre)-[r:HAS_HISTORY]->(log)
        MERGE (log)-[:RECORDED_ON]->(date)
+        MERGE (log)-[:LOGGED_BY]->(admin)
 
        WITH log,centre
        CALL{
@@ -1275,15 +1284,6 @@ type Mutation {
          RETURN COUNT(log)
        }
 
-       WITH log,centre
-       CALL {
-         WITH log
-         WITH log WHERE $loggedBy IS NOT NULL
-         MATCH (admin:Member {id: $loggedBy})
-         MERGE (log)-[:LOGGED_BY]->(admin)
-         RETURN COUNT(log)
-       }
-
        RETURN centre
       """
     )
@@ -1294,17 +1294,18 @@ type Mutation {
     oldLeaderId: ID
     newBishopId: ID
     oldBishopId: ID
-    loggedBy: ID
   ): Campus
     @cypher(
       statement: """
       MATCH  (campusTown {id: $campusTownId}) WHERE campusTown:Campus OR campusTown:Town
+      MATCH (admin:Member {auth_id: $cypherParams.user_authId})
       CREATE (log:HistoryLog {id: apoc.create.uuid()})
         SET log.historyRecord = $historyRecord,
           log.timeStamp = time()
       MERGE (date:TimeGraph {date: date()})
       MERGE (campusTown)-[r:HAS_HISTORY]->(log)
       MERGE (log)-[:RECORDED_ON]->(date)
+      MERGE (log)-[:LOGGED_BY]->(admin)
 
       WITH log,campusTown
       CALL{
@@ -1350,15 +1351,6 @@ type Mutation {
         RETURN COUNT(log)
       }
 
-      WITH log,campusTown
-       CALL {
-         WITH log
-         WITH log WHERE $loggedBy IS NOT NULL
-         MATCH (admin:Member {id: $loggedBy})
-         MERGE (log)-[:LOGGED_BY]->(admin)
-         RETURN COUNT(log)
-       }
-
       RETURN campusTown
       """
     )
@@ -1369,17 +1361,18 @@ type Mutation {
     oldLeaderId: ID
     newCampusTownId: ID
     oldCampusTownId: ID
-    loggedBy: ID
   ): Sonta
     @cypher(
       statement: """
        MATCH  (sonta:Sonta {id: $sontaId})
+       MATCH (admin:Member {auth_id: $cypherParams.user_authId})
        CREATE (log:HistoryLog {id: apoc.create.uuid()})
          SET log.historyRecord = $historyRecord,
            log.timeStamp = time()
        MERGE (date:TimeGraph {date: date()})
        MERGE (sonta)-[r:HAS_HISTORY]->(log)
        MERGE (log)-[:RECORDED_ON]->(date)
+       MERGE (log)-[:LOGGED_BY]->(admin)
 
        WITH log,sonta
        CALL{
@@ -1415,15 +1408,6 @@ type Mutation {
          WITH log WHERE $newCampusTownId IS NOT NULL
          MATCH (campusTown {id: $newCampusTownId}) WHERE campusTown:Town OR campusTown:Campus
          MERGE (campusTown)-[:HAS_HISTORY]->(log)
-         RETURN COUNT(log)
-       }
-
-       WITH log,sonta
-       CALL {
-         WITH log
-         WITH log WHERE $loggedBy IS NOT NULL
-         MATCH (admin:Member {id: $loggedBy})
-         MERGE (log)-[:LOGGED_BY]->(admin)
          RETURN COUNT(log)
        }
 

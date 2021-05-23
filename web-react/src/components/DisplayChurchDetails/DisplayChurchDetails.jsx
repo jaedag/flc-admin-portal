@@ -55,7 +55,7 @@ const DisplayChurchDetails = (props) => {
   }
   const initialValues = {
     adminName: admin ? `${admin?.firstName} ${admin.lastName}` : '',
-    adminSelect: admin.id ?? '',
+    adminSelect: admin?.id ?? '',
   }
   const validationSchema = Yup.object({
     adminSelect: Yup.string().required(

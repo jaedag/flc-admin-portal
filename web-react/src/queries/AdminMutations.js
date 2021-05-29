@@ -2,8 +2,11 @@ import { gql } from '@apollo/client'
 
 export const MAKE_BISHOP_ADMIN = gql`
   mutation($bishopId: ID!, $adminId: ID!) {
-    AddMemberHasAdmin(from: { id: $adminId }, to: { id: $bishopId }) {
+    MergeMemberIsBishopAdminFor(to: { id: $bishopId }, from: { id: $adminId }) {
       to {
+        id
+      }
+      from {
         id
         firstName
         lastName
@@ -37,10 +40,14 @@ export const REMOVE_TOWN_ADMIN = gql`
 
 export const MAKE_TOWN_ADMIN = gql`
   mutation($townId: ID!, $adminId: ID!) {
-    AddTownAdmin(from: { id: $adminId }, to: { id: $townId }) {
+    MergeMemberIsTownAdminFor(to: { id: $townId }, from: { id: $adminId }) {
       to {
         id
-        name
+      }
+      from {
+        id
+        firstName
+        lastName
       }
     }
   }
@@ -59,10 +66,14 @@ export const REMOVE_CAMPUS_ADMIN = gql`
 
 export const MAKE_CAMPUS_ADMIN = gql`
   mutation($campusId: ID!, $adminId: ID!) {
-    AddCampusAdmin(from: { id: $adminId }, to: { id: $campusId }) {
+    MergeMemberIsCampusAdminFor(to: { id: $townId }, from: { id: $adminId }) {
       to {
         id
-        name
+      }
+      from {
+        id
+        firstName
+        lastName
       }
     }
   }

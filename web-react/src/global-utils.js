@@ -117,7 +117,7 @@ export const getNameWithTitle = (Member) => {
 
   if (Member.title.length) {
     if (Member.gender.gender === 'Female') {
-      switch (Member.title[0].Title.title) {
+      switch (Member.title[0].title) {
         case 'Pastor':
           displayName.title = 'Lady Pastor'
           break
@@ -131,7 +131,7 @@ export const getNameWithTitle = (Member) => {
           break
       }
     } else {
-      displayName.title = Member.title[0].Title.title
+      displayName.title = Member.title[0].title
     }
 
     return `${displayName.title} ${displayName.name}`

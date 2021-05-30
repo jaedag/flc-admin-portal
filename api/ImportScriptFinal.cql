@@ -178,14 +178,15 @@ RETURN bishop;
 
 MERGE (m:Member {whatsappNumber: "233264248700"})
 	SET 
-    m.id = apoc.create.uuid(),
+    m.id = "6089feb8e1e3e700697f7eff",
     m.auth_id="auth0|6089feb8e1e3e700697f7eff",
     m.firstName = "John-Dag",
     m.middleName = "Nii",
     m.lastName = "Addy",
     m.phoneNumber = "233264248700",
     m.areaOfResidence = "East Legon Hills",
-    m.email = "jaedagy@gmail.com"
+    m.email = "jaedagy@gmail.com",
+    m.pictureUrl = "https://s.gravatar.com/avatar/478dfa6341f0ad7080751bcc897160b9?s=480&r=pg&d=https%3A%2F%2Fcdn.auth0.com%2Favatars%2Fja.png"
 
 WITH m
 MATCH (g: Gender {gender: "Male"})

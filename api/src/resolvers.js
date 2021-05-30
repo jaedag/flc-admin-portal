@@ -56,28 +56,43 @@ axios(getTokenConfig)
     console.error('There was an error obtaining auth token', err.data ?? err)
   )
 
-const createAuthUserConfig = (member) => ({
-  method: 'post',
-  baseURL: baseURL,
-  url: `/api/v2/users`,
-  headers: {
-    autho: '',
-    Authorization: `Bearer ${authToken}`,
-  },
-  data: {
-    connection: 'flcadmin',
-    email: member.email,
-    user_metadata: {
-      admin: true,
+const createAuthUserConfig = (member) => {
+  isTown = member?.bacenta?.centre?.town
+
+  return {
+    method: 'post',
+    baseURL: baseURL,
+    url: `/api/v2/users`,
+    headers: {
+      autho: '',
+      Authorization: `Bearer ${authToken}`,
     },
-    given_name: member.firstName,
-    family_name: member.lastName,
-    name: `${member.firstName} ${member.lastName}`,
-    picture: member.pictureUrl ?? '',
-    user_id: member.id,
-    password: 'rAndoMLetteRs',
-  },
-})
+    data: {
+      connection: 'flcadmin',
+      email: member.email,
+      user_metadata: {
+        stream: isTown ? 'town' : 'campus',
+        bishop: isTown
+          ? member?.bacenta?.centre?.town.bishop.id
+          : member?.bacenta?.centre?.campus.bishop.id,
+        centre: member?.bacenta?.centre,
+        constituency: isTown
+          ? member?.bacenta?.centre?.town.id
+          : member?.bacenta?.centre?.campus.id,
+        bacenta: member?.bacenta,
+      },
+      app_metadata: {
+        admin: true,
+      },
+      given_name: member.firstName,
+      family_name: member.lastName,
+      name: `${member.firstName} ${member.lastName}`,
+      picture: member.pictureUrl,
+      user_id: member.id,
+      password: 'rAndoMLetteRs',
+    },
+  }
+}
 
 const deleteAuthUserConfig = (memberId) => ({
   method: 'delete',

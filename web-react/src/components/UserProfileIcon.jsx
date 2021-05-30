@@ -40,7 +40,6 @@ function UserProfileIcon() {
     if (!currentUser?.email?.length) {
       user && memberByEmail({ variables: { email: user.email } })
     }
-    // console.log('user', user)
 
     // eslint-disable-next-line
   }, [isAuthenticated])

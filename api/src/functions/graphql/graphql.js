@@ -62,7 +62,7 @@ const server = new ApolloServer({
     })
 
     const decoded = await authResult
-    // console.log(events)
+    console.log(event)
 
     return {
       driver,

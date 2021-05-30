@@ -32,8 +32,8 @@ const BishopDashboard = () => {
 
   //Change Admin Initialised
   const [isOpen, setIsOpen] = useState(false)
-  const [AddMemberHasAdmin] = useMutation(MAKE_BISHOP_ADMIN)
-  const [RemoveMemberHasAdmin] = useMutation(REMOVE_BISHOP_ADMIN)
+  const [MergeMemberIsBishopAdminFor] = useMutation(MAKE_BISHOP_ADMIN)
+  const [RemoveMemberIsBishopAdminFor] = useMutation(REMOVE_BISHOP_ADMIN)
   const togglePopup = () => {
     setIsOpen(!isOpen)
   }
@@ -49,19 +49,19 @@ const BishopDashboard = () => {
     ),
   })
   const onSubmit = (values, onSubmitProps) => {
-    RemoveMemberHasAdmin({
+    RemoveMemberIsBishopAdminFor({
       variables: {
         bishopId: bishopId,
         adminId: initialValues.adminSelect,
       },
-    })
+    }).catch((err) => alert(err))
 
-    AddMemberHasAdmin({
+    MergeMemberIsBishopAdminFor({
       variables: {
         bishopId: bishopId,
         adminId: values.adminSelect,
       },
-    })
+    }).catch((err) => alert(err))
 
     onSubmitProps.setSubmitting(false)
     onSubmitProps.resetForm()

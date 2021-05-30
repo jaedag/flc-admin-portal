@@ -17,7 +17,10 @@ export const MAKE_BISHOP_ADMIN = gql`
 
 export const REMOVE_BISHOP_ADMIN = gql`
   mutation($bishopId: ID!, $adminId: ID!) {
-    RemoveMemberHasAdmin(from: { id: $adminId }, to: { id: $bishopId }) {
+    RemoveMemberIsBishopAdminFor(
+      from: { id: $adminId }
+      to: { id: $bishopId }
+    ) {
       from {
         id
         firstName
@@ -29,7 +32,7 @@ export const REMOVE_BISHOP_ADMIN = gql`
 
 export const REMOVE_TOWN_ADMIN = gql`
   mutation($townId: ID!, $adminId: ID!) {
-    RemoveTownAdmin(from: { id: $adminId }, to: { id: $townId }) {
+    RemoveMemberIsTownAdminFor(from: { id: $adminId }, to: { id: $townId }) {
       tow {
         id
         name
@@ -55,7 +58,10 @@ export const MAKE_TOWN_ADMIN = gql`
 
 export const REMOVE_CAMPUS_ADMIN = gql`
   mutation($campusId: ID!, $adminId: ID!) {
-    RemoveCampusAdmin(from: { id: $adminId }, to: { id: $campusId }) {
+    RemoveMemberIsCampusAdminFor(
+      from: { id: $adminId }
+      to: { id: $campusId }
+    ) {
       to {
         id
         name

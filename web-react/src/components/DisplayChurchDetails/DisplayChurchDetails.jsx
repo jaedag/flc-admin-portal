@@ -11,7 +11,7 @@ import './DisplayChurchDetails.css'
 import RoleView from '../../auth/RoleView'
 import { Form, Formik } from 'formik'
 import * as Yup from 'yup'
-import Popup from '../Popupses/Popup'
+import Popup from '../Popup/Popup'
 import { BISHOP_MEMBER_DROPDOWN } from '../../queries/ListQueries'
 import { useMutation } from '@apollo/client'
 import {

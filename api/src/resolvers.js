@@ -9,9 +9,9 @@ let authToken
 let authRoles = {}
 const errorHandling = (member) => {
   if (!member.email) {
-    throw 'member must have a valid email address'
+    throw `${member.firstName} ${member.lastName} does not have a valid email address`
   } else if (!member.pictureUrl) {
-    throw 'member must have a valid picture url'
+    throw `${member.firstName} ${member.lastName} does not have a valid picture`
   }
 }
 
@@ -570,9 +570,6 @@ export const resolvers = {
                   )
               }
             })
-            // .then(async (res) => {
-            //   console.log(res)
-            // })
             .catch((err) =>
               console.error(
                 'There was an error obtaining the auth Id ',

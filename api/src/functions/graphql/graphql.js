@@ -51,9 +51,6 @@ const server = new ApolloServer({
           algorithms: ['RS256'],
         },
         (error, decoded) => {
-          console.log('error', error)
-          console.log('env', process.env.JWT_SECRET.replace(/\\n/gm, '\n'))
-          console.log('decoded', decoded)
           if (error) {
             reject({ error })
           }
@@ -70,7 +67,7 @@ const server = new ApolloServer({
       driver,
       req: event,
       cypherParams: {
-        userId: decoded.sub,
+        user_authId: decoded.sub,
       },
     }
   },

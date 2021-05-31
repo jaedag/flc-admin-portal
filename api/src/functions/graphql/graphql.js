@@ -179,6 +179,7 @@ const schema = makeAugmentedSchema({
       hasScope: true,
     },
   },
+  schemaDirectives: { hasScope: MyHasScopeDirective },
 })
 
 assertSchema({ schema, driver, debug: true })

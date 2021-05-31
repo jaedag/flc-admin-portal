@@ -52,8 +52,8 @@ const server = new ApolloServer({
         },
         (error, decoded) => {
           console.log('error', error)
-          console.log('env', process.env.JWT_SECRET)
-          // console.log('decoded', decoded)
+          console.log('env', process.env.JWT_SECRET.replace(/\\n/gm, '\n'))
+          console.log('decoded', decoded)
           if (error) {
             reject({ error })
           }
@@ -65,7 +65,6 @@ const server = new ApolloServer({
     })
 
     const decoded = await authResult
-    console.log(event)
 
     return {
       driver,
@@ -75,8 +74,8 @@ const server = new ApolloServer({
       },
     }
   },
-  introspection: true,
-  playground: true,
+  introspection: false,
+  playground: false,
 })
 
 exports.handler = server.createHandler()

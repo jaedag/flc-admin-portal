@@ -1,7 +1,7 @@
 // This module can be used to serve the GraphQL endpoint
 // as a lambda function
 
-const { ApolloServer } = require('apollo-server-lambda')
+const { ApolloServer, SchemaDirectiveVisitor } = require('apollo-server-lambda')
 const { makeAugmentedSchema, assertSchema } = require('neo4j-graphql-js')
 const neo4j = require('neo4j-driver')
 const jwt = require('jsonwebtoken')

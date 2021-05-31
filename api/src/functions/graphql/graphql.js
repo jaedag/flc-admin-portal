@@ -46,13 +46,14 @@ const server = new ApolloServer({
     const authResult = new Promise((resolve, reject) => {
       jwt.verify(
         token,
-        process.env.JWT_SECRET,
+        process.env.JWT_SECRET,//.replace(/\\n/gm, '\n'),
         {
           algorithms: ['RS256'],
         },
         (error, decoded) => {
           console.log('error', error)
-          console.log('decoded', decoded)
+          console.log('env', process.env.JWT_SECRET)
+          // console.log('decoded', decoded)
           if (error) {
             reject({ error })
           }

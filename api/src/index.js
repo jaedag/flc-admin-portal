@@ -101,7 +101,7 @@ const host = process.env.GRAPHQL_SERVER_HOST || '0.0.0.0'
 
 app.use(
   jwt({
-    secret: process.env.JWT_SECRET,
+    secret: process.env.JWT_SECRET.replace(/\\n/gm, '\n'),
     algorithms: ['RS256'],
     credentialsRequired: false,
   })

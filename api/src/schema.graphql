@@ -221,16 +221,18 @@ type Basonta {
 
 #Query Definitions
 type Query {
+  Member: [Member] @hasScope(scopes: ["Member:Read"])
   #At the Federal Level
   bishopsList: [Member]
     @cypher(
       statement: "MATCH ()<-[:HAS_CAMPUS|:HAS_TOWN]-(bishop:Member) RETURN DISTINCT bishop"
     )
-    @hasScope(scopes: ['Member:Read'])
+    @hasScope(scopes: ["Bishop:Read"])
   bishopsListCampus: [Member]
     @cypher(
       statement: "MATCH ()<-[:HAS_CAMPUS]-(bishop:Member) RETURN DISTINCT bishop"
     )
+    @isAuthenticated
   bishopsListTown: [Member]
     @cypher(
       statement: "MATCH ()<-[:HAS_TOWN]-(bishop:Member) RETURN DISTINCT bishop"

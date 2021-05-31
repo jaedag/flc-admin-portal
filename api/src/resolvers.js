@@ -40,7 +40,7 @@ axios(getTokenConfig)
         Authorization: `Bearer ${authToken}`,
       },
     }
-    console.log('auth token obtained')
+    console.log('auth0 token obtained')
     axios(getRolesConfig).then((res) => {
       res.data.forEach(
         (role) =>

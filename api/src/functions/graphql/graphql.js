@@ -52,6 +52,8 @@ const server = new ApolloServer({
         },
         (error, decoded) => {
           if (error) {
+            // eslint-disable-next-line
+            console.log('error', error)
             reject({ error })
           }
           if (decoded) {

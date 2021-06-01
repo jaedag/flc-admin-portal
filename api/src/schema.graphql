@@ -230,12 +230,10 @@ type Query {
     @cypher(
       statement: "MATCH ()<-[:HAS_CAMPUS]-(bishop:Member) RETURN DISTINCT bishop"
     )
-    @isAuthenticated
   bishopsListTown: [Member]
     @cypher(
       statement: "MATCH ()<-[:HAS_TOWN]-(bishop:Member) RETURN DISTINCT bishop"
     )
-    @hasScope(scopes: ["Bishop: Read"])
   ministryList: [Ministry]
     @cypher(statement: "MATCH (ministry:Ministry) RETURN ministry")
   memberCount: Int!

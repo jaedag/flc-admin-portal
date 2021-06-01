@@ -226,7 +226,7 @@ type Query {
     @cypher(
       statement: "MATCH ()<-[:HAS_CAMPUS|:HAS_TOWN]-(bishop:Member) RETURN DISTINCT bishop"
     )
-    @hasScope(scopes: ["Bishop: Read"])
+    @hasScope(scopes: ["Member: Read"])
   bishopsListCampus: [Member]
     @cypher(
       statement: "MATCH ()<-[:HAS_CAMPUS]-(bishop:Member) RETURN DISTINCT bishop"

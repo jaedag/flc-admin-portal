@@ -45,11 +45,10 @@ const server = new ApolloServer({
       }
     }
 
-    const { privateKey } = JSON.parse(process.env.JWT_SECRET)
     const authResult = new Promise((resolve, reject) => {
       jwt.verify(
         token,
-        privateKey,
+        process.env.JWT_SECRET.replace(/\\n/gm, '\n'),
         {
           algorithms: ['RS256'],
         },

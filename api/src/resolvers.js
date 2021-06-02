@@ -8,8 +8,7 @@ const baseURL = 'https://flcadmin.us.auth0.com/'
 let authToken
 let authRoles = {}
 
-const { privateKey } = JSON.parse(process.env.JWT_SECRET)
-console.log(privateKey)
+console.log('jwt secret', process.env.JWT_SECRET)
 
 const errorHandling = (member) => {
   if (!member.email) {

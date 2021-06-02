@@ -45,14 +45,11 @@ const driver = neo4j.driver(
   neo4j.auth.basic(
     process.env.NEO4J_USER || 'jd_addy',
     process.env.NEO4J_PASSWORD || 'letmein'
-  ),
-  {
-    encrypted: process.env.NEO4J_ENCRYPTED ? 'ENCRYPTION_ON' : 'ENCRYPTION_OFF',
-  }
+  )
 )
 
 assertSchema({ schema, driver, debug: true })
-
+console.log(process.env.NEO4J_URI)
 /*
  * Perform any database initialization steps such as
  * creating constraints or ensuring indexes are online

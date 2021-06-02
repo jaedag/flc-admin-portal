@@ -49,7 +49,7 @@ const driver = neo4j.driver(
 )
 
 assertSchema({ schema, driver, debug: true })
-console.log(process.env.NEO4J_URI)
+
 /*
  * Perform any database initialization steps such as
  * creating constraints or ensuring indexes are online
@@ -103,7 +103,7 @@ app.use(
     credentialsRequired: false,
   })
 )
-
+console.log(process.env.JWT_SECRET)
 /*
  * Optionally, apply Express middleware for authentication, etc
  * This also also allows us to specify a path for the GraphQL endpoint

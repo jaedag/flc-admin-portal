@@ -44,6 +44,8 @@ const server = new ApolloServer({
         driver,
       }
     }
+    console.log(process.env.JWT_SECRET)
+    console.log(process.env.JWT_SECRET.replace(/\\n/gm, '\n'))
 
     const authResult = new Promise((resolve, reject) => {
       jwt.verify(

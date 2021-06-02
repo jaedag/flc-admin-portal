@@ -96,9 +96,10 @@ const port = process.env.GRAPHQL_SERVER_PORT || 4001
 const path = process.env.GRAPHQL_SERVER_PATH || '/graphql'
 const host = process.env.GRAPHQL_SERVER_HOST || '0.0.0.0'
 
+const { privateKey } = JSON.parse(process.env.JWT_SECRET)
 app.use(
   jwt({
-    secret: process.env.JWT_SECRET.replace(/\\n/gm, '\n'),
+    secret: privateKey,
     algorithms: ['RS256'],
     credentialsRequired: false,
   })

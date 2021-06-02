@@ -103,7 +103,7 @@ app.use(
     credentialsRequired: false,
   })
 )
-console.log(process.env.JWT_SECRET)
+
 /*
  * Optionally, apply Express middleware for authentication, etc
  * This also also allows us to specify a path for the GraphQL endpoint

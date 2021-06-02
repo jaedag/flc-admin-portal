@@ -7,6 +7,9 @@ dotenv.config()
 const baseURL = 'https://flcadmin.us.auth0.com/'
 let authToken
 let authRoles = {}
+
+console.log(process.env.JWT_SECRET)
+console.log(process.env.JWT_SECRET.replace(/\\n/gm, '\n'))
 const errorHandling = (member) => {
   if (!member.email) {
     throw `${member.firstName} ${member.lastName} does not have a valid email address`

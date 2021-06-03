@@ -66,7 +66,7 @@ const server = new ApolloServer({
     })
 
     const decoded = await authResult
-    console.log(decoded, 'decoded')
+
     return {
       driver,
       req: event,
@@ -79,4 +79,5 @@ const server = new ApolloServer({
   playground: false,
 })
 
+console.log(server)
 exports.handler = server.createHandler()

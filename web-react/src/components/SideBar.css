@@ -1,0 +1,20 @@
+.sidebar {
+  background-color: var(--body-bg-color);
+  height: 100vh;
+  position: fixed;
+  width: 25%;
+  max-width: 307px;
+  min-width: 255px;
+  border-right: 1px solid var(--border-color);
+}
+
+@media (max-width: var(--breakpoint-md)) {
+  .filter-mobile {
+    background-color: none;
+    width: 100%;
+    max-width: 100%;
+    min-width: 100%;
+    position: relative;
+    border-right: none;
+  }
+}

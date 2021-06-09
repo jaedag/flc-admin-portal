@@ -14,7 +14,7 @@ const BishopMembers = () => {
     <MembersGrid
       title={
         data
-          ? `Bishop ${data?.displayMember?.firstName} ${data?.displayMember?.lastName}`
+          ? `Bishop ${data?.members[0]?.firstName} ${data?.members[0]?.lastName}`
           : null
       }
       memberData={data && data.bishopMemberList}

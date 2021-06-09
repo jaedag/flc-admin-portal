@@ -6,13 +6,8 @@ import userIcon from '../img/user.png'
 import './MemberTable.css'
 
 const MemberTable = (props) => {
-  const {
-    memberData,
-    memberError,
-    memberLoading,
-    offset,
-    numberOfRecords,
-  } = props
+  const { memberData, memberError, memberLoading, offset, numberOfRecords } =
+    props
 
   const { clickCard } = useContext(ChurchContext)
   const history = useHistory()

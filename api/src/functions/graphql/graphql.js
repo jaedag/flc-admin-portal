@@ -2,14 +2,12 @@
 // as a lambda function
 
 const { ApolloServer } = require('apollo-server-lambda')
-const { makeAugmentedSchema, assertSchema } = require('neo4j-graphql-js')
+import { Neo4jGraphQL } from '@neo4j/graphql'
 const neo4j = require('neo4j-driver')
-const jwt = require('jsonwebtoken')
 
 // This module is copied during the build step
 // Be sure to run `npm run build`
 const { typeDefs } = require('./graphql-schema')
-const { resolvers } = require('../../resolvers')
 
 const driver = neo4j.driver(
   process.env.NEO4J_URI || 'bolt://localhost:7687',
@@ -19,64 +17,11 @@ const driver = neo4j.driver(
   )
 )
 
-const schema = makeAugmentedSchema({
-  typeDefs,
-  resolvers,
-  config: {
-    query: true,
-    mutation: true,
-    auth: {
-      isAuthenticated: true,
-      hasScope: true,
-    },
-  },
-})
-
-assertSchema({ schema, driver, debug: true })
+const neoSchema = new Neo4jGraphQL({ typeDefs, driver })
 
 const server = new ApolloServer({
-  schema: schema,
-  context: async ({ event }) => {
-    const token = event.headers?.authorization?.slice(7)
-
-    if (!token) {
-      return {
-        driver,
-      }
-    }
-
-    const authResult = new Promise((resolve, reject) => {
-      jwt.verify(
-        token,
-        process.env.JWT_SECRET.replace(/\\n/gm, '\n'),
-        {
-          algorithms: ['RS256'],
-        },
-        (error, decoded) => {
-          if (error) {
-            // eslint-disable-next-line
-            console.log('error', error)
-            reject({ error })
-          }
-          if (decoded) {
-            resolve(decoded)
-          }
-        }
-      )
-    })
-
-    const decoded = await authResult
-
-    return {
-      driver,
-      req: event,
-      cypherParams: {
-        user_authId: decoded.sub,
-      },
-    }
-  },
-  introspection: false,
-  playground: false,
+  schema: neoSchema.schema,
+  context: { driver, neo4jDatabase: process.env.NEO4J_DATABASE },
 })
 
 exports.handler = server.createHandler()

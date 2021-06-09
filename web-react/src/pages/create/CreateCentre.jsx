@@ -6,8 +6,8 @@ import * as Yup from 'yup'
 import FormikControl from '../../components/formik-components/FormikControl'
 
 import {
-  GET_CAMPUSES,
-  GET_TOWNS,
+  GET_BISHOP_CAMPUSES,
+  GET_BISHOP_TOWNS,
   BISHOP_BACENTA_DROPDOWN,
   GET_CAMPUS_CENTRES,
   GET_TOWN_CENTRES,
@@ -30,9 +30,8 @@ function CreateCentre() {
     bacentas: [''],
   }
 
-  const { church, bishopId, setTownId, setCampusId, setCentreId } = useContext(
-    ChurchContext
-  )
+  const { church, bishopId, setTownId, setCampusId, setCentreId } =
+    useContext(ChurchContext)
   const history = useHistory()
 
   const validationSchema = Yup.object({
@@ -53,11 +52,14 @@ function CreateCentre() {
     ],
   })
 
-  const { data: townListData, loading: townListLoading } = useQuery(GET_TOWNS, {
-    variables: { id: bishopId },
-  })
+  const { data: townListData, loading: townListLoading } = useQuery(
+    GET_BISHOP_TOWNS,
+    {
+      variables: { id: bishopId },
+    }
+  )
   const { data: campusListData, loading: campusListLoading } = useQuery(
-    GET_CAMPUSES,
+    GET_BISHOP_CAMPUSES,
     {
       variables: { id: bishopId },
     }

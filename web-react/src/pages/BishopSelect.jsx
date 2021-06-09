@@ -14,8 +14,8 @@ const BishopSelect = () => {
   const { data, loading } = useQuery(GET_BISHOPS)
 
   const history = useHistory()
-  const version = 'v0.2.2'
-
+  const version = 'v0.3.0'
+  //Migrating to new Neo4jGraphQL Library
   if (loading) {
     return (
       <>
@@ -92,7 +92,7 @@ const BishopSelect = () => {
           <h5 className="text-secondary">Select Your Bishop</h5>
         </div>
         <div className="row row-cols-sm-1 row-cols-lg-4 d-flex justify-content-center px-5">
-          {data.bishopsList.map((bishop, index) => {
+          {data.members.map((bishop, index) => {
             return (
               <div
                 key={index}
@@ -112,7 +112,7 @@ const BishopSelect = () => {
                     <h5 className="mt-0">{`${bishop.firstName} ${bishop.lastName}`}</h5>
                     <div>
                       <span className="text-muted">
-                        {bishop.townBishop[0] ? 'Town' : 'Campus'}
+                        {/* {bishop.townBishop[0] ? 'Town' : 'Campus'} */}
                       </span>
                     </div>
                   </div>

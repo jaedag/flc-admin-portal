@@ -13,20 +13,20 @@ function UserProfileIcon() {
   const { currentUser, setCurrentUser } = useContext(MemberContext)
   const [memberByEmail] = useLazyQuery(GET_LOGGED_IN_USER, {
     onCompleted: (data) => {
-      const isTown = data.memberByEmail.bacenta.centre?.town
+      const isTown = data.members[0].bacenta.centre?.town
 
       setCurrentUser({
         ...currentUser,
-        id: data.memberByEmail.id,
-        firstName: data.memberByEmail.firstName,
-        lastName: data.memberByEmail.lastName,
-        picture: data.memberByEmail?.pictureUrl ?? null,
+        id: data.members[0].id,
+        firstName: data.members[0].firstName,
+        lastName: data.members[0].lastName,
+        picture: data.members[0]?.pictureUrl ?? null,
         bishop: isTown
-          ? data.memberByEmail?.bacenta?.centre?.town.bishop.id
-          : data.memberByEmail?.bacenta?.centre?.campus.bishop.id,
+          ? data.members[0]?.bacenta?.centre?.town.bishop.id
+          : data.members[0]?.bacenta?.centre?.campus.bishop.id,
         constituency: isTown
-          ? data.memberByEmail?.bacenta?.centre?.town.id
-          : data.memberByEmail?.bacenta?.centre?.campus.id,
+          ? data.members[0]?.bacenta?.centre?.town.id
+          : data.members[0]?.bacenta?.centre?.campus.id,
         church: isTown
           ? { church: 'town', subChurch: 'centre' }
           : { church: 'campus', subChurch: 'centre' },
@@ -40,6 +40,7 @@ function UserProfileIcon() {
     if (!currentUser?.email?.length) {
       user && memberByEmail({ variables: { email: user.email } })
     }
+    // console.log('user', user)
 
     // eslint-disable-next-line
   }, [isAuthenticated])

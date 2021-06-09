@@ -21,42 +21,39 @@ const DisplayBacentaDetails = () => {
     // Spinner Icon for Loading Screens
     return <LoadingScreen />
   } else if (bacentaData) {
+    const bacenta = bacentaData.bacentas[0]
+
     let breadcrumb = [
-      bacentaData.displayBacenta?.centre?.town
-        ? bacentaData.displayBacenta?.centre?.town.bishop
-        : bacentaData.displayBacenta?.centre?.campus.bishop,
-      bacentaData.displayBacenta?.centre?.town
-        ? bacentaData.displayBacenta?.centre?.town
-        : bacentaData.displayBacenta?.centre?.campus,
-      bacentaData.displayBacenta?.centre,
-      bacentaData.displayBacenta,
+      bacenta?.centre?.town
+        ? bacenta?.centre?.town.bishop
+        : bacenta?.centre?.campus.bishop,
+      bacenta?.centre?.town ? bacenta?.centre?.town : bacenta?.centre?.campus,
+      bacenta?.centre,
+      bacenta,
     ]
-    if (!bacentaData.displayBacenta?.centre) {
-      breadcrumb = [bacentaData.displayBacenta]
+    if (!bacenta?.centre) {
+      breadcrumb = [bacenta]
     }
 
     return (
       <>
         <NavBar />
         <DisplayChurchDetails
-          name={bacentaData.displayBacenta?.name}
+          name={bacenta?.name}
           leaderTitle="Bacenta Leader"
           leaderName={
-            bacentaData.displayBacenta?.leader
-              ? `${bacentaData.displayBacenta.leader.firstName} ${bacentaData.displayBacenta.leader.lastName}`
+            bacenta?.leader
+              ? `${bacenta.leader.firstName} ${bacenta.leader.lastName}`
               : '-'
           }
-          leaderId={bacentaData.displayBacenta?.leader?.id}
+          leaderId={bacenta?.leader?.id}
           membership={bacentaData.bacentaMemberCount}
           churchHeading="Meeting Day"
-          churchNo={bacentaData.displayBacenta?.meetingDay?.day}
+          churchNo={bacenta?.meetingDay?.day}
           churchType="Bacenta"
           buttons={['']}
           editlink="/bacenta/editbacenta"
-          history={
-            bacentaData.displayBacenta?.history.length !== 0 &&
-            bacentaData.displayBacenta?.history
-          }
+          history={bacenta?.history.length !== 0 && bacenta?.history}
           breadcrumb={breadcrumb && breadcrumb}
         />
       </>

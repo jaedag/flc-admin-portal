@@ -9,8 +9,8 @@ import {
   GET_CENTRE_BACENTAS,
   GET_CAMPUS_CENTRES,
   GET_TOWN_CENTRES,
-  GET_TOWNS,
-  GET_CAMPUSES,
+  GET_BISHOP_TOWNS,
+  GET_BISHOP_CAMPUSES,
   BISHOP_MEMBER_DROPDOWN,
 } from '../../queries/ListQueries'
 import {
@@ -28,9 +28,8 @@ import { LOG_BACENTA_HISTORY } from '../../queries/LogMutations'
 import { MemberContext } from '../../contexts/MemberContext'
 
 const UpdateBacenta = () => {
-  const { church, bishopId, centreId, setCentreId, bacentaId } = useContext(
-    ChurchContext
-  )
+  const { church, bishopId, centreId, setCentreId, bacentaId } =
+    useContext(ChurchContext)
   const { currentUser } = useContext(MemberContext)
 
   let townCampusIdVar
@@ -75,10 +74,10 @@ const UpdateBacenta = () => {
     ),
   })
 
-  const { data: townListData } = useQuery(GET_TOWNS, {
+  const { data: townListData } = useQuery(GET_BISHOP_TOWNS, {
     variables: { id: bishopId },
   })
-  const { data: campusListData } = useQuery(GET_CAMPUSES, {
+  const { data: campusListData } = useQuery(GET_BISHOP_CAMPUSES, {
     variables: { id: bishopId },
   })
 

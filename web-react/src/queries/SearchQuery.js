@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client'
 
 export const GET_LOGGED_IN_USER = gql`
-  query memberByEmail($email: String) {
-    memberByEmail(email: $email) {
+  query ($email: String) {
+    members(where: { email: $email }) {
       id
       firstName
       lastName
@@ -31,7 +31,7 @@ export const GET_LOGGED_IN_USER = gql`
 
 export const GLOBAL_SEARCH = gql`
   query globalSearch($searchKey: String!) {
-    globalSontaSearch(searchKey: $searchKey, first: 6) {
+    globalSontaSearch(searchKey: $searchKey) {
       id
       name
       town {
@@ -46,21 +46,21 @@ export const GLOBAL_SEARCH = gql`
         }
       }
     }
-    globalTownSearch(searchKey: $searchKey, first: 6) {
+    globalTownSearch(searchKey: $searchKey) {
       id
       name
       bishop {
         id
       }
     }
-    globalCampusSearch(searchKey: $searchKey, first: 6) {
+    globalCampusSearch(searchKey: $searchKey) {
       id
       name
       bishop {
         id
       }
     }
-    globalCentreSearch(searchKey: $searchKey, first: 6) {
+    globalCentreSearch(searchKey: $searchKey) {
       id
       name
       town {
@@ -76,7 +76,7 @@ export const GLOBAL_SEARCH = gql`
         }
       }
     }
-    globalBacentaSearch(searchKey: $searchKey, first: 6) {
+    globalBacentaSearch(searchKey: $searchKey) {
       id
       name
       centre {
@@ -95,7 +95,7 @@ export const GLOBAL_SEARCH = gql`
       }
     }
 
-    globalMemberSearch(searchKey: $searchKey, first: 6) {
+    globalMemberSearch(searchKey: $searchKey) {
       id
       firstName
       lastName

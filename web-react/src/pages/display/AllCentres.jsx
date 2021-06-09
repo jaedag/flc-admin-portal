@@ -11,14 +11,8 @@ import { ChurchContext } from '../../contexts/ChurchContext'
 import RoleView from '../../auth/RoleView'
 
 const DisplayAllCentres = () => {
-  const {
-    church,
-    townId,
-    campusId,
-    setCentreId,
-    setTownId,
-    setCampusId,
-  } = useContext(ChurchContext)
+  const { church, townId, campusId, setCentreId, setTownId, setCampusId } =
+    useContext(ChurchContext)
 
   const { data: townCentreData, loading: townLoading } = useQuery(
     GET_TOWN_CENTRES,
@@ -117,9 +111,9 @@ const DisplayAllCentres = () => {
                   }}
                 >
                   {' '}
-                  <h4>{`${
-                    townCentreData.townCentreList[0].town.name
-                  } ${capitalise(church.church)}`}</h4>
+                  <h4>{`${townCentreData.centres[0].town.name} ${capitalise(
+                    church.church
+                  )}`}</h4>
                 </Link>
               </div>
               <RoleView
@@ -147,29 +141,29 @@ const DisplayAllCentres = () => {
               <div className="col">
                 <h6 className="text-muted">
                   Constituency Overseer:
-                  {townCentreData.townCentreList[0].town.leader
-                    ? ` ${townCentreData.townCentreList[0].town.leader.firstName} ${townCentreData.townCentreList[0].town.leader.lastName}`
+                  {townCentreData.centres[0].town.leader
+                    ? ` ${townCentreData.centres[0].town.leader.firstName} ${townCentreData.centres[0].town.leader.lastName}`
                     : null}
                 </h6>
               </div>
             </div>
 
             <div className="row justify-content-between">
-              <div className="py-1 px-2 m-2 card">{`Centres: ${townCentreData.townCentreList.length}`}</div>
+              <div className="py-1 px-2 m-2 card">{`Centres: ${townCentreData.centres.length}`}</div>
               <Link
                 className="py-1 px-2 m-2 card text-white"
                 to="/sonta/displayall"
-              >{`Sontas: ${townCentreData.townSontaList.length}`}</Link>
+              >{`Sontas: ${townCentreData.sontas.length}`}</Link>
               <div className="py-1 px-2 m-2 card">{`Membership: ${townCentreData.townMemberCount}`}</div>
             </div>
           </div>
 
           <DisplayChurchList
-            data={townCentreData.townCentreList}
+            data={townCentreData.centres}
             churchType="Centre"
           />
           {/* <DisplayChurchList
-            data={townCentreData.townSontaList}
+            data={townCentreData.sontas}
             setter={setSontaId}
             churchType="Sonta"
           /> */}

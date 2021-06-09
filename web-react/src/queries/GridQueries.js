@@ -2,7 +2,7 @@ import { gql } from '@apollo/client'
 
 export const GET_FEDERAL_MEMBERS = gql`
   query {
-    Member(orderBy: firstName_asc) {
+    members(options: { sort: { firstName: ASC } }) {
       id
       firstName
       lastName
@@ -159,13 +159,14 @@ export const GET_FEDERAL_PASTORS = gql`
 `
 
 export const GET_BISHOP_MEMBERS = gql`
-  query($id: ID) {
-    displayMember(id: $id) {
+  query ($id: ID) {
+    members(where: { id: $id }) {
       id
       firstName
       lastName
+      fullName
     }
-    bishopMemberList(id: $id, orderBy: firstName_asc) {
+    bishopMemberList(id: $id) {
       id
       firstName
       lastName
@@ -185,13 +186,7 @@ export const GET_BISHOP_MEMBERS = gql`
         gender
       }
       title {
-        Title {
-          title
-        }
-        status
-        yearAppointed {
-          year
-        }
+        title
       }
       leadsBacenta {
         id
@@ -247,12 +242,12 @@ export const GET_BISHOP_MEMBERS = gql`
 `
 
 export const GET_CAMPUSTOWN_MEMBERS = gql`
-  query($id: ID) {
-    displayTown(id: $id) {
+  query ($id: ID) {
+    towns(where: { id: $id }) {
       id
       name
     }
-    townMemberList(id: $id, orderBy: firstName_asc) {
+    townMemberList(id: $id) {
       id
       firstName
       lastName
@@ -270,13 +265,7 @@ export const GET_CAMPUSTOWN_MEMBERS = gql`
         gender
       }
       title {
-        Title {
-          title
-        }
-        status
-        yearAppointed {
-          year
-        }
+        title
       }
       leadsBacenta {
         id
@@ -328,11 +317,11 @@ export const GET_CAMPUSTOWN_MEMBERS = gql`
         name
       }
     }
-    displayCampus(id: $id) {
+    campuses(where: { id: $id }) {
       id
       name
     }
-    campusMemberList(id: $id, orderBy: firstName_asc) {
+    campusMemberList(id: $id) {
       id
       firstName
       lastName
@@ -350,13 +339,7 @@ export const GET_CAMPUSTOWN_MEMBERS = gql`
         gender
       }
       title {
-        Title {
-          title
-        }
-        status
-        yearAppointed {
-          year
-        }
+        title
       }
       leadsBacenta {
         id
@@ -412,7 +395,7 @@ export const GET_CAMPUSTOWN_MEMBERS = gql`
 `
 
 export const GET_CENTRE_MEMBERS = gql`
-  query($id: ID) {
+  query ($id: ID) {
     displayCentre(id: $id) {
       id
       name
@@ -489,7 +472,7 @@ export const GET_CENTRE_MEMBERS = gql`
 `
 
 export const GET_BACENTA_MEMBERS = gql`
-  query($id: ID) {
+  query ($id: ID) {
     displayBacenta(id: $id) {
       name
     }
@@ -573,7 +556,7 @@ export const GET_BACENTA_MEMBERS = gql`
 `
 
 export const GET_SONTA_MEMBERS = gql`
-  query($id: ID) {
+  query ($id: ID) {
     displaySonta(id: $id) {
       id
       name

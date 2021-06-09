@@ -40,7 +40,7 @@ const DisplayChurchDetails = (props) => {
     history,
     breadcrumb,
   } = props
-
+  const isConstituency = churchType === 'Campus' || churchType === 'Town'
   const { setMemberId } = useContext(MemberContext)
   const { clickCard, campusId, townId, bishopId } = useContext(ChurchContext)
   //Change Admin Initialised
@@ -172,14 +172,17 @@ const DisplayChurchDetails = (props) => {
               {`Admin:`} {admin.firstName} {admin.lastName}
             </Link>
           )}
-          <RoleView roles={['federalAdmin', 'bishopAdmin']}>
-            <input
-              type="button"
-              className={`btn btn-primary text-nowrap`}
-              value="Change Admin"
-              onClick={togglePopup}
-            />
-          </RoleView>
+          {isConstituency && (
+            <RoleView roles={['federalAdmin', 'bishopAdmin']}>
+              <input
+                type="button"
+                className={`btn btn-primary text-nowrap`}
+                value="Change Admin"
+                onClick={togglePopup}
+              />
+            </RoleView>
+          )}
+
           {isOpen && (
             <Popup
               content={

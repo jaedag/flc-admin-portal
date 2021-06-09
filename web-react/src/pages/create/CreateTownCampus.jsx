@@ -7,8 +7,8 @@ import { capitalise, makeSelectOptions } from '../../global-utils'
 import FormikControl from '../../components/formik-components/FormikControl'
 import {
   GET_BISHOPS,
-  GET_TOWNS,
-  GET_CAMPUSES,
+  GET_BISHOP_TOWNS,
+  GET_BISHOP_CAMPUSES,
   BISHOP_MEMBER_DROPDOWN,
   BISHOP_CENTRE_DROPDOWN,
 } from '../../queries/ListQueries'
@@ -24,9 +24,8 @@ import PlusSign from '../../components/buttons/PlusSign'
 import MinusSign from '../../components/buttons/MinusSign'
 
 function CreateTownCampus() {
-  const { church, bishopId, setTownId, setCampusId, setBishopId } = useContext(
-    ChurchContext
-  )
+  const { church, bishopId, setTownId, setCampusId, setBishopId } =
+    useContext(ChurchContext)
 
   const history = useHistory()
 
@@ -50,7 +49,7 @@ function CreateTownCampus() {
   })
 
   const [CreateTown] = useMutation(CREATE_TOWN_MUTATION, {
-    refetchQueries: [{ query: GET_TOWNS, variables: { id: bishopId } }],
+    refetchQueries: [{ query: GET_BISHOP_TOWNS, variables: { id: bishopId } }],
     onCompleted: (newTownData) => {
       setTownId(newTownData.CreateTown.id)
       history.push(`/${church.church}/displaydetails`)
@@ -58,7 +57,9 @@ function CreateTownCampus() {
   })
 
   const [CreateCampus] = useMutation(CREATE_CAMPUS_MUTATION, {
-    refetchQueries: [{ query: GET_CAMPUSES, variables: { id: bishopId } }],
+    refetchQueries: [
+      { query: GET_BISHOP_CAMPUSES, variables: { id: bishopId } },
+    ],
     onCompleted: (newCampusData) => {
       setCampusId(newCampusData.CreateCampus.id)
       history.push(`/${church.church}/displaydetails`)

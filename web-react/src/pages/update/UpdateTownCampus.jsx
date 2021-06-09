@@ -10,8 +10,8 @@ import {
   GET_BISHOPS,
   GET_CAMPUS_CENTRES,
   GET_TOWN_CENTRES,
-  GET_TOWNS,
-  GET_CAMPUSES,
+  GET_BISHOP_TOWNS,
+  GET_BISHOP_CAMPUSES,
   BISHOP_MEMBER_DROPDOWN,
   BISHOP_CENTRE_DROPDOWN,
 } from '../../queries/ListQueries'
@@ -42,9 +42,8 @@ import {
 import { MemberContext } from '../../contexts/MemberContext'
 
 const UpdateTownCampus = () => {
-  const { church, campusId, townId, bishopId, setBishopId } = useContext(
-    ChurchContext
-  )
+  const { church, campusId, townId, bishopId, setBishopId } =
+    useContext(ChurchContext)
   const { currentUser } = useContext(MemberContext)
 
   const { data: campusData, loading: campusLoading } = useQuery(
@@ -137,9 +136,9 @@ const UpdateTownCampus = () => {
       refetchQueries: [
         { query: DISPLAY_TOWN, variables: { id: townId } },
         { query: GET_TOWN_CENTRES, variables: { id: townId } },
-        { query: GET_TOWNS, variables: { id: bishopId } },
+        { query: GET_BISHOP_TOWNS, variables: { id: bishopId } },
         {
-          query: GET_TOWNS,
+          query: GET_BISHOP_TOWNS,
           variables: { id: initialValues.bishopSelect },
         },
         { query: BISH_DASHBOARD_COUNTS, variables: { id: bishopId } },
@@ -181,9 +180,9 @@ const UpdateTownCampus = () => {
       refetchQueries: [
         { query: DISPLAY_CAMPUS, variables: { id: campusId } },
         { query: GET_CAMPUS_CENTRES, variables: { id: campusId } },
-        { query: GET_CAMPUSES, variables: { id: bishopId } },
+        { query: GET_BISHOP_CAMPUSES, variables: { id: bishopId } },
         {
-          query: GET_CAMPUSES,
+          query: GET_BISHOP_CAMPUSES,
           variables: { id: initialValues.bishopSelect },
         },
         { query: BISH_DASHBOARD_COUNTS, variables: { id: bishopId } },

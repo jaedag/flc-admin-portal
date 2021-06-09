@@ -2,16 +2,27 @@ import { typeDefs } from './graphql-schema'
 import { ApolloServer } from 'apollo-server-express'
 import express from 'express'
 import neo4j from 'neo4j-driver'
-import { makeAugmentedSchema, assertSchema } from 'neo4j-graphql-js'
+import { Neo4jGraphQL } from '@neo4j/graphql'
 import dotenv from 'dotenv'
 import { initializeDatabase } from './initialize'
 import { resolvers } from './resolvers'
-import jwt from 'express-jwt'
+// import jwt from 'express-jwt'
 
 // set environment variables from .env
 dotenv.config()
 
 const app = express()
+
+const driver = neo4j.driver(
+  process.env.NEO4J_URI || 'bolt://localhost:7687',
+  neo4j.auth.basic(
+    process.env.NEO4J_USER || 'jd_addy',
+    process.env.NEO4J_PASSWORD || 'letmein'
+  ),
+  {
+    encrypted: process.env.NEO4J_ENCRYPTED ? 'ENCRYPTION_ON' : 'ENCRYPTION_OFF',
+  }
+)
 
 /*
  * Create an executable GraphQL schema object from GraphQL type definitions
@@ -21,15 +32,14 @@ const app = express()
  * https://grandstack.io/docs/neo4j-graphql-js-api.html#makeaugmentedschemaoptions-graphqlschema
  */
 
-const schema = makeAugmentedSchema({
+const neoSchema = new Neo4jGraphQL({
   typeDefs,
   resolvers,
+  driver,
   config: {
-    query: true,
-    mutation: true,
-    auth: {
-      isAuthenticated: true,
-      hasScope: true,
+    jwt: {
+      secret: process.env.JWT_SECRET,
+      rolesPath: 'permissions',
     },
   },
 })
@@ -39,16 +49,6 @@ const schema = makeAugmentedSchema({
  * using credentials specified as environment variables
  * with fallback to defaults
  */
-
-const driver = neo4j.driver(
-  process.env.NEO4J_URI || 'bolt://localhost:7687',
-  neo4j.auth.basic(
-    process.env.NEO4J_USER || 'jd_addy',
-    process.env.NEO4J_PASSWORD || 'letmein'
-  )
-)
-
-assertSchema({ schema, driver, debug: true })
 
 /*
  * Perform any database initialization steps such as
@@ -76,17 +76,8 @@ init(driver)
  * generated resolvers to connect to the database.
  */
 const server = new ApolloServer({
-  context: ({ req }) => {
-    return {
-      req,
-      driver,
-      cypherParams: {
-        user_authId: req?.user?.sub,
-      },
-      neo4jDatabase: process.env.NEO4J_DATABASE,
-    }
-  },
-  schema: schema,
+  context: ({ req }) => req,
+  schema: neoSchema.schema,
   introspection: true,
   playground: true,
 })
@@ -95,14 +86,6 @@ const server = new ApolloServer({
 const port = process.env.GRAPHQL_SERVER_PORT || 4001
 const path = process.env.GRAPHQL_SERVER_PATH || '/graphql'
 const host = process.env.GRAPHQL_SERVER_HOST || '0.0.0.0'
-
-app.use(
-  jwt({
-    secret: process.env.JWT_SECRET.replace(/\\n/gm, '\n'),
-    algorithms: ['RS256'],
-    credentialsRequired: false,
-  })
-)
 
 /*
  * Optionally, apply Express middleware for authentication, etc

@@ -6,8 +6,8 @@ import * as Yup from 'yup'
 import FormikControl from '../../components/formik-components/FormikControl'
 
 import {
-  GET_CAMPUSES,
-  GET_TOWNS,
+  GET_BISHOP_CAMPUSES,
+  GET_BISHOP_TOWNS,
   GET_CAMPUS_CENTRES,
   GET_TOWN_CENTRES,
   BISHOP_MEMBER_DROPDOWN,
@@ -27,9 +27,8 @@ function CreateSonta() {
     campusTownSelect: '',
   }
 
-  const { church, bishopId, setTownId, setCampusId, setSontaId } = useContext(
-    ChurchContext
-  )
+  const { church, bishopId, setTownId, setCampusId, setSontaId } =
+    useContext(ChurchContext)
   const history = useHistory()
 
   const validationSchema = Yup.object({
@@ -50,18 +49,20 @@ function CreateSonta() {
     ],
   })
 
-  const { data: townListData, loading: townListLoading } = useQuery(GET_TOWNS, {
-    variables: { id: bishopId },
-  })
-  const { data: campusListData, loading: campusListLoading } = useQuery(
-    GET_CAMPUSES,
+  const { data: townListData, loading: townListLoading } = useQuery(
+    GET_BISHOP_TOWNS,
     {
       variables: { id: bishopId },
     }
   )
-  const { data: ministryListData, loading: ministryListLoading } = useQuery(
-    GET_MINISTRIES
+  const { data: campusListData, loading: campusListLoading } = useQuery(
+    GET_BISHOP_CAMPUSES,
+    {
+      variables: { id: bishopId },
+    }
   )
+  const { data: ministryListData, loading: ministryListLoading } =
+    useQuery(GET_MINISTRIES)
 
   if (townListData && campusListData && ministryListData) {
     const townOptions = makeSelectOptions(townListData.townList)

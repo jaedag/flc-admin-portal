@@ -5,7 +5,10 @@ import DisplayChurchList from '../../components/DisplayChurchList'
 import NavBar from '../../components/nav/NavBar'
 import ErrorScreen from '../../components/ErrorScreen'
 import LoadingScreen from '../../components/LoadingScreen'
-import { GET_TOWNS, GET_CAMPUSES } from '../../queries/ListQueries'
+import {
+  GET_BISHOP_TOWNS,
+  GET_BISHOP_CAMPUSES,
+} from '../../queries/ListQueries'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import { BISHOP_MEMBER_COUNT } from '../../queries/CountQueries'
 import RoleView from '../../auth/RoleView'
@@ -13,14 +16,17 @@ import RoleView from '../../auth/RoleView'
 const DisplayAllTownCampuses = () => {
   const { clickCard, church, bishopId } = useContext(ChurchContext)
 
-  const { data: townData, loading: townLoading } = useQuery(GET_TOWNS, {
-    variables: { id: bishopId },
-  })
+  const { data: bishopTowns, loading: townLoading } = useQuery(
+    GET_BISHOP_TOWNS,
+    {
+      variables: { id: bishopId },
+    }
+  )
   const {
-    data: campusData,
+    data: bishopCampuses,
 
     loading: campusLoading,
-  } = useQuery(GET_CAMPUSES, {
+  } = useQuery(GET_BISHOP_CAMPUSES, {
     variables: { id: bishopId },
   })
   const { data: bishopMemberCount, loading: bishopMemberLoading } = useQuery(
@@ -34,6 +40,8 @@ const DisplayAllTownCampuses = () => {
     // Spinner Icon for Loading Screens
     return <LoadingScreen />
   } else if (church.church === 'town') {
+    const towns = bishopTowns.members[0].townBishop
+
     return (
       <>
         <NavBar />
@@ -44,20 +52,20 @@ const DisplayAllTownCampuses = () => {
                 <Link
                   to="/member/displaydetails"
                   onClick={() => {
-                    clickCard(townData.townList[0].bishop)
+                    clickCard(towns[0].bishop)
                   }}
                 >
-                  <h4>{`${townData.townList[0].bishop.firstName} ${townData.townList[0].bishop.lastName}'s Towns`}</h4>
+                  <h4>{`${towns[0].bishop.firstName} ${towns[0].bishop.lastName}'s Towns`}</h4>
                 </Link>
-                {townData.townList[0].bishop?.hasAdmin ? (
+                {towns[0].bishop?.hasAdmin ? (
                   <Link
                     className="pb-4"
                     to="/member/displaydetails"
                     onClick={() => {
-                      clickCard(townData.townList[0].bishop?.hasAdmin)
+                      clickCard(towns[0].bishop?.hasAdmin)
                     }}
                   >
-                    {`Admin: ${townData.townList[0].bishop?.hasAdmin?.firstName} ${townData.townList[0].bishop?.hasAdmin?.lastName}`}
+                    {`Admin: ${towns[0].bishop?.hasAdmin?.firstName} ${towns[0].bishop?.hasAdmin?.lastName}`}
                   </Link>
                 ) : null}
               </div>
@@ -71,18 +79,20 @@ const DisplayAllTownCampuses = () => {
             </div>
 
             <div className="row justify-content-between">
-              <div className="py-1 px-3 m-2 card">{`Towns: ${townData.townList.length}`}</div>
+              <div className="py-1 px-3 m-2 card">{`Towns: ${towns.length}`}</div>
 
               <div className="py-1 px-3 m-2 card">{`Membership: ${
                 bishopMemberCount ? bishopMemberCount.bishopMemberCount : null
               }`}</div>
             </div>
           </div>
-          <DisplayChurchList data={townData.townList} churchType="Town" />
+          <DisplayChurchList data={towns} churchType="Town" />
         </div>
       </>
     )
   } else if (church.church === 'campus') {
+    const campus = bishopCampuses.members[0].campusBishop
+
     return (
       <>
         <NavBar />
@@ -93,20 +103,20 @@ const DisplayAllTownCampuses = () => {
                 <Link
                   to="/member/displaydetails"
                   onClick={() => {
-                    clickCard(campusData.campusList[0].bishop)
+                    clickCard(campus[0].bishop)
                   }}
                 >
-                  <h4>{`${campusData.campusList[0].bishop.firstName} ${campusData.campusList[0].bishop.lastName}'s Campuses`}</h4>
+                  <h4>{`${campus[0].bishop.firstName} ${campus[0].bishop.lastName}'s Campuses`}</h4>
                 </Link>
-                {campusData.campusList[0].bishop?.hasAdmin ? (
+                {campus[0].bishop?.hasAdmin ? (
                   <Link
                     className="pb-4"
                     to="/member/displaydetails"
                     onClick={() => {
-                      clickCard(campusData.campusList[0].bishop?.hasAdmin)
+                      clickCard(campus[0].bishop?.hasAdmin)
                     }}
                   >
-                    {`Admin: ${campusData.campusList[0].bishop?.hasAdmin?.firstName} ${campusData.campusList[0].bishop?.hasAdmin?.lastName}`}
+                    {`Admin: ${campus[0].bishop?.hasAdmin?.firstName} ${campus[0].bishop?.hasAdmin?.lastName}`}
                   </Link>
                 ) : null}
               </div>
@@ -120,14 +130,14 @@ const DisplayAllTownCampuses = () => {
             </div>
 
             <div className="row justify-content-between">
-              <div className="py-1 px-3 m-2 card">{`Campuses: ${campusData.campusList.length}`}</div>
+              <div className="py-1 px-3 m-2 card">{`Campuses: ${campus.length}`}</div>
 
               <div className="py-1 px-3 m-2 card">{`Membership: ${
                 bishopMemberCount ? bishopMemberCount.bishopMemberCount : null
               }`}</div>
             </div>
           </div>
-          <DisplayChurchList data={campusData.campusList} churchType="Campus" />
+          <DisplayChurchList data={campus} churchType="Campus" />
         </div>
       </>
     )

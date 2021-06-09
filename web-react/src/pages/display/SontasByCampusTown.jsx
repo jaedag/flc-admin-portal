@@ -25,6 +25,7 @@ const DisplaySontasByCampusTown = () => {
     // Spinner Icon for Loading Screens
     return <LoadingScreen />
   } else if (sontaData && church.church === 'campus') {
+    const campuses = sontaData.towns
     return (
       <>
         <NavBar />
@@ -39,7 +40,7 @@ const DisplaySontasByCampusTown = () => {
                   }}
                 >
                   {' '}
-                  <h4>{`${sontaData.campusList[0].bishop.firstName} ${sontaData.campusList[0].bishop.lastName}'s Sontas`}</h4>
+                  <h4>{`${campuses[0].bishop.firstName} ${campuses[0].bishop.lastName}'s Sontas`}</h4>
                 </Link>
               </div>
               <RoleView
@@ -60,13 +61,13 @@ const DisplaySontasByCampusTown = () => {
               <Link
                 className="py-1 px-2 m-2 card"
                 to="/campus/displayall"
-              >{`Campuses: ${sontaData.campusList.length}`}</Link>
+              >{`Campuses: ${campuses.length}`}</Link>
 
               <div className="py-1 px-2 m-2 card">{`Membership: ${sontaData.bishopSontaMemberCount}`}</div>
             </div>
           </div>
 
-          {sontaData.campusList.map((campus, index) => {
+          {campuses.map((campus, index) => {
             return (
               <div key={index}>
                 <h4>{campus.name}</h4>
@@ -82,6 +83,7 @@ const DisplaySontasByCampusTown = () => {
       </>
     )
   } else if (sontaData && church.church === 'town') {
+    const towns = sontaData.towns
     return (
       <>
         <NavBar />
@@ -96,7 +98,7 @@ const DisplaySontasByCampusTown = () => {
                   }}
                 >
                   {' '}
-                  <h4>{`${sontaData.townList[0].bishop.firstName} ${sontaData.townList[0].bishop.lastName}'s Sontas`}</h4>
+                  <h4>{`${towns[0].bishop.firstName} ${towns[0].bishop.lastName}'s Sontas`}</h4>
                 </Link>
               </div>
               <RoleView
@@ -117,13 +119,13 @@ const DisplaySontasByCampusTown = () => {
               <Link
                 className="py-1 px-2 m-2 card"
                 to="/town/displayall"
-              >{`Towns: ${sontaData.townList.length}`}</Link>
+              >{`Towns: ${towns.length}`}</Link>
 
               <div className="py-1 px-2 m-2 card">{`Membership: ${sontaData.bishopSontaMemberCount}`}</div>
             </div>
           </div>
 
-          {sontaData.townList.map((town, index) => {
+          {towns.map((town, index) => {
             return (
               <div key={index}>
                 <h4>{town.name}</h4>

@@ -1,22 +1,13 @@
 import { gql } from '@apollo/client'
 
-export const DISPLAY_BISHOP_NAME = gql`
-  query displayMember($id: ID) {
-    displayMember(id: $id) {
-      id
-      firstName
-      lastName
-    }
-  }
-`
-
 export const DISPLAY_MEMBER = gql`
-  query displayMember($id: ID) {
-    displayMember(id: $id) {
+  query ($id: ID) {
+    members(where: { id: $id }) {
       id
       firstName
       middleName
       lastName
+      fullName
       email
       phoneNumber
       whatsappNumber
@@ -28,12 +19,7 @@ export const DISPLAY_MEMBER = gql`
         status
       }
       dob {
-        date {
-          formatted
-          day
-          month
-          year
-        }
+        date
       }
       bacenta {
         id
@@ -77,22 +63,12 @@ export const DISPLAY_MEMBER = gql`
         occupation
       }
       title {
-        Title {
-          title
-        }
-        yearAppointed {
-          year
-        }
+        title
       }
       history {
-        timeStamp {
-          hour
-          minute
-        }
+        timeStamp
         created_at {
-          date {
-            formatted
-          }
+          date
         }
         loggedBy {
           id
@@ -210,16 +186,12 @@ export const DISPLAY_MEMBER = gql`
 `
 
 export const DISPLAY_BACENTA = gql`
-  query displayBacenta($id: ID) {
-    displayBacenta(id: $id) {
+  query ($id: ID) {
+    bacentas(where: { id: $id }) {
       id
       name
       meetingDay {
         day
-      }
-      location {
-        latitude
-        longitude
       }
       centre {
         id
@@ -249,30 +221,21 @@ export const DISPLAY_BACENTA = gql`
         lastName
         whatsappNumber
         title {
-          Title {
-            title
-          }
+          title
         }
       }
-      history {
-        HistoryLog {
-          id
-          timeStamp {
-            hour
-            minute
-          }
-          created_at {
-            date {
-              formatted
-            }
-          }
-          loggedBy {
-            id
-            firstName
-            lastName
-          }
-          historyRecord
+      history(options: { limit: 10 }) {
+        id
+        timeStamp
+        created_at {
+          date
         }
+        loggedBy {
+          id
+          firstName
+          lastName
+        }
+        historyRecord
       }
     }
     bacentaMemberCount(id: $id)
@@ -344,8 +307,8 @@ export const DISPLAY_SONTA = gql`
 `
 
 export const DISPLAY_CENTRE = gql`
-  query displayCentre($id: ID) {
-    displayCentre(id: $id) {
+  query ($id: ID) {
+    centres(where: { id: $id }) {
       id
       name
       bacentas {
@@ -392,30 +355,21 @@ export const DISPLAY_CENTRE = gql`
         lastName
         whatsappNumber
         title {
-          Title {
-            title
-          }
+          title
         }
       }
-      history {
-        HistoryLog {
-          id
-          timeStamp {
-            hour
-            minute
-          }
-          created_at {
-            date {
-              formatted
-            }
-          }
-          loggedBy {
-            id
-            firstName
-            lastName
-          }
-          historyRecord
+      history(options: { limit: 10 }) {
+        id
+        timeStamp
+        created_at {
+          date
         }
+        loggedBy {
+          id
+          firstName
+          lastName
+        }
+        historyRecord
       }
     }
     centreMemberCount(id: $id)
@@ -424,8 +378,8 @@ export const DISPLAY_CENTRE = gql`
 `
 
 export const DISPLAY_TOWN = gql`
-  query displayTown($id: ID) {
-    displayTown(id: $id) {
+  query ($id: ID) {
+    towns(where: { id: $id }) {
       id
       name
       centres {
@@ -485,32 +439,19 @@ export const DISPLAY_TOWN = gql`
         firstName
         lastName
         whatsappNumber
-        title {
-          Title {
-            title
-          }
-        }
       }
-      history(first: 10) {
-        HistoryLog {
-          id
-          timeStamp {
-            hour
-            minute
-          }
-
-          created_at {
-            date {
-              formatted
-            }
-          }
-          loggedBy {
-            id
-            firstName
-            lastName
-          }
-          historyRecord
+      history(options: { limit: 10 }) {
+        id
+        timeStamp
+        created_at {
+          date
         }
+        loggedBy {
+          id
+          firstName
+          lastName
+        }
+        historyRecord
       }
     }
     townMemberCount(id: $id)
@@ -519,8 +460,8 @@ export const DISPLAY_TOWN = gql`
 `
 
 export const DISPLAY_CAMPUS = gql`
-  query displayCampus($id: ID) {
-    displayCampus(id: $id) {
+  query ($id: ID) {
+    campuses(where: { id: $id }) {
       id
       name
       centres {
@@ -544,11 +485,6 @@ export const DISPLAY_CAMPUS = gql`
       sontas {
         id
         name
-      }
-      bishop {
-        id
-        firstName
-        lastName
       }
       admin {
         id
@@ -575,37 +511,29 @@ export const DISPLAY_CAMPUS = gql`
           }
         }
       }
+      bishop {
+        id
+        firstName
+        lastName
+      }
       leader {
         id
         firstName
         lastName
         whatsappNumber
-        title {
-          Title {
-            title
-          }
-        }
       }
-      history(first: 10) {
-        HistoryLog {
-          id
-          timeStamp {
-            hour
-            minute
-          }
-
-          created_at {
-            date {
-              formatted
-            }
-          }
-          loggedBy {
-            id
-            firstName
-            lastName
-          }
-          historyRecord
+      history(options: { limit: 10 }) {
+        id
+        timeStamp
+        created_at {
+          date
         }
+        loggedBy {
+          id
+          firstName
+          lastName
+        }
+        historyRecord
       }
     }
     campusMemberCount(id: $id)

@@ -28,9 +28,8 @@ const DisplayMemberDetails = () => {
     // Spinner Icon for Loading Screens
     return <LoadingScreen />
   } else if (memberData && memberId) {
-    const { displayMember } = memberData
-
-    let nameAndTitle = getNameWithTitle(displayMember)
+    const member = memberData.members[0]
+    let nameAndTitle = getNameWithTitle(member)
 
     //To Display Ranks on the Member Card
     let rank = {
@@ -130,41 +129,41 @@ const DisplayMemberDetails = () => {
       return null
     }
 
-    if (displayMember.leadsBacenta[0]) {
-      updateRank(displayMember, 'bacenta')
+    if (member.leadsBacenta[0]) {
+      updateRank(member, 'bacenta')
     }
-    if (displayMember.leadsCentre[0]) {
-      updateRank(displayMember, 'centre')
+    if (member.leadsCentre[0]) {
+      updateRank(member, 'centre')
     }
-    if (displayMember.leadsTown[0]) {
-      updateRank(displayMember, 'town')
+    if (member.leadsTown[0]) {
+      updateRank(member, 'town')
     }
-    if (displayMember.leadsCampus[0]) {
-      updateRank(displayMember, 'campus')
+    if (member.leadsCampus[0]) {
+      updateRank(member, 'campus')
     }
-    if (displayMember.leadsSonta[0]) {
-      updateRank(displayMember, 'sonta')
+    if (member.leadsSonta[0]) {
+      updateRank(member, 'sonta')
     }
-    if (displayMember.leadsBasonta[0]) {
-      updateRank(displayMember, 'basonta')
+    if (member.leadsBasonta[0]) {
+      updateRank(member, 'basonta')
     }
-    if (displayMember.leadsMinistry[0]) {
-      updateRank(displayMember, 'ministry')
+    if (member.leadsMinistry[0]) {
+      updateRank(member, 'ministry')
     }
-    if (displayMember.townBishop[0]) {
-      updateRank(displayMember, 'bishop')
+    if (member.townBishop[0]) {
+      updateRank(member, 'bishop')
     }
-    if (displayMember.campusBishop[0]) {
-      updateRank(displayMember, 'bishop')
+    if (member.campusBishop[0]) {
+      updateRank(member, 'bishop')
     }
-    if (displayMember.isBishopAdminFor[0]) {
-      updateRank(displayMember, 'bishopAdmin')
+    if (member.isBishopAdminFor[0]) {
+      updateRank(member, 'bishopAdmin')
     }
-    if (displayMember.isCampusAdminFor[0]) {
-      updateRank(displayMember, 'constituencyAdmin')
+    if (member.isCampusAdminFor[0]) {
+      updateRank(member, 'constituencyAdmin')
     }
-    if (displayMember.isTownAdminFor[0]) {
-      updateRank(displayMember, 'constituencyAdmin')
+    if (member.isTownAdminFor[0]) {
+      updateRank(member, 'constituencyAdmin')
     }
 
     return (
@@ -191,28 +190,23 @@ const DisplayMemberDetails = () => {
                     <div className="row row-cols-1 my-2">
                       <div className="col d-flex justify-content-center">
                         <img
-                          src={
-                            displayMember.pictureUrl
-                              ? displayMember.pictureUrl
-                              : userIcon
-                          }
+                          src={member.pictureUrl ? member.pictureUrl : userIcon}
                           className="m-2 rounded profile-img"
-                          alt={`${displayMember.firstName} ${displayMember.lastName}`}
+                          alt={`${member.fullName}`}
                         />
                       </div>
 
                       <div className="col d-flex justify-content-center mt-2">
                         <h5 className="font-weight-bold ">
-                          {`${displayMember.firstName} ${displayMember.lastName}`}
+                          {`${member.fullName}`}
                         </h5>
                       </div>
                       <div className="col d-flex justify-content-center mb-2">
                         <div className="font-weight-light card-text text-center">
-                          {displayMember.townBishop[0] ||
-                          displayMember.campusBishop[0] ? (
+                          {member.townBishop[0] || member.campusBishop[0] ? (
                             <span
                               onClick={() => {
-                                determineStream(displayMember)
+                                determineStream(member)
                                 history.push('/dashboard')
                               }}
                             >{`Bishop in the First Love Centre`}</span>
@@ -268,7 +262,7 @@ const DisplayMemberDetails = () => {
                         </div>
                         <div className="col">
                           <p className="font-weight-bold card-text">
-                            {displayMember.firstName}
+                            {member.firstName}
                           </p>
                         </div>
                       </div>
@@ -280,7 +274,7 @@ const DisplayMemberDetails = () => {
                         </div>
                         <div className="col">
                           <p className="font-weight-bold card-text">
-                            {displayMember.middleName}
+                            {member.middleName}
                           </p>
                         </div>
                       </div>
@@ -290,7 +284,7 @@ const DisplayMemberDetails = () => {
                         </div>
                         <div className="col">
                           <p className="font-weight-bold card-text">
-                            {displayMember.lastName}
+                            {member.lastName}
                           </p>
                         </div>
                       </div>
@@ -302,7 +296,7 @@ const DisplayMemberDetails = () => {
                         </div>
                         <div className="col-6">
                           <p className="font-weight-bold card-text text-truncate">
-                            {displayMember.email}
+                            {member.email}
                           </p>
                         </div>
                       </div>
@@ -314,10 +308,10 @@ const DisplayMemberDetails = () => {
                         </div>
                         <div className="col">
                           <p className="font-weight-bold card-text">
-                            {displayMember.dob
-                              ? `${displayMember.dob.date.day} ${
-                                  MONTH_NAMES[displayMember.dob.date.month - 1]
-                                } ${displayMember.dob.date.year}`
+                            {member.dob
+                              ? `${member.dob.date.day.low} ${
+                                  MONTH_NAMES[member.dob.date.month.low - 1]
+                                } ${member.dob.date.year.low}`
                               : null}
                           </p>
                         </div>
@@ -328,9 +322,7 @@ const DisplayMemberDetails = () => {
                         </div>
                         <div className="col">
                           <p className="font-weight-bold card-text">
-                            {displayMember.gender
-                              ? displayMember.gender.gender
-                              : null}
+                            {member.gender ? member.gender.gender : null}
                           </p>
                         </div>
                       </div>
@@ -342,8 +334,8 @@ const DisplayMemberDetails = () => {
                         </div>
                         <div className="col">
                           <p className="font-weight-bold card-text">
-                            {displayMember.maritalStatus
-                              ? displayMember.maritalStatus.status
+                            {member.maritalStatus
+                              ? member.maritalStatus.status
                               : null}
                           </p>
                         </div>
@@ -354,8 +346,8 @@ const DisplayMemberDetails = () => {
                         </div>
                         <div className="col">
                           <p className="font-weight-bold card-text">
-                            {displayMember.occupation
-                              ? displayMember.occupation.occupation
+                            {member.occupation
+                              ? member.occupation.occupation
                               : '-'}
                           </p>
                         </div>
@@ -369,9 +361,9 @@ const DisplayMemberDetails = () => {
                         <div className="col">
                           <a
                             className="font-weight-bold card-text"
-                            href={`tel:${displayMember.phoneNumber}`}
+                            href={`tel:${member.phoneNumber}`}
                           >
-                            {displayMember.phoneNumber}
+                            {member.phoneNumber}
                           </a>
                         </div>
                       </div>
@@ -384,9 +376,9 @@ const DisplayMemberDetails = () => {
                         <div className="col">
                           <a
                             className="font-weight-bold card-text"
-                            href={`https://wa.me/${displayMember.whatsappNumber}`}
+                            href={`https://wa.me/${member.whatsappNumber}`}
                           >
-                            {displayMember.whatsappNumber}
+                            {member.whatsappNumber}
                           </a>
                         </div>
                       </div>
@@ -398,12 +390,12 @@ const DisplayMemberDetails = () => {
 
             <div className="col">
               {/* Leadership History Timeline */}
-              {displayMember.history[0] ? (
+              {member.history[0] ? (
                 <div className="row">
                   <div className="col">
                     <MemberDetailsCard title="History Timeline" editlink="#">
                       <div className="row">
-                        <Timeline record={displayMember.history} limit={3} />
+                        <Timeline record={member.history} limit={3} />
                       </div>
                     </MemberDetailsCard>
                   </div>
@@ -424,18 +416,15 @@ const DisplayMemberDetails = () => {
                         </div>
                         <div className="col">
                           <p className="font-weight-bold card-text">
-                            {displayMember?.bacenta?.centre
-                              ? displayMember?.bacenta?.centre[
-                                  `${church.church}`
-                                ]?.bishop
+                            {member?.bacenta?.centre
+                              ? member?.bacenta?.centre[`${church.church}`]
+                                  ?.bishop
                                 ? `${
-                                    displayMember.bacenta.centre[
-                                      `${church.church}`
-                                    ].bishop.firstName
+                                    member.bacenta.centre[`${church.church}`]
+                                      .bishop.firstName
                                   } ${
-                                    displayMember.bacenta.centre[
-                                      `${church.church}`
-                                    ].bishop.lastName
+                                    member.bacenta.centre[`${church.church}`]
+                                      .bishop.lastName
                                   }`
                                 : null
                               : null}
@@ -448,9 +437,9 @@ const DisplayMemberDetails = () => {
                         </div>
                         <div className="col">
                           <p className="font-weight-bold card-text">
-                            {displayMember.bacenta
-                              ? displayMember.bacenta.name
-                                ? displayMember.bacenta.name
+                            {member.bacenta
+                              ? member.bacenta.name
+                                ? member.bacenta.name
                                 : null
                               : null}
                           </p>
@@ -462,13 +451,11 @@ const DisplayMemberDetails = () => {
                         </div>
                         <div className="col">
                           <p className="font-weight-bold card-text">
-                            {displayMember.ministry
-                              ? `${displayMember.ministry.name}`
-                              : null}
+                            {member.ministry ? `${member.ministry.name}` : null}
                           </p>
                         </div>
                       </div>
-                      {displayMember.title[0] ? (
+                      {member.title[0] ? (
                         <div>
                           <div className="row mb-2">
                             <div className="col">
@@ -476,7 +463,7 @@ const DisplayMemberDetails = () => {
                             </div>
                             <div className="col">
                               <p className="font-weight-bold card-text">
-                                {displayMember.title[0].Title.title}
+                                {member.title[0].title}
                               </p>
                             </div>
                           </div>
@@ -488,7 +475,7 @@ const DisplayMemberDetails = () => {
                             </div>
                             <div className="col">
                               <p className="font-weight-bold card-text">
-                                {`${displayMember.title[0].yearAppointed.year}`}
+                                {`-`}
                               </p>
                             </div>
                           </div>

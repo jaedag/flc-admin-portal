@@ -9,9 +9,9 @@ import FormikControl from '../../components/formik-components/FormikControl'
 import {
   BISHOP_BACENTA_DROPDOWN,
   BISHOP_MEMBER_DROPDOWN,
-  GET_CAMPUSES,
+  GET_BISHOP_CAMPUSES,
   GET_CAMPUS_CENTRES,
-  GET_TOWNS,
+  GET_BISHOP_TOWNS,
   GET_TOWN_CENTRES,
 } from '../../queries/ListQueries'
 import {
@@ -55,11 +55,14 @@ const UpdateCentre = () => {
     }
   )
 
-  const { data: townListData, loading: townListLoading } = useQuery(GET_TOWNS, {
-    variables: { id: bishopId },
-  })
+  const { data: townListData, loading: townListLoading } = useQuery(
+    GET_BISHOP_TOWNS,
+    {
+      variables: { id: bishopId },
+    }
+  )
   const { data: campusListData, loading: campusListLoading } = useQuery(
-    GET_CAMPUSES,
+    GET_BISHOP_CAMPUSES,
     {
       variables: { id: bishopId },
     }

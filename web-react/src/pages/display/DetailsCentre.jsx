@@ -20,7 +20,8 @@ const DisplayCentreDetails = () => {
     // Spinner Icon for Loading Screens
     return <LoadingScreen />
   } else if (centreData) {
-    const { displayCentre, centreMemberCount, centreBacentaCount } = centreData
+    const displayCentre = centreData.centres[0]
+    const { centreMemberCount, centreBacentaCount } = centreData
     let breadcrumb = [
       displayCentre.town
         ? displayCentre.town.bishop
@@ -48,8 +49,7 @@ const DisplayCentreDetails = () => {
           churchNo={centreBacentaCount}
           editlink="/centre/editcentre"
           history={
-            centreData.displayCentre?.history.length !== 0 &&
-            centreData.displayCentre?.history
+            displayCentre?.history.length !== 0 && displayCentre?.history
           }
           breadcrumb={breadcrumb && breadcrumb}
           buttons={displayCentre ? displayCentre.bacentas : []}

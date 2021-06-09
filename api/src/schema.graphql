@@ -1,244 +1,249 @@
 type Member {
   id: ID! @id
-  auth_id: String @index
-  firstName: String @index #@search
+  auth_id: String
+  firstName: String #@search
   middleName: String
-  lastName: String @index
-  email: String @unique
+  lastName: String
+  fullName: String @ignore
+  email: String
   phoneNumber: String
-  whatsappNumber: String @unique
+  whatsappNumber: String
   pictureUrl: String
-  gender: Gender @relation(name: "HAS_GENDER", direction: OUT)
+  gender: Gender @relationship(type: "HAS_GENDER", direction: OUT)
   maritalStatus: MaritalStatus
-    @relation(name: "HAS_MARITAL_STATUS", direction: OUT)
-  dob: TimeGraph @relation(name: "WAS_BORN_ON", direction: OUT)
-  title: [HasTitle]
-  ministry: Ministry @relation(name: "BELONGS_TO", direction: OUT)
-  occupation: Occupation @relation(name: "HAS_OCCUPATION", direction: OUT)
+    @relationship(type: "HAS_MARITAL_STATUS", direction: OUT)
+  dob: TimeGraph @relationship(type: "WAS_BORN_ON", direction: OUT)
+  title: [Title] @relationship(type: "HAS_TITLE", direction: OUT)
+  ministry: Ministry @relationship(type: "BELONGS_TO", direction: OUT)
+  occupation: Occupation @relationship(type: "HAS_OCCUPATION", direction: OUT)
   # Church Details
-  history: [HistoryLog] @relation(name: "HAS_HISTORY", direction: OUT)
-  loggedHistory: [HistoryLog] @relation(name: "LOGGED_BY", direction: IN)
-  bacenta: Bacenta @relation(name: "BELONGS_TO", direction: OUT)
-  leadsBacenta: [Bacenta] @relation(name: "LEADS", direction: OUT)
-  leadsCentre: [Centre] @relation(name: "LEADS", direction: OUT)
-  leadsMinistry: [Ministry] @relation(name: "LEADS", direction: OUT)
-  leadsSonta: [Sonta] @relation(name: "LEADS", direction: OUT)
-  leadsBasonta: [Basonta] @relation(name: "LEADS", direction: OUT)
-  leadsTown: [Town] @relation(name: "LEADS", direction: OUT)
-  leadsCampus: [Campus] @relation(name: "LEADS", direction: OUT)
-  townBishop: [Town] @relation(name: "HAS_TOWN", direction: OUT)
-  campusBishop: [Campus] @relation(name: "HAS_CAMPUS", direction: OUT)
-  isBishopAdminFor: [Member] @relation(name: "IS_ADMIN_FOR", direction: OUT) #@neo4j_ignore
-  isCampusAdminFor: [Campus] @relation(name: "IS_ADMIN_FOR", direction: OUT)
-  isTownAdminFor: [Town] @relation(name: "IS_ADMIN_FOR", direction: OUT)
-  hasAdmin: Member @relation(name: "IS_ADMIN_FOR", direction: IN)
+  history: [HistoryLog] @relationship(type: "HAS_HISTORY", direction: OUT)
+  loggedHistory: [HistoryLog] @relationship(type: "LOGGED_BY", direction: IN)
+  bacenta: Bacenta @relationship(type: "BELONGS_TO", direction: OUT)
+  leadsBacenta: [Bacenta] @relationship(type: "LEADS", direction: OUT)
+  leadsCentre: [Centre] @relationship(type: "LEADS", direction: OUT)
+  leadsMinistry: [Ministry] @relationship(type: "LEADS", direction: OUT)
+  leadsSonta: [Sonta] @relationship(type: "LEADS", direction: OUT)
+  leadsBasonta: [Basonta] @relationship(type: "LEADS", direction: OUT)
+  leadsTown: [Town] @relationship(type: "LEADS", direction: OUT)
+  leadsCampus: [Campus] @relationship(type: "LEADS", direction: OUT)
+  townBishop: [Town] @relationship(type: "HAS_TOWN", direction: OUT)
+  campusBishop: [Campus] @relationship(type: "HAS_CAMPUS", direction: OUT)
+  isBishopAdminFor: [Member] @relationship(type: "IS_ADMIN_FOR", direction: OUT) #@neo4j_ignore
+  isCampusAdminFor: [Campus] @relationship(type: "IS_ADMIN_FOR", direction: OUT)
+  isTownAdminFor: [Town] @relationship(type: "IS_ADMIN_FOR", direction: OUT)
+  hasAdmin: Member @relationship(type: "IS_ADMIN_FOR", direction: IN)
   #OTHER WORKS
   was_treasurer_for: [ServiceRecord]!
-    @relation(name: "WAS_TREASURER_FOR", direction: OUT)
+    @relationship(type: "WAS_TREASURER_FOR", direction: OUT)
 }
+
+extend type Member @auth(rules: [{ roles: ["federalAdmin"] }])
+extend type Bacenta @auth(rules: [{ roles: ["federalAdmin"] }])
+extend type Centre @auth(rules: [{ roles: ["federalAdmin"] }])
+extend type Campus @auth(rules: [{ roles: ["federalAdmin"] }])
+extend type Town @auth(rules: [{ roles: ["federalAdmin"] }])
+extend type Sonta @auth(rules: [{ roles: ["federalAdmin"] }])
+extend type Ministry @auth(rules: [{ roles: ["federalAdmin"] }])
 
 type Gender {
   gender: String
-  members: [Member] @relation(name: "HAS_GENDER", direction: IN)
+  members: [Member] @relationship(type: "HAS_GENDER", direction: IN)
 }
 
 type MaritalStatus {
   status: String
-  members: [Member] @relation(name: "HAS_MARITAL_STATUS", direction: IN)
+  members: [Member] @relationship(type: "HAS_MARITAL_STATUS", direction: IN)
 }
 
 type Occupation {
   occupation: String
-  members: [Member] @relation(name: "HAS_OCCUPATION", direction: IN)
+  members: [Member] @relationship(type: "HAS_OCCUPATION", direction: IN)
 }
 
 type Title {
   title: String! #Pastor, Reverend, Apostle, Bishop (Mother)
-  members: [HasTitle]
+  members: [Member] @relationship(type: "HAS_TITLE", direction: IN)
 }
 
-type HasTitle @relation(name: "HAS_TITLE") {
-  from: Member
-  to: Title
-  yearAppointed: Date
-  status: Boolean #active or inactive
-  numberofTimesRemoved: Int
-}
+# type HasTitle @relationship(type: "HAS_TITLE") {
+#   from: Member
+#   to: Title
+#   yearAppointed: Date
+#   status: Boolean #active or inactive
+#   numberofTimesRemoved: Int
+# }
 
-type HasBacentaHistory @relation(name: "HAS_HISTORY") {
-  from: Bacenta
-  to: HistoryLog
-  pointer: Boolean
-}
-type HasCentreHistory @relation(name: "HAS_HISTORY") {
-  from: Centre
-  to: HistoryLog
-  pointer: Boolean
-}
-type HasSontaHistory @relation(name: "HAS_HISTORY") {
-  from: Sonta
-  to: HistoryLog
-  pointer: Boolean
-}
-type HasCampusHistory @relation(name: "HAS_HISTORY") {
-  from: Campus
-  to: HistoryLog
-  pointer: Boolean
-}
-type HasTownHistory @relation(name: "HAS_HISTORY") {
-  from: Town
-  to: HistoryLog
-  pointer: Boolean
-}
+# type HasBacentaHistory @relationship(type: "HAS_HISTORY") {
+#   from: Bacenta
+#   to: HistoryLog
+#   pointer: Boolean
+# }
+# type HasCentreHistory @relationship(type: "HAS_HISTORY") {
+#   from: Centre
+#   to: HistoryLog
+#   pointer: Boolean
+# }
+# type HasSontaHistory @relationship(type: "HAS_HISTORY") {
+#   from: Sonta
+#   to: HistoryLog
+#   pointer: Boolean
+# }
+# type HasCampusHistory @relationship(type: "HAS_HISTORY") {
+#   from: Campus
+#   to: HistoryLog
+#   pointer: Boolean
+# }
+# type HasTownHistory @relationship(type: "HAS_HISTORY") {
+#   from: Town
+#   to: HistoryLog
+#   pointer: Boolean
+# }
 
 type TimeGraph {
-  date: Date @index
-  memberDob: Member @relation(name: "WAS_BORN_ON", direction: IN)
-  # titleAppointmentDate: Member @relation(name: "APPOINTED_ON", direction: IN)
+  date: Date
+  memberDob: Member @relationship(type: "WAS_BORN_ON", direction: IN)
+  # titleAppointmentDate: Member @relationship(type: "APPOINTED_ON", direction: IN)
   leaderHistoryStartDate: TimeGraph
-    @relation(name: "LEADER_STARTED_ON", direction: OUT)
+    @relationship(type: "LEADER_STARTED_ON", direction: OUT)
   leaderHistoryEndDate: TimeGraph
-    @relation(name: "LEADER_ENDED_ON", direction: OUT)
-  historyDate: TimeGraph @relation(name: "RECORDED_ON", direction: OUT)
-  serviceDate: [ServiceRecord] @relation(name: "SERVICE_HELD_ON", direction: IN)
+    @relationship(type: "LEADER_ENDED_ON", direction: OUT)
+  historyDate: TimeGraph @relationship(type: "RECORDED_ON", direction: OUT)
+  serviceDate: [ServiceRecord]
+    @relationship(type: "SERVICE_HELD_ON", direction: IN)
 }
 
 # type LeaderHistory {
 #   created_at: DateTime
 #   historyRecord: String
 #   historyDate: TimeGraph
-#     @relation(name: "LEADER_STARTED_ON", direction: OUT)
-#   historyEndDate: TimeGraph @relation(name: "LEADER_ENDED_ON", direction: OUT)
-#   leaders: Member @relation(name: "HAS_LEADERSHIP_HISTORY", direction: IN)
+#     @relationship(type: "LEADER_STARTED_ON", direction: OUT)
+#   historyEndDate: TimeGraph @relationship(type: "LEADER_ENDED_ON", direction: OUT)
+#   leaders: Member @relationship(type: "HAS_LEADERSHIP_HISTORY", direction: IN)
 #   bacentaerviceRecords: [ServiceRecord]
-#     @relation(name: "HAS_RECORD", direction: OUT)
+#     @relationship(type: "HAS_RECORD", direction: OUT)
 # }
 
 type ServiceRecord {
   created_at: DateTime
-  serviceDate: TimeGraph @relation(name: "SERVICE_HELD_ON", direction: OUT)
+  serviceDate: TimeGraph @relationship(type: "SERVICE_HELD_ON", direction: OUT)
   attendance: Int!
   income: Float
-  treasurers: [Member]! @relation(name: "WAS_TREASURER_FOR", direction: IN)
-  historyLog: HistoryLog @relation(name: "HAS_RECORD", direction: IN)
+  treasurers: [Member]! @relationship(type: "WAS_TREASURER_FOR", direction: IN)
+  historyLog: HistoryLog @relationship(type: "HAS_RECORD", direction: IN)
 }
 
 type HistoryLog {
   id: ID @id
-  timeStamp: Time
+  timeStamp: String
   historyRecord: String #leader was transferred to
-  created_at: TimeGraph @relation(name: "RECORDED_ON", direction: OUT)
-  leaders: [Member] @relation(name: "HAS_HISTORY", direction: IN)
-  Bacenta: [Bacenta] @relation(name: "HAS_HISTORY", direction: IN)
-  Centre: [Centre] @relation(name: "HAS_HISTORY", direction: IN)
-  Campus: [Campus] @relation(name: "HAS_HISTORY", direction: IN)
-  Town: [Town] @relation(name: "HAS_HISTORY", direction: IN)
-  Sonta: [Sonta] @relation(name: "HAS_HISTORY", direction: IN)
-  loggedBy: Member @relation(name: "LOGGED_BY", direction: OUT)
+  created_at: TimeGraph @relationship(type: "RECORDED_ON", direction: OUT)
+  leaders: [Member] @relationship(type: "HAS_HISTORY", direction: IN)
+  Bacenta: [Bacenta] @relationship(type: "HAS_HISTORY", direction: IN)
+  Centre: [Centre] @relationship(type: "HAS_HISTORY", direction: IN)
+  Campus: [Campus] @relationship(type: "HAS_HISTORY", direction: IN)
+  Town: [Town] @relationship(type: "HAS_HISTORY", direction: IN)
+  Sonta: [Sonta] @relationship(type: "HAS_HISTORY", direction: IN)
+  loggedBy: Member @relationship(type: "LOGGED_BY", direction: OUT)
 }
 
 # Campus-Centre, Town-Centre
 type Campus {
   id: ID @id
-  name: String @index
-  leader: Member @relation(name: "LEADS", direction: IN)
-  sontas: [Sonta] @relation(name: "HAS_SONTA", direction: OUT)
-  centres: [Centre] @relation(name: "HAS_CENTRE", direction: OUT)
-  bishop: Member @relation(name: "HAS_CAMPUS", direction: IN)
-  admin: Member @relation(name: "IS_ADMIN_FOR", direction: IN)
-  history: [HasCampusHistory]
-  serviceRecord: [ServiceRecord] @relation(name: "HAS_RECORD", direction: OUT)
+  name: String
+  leader: Member @relationship(type: "LEADS", direction: IN)
+  sontas: [Sonta] @relationship(type: "HAS_SONTA", direction: OUT)
+  centres: [Centre] @relationship(type: "HAS_CENTRE", direction: OUT)
+  bishop: Member @relationship(type: "HAS_CAMPUS", direction: IN)
+  admin: Member @relationship(type: "IS_ADMIN_FOR", direction: IN)
+  history: [HistoryLog] @relationship(type: "HAS_HISTORY", direction: OUT)
+  serviceRecord: [ServiceRecord]
+    @relationship(type: "HAS_RECORD", direction: OUT)
 }
 
 type Town {
   id: ID @id
-  name: String @index
-  leader: Member @relation(name: "LEADS", direction: IN)
-  sontas: [Sonta] @relation(name: "HAS_SONTA", direction: OUT)
-  centres: [Centre] @relation(name: "HAS_CENTRE", direction: OUT)
-  bishop: Member @relation(name: "HAS_TOWN", direction: IN)
-  admin: Member @relation(name: "IS_ADMIN_FOR", direction: IN)
-  history: [HasTownHistory]
-  serviceRecord: [ServiceRecord] @relation(name: "HAS_RECORD", direction: OUT)
+  name: String
+  leader: Member @relationship(type: "LEADS", direction: IN)
+  sontas: [Sonta] @relationship(type: "HAS_SONTA", direction: OUT)
+  centres: [Centre] @relationship(type: "HAS_CENTRE", direction: OUT)
+  bishop: Member @relationship(type: "HAS_TOWN", direction: IN)
+  admin: Member @relationship(type: "IS_ADMIN_FOR", direction: IN)
+  history: [HistoryLog] @relationship(type: "HAS_HISTORY", direction: OUT)
+  serviceRecord: [ServiceRecord]
+    @relationship(type: "HAS_RECORD", direction: OUT)
 }
 
 type Centre {
   id: ID @id
-  name: String @index
-  leader: Member @relation(name: "LEADS", direction: IN)
-  bacentas: [Bacenta] @relation(name: "HAS_BACENTA", direction: OUT)
-  basontas: Basonta @relation(name: "HAS_BASONTA", direction: OUT)
-  town: Town @relation(name: "HAS_CENTRE", direction: IN)
-  campus: Campus @relation(name: "HAS_CENTRE", direction: IN)
-  history: [HasCentreHistory]
-  serviceRecord: [ServiceRecord] @relation(name: "HAS_RECORD", direction: OUT)
+  name: String
+  leader: Member @relationship(type: "LEADS", direction: IN)
+  bacentas: [Bacenta] @relationship(type: "HAS_BACENTA", direction: OUT)
+  basontas: Basonta @relationship(type: "HAS_BASONTA", direction: OUT)
+  town: Town @relationship(type: "HAS_CENTRE", direction: IN)
+  campus: Campus @relationship(type: "HAS_CENTRE", direction: IN)
+  history: [HistoryLog] @relationship(type: "HAS_HISTORY", direction: OUT)
+  serviceRecord: [ServiceRecord]
+    @relationship(type: "HAS_RECORD", direction: OUT)
 }
 
 # Shared Units: Bacenta, Bacenta, Sonta
 type Bacenta {
   id: ID @id
-  name: String @index
+  name: String
   location: Point
-  centre: Centre @relation(name: "HAS_BACENTA", direction: IN)
-  leader: Member @relation(name: "LEADS", direction: IN)
-  members: [Member] @relation(name: "BELONGS_TO", direction: IN)
-  meetingDay: ServiceDay @relation(name: "MEETS_ON", direction: OUT)
-  history: [HasBacentaHistory]
-  serviceRecord: [ServiceRecord] @relation(name: "HAS_RECORD", direction: OUT)
+  centre: Centre @relationship(type: "HAS_BACENTA", direction: IN)
+  leader: Member @relationship(type: "LEADS", direction: IN)
+  members: [Member] @relationship(type: "BELONGS_TO", direction: IN)
+  meetingDay: ServiceDay @relationship(type: "MEETS_ON", direction: OUT)
+  history: [HistoryLog] @relationship(type: "HAS_HISTORY", direction: OUT)
+  serviceRecord: [ServiceRecord]
+    @relationship(type: "HAS_RECORD", direction: OUT)
 }
 
 type ServiceDay {
   day: String!
   dayNum: Int
-  bacenta: Bacenta @relation(name: "MEETS_ON", direction: IN)
+  bacenta: Bacenta @relationship(type: "MEETS_ON", direction: IN)
 }
 
 type Ministry {
   id: ID @id
-  name: String @index
-  sonta: [Sonta] @relation(name: "HAS_SONTA", direction: OUT)
-  leader: Member @relation(name: "LEADS", direction: IN)
-  members: [Member] @relation(name: "BELONGS_TO", direction: IN)
+  name: String
+  sonta: [Sonta] @relationship(type: "HAS_SONTA", direction: OUT)
+  leader: Member @relationship(type: "LEADS", direction: IN)
+  members: [Member] @relationship(type: "BELONGS_TO", direction: IN)
 }
 
 type Sonta {
   id: ID @id
-  name: String @index
-  leader: Member @relation(name: "LEADS", direction: IN)
-  basonta: [Basonta] @relation(name: "HAS_BASONTA", direction: OUT)
-  ministry: Ministry @relation(name: "HAS_SONTA", direction: IN)
-  town: Town @relation(name: "HAS_SONTA", direction: IN)
-  history: [HasSontaHistory]
-  campus: Campus @relation(name: "HAS_SONTA", direction: IN)
+  name: String
+  leader: Member @relationship(type: "LEADS", direction: IN)
+  basonta: [Basonta] @relationship(type: "HAS_BASONTA", direction: OUT)
+  ministry: Ministry @relationship(type: "HAS_SONTA", direction: IN)
+  town: Town @relationship(type: "HAS_SONTA", direction: IN)
+  history: [HistoryLog] @relationship(type: "HAS_HISTORY", direction: OUT)
+  campus: Campus @relationship(type: "HAS_SONTA", direction: IN)
 }
 type Basonta {
   id: ID @id
-  name: String @index
-  leader: Member @relation(name: "LEADS", direction: IN)
-  centre: Centre @relation(name: "HAS_BASONTA", direction: IN)
-  sonta: Sonta @relation(name: "HAS_BASONTA", direction: IN)
+  name: String
+  leader: Member @relationship(type: "LEADS", direction: IN)
+  centre: Centre @relationship(type: "HAS_BASONTA", direction: IN)
+  sonta: Sonta @relationship(type: "HAS_BASONTA", direction: IN)
 }
 
 #Query Definitions
 type Query {
   #At the Federal Level
-  bishopsList: [Member]
-    @cypher(
-      statement: "MATCH ()<-[:HAS_CAMPUS|:HAS_TOWN]-(bishop:Member) RETURN DISTINCT bishop"
-    )
-    @hasScope(scopes: ["Member: Read"])
   bishopsListCampus: [Member]
     @cypher(
       statement: "MATCH ()<-[:HAS_CAMPUS]-(bishop:Member) RETURN DISTINCT bishop"
     )
-    @isAuthenticated
   bishopsListTown: [Member]
     @cypher(
       statement: "MATCH ()<-[:HAS_TOWN]-(bishop:Member) RETURN DISTINCT bishop"
     )
-    @hasScope(scopes: ["Bishop: Read"])
-  ministryList: [Ministry]
-    @cypher(statement: "MATCH (ministry:Ministry) RETURN ministry")
   memberCount: Int!
     @cypher(statement: "MATCH (member:Member) RETURN COUNT(DISTINCT member)")
   centreCount: Int!
@@ -382,21 +387,11 @@ type Query {
        OPTIONAL MATCH (campusTown)<-[:IS_ADMIN_FOR]-(constituencyAdmin:Member)
       UNWIND [member,bacentaLeader,centreLeader,constituencyOverseer,constituencyAdmin] as members
       WITH members WHERE members IS NOT NULL
-      RETURN DISTINCT members
+      RETURN DISTINCT members ORDER BY members.firstName
       """
     )
 
   #At the Town Level
-  displayTown(id: ID): Town
-    @cypher(statement: "MATCH (town:Town {id:$id}) RETURN town")
-  townList(id: ID): [Town]
-    @cypher(
-      statement: "MATCH (title:Title {title:'Bishop'})<-[:HAS_TITLE]-(bishop:Member {id:$id})-[:HAS_TOWN]->(town:Town) RETURN town"
-    )
-  townBacentaList(id: ID): [Bacenta]
-    @cypher(
-      statement: "MATCH (town:Town {id: $id})-[:HAS_CENTRE]->(:Centre)-[:HAS_BACENTA]-> (bacenta:Bacenta) RETURN bacenta"
-    )
   townSontaList(id: ID): [Sonta]
     @cypher(
       statement: "MATCH (town:Town {id: $id})-[:HAS_SONTA]->(sonta:Sonta)  RETURN sonta"
@@ -437,12 +432,6 @@ type Query {
     )
 
   #At the Campus Level
-  displayCampus(id: ID): Campus
-    @cypher(statement: "MATCH (campus:Campus {id:$id}) RETURN campus")
-  campusList(id: ID): [Campus]
-    @cypher(
-      statement: "MATCH (title:Title {title:'Bishop'})<-[:HAS_TITLE]-(bishop:Member {id:$id})-[:HAS_CAMPUS]->(campus:Campus) RETURN campus"
-    )
   campusBacentaList(id: ID): [Bacenta]
     @cypher(
       statement: "MATCH (campus:Campus {id: $id})-[:HAS_CENTRE]->(:Centre)-[:HAS_BACENTA]-> (bacenta:Bacenta) RETURN bacenta"
@@ -487,8 +476,6 @@ type Query {
     )
 
   #At the Centre Level
-  displayCentre(id: ID): Centre
-    @cypher(statement: "MATCH (centre:Centre {id:$id}) RETURN centre")
   centreDropdown(centreName: String): [Centre]
     @cypher(
       statement: "MATCH (centre:Centre) WHERE toLower(centre.name) CONTAINS toLower($centreName) RETURN centre LIMIT 5"
@@ -522,8 +509,6 @@ type Query {
     )
 
   #At the Bacenta Level
-  displayBacenta(id: ID): Bacenta
-    @cypher(statement: "MATCH (bacenta:Bacenta{id:$id}) RETURN bacenta")
   bacentaMemberCount(id: ID): Int
     @cypher(
       statement: "MATCH (bacenta:Bacenta{id:$id}) MATCH (bacenta)<-[:BELONGS_TO]-(member:Member) RETURN COUNT(DISTINCT member)"
@@ -541,8 +526,6 @@ type Query {
     )
 
   #At the Ministry Level
-  displayMinistry(id: ID): Ministry
-    @cypher(statement: "MATCH (ministry:Ministry {id: $id}) RETURN ministry")
   sontaTownList(bishopId: ID, ministryId: ID): [Town]
     @cypher(
       statement: """
@@ -554,8 +537,6 @@ type Query {
     )
 
   #At the Sonta Level
-  displaySonta(id: ID): Sonta
-    @cypher(statement: "MATCH (sonta:Sonta {id: $id}) RETURN sonta")
   sontaList: [Sonta] @cypher(statement: "MATCH (s:Sonta) RETURN s")
   townSontaLeader(bishopId: ID): [Member]
     @cypher(
@@ -596,10 +577,10 @@ type Query {
 
   #Members
   # Display Member based on ID
-  displayMember(id: ID): Member
-    @cypher(statement: "MATCH (member:Member {id:$id}) RETURN member")
-  memberByEmail(email: String): Member
-    @cypher(statement: "MATCH (member:Member {email:$email}) RETURN member")
+  currentUser(id: ID): Member
+    @cypher(
+      statement: "MATCH (member:Member {auth_id: $auth.jwt.sub}) RETURN member"
+    )
 
   #Fuzzy Search
   memberGridList(
@@ -722,7 +703,7 @@ type Mutation {
       MERGE (date:TimeGraph {date: date()})
 
       WITH member, log
-      MATCH (currentUser:Member {auth_id:$cypherParams.user_authId})
+      MATCH (currentUser:Member {auth_id:$auth.jwt.sub})
       MERGE (log)-[:RECORDED_ON]->(date)
       MERGE (log)-[:LOGGED_BY]->(currentUser)
 
@@ -780,7 +761,7 @@ type Mutation {
       	town.id = apoc.create.uuid()
       WITH town
       MATCH (leader:Member {id: $leaderId})
-      MATCH (currentUser:Member {auth_id:$cypherParams.user_authId})
+      MATCH (currentUser:Member {auth_id:$auth.jwt.sub})
       MATCH (bishop:Member {id: $id})
 
        CREATE (log:HistoryLog)
@@ -809,7 +790,7 @@ type Mutation {
       	campus.id = apoc.create.uuid()
       WITH campus
       MATCH (leader:Member {id: $leaderId})
-      MATCH (currentUser:Member {auth_id:$cypherParams.user_authId})
+      MATCH (currentUser:Member {auth_id:$auth.jwt.sub})
       MATCH (bishop:Member {id: $id})
 
        CREATE (log:HistoryLog)
@@ -839,7 +820,7 @@ type Mutation {
       	centre.id = apoc.create.uuid()
       WITH centre
        MATCH (leader:Member {id: $leaderId})
-       MATCH (currentUser:Member {auth_id:$cypherParams.user_authId})
+       MATCH (currentUser:Member {auth_id:$auth.jwt.sub})
        MATCH (campusTown {id:$townCampusId}) WHERE campusTown:Town OR campusTown:Campus
        UNWIND labels(campusTown) AS typename
 
@@ -869,7 +850,7 @@ type Mutation {
       	sonta.id = apoc.create.uuid()
       WITH sonta
        MATCH (leader:Member {id: $leaderId})
-       MATCH (currentUser:Member {auth_id:$cypherParams.user_authId})
+       MATCH (currentUser:Member {auth_id:$auth.jwt.sub})
        MATCH (ministry:Ministry {id:$ministryId})
        MATCH (campusTown {id:$townCampusId}) WHERE campusTown:Town OR campusTown:Campus
        UNWIND labels(campusTown) AS typename
@@ -913,7 +894,7 @@ type Mutation {
       MATCH (centre:Centre {id: $centreId})
       MATCH (meetingDay:ServiceDay {day: $meetingDay})
       MATCH (leader:Member {id: $leaderId})
-      MATCH (currentUser:Member {auth_id:$cypherParams.user_authId})
+      MATCH (currentUser:Member {auth_id:$auth.jwt.sub})
 
         CREATE (log:HistoryLog:ServiceLog)
          SET
@@ -1182,7 +1163,7 @@ type Mutation {
     @cypher(
       statement: """
        MATCH  (bacenta:Bacenta {id: $bacentaId})
-       MATCH (admin:Member {auth_id: $cypherParams.user_authId})
+       MATCH (admin:Member {auth_id: $auth.jwt.sub})
        CREATE (log:HistoryLog {id: apoc.create.uuid()})
          SET log.historyRecord = $historyRecord,
            log.timeStamp = time()
@@ -1241,7 +1222,7 @@ type Mutation {
     @cypher(
       statement: """
        MATCH  (centre:Centre {id: $centreId})
-       MATCH (admin:Member {auth_id: $cypherParams.user_authId})
+       MATCH (admin:Member {auth_id: $auth.jwt.sub})
        CREATE (log:HistoryLog {id: apoc.create.uuid()})
          SET log.historyRecord = $historyRecord,
            log.timeStamp = time()
@@ -1301,7 +1282,7 @@ type Mutation {
     @cypher(
       statement: """
       MATCH  (campusTown {id: $campusTownId}) WHERE campusTown:Campus OR campusTown:Town
-      MATCH (admin:Member {auth_id: $cypherParams.user_authId})
+      MATCH (admin:Member {auth_id: $auth.jwt.sub})
       CREATE (log:HistoryLog {id: apoc.create.uuid()})
         SET log.historyRecord = $historyRecord,
           log.timeStamp = time()
@@ -1368,7 +1349,7 @@ type Mutation {
     @cypher(
       statement: """
        MATCH  (sonta:Sonta {id: $sontaId})
-       MATCH (admin:Member {auth_id: $cypherParams.user_authId})
+       MATCH (admin:Member {auth_id: $auth.jwt.sub})
        CREATE (log:HistoryLog {id: apoc.create.uuid()})
          SET log.historyRecord = $historyRecord,
            log.timeStamp = time()

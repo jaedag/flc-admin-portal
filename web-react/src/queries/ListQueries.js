@@ -2,7 +2,7 @@ import { gql } from '@apollo/client'
 
 export const ALL_MEMBERS = gql`
   {
-    Member(first: 50) {
+    members(options: { limit: 50 }) {
       id
       firstName
       lastName
@@ -28,7 +28,7 @@ export const GET_BACENTA_LEADERS = gql`
 `
 
 export const BACENTA_DROPDOWN = gql`
-  query($bacentaName: String) {
+  query ($bacentaName: String) {
     bacentaDropdown(bacentaName: $bacentaName, first: 8) {
       id
       name
@@ -48,7 +48,7 @@ export const BACENTA_DROPDOWN = gql`
 `
 
 export const BISHOP_BACENTA_DROPDOWN = gql`
-  query($id: ID, $bacentaName: String) {
+  query ($id: ID, $bacentaName: String) {
     bishopBacentaDropdown(id: $id, bacentaName: $bacentaName, first: 8) {
       id
       name
@@ -67,7 +67,7 @@ export const BISHOP_BACENTA_DROPDOWN = gql`
 `
 
 export const BISHOP_MEMBER_DROPDOWN = gql`
-  query($id: ID, $nameSearch: String) {
+  query ($id: ID, $nameSearch: String) {
     bishopMemberDropdown(id: $id, nameSearch: $nameSearch, first: 8) {
       id
       firstName
@@ -77,7 +77,7 @@ export const BISHOP_MEMBER_DROPDOWN = gql`
 `
 
 export const CENTRE_DROPDOWN = gql`
-  query($centreName: String) {
+  query ($centreName: String) {
     centreDropdown(centreName: $centreName, first: 8) {
       id
       name
@@ -94,7 +94,7 @@ export const CENTRE_DROPDOWN = gql`
 `
 
 export const BISHOP_CENTRE_DROPDOWN = gql`
-  query($id: ID!, $nameSearch: String!) {
+  query ($id: ID!, $nameSearch: String!) {
     bishopCentreDropdown(id: $id, nameSearch: $nameSearch, first: 8) {
       id
       name
@@ -111,8 +111,8 @@ export const BISHOP_CENTRE_DROPDOWN = gql`
 `
 
 export const GET_TOWN_CENTRES = gql`
-  query($id: ID) {
-    townCentreList(id: $id) {
+  query ($id: ID) {
+    centres(where: { town: { id: $id } }) {
       id
       name
       town {
@@ -135,7 +135,7 @@ export const GET_TOWN_CENTRES = gql`
         lastName
       }
     }
-    townSontaList(id: $id) {
+    sontas(where: { town: { id: $id } }) {
       id
       name
       leader {
@@ -148,8 +148,8 @@ export const GET_TOWN_CENTRES = gql`
 `
 
 export const GET_CAMPUS_CENTRES = gql`
-  query($id: ID) {
-    campusCentreList(id: $id) {
+  query ($id: ID) {
+    centres(where: { campus: { id: $id } }) {
       id
       name
       campus {
@@ -171,7 +171,7 @@ export const GET_CAMPUS_CENTRES = gql`
         lastName
       }
     }
-    campusSontaList(id: $id) {
+    sontas(where: { campus: { id: $id } }) {
       id
       name
       leader {
@@ -184,8 +184,8 @@ export const GET_CAMPUS_CENTRES = gql`
 `
 
 export const GET_SONTAS_BY_CAMPUSTOWN = gql`
-  query($id: ID) {
-    townList(id: $id) {
+  query ($id: ID) {
+    towns(where: { bishop: { id: $id } }) {
       id
       name
       bishop {
@@ -202,7 +202,7 @@ export const GET_SONTAS_BY_CAMPUSTOWN = gql`
       }
     }
     bishopSontaMemberCount(id: $id)
-    campusList(id: $id) {
+    campuses(where: { bishop: { id: $id } }) {
       id
       name
       bishop {
@@ -221,46 +221,48 @@ export const GET_SONTAS_BY_CAMPUSTOWN = gql`
   }
 `
 
-export const GET_CAMPUSES = gql`
-  query($id: ID) {
-    campusList(id: $id) {
-      name
-      id
-      leader {
-        id
-        firstName
-        lastName
-      }
-      admin {
-        id
-        firstName
-        lastName
-      }
-      sontas {
-        id
+export const GET_BISHOP_CAMPUSES = gql`
+  query ($id: ID) {
+    members(where: { id: $id }) {
+      campusBishop {
         name
-      }
-      bishop {
         id
-        firstName
-        lastName
-        hasAdmin {
+        leader {
           id
           firstName
           lastName
-          bacenta {
-            centre {
-              town {
-                id
-                name
-                bishop {
+        }
+        admin {
+          id
+          firstName
+          lastName
+        }
+        sontas {
+          id
+          name
+        }
+        bishop {
+          id
+          firstName
+          lastName
+          hasAdmin {
+            id
+            firstName
+            lastName
+            bacenta {
+              centre {
+                town {
                   id
+                  name
+                  bishop {
+                    id
+                  }
                 }
-              }
-              campus {
-                name
-                bishop {
-                  id
+                campus {
+                  name
+                  bishop {
+                    id
+                  }
                 }
               }
             }
@@ -271,46 +273,48 @@ export const GET_CAMPUSES = gql`
   }
 `
 
-export const GET_TOWNS = gql`
-  query($id: ID) {
-    townList(id: $id) {
-      name
-      id
-      leader {
-        id
-        firstName
-        lastName
-      }
-      admin {
-        id
-        firstName
-        lastName
-      }
-      sontas {
-        id
+export const GET_BISHOP_TOWNS = gql`
+  query ($id: ID) {
+    members(where: { id: $id }) {
+      townBishop {
         name
-      }
-      bishop {
         id
-        firstName
-        lastName
-        hasAdmin {
+        leader {
           id
           firstName
           lastName
-          bacenta {
-            centre {
-              town {
-                id
-                name
-                bishop {
+        }
+        admin {
+          id
+          firstName
+          lastName
+        }
+        sontas {
+          id
+          name
+        }
+        bishop {
+          id
+          firstName
+          lastName
+          hasAdmin {
+            id
+            firstName
+            lastName
+            bacenta {
+              centre {
+                town {
                   id
+                  name
+                  bishop {
+                    id
+                  }
                 }
-              }
-              campus {
-                name
-                bishop {
-                  id
+                campus {
+                  name
+                  bishop {
+                    id
+                  }
                 }
               }
             }
@@ -322,8 +326,8 @@ export const GET_TOWNS = gql`
 `
 
 export const GET_BISHOPS = gql`
-  query {
-    bishopsList {
+  {
+    members(where: { title: { title: "Bishop" } }) {
       id
       firstName
       lastName
@@ -333,25 +337,16 @@ export const GET_BISHOPS = gql`
         name
       }
       campusBishop {
+        id
         name
       }
-    }
-    bishopsListCampus {
-      id
-      firstName
-      lastName
-    }
-    bishopsListTown {
-      id
-      firstName
-      lastName
     }
   }
 `
 
 export const GET_MINISTRIES = gql`
   query {
-    ministryList {
+    ministries {
       id
       name
     }
@@ -359,31 +354,33 @@ export const GET_MINISTRIES = gql`
 `
 
 export const GET_CENTRE_BACENTAS = gql`
-  query($id: ID) {
-    centreBacentaList(id: $id) {
-      id
-      name
-      leader {
-        firstName
-        lastName
-      }
-      centre {
+  query ($id: ID) {
+    centres(where: { id: $id }) {
+      bacentas {
+        id
         name
         leader {
-          id
           firstName
           lastName
         }
-        town {
-          id
-          bishop {
+        centre {
+          name
+          leader {
             id
+            firstName
+            lastName
           }
-        }
-        campus {
-          id
-          bishop {
+          town {
             id
+            bishop {
+              id
+            }
+          }
+          campus {
+            id
+            bishop {
+              id
+            }
           }
         }
       }
@@ -392,7 +389,7 @@ export const GET_CENTRE_BACENTAS = gql`
 `
 
 export const OCCUPATION_LIST = gql`
-  query($searchKey: String!) {
+  query ($searchKey: String!) {
     occupationList(searchKey: $searchKey, first: 5) {
       occupation
     }

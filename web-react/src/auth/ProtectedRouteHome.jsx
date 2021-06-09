@@ -12,9 +12,8 @@ import { isAuthorised } from '../global-utils'
 const ProtectedRoute = ({ component, roles, ...args }) => {
   const { currentUser } = useContext(MemberContext)
   const { isAuthenticated } = useAuth0()
-  const { setBishopId, setTownId, setCampusId, setChurch } = useContext(
-    ChurchContext
-  )
+  const { setBishopId, setTownId, setCampusId, setChurch } =
+    useContext(ChurchContext)
 
   useEffect(() => {
     if (isAuthenticated && !currentUser.roles.includes('federalAdmin')) {

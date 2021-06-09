@@ -1,5 +1,6 @@
 //Global Constants
-export const PHONE_NUM_REGEX_VALIDATION = /^[+][(]{0,1}[1-9]{1,4}[)]{0,1}[-\s/0-9]*$/
+export const PHONE_NUM_REGEX_VALIDATION =
+  /^[+][(]{0,1}[1-9]{1,4}[)]{0,1}[-\s/0-9]*$/
 export const MONTH_NAMES = [
   'Jan',
   'Feb',
@@ -109,15 +110,15 @@ export function debounce(func, wait) {
   }
 }
 
-export const getNameWithTitle = (Member) => {
+export const getNameWithTitle = (member) => {
   let displayName = {
-    name: `${Member.firstName} ${Member.lastName}`,
+    name: `${member.fullName}`,
     title: '',
   }
 
-  if (Member.title.length) {
-    if (Member.gender.gender === 'Female') {
-      switch (Member.title[0].title) {
+  if (member.title.length) {
+    if (member.gender.gender === 'Female') {
+      switch (member.title[0].title) {
         case 'Pastor':
           displayName.title = 'Lady Pastor'
           break
@@ -131,7 +132,7 @@ export const getNameWithTitle = (Member) => {
           break
       }
     } else {
-      displayName.title = Member.title[0].title
+      displayName.title = member.title[0].title
     }
 
     return `${displayName.title} ${displayName.name}`

@@ -14,6 +14,7 @@ const DisplayCampusTownDetails = () => {
   const { data: townData, loading: townLoading } = useQuery(DISPLAY_TOWN, {
     variables: { id: townId },
   })
+
   const { data: campusData, loading: campusLoading } = useQuery(
     DISPLAY_CAMPUS,
     {
@@ -25,67 +26,64 @@ const DisplayCampusTownDetails = () => {
     // Spinner Icon for Loading Screens
     return <LoadingScreen />
   } else if (church.church === 'town' && townData) {
-    let breadcrumb = [townData.displayTown?.bishop, townData.displayTown]
+    let breadcrumb = [townData.towns[0]?.bishop, townData.towns[0]]
     return (
       <>
         <NavBar />
         <DisplayChurchDetails
-          name={townData.displayTown.name}
+          name={townData.towns[0].name}
           leaderTitle={'Town CO'}
           membership={townData.townMemberCount}
           leaderName={
-            townData.displayTown.leader
-              ? `${townData.displayTown.leader.firstName} ${townData.displayTown.leader.lastName}`
+            townData.towns[0].leader
+              ? `${townData.towns[0].leader.firstName} ${townData.towns[0].leader.lastName}`
               : null
           }
-          leaderId={townData.displayTown.leader?.id}
+          leaderId={townData.towns[0].leader?.id}
           churchHeading="No of Centres"
           churchNo={townData.townCentreCount}
-          admin={townData.displayTown.admin}
+          admin={townData.towns[0].admin}
           churchType={`${capitalise(church.church)}`}
           subChurch={`${capitalise(church.subChurch)}`}
-          buttons={townData.displayTown.centres}
+          buttons={townData.towns[0].centres}
           editlink="/town/edittown"
           history={
-            townData.displayTown?.history.length !== 0 &&
-            townData.displayTown?.history
+            townData.towns[0]?.history.length !== 0 &&
+            townData.towns[0]?.history
           }
           breadcrumb={breadcrumb && breadcrumb}
         />
       </>
     )
   } else if (church.church === 'campus' && campusData) {
-    let breadcrumb = [
-      campusData.displayCampus?.bishop,
-      campusData.displayCampus,
-    ]
+    let breadcrumb = [campusData.campuses[0]?.bishop, campusData.campuses[0]]
     return (
       <>
         <NavBar />
         <DisplayChurchDetails
-          name={campusData.displayCampus.name}
+          name={campusData.campuses[0].name}
           leaderTitle={'Campus CO'}
           membership={campusData.campusMemberCount}
           leaderName={
-            campusData.displayCampus.leader
-              ? `${campusData.displayCampus.leader.firstName} ${campusData.displayCampus.leader.lastName}`
+            campusData.campuses[0].leader
+              ? `${campusData.campuses[0].leader.firstName} ${campusData.campuses[0].leader.lastName}`
               : '-'
           }
           leaderId={
-            campusData.displayCampus.leader
-              ? campusData.displayCampus.leader.id
+            campusData.campuses[0].leader
+              ? campusData.campuses[0].leader.id
               : null
           }
           churchHeading="No of Centres"
           churchNo={campusData.campusCentreCount}
-          admin={campusData.displayCampus.admin}
+          admin={campusData.campuses[0].admin}
           churchType={`${capitalise(church.church)}`}
           subChurch="Centre"
-          buttons={campusData.displayCampus.centres}
+          buttons={campusData.campuses[0].centres}
           breadcrumb={breadcrumb && breadcrumb}
           history={
-            campusData.displayCampus?.history.length !== 0 &&
-            campusData.displayCampus?.history
+            campusData.campuses[0]?.history.length !== 0 &&
+            campusData.campuses[0]?.history
           }
           editlink="/campus/editcampus"
         />

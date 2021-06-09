@@ -13,7 +13,7 @@ export const CampusTownMembers = () => {
   if (church.church === 'campus') {
     return (
       <MembersGrid
-        title={data ? `${data.displayCampus?.name} Campus` : null}
+        title={data ? `${data.campuses[0]?.name} Campus` : null}
         memberData={data?.campusMemberList}
         memberLoading={loading}
         memberError={error}
@@ -22,7 +22,7 @@ export const CampusTownMembers = () => {
   } else {
     return (
       <MembersGrid
-        title={data ? `${data?.displayTown?.name} Town` : null}
+        title={data ? `${data?.towns[0]?.name} Town` : null}
         memberData={data?.townMemberList}
         memberLoading={loading}
         memberError={error}

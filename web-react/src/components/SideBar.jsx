@@ -112,7 +112,7 @@ const SideBar = () => {
                       modifier="filter"
                       optionsQuery={GET_MINISTRIES}
                       queryVariable="id"
-                      dataset="ministryList"
+                      dataset="ministries"
                       defaultOption="Select a Ministry"
                     />
                   </div>

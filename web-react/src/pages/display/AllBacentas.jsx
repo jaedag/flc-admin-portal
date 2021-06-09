@@ -24,32 +24,28 @@ const DisplayAllBacentas = () => {
     // Spinner Icon for Loading Screens
     return <LoadingScreen />
   } else if (bacentaData) {
+    const bacentas = bacentaData.centres[0]?.bacentas
     return (
       <>
         <NavBar />
         <div className="body-container container">
           <div className="mb-4">
-            <h4>{`${bacentaData.centreBacentaList[0].centre.name} Centre`}</h4>
+            <h4>{`${bacentas[0].centre.name} Centre`}</h4>
             <Link
               to="/member/displaydetails"
               onClick={() => {
-                setMemberId(
-                  `${bacentaData.centreBacentaList[0].centre.leader.id}`
-                )
+                setMemberId(`${bacentas[0].centre.leader.id}`)
               }}
             >
               <h6 className="text-muted">
                 Leader:
-                {bacentaData.centreBacentaList[0].centre.leader
-                  ? ` ${bacentaData.centreBacentaList[0].centre.leader.firstName} ${bacentaData.centreBacentaList[0].centre.leader.lastName}`
+                {bacentas[0].centre.leader
+                  ? ` ${bacentas[0].centre.leader.firstName} ${bacentas[0].centre.leader.lastName}`
                   : null}
               </h6>
             </Link>
           </div>
-          <DisplayChurchList
-            data={bacentaData.centreBacentaList}
-            churchType="Bacenta"
-          />
+          <DisplayChurchList data={bacentas} churchType="Bacenta" />
         </div>
       </>
     )

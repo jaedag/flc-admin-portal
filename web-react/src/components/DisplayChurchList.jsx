@@ -29,7 +29,7 @@ const DisplayChurchList = (props) => {
                     : null}
                 </h6>
                 {church.admin && (
-                  <p className="card-text text-muted">{`Admin: ${church.admin.firstName}`}</p>
+                  <p className="card-text text-muted">{`Admin: ${church.admin.firstName} ${church.admin.lastName}`}</p>
                 )}
               </div>
             </Link>

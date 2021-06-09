@@ -11,9 +11,8 @@ import { ChurchContext } from '../../contexts/ChurchContext'
 import RoleView from '../../auth/RoleView'
 
 const DisplayAllSontas = () => {
-  const { church, townId, campusId, setTownId, setCampusId } = useContext(
-    ChurchContext
-  )
+  const { church, townId, campusId, setTownId, setCampusId } =
+    useContext(ChurchContext)
 
   const { data: townCentreData, loading: townLoading } = useQuery(
     GET_TOWN_CENTRES,

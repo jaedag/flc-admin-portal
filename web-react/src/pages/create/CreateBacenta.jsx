@@ -11,10 +11,10 @@ import {
 import FormikControl from '../../components/formik-components/FormikControl'
 
 import {
-  GET_CAMPUSES,
+  GET_BISHOP_CAMPUSES,
   GET_TOWN_CENTRES,
   GET_CAMPUS_CENTRES,
-  GET_TOWNS,
+  GET_BISHOP_TOWNS,
   BISHOP_MEMBER_DROPDOWN,
 } from '../../queries/ListQueries'
 import { CREATE_BACENTA_MUTATION } from '../../queries/CreateMutations'
@@ -66,11 +66,14 @@ const CreateBacenta = () => {
     },
   })
 
-  const { data: townListData, loading: townListLoading } = useQuery(GET_TOWNS, {
-    variables: { id: bishopId },
-  })
+  const { data: townListData, loading: townListLoading } = useQuery(
+    GET_BISHOP_TOWNS,
+    {
+      variables: { id: bishopId },
+    }
+  )
   const { data: campusListData, loading: campusListLoading } = useQuery(
-    GET_CAMPUSES,
+    GET_BISHOP_CAMPUSES,
     {
       variables: { id: bishopId },
     }

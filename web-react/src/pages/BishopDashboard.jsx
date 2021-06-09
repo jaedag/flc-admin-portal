@@ -21,14 +21,14 @@ import {
 } from '../queries/AdminMutations'
 
 const BishopDashboard = () => {
-  const { church, setFilters, clickCard, bishopId, setBishopId } = useContext(
-    ChurchContext
-  )
+  const { church, setFilters, clickCard, bishopId, setBishopId } =
+    useContext(ChurchContext)
 
   const { currentUser } = useContext(MemberContext)
   const { data, loading } = useQuery(BISH_DASHBOARD_COUNTS, {
     variables: { id: bishopId },
   })
+  const bishop = data?.members[0]
 
   //Change Admin Initialised
   const [isOpen, setIsOpen] = useState(false)
@@ -38,10 +38,10 @@ const BishopDashboard = () => {
     setIsOpen(!isOpen)
   }
   const initialValues = {
-    adminName: data?.displayMember?.hasAdmin
-      ? `${data.displayMember?.hasAdmin?.firstName} ${data.displayMember?.hasAdmin?.lastName}`
+    adminName: bishop?.hasAdmin
+      ? `${bishop?.hasAdmin?.firstName} ${bishop?.hasAdmin?.lastName}`
       : '',
-    adminSelect: data?.displayMember?.hasAdmin.id ?? '',
+    adminSelect: bishop?.hasAdmin?.id ?? '',
   }
   const validationSchema = Yup.object({
     adminSelect: Yup.string().required(
@@ -111,8 +111,8 @@ const BishopDashboard = () => {
     campusTownCount = loadingText
     sontaMemberCount = loadingText
   } else if (data) {
-    bishopName = `${data.displayMember?.firstName} ${data.displayMember?.lastName}`
-    adminName = `Admin: ${data.displayMember?.hasAdmin?.firstName} ${data.displayMember?.hasAdmin?.lastName}`
+    bishopName = `${bishop?.firstName} ${bishop?.lastName}`
+    adminName = `Admin: ${bishop?.hasAdmin?.firstName} ${bishop?.hasAdmin?.lastName}`
     memberCount = `${data.bishopMemberCount} Members`
     pastorCount = `${data.bishopPastorCount} Pastors`
     campusTownCount = `${data.bishopCampusTownCount} ${capitalise(
@@ -137,12 +137,12 @@ const BishopDashboard = () => {
             <h4>{`${bishopName}'s`} Church</h4>
             <p
               onClick={() => {
-                clickCard(data.displayMember?.hasAdmin)
-                setBishopId(data.displayMember?.id)
+                clickCard(bishop?.hasAdmin)
+                setBishopId(bishop?.id)
                 history.push('/member/displaydetails')
               }}
             >
-              {data?.displayMember?.hasAdmin ? adminName : null}
+              {bishop?.hasAdmin ? adminName : null}
             </p>
             <RoleView roles={['federalAdmin']}>
               <input

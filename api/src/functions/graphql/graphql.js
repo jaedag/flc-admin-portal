@@ -9,6 +9,7 @@ const neo4j = require('neo4j-driver')
 // Be sure to run `npm run build`
 const { typeDefs } = require('./graphql-schema')
 const { resolvers } = require('../../resolvers')
+const { initializeDatabase } = require('../../initialize')
 
 const driver = neo4j.driver(
   process.env.NEO4J_URI || 'bolt://localhost:7687',
@@ -29,6 +30,12 @@ const neoSchema = new Neo4jGraphQL({
     },
   },
 })
+
+const init = async (driver) => {
+  await initializeDatabase(driver)
+}
+
+init(driver)
 
 const server = new ApolloServer({
   schema: neoSchema.schema,

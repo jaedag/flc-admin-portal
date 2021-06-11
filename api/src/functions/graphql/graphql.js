@@ -39,7 +39,12 @@ init(driver)
 
 const server = new ApolloServer({
   schema: neoSchema.schema,
-  context: ({ req }) => req,
+  context: ({ event }) => {
+    const req = event
+    return req
+  },
+  introspection: false,
+  playground: false,
 })
 
 exports.handler = server.createHandler()

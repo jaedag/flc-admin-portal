@@ -47,7 +47,7 @@ function UserProfileIcon() {
 
   return (
     <>
-      {isAuthenticated && (
+      {isAuthenticated && currentUser.email && (
         <Link
           className="nav-item nav-link d-flex align-items-center flex-column p-0 pb-2"
           to="/user-profile"
@@ -63,6 +63,11 @@ function UserProfileIcon() {
             {currentUser ? currentUser.firstName : `Admin`}
           </span>
         </Link>
+      )}
+      {isAuthenticated && !currentUser.email && (
+        <div className="text-secondary text-center">
+          {`There seems to be an issue with your login credentials. Please contact the system administrator for more details`}
+        </div>
       )}
       {!isAuthenticated && (
         <div className="nav-item nav-link d-flex align-items-center flex-column">

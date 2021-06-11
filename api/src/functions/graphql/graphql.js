@@ -39,12 +39,8 @@ init(driver)
 
 const server = new ApolloServer({
   schema: neoSchema.schema,
-  context: ({ event }) => {
-    const req = event
-
-    console.log('event object', event)
-    console.log('req object', req)
-    return req
+  context: ({ req }) => {
+    return { req }
   },
   introspection: true,
   playground: false,

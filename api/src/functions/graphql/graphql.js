@@ -41,6 +41,9 @@ const server = new ApolloServer({
   schema: neoSchema.schema,
   context: ({ event }) => {
     const req = event
+
+    console.log('event object', event)
+    console.log('req object', req)
     return req
   },
   introspection: true,

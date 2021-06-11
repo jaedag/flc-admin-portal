@@ -43,7 +43,7 @@ const server = new ApolloServer({
     const req = event
     return req
   },
-  introspection: false,
+  introspection: true,
   playground: false,
 })
 

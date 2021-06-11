@@ -25,7 +25,7 @@ const neoSchema = new Neo4jGraphQL({
   driver,
   config: {
     jwt: {
-      secret: process.env.JWT_SECRET,
+      secret: process.env.JWT_SECRET.replace(/\\n/gm, '\n'),
       rolesPath: 'permissions',
     },
   },

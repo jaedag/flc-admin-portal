@@ -284,11 +284,7 @@ const UpdateBacenta = () => {
                                 : GET_CAMPUS_CENTRES
                             }
                             queryVariable="id"
-                            dataset={
-                              church.church === 'town'
-                                ? 'townCentreList'
-                                : 'campusCentreList'
-                            }
+                            dataset="centres"
                             varValue={
                               townCampusIdVar ?? initialValues.townCampusSelect
                             }

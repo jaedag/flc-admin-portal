@@ -396,10 +396,6 @@ type Query {
     @cypher(
       statement: "MATCH (town:Town {id: $id})-[:HAS_SONTA]->(sonta:Sonta)  RETURN sonta"
     )
-  townCentreList(id: ID): [Centre]
-    @cypher(
-      statement: "MATCH (town:Town {id:$id})-[:HAS_CENTRE]->(centre:Centre) RETURN centre"
-    )
   townCentreCount(id: ID): Int!
     @cypher(
       statement: "MATCH(:Town {id:$id})-[:HAS_CENTRE]->(centre:Centre) RETURN COUNT(centre)"

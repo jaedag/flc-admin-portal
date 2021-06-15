@@ -21,28 +21,23 @@ const Timeline = (props) => {
             index < 5 && (
               <li key={index}>
                 <p className="timeline-text">
-                  {element.HistoryLog.historyRecord}
+                  {element.historyRecord}
                   <br />
                   <small className="text-secondary">
-                    {`${parseDate(
-                      element.HistoryLog.created_at.date?.formatted
-                    )} at ${
-                      element.HistoryLog.timeStamp.hour
-                    }:${element.HistoryLog.timeStamp.minute.toLocaleString(
-                      'en-US',
-                      {
-                        minimumIntegerDigits: 2,
-                      }
-                    )}`}
+                    {`${parseDate(element.created_at?.date?.formatted)} at ${
+                      element.timeStamp?.hour
+                    }:${element.timeStamp?.minute.toLocaleString('en-US', {
+                      minimumIntegerDigits: 2,
+                    })}`}
                     <span
                       className="font-weight-bold"
                       onClick={() => {
-                        clickCard(element.HistoryLog?.loggedBy)
+                        clickCard(element?.loggedBy)
                         history.push('/member/displaydetails')
                       }}
                     >
-                      {element.HistoryLog?.loggedBy &&
-                        ` by ${element.HistoryLog?.loggedBy?.firstName} ${element.HistoryLog?.loggedBy?.lastName}`}
+                      {element?.loggedBy &&
+                        ` by ${element?.loggedBy?.firstName} ${element?.loggedBy?.lastName}`}
                     </span>
                   </small>
                 </p>
@@ -70,7 +65,7 @@ const Timeline = (props) => {
                     <span
                       className="font-weight-bold"
                       onClick={() => {
-                        clickCard(element.HistoryLog?.loggedBy)
+                        clickCard(element?.loggedBy)
                         history.push('/member/displaydetails')
                       }}
                     >

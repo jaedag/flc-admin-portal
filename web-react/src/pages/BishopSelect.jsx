@@ -112,7 +112,7 @@ const BishopSelect = () => {
                     <h5 className="mt-0">{`${bishop.firstName} ${bishop.lastName}`}</h5>
                     <div>
                       <span className="text-muted">
-                        {/* {bishop.townBishop[0] ? 'Town' : 'Campus'} */}
+                        {bishop.townBishop?.length ? 'Town' : 'Campus'}
                       </span>
                     </div>
                   </div>

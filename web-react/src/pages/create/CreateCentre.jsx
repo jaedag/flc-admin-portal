@@ -53,22 +53,24 @@ function CreateCentre() {
     ],
   })
 
-  const { data: townListData, loading: townListLoading } = useQuery(
+  const { data: townsData, loading: townsLoading } = useQuery(
     GET_BISHOP_TOWNS,
     {
       variables: { id: bishopId },
     }
   )
-  const { data: campusListData, loading: campusListLoading } = useQuery(
+  const { data: campusesData, loading: campusesLoading } = useQuery(
     GET_BISHOP_CAMPUSES,
     {
       variables: { id: bishopId },
     }
   )
 
-  if (townListData && campusListData) {
-    const townOptions = makeSelectOptions(townListData.townList)
-    const campusOptions = makeSelectOptions(campusListData.campusList)
+  if (townsData && campusesData) {
+    const townOptions = makeSelectOptions(townsData.members[0].townBishop)
+    const campusOptions = makeSelectOptions(
+      campusesData.members[0].campusBishop
+    )
 
     //onSubmit receives the form state as argument
     const onSubmit = (values, onSubmitProps) => {
@@ -223,7 +225,7 @@ function CreateCentre() {
         </Formik>
       </>
     )
-  } else if (townListLoading || campusListLoading) {
+  } else if (townsLoading || campusesLoading) {
     return <LoadingScreen />
   } else {
     return <ErrorScreen />

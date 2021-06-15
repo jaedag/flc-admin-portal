@@ -48,12 +48,12 @@ const CreateBacenta = () => {
     venueLatitude: Yup.string()
       .required('Please fill in your location info')
       .test('is-decimal', 'Please enter valid coordinates', (value) =>
-        (value + '').match(/^\d*\.{1}\d*$/)
+        (value + '').match(/^-?\d*\.{1}\d*$/)
       ),
     venueLongitude: Yup.string()
       .required('Please fill in your location info')
       .test('is-decimal', 'Please enter valid coordinates', (value) =>
-        (value + '').match(/^\d*\.{1}\d*$/)
+        (value + '').match(/^-?\d*\.{1}\d*$/)
       ),
   })
 
@@ -101,10 +101,10 @@ const CreateBacenta = () => {
     return <LoadingScreen />
   } else if (townListData && campusListData) {
     const townOptions = townListData
-      ? makeSelectOptions(townListData.townList)
+      ? makeSelectOptions(townListData.members[0]?.townBishop)
       : []
     const campusOptions = campusListData
-      ? makeSelectOptions(campusListData.campusList)
+      ? makeSelectOptions(campusListData.members[0]?.campusBishop)
       : []
 
     return (
@@ -152,11 +152,7 @@ const CreateBacenta = () => {
                                 : GET_CAMPUS_CENTRES
                             }
                             queryVariable="id"
-                            dataset={
-                              church.church === 'town'
-                                ? 'townCentreList'
-                                : 'campusCentreList'
-                            }
+                            dataset="centres"
                             varValue={townCampusIdVar}
                             defaultOption="Select a Centre"
                           />

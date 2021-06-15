@@ -68,21 +68,29 @@ function CreateTownCampus() {
   })
 
   const {
-    data: bishopData,
-    loading: bishopLoading,
-    error: bishopError,
+    data: bishopsData,
+    loading: bishopsLoading,
+    error: bishopsError,
   } = useQuery(GET_BISHOPS)
 
-  if (bishopError) {
+  if (bishopsError) {
     return <ErrorScreen />
-  } else if (bishopLoading) {
+  } else if (bishopsLoading) {
     return <LoadingScreen />
   } else if (
-    (bishopData && church.church === 'campus') ||
-    (bishopData && church.church === 'town')
+    (bishopsData && church.church === 'campus') ||
+    (bishopsData && church.church === 'town')
   ) {
-    const bishopCampusOptions = makeSelectOptions(bishopData.bishopsListCampus)
-    const bishopTownOptions = makeSelectOptions(bishopData.bishopsListTown)
+    const bishopTownOptions = makeSelectOptions(
+      bishopsData.members.filter(
+        (bishop) => bishop.townBishop.length > 0 && bishop
+      )
+    )
+    const bishopCampusOptions = makeSelectOptions(
+      bishopsData.members.filter(
+        (bishop) => bishop.campusBishop.length > 0 && bishop
+      )
+    )
 
     //onSubmit receives the form state as argument
     const onSubmit = (values, onSubmitProps) => {

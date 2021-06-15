@@ -29,7 +29,7 @@ const UserProfileDisplayPage = () => {
     // Spinner Icon for Loading Screens
     return <LoadingScreen />
   } else if (memberData && currentUser.id) {
-    const { displayMember } = memberData
+    const displayMember = memberData.members[0]
 
     let nameAndTitle = getNameWithTitle(displayMember)
 

@@ -28,7 +28,7 @@ import PlusSign from '../../components/buttons/PlusSign'
 import MinusSign from '../../components/buttons/MinusSign'
 import { ChurchContext } from '../../contexts/ChurchContext'
 
-const UpdateMemberDetails = () => {
+const UpdateMember = () => {
   const { memberId } = useContext(MemberContext)
   const { bishopId } = useContext(ChurchContext)
 
@@ -40,46 +40,22 @@ const UpdateMemberDetails = () => {
     variables: { id: memberId },
   })
 
+  const member = memberData?.members[0]
+
   const initialValues = {
-    firstName: memberData?.displayMember.firstName
-      ? memberData?.displayMember.firstName
-      : '',
-    middleName: memberData?.displayMember.middleName
-      ? memberData?.displayMember.middleName
-      : '',
-    lastName: memberData?.displayMember.lastName
-      ? memberData?.displayMember.lastName
-      : '',
-    gender: memberData?.displayMember.gender
-      ? memberData?.displayMember.gender.gender
-      : '',
-    phoneNumber: memberData?.displayMember.phoneNumber
-      ? `+${memberData?.displayMember.phoneNumber}`
-      : '',
-    whatsappNumber: memberData?.displayMember.whatsappNumber
-      ? `+${memberData?.displayMember.whatsappNumber}`
-      : '',
-    email: memberData?.displayMember.email
-      ? memberData?.displayMember.email
-      : '',
-    dob: memberData?.displayMember.dob
-      ? memberData?.displayMember.dob.date.formatted
-      : null,
-    maritalStatus: memberData?.displayMember.maritalStatus
-      ? memberData?.displayMember.maritalStatus.status
-      : '',
-    occupation: memberData?.displayMember.occupation
-      ? memberData?.displayMember.occupation.occupation
-      : '',
-    pictureUrl: memberData?.displayMember.pictureUrl
-      ? memberData?.displayMember.pictureUrl
-      : '',
-    bacenta: memberData?.displayMember.bacenta
-      ? memberData?.displayMember.bacenta.name
-      : '',
-    ministry: memberData?.displayMember.ministry
-      ? memberData?.displayMember.ministry.id
-      : '',
+    firstName: member?.firstName ? member?.firstName : '',
+    middleName: member?.middleName ? member?.middleName : '',
+    lastName: member?.lastName ? member?.lastName : '',
+    gender: member?.gender ? member?.gender.gender : '',
+    phoneNumber: member?.phoneNumber ? `+${member?.phoneNumber}` : '',
+    whatsappNumber: member?.whatsappNumber ? `+${member?.whatsappNumber}` : '',
+    email: member?.email ? member?.email : '',
+    dob: member?.dob ? member?.dob.date : null,
+    maritalStatus: member?.maritalStatus ? member?.maritalStatus.status : '',
+    occupation: member?.occupation ? member?.occupation.occupation : '',
+    pictureUrl: member?.pictureUrl ? member?.pictureUrl : '',
+    bacenta: member?.bacenta ? member?.bacenta.name : '',
+    ministry: member?.ministry ? member?.ministry.id : '',
 
     pastoralHistory: [
       {
@@ -122,12 +98,12 @@ const UpdateMemberDetails = () => {
 
   //All of the Hooks!
   const {
-    data: ministryListData,
-    loading: ministryListLoading,
-    error: ministryListError,
+    data: ministriesData,
+    loading: ministriesLoading,
+    error: ministriesError,
   } = useQuery(GET_MINISTRIES)
 
-  const [UpdateMemberDetails] = useMutation(UPDATE_MEMBER_MUTATION, {
+  const [UpdateMember] = useMutation(UPDATE_MEMBER_MUTATION, {
     refetchQueries: [{ query: DISPLAY_MEMBER, variables: { id: memberId } }],
   })
 
@@ -162,7 +138,7 @@ const UpdateMemberDetails = () => {
       values.pictureUrl = image
     }
 
-    UpdateMemberDetails({
+    UpdateMember({
       variables: {
         id: memberId,
         firstName: values.firstName,
@@ -187,13 +163,13 @@ const UpdateMemberDetails = () => {
     history.push('/member/displaydetails')
   }
 
-  if (memberError || ministryListError || memberId === '') {
+  if (memberError || ministriesError || memberId === '') {
     return <ErrorScreen />
-  } else if (memberLoading || ministryListLoading) {
+  } else if (memberLoading || ministriesLoading) {
     // Spinner Icon for Loading Screens
     return <LoadingScreen />
   } else {
-    const ministryOptions = makeSelectOptions(ministryListData.ministryList)
+    const ministryOptions = makeSelectOptions(ministriesData.ministries)
 
     return (
       <>
@@ -224,7 +200,7 @@ const UpdateMemberDetails = () => {
                             src={
                               image
                                 ? image
-                                : memberData.displayMember.pictureUrl
+                                : memberData.displayMember?.pictureUrl
                             }
                             className="profile-img rounded my-3"
                             alt=""
@@ -518,4 +494,4 @@ const UpdateMemberDetails = () => {
   }
 }
 
-export default UpdateMemberDetails
+export default UpdateMember

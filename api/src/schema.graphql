@@ -101,14 +101,14 @@ type Title {
 # }
 
 type TimeGraph {
-  date: Date
+  date: DateTime
   memberDob: Member @relationship(type: "WAS_BORN_ON", direction: IN)
   # titleAppointmentDate: Member @relationship(type: "APPOINTED_ON", direction: IN)
-  leaderHistoryStartDate: TimeGraph
+  leaderHistoryStartDate: Member
     @relationship(type: "LEADER_STARTED_ON", direction: OUT)
   leaderHistoryEndDate: TimeGraph
     @relationship(type: "LEADER_ENDED_ON", direction: OUT)
-  historyDate: TimeGraph @relationship(type: "RECORDED_ON", direction: OUT)
+  historyDate: Member @relationship(type: "RECORDED_ON", direction: OUT)
   serviceDate: [ServiceRecord]
     @relationship(type: "SERVICE_HELD_ON", direction: IN)
 }
@@ -581,6 +581,7 @@ type Query {
     @cypher(
       statement: "MATCH (member:Member {auth_id: $auth.jwt.sub}) RETURN member"
     )
+    @auth(rules: [{ isAuthenticated: true }])
 
   #Fuzzy Search
   memberGridList(
@@ -666,6 +667,14 @@ type Query {
 
 #Mutation Definitions
 type Mutation {
+  #resolver Mutations
+  MergeMemberIsBishopAdminFor(from: ID, to: ID): Member
+  RemoveMemberIsBishopAdminFor(from: ID, to: ID): Member
+  MergeMemberIsTownAdminFor(from: ID, to: ID): Member
+  RemoveMemberIsTownAdminFor(from: ID, to: ID): Member
+  MergeMemberIsCampusAdminFor(from: ID, to: ID): Member
+  RemoveMemberIsCampusAdminFor(from: ID, to: ID): Member
+
   #CREATE OPERATIONS
   # Add Member to the Database
   CreateMember(

@@ -97,9 +97,9 @@ const CreateMember = () => {
 
   //All of the Hooks!
   const {
-    data: ministryListData,
-    loading: ministryListLoading,
-    error: ministryListError,
+    data: ministriesData,
+    loading: ministriesLoading,
+    error: ministriesError,
   } = useQuery(GET_MINISTRIES)
 
   const [CreateMember] = useMutation(CREATE_MEMBER_MUTATION, {
@@ -184,12 +184,12 @@ const CreateMember = () => {
     })
   }
 
-  if (ministryListLoading) {
+  if (ministriesLoading) {
     return <LoadingScreen />
-  } else if (ministryListError) {
+  } else if (ministriesError) {
     return <ErrorScreen />
   } else {
-    const ministryOptions = makeSelectOptions(ministryListData.ministryList)
+    const ministryOptions = makeSelectOptions(ministriesData.ministries)
 
     return (
       <>

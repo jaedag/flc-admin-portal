@@ -21,7 +21,7 @@ import SontaMembers from './pages/grids/SontaMembers.jsx'
 import SearchPageMobile from './pages/mobile/SearchPage'
 import DisplayMemberDetails from './pages/display/DetailsMember'
 import CreateMember from './pages/create/CreateMember'
-import UpdateMemberDetails from './pages/update/UpdateMemberDetails.jsx'
+import UpdateMember from './pages/update/UpdateMember.jsx'
 import CreateBacenta from './pages/create/CreateBacenta'
 import CreateCentre from './pages/create/CreateCentre.jsx'
 import CreateTownCampus from './pages/create/CreateTownCampus'
@@ -489,7 +489,7 @@ const PastorsAdmin = () => {
               <ProtectedRoute
                 roles={['federalAdmin', 'bishopAdmin', 'constituencyAdmin']}
                 path="/member/editmember"
-                component={UpdateMemberDetails}
+                component={UpdateMember}
                 exact
               />
               <ProtectedRoute

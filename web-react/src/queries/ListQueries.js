@@ -49,7 +49,7 @@ export const BACENTA_DROPDOWN = gql`
 
 export const BISHOP_BACENTA_DROPDOWN = gql`
   query($id: ID, $bacentaName: String) {
-    bishopBacentaDropdown(id: $id, bacentaName: $bacentaName, first: 8) {
+    bishopBacentaDropdown(id: $id, bacentaName: $bacentaName) {
       id
       name
       centre {
@@ -68,7 +68,7 @@ export const BISHOP_BACENTA_DROPDOWN = gql`
 
 export const BISHOP_MEMBER_DROPDOWN = gql`
   query($id: ID, $nameSearch: String) {
-    bishopMemberDropdown(id: $id, nameSearch: $nameSearch, first: 8) {
+    bishopMemberDropdown(id: $id, nameSearch: $nameSearch) {
       id
       firstName
       lastName

@@ -11,7 +11,7 @@ const MembersGrid = (props) => {
   const { memberData, memberError, memberLoading, title } = props
   const { filters } = useContext(ChurchContext)
   const [offset, setOffset] = useState(0)
-  const [dimensions, setDimensions] = React.useState({
+  const [dimensions, setDimensions] = useState({
     height: window.innerHeight,
     width: window.innerWidth,
   })
@@ -20,6 +20,7 @@ const MembersGrid = (props) => {
     ((dimensions.height - 96 - 30) * (0.75 * dimensions.width - 46)) /
       (160 * 126)
   )
+
   //NavBar takes 70px of the height and side bar takes 25% of the width
   const memberDataLoaded = memberData ? memberFilter(memberData, filters) : null
 

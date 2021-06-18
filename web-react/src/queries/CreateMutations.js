@@ -146,8 +146,8 @@ export const CREATE_SONTA_MUTATION = gql`
 `
 
 export const CREATE_TOWN_MUTATION = gql`
-  mutation CreateTown($townName: String!, $leaderId: ID!, $id: ID!) {
-    CreateTown(townName: $townName, leaderId: $leaderId, id: $id) {
+  mutation CreateTown($townName: String!, $leaderId: ID!, $bishopId: ID!) {
+    CreateTown(townName: $townName, leaderId: $leaderId, bishopId: $bishopId) {
       id
       name
     }
@@ -155,8 +155,12 @@ export const CREATE_TOWN_MUTATION = gql`
 `
 
 export const CREATE_CAMPUS_MUTATION = gql`
-  mutation CreateCampus($campusName: String!, $leaderId: ID!, $id: ID!) {
-    CreateCampus(campusName: $campusName, leaderId: $leaderId, id: $id) {
+  mutation CreateCampus($campusName: String!, $leaderId: ID!, $bishopId: ID!) {
+    CreateCampus(
+      campusName: $campusName
+      leaderId: $leaderId
+      bishopId: $bishopId
+    ) {
       id
       name
     }

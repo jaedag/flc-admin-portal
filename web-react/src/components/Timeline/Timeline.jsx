@@ -58,8 +58,8 @@ const Timeline = (props) => {
                   <br />
                   <small className="text-secondary">
                     {`${parseDate(element.created_at?.date.formatted)} at ${
-                      element.timeStamp.hour
-                    }:${element.timeStamp.minute.toLocaleString('en-US', {
+                      element.timeStamp?.hour
+                    }:${element.timeStamp?.minute.toLocaleString('en-US', {
                       minimumIntegerDigits: 2,
                     })}`}
                     <span

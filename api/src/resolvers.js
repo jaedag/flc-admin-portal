@@ -340,10 +340,7 @@ export const resolvers = {
 
       errorHandling(admin)
 
-      return {
-        from: admin,
-        to: bishop,
-      }
+      return admin
     },
     MergeMemberIsTownAdminFor: async (object, args, context) => {
       const session = context.driver.session()

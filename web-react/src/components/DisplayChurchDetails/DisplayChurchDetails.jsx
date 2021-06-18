@@ -187,7 +187,7 @@ const DisplayChurchDetails = (props) => {
             <Popup
               content={
                 <>
-                  <b>Change {`${churchHeading}'s`} Admin</b>
+                  <b>Change {`${churchType}`} Admin</b>
                   <p>Please enter the name of the new administrator</p>
 
                   <Formik

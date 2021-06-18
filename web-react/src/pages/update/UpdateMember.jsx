@@ -43,16 +43,16 @@ const UpdateMember = () => {
   const member = memberData?.members[0]
 
   const initialValues = {
-    firstName: member?.firstName ? member?.firstName : '',
-    middleName: member?.middleName ? member?.middleName : '',
-    lastName: member?.lastName ? member?.lastName : '',
-    gender: member?.gender ? member?.gender.gender : '',
+    firstName: member?.firstName ?? '',
+    middleName: member?.middleName ?? '',
+    lastName: member?.lastName ?? '',
+    gender: member?.gender?.gender ?? '',
     phoneNumber: member?.phoneNumber ? `+${member?.phoneNumber}` : '',
     whatsappNumber: member?.whatsappNumber ? `+${member?.whatsappNumber}` : '',
     email: member?.email ? member?.email : '',
-    dob: member?.dob ? member?.dob.date : null,
+    dob: member?.dob ? member?.dob.date : '',
     maritalStatus: member?.maritalStatus ? member?.maritalStatus.status : '',
-    occupation: member?.occupation ? member?.occupation.occupation : '',
+    occupation: member?.occupation?.occupation ?? '',
     pictureUrl: member?.pictureUrl ? member?.pictureUrl : '',
     bacenta: member?.bacenta ? member?.bacenta.name : '',
     ministry: member?.ministry ? member?.ministry.id : '',

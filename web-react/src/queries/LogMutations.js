@@ -19,14 +19,14 @@ export const LOG_BACENTA_HISTORY = gql`
     ) {
       id
       name
+      leader {
+        id
+        firstName
+        lastName
+      }
       history {
-        HistoryLog {
-          historyRecord
-          timeStamp {
-            formatted
-          }
-        }
-        pointer
+        historyRecord
+        timeStamp
       }
     }
   }

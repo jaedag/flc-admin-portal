@@ -95,7 +95,7 @@ export const CENTRE_DROPDOWN = gql`
 
 export const BISHOP_CENTRE_DROPDOWN = gql`
   query($id: ID!, $nameSearch: String!) {
-    bishopCentreDropdown(id: $id, nameSearch: $nameSearch, first: 8) {
+    bishopCentreDropdown(id: $id, nameSearch: $nameSearch) {
       id
       name
       campus {

@@ -66,10 +66,10 @@ export const DISPLAY_MEMBER = gql`
         title
       }
       history {
-        timeStamp
-        created_at {
-          date
-        }
+        # timeStamp
+        # created_at {
+        #   date
+        # }
         loggedBy {
           id
           firstName
@@ -276,25 +276,18 @@ export const DISPLAY_SONTA = gql`
           lastName
         }
       }
-      history {
-        HistoryLog {
+      history(options: { limit: 10 }) {
+        id
+        # timeStamp
+        # created_at {
+        #   date
+        # }
+        loggedBy {
           id
-          timeStamp {
-            hour
-            minute
-          }
-          created_at {
-            date {
-              formatted
-            }
-          }
-          loggedBy {
-            id
-            firstName
-            lastName
-          }
-          historyRecord
+          firstName
+          lastName
         }
+        historyRecord
       }
     }
     sontaMemberCount(id: $id)
@@ -360,10 +353,10 @@ export const DISPLAY_CENTRE = gql`
       }
       history(options: { limit: 10 }) {
         id
-        timeStamp
-        created_at {
-          date
-        }
+        # timeStamp
+        # created_at {
+        #   date
+        # }
         loggedBy {
           id
           firstName
@@ -442,10 +435,10 @@ export const DISPLAY_TOWN = gql`
       }
       history(options: { limit: 10 }) {
         id
-        timeStamp
-        created_at {
-          date
-        }
+        # timeStamp
+        # created_at {
+        #   date
+        # }
         loggedBy {
           id
           firstName
@@ -524,10 +517,10 @@ export const DISPLAY_CAMPUS = gql`
       }
       history(options: { limit: 10 }) {
         id
-        timeStamp
-        created_at {
-          date
-        }
+        # timeStamp
+        # created_at {
+        #   date
+        # }
         loggedBy {
           id
           firstName

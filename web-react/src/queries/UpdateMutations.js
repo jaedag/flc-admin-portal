@@ -282,13 +282,11 @@ export const ADD_BACENTA_CENTRE = gql`
 //Updating Campus/Town Mutations
 export const ADD_TOWN_BISHOP = gql`
   mutation AddTownBishop($townId: ID!, $bishopId: ID!) {
-    AddTownBishop(from: { id: $bishopId }, to: { id: $townId }) {
-      from {
-        id
-        firstName
-        lastName
-      }
-      to {
+    updateTowns(
+      where: { id: $townId }
+      connect: { bishop: { where: { id: $bishopId } } }
+    ) {
+      towns {
         id
         name
       }
@@ -298,13 +296,11 @@ export const ADD_TOWN_BISHOP = gql`
 
 export const REMOVE_TOWN_BISHOP = gql`
   mutation RemoveTownBishop($townId: ID!, $bishopId: ID!) {
-    RemoveTownBishop(from: { id: $bishopId }, to: { id: $townId }) {
-      from {
-        id
-        firstName
-        lastName
-      }
-      to {
+    updateTowns(
+      where: { id: $townId }
+      disconnect: { bishop: { where: { id: $bishopId } } }
+    ) {
+      towns {
         id
         name
       }
@@ -314,15 +310,18 @@ export const REMOVE_TOWN_BISHOP = gql`
 
 export const ADD_CAMPUS_BISHOP = gql`
   mutation AddCampusBishop($campusId: ID!, $bishopId: ID!) {
-    AddCampusBishop(from: { id: $bishopId }, to: { id: $campusId }) {
-      from {
-        id
-        firstName
-        lastName
-      }
-      to {
+    updateCampuses(
+      where: { id: $campusId }
+      connect: { bishop: { where: { id: $bishopId } } }
+    ) {
+      campuses {
         id
         name
+        bishop {
+          id
+          firstName
+          lastName
+        }
       }
     }
   }
@@ -330,13 +329,11 @@ export const ADD_CAMPUS_BISHOP = gql`
 
 export const REMOVE_CAMPUS_BISHOP = gql`
   mutation RemoveCampusBishop($campusId: ID!, $bishopId: ID!) {
-    RemoveCampusBishop(from: { id: $bishopId }, to: { id: $campusId }) {
-      from {
-        id
-        firstName
-        lastName
-      }
-      to {
+    updateCampuses(
+      where: { id: $campusId }
+      disconnect: { bishop: { where: { id: $bishopId } } }
+    ) {
+      campuses {
         id
         name
       }

@@ -101,8 +101,8 @@ function CreateTownCampus() {
           variables: {
             townName: values.campusTownName,
             leaderId: values.leaderId,
-            id: values.bishopSelect,
-            centres: values.centres,
+            bishopId: values.bishopSelect,
+            centreIds: values.centres,
           },
         })
       } else if (church.church === 'campus') {
@@ -110,8 +110,8 @@ function CreateTownCampus() {
           variables: {
             campusName: values.campusTownName,
             leaderId: values.leaderId,
-            id: values.bishopSelect,
-            centres: values.centres,
+            bishopId: values.bishopSelect,
+            centreIds: values.centres,
           },
         })
       }

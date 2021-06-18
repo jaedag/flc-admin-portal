@@ -63,9 +63,7 @@ const UpdateTownCampus = () => {
   const history = useHistory()
 
   const campusTownData =
-    church.church === 'campus'
-      ? campusData?.displayCampus
-      : townData?.displayTown
+    church.church === 'campus' ? campusData?.campuses[0] : townData?.towns[0]
 
   const initialValues = {
     campusTownName: campusTownData?.name,
@@ -120,7 +118,7 @@ const UpdateTownCampus = () => {
           LogCampusTownHistory({
             variables: {
               campusTownId: townId,
-              newLeaderId: newLeaderInfo.id,
+              newLeaderId: newLeaderInfo?.id ?? '',
               oldLeaderId: townData?.displayTown?.leader
                 ? townData.displayTown.leader?.id
                 : '',
@@ -153,10 +151,10 @@ const UpdateTownCampus = () => {
       onCompleted: (updatedInfo) => {
         let newLeaderInfo = updatedInfo.UpdateCampus?.leader
         let historyRecord
-        if (campusData?.displayCampus?.leader) {
-          historyRecord = `${newLeaderInfo.firstName} ${newLeaderInfo.lastName} was transferred to become the new Campus CO for ${initialValues.campusTownName} replacing ${campusData?.displayCampus?.leader.firstName} ${campusData?.displayCampus?.leader.lastName}`
+        if (campusTownData?.leader) {
+          historyRecord = `${newLeaderInfo.firstName} ${newLeaderInfo.lastName} was transferred to become the new Campus CO for ${initialValues.campusTownName} replacing ${campusTownData?.leader.firstName} ${campusTownData?.leader.lastName}`
         }
-        if (!campusData?.displayCampus?.leader) {
+        if (!campusTownData?.leader) {
           historyRecord = `${newLeaderInfo.firstName} ${newLeaderInfo.lastName} was transferred to become the new Campus CO for ${initialValues.campusTownName}`
         }
         //Log if the Leader Changes
@@ -164,9 +162,9 @@ const UpdateTownCampus = () => {
           LogCampusTownHistory({
             variables: {
               campusTownId: campusId,
-              newLeaderId: newLeaderInfo.id,
-              oldLeaderId: campusData?.displayCampus.leader
-                ? campusData?.displayCampus.leader?.id
+              newLeaderId: newLeaderInfo?.id ?? '',
+              oldLeaderId: campusTownData.leader
+                ? campusTownData.leader?.id
                 : '',
               oldBishopId: '',
               newBishopId: '',
@@ -272,7 +270,7 @@ const UpdateTownCampus = () => {
   const [RemoveTownBishop] = useMutation(REMOVE_TOWN_BISHOP)
   const [AddCampusBishop] = useMutation(ADD_CAMPUS_BISHOP, {
     onCompleted: (data) => {
-      if (!campusData?.displayCampus?.bishop.firstName) {
+      if (!campusTownData?.bishop.firstName) {
         //If There is no old Bishop
         let recordIfNoOldBishop = `${initialValues.campusTownName} Campus has been moved to Bishop ${data.AddCampusBishop.from.firstName} ${data.AddCampusBishop.from.firstName}`
 
@@ -281,8 +279,8 @@ const UpdateTownCampus = () => {
             campusTownId: campusId,
             newLeaderId: '',
             oldLeaderId: '',
-            newBishopId: data.AddCampusBishop.from.id,
-            oldBishopId: campusData?.displayCampus?.bishop.id,
+            newBishopId: data.updateCampuses.campuses[0].bishop.id,
+            oldBishopId: campusTownData?.bishop.id,
             loggedBy: currentUser.id,
             historyRecord: recordIfNoOldBishop,
           },
@@ -298,8 +296,8 @@ const UpdateTownCampus = () => {
           },
         })
 
-        let recordIfOldBishop = `${initialValues.campusTownName} Campus has been moved from Bishop ${campusData?.displayCampus?.bishop.firstName} ${campusData?.displayCampus?.bishop.lastName} 
-        to Bishop ${data.AddCampusBishop.from.firstName} ${data.AddCampusBishop.from.lastName} `
+        let recordIfOldBishop = `${initialValues.campusTownName} Campus has been moved from Bishop ${campusTownData?.bishop.firstName} ${campusTownData?.bishop.lastName} 
+        to Bishop ${data.updateCampuses.campuses[0].bishop.firstName} ${data.updateCampuses.campuses[0].bishop.lastName} `
 
         //After Adding the campus to a bishop, then you log that change.
         LogCampusTownHistory({
@@ -307,8 +305,8 @@ const UpdateTownCampus = () => {
             campusTownId: campusId,
             newLeaderId: '',
             oldLeaderId: '',
-            newBishopId: data.AddCampusBishop.from.id,
-            oldBishopId: campusData?.displayCampus?.bishop.id,
+            newBishopId: data.updateCampuses.campuses[0].bishop.id,
+            oldBishopId: campusTownData?.bishop.id,
             loggedBy: currentUser.id,
             historyRecord: recordIfOldBishop,
           },
@@ -367,8 +365,16 @@ const UpdateTownCampus = () => {
     return <LoadingScreen />
   } else if (bishopsData || townData || campusData) {
     //Refactoring the Options into Something that can be read by my formik component
-    const bishopCampusOptions = makeSelectOptions(bishopsData.bishopsListCampus)
-    const bishopTownOptions = makeSelectOptions(bishopsData.bishopsListTown)
+    const bishopCampusOptions = makeSelectOptions(
+      bishopsData.members.filter(
+        (bishop) => bishop.campusBishop.length > 0 && bishop
+      )
+    )
+    const bishopTownOptions = makeSelectOptions(
+      bishopsData.members.filter(
+        (bishop) => bishop.townBishop.length > 0 && bishop
+      )
+    )
 
     //onSubmit receives the form state as argument
     const onSubmit = (values, onSubmitProps) => {

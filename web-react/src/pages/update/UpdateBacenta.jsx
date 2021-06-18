@@ -3,7 +3,11 @@ import { useHistory } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/client'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
-import { capitalise, makeSelectOptions } from '../../global-utils'
+import {
+  capitalise,
+  makeSelectOptions,
+  SERVICE_DAY_OPTIONS,
+} from '../../global-utils'
 import FormikControl from '../../components/formik-components/FormikControl'
 import {
   GET_CENTRE_BACENTAS,
@@ -35,36 +39,25 @@ const UpdateBacenta = () => {
 
   let townCampusIdVar
 
-  const { data: bacentaData, loading: bacentaLoading } = useQuery(
-    DISPLAY_BACENTA,
-    {
-      variables: { id: bacentaId },
-    }
-  )
+  const { data: bacenta, loading: bacentaLoading } = useQuery(DISPLAY_BACENTA, {
+    variables: { id: bacentaId },
+  })
 
   const history = useHistory()
   const [positionLoading, setPositionLoading] = useState(false)
+  const bacentaData = bacenta?.bacentas[0]
 
   const initialValues = {
-    bacentaName: bacentaData?.displayBacenta?.name,
-    leaderSelect: bacentaData?.displayBacenta?.leader?.id,
-    leaderName: `${bacentaData?.displayBacenta?.leader?.firstName} ${bacentaData?.displayBacenta?.leader?.lastName} `,
+    bacentaName: bacentaData?.name,
+    leaderSelect: bacentaData?.leader?.id,
+    leaderName: `${bacentaData?.leader?.firstName} ${bacentaData?.leader?.lastName} `,
     townCampusSelect:
-      bacentaData?.displayBacenta?.centre?.town?.id ??
-      bacentaData?.displayBacenta?.centre?.campus?.id,
-    centreSelect: bacentaData?.displayBacenta?.centre?.id,
-    meetingDay: bacentaData?.displayBacenta?.meetingDay?.day,
-    venueLatitude: bacentaData?.displayBacenta?.location?.latitude ?? '',
-    venueLongitude: bacentaData?.displayBacenta?.location?.longitude ?? '',
+      bacentaData?.centre?.town?.id ?? bacentaData?.centre?.campus?.id,
+    centreSelect: bacentaData?.centre?.id,
+    meetingDay: bacentaData?.meetingDay?.day,
+    venueLatitude: bacentaData?.location?.latitude ?? '',
+    venueLongitude: bacentaData?.location?.longitude ?? '',
   }
-
-  const serviceDayOptions = [
-    { key: 'Tuesday', value: 'Tuesday' },
-    { key: 'Wednesday', value: 'Wednesday' },
-    { key: 'Thursday', value: 'Thursday' },
-    { key: 'Friday', value: 'Friday' },
-    { key: 'Saturday', value: 'Saturday' },
-  ]
 
   const validationSchema = Yup.object({
     bacentaName: Yup.string().required(
@@ -75,10 +68,10 @@ const UpdateBacenta = () => {
     ),
   })
 
-  const { data: townListData } = useQuery(GET_BISHOP_TOWNS, {
+  const { data: towns } = useQuery(GET_BISHOP_TOWNS, {
     variables: { id: bishopId },
   })
-  const { data: campusListData } = useQuery(GET_BISHOP_CAMPUSES, {
+  const { data: campuses } = useQuery(GET_BISHOP_CAMPUSES, {
     variables: { id: bishopId },
   })
 
@@ -91,16 +84,16 @@ const UpdateBacenta = () => {
       let newLeaderInfo = updatedInfo.UpdateBacenta?.leader
       //Log if the Leader Changes
 
-      if (newLeaderInfo.id !== initialValues.leaderSelect) {
+      if (newLeaderInfo?.id !== initialValues.leaderSelect) {
         LogBacentaHistory({
           variables: {
             bacentaId: bacentaId,
-            oldLeaderId: bacentaData?.displayBacenta?.leader.id,
-            newLeaderId: newLeaderInfo.id,
+            oldLeaderId: bacentaData?.leader.id,
+            newLeaderId: newLeaderInfo?.id ?? '',
             oldCentreId: '',
             newCentreId: '',
             loggedBy: currentUser.id,
-            historyRecord: `${newLeaderInfo.firstName} ${newLeaderInfo.lastName} was transferred to become the new Bacenta Leader for ${initialValues.bacentaName} replacing ${bacentaData?.displayBacenta?.leader.firstName} ${bacentaData?.displayBacenta?.leader.lastName}`,
+            historyRecord: `${newLeaderInfo?.firstName} ${newLeaderInfo?.lastName} was transferred to become the new Bacenta Leader for ${initialValues.bacentaName} replacing ${bacentaData?.leader.firstName} ${bacentaData?.leader.lastName}`,
           },
         })
       }
@@ -137,11 +130,9 @@ const UpdateBacenta = () => {
           newCentreId: newCentre.AddBacentaCentre.from
             ? newCentre.AddBacentaCentre.from.id
             : '',
-          oldCentreId: bacentaData?.displayBacenta?.centre
-            ? bacentaData?.displayBacenta?.centre.id
-            : null,
+          oldCentreId: bacentaData?.centre ? bacentaData?.centre.id : null,
           loggedBy: currentUser.id,
-          historyRecord: `${initialValues.bacentaName} Bacenta has been moved from ${bacentaData?.displayBacenta?.centre.name} Centre to ${newCentre.AddBacentaCentre.from.name} Centre`,
+          historyRecord: `${initialValues.bacentaName} Bacenta has been moved from ${bacentaData?.centre.name} Centre to ${newCentre.AddBacentaCentre.from.name} Centre`,
         },
       })
     },
@@ -149,12 +140,12 @@ const UpdateBacenta = () => {
 
   if (bacentaLoading) {
     return <LoadingScreen />
-  } else if (bacentaData && campusListData && townListData) {
-    const townOptions = townListData
-      ? makeSelectOptions(townListData.townList)
+  } else if (bacentaData && campuses && towns) {
+    const townOptions = towns
+      ? makeSelectOptions(towns.members[0].townBishop)
       : []
-    const campusOptions = campusListData
-      ? makeSelectOptions(campusListData.campusList)
+    const campusOptions = campuses
+      ? makeSelectOptions(campuses.members[0].campusBishop)
       : []
 
     //onSubmit receives the form state as argument
@@ -314,7 +305,7 @@ const UpdateBacenta = () => {
                             className="form-control"
                             control="select"
                             name="meetingDay"
-                            options={serviceDayOptions}
+                            options={SERVICE_DAY_OPTIONS}
                             defaultOption="Pick a Service Day"
                           />
                         </div>

@@ -135,7 +135,7 @@ type ServiceRecord {
 
 type HistoryLog {
   id: ID @id
-  timeStamp: String
+  timeStamp: DateTime
   historyRecord: String #leader was transferred to
   created_at: TimeGraph @relationship(type: "RECORDED_ON", direction: OUT)
   leaders: [Member] @relationship(type: "HAS_HISTORY", direction: IN)
@@ -758,7 +758,7 @@ type Mutation {
       """
     )
 
-  CreateTown(townName: String!, leaderId: ID!, id: ID!): Town
+  CreateTown(townName: String!, leaderId: ID!, bishopId: ID!): Town
     @cypher(
       statement: """
        CREATE (town:Town {name:$townName})
@@ -767,7 +767,7 @@ type Mutation {
       WITH town
       MATCH (leader:Member {id: $leaderId})
       MATCH (currentUser:Member {auth_id:$auth.jwt.sub})
-      MATCH (bishop:Member {id: $id})
+      MATCH (bishop:Member {bishopId: $id})
 
        CREATE (log:HistoryLog)
         SET
@@ -787,7 +787,7 @@ type Mutation {
       RETURN town
       """
     )
-  CreateCampus(campusName: String!, leaderId: ID!, id: ID!): Campus
+  CreateCampus(campusName: String!, leaderId: ID!, bishopId: ID!): Campus
     @cypher(
       statement: """
       CREATE (campus:Campus {name:$campusName})

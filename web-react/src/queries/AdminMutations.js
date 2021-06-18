@@ -18,11 +18,7 @@ export const MAKE_BISHOP_ADMIN = gql`
 export const REMOVE_BISHOP_ADMIN = gql`
   mutation($bishopId: ID!, $adminId: ID!) {
     RemoveMemberIsBishopAdminFor(from: $adminId, to: $bishopId) {
-      from {
-        id
-        firstName
-        lastName
-      }
+      id
     }
   }
 `

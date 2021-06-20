@@ -18,35 +18,31 @@ const DisplaySontaDetails = () => {
     // Spinner Icon for Loading Screens
     return <LoadingScreen />
   } else if (sontaData) {
-    const { displaySonta, sontaBasontaLeaderList, sontaMemberCount } = sontaData
+    const { sontas, sontaBasontaLeaderList, sontaMemberCount } = sontaData
 
     let breadcrumb
     if (church.church === 'town') {
-      breadcrumb = [displaySonta.town.bishop, displaySonta.town, displaySonta]
+      breadcrumb = [sontas[0].town?.bishop, sontas[0].town, sontas[0]]
     }
     if (church.church === 'campus') {
-      breadcrumb = [
-        displaySonta.campus.bishop,
-        displaySonta.campus,
-        displaySonta,
-      ]
+      breadcrumb = [sontas[0].campus?.bishop, sontas[0].campus, sontas[0]]
     }
 
     return (
       <>
         <NavBar />
         <DisplayChurchDetails
-          name={displaySonta?.name}
+          name={sontas[0]?.name}
           leaderTitle="Sonta Leader"
-          leaderName={`${displaySonta?.leader.firstName} ${displaySonta?.leader.lastName}`}
-          leaderId={displaySonta?.leader.id}
+          leaderName={`${sontas[0]?.leader.firstName} ${sontas[0]?.leader.lastName}`}
+          leaderId={sontas[0]?.leader.id}
           churchHeading="No of Basonta Leaders"
           churchType={`Sonta`}
           subChurch="Basonta Leaders"
           membership={sontaMemberCount}
           churchNo={sontaBasontaLeaderList.length}
           // editlink="/sonta/editsonta"
-          history={displaySonta?.history.length !== 0 && displaySonta?.history}
+          history={sontas[0]?.history.length !== 0 && sontas[0]?.history}
           breadcrumb={breadcrumb}
           buttons={['']}
           basontaLeaders={sontaBasontaLeaderList}

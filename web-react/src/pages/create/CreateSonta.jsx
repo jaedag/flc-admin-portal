@@ -22,7 +22,7 @@ import { capitalise, makeSelectOptions } from '../../global-utils'
 
 function CreateSonta() {
   const initialValues = {
-    ministryId: '',
+    ministrySelect: '',
     leaderId: '',
     campusTownSelect: '',
   }
@@ -67,9 +67,11 @@ function CreateSonta() {
   )
 
   if (townListData && campusListData && ministryListData) {
-    const townOptions = makeSelectOptions(townListData.townList)
-    const campusOptions = makeSelectOptions(campusListData.campusList)
-    const ministryOptions = makeSelectOptions(ministryListData.ministryList)
+    const townOptions = makeSelectOptions(townListData.members[0].townBishop)
+    const campusOptions = makeSelectOptions(
+      campusListData.members[0].campusBishop
+    )
+    const ministryOptions = makeSelectOptions(ministryListData.ministries)
 
     //onSubmit receives the form state as argument
     const onSubmit = (values, onSubmitProps) => {

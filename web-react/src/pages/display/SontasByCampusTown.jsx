@@ -20,12 +20,13 @@ const DisplaySontasByCampusTown = () => {
       variables: { id: bishopId },
     }
   )
-
+  console.log(sontaData)
   if (sontaLoading) {
     // Spinner Icon for Loading Screens
     return <LoadingScreen />
   } else if (sontaData && church.church === 'campus') {
-    const campuses = sontaData.towns
+    const campuses = sontaData.campuses
+
     return (
       <>
         <NavBar />
@@ -40,7 +41,7 @@ const DisplaySontasByCampusTown = () => {
                   }}
                 >
                   {' '}
-                  <h4>{`${campuses[0].bishop.firstName} ${campuses[0].bishop.lastName}'s Sontas`}</h4>
+                  <h4>{`${campuses[0].bishop?.firstName} ${campuses[0].bishop?.lastName}'s Sontas`}</h4>
                 </Link>
               </div>
               <RoleView
@@ -98,7 +99,7 @@ const DisplaySontasByCampusTown = () => {
                   }}
                 >
                   {' '}
-                  <h4>{`${towns[0].bishop.firstName} ${towns[0].bishop.lastName}'s Sontas`}</h4>
+                  <h4>{`${towns[0].bishop?.firstName} ${towns[0].bishop?.lastName}'s Sontas`}</h4>
                 </Link>
               </div>
               <RoleView
@@ -110,6 +111,12 @@ const DisplaySontasByCampusTown = () => {
                     className="btn btn-primary text-nowrap"
                   >
                     Add Centre
+                  </Link>
+                  <Link
+                    to="/sonta/addsonta"
+                    className="btn btn-primary text-nowrap"
+                  >
+                    Add Sonta
                   </Link>
                 </div>
               </RoleView>

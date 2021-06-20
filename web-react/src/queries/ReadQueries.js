@@ -243,8 +243,8 @@ export const DISPLAY_BACENTA = gql`
 `
 
 export const DISPLAY_SONTA = gql`
-  query displaySonta($id: ID) {
-    displaySonta(id: $id) {
+  query($id: ID) {
+    sontas(where: { id: $id }) {
       id
       name
       leader {
@@ -253,9 +253,7 @@ export const DISPLAY_SONTA = gql`
         lastName
         whatsappNumber
         title {
-          Title {
-            title
-          }
+          title
         }
       }
       town {

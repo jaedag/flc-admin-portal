@@ -37,6 +37,7 @@ const DisplayAllCentres = () => {
     // Spinner Icon for Loading Screens
     return <LoadingScreen />
   } else if (campusCentreData && church.church === 'campus') {
+    console.log(campusCentreData)
     return (
       <>
         <NavBar />
@@ -53,9 +54,9 @@ const DisplayAllCentres = () => {
                   }}
                 >
                   {' '}
-                  <h4>{`${
-                    campusCentreData.campusCentreList[0].campus.name
-                  } ${capitalise(church.church)}`}</h4>
+                  <h4>{`${campusCentreData.centres[0].campus.name} ${capitalise(
+                    church.church
+                  )}`}</h4>
                 </Link>
               </div>
               <RoleView
@@ -75,25 +76,25 @@ const DisplayAllCentres = () => {
               <div className="col">
                 <h6 className="text-muted">
                   Con Overseer:
-                  {campusCentreData.campusCentreList[0].campus.leader
-                    ? ` ${campusCentreData.campusCentreList[0].campus.leader.firstName} ${campusCentreData.campusCentreList[0].campus.leader.lastName}`
+                  {campusCentreData.centres[0].campus.leader
+                    ? ` ${campusCentreData.centres[0].campus.leader.firstName} ${campusCentreData.centres[0].campus.leader.lastName}`
                     : null}
                 </h6>
               </div>
             </div>
 
             <div className="row justify-content-between">
-              <div className="py-1 px-2 m-2 card">{`Centres: ${campusCentreData.campusCentreList.length}`}</div>
+              <div className="py-1 px-2 m-2 card">{`Centres: ${campusCentreData.centres.length}`}</div>
               <Link
                 className="py-1 px-2 m-2 card text-white"
                 to="/sonta/displayall"
-              >{`Sontas: ${campusCentreData.campusCentreList.length}`}</Link>
+              >{`Sontas: ${campusCentreData.centres.length}`}</Link>
               <div className="py-1 px-2 m-2 card">{`Membership: ${campusCentreData.campusMemberCount}`}</div>
             </div>
           </div>
 
           <DisplayChurchList
-            data={campusCentreData.campusCentreList}
+            data={campusCentreData.centres}
             setter={setCentreId}
             churchType="Centre"
           />

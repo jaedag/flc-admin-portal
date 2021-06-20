@@ -494,26 +494,50 @@ type Query {
     )
   centreMemberCount(id: ID): Int!
     @cypher(
-      statement: "MATCH (:Centre {id:$id})-[:HAS_BACENTA]->(bacenta:Bacenta)<-[:BELONGS_TO]-(member:Member) RETURN COUNT(DISTINCT member)"
+      statement: """
+      MATCH (centre:Centre {id:$id})-[:HAS_BACENTA]->(bacenta:Bacenta)
+      OPTIONAL MATCH (bacenta)<-[:BELONGS_TO*]-(member:Member)
+      OPTIONAL MATCH (bacenta)<-[:LEADS]-(bacentaLeader:Member)
+      OPTIONAL MATCH (centre)<-[:LEADS]-(centreLeader:Member)
+      UNWIND [member,bacentaLeader,centreLeader] as members
+      WITH members WHERE members IS NOT NULL
+      RETURN COUNT(DISTINCT members)
+      """
     )
   centreMemberList(id: ID): [Member]
     @cypher(
       statement: """
-      MATCH (:Centre {id: $id})-[:HAS_BACENTA]->()<-[:BELONGS_TO]-(member:Member)
-      RETURN member
+      MATCH (centre:Centre {id:$id})-[:HAS_BACENTA]->(bacenta:Bacenta)
+      OPTIONAL MATCH (bacenta)<-[:BELONGS_TO*]-(member:Member)
+      OPTIONAL MATCH (bacenta)<-[:LEADS]-(bacentaLeader:Member)
+      OPTIONAL MATCH (centre)<-[:LEADS]-(centreLeader:Member)
+      UNWIND [member,bacentaLeader,centreLeader] as members
+      WITH members WHERE members IS NOT NULL
+      RETURN DISTINCT members
       """
     )
 
   #At the Bacenta Level
   bacentaMemberCount(id: ID): Int
     @cypher(
-      statement: "MATCH (bacenta:Bacenta{id:$id}) MATCH (bacenta)<-[:BELONGS_TO]-(member:Member) RETURN COUNT(DISTINCT member)"
+      statement: """
+      MATCH (bacenta:Bacenta {id:$id})
+      OPTIONAL MATCH (bacenta)<-[:BELONGS_TO*]-(member:Member)
+      OPTIONAL MATCH (bacenta)<-[:LEADS]-(bacentaLeader:Member)
+      UNWIND [member,bacentaLeader] as members
+      WITH members WHERE members IS NOT NULL
+      RETURN COUNT(DISTINCT members)
+      """
     )
   bacentaMemberList(id: ID): [Member]
     @cypher(
       statement: """
-      MATCH (:Bacenta {id:$id})<-[:BELONGS_TO]-(member:Member)
-      RETURN member
+      MATCH (bacenta:Bacenta {id:$id})
+      OPTIONAL MATCH (bacenta)<-[:BELONGS_TO*]-(member:Member)
+      OPTIONAL MATCH (bacenta)<-[:LEADS]-(bacentaLeader:Member)
+      UNWIND [member,bacentaLeader] as members
+      WITH members WHERE members IS NOT NULL
+      RETURN DISTINCT members
       """
     )
   bacentaDropdown(bacentaName: String): [Bacenta]
@@ -1405,7 +1429,7 @@ type Mutation {
     )
 
   #SERVICE RECORDS MUTATIONS
-  CreateBacentaServiceRecord(
+  RecordBacentaService(
     bacentaId: ID!
     serviceDate: String!
     attendance: Int!

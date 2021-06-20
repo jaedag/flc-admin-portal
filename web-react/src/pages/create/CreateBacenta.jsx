@@ -5,6 +5,7 @@ import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 import {
   capitalise,
+  DECIMAL_NUM_REGEX,
   makeSelectOptions,
   SERVICE_DAY_OPTIONS,
 } from '../../global-utils'
@@ -48,12 +49,12 @@ const CreateBacenta = () => {
     venueLatitude: Yup.string()
       .required('Please fill in your location info')
       .test('is-decimal', 'Please enter valid coordinates', (value) =>
-        (value + '').match(/^-?\d*\.{1}\d*$/)
+        (value + '').match(DECIMAL_NUM_REGEX)
       ),
     venueLongitude: Yup.string()
       .required('Please fill in your location info')
       .test('is-decimal', 'Please enter valid coordinates', (value) =>
-        (value + '').match(/^-?\d*\.{1}\d*$/)
+        (value + '').match(DECIMAL_NUM_REGEX)
       ),
   })
 

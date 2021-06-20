@@ -47,6 +47,7 @@ import MemberTableMobile from './components/MemberTableMobile.jsx'
 import UserProfileDisplayPage from './pages/user-profile/DisplayPage'
 import UserProfileEditPage from './pages/user-profile/EditPage'
 import CreateSonta from './pages/create/CreateSonta'
+import BacentaService from './pages/service-record/BacentaService'
 
 const AppWithApollo = () => {
   const [accessToken, setAccessToken] = useState()
@@ -85,6 +86,7 @@ const AppWithApollo = () => {
   })
 
   const client = new ApolloClient({
+    uri: process.env.REACT_APP_GRAPHQL_URI || '/graphql',
     link: authLink.concat(httpLink),
     cache: new InMemoryCache({
       typePolicies: {
@@ -396,7 +398,7 @@ const PastorsAdmin = () => {
         >
           <SearchContext.Provider value={{ searchKey, setSearchKey }}>
             <Switch>
-              <ProtectedRouteHome
+              <Route
                 path="/"
                 roles={['federalAdmin']}
                 component={BishopSelect}
@@ -540,7 +542,7 @@ const PastorsAdmin = () => {
                 component={CreateCentre}
                 exact
               />
-              <Route
+              <ProtectedRoute
                 roles={['federalAdmin', 'bishopAdmin', 'constituencyAdmin']}
                 path="/sonta/addsonta"
                 component={CreateSonta}
@@ -623,6 +625,13 @@ const PastorsAdmin = () => {
                 path="/campus/editcampus"
                 component={UpdateTownCampus}
                 exact
+              />
+
+              {/* Service Links */}
+              <ProtectedRoute
+                roles={['federalAdmin', 'bacentaLeader']}
+                path="/bacenta/record-service"
+                component={BacentaService}
               />
             </Switch>
           </SearchContext.Provider>

@@ -406,7 +406,7 @@ const DisplayMemberDetails = () => {
               <div className="row">
                 <div className="col">
                   <MemberDetailsCard
-                    title="Current Church Activity"
+                    title="Current Church Groups"
                     editlink="/member/editmember"
                   >
                     <div className="container p-2">

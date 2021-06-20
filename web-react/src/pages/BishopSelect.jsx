@@ -14,7 +14,8 @@ const BishopSelect = () => {
   const { data, loading } = useQuery(GET_BISHOPS)
 
   const history = useHistory()
-  const version = 'v0.3.0'
+  const version = 'v0.3.2'
+
   //Migrating to new Neo4jGraphQL Library
   if (loading) {
     return (
@@ -93,6 +94,13 @@ const BishopSelect = () => {
         </div>
         <div className="row row-cols-sm-1 row-cols-lg-4 d-flex justify-content-center px-5">
           {data.members.map((bishop, index) => {
+            let bishopStream
+            if (bishop.townBishop?.length) {
+              bishopStream = 'Town'
+            } else if (bishop.campusBishop?.length) {
+              bishopStream = 'Campus'
+            }
+
             return (
               <div
                 key={index}
@@ -111,9 +119,7 @@ const BishopSelect = () => {
                   <div className="media-body">
                     <h5 className="mt-0">{`${bishop.firstName} ${bishop.lastName}`}</h5>
                     <div>
-                      <span className="text-muted">
-                        {bishop.townBishop?.length ? 'Town' : 'Campus'}
-                      </span>
+                      <span className="text-muted">{bishopStream}</span>
                     </div>
                   </div>
                 </div>

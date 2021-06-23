@@ -599,7 +599,7 @@ type Query {
   # Display Member based on ID
   currentUser(id: ID): Member
     @cypher(
-      statement: "MATCH (member:Member {auth_id: $jwt.sub}) RETURN member"
+      statement: "MATCH (member:Member {auth_id: $auth.jwt.sub}) RETURN member"
     )
     @auth(rules: [{ isAuthenticated: true }])
 
@@ -732,7 +732,7 @@ type Mutation {
       MERGE (date:TimeGraph {date: date()})
 
       WITH member, log
-      MATCH (currentUser:Member {auth_id:$jwt.sub})
+      MATCH (currentUser:Member {auth_id:$auth.jwt.sub})
       MERGE (log)-[:RECORDED_ON]->(date)
       MERGE (log)-[:LOGGED_BY]->(currentUser)
 
@@ -790,7 +790,7 @@ type Mutation {
       	town.id = apoc.create.uuid()
       WITH town
       MATCH (leader:Member {id: $leaderId})
-      MATCH (currentUser:Member {auth_id:$jwt.sub})
+      MATCH (currentUser:Member {auth_id:$auth.jwt.sub})
       MATCH (bishop:Member {bishopId: $id})
 
        CREATE (log:HistoryLog)
@@ -819,7 +819,7 @@ type Mutation {
       	campus.id = apoc.create.uuid()
       WITH campus
       MATCH (leader:Member {id: $leaderId})
-      MATCH (currentUser:Member {auth_id:$jwt.sub})
+      MATCH (currentUser:Member {auth_id:$auth.jwt.sub})
       MATCH (bishop:Member {id: $id})
 
        CREATE (log:HistoryLog)
@@ -849,7 +849,7 @@ type Mutation {
       	centre.id = apoc.create.uuid()
       WITH centre
        MATCH (leader:Member {id: $leaderId})
-       MATCH (currentUser:Member {auth_id:$jwt.sub})
+       MATCH (currentUser:Member {auth_id:$auth.jwt.sub})
        MATCH (campusTown {id:$townCampusId}) WHERE campusTown:Town OR campusTown:Campus
        UNWIND labels(campusTown) AS typename
 
@@ -879,7 +879,7 @@ type Mutation {
       	sonta.id = apoc.create.uuid()
       WITH sonta
        MATCH (leader:Member {id: $leaderId})
-       MATCH (currentUser:Member {auth_id:$jwt.sub})
+       MATCH (currentUser:Member {auth_id:$auth.jwt.sub})
        MATCH (ministry:Ministry {id:$ministryId})
        MATCH (campusTown {id:$townCampusId}) WHERE campusTown:Town OR campusTown:Campus
        UNWIND labels(campusTown) AS typename
@@ -923,7 +923,7 @@ type Mutation {
       MATCH (centre:Centre {id: $centreId})
       MATCH (meetingDay:ServiceDay {day: $meetingDay})
       MATCH (leader:Member {id: $leaderId})
-      MATCH (currentUser:Member {auth_id:$jwt.sub})
+      MATCH (currentUser:Member {auth_id:$auth.jwt.sub})
 
         CREATE (log:HistoryLog:ServiceLog)
          SET
@@ -1192,7 +1192,7 @@ type Mutation {
     @cypher(
       statement: """
        MATCH  (bacenta:Bacenta {id: $bacentaId})
-       MATCH (admin:Member {auth_id: $jwt.sub})
+       MATCH (admin:Member {auth_id: $auth.jwt.sub})
        CREATE (log:HistoryLog {id: apoc.create.uuid()})
          SET log.historyRecord = $historyRecord,
            log.timeStamp = time()
@@ -1251,7 +1251,7 @@ type Mutation {
     @cypher(
       statement: """
        MATCH  (centre:Centre {id: $centreId})
-       MATCH (admin:Member {auth_id: $jwt.sub})
+       MATCH (admin:Member {auth_id: $auth.jwt.sub})
        CREATE (log:HistoryLog {id: apoc.create.uuid()})
          SET log.historyRecord = $historyRecord,
            log.timeStamp = time()
@@ -1311,7 +1311,7 @@ type Mutation {
     @cypher(
       statement: """
       MATCH  (campusTown {id: $campusTownId}) WHERE campusTown:Campus OR campusTown:Town
-      MATCH (admin:Member {auth_id: $jwt.sub})
+      MATCH (admin:Member {auth_id: $auth.jwt.sub})
       CREATE (log:HistoryLog {id: apoc.create.uuid()})
         SET log.historyRecord = $historyRecord,
           log.timeStamp = time()
@@ -1378,7 +1378,7 @@ type Mutation {
     @cypher(
       statement: """
        MATCH  (sonta:Sonta {id: $sontaId})
-       MATCH (admin:Member {auth_id: $jwt.sub})
+       MATCH (admin:Member {auth_id: $auth.jwt.sub})
        CREATE (log:HistoryLog {id: apoc.create.uuid()})
          SET log.historyRecord = $historyRecord,
            log.timeStamp = time()

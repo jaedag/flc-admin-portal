@@ -473,10 +473,10 @@ export const GET_CENTRE_MEMBERS = gql`
 
 export const GET_BACENTA_MEMBERS = gql`
   query($id: ID) {
-    displayBacenta(id: $id) {
+    bacentas(where: { id: $id }) {
       name
     }
-    bacentaMemberList(id: $id, orderBy: firstName_asc) {
+    bacentaMemberList(id: $id) {
       id
       firstName
       lastName
@@ -494,13 +494,7 @@ export const GET_BACENTA_MEMBERS = gql`
         gender
       }
       title {
-        Title {
-          title
-        }
-        status
-        yearAppointed {
-          year
-        }
+        title
       }
       leadsBacenta {
         id

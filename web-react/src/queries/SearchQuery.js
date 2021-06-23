@@ -94,62 +94,61 @@ export const GLOBAL_SEARCH = gql`
         }
       }
     }
-
-    globalMemberSearch(searchKey: $searchKey) {
-      id
-      firstName
-      lastName
-      pictureUrl
-      bacenta {
-        id
-        name
-        leader {
-          id
-          firstName
-          lastName
-        }
-        centre {
-          id
-          town {
-            id
-            bishop {
-              id
-            }
-          }
-          campus {
-            id
-            bishop {
-              id
-            }
-          }
-        }
-      }
-      ministry {
-        id
-        name
-      }
-      leadsCampus {
-        id
-        name
-        bishop {
-          id
-        }
-      }
-      leadsTown {
-        id
-        name
-        bishop {
-          id
-        }
-      }
-      townBishop {
-        id
-        name
-      }
-      campusBishop {
-        id
-        name
-      }
-    }
+    # globalMemberSearch(searchKey: $searchKey) {
+    #   id
+    #   firstName
+    #   lastName
+    #   pictureUrl
+    #   bacenta {
+    #     id
+    #     name
+    #     leader {
+    #       id
+    #       firstName
+    #       lastName
+    #     }
+    #     centre {
+    #       id
+    #       town {
+    #         id
+    #         bishop {
+    #           id
+    #         }
+    #       }
+    #       campus {
+    #         id
+    #         bishop {
+    #           id
+    #         }
+    #       }
+    #     }
+    #   }
+    #   ministry {
+    #     id
+    #     name
+    #   }
+    #   leadsCampus {
+    #     id
+    #     name
+    #     bishop {
+    #       id
+    #     }
+    #   }
+    #   leadsTown {
+    #     id
+    #     name
+    #     bishop {
+    #       id
+    #     }
+    #   }
+    #   townBishop {
+    #     id
+    #     name
+    #   }
+    #   campusBishop {
+    #     id
+    #     name
+    #   }
+    # }
   }
 `

@@ -2,20 +2,6 @@
 export const PHONE_NUM_REGEX_VALIDATION = /^[+][(]{0,1}[1-9]{1,4}[)]{0,1}[-\s/0-9]*$/
 export const DECIMAL_NUM_REGEX = /^-?\d*\.{1}\d*$/
 export const DECIMAL_NUM_REGEX_POSITIVE_ONLY = /^\d*\.{1}\d*$/
-export const MONTH_NAMES = [
-  'Jan',
-  'Feb',
-  'Mar',
-  'Apr',
-  'May',
-  'June',
-  'July',
-  'Aug',
-  'Sept',
-  'Oct',
-  'Nov',
-  'Dec',
-]
 
 export const GENDER_OPTIONS = [
   { key: 'Male', value: 'Male' },
@@ -77,6 +63,13 @@ export const makeSelectOptions = (data) => {
   }))
 }
 
+const parseNeoDate = (date) => {
+  return `${date.year.low}-${date.month.low}-${date.day.low}`
+}
+export const parseNeoTime = (time) => {
+  return `${time.hour.low}:${time.minute.low}`
+}
+
 export const parseDate = (date) => {
   //Receives the current date and returns text "Today, Yesterday,etc"
 
@@ -84,7 +77,7 @@ export const parseDate = (date) => {
   let todaysDate = new Date()
 
   // Create date from input value
-  let inputDate = new Date(date)
+  let inputDate = new Date(parseNeoDate(date))
 
   // call setHours to take the time out of the comparison
   if (inputDate.toDateString() === todaysDate.toDateString()) {
@@ -140,4 +133,15 @@ export const getNameWithTitle = (member) => {
   } else {
     return displayName.name
   }
+}
+
+export const getMemberDob = (displayMember) => {
+  return new Date(parseNeoDate(displayMember.dob.date)).toLocaleDateString(
+    'en-gb',
+    {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    }
+  )
 }

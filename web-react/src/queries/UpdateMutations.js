@@ -47,7 +47,7 @@ export const UPDATE_TOWN_MUTATION = gql`
     $leaderId: ID!
     $bishopId: ID!
   ) {
-    UpdateTown(
+    UpdateTownDetails(
       townId: $townId
       townName: $townName
       leaderId: $leaderId
@@ -72,7 +72,7 @@ export const UPDATE_CAMPUS_MUTATION = gql`
     $leaderId: ID!
     $bishopId: ID!
   ) {
-    UpdateCampus(
+    UpdateCampusDetails(
       campusId: $campusId
       campusName: $campusName
       leaderId: $leaderId
@@ -97,7 +97,7 @@ export const UPDATE_CENTRE_MUTATION = gql`
     $leaderId: ID
     $campusTownID: ID
   ) {
-    UpdateCentre(
+    UpdateCentreDetails(
       centreId: $centreId
       centreName: $centreName
       leaderId: $leaderId
@@ -115,127 +115,6 @@ export const UPDATE_CENTRE_MUTATION = gql`
   }
 `
 
-export const ADD_CENTRE_TOWN = gql`
-  mutation AddCentreTown($townId: ID!, $centreId: ID!) {
-    AddCentreTown(from: { id: $townId }, to: { id: $centreId }) {
-      from {
-        id
-        name
-        centres {
-          id
-          name
-        }
-      }
-    }
-  }
-`
-
-export const ADD_CENTRE_CAMPUS = gql`
-  mutation AddCentreCampus($campusId: ID!, $centreId: ID!) {
-    AddCentreCampus(from: { id: $campusId }, to: { id: $centreId }) {
-      from {
-        id
-        name
-        centres {
-          id
-          name
-        }
-      }
-    }
-  }
-`
-
-export const REMOVE_CENTRE_TOWN = gql`
-  mutation RemoveCentreTown($townId: ID!, $centreId: ID!) {
-    RemoveCentreTown(from: { id: $townId }, to: { id: $centreId }) {
-      from {
-        id
-        name
-        centres {
-          id
-          name
-        }
-      }
-      to {
-        id
-        name
-      }
-    }
-  }
-`
-
-export const REMOVE_CENTRE_CAMPUS = gql`
-  mutation RemoveCentreCampus($campusId: ID!, $centreId: ID!) {
-    RemoveCentreCampus(from: { id: $campusId }, to: { id: $centreId }) {
-      from {
-        id
-        name
-        centres {
-          id
-          name
-        }
-      }
-      to {
-        id
-        name
-      }
-    }
-  }
-`
-
-export const ADD_CENTRE_BACENTAS = gql`
-  mutation AddCentreBacentas($centreId: ID!, $bacentaId: ID!) {
-    AddCentreBacentas(from: { id: $centreId }, to: { id: $bacentaId }) {
-      from {
-        id
-        name
-        bacentas {
-          name
-        }
-      }
-      to {
-        id
-        name
-      }
-    }
-  }
-`
-export const REMOVE_CENTRE_BACENTAS = gql`
-  mutation RemoveCentreBacentas($centreId: ID!, $bacentaId: ID!) {
-    RemoveCentreBacentas(from: { id: $centreId }, to: { id: $bacentaId }) {
-      from {
-        id
-        name
-        bacentas {
-          name
-        }
-      }
-    }
-  }
-`
-
-export const REMOVE_BACENTA_CENTRE = gql`
-  mutation RemoveBacentaCentre($centreId: ID!, $bacentaId: ID!) {
-    RemoveBacentaCentre(from: { id: $centreId }, to: { id: $bacentaId }) {
-      from {
-        id
-        name
-        bacentas {
-          name
-        }
-      }
-      to {
-        id
-        name
-        centre {
-          id
-          name
-        }
-      }
-    }
-  }
-`
-
 export const UPDATE_BACENTA = gql`
   mutation UpdateBacenta(
     $id: ID
@@ -245,7 +124,7 @@ export const UPDATE_BACENTA = gql`
     $venueLatitude: Float
     $venueLongitude: Float
   ) {
-    UpdateBacenta(
+    UpdateBacentaDetails(
       id: $id
       name: $name
       leaderId: $leaderId
@@ -268,12 +147,128 @@ export const UPDATE_BACENTA = gql`
   }
 `
 
+export const ADD_CENTRE_TOWN = gql`
+  mutation AddCentreTown($townId: ID!, $centreId: ID!) {
+    updateCentres(
+      where: { id: $centreId }
+      connect: { town: { where: { id: $townId } } }
+    ) {
+      centres {
+        town {
+          id
+          name
+        }
+      }
+    }
+  }
+`
+
+export const ADD_CENTRE_CAMPUS = gql`
+  mutation AddCentreCampus($campusId: ID!, $centreId: ID!) {
+    updateCentres(
+      where: { id: $centreId }
+      connect: { campus: { where: { id: $campusId } } }
+    ) {
+      centres {
+        campus {
+          id
+          name
+        }
+      }
+    }
+  }
+`
+
+export const REMOVE_CENTRE_TOWN = gql`
+  mutation RemoveCentreTown($townId: ID!, $centreId: ID!) {
+    updateCentres(
+      where: { id: $centreId }
+      disconnect: { town: { where: { id: $townId } } }
+    ) {
+      centres {
+        town {
+          id
+          name
+        }
+      }
+    }
+  }
+`
+
+export const REMOVE_CENTRE_CAMPUS = gql`
+  mutation RemoveCentreCampus($campusId: ID!, $centreId: ID!) {
+    updateCentres(
+      where: { id: $centreId }
+      disconnect: { campus: { where: { id: $campusId } } }
+    ) {
+      centres {
+        campus {
+          id
+          name
+        }
+      }
+    }
+  }
+`
+
+export const ADD_CENTRE_BACENTAS = gql`
+  mutation AddCentreBacentas($centreId: ID!, $bacentaId: ID!) {
+    updateCentres(
+      where: { id: $centreId }
+      connect: { bacentas: { where: { id: $bacentaId } } }
+    ) {
+      centres {
+        bacentas {
+          id
+          name
+        }
+      }
+    }
+  }
+`
+export const REMOVE_CENTRE_BACENTAS = gql`
+  mutation RemoveCentreBacentas($centreId: ID!, $bacentaId: ID!) {
+    updateCentres(
+      where: { id: $centreId }
+      disconnect: { bacentas: { where: { id: $bacentaId } } }
+    ) {
+      centres {
+        bacentas {
+          id
+          name
+        }
+      }
+    }
+  }
+`
+
+export const REMOVE_BACENTA_CENTRE = gql`
+  mutation RemoveBacentaCentre($centreId: ID!, $bacentaId: ID!) {
+    updateBacentas(
+      where: { id: $bacentaId }
+      disconnect: { centre: { where: { id: $centreId } } }
+    ) {
+      bacentas {
+        centre {
+          id
+          name
+        }
+      }
+    }
+  }
+`
+
 export const ADD_BACENTA_CENTRE = gql`
   mutation AddBacentaCentre($centreId: ID!, $bacentaId: ID!) {
-    AddBacentaCentre(from: { id: $centreId }, to: { id: $bacentaId }) {
-      from {
-        id
-        name
+    updateBacentas(
+      where: { id: $bacentaId }
+      connect: { centre: { where: { id: $centreId } } }
+    ) {
+      bacentas {
+        centre {
+          id
+          name
+        }
       }
     }
   }

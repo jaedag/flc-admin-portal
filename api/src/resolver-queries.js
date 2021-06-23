@@ -1,5 +1,5 @@
 export const matchMemberQuery = `
-MATCH (member:Member {id:$from.id}) 
+MATCH (member:Member {id:$from}) 
   RETURN 
   member.id AS id,
   member.firstName AS firstName, 
@@ -25,7 +25,7 @@ CREATE (log:HistoryLog)
    log.historyRecord = $log
 
   WITH admin
-  MATCH (currentUser:Member {auth_id:$cypherParams.user_authId})
+  MATCH (currentUser:Member {auth_id:$auth.jwt.sub})
   MERGE (admin)-[:HAS_HISTORY]->(log)
   MERGE (log)-[:LOGGED_BY]->(currentUser)
   MERGE (date:TimeGraph {date: date()})
@@ -39,7 +39,7 @@ SET admin.auth_id = $auth_id
 
 WITH admin
 MATCH (bishop:Member {id:$bishopId})
-MATCH (currentUser:Member {auth_id:$cypherParams.user_authId})
+MATCH (currentUser:Member {auth_id:$auth.jwt.sub})
 MERGE (admin)-[:IS_ADMIN_FOR]->(bishop)
 
 CREATE (log:HistoryLog)
@@ -62,7 +62,7 @@ MATCH (admin:Member {id:$adminId})
 
 WITH admin
 MATCH (bishop:Member {id:$bishopId})
-MATCH (currentUser:Member {auth_id:$cypherParams.user_authId})
+MATCH (currentUser:Member {auth_id:$auth.jwt.sub})
 MATCH (admin)-[r:IS_ADMIN_FOR]->(bishop)
 DELETE r
 
@@ -87,7 +87,7 @@ SET admin.auth_id = $auth_id
 
 WITH admin
 MATCH (town:Town {id:$townId})
-MATCH (currentUser:Member {auth_id:$cypherParams.user_authId})
+MATCH (currentUser:Member {auth_id:$auth.jwt.sub})
 MERGE (admin)-[:IS_ADMIN_FOR]->(town)
 
 CREATE (log:HistoryLog)
@@ -111,7 +111,7 @@ MATCH (admin:Member {id:$adminId})
 
 WITH admin
 MATCH (town:Town {id:$townId})
-MATCH (currentUser:Member {auth_id:$cypherParams.user_authId})
+MATCH (currentUser:Member {auth_id:$auth.jwt.sub})
 MATCH (admin)-[r:IS_ADMIN_FOR]->(town)
 DELETE r
 
@@ -137,7 +137,7 @@ SET admin.auth_id = $auth_id
 
 WITH admin
 MATCH (campus:Campus {id:$townId})
-MATCH (currentUser:Member {auth_id:$cypherParams.user_authId})
+MATCH (currentUser:Member {auth_id:$auth.jwt.sub})
 MERGE (admin)-[:IS_ADMIN_FOR]->(campus)
 
 CREATE (log:HistoryLog)
@@ -160,7 +160,7 @@ MATCH (admin:Member {id:$adminId})
 
 WITH admin
 MATCH (campus:Campus {id:$townId})
-MATCH (currentUser:Member {auth_id:$cypherParams.user_authId})
+MATCH (currentUser:Member {auth_id:$auth.jwt.sub})
 MATCH (admin)-[r:IS_ADMIN_FOR]->(campus)
 DELETE r 
 

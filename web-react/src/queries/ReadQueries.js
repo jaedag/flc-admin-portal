@@ -18,9 +18,9 @@ export const DISPLAY_MEMBER = gql`
       maritalStatus {
         status
       }
-      # dob {
-      #   date
-      # }
+      dob {
+        date
+      }
       bacenta {
         id
         name
@@ -226,10 +226,10 @@ export const DISPLAY_BACENTA = gql`
       }
       history(options: { limit: 10 }) {
         id
-        # timeStamp
-        # created_at {
-        #   date
-        # }
+        timeStamp
+        created_at {
+          date
+        }
         loggedBy {
           id
           firstName
@@ -276,10 +276,10 @@ export const DISPLAY_SONTA = gql`
       }
       history(options: { limit: 10 }) {
         id
-        # timeStamp
-        # created_at {
-        #   date
-        # }
+        timeStamp
+        created_at {
+          date
+        }
         loggedBy {
           id
           firstName

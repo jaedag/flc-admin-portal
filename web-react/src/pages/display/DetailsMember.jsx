@@ -10,7 +10,7 @@ import { MemberContext } from '../../contexts/MemberContext'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import userIcon from '../../img/user.png'
 import Timeline from '../../components/Timeline/Timeline'
-import { getNameWithTitle, MONTH_NAMES, capitalise } from '../../global-utils'
+import { getNameWithTitle, capitalise, getMemberDob } from '../../global-utils'
 
 const DisplayMemberDetails = () => {
   const { memberId } = useContext(MemberContext)
@@ -29,6 +29,7 @@ const DisplayMemberDetails = () => {
     return <LoadingScreen />
   } else if (memberData && memberId) {
     const member = memberData.members[0]
+    const memberBirthday = getMemberDob(member)
     let nameAndTitle = getNameWithTitle(member)
 
     //To Display Ranks on the Member Card
@@ -308,11 +309,7 @@ const DisplayMemberDetails = () => {
                         </div>
                         <div className="col">
                           <p className="font-weight-bold card-text">
-                            {member.dob
-                              ? `${member.dob.date.day.low} ${
-                                  MONTH_NAMES[member.dob.date.month.low - 1]
-                                } ${member.dob.date.year.low}`
-                              : null}
+                            {memberBirthday && memberBirthday}
                           </p>
                         </div>
                       </div>

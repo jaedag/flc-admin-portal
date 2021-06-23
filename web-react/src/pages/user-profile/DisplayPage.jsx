@@ -10,7 +10,7 @@ import { MemberContext } from '../../contexts/MemberContext'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import userIcon from '../../img/user.png'
 import Timeline from '../../components/Timeline/Timeline.jsx'
-import { getNameWithTitle, MONTH_NAMES, capitalise } from '../../global-utils'
+import { getNameWithTitle, capitalise, getMemberDob } from '../../global-utils'
 import AuthButton from '../../components/buttons/AuthButton'
 
 const UserProfileDisplayPage = () => {
@@ -30,6 +30,7 @@ const UserProfileDisplayPage = () => {
     return <LoadingScreen />
   } else if (memberData && currentUser.id) {
     const displayMember = memberData.members[0]
+    const memberBirthday = getMemberDob(displayMember)
 
     let nameAndTitle = getNameWithTitle(displayMember)
 
@@ -261,11 +262,7 @@ const UserProfileDisplayPage = () => {
                         </div>
                         <div className="col">
                           <p className="font-weight-bold card-text">
-                            {displayMember.dob
-                              ? `${displayMember.dob.date.day} ${
-                                  MONTH_NAMES[displayMember.dob.date.month - 1]
-                                } ${displayMember.dob.date.year}`
-                              : null}
+                            {memberBirthday && memberBirthday}
                           </p>
                         </div>
                       </div>

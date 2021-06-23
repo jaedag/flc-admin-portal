@@ -81,9 +81,12 @@ const DisplayAllTownCampuses = () => {
             <div className="row justify-content-between">
               <div className="py-1 px-3 m-2 card">{`Towns: ${towns.length}`}</div>
 
-              <div className="py-1 px-3 m-2 card">{`Membership: ${
+              <Link
+                to={`/${church.church}/members`}
+                className="py-1 px-3 m-2 card"
+              >{`Membership: ${
                 bishopMemberCount ? bishopMemberCount.bishopMemberCount : null
-              }`}</div>
+              }`}</Link>
             </div>
           </div>
           <DisplayChurchList data={towns} churchType="Town" />
@@ -130,11 +133,14 @@ const DisplayAllTownCampuses = () => {
             </div>
 
             <div className="row justify-content-between">
-              <div className="py-1 px-3 m-2 card">{`Campuses: ${campus.length}`}</div>
+              <div className="py-1 px-3 m-2 card">{`Campusess: ${campus.length}`}</div>
 
-              <div className="py-1 px-3 m-2 card">{`Membership: ${
+              <Link
+                to={`/${church.church}/members`}
+                className="py-1 px-3 m-2 card"
+              >{`Membership: ${
                 bishopMemberCount ? bishopMemberCount.bishopMemberCount : null
-              }`}</div>
+              }`}</Link>
             </div>
           </div>
           <DisplayChurchList data={campus} churchType="Campus" />

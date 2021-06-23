@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import './Timeline.css'
-import { parseDate } from '../../global-utils'
+import { parseDate, parseNeoTime } from '../../global-utils'
 
 const Timeline = (props) => {
   const { record, limit, modifier } = props
@@ -24,11 +24,9 @@ const Timeline = (props) => {
                   {element.historyRecord}
                   <br />
                   <small className="text-secondary">
-                    {`${parseDate(element.created_at?.date?.formatted)} at ${
-                      element.timeStamp?.hour
-                    }:${element.timeStamp?.minute.toLocaleString('en-US', {
-                      minimumIntegerDigits: 2,
-                    })}`}
+                    {`${parseDate(element.created_at?.date)} at ${parseNeoTime(
+                      element.timeStamp
+                    )}`}
                     <span
                       className="font-weight-bold"
                       onClick={() => {
@@ -57,11 +55,9 @@ const Timeline = (props) => {
                   {element.historyRecord}
                   <br />
                   <small className="text-secondary">
-                    {`${parseDate(element.created_at?.date.formatted)} at ${
-                      element.timeStamp?.hour
-                    }:${element.timeStamp?.minute.toLocaleString('en-US', {
-                      minimumIntegerDigits: 2,
-                    })}`}
+                    {`${parseDate(element.created_at?.date)} at ${parseNeoTime(
+                      element.timeStamp
+                    )}`}
                     <span
                       className="font-weight-bold"
                       onClick={() => {

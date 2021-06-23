@@ -13,9 +13,8 @@ function UserProfileIcon() {
   const { currentUser, setCurrentUser } = useContext(MemberContext)
   const [memberByEmail] = useLazyQuery(GET_LOGGED_IN_USER, {
     onCompleted: (data) => {
-      console.log('data from memberByEmail', data)
       const isTown = data.members[0].bacenta.centre?.town
-      console.log(data)
+
       setCurrentUser({
         ...currentUser,
         id: data.members[0].id,

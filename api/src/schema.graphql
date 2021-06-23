@@ -1037,7 +1037,7 @@ type Mutation {
       """
     )
 
-  UpdateTown(
+  UpdateTownDetails(
     townId: ID!
     townName: String!
     leaderId: ID!
@@ -1071,7 +1071,7 @@ type Mutation {
       RETURN town
       """
     )
-  UpdateCampus(
+  UpdateCampusDetails(
     campusId: ID!
     campusName: String!
     leaderId: ID!
@@ -1106,7 +1106,7 @@ type Mutation {
       RETURN campus
       """
     )
-  UpdateCentre(
+  UpdateCentreDetails(
     centreId: ID
     centreName: String
     leaderId: ID
@@ -1142,7 +1142,7 @@ type Mutation {
       RETURN centre
       """
     )
-  UpdateBacenta(
+  UpdateBacentaDetails(
     id: ID
     name: String
     meetingDay: String

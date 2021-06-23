@@ -1,5 +1,5 @@
 export const matchMemberQuery = `
-MATCH (member:Member {id:$from.id}) 
+MATCH (member:Member {id:$from}) 
   RETURN 
   member.id AS id,
   member.firstName AS firstName, 

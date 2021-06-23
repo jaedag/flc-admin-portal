@@ -285,7 +285,6 @@ export const resolvers = {
     RemoveMemberIsBishopAdminFor: async (object, args, context) => {
       const session = context.driver.session()
       let admin = {}
-      let bishop = { id: args.to.id }
 
       await session
         .run(cypher.matchMemberQuery, args)
@@ -323,7 +322,7 @@ export const resolvers = {
             .then(async () =>
               //Remove Admin relationship in Neo4j DB
               session
-                .run(cypher.removeBshopAdmin, {
+                .run(cypher.removeBishopAdmin, {
                   adminId: admin.id,
                   bishopId: args.to.id,
                   cypherParams: context.cypherParams,
@@ -436,10 +435,7 @@ export const resolvers = {
 
       errorHandling(admin)
 
-      return {
-        from: admin,
-        to: town,
-      }
+      return admin
     },
     RemoveMemberIsTownAdminFor: async (object, args, context) => {
       const session = context.driver.session()
@@ -503,10 +499,7 @@ export const resolvers = {
 
       errorHandling(admin)
 
-      return {
-        from: admin,
-        to: town,
-      }
+      return admin
     },
     MergeMemberIsCampusAdminFor: async (object, args, context) => {
       const session = context.driver.session()
@@ -599,10 +592,7 @@ export const resolvers = {
 
       errorHandling(admin)
 
-      return {
-        from: admin,
-        to: campus,
-      }
+      return admin
     },
     RemoveMemberIsCampusAdminFor: async (object, args, context) => {
       const session = context.driver.session()
@@ -666,10 +656,7 @@ export const resolvers = {
 
       errorHandling(admin)
 
-      return {
-        from: admin,
-        to: campus,
-      }
+      return admin
     },
   },
 }

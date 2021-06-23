@@ -21,7 +21,7 @@ function FormikSearchbox(props) {
   const [globalSearch] = useLazyQuery(GLOBAL_SEARCH, {
     onCompleted: (data) => {
       combinedData = [
-        ...data.globalMemberSearch,
+        // ...data.globalMemberSearch,
         ...data.globalCampusSearch,
         ...data.globalTownSearch,
         ...data.globalSontaSearch,

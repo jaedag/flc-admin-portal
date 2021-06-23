@@ -101,7 +101,7 @@ type Title {
 # }
 
 type TimeGraph {
-  date: DateTime
+  date: Date
   memberDob: Member @relationship(type: "WAS_BORN_ON", direction: IN)
   # titleAppointmentDate: Member @relationship(type: "APPOINTED_ON", direction: IN)
   leaderHistoryStartDate: Member
@@ -125,7 +125,7 @@ type TimeGraph {
 # }
 
 type ServiceRecord {
-  created_at: DateTime
+  created_at: Date
   serviceDate: TimeGraph @relationship(type: "SERVICE_HELD_ON", direction: OUT)
   attendance: Int!
   income: Float
@@ -135,7 +135,7 @@ type ServiceRecord {
 
 type HistoryLog {
   id: ID @id
-  timeStamp: DateTime
+  timeStamp: Date
   historyRecord: String #leader was transferred to
   created_at: TimeGraph @relationship(type: "RECORDED_ON", direction: OUT)
   leaders: [Member] @relationship(type: "HAS_HISTORY", direction: IN)
@@ -537,7 +537,7 @@ type Query {
       OPTIONAL MATCH (bacenta)<-[:LEADS]-(bacentaLeader:Member)
       UNWIND [member,bacentaLeader] as members
       WITH members WHERE members IS NOT NULL
-      RETURN DISTINCT members
+      RETURN DISTINCT members ORDER BY members.firstName
       """
     )
   bacentaDropdown(bacentaName: String): [Bacenta]

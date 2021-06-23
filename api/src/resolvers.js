@@ -226,7 +226,7 @@ export const resolvers = {
                         adminId: admin.id,
                         bishopId: args.to,
                         auth_id: admin.auth_id,
-                        cypherParams: context.cypherParams,
+                        auth: context.auth,
                       })
                       .then(console.log('Cypher Query Executed Successfully'))
                       .catch((err) =>
@@ -255,7 +255,7 @@ export const resolvers = {
                         adminId: admin.id,
                         bishopId: args.to,
                         auth_id: admin.auth_id,
-                        cypherParams: context.cypherParams,
+                        auth: context.auth,
                       })
                       .then(console.log('Cypher Query Executed Successfully'))
                       .catch((err) =>
@@ -277,10 +277,7 @@ export const resolvers = {
 
       errorHandling(admin)
 
-      return {
-        from: admin,
-        to: bishop,
-      }
+      return admin
     },
     RemoveMemberIsBishopAdminFor: async (object, args, context) => {
       const session = context.driver.session()
@@ -309,7 +306,7 @@ export const resolvers = {
                   session.run(cypher.removeMemberAuthId, {
                     log: `${admin.firstName} ${admin.lastName} was removed as a bishop admin`,
                     auth_id: admin.auth_id,
-                    cypherParams: context.cypherParams,
+                    auth: context.auth,
                   })
                 })
               }
@@ -319,22 +316,22 @@ export const resolvers = {
                 removeRoles(admin.auth_id, roles, authRoles.bishopAdmin.id)
               }
             })
+            .catch((error) => {
+              console.error(
+                'getUserRoles Failed to Run',
+                error.response?.data ?? error
+              )
+            })
             .then(async () =>
               //Remove Admin relationship in Neo4j DB
               session
                 .run(cypher.removeBishopAdmin, {
                   adminId: admin.id,
-                  bishopId: args.to.id,
-                  cypherParams: context.cypherParams,
+                  bishopId: args.to,
+                  auth: context.auth,
                 })
                 .then(console.log('Cypher query ran successfully'))
             )
-            .catch((error) => {
-              console.error(
-                'getUserRoles Failed to Run',
-                error.response.data ?? error
-              )
-            })
         })
 
       errorHandling(admin)
@@ -344,7 +341,7 @@ export const resolvers = {
     MergeMemberIsTownAdminFor: async (object, args, context) => {
       const session = context.driver.session()
       let admin = {}
-      let town = { id: args.to.id }
+      let town = { id: args.to }
 
       await session
         .run(cypher.matchMemberQuery, args)
@@ -379,9 +376,9 @@ export const resolvers = {
                     session
                       .run(cypher.setTownAdmin, {
                         adminId: admin.id,
-                        townId: args.to.id,
+                        townId: args.to,
                         auth_id: admin.auth_id,
-                        cypherParams: context.cypherParams,
+                        auth: context.auth,
                       })
                       .then(console.log('Cypher Query Executed Successfully'))
                       .catch((err) =>
@@ -408,9 +405,9 @@ export const resolvers = {
                     session
                       .run(cypher.setTownAdmin, {
                         adminId: admin.id,
-                        townId: args.to.id,
+                        townId: town.id,
                         auth_id: admin.auth_id,
-                        cypherParams: context.cypherParams,
+                        auth: context.auth,
                       })
                       .then(console.log('Cypher Query Executed Successfully'))
                       .catch((err) =>
@@ -440,7 +437,7 @@ export const resolvers = {
     RemoveMemberIsTownAdminFor: async (object, args, context) => {
       const session = context.driver.session()
       let admin = {}
-      let town = { id: args.to.id }
+      let town = { id: args.to }
 
       await session
         .run(cypher.matchMemberQuery, args)
@@ -465,7 +462,7 @@ export const resolvers = {
                   session.run(cypher.removeMemberAuthId, {
                     log: `${admin.firstName} ${admin.lastName} was removed as a constituency admin`,
                     auth_id: admin.auth_id,
-                    cypherParams: context.cypherParams,
+                    auth: context.auth,
                   })
                 })
               }
@@ -479,22 +476,23 @@ export const resolvers = {
                 )
               }
             })
-            .then(async () =>
-              //Remove Admin relationship in Neo4j DB
-              session
-                .run(cypher.removeTownAdmin, {
-                  adminId: admin.id,
-                  townId: args.to.id,
-                  cypherParams: context.cypherParams,
-                })
-                .then(console.log('Cypher query ran successfully'))
-            )
+
             .catch((error) => {
               console.error(
                 'getUserRoles Failed to Run',
                 error.response.data ?? error
               )
             })
+            .then(async () =>
+              //Remove Admin relationship in Neo4j DB
+              session
+                .run(cypher.removeTownAdmin, {
+                  adminId: admin.id,
+                  townId: town.id,
+                  auth: context.auth,
+                })
+                .then(console.log('Cypher query ran successfully'))
+            )
         })
 
       errorHandling(admin)
@@ -504,7 +502,7 @@ export const resolvers = {
     MergeMemberIsCampusAdminFor: async (object, args, context) => {
       const session = context.driver.session()
       let admin = {}
-      let campus = { id: args.to.id }
+      let campus = { id: args.to }
 
       await session
         .run(cypher.matchMemberQuery, args)
@@ -539,9 +537,9 @@ export const resolvers = {
                     session
                       .run(cypher.setCampusAdmin, {
                         adminId: admin.id,
-                        campusId: args.to.id,
+                        campusId: campus.id,
                         auth_id: admin.auth_id,
-                        cypherParams: context.cypherParams,
+                        auth: context.auth,
                       })
                       .then(console.log('Cypher Query Executed Successfully'))
                       .catch((err) =>
@@ -568,9 +566,9 @@ export const resolvers = {
                     session
                       .run(cypher.setCampusAdmin, {
                         adminId: admin.id,
-                        campusId: args.to.id,
+                        campusId: args.to,
                         auth_id: admin.auth_id,
-                        cypherParams: context.cypherParams,
+                        auth: context.auth,
                       })
                       .then(console.log('Cypher Query Executed Successfully'))
                       .catch((err) =>
@@ -597,7 +595,7 @@ export const resolvers = {
     RemoveMemberIsCampusAdminFor: async (object, args, context) => {
       const session = context.driver.session()
       let admin = {}
-      let campus = { id: args.to.id }
+      let campus = { id: args.to }
 
       await session
         .run(cypher.matchMemberQuery, args)
@@ -622,7 +620,7 @@ export const resolvers = {
                   session.run(cypher.removeMemberAuthId, {
                     log: `${admin.firstName} ${admin.lastName} was removed as a constituency admin`,
                     auth_id: admin.auth_id,
-                    cypherParams: context.cypherParams,
+                    auth: context.auth,
                   })
                 })
               }
@@ -636,22 +634,22 @@ export const resolvers = {
                 )
               }
             })
-            .then(async () =>
-              //Remove Admin relationship in Neo4j DB
-              session
-                .run(cypher.removeCampusAdmin, {
-                  adminId: admin.id,
-                  campusId: args.to.id,
-                  cypherParams: context.cypherParams,
-                })
-                .then(console.log('Cypher query ran successfully'))
-            )
             .catch((error) => {
               console.error(
                 'getUserRoles Failed to Run',
                 error.response.data ?? error
               )
             })
+            .then(async () =>
+              //Remove Admin relationship in Neo4j DB
+              session
+                .run(cypher.removeCampusAdmin, {
+                  adminId: admin.id,
+                  campusId: campus.id,
+                  auth: context.auth,
+                })
+                .then(console.log('Cypher query ran successfully'))
+            )
         })
 
       errorHandling(admin)

@@ -44,6 +44,7 @@ const BishopDashboard = () => {
       : '',
     adminSelect: bishop?.hasAdmin?.id ?? '',
   }
+  console.log(initialValues)
   const validationSchema = Yup.object({
     adminSelect: Yup.string().required(
       'Please select an Admin from the dropdown'
@@ -76,8 +77,7 @@ const BishopDashboard = () => {
     adminName,
     memberCount,
     pastorCount,
-    campusTownCount,
-    bacentaCount,
+    churchesCount,
     sontaMemberCount
   const loadingText = 'Loading...'
   const errorText = 'Error!'
@@ -109,23 +109,24 @@ const BishopDashboard = () => {
     bishopName = loadingText
     memberCount = loadingText
     pastorCount = loadingText
-    campusTownCount = loadingText
+    churchesCount = loadingText
     sontaMemberCount = loadingText
   } else if (data) {
     bishopName = `${bishop?.firstName} ${bishop?.lastName}`
     adminName = `Admin: ${bishop?.hasAdmin?.firstName} ${bishop?.hasAdmin?.lastName}`
     memberCount = `${data.bishopMemberCount} Members`
     pastorCount = `${data.bishopPastorCount} Pastors`
-    campusTownCount = `${data.bishopCampusTownCount} ${capitalise(
+    churchesCount = `${data.bishopCampusTownCount} ${capitalise(
       plural(churchStream)
-    )} | ${data.bishopCentreCount} Centres`
-    bacentaCount = `${data.bishopBacentaCount} Bacentas`
+    )} | ${data.bishopCentreCount} Centres | ${
+      data.bishopBacentaCount
+    } Bacentas`
     sontaMemberCount = `${data.bishopSontaMemberCount} Members in Ministries`
   } else {
     bishopName = errorText
     memberCount = errorText
     pastorCount = errorText
-    campusTownCount = errorText
+    churchesCount = errorText
     sontaMemberCount = errorText
   }
 
@@ -236,8 +237,7 @@ const BishopDashboard = () => {
           <div className="col-sm-12 col-md">
             <DashboardCard
               name={capitalise(plural(churchStream))}
-              detail1={campusTownCount}
-              detail2={bacentaCount}
+              detail1={churchesCount}
               cardLink={`/${churchStream}/displayall`}
             />
           </div>

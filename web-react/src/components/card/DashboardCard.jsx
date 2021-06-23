@@ -20,7 +20,7 @@ const DashboardCard = (props) => {
     <>
       <Link
         to={cardLink}
-        className="d-none d-md-block text-center card dashboard-card align-self-center card-body mx-2 mb-2"
+        className="d-none d-md-block text-center card dashboard-card align-self-center card-body mx-2 mb-2 p-3"
       >
         <span
           className={`fas fa-${icon} fa-2x d-md-none pb-3 icon-color text-center`}
@@ -30,8 +30,6 @@ const DashboardCard = (props) => {
         />
         <h5 className="card-title text-nowrap text-white">{`${name}`}</h5>
         <span className="card-text text-muted">{detail1}</span>
-        <br />
-        <span className="card-text text-muted">{detail2}</span>
       </Link>
       <Link
         to={cardLink}

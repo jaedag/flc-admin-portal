@@ -83,7 +83,7 @@ const UpdateBacenta = () => {
     onCompleted: (updatedInfo) => {
       let newLeaderInfo = updatedInfo.UpdateBacenta?.leader
       //Log if the Leader Changes
-      console.log(updatedInfo)
+
       if (newLeaderInfo?.id !== initialValues.leaderSelect) {
         LogBacentaHistory({
           variables: {

@@ -6,6 +6,7 @@ import NavLink from './NavLink'
 import './NavBar.css'
 import { capitalise } from '../../global-utils'
 import UserProfileIcon from '../UserProfileIcon.jsx'
+import RoleView from '../../auth/RoleView.jsx'
 
 const NavBar = () => {
   const { church } = useContext(ChurchContext)
@@ -19,7 +20,11 @@ const NavBar = () => {
       <div className="navbar-nav">
         <NavLink label="Home" linkTo="/" icon="home" />
 
-        {atHome && <NavLink label="Bishop" linkTo="/dashboard" icon="bold" />}
+        {atHome && (
+          <RoleView roles={['federalAdmin']}>
+            <NavLink label="Bishop" linkTo="/dashboard" icon="bold" />
+          </RoleView>
+        )}
         {!showingMembers && atHome ? (
           <NavLink linkTo="/members" label="Members" icon="users" />
         ) : (
@@ -29,7 +34,7 @@ const NavBar = () => {
         )}
 
         {atHome && (
-          <>
+          <RoleView roles={['federalAdmin', 'bishopAdmin']}>
             <NavLink
               linkTo={`/${church.church}/displayall`}
               label={`${capitalise(church.church)}`}
@@ -40,7 +45,7 @@ const NavBar = () => {
               label="Ministries"
               icon="church"
             />
-          </>
+          </RoleView>
         )}
 
         {showingMembers && (

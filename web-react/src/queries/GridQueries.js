@@ -396,11 +396,11 @@ export const GET_CAMPUSTOWN_MEMBERS = gql`
 
 export const GET_CENTRE_MEMBERS = gql`
   query($id: ID) {
-    displayCentre(id: $id) {
+    centres(where: { id: $id }) {
       id
       name
     }
-    centreMemberList(id: $id, orderBy: firstName_asc) {
+    centreMemberList(id: $id) {
       id
       firstName
       lastName
@@ -418,13 +418,7 @@ export const GET_CENTRE_MEMBERS = gql`
         gender
       }
       title {
-        Title {
-          title
-        }
-        status
-        yearAppointed {
-          year
-        }
+        title
       }
       leadsBacenta {
         name
@@ -474,6 +468,7 @@ export const GET_CENTRE_MEMBERS = gql`
 export const GET_BACENTA_MEMBERS = gql`
   query($id: ID) {
     bacentas(where: { id: $id }) {
+      id
       name
     }
     bacentaMemberList(id: $id) {

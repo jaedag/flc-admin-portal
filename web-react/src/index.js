@@ -386,7 +386,7 @@ const PastorsAdmin = () => {
         >
           <SearchContext.Provider value={{ searchKey, setSearchKey }}>
             <Switch>
-              <Route
+              <ProtectedRouteHome
                 path="/"
                 roles={['federalAdmin']}
                 component={BishopSelect}
@@ -567,7 +567,7 @@ const PastorsAdmin = () => {
                 exact
               />
               <ProtectedRoute
-                roles={['all']}
+                roles={['federalAdmin', 'bishopAdmin']}
                 path="/town/displayall"
                 component={DisplayAllTownCampuses}
                 exact

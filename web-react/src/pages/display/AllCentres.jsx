@@ -74,7 +74,7 @@ const DisplayAllCentres = () => {
             <div className="row">
               <div className="col">
                 <h6 className="text-muted">
-                  Con Overseer:
+                  Overseer:
                   {campusCentreData.centres[0].campus.leader
                     ? ` ${campusCentreData.centres[0].campus.leader.firstName} ${campusCentreData.centres[0].campus.leader.lastName}`
                     : null}

@@ -154,9 +154,7 @@ const DisplayChurchDetails = (props) => {
             : null}
           <h3 className="mx-3 mt-3 font-weight-bold">
             {`${name} ${churchType}`}
-            <RoleView
-              roles={['federalAdmin', 'bishopAdmin', 'constituencyAdmin']}
-            >
+            <RoleView roles={['federalAdmin', 'bishopAdmin']}>
               <EditButton link={editlink} />
             </RoleView>
           </h3>

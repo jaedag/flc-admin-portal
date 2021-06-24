@@ -475,19 +475,20 @@ const UpdateMember = () => {
                           )
                         }}
                       </FieldArray>
-                      <div className="row mt-4">
-                        <div className="col d-flex justify-content-center">
-                          <button
-                            type="submit"
-                            disabled={!formik.isValid || formik.isSubmitting}
-                            className="btn btn-primary btn-medium my-3 text-center"
-                          >
-                            Submit
-                          </button>
-                        </div>
-                      </div>
                     </div>
                   </RoleView>
+                  <div className="row mt-4">
+                    <div className="col d-flex justify-content-center">
+                      <button
+                        type="submit"
+                        disabled={!formik.isValid || formik.isSubmitting}
+                        className="btn btn-primary btn-medium my-3 text-center"
+                      >
+                        Submit
+                      </button>
+                    </div>
+                  </div>
+
                   {/* <!--End of Pastoral History Section--> */}
                 </div>
               </Form>

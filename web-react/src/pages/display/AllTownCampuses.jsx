@@ -133,7 +133,7 @@ const DisplayAllTownCampuses = () => {
             </div>
 
             <div className="row justify-content-between">
-              <div className="py-1 px-3 m-2 card">{`Campusess: ${campus.length}`}</div>
+              <div className="py-1 px-3 m-2 card">{`Campuses: ${campus.length}`}</div>
 
               <Link
                 to={`/${church.church}/members`}

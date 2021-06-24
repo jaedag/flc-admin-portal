@@ -7,7 +7,6 @@ import Timeline from '../Timeline/Timeline'
 import EditButton from '../buttons/EditButton'
 import MemberDisplayCard from '../card/MemberDisplayCard'
 import ChurchButton from '../buttons/ChurchButton'
-import DashboardButton from '../buttons/DashboardButton'
 import './DisplayChurchDetails.css'
 import RoleView from '../../auth/RoleView'
 import { Form, Formik } from 'formik'
@@ -257,12 +256,6 @@ const DisplayChurchDetails = (props) => {
           <div className="col-9 col-md-6 col-lg-4">
             <DetailsCard heading={churchHeading} detail={churchNo} />
           </div>
-        </div>
-        <div>
-          <DashboardButton
-            btnText="Record a Service"
-            btnLink={`/${churchType.toLowerCase()}/record-service`}
-          />
         </div>
       </div>
 

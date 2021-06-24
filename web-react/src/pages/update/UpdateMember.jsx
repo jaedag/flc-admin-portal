@@ -10,6 +10,7 @@ import {
   GENDER_OPTIONS,
   MARITAL_STATUS_OPTIONS,
   TITLE_OPTIONS,
+  parseNeoDate,
 } from '../../global-utils'
 import FormikControl from '../../components/formik-components/FormikControl'
 import { UPDATE_MEMBER_MUTATION } from '../../queries/UpdateMutations'
@@ -51,7 +52,7 @@ const UpdateMember = () => {
     phoneNumber: member?.phoneNumber ? `+${member?.phoneNumber}` : '',
     whatsappNumber: member?.whatsappNumber ? `+${member?.whatsappNumber}` : '',
     email: member?.email ? member?.email : '',
-    dob: member?.dob ? member?.dob.date : '',
+    dob: member?.dob ? parseNeoDate(member.dob.date) : '',
     maritalStatus: member?.maritalStatus ? member?.maritalStatus.status : '',
     occupation: member?.occupation?.occupation ?? '',
     pictureUrl: member?.pictureUrl ? member?.pictureUrl : '',
@@ -104,9 +105,7 @@ const UpdateMember = () => {
     error: ministriesError,
   } = useQuery(GET_MINISTRIES)
 
-  const [UpdateMember] = useMutation(UPDATE_MEMBER_MUTATION, {
-    refetchQueries: [{ query: DISPLAY_MEMBER, variables: { id: memberId } }],
-  })
+  const [UpdateMember] = useMutation(UPDATE_MEMBER_MUTATION)
 
   const [image, setImage] = useState('')
   const [loading, setLoading] = useState(false)
@@ -348,10 +347,7 @@ const UpdateMember = () => {
                           control="combobox2"
                           name="bacenta"
                           label="Bacenta*"
-                          placeholder={
-                            memberData.displayMember?.bacenta?.name ??
-                            'Bacenta Name'
-                          }
+                          placeholder={member.bacenta?.name ?? 'Bacenta Name'}
                           setFieldValue={formik.setFieldValue}
                           optionsQuery={BISHOP_BACENTA_DROPDOWN}
                           queryVariable1="id"

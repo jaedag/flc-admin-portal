@@ -63,8 +63,11 @@ export const makeSelectOptions = (data) => {
   }))
 }
 
-const parseNeoDate = (date) => {
-  return `${date.year.low}-${date.month.low}-${date.day.low}`
+export const parseNeoDate = (date) => {
+  function pad(d) {
+    return d < 10 ? '0' + d.toString() : d.toString()
+  }
+  return `${date.year.low}-${pad(date.month.low)}-${pad(date.day.low)}`
 }
 export const parseNeoTime = (time) => {
   return `${time.hour.low}:${time.minute.low}`
@@ -110,7 +113,7 @@ export const getNameWithTitle = (member) => {
     title: '',
   }
 
-  if (member.title.length) {
+  if (member.title?.length) {
     if (member.gender.gender === 'Female') {
       switch (member.title[0].title) {
         case 'Pastor':
@@ -136,12 +139,14 @@ export const getNameWithTitle = (member) => {
 }
 
 export const getMemberDob = (displayMember) => {
-  return new Date(parseNeoDate(displayMember.dob.date)).toLocaleDateString(
-    'en-gb',
-    {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    }
-  )
+  if (displayMember.dob?.date) {
+    return new Date(parseNeoDate(displayMember.dob?.date)).toLocaleDateString(
+      'en-gb',
+      {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      }
+    )
+  } else return null
 }

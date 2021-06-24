@@ -48,6 +48,7 @@ import UserProfileDisplayPage from './pages/user-profile/DisplayPage'
 import UserProfileEditPage from './pages/user-profile/EditPage'
 import CreateSonta from './pages/create/CreateSonta'
 import BacentaService from './pages/service-record/BacentaService'
+import BacentaLeaderDashboard from './pages/BacentaLeaderDashboard'
 
 const AppWithApollo = () => {
   const [accessToken, setAccessToken] = useState()
@@ -614,11 +615,16 @@ const PastorsAdmin = () => {
                 exact
               />
 
-              {/* Service Links */}
+              {/* Bacenta Leader Routes */}
               <ProtectedRoute
                 roles={['federalAdmin', 'bacentaLeader']}
                 path="/bacenta/record-service"
                 component={BacentaService}
+              />
+              <ProtectedRoute
+                roles={['federalAdmin', 'bacentaLeader']}
+                path="/bacentaleader/dashboard"
+                component={BacentaLeaderDashboard}
               />
             </Switch>
           </SearchContext.Provider>

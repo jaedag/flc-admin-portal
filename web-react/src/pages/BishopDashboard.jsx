@@ -44,7 +44,7 @@ const BishopDashboard = () => {
       : '',
     adminSelect: bishop?.hasAdmin?.id ?? '',
   }
-  console.log(initialValues)
+
   const validationSchema = Yup.object({
     adminSelect: Yup.string().required(
       'Please select an Admin from the dropdown'

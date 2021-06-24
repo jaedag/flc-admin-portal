@@ -37,7 +37,6 @@ const DisplayAllCentres = () => {
     // Spinner Icon for Loading Screens
     return <LoadingScreen />
   } else if (campusCentreData && church.church === 'campus') {
-    console.log(campusCentreData)
     return (
       <>
         <NavBar />

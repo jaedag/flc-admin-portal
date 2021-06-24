@@ -136,7 +136,7 @@ MATCH (admin:Member {id:$adminId})
 SET admin.auth_id = $auth_id
 
 WITH admin
-MATCH (campus:Campus {id:$townId})
+MATCH (campus:Campus {id:$campusId})
 MATCH (currentUser:Member {auth_id:$auth.jwt.sub})
 MERGE (admin)-[:IS_ADMIN_FOR]->(campus)
 

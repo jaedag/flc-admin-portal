@@ -12,7 +12,7 @@ const CentreMembers = () => {
 
   return (
     <MembersGrid
-      title={data ? `${data.displayCentre?.name} Centre` : null}
+      title={data ? `${data.centres[0]?.name} Centre` : null}
       memberData={data?.centreMemberList}
       memberLoading={loading}
       memberError={error}

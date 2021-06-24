@@ -42,7 +42,7 @@ export const REMOVE_CAMPUS_ADMIN = gql`
 
 export const MAKE_CAMPUS_ADMIN = gql`
   mutation($campusId: ID!, $adminId: ID!) {
-    MergeMemberIsCampusAdminFor(to: $townId, from: $adminId) {
+    MergeMemberIsCampusAdminFor(to: $campusId, from: $adminId) {
       id
     }
   }

@@ -38,13 +38,20 @@ type Member {
     @relationship(type: "WAS_TREASURER_FOR", direction: OUT)
 }
 
-extend type Member @auth(rules: [{ roles: ["federalAdmin"] }])
-extend type Bacenta @auth(rules: [{ roles: ["federalAdmin"] }])
-extend type Centre @auth(rules: [{ roles: ["federalAdmin"] }])
-extend type Campus @auth(rules: [{ roles: ["federalAdmin"] }])
-extend type Town @auth(rules: [{ roles: ["federalAdmin"] }])
-extend type Sonta @auth(rules: [{ roles: ["federalAdmin"] }])
-extend type Ministry @auth(rules: [{ roles: ["federalAdmin"] }])
+extend type Member
+  @auth(rules: [{ roles: ["federalAdmin", "bishopAdmin", "constituencyAdmin"] }])
+extend type Bacenta
+  @auth(rules: [{ roles: ["federalAdmin", "bishopAdmin", "constituencyAdmin"] }])
+extend type Centre
+  @auth(rules: [{ roles: ["federalAdmin", "bishopAdmin", "constituencyAdmin"] }])
+extend type Campus
+  @auth(rules: [{ roles: ["federalAdmin", "bishopAdmin", "constituencyAdmin"] }])
+extend type Town
+  @auth(rules: [{ roles: ["federalAdmin", "bishopAdmin", "constituencyAdmin"] }])
+extend type Sonta
+  @auth(rules: [{ roles: ["federalAdmin", "bishopAdmin", "constituencyAdmin"] }])
+extend type Ministry
+  @auth(rules: [{ roles: ["federalAdmin", "bishopAdmin", "constituencyAdmin"] }])
 
 type Gender {
   gender: String
@@ -513,7 +520,7 @@ type Query {
       OPTIONAL MATCH (centre)<-[:LEADS]-(centreLeader:Member)
       UNWIND [member,bacentaLeader,centreLeader] as members
       WITH members WHERE members IS NOT NULL
-      RETURN DISTINCT members
+      RETURN DISTINCT members ORDER BY members.firstName
       """
     )
 

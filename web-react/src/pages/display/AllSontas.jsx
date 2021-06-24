@@ -67,7 +67,7 @@ const DisplayAllSontas = () => {
             <div className="row">
               <div className="col">
                 <h6 className="text-muted">
-                  Con Overseer:
+                  Overseer:
                   {campusCentreData.campusCentreList[0].campus.leader
                     ? ` ${campusCentreData.campusCentreList[0].campus.leader.firstName} ${campusCentreData.campusCentreList[0].campus.leader.lastName}`
                     : null}

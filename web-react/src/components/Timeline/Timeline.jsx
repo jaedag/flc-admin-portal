@@ -27,6 +27,7 @@ const Timeline = (props) => {
                     {`${parseDate(element.created_at?.date)} at ${parseNeoTime(
                       element.timeStamp
                     )}`}
+                    {element?.loggedBy && ' by'}
                     <span
                       className="font-weight-bold"
                       onClick={() => {
@@ -35,7 +36,7 @@ const Timeline = (props) => {
                       }}
                     >
                       {element?.loggedBy &&
-                        ` by ${element?.loggedBy?.firstName} ${element?.loggedBy?.lastName}`}
+                        ` ${element?.loggedBy?.firstName} ${element?.loggedBy?.lastName}`}
                     </span>
                   </small>
                 </p>
@@ -58,6 +59,7 @@ const Timeline = (props) => {
                     {`${parseDate(element.created_at?.date)} at ${parseNeoTime(
                       element.timeStamp
                     )}`}
+                    {element?.loggedBy && ' by '}
                     <span
                       className="font-weight-bold"
                       onClick={() => {
@@ -66,7 +68,7 @@ const Timeline = (props) => {
                       }}
                     >
                       {element?.loggedBy &&
-                        ` by ${element?.loggedBy?.firstName} ${element?.loggedBy?.lastName}`}
+                        `${element?.loggedBy?.firstName} ${element?.loggedBy?.lastName}`}
                     </span>
                   </small>
                 </p>

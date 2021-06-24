@@ -62,15 +62,14 @@ export const makeSelectOptions = (data) => {
     key: data.name ? data.name : data.firstName + ' ' + data.lastName,
   }))
 }
-
+function pad(d) {
+  return d < 10 ? '0' + d.toString() : d.toString()
+}
 export const parseNeoDate = (date) => {
-  function pad(d) {
-    return d < 10 ? '0' + d.toString() : d.toString()
-  }
   return `${date.year.low}-${pad(date.month.low)}-${pad(date.day.low)}`
 }
 export const parseNeoTime = (time) => {
-  return `${time.hour.low}:${time.minute.low}`
+  return `${pad(time.hour.low)}:${pad(time.minute.low)}`
 }
 
 export const parseDate = (date) => {

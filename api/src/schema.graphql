@@ -39,19 +39,33 @@ type Member {
 }
 
 extend type Member
-  @auth(rules: [{ roles: ["federalAdmin", "bishopAdmin", "constituencyAdmin"] }])
+  @auth(
+    rules: [{ roles: ["federalAdmin", "bishopAdmin", "constituencyAdmin"] }]
+  )
 extend type Bacenta
-  @auth(rules: [{ roles: ["federalAdmin", "bishopAdmin", "constituencyAdmin"] }])
+  @auth(
+    rules: [{ roles: ["federalAdmin", "bishopAdmin", "constituencyAdmin"] }]
+  )
 extend type Centre
-  @auth(rules: [{ roles: ["federalAdmin", "bishopAdmin", "constituencyAdmin"] }])
+  @auth(
+    rules: [{ roles: ["federalAdmin", "bishopAdmin", "constituencyAdmin"] }]
+  )
 extend type Campus
-  @auth(rules: [{ roles: ["federalAdmin", "bishopAdmin", "constituencyAdmin"] }])
+  @auth(
+    rules: [{ roles: ["federalAdmin", "bishopAdmin", "constituencyAdmin"] }]
+  )
 extend type Town
-  @auth(rules: [{ roles: ["federalAdmin", "bishopAdmin", "constituencyAdmin"] }])
+  @auth(
+    rules: [{ roles: ["federalAdmin", "bishopAdmin", "constituencyAdmin"] }]
+  )
 extend type Sonta
-  @auth(rules: [{ roles: ["federalAdmin", "bishopAdmin", "constituencyAdmin"] }])
+  @auth(
+    rules: [{ roles: ["federalAdmin", "bishopAdmin", "constituencyAdmin"] }]
+  )
 extend type Ministry
-  @auth(rules: [{ roles: ["federalAdmin", "bishopAdmin", "constituencyAdmin"] }])
+  @auth(
+    rules: [{ roles: ["federalAdmin", "bishopAdmin", "constituencyAdmin"] }]
+  )
 
 type Gender {
   gender: String
@@ -719,6 +733,9 @@ type Mutation {
     ministry: String
     pictureUrl: String!
   ): Member
+    @auth(
+      rules: [{ roles: ["federalAdmin", "bishopAdmin", "constituencyAdmin"] }]
+    )
     @cypher(
       statement: """
       CREATE (member:Member {whatsappNumber:$whatsappNumber})
@@ -790,6 +807,7 @@ type Mutation {
     )
 
   CreateTown(townName: String!, leaderId: ID!, bishopId: ID!): Town
+    @auth(rules: [{ roles: ["federalAdmin", "bishopAdmin"] }])
     @cypher(
       statement: """
        CREATE (town:Town {name:$townName})
@@ -819,6 +837,7 @@ type Mutation {
       """
     )
   CreateCampus(campusName: String!, leaderId: ID!, bishopId: ID!): Campus
+    @auth(rules: [{ roles: ["federalAdmin", "bishopAdmin"] }])
     @cypher(
       statement: """
       CREATE (campus:Campus {name:$campusName})
@@ -849,6 +868,9 @@ type Mutation {
     )
 
   CreateCentre(centreName: String!, leaderId: ID!, townCampusId: ID!): Centre
+    @auth(
+      rules: [{ roles: ["federalAdmin", "bishopAdmin", "constituencyAdmin"] }]
+    )
     @cypher(
       statement: """
       CREATE (centre:Centre {name:$centreName})
@@ -879,6 +901,9 @@ type Mutation {
       """
     )
   CreateSonta(ministryId: ID!, leaderId: ID!, townCampusId: ID!): Sonta
+    @auth(
+      rules: [{ roles: ["federalAdmin", "bishopAdmin", "constituencyAdmin"] }]
+    )
     @cypher(
       statement: """
       CREATE (sonta:Sonta)
@@ -920,6 +945,9 @@ type Mutation {
     venueLongitude: Float
     venueLatitude: Float
   ): Bacenta
+    @auth(
+      rules: [{ roles: ["federalAdmin", "bishopAdmin", "constituencyAdmin"] }]
+    )
     @cypher(
       statement: """
       CREATE (bacenta:Bacenta {name:$bacentaName,location: point({latitude:toFloat($venueLatitude), longitude:toFloat($venueLongitude), crs:'WGS-84'})})
@@ -969,6 +997,9 @@ type Mutation {
     ministry: String
     pictureUrl: String!
   ): Member
+    @auth(
+      rules: [{ roles: ["federalAdmin", "bishopAdmin", "constituencyAdmin"] }]
+    )
     @cypher(
       statement: """
       MATCH (member:Member {id:$id})
@@ -1050,6 +1081,7 @@ type Mutation {
     leaderId: ID!
     bishopId: ID!
   ): Town
+    @auth(rules: [{ roles: ["federalAdmin", "bishopAdmin"] }])
     @cypher(
       statement: """
       MATCH (town:Town {id: $townId})
@@ -1084,6 +1116,7 @@ type Mutation {
     leaderId: ID!
     bishopId: ID!
   ): Campus
+    @auth(rules: [{ roles: ["federalAdmin", "bishopAdmin"] }])
     @cypher(
       statement: """
       MATCH (campus:Campus {id: $campusId})
@@ -1119,6 +1152,9 @@ type Mutation {
     leaderId: ID
     campusTownID: ID
   ): Centre
+    @auth(
+      rules: [{ roles: ["federalAdmin", "bishopAdmin", "constituencyAdmin"] }]
+    )
     @cypher(
       statement: """
       MATCH (centre:Centre {id: $centreId})
@@ -1157,6 +1193,9 @@ type Mutation {
     venueLongitude: Float
     venueLatitude: Float
   ): Bacenta
+    @auth(
+      rules: [{ roles: ["federalAdmin", "bishopAdmin", "constituencyAdmin"] }]
+    )
     @cypher(
       statement: """
                MATCH (bacenta:Bacenta {id: $id})

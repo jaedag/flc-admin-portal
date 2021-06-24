@@ -57,7 +57,7 @@ const AppWithApollo = () => {
   const getAccessToken = useCallback(async () => {
     try {
       const token = await getAccessTokenSilently()
-
+      console.log('from get access token', token)
       setAccessToken(token)
       sessionStorage.setItem('token', token)
     } catch (err) {
@@ -76,7 +76,7 @@ const AppWithApollo = () => {
   const authLink = setContext((_, { headers }) => {
     // get the authentication token from local storage if it exists
     const token = sessionStorage.getItem('token') || accessToken
-
+    console.log('token', token)
     // return the headers to the context so httpLink can read them
     return {
       headers: {

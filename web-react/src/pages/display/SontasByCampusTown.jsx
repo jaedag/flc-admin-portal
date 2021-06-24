@@ -20,7 +20,7 @@ const DisplaySontasByCampusTown = () => {
       variables: { id: bishopId },
     }
   )
-  console.log(sontaData)
+
   if (sontaLoading) {
     // Spinner Icon for Loading Screens
     return <LoadingScreen />

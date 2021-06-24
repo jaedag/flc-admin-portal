@@ -1,6 +1,5 @@
 import React, { useContext } from 'react'
 import { useQuery } from '@apollo/client'
-import { useHistory } from 'react-router-dom'
 import NavBar from '../../components/nav/NavBar'
 import MemberDetailsCard from '../../components/card/MemberDetailsCard'
 import { DISPLAY_MEMBER } from '../../queries/ReadQueries'
@@ -10,13 +9,13 @@ import { MemberContext } from '../../contexts/MemberContext'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import userIcon from '../../img/user.png'
 import Timeline from '../../components/Timeline/Timeline.jsx'
-import { getNameWithTitle, capitalise, getMemberDob } from '../../global-utils'
+import { getNameWithTitle, getMemberDob } from '../../global-utils'
 import AuthButton from '../../components/buttons/AuthButton'
+import MemberRankList from '../../components/MemberRankList'
 
 const UserProfileDisplayPage = () => {
   const { currentUser } = useContext(MemberContext)
-  const { church, determineStream, clickCard } = useContext(ChurchContext)
-  const history = useHistory()
+  const { church } = useContext(ChurchContext)
 
   const { data: memberData, loading: memberLoading } = useQuery(
     DISPLAY_MEMBER,
@@ -31,90 +30,7 @@ const UserProfileDisplayPage = () => {
   } else if (memberData && currentUser.id) {
     const displayMember = memberData.members[0]
     const memberBirthday = getMemberDob(displayMember)
-
     let nameAndTitle = getNameWithTitle(displayMember)
-
-    //To Display Ranks on the Member Card
-    let rank = {
-      bishop: [],
-      campusLeader: [],
-      townLeader: [],
-      sontaLeader: [],
-      basontaLeader: [],
-      centreLeader: [],
-      bacentaLeader: [],
-    }
-
-    const updateRank = (member, churchType) => {
-      if (churchType === 'bishop') {
-        if (member.townBishop[0]) {
-          member.townBishop.map((church) => {
-            rank.bishop.push({
-              name: church.name,
-              church: church,
-              id: church.id,
-              __typename: church.__typename,
-            })
-            return null
-          })
-          return
-        } else if (member.campusBishop[0]) {
-          member.campusBishop.map((church) => {
-            rank.bishop.push({
-              name: church.name,
-              church: church,
-              id: church.id,
-              __typename: church.__typename,
-            })
-            return null
-          })
-          return
-        }
-      }
-
-      member[`leads${capitalise(churchType)}`].map((church) => {
-        let ch = church.__typename.toLowerCase()
-
-        rank[`${ch}Leader`].push({
-          name: church.name,
-          centre: church.centre,
-          sonta: church.sonta,
-          campus: church.campus,
-          town: church.town,
-          bishop: church.bishop,
-          id: church.id,
-          link: '',
-          __typename: church.__typename,
-        })
-        return null
-      })
-      return null
-    }
-
-    if (displayMember.leadsBacenta[0]) {
-      updateRank(displayMember, 'bacenta')
-    }
-    if (displayMember.leadsCentre[0]) {
-      updateRank(displayMember, 'centre')
-    }
-    if (displayMember.leadsTown[0]) {
-      updateRank(displayMember, 'town')
-    }
-    if (displayMember.leadsCampus[0]) {
-      updateRank(displayMember, 'campus')
-    }
-    if (displayMember.leadsSonta[0]) {
-      updateRank(displayMember, 'sonta')
-    }
-    if (displayMember.leadsBasonta[0]) {
-      updateRank(displayMember, 'basonta')
-    }
-    if (displayMember.leadsMinistry[0]) {
-      updateRank(displayMember, 'ministry')
-    }
-    if (displayMember.townBishop[0]) {
-      updateRank(displayMember, 'bishop')
-    }
 
     return (
       <div className="container pt-5">
@@ -164,42 +80,7 @@ const UserProfileDisplayPage = () => {
                         </h5>
                       </div>
                       <div className="col d-flex justify-content-center mb-2">
-                        <div className="font-weight-light card-text text-center">
-                          {displayMember.townBishop[0] ? (
-                            <span
-                              onClick={() => {
-                                determineStream(displayMember)
-                                history.push('/dashboard')
-                              }}
-                            >{`Bishop in the First Love Centre`}</span>
-                          ) : (
-                            //Rank Discussions */}
-                            Object.entries(rank).map((rank) => {
-                              return rank[1].map((place, i) => {
-                                let leader
-                                if (place.__typename === ('Campus' || 'Town')) {
-                                  leader = 'CO'
-                                } else {
-                                  leader = 'Leader'
-                                }
-
-                                return (
-                                  <span
-                                    key={i}
-                                    onClick={() => {
-                                      clickCard(place)
-                                      history.push(place.link)
-                                    }}
-                                  >
-                                    <span className="font-weight-bold">{`${place.__typename} ${leader}`}</span>
-                                    {` for ${place.name}`}
-                                    <br />
-                                  </span>
-                                )
-                              })
-                            })
-                          )}
-                        </div>
+                        <MemberRankList member={displayMember} />
                       </div>
                     </div>
                   </MemberDetailsCard>

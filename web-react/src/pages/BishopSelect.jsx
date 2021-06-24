@@ -14,7 +14,7 @@ const BishopSelect = () => {
   const { data, loading } = useQuery(GET_BISHOPS)
 
   const history = useHistory()
-  const version = 'v0.3.3'
+  const version = 'v0.4.1'
 
   //Migrating to new Neo4jGraphQL Library
   if (loading) {

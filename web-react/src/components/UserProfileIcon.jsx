@@ -7,6 +7,7 @@ import './UserProfileIcon.css'
 import { GET_LOGGED_IN_USER } from '../queries/SearchQuery'
 import { MemberContext } from '../contexts/MemberContext.js'
 import userIcon from '../img/user.png'
+import Spinner from './Spinner'
 
 function UserProfileIcon() {
   const { user, isAuthenticated } = useAuth0()
@@ -65,7 +66,7 @@ function UserProfileIcon() {
       )}
       {isAuthenticated && !currentUser.email && (
         <div className="text-secondary text-center">
-          {`There seems to be an issue with your login credentials. Please contact the system administrator for more details`}
+          <Spinner />
         </div>
       )}
       {!isAuthenticated && (

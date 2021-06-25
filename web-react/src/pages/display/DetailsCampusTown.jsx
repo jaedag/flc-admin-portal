@@ -45,7 +45,9 @@ const DisplayCampusTownDetails = () => {
           admin={townData.towns[0].admin}
           churchType={`${capitalise(church.church)}`}
           subChurch={`${capitalise(church.subChurch)}`}
+          subChurchBasonta="Sonta"
           buttons={townData.towns[0].centres}
+          buttonsSecondRow={townData.towns[0].sontas}
           editlink="/town/edittown"
           history={
             townData.towns[0]?.history.length !== 0 &&
@@ -80,6 +82,7 @@ const DisplayCampusTownDetails = () => {
           churchType={`${capitalise(church.church)}`}
           subChurch="Centre"
           buttons={campusData.campuses[0].centres}
+          buttons-second-row={campusData.campuses[0].sontas}
           breadcrumb={breadcrumb && breadcrumb}
           history={
             campusData.campuses[0]?.history.length !== 0 &&

@@ -21,6 +21,7 @@ import {
   REMOVE_CAMPUS_ADMIN,
 } from '../../queries/AdminMutations'
 import FormikControl from '../formik-components/FormikControl'
+import { plural } from '../../global-utils'
 
 const DisplayChurchDetails = (props) => {
   const {
@@ -31,10 +32,12 @@ const DisplayChurchDetails = (props) => {
     admin,
     churchHeading,
     subChurch,
+    subChurchBasonta,
     churchType,
     churchNo,
     membership,
     buttons,
+    buttonsSecondRow,
     basontaLeaders,
     editlink,
     history,
@@ -271,7 +274,7 @@ const DisplayChurchDetails = (props) => {
                   className="card text-secondary px-1"
                   to={`/${subChurch.toLowerCase()}/displayall`}
                 >
-                  View All
+                  {`View All ${plural(subChurch)}`}
                 </Link>
               </div>
             </div>
@@ -282,6 +285,47 @@ const DisplayChurchDetails = (props) => {
               <tbody>
                 <tr>
                   {buttons.map((church, index) => {
+                    if (index > 4) {
+                      return null
+                    }
+                    return (
+                      <td className="col-auto" key={index}>
+                        <ChurchButton church={church} />{' '}
+                      </td>
+                    )
+                  })}
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </>
+      ) : null}
+
+      {subChurchBasonta === 'Sonta' ? (
+        <>
+          <div className="container">
+            <hr className="hr-line" />
+
+            <div className="row justify-content-between">
+              <div className="col">
+                <p className="text-secondary">{`${subChurchBasonta} Locations`}</p>
+              </div>
+              <div className="col-auto">
+                <Link
+                  className="card text-secondary px-1"
+                  to={`/${subChurchBasonta.toLowerCase()}/displayall`}
+                >
+                  {`View All ${plural(subChurchBasonta)}`}
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          <div className="container mb-4 card-button-row">
+            <table>
+              <tbody>
+                <tr>
+                  {buttonsSecondRow.map((church, index) => {
                     if (index > 4) {
                       return null
                     }

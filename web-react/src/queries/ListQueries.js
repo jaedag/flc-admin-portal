@@ -153,6 +153,7 @@ export const GET_CAMPUS_CENTRES = gql`
       id
       name
       campus {
+        id
         name
         leader {
           id

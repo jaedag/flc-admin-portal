@@ -39,10 +39,24 @@ export const plural = (church) => {
   switch (church) {
     case 'town':
       return 'towns'
+    case 'Town':
+      return 'Towns'
     case 'campus':
       return 'campuses'
+    case 'Campus':
+      return 'Campuses'
     case 'senior high school':
       return 'senior high schools'
+    case 'Senior High School':
+      return 'Senior High Schools'
+    case 'centre':
+      return 'centres'
+    case 'Centre':
+      return 'Centres'
+    case 'sonta':
+      return 'sontas'
+    case 'Sonta':
+      return 'Sontas'
     default:
       return
   }
@@ -66,6 +80,10 @@ function pad(d) {
   return d < 10 ? '0' + d.toString() : d.toString()
 }
 export const parseNeoDate = (date) => {
+  if (!date) {
+    return
+  }
+
   return `${date.year.low}-${pad(date.month.low)}-${pad(date.day.low)}`
 }
 export const parseNeoTime = (time) => {

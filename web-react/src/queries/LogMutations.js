@@ -25,8 +25,12 @@ export const LOG_BACENTA_HISTORY = gql`
         lastName
       }
       history {
+        id
         historyRecord
         timeStamp
+        created_at {
+          date
+        }
       }
     }
   }
@@ -52,13 +56,12 @@ export const LOG_CENTRE_HISTORY = gql`
       id
       name
       history {
-        HistoryLog {
-          historyRecord
-          timeStamp {
-            formatted
-          }
+        id
+        historyRecord
+        timeStamp
+        created_at {
+          date
         }
-        pointer
       }
     }
   }
@@ -84,13 +87,12 @@ export const LOG_CAMPUSTOWN_HISTORY = gql`
       id
       name
       history {
-        HistoryLog {
-          historyRecord
-          timeStamp {
-            formatted
-          }
+        id
+        historyRecord
+        timeStamp
+        created_at {
+          date
         }
-        pointer
       }
     }
   }
@@ -116,13 +118,12 @@ export const LOG_SONTA_HISTORY = gql`
       id
       name
       history {
-        HistoryLog {
-          historyRecord
-          timeStamp {
-            formatted
-          }
+        id
+        historyRecord
+        timeStamp
+        created_at {
+          date
         }
-        pointer
       }
     }
   }

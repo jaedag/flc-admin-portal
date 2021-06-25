@@ -71,7 +71,7 @@ const UpdateCentre = () => {
   const history = useHistory()
 
   const initialValues = {
-    centreName: centreData?.displayCentre?.name,
+    centreName: centreData?.displayCentre.name,
     leaderName: centreData?.displayCentre?.leader
       ? `${centreData?.displayCentre?.leader.firstName} ${centreData?.displayCentre?.leader.lastName}`
       : '',

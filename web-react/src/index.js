@@ -61,6 +61,7 @@ const AppWithApollo = () => {
       setAccessToken(token)
       sessionStorage.setItem('token', token)
     } catch (err) {
+      console.error('There was an error', err)
       // loginWithRedirect()
     }
   }, [getAccessTokenSilently])

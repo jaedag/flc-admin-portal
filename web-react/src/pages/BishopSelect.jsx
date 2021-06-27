@@ -14,7 +14,6 @@ const BishopSelect = () => {
   const { data, loading } = useQuery(GET_BISHOPS)
 
   const history = useHistory()
-  const version = 'v0.4.0'
 
   //Migrating to new Neo4jGraphQL Library
   if (loading) {
@@ -28,12 +27,7 @@ const BishopSelect = () => {
             className="img-fluid mx-auto"
             style={{ maxWidth: '30%' }}
           />
-          <h3>
-            FLC Admin Dashboard{' '}
-            <sup>
-              <small>{version}</small>
-            </sup>
-          </h3>
+          <h3>FLC Admin Dashboard </h3>
           <h5 className="text-secondary">Loading...</h5>
           <div className="spinner-border-center full-center" role="status">
             <Spinner />
@@ -83,12 +77,7 @@ const BishopSelect = () => {
             style={{ maxWidth: '30%' }}
           />
 
-          <h3>
-            FLC Admin Dashboard{' '}
-            <sup>
-              <small>{version}</small>
-            </sup>
-          </h3>
+          <h3>FLC Admin Dashboard </h3>
           <h4>{`Hi There ${currentUser.firstName}`}</h4>
           <h5 className="text-secondary">Select Your Bishop</h5>
         </div>

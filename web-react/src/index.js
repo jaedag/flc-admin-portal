@@ -56,14 +56,16 @@ const AppWithApollo = () => {
 
   const getAccessToken = useCallback(async () => {
     try {
-      const token = await getAccessTokenSilently({ scope: 'read:current_user' })
+      const token = await getAccessTokenSilently({
+        audience: 'https://flcadmin.netlify.app/graphql',
+        scope: 'read:current_user',
+      })
       // console.log('from get access token', token)
       setAccessToken(token)
       sessionStorage.setItem('token', token)
     } catch (err) {
       // eslint-disable-next-line
-      console.error('There was an error', err)
-      // loginWithRedirect()
+      console.error(err)
     }
   }, [getAccessTokenSilently])
 

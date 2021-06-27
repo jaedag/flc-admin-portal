@@ -4,6 +4,7 @@ import UserProfileIcon from './UserProfileIcon.jsx'
 import Logo from '../img/flc-logo-small.png'
 
 const Login = () => {
+  const version = 'v0.4.1'
   return (
     <>
       <div className="container body-container d-none d-lg-block">
@@ -14,7 +15,10 @@ const Login = () => {
           <form className="login-page-lg">
             <div className="m-5">
               <div className="col-auto my-3">
-                <img src={Logo} alt="logo" className="img-fluid" />
+                <img src={Logo} alt="logo" className="img-fluid" />{' '}
+                <sup>
+                  <small>{version}</small>
+                </sup>
                 <div className="d-none d-lg-block">
                   First Love Church is a church full of young people on fire for
                   the Lord
@@ -35,7 +39,12 @@ const Login = () => {
             className="img-fluid mx-auto d-block d-lg-none"
             style={{ maxWidth: '30%' }}
           />
-          <div className="d-lg-none h2 text-center text-white">FLC Admin</div>
+          <div className="d-lg-none h2 text-center text-white">
+            FLC Admin{' '}
+            <sup>
+              <small>{version}</small>
+            </sup>
+          </div>
           <div className="col-auto my-3 align-items-center text-center">
             First Love Church is a church full of young people on fire for the
             Lord!

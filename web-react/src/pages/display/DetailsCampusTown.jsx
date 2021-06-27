@@ -81,8 +81,9 @@ const DisplayCampusTownDetails = () => {
           admin={campusData.campuses[0].admin}
           churchType={`${capitalise(church.church)}`}
           subChurch="Centre"
+          subChurchBasonta="Sonta"
           buttons={campusData.campuses[0].centres}
-          buttons-second-row={campusData.campuses[0].sontas}
+          buttonsSecondRow={campusData.campuses[0].sontas}
           breadcrumb={breadcrumb && breadcrumb}
           history={
             campusData.campuses[0]?.history.length !== 0 &&

@@ -65,11 +65,12 @@ export const DISPLAY_MEMBER = gql`
       title {
         title
       }
-      history {
-        # timeStamp
-        # created_at {
-        #   date
-        # }
+      history(options: { limit: 3 }) {
+        id
+        timeStamp
+        created_at {
+          date
+        }
         loggedBy {
           id
           firstName

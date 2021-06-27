@@ -643,6 +643,7 @@ const Main = () => (
     clientId={process.env.REACT_APP_AUTH0_CLIENT_ID}
     redirectUri={window.location.origin}
     audience="https://flcadmin.netlify.app/graphql"
+    scope
   >
     <AppWithApollo />
   </Auth0Provider>

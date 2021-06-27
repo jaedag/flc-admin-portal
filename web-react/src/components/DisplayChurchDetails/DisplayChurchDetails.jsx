@@ -22,6 +22,7 @@ import {
 } from '../../queries/AdminMutations'
 import FormikControl from '../formik-components/FormikControl'
 import { plural } from '../../global-utils'
+import Breadcrumb from './Breadcrumb'
 
 const DisplayChurchDetails = (props) => {
   const {
@@ -105,56 +106,7 @@ const DisplayChurchDetails = (props) => {
     <>
       <div className=" py-2 top-heading title-bar mt-4">
         <div className="container ">
-          {breadcrumb
-            ? breadcrumb.map((bread, i) => {
-                let breadname
-                if (bread.__typename === 'Sonta') {
-                  bread.campus &&
-                    (breadname = bread.name.replace(bread.campus.name, ''))
-                  bread.town &&
-                    (breadname = bread.name.replace(bread.town.name, ''))
-                } else {
-                  breadname = bread.name
-                }
-                if (i === breadcrumb.length - 1) {
-                  return (
-                    <small
-                      key={i}
-                      to={
-                        bread?.firstName
-                          ? `/dashboard`
-                          : `/${bread?.__typename.toLowerCase()}/displaydetails`
-                      }
-                      className="label text-secondary"
-                    >
-                      {bread?.name
-                        ? `${breadname} ${bread?.__typename}`
-                        : `Bishop ${bread?.firstName} ${bread?.lastName}`}
-                    </small>
-                  )
-                } else {
-                  return (
-                    <Link
-                      key={i}
-                      to={
-                        bread?.firstName
-                          ? `/dashboard`
-                          : `/${bread?.__typename.toLowerCase()}/displaydetails`
-                      }
-                      className=" label text-secondary"
-                      onClick={() => {
-                        clickCard(bread)
-                      }}
-                    >
-                      {bread?.name
-                        ? `${bread?.name} ${bread?.__typename}`
-                        : `Bishop ${bread?.firstName} ${bread?.lastName}`}
-                      {' >'}{' '}
-                    </Link>
-                  )
-                }
-              })
-            : null}
+          <Breadcrumb breadcrumb={breadcrumb} />
           <h3 className="mx-3 mt-3 font-weight-bold">
             {`${name} ${churchType}`}
             <RoleView roles={['federalAdmin', 'bishopAdmin']}>

@@ -57,6 +57,10 @@ export const plural = (church) => {
       return 'sontas'
     case 'Sonta':
       return 'Sontas'
+    case 'bacenta':
+      return 'bacentas'
+    case 'Bacenta':
+      return 'Bacentas'
     default:
       return
   }
@@ -87,6 +91,9 @@ export const parseNeoDate = (date) => {
   return `${date.year.low}-${pad(date.month.low)}-${pad(date.day.low)}`
 }
 export const parseNeoTime = (time) => {
+  if (!time) {
+    return
+  }
   return `${pad(time.hour.low)}:${pad(time.minute.low)}`
 }
 

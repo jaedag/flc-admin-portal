@@ -149,9 +149,24 @@ type ServiceRecord {
   created_at: Date
   serviceDate: TimeGraph @relationship(type: "SERVICE_HELD_ON", direction: OUT)
   attendance: Int!
-  income: Float
+  income: Float!
   treasurers: [Member]! @relationship(type: "WAS_TREASURER_FOR", direction: IN)
   historyLog: HistoryLog @relationship(type: "HAS_RECORD", direction: IN)
+}
+
+type ServiceLog {
+  id: ID
+  historyRecord: String #leader was transferred to
+  created_at: TimeGraph @relationship(type: "RECORDED_ON", direction: OUT)
+  serviceRecords: [ServiceRecord]
+    @relationship(type: "HAS_RECORD", direction: OUT)
+  leaders: [Member] @relationship(type: "HAS_HISTORY", direction: IN)
+  Bacenta: [Bacenta] @relationship(type: "HAS_HISTORY", direction: IN)
+  Centre: [Centre] @relationship(type: "HAS_HISTORY", direction: IN)
+  Campus: [Campus] @relationship(type: "HAS_HISTORY", direction: IN)
+  Town: [Town] @relationship(type: "HAS_HISTORY", direction: IN)
+  Sonta: [Sonta] @relationship(type: "HAS_HISTORY", direction: IN)
+  loggedBy: Member @relationship(type: "LOGGED_BY", direction: OUT)
 }
 
 type HistoryLog {
@@ -218,8 +233,7 @@ type Bacenta {
   members: [Member] @relationship(type: "BELONGS_TO", direction: IN)
   meetingDay: ServiceDay @relationship(type: "MEETS_ON", direction: OUT)
   history: [HistoryLog] @relationship(type: "HAS_HISTORY", direction: OUT)
-  serviceRecord: [ServiceRecord]
-    @relationship(type: "HAS_RECORD", direction: OUT)
+  services: [ServiceLog] @relationship(type: "HAS_HISTORY", direction: OUT)
 }
 
 type ServiceDay {
@@ -1487,11 +1501,11 @@ type Mutation {
       statement: """
       CREATE (serviceRecord:ServiceRecord {created_at:datetime()})
         SET serviceRecord.attendance = $attendance,
-        serviceRecord.incoome = $income
+        serviceRecord.income = $income
       WITH serviceRecord
       MATCH (treasurer1:Member {id:$treasurer1})
       MATCH (treasurer2:Member {id:$treasurer2})
-      MATCH (bacenta:Bacenta {id:$bacentaId})<-[has_history:HAS_HISTORY]-(log:HistoryLog) WHERE has_history.pointer = true
+      MATCH (bacenta:Bacenta {id:$bacentaId})-[has_history:HAS_HISTORY]->(log:HistoryLog) WHERE has_history.pointer = true
 
 
       MERGE (serviceDate:TimeGraph {date:date($serviceDate)})

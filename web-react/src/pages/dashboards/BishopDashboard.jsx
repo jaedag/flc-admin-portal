@@ -1,24 +1,24 @@
 import React, { useContext, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useMutation, useQuery } from '@apollo/client'
-import { BISH_DASHBOARD_COUNTS } from '../queries/CountQueries'
-import NavBar from '../components/nav/NavBar'
-import DashboardCard from '../components/card/DashboardCard'
-import DashboardButton from '../components/buttons/DashboardButton'
-import DropdownButton from '../components/buttons/DropdownButton'
-import { ChurchContext } from '../contexts/ChurchContext'
-import { capitalise, isAuthorised, plural } from '../global-utils'
-import { MemberContext } from '../contexts/MemberContext'
-import Popup from '../components/Popup/Popup'
-import RoleView from '../auth/RoleView'
-import { BISHOP_MEMBER_DROPDOWN } from '../queries/ListQueries'
+import { BISH_DASHBOARD_COUNTS } from '../../queries/CountQueries'
+import NavBar from '../../components/nav/NavBar'
+import DashboardCard from '../../components/card/DashboardCard'
+import DashboardButton from '../../components/buttons/DashboardButton'
+import DropdownButton from '../../components/buttons/DropdownButton'
+import { ChurchContext } from '../../contexts/ChurchContext'
+import { capitalise, isAuthorised, plural } from '../../global-utils'
+import { MemberContext } from '../../contexts/MemberContext'
+import Popup from '../../components/Popup/Popup'
+import RoleView from '../../auth/RoleView'
+import { BISHOP_MEMBER_DROPDOWN } from '../../queries/ListQueries'
 import { Form, Formik } from 'formik'
 import * as Yup from 'yup'
-import FormikControl from '../components/formik-components/FormikControl'
+import FormikControl from '../../components/formik-components/FormikControl'
 import {
   MAKE_BISHOP_ADMIN,
   REMOVE_BISHOP_ADMIN,
-} from '../queries/AdminMutations'
+} from '../../queries/AdminMutations'
 
 const BishopDashboard = () => {
   const { church, setFilters, clickCard, bishopId, setBishopId } = useContext(

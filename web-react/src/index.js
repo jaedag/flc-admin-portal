@@ -11,8 +11,8 @@ import {
 import { setContext } from '@apollo/client/link/context'
 import { Auth0Provider, useAuth0 } from '@auth0/auth0-react'
 import './index.css'
-import BishopSelect from './pages/BishopSelect.jsx'
-import BishopDashboard from './pages/BishopDashboard.jsx'
+import BishopSelect from './pages/dashboards/BishopSelect.jsx'
+import BishopDashboard from './pages/dashboards/BishopDashboard.jsx'
 import BishopMembers from './pages/grids/BishopMembers.jsx'
 import CampusTownMembers from './pages/grids/CampusTownMembers.jsx'
 import CentreMembers from './pages/grids/CentreMembers.jsx'
@@ -48,7 +48,7 @@ import UserProfileDisplayPage from './pages/user-profile/DisplayPage'
 import UserProfileEditPage from './pages/user-profile/EditPage'
 import CreateSonta from './pages/create/CreateSonta'
 import BacentaService from './pages/service-record/BacentaService'
-import BacentaLeaderDashboard from './pages/BacentaLeaderDashboard'
+import BacentaLeaderDashboard from './pages/dashboards/BacentaLeaderDashboard'
 
 const AppWithApollo = () => {
   const [accessToken, setAccessToken] = useState()
@@ -389,6 +389,7 @@ const PastorsAdmin = () => {
         >
           <SearchContext.Provider value={{ searchKey, setSearchKey }}>
             <Switch>
+              {/* Landing Pages - Dashboards for Different Roles */}
               <ProtectedRouteHome
                 path="/"
                 roles={['federalAdmin']}
@@ -401,10 +402,22 @@ const PastorsAdmin = () => {
                 roles={['federalAdmin', 'bishopAdmin']}
                 exact
               />
+              <ProtectedRoute
+                roles={['federalAdmin', 'bacentaLeader']}
+                path="/bacentaleader/dashboard"
+                component={BacentaLeaderDashboard}
+              />
+              {/* Member Display and Edit Pages */}
               <Route
                 roles={['all']}
                 path="/user-profile"
                 component={UserProfileDisplayPage}
+                exact
+              />
+              <ProtectedRoute
+                roles={['all']}
+                path="/member/displaydetails"
+                component={DisplayMemberDetails}
                 exact
               />
               <Route
@@ -413,6 +426,20 @@ const PastorsAdmin = () => {
                 component={UserProfileEditPage}
                 exact
               />
+              <ProtectedRoute
+                roles={['federalAdmin', 'bishopAdmin', 'constituencyAdmin']}
+                path="/member/addmember"
+                component={CreateMember}
+                exact
+              />
+              <ProtectedRoute
+                roles={['federalAdmin', 'bishopAdmin', 'constituencyAdmin']}
+                path="/member/editmember"
+                component={UpdateMember}
+                exact
+              />
+
+              {/* Search Routes */}
               <ProtectedRoute
                 roles={['all']}
                 path="/member-search"
@@ -425,6 +452,7 @@ const PastorsAdmin = () => {
                 component={MemberFiltersMobile}
                 exact
               />
+              {/* Member Grid Display Pages */}
               <ProtectedMembersRoute
                 roles={['federalAdmin', 'bishopAdmin']}
                 path="/members"
@@ -473,52 +501,11 @@ const PastorsAdmin = () => {
                 component={BishopMembers}
                 exact
               />
-              <ProtectedRoute
-                roles={['federalAdmin', 'bishopAdmin', 'constituencyAdmin']}
-                path="/member/addmember"
-                component={CreateMember}
-                exact
-              />
-              <ProtectedRoute
-                roles={['federalAdmin', 'bishopAdmin', 'constituencyAdmin']}
-                path="/member/editmember"
-                component={UpdateMember}
-                exact
-              />
-              <ProtectedRoute
-                roles={['all']}
-                path="/member/displaydetails"
-                component={DisplayMemberDetails}
-                exact
-              />
-              <ProtectedRoute
-                roles={['all']}
-                path="/sonta/displaydetails"
-                component={DisplaySontaDetails}
-                exact
-              />
-              <ProtectedRoute
-                roles={['federalAdmin', 'bishopAdmin', 'constituencyAdmin']}
-                path="/bacenta/addbacenta"
-                component={CreateBacenta}
-                exact
-              />
-              <ProtectedRoute
-                roles={['federalAdmin', 'bishopAdmin', 'constituencyAdmin']}
-                path="/bacenta/editbacenta"
-                component={UpdateBacenta}
-                exact
-              />
+              {/* Pages to Display Church Details  */}
               <ProtectedRoute
                 roles={['all']}
                 path="/bacenta/displaydetails"
                 component={DisplayBacentaDetails}
-                exact
-              />
-              <ProtectedRoute
-                roles={['all']}
-                path="/bacenta/displayall"
-                component={DisplayAllBacentas}
                 exact
               />
               <ProtectedRoute
@@ -528,23 +515,24 @@ const PastorsAdmin = () => {
                 exact
               />
               <ProtectedRoute
-                roles={['federalAdmin', 'bishopAdmin', 'constituencyAdmin']}
-                path="/centre/addcentre"
-                component={CreateCentre}
+                roles={['all']}
+                path="/town/displaydetails"
+                component={DisplayCampusTownDetails}
                 exact
               />
               <ProtectedRoute
-                roles={['federalAdmin', 'bishopAdmin', 'constituencyAdmin']}
-                path="/sonta/addsonta"
-                component={CreateSonta}
+                roles={['all']}
+                path="/campus/displaydetails"
+                component={DisplayCampusTownDetails}
                 exact
               />
               <ProtectedRoute
-                roles={['federalAdmin', 'bishopAdmin', 'constituencyAdmin']}
-                path="/centre/editcentre"
-                component={UpdateCentre}
+                roles={['all']}
+                path="/sonta/displaydetails"
+                component={DisplaySontaDetails}
                 exact
               />
+              {/* Pages to Display Lists in the Directory */}
               <ProtectedRoute
                 roles={['all']}
                 path="/centre/displayall"
@@ -576,12 +564,6 @@ const PastorsAdmin = () => {
                 exact
               />
               <ProtectedRoute
-                roles={['all']}
-                path="/town/displaydetails"
-                component={DisplayCampusTownDetails}
-                exact
-              />
-              <ProtectedRoute
                 roles={['federalAdmin', 'bishopAdmin']}
                 path="/campus/displayall"
                 component={DisplayAllTownCampuses}
@@ -589,10 +571,11 @@ const PastorsAdmin = () => {
               />
               <ProtectedRoute
                 roles={['all']}
-                path="/campus/displaydetails"
-                component={DisplayCampusTownDetails}
+                path="/bacenta/displayall"
+                component={DisplayAllBacentas}
                 exact
               />
+              {/* Pages to Create Directory  */}
               <ProtectedRoute
                 roles={['federalAdmin', 'bishopAdmin']}
                 path="/town/addtown"
@@ -603,6 +586,37 @@ const PastorsAdmin = () => {
                 roles={['federalAdmin', 'bishopAdmin']}
                 path="/campus/addcampus"
                 component={CreateTownCampus}
+                exact
+              />
+              <ProtectedRoute
+                roles={['federalAdmin', 'bishopAdmin', 'constituencyAdmin']}
+                path="/centre/addcentre"
+                component={CreateCentre}
+                exact
+              />
+              <ProtectedRoute
+                roles={['federalAdmin', 'bishopAdmin', 'constituencyAdmin']}
+                path="/bacenta/addbacenta"
+                component={CreateBacenta}
+                exact
+              />
+              <ProtectedRoute
+                roles={['federalAdmin', 'bishopAdmin', 'constituencyAdmin']}
+                path="/sonta/addsonta"
+                component={CreateSonta}
+                exact
+              />
+              {/* Pages to Update Directory */}
+              <ProtectedRoute
+                roles={['federalAdmin', 'bishopAdmin', 'constituencyAdmin']}
+                path="/bacenta/editbacenta"
+                component={UpdateBacenta}
+                exact
+              />
+              <ProtectedRoute
+                roles={['federalAdmin', 'bishopAdmin', 'constituencyAdmin']}
+                path="/centre/editcentre"
+                component={UpdateCentre}
                 exact
               />
               <ProtectedRoute
@@ -617,17 +631,11 @@ const PastorsAdmin = () => {
                 component={UpdateTownCampus}
                 exact
               />
-
               {/* Bacenta Leader Routes */}
               <ProtectedRoute
                 roles={['federalAdmin', 'bacentaLeader']}
                 path="/bacenta/record-service"
                 component={BacentaService}
-              />
-              <ProtectedRoute
-                roles={['federalAdmin', 'bacentaLeader']}
-                path="/bacentaleader/dashboard"
-                component={BacentaLeaderDashboard}
               />
             </Switch>
           </SearchContext.Provider>

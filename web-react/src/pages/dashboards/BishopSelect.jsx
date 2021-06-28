@@ -1,12 +1,12 @@
 import React, { useContext } from 'react'
 import { useQuery } from '@apollo/client'
 import { useHistory } from 'react-router-dom'
-import { ChurchContext } from '../contexts/ChurchContext'
-import { GET_BISHOPS } from '../queries/ListQueries'
-import NavBar from '../components/nav/NavBar'
-import Spinner from '../components/Spinner.jsx'
-import Logo from '../img/flc-logo-small.png'
-import { MemberContext } from '../contexts/MemberContext'
+import { ChurchContext } from '../../contexts/ChurchContext'
+import { GET_BISHOPS } from '../../queries/ListQueries'
+import NavBar from '../../components/nav/NavBar'
+import Spinner from '../../components/Spinner.jsx'
+import Logo from '../../img/flc-logo-small.png'
+import { MemberContext } from '../../contexts/MemberContext'
 
 const BishopSelect = () => {
   const { determineStream } = useContext(ChurchContext)

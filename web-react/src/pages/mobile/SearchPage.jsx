@@ -30,7 +30,7 @@ const SearchPageMobile = () => {
     const combinedData = [
       // ...new Set([
       // ...searchData.Member,
-      ...searchData.globalMemberSearch,
+      // ...searchData.globalMemberSearch,
       ...searchData.globalCampusSearch,
       ...searchData.globalTownSearch,
       ...searchData.globalSontaSearch,

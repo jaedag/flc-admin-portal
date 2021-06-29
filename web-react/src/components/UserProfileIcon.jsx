@@ -8,9 +8,11 @@ import { GET_LOGGED_IN_USER } from '../queries/SearchQuery'
 import { MemberContext } from '../contexts/MemberContext.js'
 import userIcon from '../img/user.png'
 import Spinner from './Spinner'
+import { ChurchContext } from '../contexts/ChurchContext'
 
 function UserProfileIcon() {
   const { user, isAuthenticated } = useAuth0()
+  const { setChurch } = useContext(ChurchContext)
   const { currentUser, setCurrentUser } = useContext(MemberContext)
   const [memberByEmail] = useLazyQuery(GET_LOGGED_IN_USER, {
     onCompleted: (data) => {
@@ -51,6 +53,7 @@ function UserProfileIcon() {
         <Link
           className="nav-item nav-link d-flex align-items-center flex-column p-0 pb-2"
           to="/user-profile"
+          onClick={() => setChurch(currentUser.church)}
         >
           <span>
             <img

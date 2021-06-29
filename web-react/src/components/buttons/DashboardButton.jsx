@@ -2,10 +2,12 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 
 const DashboardButton = (props) => {
+  const { btnLink, children, ...rest } = props
+
   return (
-    <Link to={`${props.btnLink}`}>
-      <button className="btn btn-primary btn-block text-nowrap px-4">
-        {props.btnText}
+    <Link to={btnLink ? `${btnLink}` : '#'}>
+      <button className="btn btn-primary px-4" {...rest}>
+        {children}
       </button>
     </Link>
   )

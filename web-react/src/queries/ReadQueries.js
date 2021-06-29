@@ -38,6 +38,7 @@ export const DISPLAY_MEMBER = gql`
               id
               firstName
               lastName
+              fullName
             }
           }
           campus {
@@ -47,6 +48,7 @@ export const DISPLAY_MEMBER = gql`
               id
               firstName
               lastName
+              fullName
             }
           }
         }

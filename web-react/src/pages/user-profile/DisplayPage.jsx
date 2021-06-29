@@ -249,21 +249,10 @@ const UserProfileDisplayPage = () => {
                         </div>
                         <div className="col">
                           <p className="font-weight-bold card-text">
-                            {displayMember?.bacenta?.centre
-                              ? displayMember?.bacenta?.centre[
-                                  `${church.church}`
-                                ]?.bishop
-                                ? `${
-                                    displayMember.bacenta.centre[
-                                      `${church.church}`
-                                    ].bishop.firstName
-                                  } ${
-                                    displayMember.bacenta.centre[
-                                      `${church.church}`
-                                    ].bishop.lastName
-                                  }`
-                                : null
-                              : null}
+                            {`${
+                              displayMember.bacenta.centre[`${church.church}`]
+                                ?.bishop.fullName
+                            }`}
                           </p>
                         </div>
                       </div>

@@ -16,7 +16,7 @@ export const BACENTA_LEADER_DASHBOARD = gql`
         historyRecord
         serviceRecords {
           created_at
-          #   attendance
+          attendance
           income
           serviceDate {
             date

@@ -8,6 +8,7 @@ import CheckboxGroup from './CheckboxGroup'
 import Combobox from './Combobox'
 import ComboboxTwoVariables from './ComboboxTwoVariables'
 import FormikSearchbox from './FormikSearchbox'
+import ImageUpload from './ImageUpload'
 
 function FormikControl(props) {
   const { control, ...rest } = props
@@ -31,6 +32,8 @@ function FormikControl(props) {
       return <RadioButtons {...rest} />
     case 'checkbox':
       return <CheckboxGroup {...rest} />
+    case 'imageUpload':
+      return <ImageUpload {...rest} />
     default:
       return null
   }

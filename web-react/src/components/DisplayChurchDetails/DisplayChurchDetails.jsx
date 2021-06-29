@@ -23,6 +23,7 @@ import {
 import FormikControl from '../formik-components/FormikControl'
 import { plural } from '../../global-utils'
 import Breadcrumb from './Breadcrumb'
+import DashboardButton from '../buttons/DashboardButton'
 
 const DisplayChurchDetails = (props) => {
   const {
@@ -208,6 +209,11 @@ const DisplayChurchDetails = (props) => {
           </Link>
           <div className="col-9 col-md-6 col-lg-4">
             <DetailsCard heading={churchHeading} detail={churchNo} />
+          </div>
+          <div className="col-9 col-md-6 col-lg-4 pl-3">
+            <DashboardButton btnLink="/bacentaleader/dashboard">
+              View Records
+            </DashboardButton>
           </div>
         </div>
       </div>

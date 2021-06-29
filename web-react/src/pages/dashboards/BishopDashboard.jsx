@@ -254,10 +254,9 @@ const BishopDashboard = () => {
             {listItems.map((item, index) => (
               <div key={index} className="col-sm-12 col-lg-auto">
                 {isAuthorised(item.roles, currentUser.roles) && (
-                  <DashboardButton
-                    btnText={item.buttonText}
-                    btnLink={item.link}
-                  />
+                  <DashboardButton btnLink={item.link}>
+                    {item.buttonText}
+                  </DashboardButton>
                 )}
               </div>
             ))}

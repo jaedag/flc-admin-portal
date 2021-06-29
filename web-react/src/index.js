@@ -47,7 +47,7 @@ import MemberTableMobile from './components/MemberTableMobile.jsx'
 import UserProfileDisplayPage from './pages/user-profile/DisplayPage'
 import UserProfileEditPage from './pages/user-profile/EditPage'
 import CreateSonta from './pages/create/CreateSonta'
-import BacentaService from './pages/service-record/BacentaService'
+import BacentaService from './pages/record-service/BacentaService'
 import BacentaLeaderDashboard from './pages/dashboards/BacentaLeaderDashboard'
 
 const AppWithApollo = () => {
@@ -149,7 +149,7 @@ const PastorsAdmin = () => {
     roles: [''],
   })
 
-  const [searchKey, setSearchKey] = useState('a')
+  const [searchKey, setSearchKey] = useState('')
   const [filters, setFilters] = useState({
     gender: '',
     maritalStatus: '',
@@ -478,7 +478,12 @@ const PastorsAdmin = () => {
                 exact
               />
               <ProtectedMembersRoute
-                roles={['federalAdmin', 'bishopAdmin', 'constituencyAdmin']}
+                roles={[
+                  'federalAdmin',
+                  'bishopAdmin',
+                  'constituencyAdmin',
+                  'bacenta Leader',
+                ]}
                 path="/bacenta/members"
                 component={BacentaMembers}
                 exact

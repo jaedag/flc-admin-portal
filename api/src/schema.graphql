@@ -98,27 +98,27 @@ type Title {
 # type HasBacentaHistory @relationship(type: "HAS_HISTORY") {
 #   from: Bacenta
 #   to: HistoryLog
-#   pointer: Boolean
+#   current: Boolean
 # }
 # type HasCentreHistory @relationship(type: "HAS_HISTORY") {
 #   from: Centre
 #   to: HistoryLog
-#   pointer: Boolean
+#   current: Boolean
 # }
 # type HasSontaHistory @relationship(type: "HAS_HISTORY") {
 #   from: Sonta
 #   to: HistoryLog
-#   pointer: Boolean
+#   current: Boolean
 # }
 # type HasCampusHistory @relationship(type: "HAS_HISTORY") {
 #   from: Campus
 #   to: HistoryLog
-#   pointer: Boolean
+#   current: Boolean
 # }
 # type HasTownHistory @relationship(type: "HAS_HISTORY") {
 #   from: Town
 #   to: HistoryLog
-#   pointer: Boolean
+#   current: Boolean
 # }
 
 type TimeGraph {
@@ -146,6 +146,7 @@ type TimeGraph {
 # }
 
 type ServiceRecord {
+  id: ID!
   created_at: Date
   serviceDate: TimeGraph @relationship(type: "SERVICE_HELD_ON", direction: OUT)
   attendance: Int!
@@ -158,6 +159,7 @@ type ServiceLog {
   id: ID
   historyRecord: String #leader was transferred to
   created_at: TimeGraph @relationship(type: "RECORDED_ON", direction: OUT)
+  loggedBy: Member @relationship(type: "LOGGED_BY", direction: OUT)
   serviceRecords: [ServiceRecord]
     @relationship(type: "HAS_RECORD", direction: OUT)
   leaders: [Member] @relationship(type: "HAS_HISTORY", direction: IN)
@@ -166,7 +168,6 @@ type ServiceLog {
   Campus: [Campus] @relationship(type: "HAS_HISTORY", direction: IN)
   Town: [Town] @relationship(type: "HAS_HISTORY", direction: IN)
   Sonta: [Sonta] @relationship(type: "HAS_HISTORY", direction: IN)
-  loggedBy: Member @relationship(type: "LOGGED_BY", direction: OUT)
 }
 
 type HistoryLog {
@@ -174,13 +175,13 @@ type HistoryLog {
   timeStamp: Date
   historyRecord: String #leader was transferred to
   created_at: TimeGraph @relationship(type: "RECORDED_ON", direction: OUT)
+  loggedBy: Member @relationship(type: "LOGGED_BY", direction: OUT)
   leaders: [Member] @relationship(type: "HAS_HISTORY", direction: IN)
   Bacenta: [Bacenta] @relationship(type: "HAS_HISTORY", direction: IN)
   Centre: [Centre] @relationship(type: "HAS_HISTORY", direction: IN)
   Campus: [Campus] @relationship(type: "HAS_HISTORY", direction: IN)
   Town: [Town] @relationship(type: "HAS_HISTORY", direction: IN)
   Sonta: [Sonta] @relationship(type: "HAS_HISTORY", direction: IN)
-  loggedBy: Member @relationship(type: "LOGGED_BY", direction: OUT)
 }
 
 # Campus-Centre, Town-Centre
@@ -846,7 +847,7 @@ type Mutation {
       MERGE (bishop)-[:HAS_HISTORY]->(log)
       MERGE (town)-[:HAS_HISTORY]->(log)
       MERGE (leader)-[r:HAS_HISTORY]->(log)
-        SET r.pointer = true
+        SET r.current = true
       RETURN town
       """
     )
@@ -876,7 +877,7 @@ type Mutation {
       MERGE (bishop)-[:HAS_HISTORY]->(log)
       MERGE (campus)-[:HAS_HISTORY]->(log)
       MERGE (leader)-[r:HAS_HISTORY]->(log)
-        SET r.pointer = true
+        SET r.current = true
       RETURN campus
       """
     )
@@ -910,7 +911,7 @@ type Mutation {
        MERGE (campusTown)-[:HAS_HISTORY]->(log)
        MERGE (centre)-[:HAS_HISTORY]->(log)
        MERGE (leader)-[r:HAS_HISTORY]->(log)
-         SET r.pointer = true
+         SET r.current = true
       RETURN centre
       """
     )
@@ -947,7 +948,7 @@ type Mutation {
        MERGE (sonta)-[:HAS_HISTORY]->(log)
        MERGE (ministry)-[:HAS_HISTORY]->(log)
        MERGE (leader)-[r:HAS_HISTORY]->(log)
-         SET r.pointer = true
+         SET r.current = true
       RETURN sonta
       """
     )
@@ -989,7 +990,7 @@ type Mutation {
         MERGE (leader)-[r:HAS_HISTORY]->(log)
         MERGE (centre)-[:HAS_HISTORY]->(log)
         MERGE (bacenta)-[:HAS_HISTORY]->(log)
-          SET r.pointer = true
+          SET r.current = true
          RETURN bacenta
       """
     )
@@ -1270,11 +1271,11 @@ type Mutation {
          SET log :ServiceLog
          WITH log, newLeader, oldLeader
        OPTIONAl MATCH ()-[r0:HAS_HISTORY]->(log)
-         SET r0.pointer = false
+         SET r0.current = false
          WITH log,newLeader, oldLeader
        CREATE (oldLeader)-[:HAS_HISTORY]->(log)
        CREATE (newLeader)-[r:HAS_HISTORY]->(log)
-          SET r.pointer = true
+          SET r.current = true
        RETURN COUNT(log)
        }
 
@@ -1329,11 +1330,11 @@ type Mutation {
          SET log :ServiceLog
          WITH log, newLeader,oldLeader
        OPTIONAl MATCH (log)<-[r0:HAS_HISTORY]-()
-         SET r0.pointer = false
+         SET r0.current = false
          WITH log,newLeader,oldLeader
        CREATE (oldLeader)-[:HAS_HISTORY]->(log)
        CREATE (newLeader)-[r:HAS_HISTORY]->(log)
-          SET r.pointer = true
+          SET r.current = true
           WITH log
        RETURN COUNT(log)
        }
@@ -1388,10 +1389,10 @@ type Mutation {
         SET log :ServiceLog
         WITH log, newLeader
       OPTIONAl MATCH ()-[r0:HAS_HISTORY]->(log)
-        SET r0.pointer = false
+        SET r0.current = false
         WITH log,newLeader
       CREATE (newLeader)-[r:HAS_HISTORY]->(log)
-         SET r.pointer = true
+         SET r.current = true
          WITH log
       RETURN COUNT(log)
       }
@@ -1456,11 +1457,11 @@ type Mutation {
          SET log :ServiceLog
          WITH log, newLeader,oldLeader
        OPTIONAl MATCH ()-[r0:HAS_HISTORY]->(log)
-         SET r0.pointer = false
+         SET r0.current = false
          WITH log,newLeader,oldLeader
        CREATE (oldLeader)-[:HAS_HISTORY]->(log)
        CREATE (newLeader)-[r:HAS_HISTORY]->(log)
-          SET r.pointer = true
+          SET r.current = true
           WITH log
        RETURN COUNT(log)
        }
@@ -1494,8 +1495,7 @@ type Mutation {
     serviceDate: String!
     attendance: Int!
     income: Float
-    treasurer1: ID!
-    treasurer2: ID!
+    treasurers: [ID]!
   ): ServiceRecord
     @cypher(
       statement: """
@@ -1505,7 +1505,7 @@ type Mutation {
       WITH serviceRecord
       MATCH (treasurer1:Member {id:$treasurer1})
       MATCH (treasurer2:Member {id:$treasurer2})
-      MATCH (bacenta:Bacenta {id:$bacentaId})-[has_history:HAS_HISTORY]->(log:HistoryLog) WHERE has_history.pointer = true
+      MATCH (bacenta:Bacenta {id:$bacentaId})-[has_history:HAS_HISTORY]->(log:HistoryLog) WHERE has_history.current = true
 
 
       MERGE (serviceDate:TimeGraph {date:date($serviceDate)})

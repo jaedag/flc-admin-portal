@@ -108,7 +108,7 @@ function CreateSonta() {
               <Form>
                 <div className="form-group">
                   <div className="row row-cols-1 row-cols-md-2">
-                    {/* <!-- Basic Info Div --> */}
+                    {/* <!-- Create Sonta Div --> */}
                     <div className="col mb-2">
                       <div className="form-row row-cols-2">
                         <div className="col-10">

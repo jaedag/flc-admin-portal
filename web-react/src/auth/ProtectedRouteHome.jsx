@@ -8,6 +8,7 @@ import { ChurchContext } from '../contexts/ChurchContext'
 import DisplayCampusTownDetails from '../pages/display/DetailsCampusTown.jsx'
 import LoadingScreen from '../components/LoadingScreen'
 import { isAuthorised } from '../global-utils'
+import BacentaLeaderDashboard from '../pages/dashboards/BacentaLeaderDashboard'
 
 const ProtectedRoute = ({ component, roles, ...args }) => {
   const { currentUser } = useContext(MemberContext)
@@ -47,6 +48,10 @@ const ProtectedRoute = ({ component, roles, ...args }) => {
     //If the user does not have permission but is a CO Admin
 
     return <DisplayCampusTownDetails />
+  } else if (currentUser.roles.includes('bacentaLeader')) {
+    //If the user does not have permission but is a Bacenta Leader
+
+    return <BacentaLeaderDashboard />
   } else {
     return <UnauthMsg />
   }

@@ -1,0 +1,15 @@
+:root {
+  --chart-primary-color: #690c13;
+
+  --chart-secondary-color: #097778;
+}
+
+.chart-title {
+  margin: 0px;
+  font-family: 'Poppins';
+  font-size: 11pt;
+}
+
+.church-name {
+  font-weight: lighter;
+}

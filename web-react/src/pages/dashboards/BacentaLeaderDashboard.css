@@ -5,3 +5,48 @@
 .btn-rounded {
   border-radius: 15px;
 }
+
+.membership-card {
+  background-color: var(--chart-primary-color);
+  border: none;
+  border-radius: 30px;
+  width: 150px;
+  height: 150px;
+  background-image: linear-gradient(
+    var(--chart-primary-color),
+    #630606,
+    #310303
+  );
+}
+
+.dashboard-title {
+  opacity: 50%;
+  font-size: 10pt;
+  margin-bottom: 0px;
+  font-weight: normal;
+  font-family: 'Poppins';
+}
+
+.membership-card-body {
+  background-color: white;
+  font-family: 'Roboto';
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: white;
+}
+
+a {
+  color: white;
+}
+
+.membership-icon {
+  border: thin;
+  opacity: 75%;
+}
+
+.info-text {
+  font-size: 3.2rem;
+  font-weight: bold;
+  margin: 0px;
+  font-family: 'Roboto';
+}

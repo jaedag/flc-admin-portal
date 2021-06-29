@@ -1,0 +1,105 @@
+import React from 'react'
+import {
+  ResponsiveContainer,
+  XAxis,
+  Tooltip,
+  BarChart,
+  Bar,
+  LabelList,
+} from 'recharts'
+import { capitalise } from '../../global-utils'
+import './ChurchGraph.css'
+
+const ChurchGraph = ({ churchData, stat1, stat2, serviceData }) => {
+  return (
+    <>
+      <div className="row mt-2">
+        <div className="col">
+          <p className="chart-title font-weight-bold m-0">{`${capitalise(
+            stat1
+          )} and ${capitalise(stat2)}`}</p>
+          <p className="chart-title church-name">{`${churchData[0].name} ${churchData[0].__typename}`}</p>
+          <ResponsiveContainer width="100%" height={330}>
+            <BarChart data={serviceData}>
+              <defs>
+                <linearGradient
+                  id="colorPrimary"
+                  x1="0"
+                  y1="0"
+                  x2="0"
+                  y2="100%"
+                >
+                  <stop
+                    offset="0%"
+                    stopColor="var(--chart-primary-color)"
+                    stopOpacity="1"
+                  />
+                  <stop
+                    offset="80%"
+                    stopColor="var(--chart-primary-color)"
+                    stopOpacity="0.1"
+                  />
+                </linearGradient>
+                <linearGradient
+                  id="colorSecondary"
+                  x1="0"
+                  y1="0"
+                  x2="0"
+                  y2="100%"
+                >
+                  <stop
+                    offset="0%"
+                    stopColor="var(--chart-secondary-color)"
+                    stopOpacity="1"
+                  />
+                  <stop
+                    offset="80%"
+                    stopColor="var(--chart-secondary-color)"
+                    stopOpacity="0.1"
+                  />
+                </linearGradient>
+              </defs>
+
+              <Bar dataKey={`${stat1}`} barSize={30} fill="url(#colorPrimary)">
+                <LabelList
+                  dataKey={`${stat1}`}
+                  position="top"
+                  fill="#FFF"
+                  fontSize="12"
+                />
+              </Bar>
+              <Bar
+                dataKey={`${stat2}`}
+                barSize={35}
+                fill="url(#colorSecondary)"
+              >
+                <LabelList
+                  dataKey={`${stat2}`}
+                  position="top"
+                  fill="#FFF"
+                  fontSize="12"
+                />
+              </Bar>
+
+              <XAxis
+                dataKey="date"
+                tickLine={false}
+                fontSize="13"
+                tickFormatter={(date) => {
+                  return new Date(date).toLocaleDateString('en-gb', {
+                    month: 'short',
+                    day: 'numeric',
+                  })
+                }}
+              />
+              {/* <YAxis scale="log" domain={['auto', 'auto']} label={false} /> */}
+              <Tooltip />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+    </>
+  )
+}
+
+export default ChurchGraph

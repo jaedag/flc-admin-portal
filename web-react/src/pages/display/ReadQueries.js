@@ -1,5 +1,11 @@
 import { gql } from '@apollo/client'
 
+export const BISHOP_MEMBER_COUNT = gql`
+  query($id: ID) {
+    bishopMemberCount(id: $id)
+  }
+`
+
 export const DISPLAY_MEMBER = gql`
   query($id: ID) {
     members(where: { id: $id }) {

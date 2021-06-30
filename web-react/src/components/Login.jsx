@@ -1,6 +1,6 @@
 import React from 'react'
 import AuthButton from './buttons/AuthButton'
-import UserProfileIcon from './UserProfileIcon.jsx'
+import UserProfileIcon from './UserProfileIcon/UserProfileIcon'
 import Logo from '../img/flc-logo-small.png'
 
 const Login = () => {

@@ -21,14 +21,14 @@ import {
   ADD_BACENTA_CENTRE,
   REMOVE_BACENTA_CENTRE,
   UPDATE_BACENTA,
-} from '../../queries/UpdateMutations'
+} from './UpdateMutations'
 import NavBar from '../../components/nav/NavBar'
 import ErrorScreen from '../../components/ErrorScreen'
 import LoadingScreen from '../../components/LoadingScreen'
 import { ChurchContext } from '../../contexts/ChurchContext'
-import { DISPLAY_BACENTA } from '../../queries/ReadQueries'
+import { DISPLAY_BACENTA } from '../display/ReadQueries'
 import Spinner from '../../components/Spinner.jsx'
-import { LOG_BACENTA_HISTORY } from '../../queries/LogMutations'
+import { LOG_BACENTA_HISTORY } from './LogMutations'
 import { MemberContext } from '../../contexts/MemberContext'
 
 const UpdateBacenta = () => {
@@ -39,24 +39,26 @@ const UpdateBacenta = () => {
 
   let townCampusIdVar
 
-  const { data: bacenta, loading: bacentaLoading } = useQuery(DISPLAY_BACENTA, {
-    variables: { id: bacentaId },
-  })
+  const { data: bacentaData, loading: bacentaLoading } = useQuery(
+    DISPLAY_BACENTA,
+    {
+      variables: { id: bacentaId },
+    }
+  )
 
   const history = useHistory()
   const [positionLoading, setPositionLoading] = useState(false)
-  const bacentaData = bacenta?.bacentas[0]
+  const bacenta = bacentaData?.bacentas[0]
 
   const initialValues = {
-    bacentaName: bacentaData?.name,
-    leaderSelect: bacentaData?.leader?.id,
-    leaderName: `${bacentaData?.leader?.firstName} ${bacentaData?.leader?.lastName} `,
-    townCampusSelect:
-      bacentaData?.centre?.town?.id ?? bacentaData?.centre?.campus?.id,
-    centreSelect: bacentaData?.centre?.id,
-    meetingDay: bacentaData?.meetingDay?.day,
-    venueLatitude: bacentaData?.location?.latitude ?? '',
-    venueLongitude: bacentaData?.location?.longitude ?? '',
+    bacentaName: bacenta?.name,
+    leaderSelect: bacenta?.leader?.id,
+    leaderName: `${bacenta?.leader?.firstName} ${bacenta?.leader?.lastName} `,
+    townCampusSelect: bacenta?.centre?.town?.id ?? bacenta?.centre?.campus?.id,
+    centreSelect: bacenta?.centre?.id,
+    meetingDay: bacenta?.meetingDay?.day,
+    venueLatitude: bacenta?.location?.latitude ?? '',
+    venueLongitude: bacenta?.location?.longitude ?? '',
   }
 
   const validationSchema = Yup.object({
@@ -88,12 +90,12 @@ const UpdateBacenta = () => {
         LogBacentaHistory({
           variables: {
             bacentaId: bacentaId,
-            oldLeaderId: bacentaData?.leader.id,
+            oldLeaderId: bacenta?.leader.id,
             newLeaderId: newLeaderInfo?.id ?? '',
             oldCentreId: '',
             newCentreId: '',
             loggedBy: currentUser.id,
-            historyRecord: `${newLeaderInfo?.firstName} ${newLeaderInfo?.lastName} was transferred to become the new Bacenta Leader for ${initialValues.bacentaName} replacing ${bacentaData?.leader.firstName} ${bacentaData?.leader.lastName}`,
+            historyRecord: `${newLeaderInfo?.firstName} ${newLeaderInfo?.lastName} was transferred to become the new Bacenta Leader for ${initialValues.bacentaName} replacing ${bacenta?.leader.firstName} ${bacenta?.leader.lastName}`,
           },
         })
       }
@@ -128,9 +130,9 @@ const UpdateBacenta = () => {
           newLeaderId: '',
           oldLeaderId: '',
           newCentreId: data.updateBacentas.bacentas[0]?.centre.id ?? '',
-          oldCentreId: bacentaData?.centre ? bacentaData?.centre.id : null,
+          oldCentreId: bacenta?.centre ? bacenta?.centre.id : null,
           loggedBy: currentUser.id,
-          historyRecord: `${initialValues.bacentaName} Bacenta has been moved from ${bacentaData?.centre.name} Centre to ${data.updateBacentas.bacentas[0]?.centre.name} Centre`,
+          historyRecord: `${initialValues.bacentaName} Bacenta has been moved from ${bacenta?.centre.name} Centre to ${data.updateBacentas.bacentas[0]?.centre.name} Centre`,
         },
       })
     },
@@ -138,7 +140,7 @@ const UpdateBacenta = () => {
 
   if (bacentaLoading) {
     return <LoadingScreen />
-  } else if (bacentaData && campuses && towns) {
+  } else if (bacenta && campuses && towns) {
     const townOptions = towns
       ? makeSelectOptions(towns.members[0]?.townBishop)
       : []

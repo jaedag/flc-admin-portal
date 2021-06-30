@@ -7,7 +7,7 @@ import { parsePhoneNum, PHONE_NUM_REGEX_VALIDATION } from '../../global-utils'
 import {
   ADD_MEMBER_TITLE_MUTATION,
   CREATE_MEMBER_MUTATION,
-} from '../../queries/CreateMutations'
+} from './CreateMutations'
 import NavBar from '../../components/nav/NavBar'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import { MemberContext } from '../../contexts/MemberContext'

@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { useQuery } from '@apollo/client'
 import MembersGrid from '../../components/MembersGrid'
-import { GET_BACENTA_MEMBERS } from '../../queries/GridQueries'
+import { GET_BACENTA_MEMBERS } from './GridQueries'
 import { ChurchContext } from '../../contexts/ChurchContext'
 
 const BacentaMembers = () => {

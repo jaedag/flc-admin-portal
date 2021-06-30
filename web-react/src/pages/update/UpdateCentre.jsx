@@ -22,16 +22,13 @@ import {
   REMOVE_CENTRE_TOWN,
   REMOVE_CENTRE_CAMPUS,
   UPDATE_CENTRE_MUTATION,
-} from '../../queries/UpdateMutations'
+} from './UpdateMutations'
 import NavBar from '../../components/nav/NavBar'
 import ErrorScreen from '../../components/ErrorScreen'
 import LoadingScreen from '../../components/LoadingScreen'
 import { ChurchContext } from '../../contexts/ChurchContext'
-import { DISPLAY_CENTRE } from '../../queries/ReadQueries'
-import {
-  LOG_CENTRE_HISTORY,
-  LOG_BACENTA_HISTORY,
-} from '../../queries/LogMutations'
+import { DISPLAY_CENTRE } from '../display/ReadQueries'
+import { LOG_CENTRE_HISTORY, LOG_BACENTA_HISTORY } from './LogMutations'
 import PlusSign from '../../components/buttons/PlusSign'
 import MinusSign from '../../components/buttons/MinusSign'
 import { MemberContext } from '../../contexts/MemberContext'
@@ -69,18 +66,17 @@ const UpdateCentre = () => {
   )
 
   const history = useHistory()
+  const centre = centreData?.centres[0]
 
   const initialValues = {
-    centreName: centreData?.displayCentre.name,
-    leaderName: centreData?.displayCentre?.leader
-      ? `${centreData?.displayCentre?.leader.firstName} ${centreData?.displayCentre?.leader.lastName}`
+    centreName: centre?.name,
+    leaderName: centre?.leader
+      ? `${centre?.leader.firstName} ${centre?.leader.lastName}`
       : '',
-    leaderSelect: centreData?.displayCentre?.leader?.id,
+    leaderSelect: centre?.leader?.id,
     campusTownSelect:
-      church.church === 'town'
-        ? centreData?.displayCentre?.town?.id
-        : centreData?.displayCentre?.campus?.id,
-    bacentas: centreData?.displayCentre?.bacentas?.length
+      church.church === 'town' ? centre?.town?.id : centre?.campus?.id,
+    bacentas: centre?.bacentas?.length
       ? centreData.displayCentre?.bacentas
       : [''],
   }
@@ -115,11 +111,11 @@ const UpdateCentre = () => {
           variables: {
             centreId: centreId,
             newLeaderId: newLeaderInfo.id,
-            oldLeaderId: centreData?.displayCentre?.leader.id,
+            oldLeaderId: centre?.leader.id,
             oldCampusTownId: '',
             newCampusTownId: '',
             loggedBy: currentUser.id,
-            historyRecord: `${newLeaderInfo.firstName} ${newLeaderInfo.lastName} was transferred to become the new Centre Leader for ${initialValues.centreName} replacing ${centreData?.displayCentre?.leader.firstName} ${centreData?.displayCentre?.leader.lastName}`,
+            historyRecord: `${newLeaderInfo.firstName} ${newLeaderInfo.lastName} was transferred to become the new Centre Leader for ${initialValues.centreName} replacing ${centre?.leader.firstName} ${centre?.leader.lastName}`,
           },
         })
       }
@@ -184,7 +180,7 @@ const UpdateCentre = () => {
   const [RemoveCentreCampus] = useMutation(REMOVE_CENTRE_CAMPUS)
   const [AddCentreTown] = useMutation(ADD_CENTRE_TOWN, {
     onCompleted: (newTown) => {
-      if (!centreData?.displayCentre?.town.name) {
+      if (!centre?.town.name) {
         //If There is no old town
         let recordIfNoOldTown = `${
           initialValues.centreName
@@ -198,7 +194,7 @@ const UpdateCentre = () => {
             newLeaderId: '',
             oldLeaderId: '',
             newCampusTownId: newTown.AddCentreTown.from.id,
-            oldCampusTownId: centreData?.displayCentre?.town.id,
+            oldCampusTownId: centre?.town.id,
             loggedBy: currentUser.id,
             historyRecord: recordIfNoOldTown,
           },
@@ -216,11 +212,9 @@ const UpdateCentre = () => {
 
         let recordIfOldTown = `${
           initialValues.centreName
-        } Centre has been moved from ${
-          centreData?.displayCentre?.town.name
-        } ${capitalise(church.church)} to ${
-          newTown.AddCentreTown.from.name
-        } ${capitalise(church.church)}`
+        } Centre has been moved from ${centre?.town.name} ${capitalise(
+          church.church
+        )} to ${newTown.AddCentreTown.from.name} ${capitalise(church.church)}`
 
         //After Adding the centre to a campus/town, then you log that change.
         LogCentreHistory({
@@ -229,7 +223,7 @@ const UpdateCentre = () => {
             newLeaderId: '',
             oldLeaderId: '',
             newCampusTownId: newTown.AddCentreTown.from.id,
-            oldCampusTownId: centreData?.displayCentre?.town.id,
+            oldCampusTownId: centre?.town.id,
             loggedBy: currentUser.id,
             historyRecord: recordIfOldTown,
           },
@@ -239,7 +233,7 @@ const UpdateCentre = () => {
   })
   const [AddCentreCampus] = useMutation(ADD_CENTRE_CAMPUS, {
     onCompleted: (newCampus) => {
-      if (!centreData?.displayCentre?.campus.name) {
+      if (!centre?.campus.name) {
         //If There is no old campus
         let recordIfNoOldCampus = `${
           initialValues.centreName
@@ -253,7 +247,7 @@ const UpdateCentre = () => {
             newLeaderId: '',
             oldLeaderId: '',
             newCampusTownId: newCampus.AddCentreCampus.from.id,
-            oldCampusTownId: centreData?.displayCentre?.campus.id,
+            oldCampusTownId: centre?.campus.id,
             loggedBy: currentUser.id,
             historyRecord: recordIfNoOldCampus,
           },
@@ -271,11 +265,11 @@ const UpdateCentre = () => {
 
         let recordIfOldCampus = `${
           initialValues.centreName
-        } Centre has been moved from ${
-          centreData?.displayCentre?.campus.name
-        } ${capitalise(church.church)} to ${
-          newCampus.AddCentreCampus.from.name
-        } ${capitalise(church.church)}`
+        } Centre has been moved from ${centre?.campus.name} ${capitalise(
+          church.church
+        )} to ${newCampus.AddCentreCampus.from.name} ${capitalise(
+          church.church
+        )}`
 
         //After Adding the centre to a campus/town, then you log that change.
         LogCentreHistory({
@@ -284,7 +278,7 @@ const UpdateCentre = () => {
             newLeaderId: '',
             oldLeaderId: '',
             newCampusTownId: newCampus.AddCentreCampus.from.id,
-            oldCampusTownId: centreData?.displayCentre?.campus.id,
+            oldCampusTownId: centre?.campus.id,
             loggedBy: currentUser.id,
             historyRecord: recordIfOldCampus,
           },
@@ -298,10 +292,10 @@ const UpdateCentre = () => {
   } else if (centreData && (townListData || campusListData)) {
     //Refactoring the Options into Something that can be read by my formik component
     const townOptions = townListData
-      ? makeSelectOptions(townListData.townList)
+      ? makeSelectOptions(townListData.members[0].townBishop)
       : []
     const campusOptions = campusListData
-      ? makeSelectOptions(campusListData.campusList)
+      ? makeSelectOptions(campusListData.members[0].campusBishop)
       : []
 
     //onSubmit receives the form state as argument
@@ -318,7 +312,7 @@ const UpdateCentre = () => {
           centreId: centreId,
           centreName: values.centreName,
           leaderId: values.leaderSelect,
-          campusTownID: values.campusTownSelect,
+          campusTownId: values.campusTownSelect,
         },
       })
 

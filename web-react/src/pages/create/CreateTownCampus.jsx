@@ -12,10 +12,7 @@ import {
   BISHOP_MEMBER_DROPDOWN,
   BISHOP_CENTRE_DROPDOWN,
 } from '../../queries/ListQueries'
-import {
-  CREATE_TOWN_MUTATION,
-  CREATE_CAMPUS_MUTATION,
-} from '../../queries/CreateMutations'
+import { CREATE_TOWN_MUTATION, CREATE_CAMPUS_MUTATION } from './CreateMutations'
 import NavBar from '../../components/nav/NavBar'
 import ErrorScreen from '../../components/ErrorScreen'
 import LoadingScreen from '../../components/LoadingScreen'

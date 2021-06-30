@@ -13,7 +13,7 @@ import {
   GET_TOWN_CENTRES,
   BISHOP_MEMBER_DROPDOWN,
 } from '../../queries/ListQueries.js'
-import { CREATE_CENTRE_MUTATION } from '../../queries/CreateMutations'
+import { CREATE_CENTRE_MUTATION } from './CreateMutations'
 import NavBar from '../../components/nav/NavBar'
 import ErrorScreen from '../../components/ErrorScreen'
 import LoadingScreen from '../../components/LoadingScreen'

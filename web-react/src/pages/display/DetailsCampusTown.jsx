@@ -5,7 +5,7 @@ import DisplayChurchDetails from '../../components/DisplayChurchDetails/DisplayC
 import NavBar from '../../components/nav/NavBar'
 import ErrorScreen from '../../components/ErrorScreen'
 import LoadingScreen from '../../components/LoadingScreen'
-import { DISPLAY_TOWN, DISPLAY_CAMPUS } from '../../queries/ReadQueries'
+import { DISPLAY_TOWN, DISPLAY_CAMPUS } from './ReadQueries'
 import { ChurchContext } from '../../contexts/ChurchContext'
 
 const DisplayCampusTownDetails = () => {

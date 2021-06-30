@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { useQuery } from '@apollo/client'
 import MobileSearchNav from '../../components/MobileSearchNav.jsx'
-import { GLOBAL_NEO_SEARCH } from '../../queries/SearchQuery'
+import { GLOBAL_NEO_SEARCH } from './SearchQuery'
 import { SearchContext } from '../../contexts/MemberContext'
 import Spinner from '../../components/Spinner.jsx'
 import MemberDisplayCard from '../../components/card/MemberDisplayCard'

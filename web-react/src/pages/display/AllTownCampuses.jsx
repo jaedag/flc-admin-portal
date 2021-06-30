@@ -9,8 +9,9 @@ import {
   GET_BISHOP_TOWNS,
   GET_BISHOP_CAMPUSES,
 } from '../../queries/ListQueries'
+import { BISHOP_MEMBER_COUNT } from '../display/ReadQueries'
 import { ChurchContext } from '../../contexts/ChurchContext'
-import { BISHOP_MEMBER_COUNT } from '../../queries/CountQueries'
+
 import RoleView from '../../auth/RoleView'
 
 const DisplayAllTownCampuses = () => {

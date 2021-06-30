@@ -8,8 +8,8 @@ import {
   PHONE_NUM_REGEX_VALIDATION,
   parseNeoDate,
 } from '../../global-utils'
-import { UPDATE_MEMBER_MUTATION } from '../../queries/UpdateMutations'
-import { DISPLAY_MEMBER } from '../../queries/ReadQueries'
+import { UPDATE_MEMBER_MUTATION } from './UpdateMutations'
+import { DISPLAY_MEMBER } from '../display/ReadQueries'
 import NavBar from '../../components/nav/NavBar'
 import ErrorScreen from '../../components/ErrorScreen'
 import LoadingScreen from '../../components/LoadingScreen'

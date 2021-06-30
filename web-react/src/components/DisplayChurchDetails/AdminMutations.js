@@ -1,21 +1,5 @@
 import { gql } from '@apollo/client'
 
-export const MAKE_BISHOP_ADMIN = gql`
-  mutation($bishopId: ID!, $adminId: ID!) {
-    MergeMemberIsBishopAdminFor(to: $bishopId, from: $adminId) {
-      id
-    }
-  }
-`
-
-export const REMOVE_BISHOP_ADMIN = gql`
-  mutation($bishopId: ID!, $adminId: ID!) {
-    RemoveMemberIsBishopAdminFor(from: $adminId, to: $bishopId) {
-      id
-    }
-  }
-`
-
 export const REMOVE_TOWN_ADMIN = gql`
   mutation($townId: ID!, $adminId: ID!) {
     RemoveMemberIsTownAdminFor(from: $adminId, to: $townId) {

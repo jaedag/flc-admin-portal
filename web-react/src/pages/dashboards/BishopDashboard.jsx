@@ -1,7 +1,11 @@
 import React, { useContext, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useMutation, useQuery } from '@apollo/client'
-import { BISH_DASHBOARD_COUNTS } from '../../queries/CountQueries'
+import {
+  BISH_DASHBOARD_COUNTS,
+  MAKE_BISHOP_ADMIN,
+  REMOVE_BISHOP_ADMIN,
+} from './DashboardQueries'
 import NavBar from '../../components/nav/NavBar'
 import DashboardCard from '../../components/card/DashboardCard'
 import DashboardButton from '../../components/buttons/DashboardButton'
@@ -15,10 +19,6 @@ import { BISHOP_MEMBER_DROPDOWN } from '../../queries/ListQueries'
 import { Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import FormikControl from '../../components/formik-components/FormikControl'
-import {
-  MAKE_BISHOP_ADMIN,
-  REMOVE_BISHOP_ADMIN,
-} from '../../queries/AdminMutations'
 
 const BishopDashboard = () => {
   const { church, setFilters, clickCard, bishopId, setBishopId } = useContext(

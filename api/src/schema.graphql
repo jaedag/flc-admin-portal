@@ -322,6 +322,14 @@ type Bacenta {
   services: [ServiceLog] @relationship(type: "HAS_HISTORY", direction: OUT)
 }
 
+# type CustomPoint {
+#   longitude: Float
+#   latitude: Float
+#   height: Float
+#   crs: String!
+#   srid: Int!
+# }
+
 type ServiceDay {
   day: String!
   dayNum: Int
@@ -1260,7 +1268,7 @@ type Mutation {
     centreId: ID
     centreName: String
     leaderId: ID
-    campusTownID: ID
+    campusTownId: ID
   ): Centre
     @auth(
       rules: [{ roles: ["federalAdmin", "bishopAdmin", "constituencyAdmin"] }]
@@ -1284,7 +1292,7 @@ type Mutation {
       WITH centre
          CALL {
          	WITH centre
-      		OPTIONAL MATCH (campusTown {id: $campusTownID}) WHERE campusTown:Campus OR campusTown:Town
+      		OPTIONAL MATCH (campusTown {id: $campusTownId}) WHERE campusTown:Campus OR campusTown:Town
 
             OPTIONAL MATCH (centre)<-[r:HAS_CENTRE]-()
             DELETE r

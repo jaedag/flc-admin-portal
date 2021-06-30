@@ -18,7 +18,7 @@ import {
   GET_BISHOP_TOWNS,
   BISHOP_MEMBER_DROPDOWN,
 } from '../../queries/ListQueries'
-import { CREATE_BACENTA_MUTATION } from '../../queries/CreateMutations'
+import { CREATE_BACENTA_MUTATION } from './CreateMutations'
 import NavBar from '../../components/nav/NavBar'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import ErrorScreen from '../../components/ErrorScreen'

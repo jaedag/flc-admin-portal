@@ -5,7 +5,7 @@ import { useLazyQuery } from '@apollo/client'
 import { ErrorMessage } from 'formik'
 import TextError from './TextError'
 import { useHistory } from 'react-router-dom'
-import { GLOBAL_NEO_SEARCH } from '../../queries/SearchQuery.js'
+import { GLOBAL_NEO_SEARCH } from '../../pages/mobile/SearchQuery.js'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import { capitalise } from '../../global-utils'
 

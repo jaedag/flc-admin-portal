@@ -95,13 +95,13 @@ export const UPDATE_CENTRE_MUTATION = gql`
     $centreId: ID
     $centreName: String
     $leaderId: ID
-    $campusTownID: ID
+    $campusTownId: ID
   ) {
     UpdateCentreDetails(
       centreId: $centreId
       centreName: $centreName
       leaderId: $leaderId
-      campusTownID: $campusTownID
+      campusTownId: $campusTownId
     ) {
       id
       name

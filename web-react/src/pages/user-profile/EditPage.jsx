@@ -9,8 +9,8 @@ import {
   parseNeoDate,
 } from '../../global-utils'
 
-import { UPDATE_MEMBER_MUTATION } from '../../queries/UpdateMutations'
-import { DISPLAY_MEMBER } from '../../queries/ReadQueries'
+import { UPDATE_MEMBER_MUTATION } from '../update/UpdateMutations'
+import { DISPLAY_MEMBER } from '../display/ReadQueries'
 import NavBar from '../../components/nav/NavBar'
 import ErrorScreen from '../../components/ErrorScreen'
 import LoadingScreen from '../../components/LoadingScreen'

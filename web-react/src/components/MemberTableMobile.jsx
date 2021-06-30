@@ -4,7 +4,7 @@ import { useQuery } from '@apollo/client'
 import { memberFilter } from './member-filter-utils'
 import { ChurchContext } from '../contexts/ChurchContext'
 import Spinner from './Spinner.jsx'
-import { GET_BISHOP_MEMBERS } from '../queries/GridQueries'
+import { GET_BISHOP_MEMBERS } from '../pages/grids/GridQueries'
 import userIcon from '../img/user.png'
 import NavBar from './nav/NavBar'
 

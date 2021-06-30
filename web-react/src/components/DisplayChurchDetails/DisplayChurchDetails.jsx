@@ -19,7 +19,7 @@ import {
   MAKE_CAMPUS_ADMIN,
   REMOVE_TOWN_ADMIN,
   REMOVE_CAMPUS_ADMIN,
-} from '../../queries/AdminMutations'
+} from './AdminMutations'
 import FormikControl from '../formik-components/FormikControl'
 import { plural } from '../../global-utils'
 import Breadcrumb from './Breadcrumb'

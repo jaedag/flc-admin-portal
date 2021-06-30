@@ -15,7 +15,7 @@ import {
   BISHOP_MEMBER_DROPDOWN,
   BISHOP_CENTRE_DROPDOWN,
 } from '../../queries/ListQueries'
-import { BISH_DASHBOARD_COUNTS } from '../../queries/CountQueries'
+import { BISH_DASHBOARD_COUNTS } from '../dashboards/DashboardQueries'
 import {
   UPDATE_TOWN_MUTATION,
   UPDATE_CAMPUS_MUTATION,
@@ -27,18 +27,15 @@ import {
   REMOVE_CENTRE_TOWN,
   ADD_CAMPUS_CENTRES,
   ADD_TOWN_CENTRES,
-} from '../../queries/UpdateMutations.js'
+} from './UpdateMutations'
 import NavBar from '../../components/nav/NavBar'
 import ErrorScreen from '../../components/ErrorScreen'
 import LoadingScreen from '../../components/LoadingScreen'
 import { ChurchContext } from '../../contexts/ChurchContext'
-import { DISPLAY_CAMPUS, DISPLAY_TOWN } from '../../queries/ReadQueries'
+import { DISPLAY_CAMPUS, DISPLAY_TOWN } from '../display/ReadQueries'
 import PlusSign from '../../components/buttons/PlusSign'
 import MinusSign from '../../components/buttons/MinusSign'
-import {
-  LOG_CAMPUSTOWN_HISTORY,
-  LOG_CENTRE_HISTORY,
-} from '../../queries/LogMutations'
+import { LOG_CAMPUSTOWN_HISTORY, LOG_CENTRE_HISTORY } from './LogMutations'
 import { MemberContext } from '../../contexts/MemberContext'
 
 const UpdateTownCampus = () => {

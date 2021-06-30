@@ -6,7 +6,7 @@ import { Formik, Form, FieldArray } from 'formik'
 import FormikControl from '../../components/formik-components/FormikControl'
 
 import { ADD_LEADER_HISTORY_MUTATION } from '../../queries/CreateMutations'
-import { DISPLAY_MEMBER } from '../../queries/ReadQueries'
+import { DISPLAY_MEMBER } from '../display/ReadQueries'
 import { HeadingBar } from '../../components/HeadingBar'
 import NavBar from '../../components/nav/NavBar'
 import ErrorScreen from '../../components/ErrorScreen'

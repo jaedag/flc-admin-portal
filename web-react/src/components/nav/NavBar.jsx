@@ -5,7 +5,7 @@ import { ChurchContext } from '../../contexts/ChurchContext'
 import NavLink from './NavLink'
 import './NavBar.css'
 import { capitalise } from '../../global-utils'
-import UserProfileIcon from '../UserProfileIcon.jsx'
+import UserProfileIcon from '../UserProfileIcon/UserProfileIcon'
 import RoleView from '../../auth/RoleView.jsx'
 
 const NavBar = () => {

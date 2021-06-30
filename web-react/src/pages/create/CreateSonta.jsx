@@ -13,7 +13,7 @@ import {
   BISHOP_MEMBER_DROPDOWN,
   GET_MINISTRIES,
 } from '../../queries/ListQueries.js'
-import { CREATE_SONTA_MUTATION } from '../../queries/CreateMutations'
+import { CREATE_SONTA_MUTATION } from './CreateMutations'
 import NavBar from '../../components/nav/NavBar'
 import ErrorScreen from '../../components/ErrorScreen'
 import LoadingScreen from '../../components/LoadingScreen'

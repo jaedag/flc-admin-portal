@@ -21,6 +21,12 @@ export const DISPLAY_MEMBER = gql`
       dob {
         date
       }
+      bishop {
+        id
+        firstName
+        lastName
+        fullName
+      }
       bacenta {
         id
         name

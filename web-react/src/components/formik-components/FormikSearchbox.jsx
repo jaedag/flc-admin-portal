@@ -5,8 +5,9 @@ import { useLazyQuery } from '@apollo/client'
 import { ErrorMessage } from 'formik'
 import TextError from './TextError'
 import { useHistory } from 'react-router-dom'
-import { GLOBAL_SEARCH } from '../../queries/SearchQuery.js'
+import { GLOBAL_NEO_SEARCH } from '../../queries/SearchQuery.js'
 import { ChurchContext } from '../../contexts/ChurchContext'
+import { capitalise } from '../../global-utils'
 
 function FormikSearchbox(props) {
   const { label, name, placeholder, setFieldValue } = props
@@ -18,15 +19,15 @@ function FormikSearchbox(props) {
   const history = useHistory()
 
   let combinedData
-  const [globalSearch] = useLazyQuery(GLOBAL_SEARCH, {
+  const [globalSearch] = useLazyQuery(GLOBAL_NEO_SEARCH, {
     onCompleted: (data) => {
       combinedData = [
-        // ...data.globalMemberSearch,
-        ...data.globalCampusSearch,
-        ...data.globalTownSearch,
-        ...data.globalSontaSearch,
-        ...data.globalCentreSearch,
-        ...data.globalBacentaSearch,
+        ...data.members,
+        ...data.campuses,
+        ...data.towns,
+        ...data.sontas,
+        ...data.centres,
+        ...data.bacentas,
       ]
 
       setSuggestions(
@@ -55,7 +56,9 @@ function FormikSearchbox(props) {
   useEffect(() => {
     const timerId = setTimeout(() => {
       setDebouncedText(searchString)
-      globalSearch({ variables: { searchKey: debouncedText.trim() } })
+      globalSearch({
+        variables: { searchKey: capitalise(debouncedText.trim()) },
+      })
     }, 200)
 
     return () => {

@@ -6,7 +6,7 @@ import { useQuery } from '@apollo/client'
 import { BACENTA_LEADER_DASHBOARD } from '../../queries/DashboardQueries'
 import LoadingScreen from '../../components/LoadingScreen'
 import ErrorScreen from '../../components/ErrorScreen'
-import { compareValues, parseNeoDate } from '../../global-utils'
+import { average, compareValues, parseNeoDate } from '../../global-utils'
 import { Link } from 'react-router-dom'
 import ChurchGraph from '../../components/ChurchGraph/ChurchGraph'
 
@@ -56,6 +56,12 @@ export const BacentaLeaderDashboard = () => {
 
     serviceData.sort(compareValues('date'))
 
+    const monthlyStatAverage = (data, stat) => {
+      const statArray = data.map((service) => service[`${stat}`])
+      //Calculate average of the last four weeks of service
+      return average(statArray.slice(-4)).toFixed(2)
+    }
+
     return (
       <>
         <NavBar />
@@ -90,12 +96,16 @@ export const BacentaLeaderDashboard = () => {
           <div className="row mt-3">
             <div className="col">
               <p className="dashboard-title">Avg Attendance</p>
-              <p className="info-text">400</p>
+              <p className="info-text">
+                {monthlyStatAverage(serviceData, 'attendance')}
+              </p>
             </div>
 
             <div className="col">
-              <p className="dashboard-title">Avg Income</p>
-              <p className="info-text">400</p>
+              <p className="dashboard-title">Avg Income (in GH₵)</p>
+              <p className="info-text">
+                {`${monthlyStatAverage(serviceData, 'income')}`}
+              </p>
             </div>
           </div>
           <ChurchGraph

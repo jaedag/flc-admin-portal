@@ -17,7 +17,7 @@ const BishopMembers = () => {
           ? `Bishop ${data?.members[0]?.firstName} ${data?.members[0]?.lastName}`
           : null
       }
-      memberData={data && data.bishopMemberList}
+      memberData={data && data.members[0].members}
       memberLoading={loading}
       memberError={error}
     />

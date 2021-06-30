@@ -13,7 +13,7 @@ const BacentaMembers = () => {
   return (
     <MembersGrid
       title={data ? `${data.bacentas[0]?.name} Bacenta Membership` : null}
-      memberData={data?.bacentaMemberList}
+      memberData={data?.bacentas[0].members}
       memberLoading={loading}
       memberError={error}
     />

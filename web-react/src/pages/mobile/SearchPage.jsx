@@ -1,21 +1,22 @@
 import React, { useContext } from 'react'
 import { useQuery } from '@apollo/client'
 import MobileSearchNav from '../../components/MobileSearchNav.jsx'
-import { GLOBAL_SEARCH } from '../../queries/SearchQuery'
+import { GLOBAL_NEO_SEARCH } from '../../queries/SearchQuery'
 import { SearchContext } from '../../contexts/MemberContext'
 import Spinner from '../../components/Spinner.jsx'
 import MemberDisplayCard from '../../components/card/MemberDisplayCard'
+import { capitalise } from '../../global-utils.js'
 
 const SearchPageMobile = () => {
   const { searchKey } = useContext(SearchContext)
 
-  const { data: searchData, loading: searchLoading } = useQuery(GLOBAL_SEARCH, {
+  const { data, loading } = useQuery(GLOBAL_NEO_SEARCH, {
     variables: {
-      searchKey: searchKey,
+      searchKey: capitalise(searchKey.trim()),
     },
   })
 
-  if (searchLoading) {
+  if (loading) {
     return (
       <>
         <MobileSearchNav />
@@ -26,24 +27,21 @@ const SearchPageMobile = () => {
         </div>
       </>
     )
-  } else if (searchData) {
+  } else if (data) {
     const combinedData = [
-      // ...new Set([
-      // ...searchData.Member,
-      // ...searchData.globalMemberSearch,
-      ...searchData.globalCampusSearch,
-      ...searchData.globalTownSearch,
-      ...searchData.globalSontaSearch,
-      ...searchData.globalCentreSearch,
-      ...searchData.globalBacentaSearch,
+      ...data.members,
+      ...data.campuses,
+      ...data.towns,
+      ...data.sontas,
+      ...data.centres,
+      ...data.bacentas,
     ]
-    // ),]
 
     return (
       <>
         <MobileSearchNav />
         <div className="container mt-5">
-          {searchLoading && (
+          {loading && (
             <div className="d-flex justify-content-center">
               <Spinner />
             </div>

@@ -165,77 +165,77 @@ export const GET_BISHOP_MEMBERS = gql`
       firstName
       lastName
       fullName
-    }
-    bishopMemberList(id: $id) {
-      id
-      firstName
-      lastName
-      pictureUrl
-      bacenta {
-        id
-        name
-      }
-      ministry {
-        id
-        name
-      }
-      maritalStatus {
-        status
-      }
-      gender {
-        gender
-      }
-      title {
-        title
-      }
-      leadsBacenta {
-        id
-        name
-      }
-      leadsCentre {
-        id
-        name
-      }
-      leadsMinistry {
-        id
-        name
-      }
-      leadsSonta {
-        id
-        name
-      }
-      leadsBasonta {
-        id
-        name
-      }
-      leadsTown {
-        id
-        name
-      }
-      leadsCampus {
-        id
-        name
-      }
-      townBishop {
-        id
-        name
-      }
-      campusBishop {
-        id
-        name
-      }
-      isBishopAdminFor {
+      members {
         id
         firstName
         lastName
-      }
-      isCampusAdminFor {
-        id
-        name
-      }
-      isTownAdminFor {
-        id
-        name
+        pictureUrl
+        bacenta {
+          id
+          name
+        }
+        ministry {
+          id
+          name
+        }
+        maritalStatus {
+          status
+        }
+        gender {
+          gender
+        }
+        title {
+          title
+        }
+        leadsBacenta {
+          id
+          name
+        }
+        leadsCentre {
+          id
+          name
+        }
+        leadsMinistry {
+          id
+          name
+        }
+        leadsSonta {
+          id
+          name
+        }
+        leadsBasonta {
+          id
+          name
+        }
+        leadsTown {
+          id
+          name
+        }
+        leadsCampus {
+          id
+          name
+        }
+        townBishop {
+          id
+          name
+        }
+        campusBishop {
+          id
+          name
+        }
+        isBishopAdminFor {
+          id
+          firstName
+          lastName
+        }
+        isCampusAdminFor {
+          id
+          name
+        }
+        isTownAdminFor {
+          id
+          name
+        }
       }
     }
   }
@@ -246,149 +246,150 @@ export const GET_CAMPUSTOWN_MEMBERS = gql`
     towns(where: { id: $id }) {
       id
       name
-    }
-    townMemberList(id: $id) {
-      id
-      firstName
-      lastName
-      pictureUrl
-      bacenta {
-        name
-      }
-      ministry {
-        name
-      }
-      maritalStatus {
-        status
-      }
-      gender {
-        gender
-      }
-      title {
-        title
-      }
-      leadsBacenta {
-        id
-        name
-      }
-      leadsCentre {
-        id
-        name
-      }
-      leadsMinistry {
-        id
-        name
-      }
-      leadsSonta {
-        id
-        name
-      }
-      leadsBasonta {
-        id
-        name
-      }
-      leadsTown {
-        id
-        name
-      }
-      leadsCampus {
-        id
-        name
-      }
-      townBishop {
-        id
-        name
-      }
-      campusBishop {
-        id
-        name
-      }
-      isBishopAdminFor {
+      members {
         id
         firstName
         lastName
-      }
-      isCampusAdminFor {
-        id
-        name
-      }
-      isTownAdminFor {
-        id
-        name
+        pictureUrl
+        bacenta {
+          name
+        }
+        ministry {
+          name
+        }
+        maritalStatus {
+          status
+        }
+        gender {
+          gender
+        }
+        title {
+          title
+        }
+        leadsBacenta {
+          id
+          name
+        }
+        leadsCentre {
+          id
+          name
+        }
+        leadsMinistry {
+          id
+          name
+        }
+        leadsSonta {
+          id
+          name
+        }
+        leadsBasonta {
+          id
+          name
+        }
+        leadsTown {
+          id
+          name
+        }
+        leadsCampus {
+          id
+          name
+        }
+        townBishop {
+          id
+          name
+        }
+        campusBishop {
+          id
+          name
+        }
+        isBishopAdminFor {
+          id
+          firstName
+          lastName
+        }
+        isCampusAdminFor {
+          id
+          name
+        }
+        isTownAdminFor {
+          id
+          name
+        }
       }
     }
+
     campuses(where: { id: $id }) {
       id
       name
-    }
-    campusMemberList(id: $id) {
-      id
-      firstName
-      lastName
-      pictureUrl
-      bacenta {
-        name
-      }
-      ministry {
-        name
-      }
-      maritalStatus {
-        status
-      }
-      gender {
-        gender
-      }
-      title {
-        title
-      }
-      leadsBacenta {
-        id
-        name
-      }
-      leadsCentre {
-        id
-        name
-      }
-      leadsMinistry {
-        id
-        name
-      }
-      leadsSonta {
-        id
-        name
-      }
-      leadsBasonta {
-        id
-        name
-      }
-      leadsTown {
-        id
-        name
-      }
-      leadsCampus {
-        id
-        name
-      }
-      townBishop {
-        id
-        name
-      }
-      campusBishop {
-        id
-        name
-      }
-      isBishopAdminFor {
+      members {
         id
         firstName
         lastName
-      }
-      isCampusAdminFor {
-        id
-        name
-      }
-      isTownAdminFor {
-        id
-        name
+        pictureUrl
+        bacenta {
+          name
+        }
+        ministry {
+          name
+        }
+        maritalStatus {
+          status
+        }
+        gender {
+          gender
+        }
+        title {
+          title
+        }
+        leadsBacenta {
+          id
+          name
+        }
+        leadsCentre {
+          id
+          name
+        }
+        leadsMinistry {
+          id
+          name
+        }
+        leadsSonta {
+          id
+          name
+        }
+        leadsBasonta {
+          id
+          name
+        }
+        leadsTown {
+          id
+          name
+        }
+        leadsCampus {
+          id
+          name
+        }
+        townBishop {
+          id
+          name
+        }
+        campusBishop {
+          id
+          name
+        }
+        isBishopAdminFor {
+          id
+          firstName
+          lastName
+        }
+        isCampusAdminFor {
+          id
+          name
+        }
+        isTownAdminFor {
+          id
+          name
+        }
       }
     }
   }
@@ -399,67 +400,67 @@ export const GET_CENTRE_MEMBERS = gql`
     centres(where: { id: $id }) {
       id
       name
-    }
-    centreMemberList(id: $id) {
-      id
-      firstName
-      lastName
-      pictureUrl
-      bacenta {
-        name
-      }
-      ministry {
-        name
-      }
-      maritalStatus {
-        status
-      }
-      gender {
-        gender
-      }
-      title {
-        title
-      }
-      leadsBacenta {
-        name
-      }
-      leadsCentre {
-        name
-      }
-      leadsMinistry {
-        name
-      }
-      leadsSonta {
-        name
-      }
-      leadsBasonta {
-        name
-      }
-      leadsTown {
-        name
-      }
-      leadsCampus {
-        name
-      }
-      townBishop {
-        name
-      }
-      campusBishop {
-        id
-        name
-      }
-      isBishopAdminFor {
+      members {
         id
         firstName
         lastName
-      }
-      isCampusAdminFor {
-        id
-        name
-      }
-      isTownAdminFor {
-        id
-        name
+        pictureUrl
+        bacenta {
+          name
+        }
+        ministry {
+          name
+        }
+        maritalStatus {
+          status
+        }
+        gender {
+          gender
+        }
+        title {
+          title
+        }
+        leadsBacenta {
+          name
+        }
+        leadsCentre {
+          name
+        }
+        leadsMinistry {
+          name
+        }
+        leadsSonta {
+          name
+        }
+        leadsBasonta {
+          name
+        }
+        leadsTown {
+          name
+        }
+        leadsCampus {
+          name
+        }
+        townBishop {
+          name
+        }
+        campusBishop {
+          id
+          name
+        }
+        isBishopAdminFor {
+          id
+          firstName
+          lastName
+        }
+        isCampusAdminFor {
+          id
+          name
+        }
+        isTownAdminFor {
+          id
+          name
+        }
       }
     }
   }
@@ -470,75 +471,75 @@ export const GET_BACENTA_MEMBERS = gql`
     bacentas(where: { id: $id }) {
       id
       name
-    }
-    bacentaMemberList(id: $id) {
-      id
-      firstName
-      lastName
-      pictureUrl
-      bacenta {
-        name
-      }
-      ministry {
-        name
-      }
-      maritalStatus {
-        status
-      }
-      gender {
-        gender
-      }
-      title {
-        title
-      }
-      leadsBacenta {
-        id
-        name
-      }
-      leadsCentre {
-        id
-        name
-      }
-      leadsMinistry {
-        id
-        name
-      }
-      leadsSonta {
-        id
-        name
-      }
-      leadsBasonta {
-        id
-        name
-      }
-      leadsTown {
-        id
-        name
-      }
-      leadsCampus {
-        id
-        name
-      }
-      townBishop {
-        id
-        name
-      }
-      campusBishop {
-        id
-        name
-      }
-      isBishopAdminFor {
+      members {
         id
         firstName
         lastName
-      }
-      isCampusAdminFor {
-        id
-        name
-      }
-      isTownAdminFor {
-        id
-        name
+        pictureUrl
+        bacenta {
+          name
+        }
+        ministry {
+          name
+        }
+        maritalStatus {
+          status
+        }
+        gender {
+          gender
+        }
+        title {
+          title
+        }
+        leadsBacenta {
+          id
+          name
+        }
+        leadsCentre {
+          id
+          name
+        }
+        leadsMinistry {
+          id
+          name
+        }
+        leadsSonta {
+          id
+          name
+        }
+        leadsBasonta {
+          id
+          name
+        }
+        leadsTown {
+          id
+          name
+        }
+        leadsCampus {
+          id
+          name
+        }
+        townBishop {
+          id
+          name
+        }
+        campusBishop {
+          id
+          name
+        }
+        isBishopAdminFor {
+          id
+          firstName
+          lastName
+        }
+        isCampusAdminFor {
+          id
+          name
+        }
+        isTownAdminFor {
+          id
+          name
+        }
       }
     }
   }
@@ -546,84 +547,84 @@ export const GET_BACENTA_MEMBERS = gql`
 
 export const GET_SONTA_MEMBERS = gql`
   query($id: ID) {
-    displaySonta(id: $id) {
+    sontas(where: { id: $id }) {
       id
       name
-    }
-    sontaMemberList(id: $id, orderBy: firstName_asc) {
-      id
-      firstName
-      lastName
-      pictureUrl
-      bacenta {
-        name
-      }
-      ministry {
-        name
-      }
-      maritalStatus {
-        status
-      }
-      gender {
-        gender
-      }
-      title {
-        Title {
-          title
-        }
-        status
-        yearAppointed {
-          year
-        }
-      }
-      leadsBacenta {
-        id
-        name
-      }
-      leadsCentre {
-        id
-        name
-      }
-      leadsMinistry {
-        id
-        name
-      }
-      leadsSonta {
-        id
-        name
-      }
-      leadsBasonta {
-        id
-        name
-      }
-      leadsTown {
-        id
-        name
-      }
-      leadsCampus {
-        id
-        name
-      }
-      townBishop {
-        id
-        name
-      }
-      campusBishop {
-        id
-        name
-      }
-      isBishopAdminFor {
+      members {
         id
         firstName
         lastName
-      }
-      isCampusAdminFor {
-        id
-        name
-      }
-      isTownAdminFor {
-        id
-        name
+        pictureUrl
+        bacenta {
+          name
+        }
+        ministry {
+          name
+        }
+        maritalStatus {
+          status
+        }
+        gender {
+          gender
+        }
+        title {
+          Title {
+            title
+          }
+          status
+          yearAppointed {
+            year
+          }
+        }
+        leadsBacenta {
+          id
+          name
+        }
+        leadsCentre {
+          id
+          name
+        }
+        leadsMinistry {
+          id
+          name
+        }
+        leadsSonta {
+          id
+          name
+        }
+        leadsBasonta {
+          id
+          name
+        }
+        leadsTown {
+          id
+          name
+        }
+        leadsCampus {
+          id
+          name
+        }
+        townBishop {
+          id
+          name
+        }
+        campusBishop {
+          id
+          name
+        }
+        isBishopAdminFor {
+          id
+          firstName
+          lastName
+        }
+        isCampusAdminFor {
+          id
+          name
+        }
+        isTownAdminFor {
+          id
+          name
+        }
       }
     }
   }

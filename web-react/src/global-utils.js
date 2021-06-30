@@ -195,3 +195,13 @@ export const compareValues = (key, order = 'asc') => {
     return order === 'desc' ? comparison * -1 : comparison
   }
 }
+
+export const average = (array) => {
+  var i = 0,
+    sum = 0,
+    len = array.length
+  while (i < len) {
+    sum = sum + array[i++]
+  }
+  return sum / len
+}

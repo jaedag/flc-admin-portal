@@ -6,7 +6,6 @@ import { DISPLAY_MEMBER } from '../../queries/ReadQueries'
 import ErrorScreen from '../../components/ErrorScreen'
 import LoadingScreen from '../../components/LoadingScreen'
 import { MemberContext } from '../../contexts/MemberContext'
-import { ChurchContext } from '../../contexts/ChurchContext'
 import userIcon from '../../img/user.png'
 import Timeline from '../../components/Timeline/Timeline'
 import { getNameWithTitle, getMemberDob } from '../../global-utils'
@@ -14,7 +13,6 @@ import MemberRankList from '../../components/MemberRankList'
 
 const DisplayMemberDetails = () => {
   const { memberId } = useContext(MemberContext)
-  const { church } = useContext(ChurchContext)
 
   const { data: memberData, loading: memberLoading } = useQuery(
     DISPLAY_MEMBER,
@@ -234,18 +232,7 @@ const DisplayMemberDetails = () => {
                         </div>
                         <div className="col">
                           <p className="font-weight-bold card-text">
-                            {member?.bacenta?.centre
-                              ? member?.bacenta?.centre[`${church.church}`]
-                                  ?.bishop
-                                ? `${
-                                    member.bacenta.centre[`${church.church}`]
-                                      .bishop.firstName
-                                  } ${
-                                    member.bacenta.centre[`${church.church}`]
-                                      .bishop.lastName
-                                  }`
-                                : null
-                              : null}
+                            {member?.bishop.fullName}
                           </p>
                         </div>
                       </div>

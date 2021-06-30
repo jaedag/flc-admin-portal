@@ -81,7 +81,7 @@ const UpdateBacenta = () => {
 
   const [UpdateBacenta] = useMutation(UPDATE_BACENTA, {
     onCompleted: (updatedInfo) => {
-      let newLeaderInfo = updatedInfo.UpdateBacenta?.leader
+      let newLeaderInfo = updatedInfo.UpdateBacentaDetails
       //Log if the Leader Changes
 
       if (newLeaderInfo?.id !== initialValues.leaderSelect) {
@@ -110,7 +110,7 @@ const UpdateBacenta = () => {
   const [RemoveBacentaCentre] = useMutation(REMOVE_BACENTA_CENTRE)
 
   const [AddBacentaCentre] = useMutation(ADD_BACENTA_CENTRE, {
-    onCompleted: (newCentre) => {
+    onCompleted: (data) => {
       if (initialValues.centreSelect) {
         //Remove Link to the old Bacenta
         RemoveBacentaCentre({
@@ -127,12 +127,10 @@ const UpdateBacenta = () => {
           bacentaId: bacentaId,
           newLeaderId: '',
           oldLeaderId: '',
-          newCentreId: newCentre.AddBacentaCentre.from
-            ? newCentre.AddBacentaCentre.from.id
-            : '',
+          newCentreId: data.updateBacentas.bacentas[0]?.centre.id ?? '',
           oldCentreId: bacentaData?.centre ? bacentaData?.centre.id : null,
           loggedBy: currentUser.id,
-          historyRecord: `${initialValues.bacentaName} Bacenta has been moved from ${bacentaData?.centre.name} Centre to ${newCentre.AddBacentaCentre.from.name} Centre`,
+          historyRecord: `${initialValues.bacentaName} Bacenta has been moved from ${bacentaData?.centre.name} Centre to ${data.updateBacentas.bacentas[0]?.centre.name} Centre`,
         },
       })
     },
@@ -142,10 +140,10 @@ const UpdateBacenta = () => {
     return <LoadingScreen />
   } else if (bacentaData && campuses && towns) {
     const townOptions = towns
-      ? makeSelectOptions(towns.members[0].townBishop)
+      ? makeSelectOptions(towns.members[0]?.townBishop)
       : []
     const campusOptions = campuses
-      ? makeSelectOptions(campuses.members[0].campusBishop)
+      ? makeSelectOptions(campuses.members[0]?.campusBishop)
       : []
 
     //onSubmit receives the form state as argument

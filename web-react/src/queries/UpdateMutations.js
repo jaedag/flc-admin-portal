@@ -133,16 +133,9 @@ export const UPDATE_BACENTA = gql`
       venueLongitude: $venueLongitude
     ) {
       id
-      name
-      meetingDay {
-        day
-      }
-      leader {
-        id
-        firstName
-        lastName
-        whatsappNumber
-      }
+      firstName
+      lastName
+      whatsappNumber
     }
   }
 `

@@ -1302,7 +1302,7 @@ type Mutation {
     leaderId: ID
     venueLongitude: Float
     venueLatitude: Float
-  ): Bacenta
+  ): Member
     @auth(
       rules: [{ roles: ["federalAdmin", "bishopAdmin", "constituencyAdmin"] }]
     )
@@ -1332,8 +1332,8 @@ type Mutation {
                       MERGE (bacenta)-[:MEETS_ON]->(meetingDay)
                      	RETURN count(bacenta)
                      	}
-
-      RETURN bacenta
+      MATCH (bacenta)-[:LEADS]-(leader:Member)
+      RETURN leader
       """
     )
   #DIFFERENT LOG HISTORY MUTATIONS

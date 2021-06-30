@@ -47,25 +47,6 @@ export const BACENTA_DROPDOWN = gql`
   }
 `
 
-export const BISHOP_BACENTA_DROPDOWN = gql`
-  query($id: ID, $bacentaName: String) {
-    bishopBacentaDropdown(id: $id, bacentaName: $bacentaName) {
-      id
-      name
-      centre {
-        campus {
-          id
-          name
-        }
-        town {
-          id
-          name
-        }
-      }
-    }
-  }
-`
-
 export const BISHOP_MEMBER_DROPDOWN = gql`
   query($id: ID, $nameSearch: String) {
     bishopMemberDropdown(id: $id, nameSearch: $nameSearch) {

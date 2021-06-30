@@ -8,7 +8,6 @@ import FormikControl from '../../components/formik-components/FormikControl'
 import {
   GET_BISHOP_CAMPUSES,
   GET_BISHOP_TOWNS,
-  BISHOP_BACENTA_DROPDOWN,
   GET_CAMPUS_CENTRES,
   GET_TOWN_CENTRES,
   BISHOP_MEMBER_DROPDOWN,
@@ -21,6 +20,7 @@ import { ChurchContext } from '../../contexts/ChurchContext'
 import PlusSign from '../../components/buttons/PlusSign'
 import MinusSign from '../../components/buttons/MinusSign'
 import { capitalise, makeSelectOptions } from '../../global-utils'
+import { BISHOP_BACENTA_DROPDOWN } from '../../components/formik-components/ComboboxQueries'
 
 function CreateCentre() {
   const initialValues = {
@@ -169,7 +169,7 @@ function CreateCentre() {
                           const { bacentas } = values
 
                           return (
-                            <div>
+                            <>
                               {bacentas.map((bacentas, index) => (
                                 <div key={index} className="form-row row-cols">
                                   <div className="col-9">
@@ -203,7 +203,7 @@ function CreateCentre() {
                                   </div>
                                 </div>
                               ))}
-                            </div>
+                            </>
                           )
                         }}
                       </FieldArray>

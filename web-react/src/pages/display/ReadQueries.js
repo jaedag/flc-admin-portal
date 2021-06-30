@@ -366,10 +366,10 @@ export const DISPLAY_CENTRE = gql`
       }
       history(options: { limit: 10 }) {
         id
-        # timeStamp
-        # created_at {
-        #   date
-        # }
+        timeStamp
+        created_at {
+          date
+        }
         loggedBy {
           id
           firstName

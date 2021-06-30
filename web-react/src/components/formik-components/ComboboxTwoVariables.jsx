@@ -25,16 +25,34 @@ function ComboboxTwoVariables(props) {
 
   const [query] = useLazyQuery(optionsQuery, {
     onCompleted: (data) => {
-      setSuggestions(
-        data[`${dataset}`].map((row) => {
-          return {
-            name: row[`${suggestionText}`],
-            id: row.id,
-            firstName: row.firstName,
-            lastName: row.lastName,
-          }
-        })
-      )
+      if (dataset === 'members[0].bacentas') {
+        setSuggestions(
+          data.members[0].bacentas.map((row) => {
+            // console.log(row);
+            return {
+              id: row.id,
+              name: row[`${suggestionText}`],
+              //if any type of church
+              centre: row.centre,
+            }
+          })
+        )
+      } else {
+        setSuggestions(
+          data[`${dataset}`].map((row) => {
+            // console.log(row);
+            return {
+              id: row.id,
+              name: row[`${suggestionText}`],
+              //if members
+              firstName: row.firstName,
+              lastName: row.lastName,
+              //if any type of church
+              centre: row.centre,
+            }
+          })
+        )
+      }
     },
   })
 
@@ -98,7 +116,11 @@ function ComboboxTwoVariables(props) {
           }
 
           setDebouncedText(suggestion.name)
-          setFieldValue(`${name}`, suggestion.id)
+          if (props.returnObject) {
+            setFieldValue(`${name}`, suggestion)
+          } else {
+            setFieldValue(`${name}`, suggestion.id)
+          }
         }}
         getSuggestionValue={(suggestion) =>
           `${

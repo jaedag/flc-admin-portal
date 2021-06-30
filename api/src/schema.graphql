@@ -35,6 +35,15 @@ type Member {
       RETURN DISTINCT bishop
       """
     )
+  bacentas(search:String): [Bacenta] @cypher(statement:"""
+  MATCH (this)
+  OPTIONAL MATCH (this)-[:HAS_CAMPUS|HAS_TOWN]->()-[:HAS_CENTRE]->(centre:Centre)
+  OPTIONAL MATCH (centre)-[:HAS_BACENTA]-(bacenta)
+  WHERE toLower(bacenta.name) CONTAINS toLower($search) 
+  WITH bacenta WHERE bacenta IS NOT NULL
+  RETURN bacenta
+  """
+  )
   leadsBacenta: [Bacenta] @relationship(type: "LEADS", direction: OUT)
   leadsCentre: [Centre] @relationship(type: "LEADS", direction: OUT)
   leadsMinistry: [Ministry] @relationship(type: "LEADS", direction: OUT)
@@ -548,7 +557,8 @@ type Query {
   townMemberCount(id: ID): Int!
     @cypher(
       statement: """
-      MATCH (campusTown:Town {id:$id})-[:HAS_CENTRE]->(centre:Centre)-[:HAS_BACENTA]->(bacenta:Bacenta)
+      MATCH (campusTown:Town {id:$id})
+      OPTIONAL MATCH (campusTown)-[:HAS_CENTRE]->(centre:Centre)-[:HAS_BACENTA]->(bacenta:Bacenta)
       OPTIONAL MATCH (bacenta)<-[:BELONGS_TO*]-(member:Member)
       OPTIONAL MATCH (bacenta)<-[:LEADS]-(bacentaLeader:Member)
       OPTIONAL MATCH (centre)<-[:LEADS]-(centreLeader:Member)
@@ -592,7 +602,8 @@ type Query {
   campusMemberCount(id: ID): Int!
     @cypher(
       statement: """
-      MATCH (campusTown:Campus {id:$id})-[:HAS_CENTRE]->(centre:Centre)-[:HAS_BACENTA]->(bacenta:Bacenta)
+      MATCH (campusTown:Campus {id:$id})
+      OPTIONAL MATCH (campusTown)-[:HAS_CENTRE]->(centre:Centre)-[:HAS_BACENTA]->(bacenta:Bacenta)
       OPTIONAL MATCH (bacenta)<-[:BELONGS_TO*]-(member:Member)
       OPTIONAL MATCH (bacenta)<-[:LEADS]-(bacentaLeader:Member)
       OPTIONAL MATCH (centre)<-[:LEADS]-(centreLeader:Member)
@@ -632,7 +643,8 @@ type Query {
   centreMemberCount(id: ID): Int!
     @cypher(
       statement: """
-      MATCH (centre:Centre {id:$id})-[:HAS_BACENTA]->(bacenta:Bacenta)
+      MATCH (centre:Centre {id:$id})
+      OPTIONAL MATCH (centre)-[:HAS_BACENTA]->(bacenta:Bacenta)
       OPTIONAL MATCH (bacenta)<-[:BELONGS_TO*]-(member:Member)
       OPTIONAL MATCH (bacenta)<-[:LEADS]-(bacentaLeader:Member)
       OPTIONAL MATCH (centre)<-[:LEADS]-(centreLeader:Member)
@@ -1269,7 +1281,7 @@ type Mutation {
     centreName: String
     leaderId: ID
     campusTownId: ID
-  ): Centre
+  ): Member
     @auth(
       rules: [{ roles: ["federalAdmin", "bishopAdmin", "constituencyAdmin"] }]
     )
@@ -1299,8 +1311,8 @@ type Mutation {
             MERGE (campusTown)-[:HAS_CENTRE]->(centre)
          	RETURN count(centre)
          	}
-
-      RETURN centre
+      MATCH (centre)<-[:LEADS]-(leader:Member)
+      RETURN leader
       """
     )
   UpdateBacentaDetails(

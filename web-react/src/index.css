@@ -29,6 +29,12 @@
   background-color: var(--text-box-inner);
 }
 
+a,
+a:hover,
+a:active {
+  color: white;
+}
+
 .spinner-border-center {
   margin-left: auto;
   margin-right: auto;

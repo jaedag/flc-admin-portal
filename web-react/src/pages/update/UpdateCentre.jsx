@@ -7,7 +7,6 @@ import { capitalise, makeSelectOptions } from '../../global-utils'
 import FormikControl from '../../components/formik-components/FormikControl'
 
 import {
-  BISHOP_BACENTA_DROPDOWN,
   BISHOP_MEMBER_DROPDOWN,
   GET_BISHOP_CAMPUSES,
   GET_CAMPUS_CENTRES,
@@ -23,6 +22,7 @@ import {
   REMOVE_CENTRE_CAMPUS,
   UPDATE_CENTRE_MUTATION,
 } from './UpdateMutations'
+import { BISHOP_BACENTA_DROPDOWN } from '../../components/formik-components/ComboboxQueries'
 import NavBar from '../../components/nav/NavBar'
 import ErrorScreen from '../../components/ErrorScreen'
 import LoadingScreen from '../../components/LoadingScreen'
@@ -76,9 +76,7 @@ const UpdateCentre = () => {
     leaderSelect: centre?.leader?.id,
     campusTownSelect:
       church.church === 'town' ? centre?.town?.id : centre?.campus?.id,
-    bacentas: centre?.bacentas?.length
-      ? centreData.displayCentre?.bacentas
-      : [''],
+    bacentas: centre?.bacentas.length ? centre?.bacentas : [''],
   }
 
   const validationSchema = Yup.object({
@@ -103,7 +101,7 @@ const UpdateCentre = () => {
 
   const [UpdateCentre] = useMutation(UPDATE_CENTRE_MUTATION, {
     onCompleted: (updatedInfo) => {
-      let newLeaderInfo = updatedInfo.UpdateCentre?.leader
+      let newLeaderInfo = updatedInfo.UpdateCentreDetails
       //Log if the Leader Changes
 
       if (newLeaderInfo.id !== initialValues.leaderSelect) {
@@ -137,37 +135,37 @@ const UpdateCentre = () => {
 
   //Changes downwards.ie. Changes to the Bacentas underneath the Centre
   const [AddCentreBacentas] = useMutation(ADD_CENTRE_BACENTAS)
-  const [RemoveBacentaCentre] = useMutation(REMOVE_BACENTA_CENTRE, {
+  const [RemoveBacentaFromCentre] = useMutation(REMOVE_BACENTA_CENTRE, {
     onCompleted: (data) => {
-      let prevCentre = data.RemoveBacentaCentre?.from
+      let prevCentre = data.updateCentres.centres[0]
+      let bacenta = data.updateBacentas.bacentas[0]
       let newCentreId = ''
       let oldCentreId = ''
       let historyRecord
 
-      if (data.RemoveBacentaCentre.from.id === centreId) {
+      if (prevCentre.id === centreId) {
         //Bacenta has previous centre which is current centre and is going
         oldCentreId = centreId
         newCentreId = ''
-        historyRecord = `${data.RemoveBacentaCentre.to.name}
-      Bacenta has been moved from ${initialValues.centreName} Centre`
+        historyRecord = `${bacenta.name}
+      Bacenta has been closed down under ${initialValues.centreName} Centre`
       } else if (prevCentre.id !== centreId) {
         //Bacenta has previous centre which is not current centre and is joining
         oldCentreId = prevCentre.id
         newCentreId = centreId
-        historyRecord = `${data.RemoveBacentaCentre.to.name} 
-      Bacenta has been moved to ${initialValues.centreName} Centre 
+        historyRecord = `${bacenta.name}
+      Bacenta has been moved to ${initialValues.centreName} Centre
       from ${prevCentre.name} Centre`
       }
 
       //After removing the bacenta from a centre, then you log that change.
       LogBacentaHistory({
         variables: {
-          bacentaId: data.RemoveBacentaCentre?.to.id,
+          bacentaId: bacenta.id,
           newLeaderId: '',
           oldLeaderId: '',
           newCentreId: newCentreId,
           oldCentreId: oldCentreId,
-          loggedBy: currentUser.id,
           historyRecord: historyRecord,
         },
       })
@@ -380,7 +378,7 @@ const UpdateCentre = () => {
       })
 
       removeBacentas.forEach((bacenta) => {
-        RemoveBacentaCentre({
+        RemoveBacentaFromCentre({
           variables: {
             centreId: centreId,
             bacentaId: bacenta,
@@ -389,14 +387,14 @@ const UpdateCentre = () => {
       })
       addBacentas.forEach((bacenta) => {
         if (bacenta.centre) {
-          RemoveBacentaCentre({
+          RemoveBacentaFromCentre({
             variables: {
               centreId: bacenta.centre.id,
               bacentaId: bacenta.id,
             },
           })
         } else {
-          //Bacenta has no previous centre and is now joining. ie. RemoveBacentaCentre won't run
+          //Bacenta has no previous centre and is now joining. ie. RemoveBacentaFromCentre won't run
           LogBacentaHistory({
             variables: {
               bacentaId: bacenta.id,
@@ -406,7 +404,7 @@ const UpdateCentre = () => {
               oldCentreId: '',
               loggedBy: currentUser.id,
               historyRecord: `${bacenta.name} 
-              Bacenta has been moved to ${initialValues.centreName} Centre`,
+              Bacenta has been started again under ${initialValues.centreName} Centre`,
             },
           })
         }
@@ -503,12 +501,9 @@ const UpdateCentre = () => {
                           const { push, remove, form } = fieldArrayProps
                           const { values } = form
                           const { bacentas } = values
-                          if (!bacentas) {
-                            return null
-                          }
 
                           return (
-                            <div>
+                            <>
                               {bacentas.map((bacenta, index) => (
                                 <div key={index} className="form-row row-cols">
                                   <div className="col-9">
@@ -524,8 +519,9 @@ const UpdateCentre = () => {
                                       queryVariable2="bacentaName"
                                       suggestionText="name"
                                       suggestionID="id"
-                                      dataset="bishopBacentaDropdown"
+                                      dataset="members[0].bacentas"
                                       aria-describedby="Bacenta Name"
+                                      returnObject={true}
                                       className="form-control"
                                       error={
                                         formik.errors.bacentas &&
@@ -543,7 +539,7 @@ const UpdateCentre = () => {
                                   </div>
                                 </div>
                               ))}
-                            </div>
+                            </>
                           )
                         }}
                       </FieldArray>

@@ -9,13 +9,11 @@ import {
   MARITAL_STATUS_OPTIONS,
   TITLE_OPTIONS,
 } from '../../global-utils'
-import {
-  BISHOP_BACENTA_DROPDOWN,
-  GET_MINISTRIES,
-} from '../../queries/ListQueries'
+import { GET_MINISTRIES } from '../../queries/ListQueries'
 import MinusSign from '../buttons/MinusSign'
 import PlusSign from '../buttons/PlusSign'
 import ErrorScreen from '../ErrorScreen'
+import { BISHOP_BACENTA_DROPDOWN } from '../formik-components/ComboboxQueries'
 import FormikControl from '../formik-components/FormikControl'
 import { HeadingBar } from '../HeadingBar/HeadingBar'
 import LoadingScreen from '../LoadingScreen'

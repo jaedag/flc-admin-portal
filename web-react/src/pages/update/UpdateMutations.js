@@ -104,13 +104,9 @@ export const UPDATE_CENTRE_MUTATION = gql`
       campusTownId: $campusTownId
     ) {
       id
-      name
-      leader {
-        id
-        firstName
-        lastName
-        whatsappNumber
-      }
+      firstName
+      lastName
+      whatsappNumber
     }
   }
 `
@@ -236,16 +232,24 @@ export const REMOVE_CENTRE_BACENTAS = gql`
 `
 
 export const REMOVE_BACENTA_CENTRE = gql`
-  mutation RemoveBacentaCentre($centreId: ID!, $bacentaId: ID!) {
+  mutation RemoveBacentaFromCentre($centreId: ID!, $bacentaId: ID!) {
     updateBacentas(
       where: { id: $bacentaId }
       disconnect: { centre: { where: { id: $centreId } } }
     ) {
       bacentas {
+        id
+        name
         centre {
           id
           name
         }
+      }
+    }
+    updateCentres(where: { id: $centreId }) {
+      centres {
+        id
+        name
       }
     }
   }

@@ -25,15 +25,27 @@ function ComboboxTwoVariables(props) {
 
   const [query] = useLazyQuery(optionsQuery, {
     onCompleted: (data) => {
-      if (dataset === 'members[0].bacentas') {
+      if (props.church === 'bacenta') {
         setSuggestions(
           data.members[0].bacentas.map((row) => {
-            // console.log(row);
             return {
               id: row.id,
               name: row[`${suggestionText}`],
               //if any type of church
               centre: row.centre,
+            }
+          })
+        )
+      } else if (props.church === 'constituency') {
+        setSuggestions(
+          data.members[0].centres.map((row) => {
+            return {
+              id: row.id,
+              name: row[`${suggestionText}`],
+              //if any type of church
+              centre: row.centre,
+              campus: row.campus,
+              town: row.town,
             }
           })
         )

@@ -8,7 +8,7 @@ import Spinner from '../../components/Spinner.jsx'
 import Logo from '../../img/flc-logo-small.png'
 import { MemberContext } from '../../contexts/MemberContext'
 
-const BishopSelect = () => {
+const FederalAdminDashboard = () => {
   const { determineStream } = useContext(ChurchContext)
   const { currentUser } = useContext(MemberContext)
   const { data, loading } = useQuery(GET_BISHOPS)
@@ -79,7 +79,7 @@ const BishopSelect = () => {
 
           <h3>FLC Admin Dashboard </h3>
           <h4>{`Hi There ${currentUser.firstName}`}</h4>
-          <h5 className="text-secondary">Select Your Bishop</h5>
+          <h5 className="text-secondary">Select a Bishop</h5>
         </div>
         <div className="row row-cols-sm-1 row-cols-lg-4 d-flex justify-content-center px-5">
           {data.members.map((bishop, index) => {
@@ -133,4 +133,4 @@ const BishopSelect = () => {
   }
 }
 
-export default BishopSelect
+export default FederalAdminDashboard

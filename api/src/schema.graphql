@@ -35,15 +35,27 @@ type Member {
       RETURN DISTINCT bishop
       """
     )
-  bacentas(search:String): [Bacenta] @cypher(statement:"""
-  MATCH (this)
-  OPTIONAL MATCH (this)-[:HAS_CAMPUS|HAS_TOWN]->()-[:HAS_CENTRE]->(centre:Centre)
-  OPTIONAL MATCH (centre)-[:HAS_BACENTA]-(bacenta)
-  WHERE toLower(bacenta.name) CONTAINS toLower($search) 
-  WITH bacenta WHERE bacenta IS NOT NULL
-  RETURN bacenta
-  """
-  )
+  bacentas(search: String): [Bacenta]
+    @cypher(
+      statement: """
+      MATCH (this)
+      OPTIONAL MATCH (this)-[:HAS_CAMPUS|HAS_TOWN]->()-[:HAS_CENTRE]->(centre:Centre)
+      OPTIONAL MATCH (centre)-[:HAS_BACENTA]-(bacenta)
+      WHERE toLower(bacenta.name) CONTAINS toLower($search)
+      WITH bacenta WHERE bacenta IS NOT NULL
+      RETURN bacenta
+      """
+    )
+  centres(search: String): [Centre]
+    @cypher(
+      statement: """
+      MATCH (this)
+      OPTIONAL MATCH (this)-[:HAS_CAMPUS|HAS_TOWN]->()-[:HAS_CENTRE]->(centre:Centre)
+      WHERE toLower(centre.name) CONTAINS toLower($search)
+      WITH centre WHERE centre IS NOT NULL
+      RETURN centre
+      """
+    )
   leadsBacenta: [Bacenta] @relationship(type: "LEADS", direction: OUT)
   leadsCentre: [Centre] @relationship(type: "LEADS", direction: OUT)
   leadsMinistry: [Ministry] @relationship(type: "LEADS", direction: OUT)
@@ -1210,7 +1222,7 @@ type Mutation {
     townName: String!
     leaderId: ID!
     bishopId: ID!
-  ): Town
+  ): Member
     @auth(rules: [{ roles: ["federalAdmin", "bishopAdmin"] }])
     @cypher(
       statement: """
@@ -1237,7 +1249,8 @@ type Mutation {
          	RETURN count(town)
          	}
 
-      RETURN town
+      MATCH (town)<-[:LEADS]-(leader:Member)
+      RETURN leader
       """
     )
   UpdateCampusDetails(
@@ -1245,35 +1258,35 @@ type Mutation {
     campusName: String!
     leaderId: ID!
     bishopId: ID!
-  ): Campus
+  ): Member
     @auth(rules: [{ roles: ["federalAdmin", "bishopAdmin"] }])
     @cypher(
       statement: """
-      MATCH (campus:Campus {id: $campusId})
-      	SET campus.name = $campusName
+           MATCH (campus:Campus {id: $campusId})
+           	SET campus.name = $campusName
 
-      WITH campus
-         CALL {
-         	WITH campus
-             MATCH (leader:Member {id: $leaderId})
-             OPTIONAL MATCH (campus)<-[r:LEADS]-()
-             DELETE r
-             MERGE (leader)-[:LEADS]->(campus)
-         	RETURN count(campus)
-         	}
+           WITH campus
+              CALL {
+              	WITH campus
+                  MATCH (leader:Member {id: $leaderId})
+                  OPTIONAL MATCH (campus)<-[r:LEADS]-()
+                  DELETE r
+                  MERGE (leader)-[:LEADS]->(campus)
+              	RETURN count(campus)
+              	}
 
-      WITH campus
-         CALL {
-         	WITH campus
+           WITH campus
+              CALL {
+              	WITH campus
 
-             MATCH (bishop:Member {id: $bishopId})
-             OPTIONAL MATCH (campus)<-[r:HAS_CAMPUS]-()
-             DELETE r
-             MERGE (bishop)-[:HAS_CAMPUS]->(campus)
-         	RETURN count(campus)
-         	}
-
-      RETURN campus
+                  MATCH (bishop:Member {id: $bishopId})
+                  OPTIONAL MATCH (campus)<-[r:HAS_CAMPUS]-()
+                  DELETE r
+                  MERGE (bishop)-[:HAS_CAMPUS]->(campus)
+              	RETURN count(campus)
+              	}
+      MATCH (campus)<-[:LEADS]-(leader:Member)
+      RETURN leader
       """
     )
   UpdateCentreDetails(

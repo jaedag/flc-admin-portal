@@ -74,23 +74,6 @@ export const CENTRE_DROPDOWN = gql`
   }
 `
 
-export const BISHOP_CENTRE_DROPDOWN = gql`
-  query($id: ID!, $nameSearch: String!) {
-    bishopCentreDropdown(id: $id, nameSearch: $nameSearch) {
-      id
-      name
-      campus {
-        id
-        name
-      }
-      town {
-        id
-        name
-      }
-    }
-  }
-`
-
 export const GET_TOWN_CENTRES = gql`
   query($id: ID) {
     centres(where: { town: { id: $id } }) {

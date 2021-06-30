@@ -31,7 +31,6 @@ import { DISPLAY_CENTRE } from '../display/ReadQueries'
 import { LOG_CENTRE_HISTORY, LOG_BACENTA_HISTORY } from './LogMutations'
 import PlusSign from '../../components/buttons/PlusSign'
 import MinusSign from '../../components/buttons/MinusSign'
-import { MemberContext } from '../../contexts/MemberContext'
 
 const UpdateCentre = () => {
   const {
@@ -43,7 +42,6 @@ const UpdateCentre = () => {
     campusId,
     bishopId,
   } = useContext(ChurchContext)
-  const { currentUser } = useContext(MemberContext)
 
   const { data: centreData, loading: centreLoading } = useQuery(
     DISPLAY_CENTRE,
@@ -112,7 +110,6 @@ const UpdateCentre = () => {
             oldLeaderId: centre?.leader.id,
             oldCampusTownId: '',
             newCampusTownId: '',
-            loggedBy: currentUser.id,
             historyRecord: `${newLeaderInfo.firstName} ${newLeaderInfo.lastName} was transferred to become the new Centre Leader for ${initialValues.centreName} replacing ${centre?.leader.firstName} ${centre?.leader.lastName}`,
           },
         })
@@ -147,15 +144,12 @@ const UpdateCentre = () => {
         //Bacenta has previous centre which is current centre and is going
         oldCentreId = centreId
         newCentreId = ''
-        historyRecord = `${bacenta.name}
-      Bacenta has been closed down under ${initialValues.centreName} Centre`
+        historyRecord = `${bacenta.name} Bacenta has been closed down under ${initialValues.centreName} Centre`
       } else if (prevCentre.id !== centreId) {
         //Bacenta has previous centre which is not current centre and is joining
         oldCentreId = prevCentre.id
         newCentreId = centreId
-        historyRecord = `${bacenta.name}
-      Bacenta has been moved to ${initialValues.centreName} Centre
-      from ${prevCentre.name} Centre`
+        historyRecord = `${bacenta.name} Bacenta has been moved to ${initialValues.centreName} Centre from ${prevCentre.name} Centre`
       }
 
       //After removing the bacenta from a centre, then you log that change.
@@ -193,7 +187,6 @@ const UpdateCentre = () => {
             oldLeaderId: '',
             newCampusTownId: newTown.AddCentreTown.from.id,
             oldCampusTownId: centre?.town.id,
-            loggedBy: currentUser.id,
             historyRecord: recordIfNoOldTown,
           },
         })
@@ -222,7 +215,6 @@ const UpdateCentre = () => {
             oldLeaderId: '',
             newCampusTownId: newTown.AddCentreTown.from.id,
             oldCampusTownId: centre?.town.id,
-            loggedBy: currentUser.id,
             historyRecord: recordIfOldTown,
           },
         })
@@ -246,7 +238,6 @@ const UpdateCentre = () => {
             oldLeaderId: '',
             newCampusTownId: newCampus.AddCentreCampus.from.id,
             oldCampusTownId: centre?.campus.id,
-            loggedBy: currentUser.id,
             historyRecord: recordIfNoOldCampus,
           },
         })
@@ -277,7 +268,6 @@ const UpdateCentre = () => {
             oldLeaderId: '',
             newCampusTownId: newCampus.AddCentreCampus.from.id,
             oldCampusTownId: centre?.campus.id,
-            loggedBy: currentUser.id,
             historyRecord: recordIfOldCampus,
           },
         })
@@ -323,8 +313,7 @@ const UpdateCentre = () => {
             oldLeaderId: '',
             oldCampusTownId: '',
             newCampusTownId: '',
-            loggedBy: currentUser.id,
-            historyRecord: `The Centre name has been changed from ${initialValues.centreName} to ${values.centreName}`,
+            historyRecord: `Centre name has been changed from ${initialValues.centreName} to ${values.centreName}`,
           },
         })
       }
@@ -402,7 +391,6 @@ const UpdateCentre = () => {
               oldLeaderId: '',
               newCentreId: centreId,
               oldCentreId: '',
-              loggedBy: currentUser.id,
               historyRecord: `${bacenta.name} 
               Bacenta has been started again under ${initialValues.centreName} Centre`,
             },
@@ -451,6 +439,7 @@ const UpdateCentre = () => {
                                 ? townOptions
                                 : campusOptions
                             }
+                            label={`Select a ${capitalise(church.church)}`}
                             defaultOption={`Select a ${capitalise(
                               church.church
                             )}`}
@@ -461,6 +450,7 @@ const UpdateCentre = () => {
                             className="form-control"
                             control="input"
                             name="centreName"
+                            label={`Name of ${capitalise(church.subChurch)}`}
                             placeholder={`Name of ${capitalise(
                               church.subChurch
                             )}`}
@@ -473,6 +463,7 @@ const UpdateCentre = () => {
                             control="combobox2"
                             name="leaderSelect"
                             initialValue={initialValues.leaderName}
+                            label="Select a CentreLeader"
                             placeholder="Select a Leader"
                             setFieldValue={formik.setFieldValue}
                             optionsQuery={BISHOP_MEMBER_DROPDOWN}
@@ -519,7 +510,7 @@ const UpdateCentre = () => {
                                       queryVariable2="bacentaName"
                                       suggestionText="name"
                                       suggestionID="id"
-                                      dataset="members[0].bacentas"
+                                      church="bacenta"
                                       aria-describedby="Bacenta Name"
                                       returnObject={true}
                                       className="form-control"

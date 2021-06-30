@@ -54,13 +54,9 @@ export const UPDATE_TOWN_MUTATION = gql`
       bishopId: $bishopId
     ) {
       id
-      name
-      leader {
-        id
-        firstName
-        lastName
-        whatsappNumber
-      }
+      firstName
+      lastName
+      whatsappNumber
     }
   }
 `
@@ -79,13 +75,9 @@ export const UPDATE_CAMPUS_MUTATION = gql`
       bishopId: $bishopId
     ) {
       id
-      name
-      leader {
-        id
-        firstName
-        lastName
-        whatsappNumber
-      }
+      firstName
+      lastName
+      whatsappNumber
     }
   }
 `
@@ -159,6 +151,7 @@ export const ADD_CENTRE_CAMPUS = gql`
       connect: { campus: { where: { id: $campusId } } }
     ) {
       centres {
+        id
         campus {
           id
           name
@@ -175,9 +168,23 @@ export const REMOVE_CENTRE_TOWN = gql`
       disconnect: { town: { where: { id: $townId } } }
     ) {
       centres {
+        id
+        name
         town {
           id
           name
+          centres {
+            id
+          }
+        }
+      }
+    }
+    updateTowns(where: { id: $townId }) {
+      towns {
+        id
+        name
+        centres {
+          id
         }
       }
     }
@@ -191,10 +198,18 @@ export const REMOVE_CENTRE_CAMPUS = gql`
       disconnect: { campus: { where: { id: $campusId } } }
     ) {
       centres {
+        id
+        name
         campus {
           id
           name
         }
+      }
+    }
+    updateCampuses(where: { id: $campusId }) {
+      campuses {
+        id
+        name
       }
     }
   }
@@ -281,6 +296,12 @@ export const ADD_TOWN_BISHOP = gql`
       towns {
         id
         name
+        bishop {
+          id
+          firstName
+          lastName
+          fullName
+        }
       }
     }
   }
@@ -335,12 +356,11 @@ export const REMOVE_CAMPUS_BISHOP = gql`
 
 export const ADD_CAMPUS_CENTRES = gql`
   mutation AddCampusCentres($campusId: ID!, $centreId: ID!) {
-    AddCampusCentres(from: { id: $campusId }, to: { id: $centreId }) {
-      from {
-        id
-        name
-      }
-      to {
+    updateCampuses(
+      where: { id: $campusId }
+      connect: { centres: { where: { id: $centreId } } }
+    ) {
+      campuses {
         id
         name
       }
@@ -350,12 +370,11 @@ export const ADD_CAMPUS_CENTRES = gql`
 
 export const ADD_TOWN_CENTRES = gql`
   mutation AddTownCentres($townId: ID!, $centreId: ID!) {
-    AddTownCentres(from: { id: $townId }, to: { id: $centreId }) {
-      from {
-        id
-        name
-      }
-      to {
+    updateTowns(
+      where: { id: $townId }
+      connect: { centres: { where: { id: $centreId } } }
+    ) {
+      towns {
         id
         name
       }

@@ -439,19 +439,19 @@ export const DISPLAY_TOWN = gql`
         id
         firstName
         lastName
+        fullName
       }
       leader {
         id
         firstName
         lastName
-        whatsappNumber
       }
       history(options: { limit: 10 }) {
         id
-        # timeStamp
-        # created_at {
-        #   date
-        # }
+        timeStamp
+        created_at {
+          date
+        }
         loggedBy {
           id
           firstName
@@ -521,19 +521,19 @@ export const DISPLAY_CAMPUS = gql`
         id
         firstName
         lastName
+        fullName
       }
       leader {
         id
         firstName
         lastName
-        whatsappNumber
       }
       history(options: { limit: 10 }) {
         id
-        # timeStamp
-        # created_at {
-        #   date
-        # }
+        timeStamp
+        created_at {
+          date
+        }
         loggedBy {
           id
           firstName

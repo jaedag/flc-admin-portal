@@ -29,14 +29,11 @@ import { ChurchContext } from '../../contexts/ChurchContext'
 import { DISPLAY_BACENTA } from '../display/ReadQueries'
 import Spinner from '../../components/Spinner.jsx'
 import { LOG_BACENTA_HISTORY } from './LogMutations'
-import { MemberContext } from '../../contexts/MemberContext'
 
 const UpdateBacenta = () => {
   const { church, bishopId, centreId, setCentreId, bacentaId } = useContext(
     ChurchContext
   )
-  const { currentUser } = useContext(MemberContext)
-
   let townCampusIdVar
 
   const { data: bacentaData, loading: bacentaLoading } = useQuery(
@@ -94,7 +91,6 @@ const UpdateBacenta = () => {
             newLeaderId: newLeaderInfo?.id ?? '',
             oldCentreId: '',
             newCentreId: '',
-            loggedBy: currentUser.id,
             historyRecord: `${newLeaderInfo?.firstName} ${newLeaderInfo?.lastName} was transferred to become the new Bacenta Leader for ${initialValues.bacentaName} replacing ${bacenta?.leader.firstName} ${bacenta?.leader.lastName}`,
           },
         })
@@ -131,7 +127,6 @@ const UpdateBacenta = () => {
           oldLeaderId: '',
           newCentreId: data.updateBacentas.bacentas[0]?.centre.id ?? '',
           oldCentreId: bacenta?.centre ? bacenta?.centre.id : null,
-          loggedBy: currentUser.id,
           historyRecord: `${initialValues.bacentaName} Bacenta has been moved from ${bacenta?.centre.name} Centre to ${data.updateBacentas.bacentas[0]?.centre.name} Centre`,
         },
       })
@@ -182,7 +177,7 @@ const UpdateBacenta = () => {
             oldLeaderId: '',
             oldCentreId: '',
             newCentreId: '',
-            loggedBy: currentUser.id,
+
             historyRecord: `The Bacenta name has been changed from ${initialValues.bacentaName} to ${values.bacentaName}`,
           },
         })
@@ -197,7 +192,7 @@ const UpdateBacenta = () => {
             oldLeaderId: '',
             oldCentreId: '',
             newCentreId: '',
-            loggedBy: currentUser.id,
+
             historyRecord: `${values.bacentaName} has changed their meeting day from ${initialValues.meetingDay} to ${values.meetingDay}`,
           },
         })
@@ -215,7 +210,7 @@ const UpdateBacenta = () => {
             oldLeaderId: '',
             oldCentreId: '',
             newCentreId: '',
-            loggedBy: currentUser.id,
+
             historyRecord: `${values.bacentaName} has changed their venue`,
           },
         })

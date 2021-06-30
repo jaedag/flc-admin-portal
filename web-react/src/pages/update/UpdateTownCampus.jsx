@@ -13,7 +13,6 @@ import {
   GET_BISHOP_TOWNS,
   GET_BISHOP_CAMPUSES,
   BISHOP_MEMBER_DROPDOWN,
-  BISHOP_CENTRE_DROPDOWN,
 } from '../../queries/ListQueries'
 import { BISH_DASHBOARD_COUNTS } from '../dashboards/DashboardQueries'
 import {
@@ -36,14 +35,12 @@ import { DISPLAY_CAMPUS, DISPLAY_TOWN } from '../display/ReadQueries'
 import PlusSign from '../../components/buttons/PlusSign'
 import MinusSign from '../../components/buttons/MinusSign'
 import { LOG_CAMPUSTOWN_HISTORY, LOG_CENTRE_HISTORY } from './LogMutations'
-import { MemberContext } from '../../contexts/MemberContext'
+import { BISHOP_CENTRE_DROPDOWN } from '../../components/formik-components/ComboboxQueries'
 
 const UpdateTownCampus = () => {
   const { church, campusId, townId, bishopId, setBishopId } = useContext(
     ChurchContext
   )
-  const { currentUser } = useContext(MemberContext)
-
   const { data: campusData, loading: campusLoading } = useQuery(
     DISPLAY_CAMPUS,
     {
@@ -101,12 +98,12 @@ const UpdateTownCampus = () => {
     UPDATE_TOWN_MUTATION,
     {
       onCompleted: (updatedInfo) => {
-        let newLeaderInfo = updatedInfo.UpdateTown?.leader
+        let newLeaderInfo = updatedInfo.UpdateTownDetails
         let historyRecord
-        if (townData?.displayTown?.leader) {
-          historyRecord = `${newLeaderInfo.firstName} ${newLeaderInfo.lastName} was transferred to become the new Town CO for ${initialValues.campusTownName} replacing ${townData?.displayTown?.leader.firstName} ${townData?.displayTown?.leader.lastName}`
+        if (campusTownData?.leader) {
+          historyRecord = `${newLeaderInfo.firstName} ${newLeaderInfo.lastName} was transferred to become the new Town CO for ${initialValues.campusTownName} replacing ${campusTownData?.leader.firstName} ${campusTownData?.leader.lastName}`
         }
-        if (!townData?.displayTown?.leader) {
+        if (!campusTownData?.leader) {
           historyRecord = `${newLeaderInfo.firstName} ${newLeaderInfo.lastName} was transferred to become the new Town CO for ${initialValues.campusTownName}`
         }
 
@@ -116,12 +113,9 @@ const UpdateTownCampus = () => {
             variables: {
               campusTownId: townId,
               newLeaderId: newLeaderInfo?.id ?? '',
-              oldLeaderId: townData?.displayTown?.leader
-                ? townData.displayTown.leader?.id
-                : '',
+              oldLeaderId: campusTownData.leader?.id ?? '',
               oldBishopId: '',
               newBishopId: '',
-              loggedBy: currentUser.id,
               historyRecord: historyRecord,
             },
           })
@@ -146,7 +140,7 @@ const UpdateTownCampus = () => {
     UPDATE_CAMPUS_MUTATION,
     {
       onCompleted: (updatedInfo) => {
-        let newLeaderInfo = updatedInfo.UpdateCampus?.leader
+        let newLeaderInfo = updatedInfo.UpdateCampusDetails
         let historyRecord
         if (campusTownData?.leader) {
           historyRecord = `${newLeaderInfo.firstName} ${newLeaderInfo.lastName} was transferred to become the new Campus CO for ${initialValues.campusTownName} replacing ${campusTownData?.leader.firstName} ${campusTownData?.leader.lastName}`
@@ -160,12 +154,9 @@ const UpdateTownCampus = () => {
             variables: {
               campusTownId: campusId,
               newLeaderId: newLeaderInfo?.id ?? '',
-              oldLeaderId: campusTownData.leader
-                ? campusTownData.leader?.id
-                : '',
+              oldLeaderId: campusTownData.leader?.id ?? '',
               oldBishopId: '',
               newBishopId: '',
-              loggedBy: currentUser.id,
               historyRecord: historyRecord,
             },
           })
@@ -191,35 +182,35 @@ const UpdateTownCampus = () => {
   const [AddTownCentres] = useMutation(ADD_TOWN_CENTRES)
   const [RemoveCentreCampus] = useMutation(REMOVE_CENTRE_CAMPUS, {
     onCompleted: (data) => {
-      let prevCampus = data.RemoveCentreCampus?.from
+      if (church.church === 'town') {
+        return
+      }
+      const prevCampus = data.updateCampuses.campuses[0]
+      const centre = data.updateCentres.centres[0]
       let newCampusId = ''
       let oldCampusId = ''
       let historyRecord
 
-      if (data.RemoveCentreCampus.from.id === campusId) {
+      if (prevCampus?.id === campusId) {
         //Centre has previous campus which is current campus and is going
         oldCampusId = campusId
         newCampusId = ''
-        historyRecord = `${data.RemoveCentreCampus.to.name}
-      Centre has been moved from ${initialValues.campusTownName} Campus`
+        historyRecord = `${centre.name} Centre has been closed down under ${initialValues.campusTownName} Campus`
       } else if (prevCampus.id !== campusId) {
         //Centre has previous campus which is not current campus and is joining
         oldCampusId = prevCampus.id
         newCampusId = campusId
-        historyRecord = `${data.RemoveCentreCampus.to.name} 
-      Centre has been moved to ${initialValues.campusTownName} Campus 
-      from ${prevCampus.name} Town`
+        historyRecord = `${centre.name} Centre has been moved to ${initialValues.campusTownName} Campus from ${prevCampus.name} Campus`
       }
 
       //After removing the centre from a campus, then you log that change.
       LogCentreHistory({
         variables: {
-          centreId: data.RemoveCentreCampus?.to.id,
+          centreId: centre.id,
           newLeaderId: '',
           oldLeaderId: '',
           newCampusTownId: newCampusId,
           oldCampusTownId: oldCampusId,
-          loggedBy: currentUser.id,
           historyRecord: historyRecord,
         },
       })
@@ -227,35 +218,35 @@ const UpdateTownCampus = () => {
   })
   const [RemoveCentreTown] = useMutation(REMOVE_CENTRE_TOWN, {
     onCompleted: (data) => {
-      let prevTown = data.RemoveCentreTown?.from
+      if (church.church === 'campus') {
+        return
+      }
+      const prevTown = data.updateTowns.towns[0]
+      const centre = data.updateCentres.centres[0]
       let newTownId = ''
       let oldTownId = ''
       let historyRecord
 
-      if (data.RemoveCentreTown.from.id === townId) {
+      if (prevTown.id === townId) {
         //Centre has previous town which is current town and is going
         oldTownId = townId
         newTownId = ''
-        historyRecord = `${data.RemoveCentreTown.to.name}
-      Centre has been moved from ${initialValues.campusTownName} Town`
+        historyRecord = `${centre.name} Centre has been closed down under ${initialValues.campusTownName} Town`
       } else if (prevTown.id !== townId) {
         //Centre has previous town which is not current town and is joining
         oldTownId = prevTown.id
         newTownId = townId
-        historyRecord = `${data.RemoveCentreTown.to.name} 
-      Centre has been moved to ${initialValues.campusTownName} Town 
-      from ${prevTown.name} Town`
+        historyRecord = `${centre.name} Centre has been moved to ${initialValues.campusTownName} Town from ${prevTown.name} Town`
       }
 
       //After removing the centre from a town, then you log that change.
       LogCentreHistory({
         variables: {
-          centreId: data.RemoveCentreTown?.to.id,
+          centreId: centre.id,
           newLeaderId: '',
           oldLeaderId: '',
           newCampusTownId: newTownId,
           oldCampusTownId: oldTownId,
-          loggedBy: currentUser.id,
           historyRecord: historyRecord,
         },
       })
@@ -278,7 +269,6 @@ const UpdateTownCampus = () => {
             oldLeaderId: '',
             newBishopId: data.updateCampuses.campuses[0].bishop.id,
             oldBishopId: campusTownData?.bishop.id,
-            loggedBy: currentUser.id,
             historyRecord: recordIfNoOldBishop,
           },
         })
@@ -304,7 +294,6 @@ const UpdateTownCampus = () => {
             oldLeaderId: '',
             newBishopId: data.updateCampuses.campuses[0].bishop.id,
             oldBishopId: campusTownData?.bishop.id,
-            loggedBy: currentUser.id,
             historyRecord: recordIfOldBishop,
           },
         })
@@ -313,7 +302,10 @@ const UpdateTownCampus = () => {
   })
   const [AddTownBishop] = useMutation(ADD_TOWN_BISHOP, {
     onCompleted: (data) => {
-      if (!townData?.displayTown?.bishop.firstName) {
+      const oldBishop = campusTownData?.bishop
+      const newBishop = data.updateTowns.towns[0].bishop
+
+      if (!campusTownData?.bishop.firstName) {
         //If There is no old Bishop
         let recordIfNoOldBishop = `${initialValues.campusTownName} Town has been moved to Bishop ${data.AddTownBishop.from.firstName} ${data.AddTownBishop.from.firstName}`
 
@@ -322,9 +314,8 @@ const UpdateTownCampus = () => {
             campusTownId: townId,
             newLeaderId: '',
             oldLeaderId: '',
-            newBishopId: data.AddTownBishop.from.id,
-            oldBishopId: townData?.displayTown?.bishop.id,
-            loggedBy: currentUser.id,
+            newBishopId: newBishop.id,
+            oldBishopId: oldBishop.id,
             historyRecord: recordIfNoOldBishop,
           },
         })
@@ -334,13 +325,12 @@ const UpdateTownCampus = () => {
         //Break Link to the Old Bishop
         RemoveTownBishop({
           variables: {
-            bishopId: initialValues.bishopSelect,
+            bishopId: oldBishop.id,
             townId: townId,
           },
         })
 
-        let recordIfOldBishop = `${initialValues.campusTownName} Town has been moved from Bishop ${townData?.displayTown?.bishop.firstName} ${townData?.displayTown?.bishop.lastName} 
-        to Bishop ${data.AddTownBishop.from.firstName} ${data.AddTownBishop.from.lastName} `
+        let recordIfOldBishop = `${initialValues.campusTownName} Town has been moved from Bishop ${oldBishop.firstName} ${oldBishop.lastName} to Bishop ${newBishop.fullName} `
 
         //After Adding the campus to a bishop, then you log that change.
         LogCampusTownHistory({
@@ -348,9 +338,8 @@ const UpdateTownCampus = () => {
             campusTownId: townId,
             newLeaderId: '',
             oldLeaderId: '',
-            newBishopId: data.AddTownBishop.from.id,
-            oldBishopId: townData?.displayTown?.bishop.id,
-            loggedBy: currentUser.id,
+            newBishopId: newBishop.id,
+            oldBishopId: oldBishop.id,
             historyRecord: recordIfOldBishop,
           },
         })
@@ -396,8 +385,7 @@ const UpdateTownCampus = () => {
               oldLeaderId: '',
               oldBishopId: '',
               newBishopId: '',
-              loggedBy: currentUser.id,
-              historyRecord: `The Campus name has been changed from ${initialValues.campusTownName} to ${values.campusTownName}`,
+              historyRecord: `Campus name has been changed from ${initialValues.campusTownName} to ${values.campusTownName}`,
             },
           })
         }
@@ -436,8 +424,7 @@ const UpdateTownCampus = () => {
               oldLeaderId: '',
               oldBishopId: '',
               newBishopId: '',
-              loggedBy: currentUser.id,
-              historyRecord: `The Town name has been changed from ${initialValues.campusTownName} to ${values.campusTownName}`,
+              historyRecord: `Town name has been changed from ${initialValues.campusTownName} to ${values.campusTownName}`,
             },
           })
         }
@@ -468,11 +455,11 @@ const UpdateTownCampus = () => {
         return centre.id ? centre.id : centre
       })
 
-      const removeCentres = oldCentreList.filter(function (value) {
+      const removeCentres = oldCentreList.filter((value) => {
         return !newCentreList.includes(value)
       })
 
-      const addCentres = values.centres.filter(function (value) {
+      const addCentres = values.centres.filter((value) => {
         return !oldCentreList.includes(value.id)
       })
 
@@ -515,7 +502,9 @@ const UpdateTownCampus = () => {
               oldLeaderId: '',
               newCampusTownId: church.church === 'campus' ? campusId : townId,
               oldCampusTownId: '',
-              historyRecord: `${centre.name} Centre has been moved to ${
+              historyRecord: `${
+                centre.name
+              } Centre has been started again under ${
                 initialValues.campusTownName
               } ${capitalise(church.church)}`,
             },
@@ -567,6 +556,7 @@ const UpdateTownCampus = () => {
                           <FormikControl
                             className="form-control"
                             control="select"
+                            label="Select a Bishop"
                             name="bishopSelect"
                             options={
                               church.church === 'campus'
@@ -583,6 +573,7 @@ const UpdateTownCampus = () => {
                           <FormikControl
                             className="form-control"
                             control="input"
+                            label={`Name of ${capitalise(church.church)}`}
                             name="campusTownName"
                             placeholder={`Name of ${capitalise(church.church)}`}
                           />
@@ -594,7 +585,8 @@ const UpdateTownCampus = () => {
                             control="combobox2"
                             name="leaderSelect"
                             initialValue={initialValues.leaderName}
-                            placeholder="Select a Leader"
+                            placeholder="Start typing..."
+                            label="Choose a CO"
                             setFieldValue={formik.setFieldValue}
                             optionsQuery={BISHOP_MEMBER_DROPDOWN}
                             queryVariable1="id"
@@ -638,13 +630,14 @@ const UpdateTownCampus = () => {
                                       optionsQuery={BISHOP_CENTRE_DROPDOWN}
                                       queryVariable1="id"
                                       variable1={bishopId}
-                                      queryVariable2={`${church.subChurch}Name`}
+                                      queryVariable2="nameSearch"
                                       suggestionText="name"
                                       suggestionID="id"
-                                      dataset="bishopCentreDropdown"
+                                      church="constituency"
                                       aria-describedby={`${capitalise(
                                         church.subChurch
                                       )} Name`}
+                                      returnObject={true}
                                       className="form-control"
                                       error={
                                         formik.errors.centres &&

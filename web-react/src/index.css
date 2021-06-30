@@ -189,11 +189,13 @@ input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
   -webkit-box-shadow: 0 0 0 30px #e7e7b9 inset;
   -webkit-text-fill-color: var(--full-black);
+  box-shadow: 0 0 0 30px #e7e7b9 inset;
 }
 
 select {
   -webkit-appearance: none;
   -webkit-border-radius: 0;
+  border-radius: 0;
 }
 
 .login-page-lg {

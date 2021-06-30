@@ -11,7 +11,7 @@ import {
 import { setContext } from '@apollo/client/link/context'
 import { Auth0Provider, useAuth0 } from '@auth0/auth0-react'
 import './index.css'
-import BishopSelect from './pages/dashboards/BishopSelect.jsx'
+import FederalAdminDashboard from './pages/dashboards/FederalAdminDashboard.jsx'
 import BishopDashboard from './pages/dashboards/BishopDashboard.jsx'
 import BishopMembers from './pages/grids/BishopMembers.jsx'
 import CampusTownMembers from './pages/grids/CampusTownMembers.jsx'
@@ -393,7 +393,7 @@ const PastorsAdmin = () => {
               <ProtectedRouteHome
                 path="/"
                 roles={['federalAdmin']}
-                component={BishopSelect}
+                component={FederalAdminDashboard}
                 exact
               />
               <ProtectedRouteHome

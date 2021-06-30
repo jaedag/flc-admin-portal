@@ -10,7 +10,6 @@ import {
   GET_BISHOP_TOWNS,
   GET_BISHOP_CAMPUSES,
   BISHOP_MEMBER_DROPDOWN,
-  BISHOP_CENTRE_DROPDOWN,
 } from '../../queries/ListQueries'
 import { CREATE_TOWN_MUTATION, CREATE_CAMPUS_MUTATION } from './CreateMutations'
 import NavBar from '../../components/nav/NavBar'
@@ -19,6 +18,7 @@ import LoadingScreen from '../../components/LoadingScreen'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import PlusSign from '../../components/buttons/PlusSign'
 import MinusSign from '../../components/buttons/MinusSign'
+import { BISHOP_CENTRE_DROPDOWN } from '../../components/formik-components/ComboboxQueries'
 
 function CreateTownCampus() {
   const { church, bishopId, setTownId, setCampusId, setBishopId } = useContext(

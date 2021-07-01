@@ -42,12 +42,12 @@ const MembersGrid = (props) => {
   return (
     <div>
       <NavBar />
-      <div className="row w-100 m-0">
-        <div className="col-3 d-none d-md-block">
+      <div className="row w-100 justify-content-between m-0">
+        <div className="col-3 col-dimensions d-none d-md-block p-0">
           <SideBar />
         </div>
 
-        <div className="col col-md-9 px-2">
+        <div className="col col-md-9 rest-of-screen p-0">
           {title ? (
             <h3 className="text-center font-weight-bold mt-3 mb-0">{title}</h3>
           ) : null}

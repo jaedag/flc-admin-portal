@@ -69,7 +69,7 @@ const MemberTable = (props) => {
         </div>
 
         {/* Mobile View */}
-        <div className="d-lg-none member-grid">
+        <div className="d-lg-none member-grid container">
           {memberData.map((soul, index) => {
             if (index < offset) {
               return null

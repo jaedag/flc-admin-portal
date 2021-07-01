@@ -11,7 +11,7 @@ import {
   FEDERAL_NEO_SEARCH,
 } from '../../pages/mobile/SearchQuery.js'
 import { ChurchContext } from '../../contexts/ChurchContext'
-import { capitalise } from '../../global-utils'
+import { capitalise, isAuthorised } from '../../global-utils'
 import { MemberContext } from '../../contexts/MemberContext'
 
 function FormikSearchbox(props) {
@@ -93,12 +93,12 @@ function FormikSearchbox(props) {
   })
 
   const whichSearch = (searchString) => {
-    if (currentUser.roles.includes('federalAdmin')) {
+    if (isAuthorised(['federalAdmin'], currentUser.roles)) {
       globalSearch({
         variables: { searchKey: capitalise(searchString.trim()) },
       })
     }
-    if (currentUser.roles.includes('bishopAdmin')) {
+    if (isAuthorised(['bishopAdmin'], currentUser.roles)) {
       bishopSearch({
         variables: {
           bishopId: currentUser.bishop,
@@ -106,7 +106,7 @@ function FormikSearchbox(props) {
         },
       })
     }
-    if (currentUser.roles.includes('constituencyAdmin')) {
+    if (isAuthorised(['constituencyAdmin'], currentUser.roles)) {
       constituencySearch({
         variables: {
           constituencyId: currentUser.constituency,

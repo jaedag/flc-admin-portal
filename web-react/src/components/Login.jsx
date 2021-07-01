@@ -4,7 +4,7 @@ import UserProfileIcon from './UserProfileIcon/UserProfileIcon'
 import Logo from '../img/flc-logo-small.png'
 
 const Login = () => {
-  const version = 'v0.4.1'
+  const version = 'v0.5.0'
   return (
     <>
       <div className="container body-container d-none d-lg-block">

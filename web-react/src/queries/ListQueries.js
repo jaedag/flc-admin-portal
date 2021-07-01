@@ -334,6 +334,7 @@ export const GET_CENTRE_BACENTAS = gql`
             id
             firstName
             lastName
+            fullName
           }
           town {
             id
@@ -350,6 +351,7 @@ export const GET_CENTRE_BACENTAS = gql`
         }
       }
     }
+    centreMemberCount(id: $id)
   }
 `
 

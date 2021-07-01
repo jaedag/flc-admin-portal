@@ -37,6 +37,7 @@ const DisplayAllCentres = () => {
     // Spinner Icon for Loading Screens
     return <LoadingScreen />
   } else if (campusCentreData && church.church === 'campus') {
+    const campus = campusCentreData.centres[0].campus
     return (
       <>
         <NavBar />
@@ -47,15 +48,11 @@ const DisplayAllCentres = () => {
                 <Link
                   to={`/${church.church}/displaydetails`}
                   onClick={() => {
-                    church.church === 'town'
-                      ? setTownId(townId)
-                      : setCampusId(campusId)
+                    setCampusId(campusId)
                   }}
                 >
                   {' '}
-                  <h4>{`${campusCentreData.centres[0].campus.name} ${capitalise(
-                    church.church
-                  )}`}</h4>
+                  <h4>{`${campus.name} ${capitalise(church.church)}`}</h4>
                 </Link>
               </div>
               <RoleView
@@ -75,8 +72,8 @@ const DisplayAllCentres = () => {
               <div className="col">
                 <h6 className="text-muted">
                   Overseer:
-                  {campusCentreData.centres[0].campus.leader
-                    ? ` ${campusCentreData.centres[0].campus.leader.firstName} ${campusCentreData.centres[0].campus.leader.lastName}`
+                  {campus.leader
+                    ? ` ${campus.leader.firstName} ${campus.leader.lastName}`
                     : null}
                 </h6>
               </div>
@@ -88,7 +85,10 @@ const DisplayAllCentres = () => {
                 className="py-1 px-2 m-2 card text-white"
                 to="/sonta/displayall"
               >{`Sontas: ${campusCentreData.centres.length}`}</Link>
-              <div className="py-1 px-2 m-2 card">{`Membership: ${campusCentreData.campusMemberCount}`}</div>
+              <Link
+                to="/campus/members"
+                className="py-1 px-2 m-2 card"
+              >{`Membership: ${campusCentreData.campusMemberCount}`}</Link>
             </div>
           </div>
 
@@ -101,6 +101,7 @@ const DisplayAllCentres = () => {
       </>
     )
   } else if (townCentreData && church.church === 'town') {
+    const town = townCentreData.centres[0].town
     return (
       <>
         <NavBar />
@@ -111,15 +112,11 @@ const DisplayAllCentres = () => {
                 <Link
                   to={`/${church.church}/displaydetails`}
                   onClick={() => {
-                    church.church === 'town'
-                      ? setTownId(townId)
-                      : setCampusId(campusId)
+                    setTownId(townId)
                   }}
                 >
                   {' '}
-                  <h4>{`${townCentreData.centres[0].town.name} ${capitalise(
-                    church.church
-                  )}`}</h4>
+                  <h4>{`${town.name} ${capitalise(church.church)}`}</h4>
                 </Link>
               </div>
               <RoleView
@@ -147,8 +144,8 @@ const DisplayAllCentres = () => {
               <div className="col">
                 <h6 className="text-muted">
                   Constituency Overseer:
-                  {townCentreData.centres[0].town.leader
-                    ? ` ${townCentreData.centres[0].town.leader.firstName} ${townCentreData.centres[0].town.leader.lastName}`
+                  {town.leader
+                    ? ` ${town.leader.firstName} ${town.leader.lastName}`
                     : null}
                 </h6>
               </div>
@@ -160,7 +157,10 @@ const DisplayAllCentres = () => {
                 className="py-1 px-2 m-2 card text-white"
                 to="/sonta/displayall"
               >{`Sontas: ${townCentreData.sontas.length}`}</Link>
-              <div className="py-1 px-2 m-2 card">{`Membership: ${townCentreData.townMemberCount}`}</div>
+              <Link
+                to="/town/members"
+                className="py-1 px-2 m-2 card"
+              >{`Membership: ${townCentreData.townMemberCount}`}</Link>
             </div>
           </div>
 
@@ -168,11 +168,6 @@ const DisplayAllCentres = () => {
             data={townCentreData.centres}
             churchType="Centre"
           />
-          {/* <DisplayChurchList
-            data={townCentreData.sontas}
-            setter={setSontaId}
-            churchType="Sonta"
-          /> */}
         </div>
       </>
     )

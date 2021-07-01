@@ -83,7 +83,7 @@ const DisplayAllTownCampuses = () => {
               <div className="py-1 px-3 m-2 card">{`Towns: ${towns.length}`}</div>
 
               <Link
-                to={`/${church.church}/members`}
+                to="/bishop/members"
                 className="py-1 px-3 m-2 card"
               >{`Membership: ${
                 bishopMemberCount ? bishopMemberCount.bishopMemberCount : null
@@ -137,7 +137,7 @@ const DisplayAllTownCampuses = () => {
               <div className="py-1 px-3 m-2 card">{`Campuses: ${campus.length}`}</div>
 
               <Link
-                to={`/${church.church}/members`}
+                to="/bishop/members"
                 className="py-1 px-3 m-2 card"
               >{`Membership: ${
                 bishopMemberCount ? bishopMemberCount.bishopMemberCount : null

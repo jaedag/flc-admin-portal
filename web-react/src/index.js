@@ -464,6 +464,12 @@ const PastorsAdmin = () => {
                 exact
               />
               <ProtectedMembersRoute
+                roles={['federalAdmin', 'bishopAdmin']}
+                path="/bishop/members"
+                component={BishopMembers}
+                exact
+              />
+              <ProtectedMembersRoute
                 roles={['federalAdmin', 'bishopAdmin', 'constituencyAdmin']}
                 path="/campus/members"
                 component={CampusTownMembers}

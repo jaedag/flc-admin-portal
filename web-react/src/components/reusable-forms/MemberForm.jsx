@@ -16,7 +16,7 @@ import ErrorScreen from '../ErrorScreen'
 import { BISHOP_BACENTA_DROPDOWN } from '../formik-components/ComboboxQueries'
 import FormikControl from '../formik-components/FormikControl'
 import { HeadingBar } from '../HeadingBar/HeadingBar'
-import LoadingScreen from '../LoadingScreen'
+import Spinner from '../Spinner'
 
 function MemberForm({ formik, initialValues }) {
   const { bishopId } = useContext(ChurchContext)
@@ -25,7 +25,11 @@ function MemberForm({ formik, initialValues }) {
   )
 
   if (ministriesLoading) {
-    return <LoadingScreen />
+    return (
+      <div className="text-center p-5 m-5">
+        <Spinner />
+      </div>
+    )
   } else if (ministriesData) {
     const ministryOptions = makeSelectOptions(ministriesData.ministries)
     return (

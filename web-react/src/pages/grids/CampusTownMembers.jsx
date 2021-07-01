@@ -14,7 +14,7 @@ export const CampusTownMembers = () => {
     return (
       <MembersGrid
         title={data ? `${data.campuses[0]?.name} Campus` : null}
-        memberData={data?.campuses[0].members}
+        memberData={data?.campuses[0]?.members}
         memberLoading={loading}
         memberError={error}
       />
@@ -23,7 +23,7 @@ export const CampusTownMembers = () => {
     return (
       <MembersGrid
         title={data ? `${data?.towns[0]?.name} Town` : null}
-        memberData={data?.towns[0].members}
+        memberData={data?.towns[0]?.members}
         memberLoading={loading}
         memberError={error}
       />

@@ -9,12 +9,8 @@
 }
 
 .col-dimensions {
-  max-width: 25%;
+  max-width: 307px;
   min-width: 255px;
-}
-
-.rest-of-screen {
-  max-width: 75%;
 }
 
 @media (max-width: var(--breakpoint-md)) {

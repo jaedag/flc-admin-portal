@@ -353,7 +353,11 @@ const PastorsAdmin = () => {
     if (card.__typename === 'Basonta') {
       card.link = '/sonta/displaydetails'
     }
-    if (card.link === '') {
+    if (card.__typename === 'Bishop') {
+      setBishopId(card.id)
+      card.link = '/dashboard'
+    }
+    if (card.link === '' || card.constituency === true) {
       card.link = `/${card.__typename.toLowerCase()}/displaydetails`
     }
   }

@@ -5,9 +5,14 @@ import { useLazyQuery } from '@apollo/client'
 import { ErrorMessage } from 'formik'
 import TextError from './TextError'
 import { useHistory } from 'react-router-dom'
-import { GLOBAL_NEO_SEARCH } from '../../pages/mobile/SearchQuery.js'
+import {
+  BISHOP_SEARCH,
+  CONSTITUENCY_SEARCH,
+  FEDERAL_NEO_SEARCH,
+} from '../../pages/mobile/SearchQuery.js'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import { capitalise } from '../../global-utils'
+import { MemberContext } from '../../contexts/MemberContext'
 
 function FormikSearchbox(props) {
   const { label, name, placeholder, setFieldValue } = props
@@ -16,12 +21,34 @@ function FormikSearchbox(props) {
   const [debouncedText, setDebouncedText] = useState('')
   const [suggestions, setSuggestions] = useState([])
   const { clickCard } = useContext(ChurchContext)
+  const { currentUser } = useContext(MemberContext)
   const history = useHistory()
 
-  let combinedData
-  const [globalSearch] = useLazyQuery(GLOBAL_NEO_SEARCH, {
+  const getSuggestions = (data) => {
+    setSuggestions(
+      data.slice(0, 10).map((row) => ({
+        name: row.name,
+        __typename: row.__typename,
+        firstName: row.firstName,
+        lastName: row.lastName,
+        bacenta: row.bacenta,
+        centre: row.centre,
+        town: row.town,
+        campus: row.campus,
+        bishop: row.bishop,
+        leadsBacenta: row.leadsBacenta,
+        leadsCentre: row.leadsCentre,
+        leadsCampus: row.leadsCampus,
+        leadsTown: row.leadsTown,
+        townBishop: row.townBishop,
+        campusBishop: row.campusBishop,
+        id: row.id,
+      }))
+    )
+  }
+  const [globalSearch] = useLazyQuery(FEDERAL_NEO_SEARCH, {
     onCompleted: (data) => {
-      combinedData = [
+      const combinedData = [
         ...data.members,
         ...data.campuses,
         ...data.towns,
@@ -29,36 +56,70 @@ function FormikSearchbox(props) {
         ...data.centres,
         ...data.bacentas,
       ]
+      if (currentUser.roles.includes('federalAdmin')) {
+        getSuggestions(combinedData)
+      }
+    },
+  })
+  const [bishopSearch] = useLazyQuery(BISHOP_SEARCH, {
+    onCompleted: (data) => {
+      const combinedData = [
+        ...data.bishopMemberSearch,
+        ...data.bishopCampusSearch,
+        ...data.bishopTownSearch,
+        ...data.bishopSontaSearch,
+        ...data.bishopCentreSearch,
+        ...data.bishopBacentaSearch,
+      ]
 
-      setSuggestions(
-        combinedData.slice(0, 10).map((row) => ({
-          name: row.name,
-          __typename: row.__typename,
-          firstName: row.firstName,
-          lastName: row.lastName,
-          bacenta: row.bacenta,
-          centre: row.centre,
-          town: row.town,
-          campus: row.campus,
-          bishop: row.bishop,
-          leadsBacenta: row.leadsBacenta,
-          leadsCentre: row.leadsCentre,
-          leadsCampus: row.leadsCampus,
-          leadsTown: row.leadsTown,
-          townBishop: row.townBishop,
-          campusBishop: row.campusBishop,
-          id: row.id,
-        }))
-      )
+      if (currentUser.roles.includes('bishopAdmin')) {
+        getSuggestions(combinedData)
+      }
+    },
+  })
+  const [constituencySearch] = useLazyQuery(CONSTITUENCY_SEARCH, {
+    onCompleted: (data) => {
+      const combinedData = [
+        ...data.constituencyMemberSearch,
+        ...data.constituencySontaSearch,
+        ...data.constituencyCentreSearch,
+        ...data.constituencyBacentaSearch,
+      ]
+
+      if (currentUser.roles.includes('constituencyAdmin')) {
+        getSuggestions(combinedData)
+      }
     },
   })
 
+  const whichSearch = (searchString) => {
+    if (currentUser.roles.includes('federalAdmin')) {
+      globalSearch({
+        variables: { searchKey: capitalise(searchString.trim()) },
+      })
+    }
+    if (currentUser.roles.includes('bishopAdmin')) {
+      bishopSearch({
+        variables: {
+          bishopId: currentUser.bishop,
+          searchKey: capitalise(searchString.trim()),
+        },
+      })
+    }
+    if (currentUser.roles.includes('constituencyAdmin')) {
+      constituencySearch({
+        variables: {
+          constituencyId: currentUser.constituency,
+          searchKey: capitalise(searchString.trim()),
+        },
+      })
+    }
+  }
   useEffect(() => {
     const timerId = setTimeout(() => {
+      whichSearch(debouncedText)
       setDebouncedText(searchString)
-      globalSearch({
-        variables: { searchKey: capitalise(debouncedText.trim()) },
-      })
+      return
     }, 200)
 
     return () => {
@@ -86,15 +147,8 @@ function FormikSearchbox(props) {
           },
         }}
         suggestions={suggestions}
-        onSuggestionsFetchRequested={async ({ value }) => {
-          if (!value) {
-            setSuggestions([])
-          }
-          try {
-            globalSearch({ variables: { searchKey: debouncedText.trim() } })
-          } catch {
-            setSuggestions([])
-          }
+        onSuggestionsFetchRequested={async () => {
+          setSuggestions([])
         }}
         onSuggestionsClearRequested={() => {
           setSuggestions([])

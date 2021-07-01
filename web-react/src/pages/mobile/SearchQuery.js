@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client'
 
-export const GLOBAL_SEARCH = gql`
-  query globalSearch($searchKey: String!) {
-    globalSontaSearch(searchKey: $searchKey) {
+export const FEDERAL_SEARCH = gql`
+  query federalSearch($searchKey: String!) {
+    federalSontaSearch(searchKey: $searchKey) {
       id
       name
       town {
@@ -17,21 +17,21 @@ export const GLOBAL_SEARCH = gql`
         }
       }
     }
-    globalTownSearch(searchKey: $searchKey) {
+    federalTownSearch(searchKey: $searchKey) {
       id
       name
       bishop {
         id
       }
     }
-    globalCampusSearch(searchKey: $searchKey) {
+    federalCampusSearch(searchKey: $searchKey) {
       id
       name
       bishop {
         id
       }
     }
-    globalCentreSearch(searchKey: $searchKey) {
+    federalCentreSearch(searchKey: $searchKey) {
       id
       name
       town {
@@ -47,7 +47,7 @@ export const GLOBAL_SEARCH = gql`
         }
       }
     }
-    globalBacentaSearch(searchKey: $searchKey) {
+    federalBacentaSearch(searchKey: $searchKey) {
       id
       name
       centre {
@@ -65,7 +65,7 @@ export const GLOBAL_SEARCH = gql`
         }
       }
     }
-    # globalMemberSearch(searchKey: $searchKey) {
+    # federalMemberSearch(searchKey: $searchKey) {
     #   id
     #   firstName
     #   lastName
@@ -124,8 +124,76 @@ export const GLOBAL_SEARCH = gql`
   }
 `
 
-export const GLOBAL_NEO_SEARCH = gql`
-  query globalSearch($searchKey: String!) {
+export const BISHOP_SEARCH = gql`
+  query bishopSearch($searchKey: String!, $bishopId: ID!) {
+    bishopSontaSearch(searchKey: $searchKey, bishopId: $bishopId) {
+      id
+      name
+    }
+    bishopTownSearch(searchKey: $searchKey, bishopId: $bishopId) {
+      id
+      name
+    }
+    bishopCampusSearch(searchKey: $searchKey, bishopId: $bishopId) {
+      id
+      name
+    }
+    bishopCentreSearch(searchKey: $searchKey, bishopId: $bishopId) {
+      id
+      name
+    }
+    bishopBacentaSearch(searchKey: $searchKey, bishopId: $bishopId) {
+      id
+      name
+    }
+    bishopMemberSearch(searchKey: $searchKey, bishopId: $bishopId) {
+      id
+      firstName
+      lastName
+      fullName
+      pictureUrl
+    }
+  }
+`
+
+export const CONSTITUENCY_SEARCH = gql`
+  query constituencySearch($searchKey: String!, $constituencyId: ID!) {
+    constituencySontaSearch(
+      searchKey: $searchKey
+      constituencyId: $constituencyId
+    ) {
+      id
+      name
+    }
+    constituencyCentreSearch(
+      searchKey: $searchKey
+      constituencyId: $constituencyId
+    ) {
+      id
+      name
+    }
+    constituencyBacentaSearch(
+      searchKey: $searchKey
+      constituencyId: $constituencyId
+    ) {
+      id
+      name
+    }
+    constituencyMemberSearch(
+      searchKey: $searchKey
+      constituencyId: $constituencyId
+    ) {
+      id
+      firstName
+      lastName
+      fullName
+      pictureUrl
+    }
+  }
+`
+
+export const FEDERAL_NEO_SEARCH = gql`
+  query federalSearch($searchKey: String!) {
     sontas(
       where: {
         OR: [{ name_STARTS_WITH: $searchKey }, { name_CONTAINS: $searchKey }]

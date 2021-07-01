@@ -171,13 +171,13 @@ const UpdateCentre = () => {
   const [RemoveCentreTown] = useMutation(REMOVE_CENTRE_TOWN)
   const [RemoveCentreCampus] = useMutation(REMOVE_CENTRE_CAMPUS)
   const [AddCentreTown] = useMutation(ADD_CENTRE_TOWN, {
-    onCompleted: (newTown) => {
-      if (!centre?.town.name) {
+    onCompleted: (data) => {
+      const oldTown = centre?.town
+      const newTown = data.updateCentres.centres[0].town
+      if (!oldTown) {
         //If There is no old town
-        let recordIfNoOldTown = `${
-          initialValues.centreName
-        } Centre has been moved to ${
-          newTown.AddCentreTown.from.name
+        let recordIfNoOldTown = `${oldTown.name} Centre has been moved to ${
+          newTown.name
         } ${capitalise(church.church)} `
 
         LogCentreHistory({
@@ -185,8 +185,8 @@ const UpdateCentre = () => {
             centreId: centreId,
             newLeaderId: '',
             oldLeaderId: '',
-            newCampusTownId: newTown.AddCentreTown.from.id,
-            oldCampusTownId: centre?.town.id,
+            newCampusTownId: newTown.id,
+            oldCampusTownId: oldTown.id,
             historyRecord: recordIfNoOldTown,
           },
         })
@@ -196,67 +196,14 @@ const UpdateCentre = () => {
         //Break Link to the Old Town
         RemoveCentreTown({
           variables: {
-            townId: initialValues.campusTownSelect,
+            townId: oldTown.id,
             centreId: centreId,
           },
         })
 
-        let recordIfOldTown = `${
-          initialValues.centreName
-        } Centre has been moved from ${centre?.town.name} ${capitalise(
-          church.church
-        )} to ${newTown.AddCentreTown.from.name} ${capitalise(church.church)}`
-
-        //After Adding the centre to a campus/town, then you log that change.
-        LogCentreHistory({
-          variables: {
-            centreId: centreId,
-            newLeaderId: '',
-            oldLeaderId: '',
-            newCampusTownId: newTown.AddCentreTown.from.id,
-            oldCampusTownId: centre?.town.id,
-            historyRecord: recordIfOldTown,
-          },
-        })
-      }
-    },
-  })
-  const [AddCentreCampus] = useMutation(ADD_CENTRE_CAMPUS, {
-    onCompleted: (newCampus) => {
-      if (!centre?.campus.name) {
-        //If There is no old campus
-        let recordIfNoOldCampus = `${
-          initialValues.centreName
-        } Centre has been moved to ${
-          newCampus.AddCentreCampus.from.name
-        } ${capitalise(church.church)} `
-
-        LogCentreHistory({
-          variables: {
-            centreId: centreId,
-            newLeaderId: '',
-            oldLeaderId: '',
-            newCampusTownId: newCampus.AddCentreCampus.from.id,
-            oldCampusTownId: centre?.campus.id,
-            historyRecord: recordIfNoOldCampus,
-          },
-        })
-      } else {
-        //If there is an old Campus
-
-        //Break Link to the Old Campus
-        RemoveCentreCampus({
-          variables: {
-            campusId: initialValues.campusTownSelect,
-            centreId: centreId,
-          },
-        })
-
-        let recordIfOldCampus = `${
-          initialValues.centreName
-        } Centre has been moved from ${centre?.campus.name} ${capitalise(
-          church.church
-        )} to ${newCampus.AddCentreCampus.from.name} ${capitalise(
+        let recordIfOldTown = `${oldTown.name} Centre has been moved from ${
+          centre?.town.name
+        } ${capitalise(church.church)} to ${newTown.name} ${capitalise(
           church.church
         )}`
 
@@ -266,8 +213,61 @@ const UpdateCentre = () => {
             centreId: centreId,
             newLeaderId: '',
             oldLeaderId: '',
-            newCampusTownId: newCampus.AddCentreCampus.from.id,
-            oldCampusTownId: centre?.campus.id,
+            newCampusTownId: newTown.id,
+            oldCampusTownId: oldTown.id,
+            historyRecord: recordIfOldTown,
+          },
+        })
+      }
+    },
+  })
+  const [AddCentreCampus] = useMutation(ADD_CENTRE_CAMPUS, {
+    onCompleted: (data) => {
+      const oldCampus = centre?.campus
+      const newCampus = data.updateCentres.centres[0].campus
+      if (!oldCampus) {
+        //If There is no old campus
+        let recordIfNoOldCampus = `${
+          initialValues.centreName
+        } Centre has been moved to ${newCampus.name} ${capitalise(
+          church.church
+        )} `
+
+        LogCentreHistory({
+          variables: {
+            centreId: centreId,
+            newLeaderId: '',
+            oldLeaderId: '',
+            newCampusTownId: newCampus.id,
+            oldCampusTownId: oldCampus.id,
+            historyRecord: recordIfNoOldCampus,
+          },
+        })
+      } else {
+        //If there is an old Campus
+
+        //Break Link to the Old Campus
+        RemoveCentreCampus({
+          variables: {
+            campusId: oldCampus.id,
+            centreId: centreId,
+          },
+        })
+
+        let recordIfOldCampus = `${
+          initialValues.centreName
+        } Centre has been moved from ${oldCampus.name} ${capitalise(
+          church.church
+        )} to ${newCampus.name} ${capitalise(church.church)}`
+
+        //After Adding the centre to a campus/town, then you log that change.
+        LogCentreHistory({
+          variables: {
+            centreId: centreId,
+            newLeaderId: '',
+            oldLeaderId: '',
+            newCampusTownId: newCampus.id,
+            oldCampusTownId: oldCampus.id,
             historyRecord: recordIfOldCampus,
           },
         })

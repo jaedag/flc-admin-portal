@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { useQuery } from '@apollo/client'
 import MobileSearchNav from '../../components/MobileSearchNav.jsx'
-import { GLOBAL_NEO_SEARCH } from './SearchQuery'
+import { FEDERAL_NEO_SEARCH } from './SearchQuery'
 import { SearchContext } from '../../contexts/MemberContext'
 import Spinner from '../../components/Spinner.jsx'
 import MemberDisplayCard from '../../components/card/MemberDisplayCard'
@@ -10,7 +10,7 @@ import { capitalise } from '../../global-utils.js'
 const SearchPageMobile = () => {
   const { searchKey } = useContext(SearchContext)
 
-  const { data, loading } = useQuery(GLOBAL_NEO_SEARCH, {
+  const { data, loading } = useQuery(FEDERAL_NEO_SEARCH, {
     variables: {
       searchKey: capitalise(searchKey.trim()),
     },

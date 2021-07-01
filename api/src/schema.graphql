@@ -71,7 +71,7 @@ type Member {
   hasAdmin: Member @relationship(type: "IS_ADMIN_FOR", direction: IN)
 
   #Members
-  members: [Member]
+  members(nameSearch: String): [Member]
     @cypher(
       statement: """
       MATCH (this)-[:HAS_TOWN|:HAS_CAMPUS]->(campusTown)
@@ -82,9 +82,11 @@ type Member {
       OPTIONAL MATCH (centre)<-[:LEADS]-(centreLeader:Member)
       OPTIONAL MATCH (campusTown)<-[:LEADS]-(constituencyOverseer:Member)
       OPTIONAL MATCH (this)<-[:IS_ADMIN_FOR]-(admin:Member)
-       OPTIONAL MATCH (campusTown)<-[:IS_ADMIN_FOR]-(constituencyAdmin:Member)
+      OPTIONAL MATCH (campusTown)<-[:IS_ADMIN_FOR]-(constituencyAdmin:Member)
       UNWIND [member,bacentaLeader,centreLeader,constituencyOverseer,admin,constituencyAdmin] as members
+
       WITH members WHERE members IS NOT NULL
+
       RETURN DISTINCT members ORDER BY members.firstName
       """
     )
@@ -781,7 +783,7 @@ type Query {
       """
     )
 
-  globalMemberSearch(searchKey: String!): [Member]
+  federalMemberSearch(searchKey: String!): [Member]
     @cypher(
       statement: """
       MATCH (member:Member)
@@ -795,17 +797,89 @@ type Query {
       RETURN member LIMIT 5
       """
     )
-  globalBacentaSearch(searchKey: String!): [Bacenta]
+  bishopMemberSearch(searchKey: String!, bishopId: ID!): [Member]
+    @cypher(
+      statement: """
+      MATCH (bishop:Member {id: $bishopId})-[:HAS_TOWN|:HAS_CAMPUS]->(campusTown)
+      MATCH (campusTown)-[:HAS_CENTRE]->(centre)
+      MATCH (centre)-[:HAS_BACENTA]->(bacenta)
+      OPTIONAL MATCH (bacenta)<-[:BELONGS_TO*]-(member:Member)
+      OPTIONAL MATCH (bacenta)<-[:LEADS]-(bacentaLeader:Member)
+      OPTIONAL MATCH (centre)<-[:LEADS]-(centreLeader:Member)
+      OPTIONAL MATCH (campusTown)<-[:LEADS]-(constituencyOverseer:Member)
+      OPTIONAL MATCH (bishop)<-[:IS_ADMIN_FOR]-(bishopAdmin:Member)
+      OPTIONAL MATCH (campusTown)<-[:IS_ADMIN_FOR]-(constituencyAdmin:Member)
+      UNWIND [member,bacentaLeader,centreLeader,constituencyOverseer,bishopAdmin,constituencyAdmin] as members
+      WITH members WHERE members IS NOT NULL
+
+      AND toLower(members.firstName) = toLower($searchKey)
+      OR toLower(members.lastName) = toLower($searchKey)
+      OR toLower(members.firstName) STARTS WITH toLower($searchKey)
+      OR toLower(members.lastName) STARTS WITH toLower($searchKey)
+      OR toLower(members.firstName) CONTAINS toLower($searchKey)
+      OR toLower(members.lastName) CONTAINS toLower($searchKey)
+      OR toLower(members.firstName+ " " + members.lastName) CONTAINS toLower($searchKey)
+      RETURN DISTINCT(members) LIMIT 5
+      """
+    )
+  constituencyMemberSearch(searchKey: String!, constituencyId: ID!): [Member]
+    @cypher(
+      statement: """
+      MATCH (constituency {id:$constituencyId}) WHERE constituency:Campus OR constituency:Town
+      MATCH (constituency)-[:HAS_CENTRE]->(centre)
+      MATCH (centre)-[:HAS_BACENTA]->(bacenta)
+      OPTIONAL MATCH (bacenta)<-[:BELONGS_TO*]-(member:Member)
+      OPTIONAL MATCH (bacenta)<-[:LEADS]-(bacentaLeader:Member)
+      OPTIONAL MATCH (centre)<-[:LEADS]-(centreLeader:Member)
+      OPTIONAL MATCH (constituency)<-[:LEADS]-(constituencyOverseer:Member)
+      OPTIONAL MATCH (constituency)<-[:IS_ADMIN_FOR]-(constituencyAdmin:Member)
+      UNWIND [member,bacentaLeader,centreLeader,constituencyOverseer,constituencyAdmin] as members
+      WITH members WHERE members IS NOT NULL
+
+      AND toLower(members.firstName) = toLower($searchKey)
+      OR toLower(members.lastName) = toLower($searchKey)
+      OR toLower(members.firstName) STARTS WITH toLower($searchKey)
+      OR toLower(members.lastName) STARTS WITH toLower($searchKey)
+      OR toLower(members.firstName) CONTAINS toLower($searchKey)
+      OR toLower(members.lastName) CONTAINS toLower($searchKey)
+      OR toLower(members.firstName+ " " + members.lastName) CONTAINS toLower($searchKey)
+      RETURN DISTINCT(members) LIMIT 5
+      """
+    )
+  federalBacentaSearch(searchKey: String!): [Bacenta]
     @cypher(
       statement: """
       MATCH (bacenta:Bacenta)
       WHERE toLower(bacenta.name) STARTS WITH toLower($searchKey)
       OR toLower(bacenta.name) CONTAINS toLower($searchKey)
-      MATCH (bacenta)-[:HAS_BACENTA]-(centre:Centre)
       RETURN bacenta LIMIT 5
       """
     )
-  globalCentreSearch(searchKey: String!): [Centre]
+  bishopBacentaSearch(searchKey: String!, bishopId: ID!): [Bacenta]
+    @cypher(
+      statement: """
+      MATCH (bishop:Member {id: $bishopId})-[:HAS_TOWN|:HAS_CAMPUS]->(campusTown)
+      MATCH (campusTown)-[:HAS_CENTRE]->(centre)
+      MATCH (centre)-[:HAS_BACENTA]->(bacenta)
+
+      WHERE toLower(bacenta.name) STARTS WITH toLower($searchKey)
+      OR toLower(bacenta.name) CONTAINS toLower($searchKey)
+      RETURN bacenta LIMIT 5
+      """
+    )
+  constituencyBacentaSearch(searchKey: String!, constituencyId: ID!): [Bacenta]
+    @cypher(
+      statement: """
+      MATCH (constituency {id:$constituencyId}) WHERE constituency:Campus OR constituency:Town
+      MATCH (constituency)-[:HAS_CENTRE]->(centre)
+      MATCH (centre)-[:HAS_BACENTA]->(bacenta)
+
+      WHERE toLower(bacenta.name) STARTS WITH toLower($searchKey)
+      OR toLower(bacenta.name) CONTAINS toLower($searchKey)
+      RETURN bacenta LIMIT 5
+      """
+    )
+  federalCentreSearch(searchKey: String!): [Centre]
     @cypher(
       statement: """
       MATCH (centre:Centre)
@@ -814,7 +888,29 @@ type Query {
       RETURN centre LIMIT 5
       """
     )
-  globalCampusSearch(searchKey: String!): [Campus]
+  bishopCentreSearch(searchKey: String!, bishopId: ID!): [Centre]
+    @cypher(
+      statement: """
+      MATCH (bishop:Member {id: $bishopId})-[:HAS_TOWN|:HAS_CAMPUS]->(campusTown)
+      MATCH (campusTown)-[:HAS_CENTRE]->(centre)
+
+      WHERE toLower(centre.name) STARTS WITH toLower($searchKey)
+      OR toLower(centre.name) CONTAINS toLower($searchKey)
+      RETURN centre LIMIT 5
+      """
+    )
+  constituencyCentreSearch(searchKey: String!, constituencyId: ID!): [Bacenta]
+    @cypher(
+      statement: """
+      MATCH (constituency {id:$constituencyId}) WHERE constituency:Campus OR constituency:Town
+      MATCH (constituency)-[:HAS_CENTRE]->(centre)
+
+      WHERE toLower(centre.name) STARTS WITH toLower($searchKey)
+      OR toLower(centre.name) CONTAINS toLower($searchKey)
+      RETURN centre LIMIT 5
+      """
+    )
+  federalCampusSearch(searchKey: String!): [Campus]
     @cypher(
       statement: """
       MATCH (campus:Campus)
@@ -823,17 +919,17 @@ type Query {
       RETURN campus LIMIT 5
       """
     )
-  globalSontaSearch(searchKey: String!): [Sonta]
+  bishopCampusSearch(searchKey: String!, bishopId: ID!): [Campus]
     @cypher(
       statement: """
-      MATCH (sonta:Sonta)
-      WHERE toLower(sonta.name) STARTS WITH toLower($searchKey)
-      OR toLower(sonta.name) CONTAINS toLower($searchKey)
-      RETURN sonta LIMIT 5
+      MATCH (bishop:Member {id: $bishopId})-[:HAS_TOWN|:HAS_CAMPUS]->(campus)
+
+      WHERE toLower(campus.name) STARTS WITH toLower($searchKey)
+      OR toLower(campus.name) CONTAINS toLower($searchKey)
+      RETURN campus LIMIT 5
       """
     )
-
-  globalTownSearch(searchKey: String!): [Town]
+  federalTownSearch(searchKey: String!): [Town]
     @cypher(
       statement: """
       MATCH (town:Town)
@@ -842,6 +938,49 @@ type Query {
       RETURN town LIMIT 5
       """
     )
+  bishopTownSearch(searchKey: String!, bishopId: ID!): [Town]
+    @cypher(
+      statement: """
+      MATCH (bishop:Member {id: $bishopId})-[:HAS_TOWN|:HAS_CAMPUS]->(town)
+
+      WHERE toLower(town.name) STARTS WITH toLower($searchKey)
+      OR toLower(town.name) CONTAINS toLower($searchKey)
+      RETURN town LIMIT 5
+      """
+    )
+  federalSontaSearch(searchKey: String!): [Sonta]
+    @cypher(
+      statement: """
+      MATCH (sonta:Sonta)
+      WHERE toLower(sonta.name) STARTS WITH toLower($searchKey)
+      OR toLower(sonta.name) CONTAINS toLower($searchKey)
+      RETURN sonta LIMIT 5
+      """
+    )
+  bishopSontaSearch(searchKey: String!, bishopId: ID!): [Sonta]
+    @cypher(
+      statement: """
+      MATCH (bishop:Member {id: $bishopId})-[:HAS_TOWN|:HAS_CAMPUS]->(campusTown)
+      MATCH (campusTown)-[:HAS_SONTA]->(sonta)
+
+      WHERE toLower(sonta.name) STARTS WITH toLower($searchKey)
+      OR toLower(sonta.name) CONTAINS toLower($searchKey)
+      RETURN sonta LIMIT 5
+      """
+    )
+  constituencySontaSearch(searchKey: String!, constituencyId: ID!): [Bacenta]
+    @cypher(
+      statement: """
+      MATCH (constituency {id:$constituencyId}) WHERE constituency:Campus OR constituency:Town
+      MATCH (constituency)-[:HAS_SONTA]->(sonta)
+
+      WHERE toLower(sonta.name) STARTS WITH toLower($searchKey)
+      OR toLower(sonta.name) CONTAINS toLower($searchKey)
+      RETURN sonta LIMIT 5
+      """
+    )
+
+
   occupationList(searchKey: String!): [Occupation]
     @cypher(
       statement: "MATCH (occupation:Occupation) WHERE toLower(occupation.occupation) CONTAINS toLower($searchKey) RETURN occupation"

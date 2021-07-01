@@ -135,6 +135,7 @@ export const ADD_CENTRE_TOWN = gql`
       connect: { town: { where: { id: $townId } } }
     ) {
       centres {
+        id
         town {
           id
           name

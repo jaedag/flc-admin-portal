@@ -211,7 +211,7 @@ const DisplayChurchDetails = (props) => {
             <DetailsCard heading={churchHeading} detail={churchNo} />
           </div>
           <div className="col-9 col-md-6 col-lg-4 pl-3">
-            <DashboardButton btnLink="/bacentaleader/dashboard">
+            <DashboardButton btnLink="/bacenta/report">
               View Records
             </DashboardButton>
           </div>

@@ -59,6 +59,7 @@ const DisplayCampusTownDetails = () => {
     )
   } else if (church.church === 'campus' && campusData) {
     let breadcrumb = [campusData.campuses[0]?.bishop, campusData.campuses[0]]
+
     return (
       <>
         <NavBar />

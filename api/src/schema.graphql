@@ -797,7 +797,7 @@ type Query {
       RETURN member LIMIT 5
       """
     )
-  bishopMemberSearch(searchKey: String!, bishopId: ID!): [Member]
+  bishopMemberSearch(searchKey: String, bishopId: ID): [Member]
     @cypher(
       statement: """
       MATCH (bishop:Member {id: $bishopId})-[:HAS_TOWN|:HAS_CAMPUS]->(campusTown)
@@ -822,7 +822,7 @@ type Query {
       RETURN DISTINCT(members) LIMIT 5
       """
     )
-  constituencyMemberSearch(searchKey: String!, constituencyId: ID!): [Member]
+  constituencyMemberSearch(searchKey: String, constituencyId: ID): [Member]
     @cypher(
       statement: """
       MATCH (constituency {id:$constituencyId}) WHERE constituency:Campus OR constituency:Town
@@ -846,7 +846,7 @@ type Query {
       RETURN DISTINCT(members) LIMIT 5
       """
     )
-  federalBacentaSearch(searchKey: String!): [Bacenta]
+  federalBacentaSearch(searchKey: String): [Bacenta]
     @cypher(
       statement: """
       MATCH (bacenta:Bacenta)
@@ -855,7 +855,7 @@ type Query {
       RETURN bacenta LIMIT 5
       """
     )
-  bishopBacentaSearch(searchKey: String!, bishopId: ID!): [Bacenta]
+  bishopBacentaSearch(searchKey: String, bishopId: ID): [Bacenta]
     @cypher(
       statement: """
       MATCH (bishop:Member {id: $bishopId})-[:HAS_TOWN|:HAS_CAMPUS]->(campusTown)
@@ -867,7 +867,7 @@ type Query {
       RETURN bacenta LIMIT 5
       """
     )
-  constituencyBacentaSearch(searchKey: String!, constituencyId: ID!): [Bacenta]
+  constituencyBacentaSearch(searchKey: String, constituencyId: ID): [Bacenta]
     @cypher(
       statement: """
       MATCH (constituency {id:$constituencyId}) WHERE constituency:Campus OR constituency:Town
@@ -879,7 +879,7 @@ type Query {
       RETURN bacenta LIMIT 5
       """
     )
-  federalCentreSearch(searchKey: String!): [Centre]
+  federalCentreSearch(searchKey: String): [Centre]
     @cypher(
       statement: """
       MATCH (centre:Centre)
@@ -888,7 +888,7 @@ type Query {
       RETURN centre LIMIT 5
       """
     )
-  bishopCentreSearch(searchKey: String!, bishopId: ID!): [Centre]
+  bishopCentreSearch(searchKey: String, bishopId: ID): [Centre]
     @cypher(
       statement: """
       MATCH (bishop:Member {id: $bishopId})-[:HAS_TOWN|:HAS_CAMPUS]->(campusTown)
@@ -899,7 +899,7 @@ type Query {
       RETURN centre LIMIT 5
       """
     )
-  constituencyCentreSearch(searchKey: String!, constituencyId: ID!): [Bacenta]
+  constituencyCentreSearch(searchKey: String, constituencyId: ID): [Bacenta]
     @cypher(
       statement: """
       MATCH (constituency {id:$constituencyId}) WHERE constituency:Campus OR constituency:Town
@@ -910,7 +910,7 @@ type Query {
       RETURN centre LIMIT 5
       """
     )
-  federalCampusSearch(searchKey: String!): [Campus]
+  federalCampusSearch(searchKey: String): [Campus]
     @cypher(
       statement: """
       MATCH (campus:Campus)
@@ -919,7 +919,7 @@ type Query {
       RETURN campus LIMIT 5
       """
     )
-  bishopCampusSearch(searchKey: String!, bishopId: ID!): [Campus]
+  bishopCampusSearch(searchKey: String, bishopId: ID): [Campus]
     @cypher(
       statement: """
       MATCH (bishop:Member {id: $bishopId})-[:HAS_TOWN|:HAS_CAMPUS]->(campus)
@@ -929,7 +929,7 @@ type Query {
       RETURN campus LIMIT 5
       """
     )
-  federalTownSearch(searchKey: String!): [Town]
+  federalTownSearch(searchKey: String): [Town]
     @cypher(
       statement: """
       MATCH (town:Town)
@@ -938,7 +938,7 @@ type Query {
       RETURN town LIMIT 5
       """
     )
-  bishopTownSearch(searchKey: String!, bishopId: ID!): [Town]
+  bishopTownSearch(searchKey: String, bishopId: ID): [Town]
     @cypher(
       statement: """
       MATCH (bishop:Member {id: $bishopId})-[:HAS_TOWN|:HAS_CAMPUS]->(town)
@@ -948,7 +948,7 @@ type Query {
       RETURN town LIMIT 5
       """
     )
-  federalSontaSearch(searchKey: String!): [Sonta]
+  federalSontaSearch(searchKey: String): [Sonta]
     @cypher(
       statement: """
       MATCH (sonta:Sonta)
@@ -957,7 +957,7 @@ type Query {
       RETURN sonta LIMIT 5
       """
     )
-  bishopSontaSearch(searchKey: String!, bishopId: ID!): [Sonta]
+  bishopSontaSearch(searchKey: String, bishopId: ID): [Sonta]
     @cypher(
       statement: """
       MATCH (bishop:Member {id: $bishopId})-[:HAS_TOWN|:HAS_CAMPUS]->(campusTown)
@@ -968,7 +968,7 @@ type Query {
       RETURN sonta LIMIT 5
       """
     )
-  constituencySontaSearch(searchKey: String!, constituencyId: ID!): [Bacenta]
+  constituencySontaSearch(searchKey: String, constituencyId: ID): [Bacenta]
     @cypher(
       statement: """
       MATCH (constituency {id:$constituencyId}) WHERE constituency:Campus OR constituency:Town

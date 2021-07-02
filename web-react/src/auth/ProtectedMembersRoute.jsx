@@ -39,12 +39,26 @@ const ProtectedMembersRoute = ({ component, roles, ...args }) => {
     )
   } else if (currentUser.roles.includes('bishopAdmin')) {
     //if the user does not have permission but is a Bishop's Admin
-
-    return <BishopMembers />
+    return (
+      <Route
+        component={withAuthenticationRequired(BishopMembers, {
+          // eslint-disable-next-line react/display-name
+          onRedirecting: () => <LoadingScreen />,
+        })}
+        {...args}
+      />
+    )
   } else if (currentUser.roles.includes('constituencyAdmin')) {
     //If the user does not have permission but is a CO Admin
-
-    return <CampusTownMembers />
+    return (
+      <Route
+        component={withAuthenticationRequired(CampusTownMembers, {
+          // eslint-disable-next-line react/display-name
+          onRedirecting: () => <LoadingScreen />,
+        })}
+        {...args}
+      />
+    )
   } else {
     return <UnauthMsg />
   }

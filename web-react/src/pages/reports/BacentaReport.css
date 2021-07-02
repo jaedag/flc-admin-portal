@@ -46,3 +46,7 @@
   margin: 0px;
   font-family: 'Roboto';
 }
+
+a.white {
+  color: white;
+}

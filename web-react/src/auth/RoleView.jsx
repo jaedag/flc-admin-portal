@@ -6,12 +6,8 @@ import { isAuthorised } from '../global-utils'
 const RoleView = (props) => {
   const { roles, children } = props
   const { currentUser } = useContext(MemberContext)
-  // const { isAuthenticated } = useAuth0
 
-  if (
-    // isAuthenticated &&
-    isAuthorised(roles, currentUser.roles)
-  ) {
+  if (isAuthorised(roles, currentUser.roles)) {
     return <>{children}</>
   } else {
     return null

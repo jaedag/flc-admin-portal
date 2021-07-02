@@ -4,6 +4,7 @@ import { Formik, Form } from 'formik'
 import FormikControl from './formik-components/FormikControl'
 import { SearchContext } from '../contexts/MemberContext'
 import './MobileSearchNav.css'
+import UserProfileIcon from './UserProfileIcon/UserProfileIcon'
 
 const MobileSearchNav = () => {
   let history = useHistory()
@@ -45,6 +46,9 @@ const MobileSearchNav = () => {
                 >
                   <i className="fas fa-search icon-color" />
                 </button>
+                <div className="d-none">
+                  <UserProfileIcon />
+                </div>
               </div>
             </div>
           </Form>

@@ -39,8 +39,8 @@ const Login = () => {
             className="img-fluid mx-auto d-block d-lg-none"
             style={{ maxWidth: '30%' }}
           />
-          <div className="d-lg-none h2 text-center text-white">
-            FLC Admin{' '}
+          <div className="d-lg-none text-center">
+            <span className="h2 font-weight-bold">FLC Admin</span>
             <sup>
               <small>{version}</small>
             </sup>

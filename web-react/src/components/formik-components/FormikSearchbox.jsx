@@ -46,7 +46,7 @@ function FormikSearchbox(props) {
       }))
     )
   }
-  const [globalSearch] = useLazyQuery(FEDERAL_NEO_SEARCH, {
+  const [federalSearch] = useLazyQuery(FEDERAL_NEO_SEARCH, {
     onCompleted: (data) => {
       const combinedData = [
         ...data.members,
@@ -94,7 +94,7 @@ function FormikSearchbox(props) {
 
   const whichSearch = (searchString) => {
     if (isAuthorised(['federalAdmin'], currentUser.roles)) {
-      globalSearch({
+      federalSearch({
         variables: { searchKey: capitalise(searchString.trim()) },
       })
     }
@@ -125,7 +125,7 @@ function FormikSearchbox(props) {
     return () => {
       clearTimeout(timerId)
     }
-  }, [searchString, globalSearch, debouncedText])
+  }, [searchString, debouncedText])
 
   return (
     <div>

@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client'
 
 export const FEDERAL_SEARCH = gql`
-  query federalSearch($searchKey: String!) {
+  query federalSearch($searchKey: String) {
     federalSontaSearch(searchKey: $searchKey) {
       id
       name
@@ -125,7 +125,7 @@ export const FEDERAL_SEARCH = gql`
 `
 
 export const BISHOP_SEARCH = gql`
-  query bishopSearch($searchKey: String!, $bishopId: ID!) {
+  query bishopSearch($searchKey: String, $bishopId: ID) {
     bishopSontaSearch(searchKey: $searchKey, bishopId: $bishopId) {
       id
       name
@@ -157,7 +157,7 @@ export const BISHOP_SEARCH = gql`
 `
 
 export const CONSTITUENCY_SEARCH = gql`
-  query constituencySearch($searchKey: String!, $constituencyId: ID!) {
+  query constituencySearch($searchKey: String, $constituencyId: ID) {
     constituencySontaSearch(
       searchKey: $searchKey
       constituencyId: $constituencyId
@@ -193,7 +193,7 @@ export const CONSTITUENCY_SEARCH = gql`
 `
 
 export const FEDERAL_NEO_SEARCH = gql`
-  query federalSearch($searchKey: String!) {
+  query federalSearch($searchKey: String) {
     sontas(
       where: {
         OR: [{ name_STARTS_WITH: $searchKey }, { name_CONTAINS: $searchKey }]

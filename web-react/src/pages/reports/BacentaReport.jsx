@@ -1,38 +1,23 @@
 import React, { useContext, useState } from 'react'
 import NavBar from '../../components/nav/NavBar'
 import { ChurchContext } from '../../contexts/ChurchContext'
-import './BacentaLeaderDashboard.css'
+import './BacentaReport.css'
 import { useQuery } from '@apollo/client'
-import { BACENTA_LEADER_DASHBOARD } from './DashboardQueries'
+
 import LoadingScreen from '../../components/LoadingScreen'
 import ErrorScreen from '../../components/ErrorScreen'
 import { average, compareValues, parseNeoDate } from '../../global-utils'
 import { Link } from 'react-router-dom'
 import ChurchGraph from '../../components/ChurchGraph/ChurchGraph'
+import { BACENTA_LEADER_DASHBOARD } from '../dashboards/DashboardQueries'
 
-export const BacentaLeaderDashboard = () => {
+export const BacentaReport = () => {
   const { bacentaId } = useContext(ChurchContext)
 
   const [stats] = useState('attendance')
   const { data, loading } = useQuery(BACENTA_LEADER_DASHBOARD, {
     variables: { bacentaId: bacentaId },
   })
-
-  // const switchAttendanceIncome = (stats) => {
-  //   if (stats === 'income') {
-  //     setStats('attendance')
-  //   } else if (stats === 'attendance') {
-  //     setStats('income')
-  //   }
-  // }
-
-  // const getOtherStat = (stats) => {
-  //   if (stats === 'income') {
-  //     return 'attendance'
-  //   } else if (stats === 'attendance') {
-  //     return 'income'
-  //   }
-  // }
 
   if (loading) {
     return <LoadingScreen />
@@ -74,24 +59,13 @@ export const BacentaLeaderDashboard = () => {
           <div className="row">
             <div className="col">
               <div className="card rounded-corners membership-card">
-                <Link to="/bacenta/members" className="card-body  ">
+                <Link to="/bacenta/members" className="card-body white">
                   <span className="fas fa-users fa-2x  px-1 membership-icon" />
                   <p className="card-title dashboard-title mb-0">Membership</p>
                   <div className="info-text">{bacentaMemberCount}</div>
                 </Link>
               </div>
             </div>
-            {/* <div className="col align-self-center">
-              <div className="row">
-                <DashboardButton btnLink="/bacenta/record-service">
-                  Fill Service Data
-                </DashboardButton>
-                <button
-                  className="btn-primary p-2 btn-pill"
-                  onClick={() => switchAttendanceIncome(stats)}
-                >{`Show ${capitalise(getOtherStat(stats))}`}</button>
-              </div>
-            </div> */}
           </div>
           <div className="row mt-3">
             <div className="col">
@@ -122,4 +96,4 @@ export const BacentaLeaderDashboard = () => {
   }
 }
 
-export default BacentaLeaderDashboard
+export default BacentaReport

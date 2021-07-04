@@ -15,7 +15,7 @@ const ProtectedRoute = ({ component, roles, ...args }) => {
   )
 
   useEffect(() => {
-    if (isAuthenticated && !currentUser.roles.includes('federalAdmin')) {
+    if (isAuthenticated && !currentUser.roles.includes('adminFederal')) {
       setBishopId(currentUser.bishop)
       setChurch(currentUser.church)
       setTownId(currentUser.constituency)

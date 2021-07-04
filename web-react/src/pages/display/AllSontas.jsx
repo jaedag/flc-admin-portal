@@ -52,7 +52,7 @@ const DisplayAllSontas = () => {
                 </Link>
               </div>
               <RoleView
-                roles={['federalAdmin', 'bishopAdmin', 'constituencyAdmin']}
+                roles={['adminFederal', 'adminBishop', 'adminConstituency']}
               >
                 <div className="col-auto">
                   <Link
@@ -113,7 +113,7 @@ const DisplayAllSontas = () => {
                 </Link>
               </div>
               <RoleView
-                roles={['federalAdmin', 'bishopAdmin', 'constituencyAdmin']}
+                roles={['adminFederal', 'adminBishop', 'adminConstituency']}
               >
                 <div className="col-auto">
                   <Link

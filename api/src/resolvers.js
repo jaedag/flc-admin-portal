@@ -215,7 +215,7 @@ export const resolvers = {
 
                     const roles = []
 
-                    assignRoles(auth_id, roles, [authRoles.bishopAdmin.id])
+                    assignRoles(auth_id, roles, [authRoles.adminBishop.id])
                     console.log(
                       `Auth0 Account successfully created for ${admin.firstName} ${admin.lastName}`
                     )
@@ -240,13 +240,13 @@ export const resolvers = {
                     )
                   )
               } else if (admin.auth_id) {
-                //Check auth0 roles and add roles 'bishopAdmin'
+                //Check auth0 roles and add roles 'adminBishop'
                 axios(getUserRoles(admin.auth_id))
                   .then((res) => {
                     const roles = res.data.map((role) => role.name)
 
                     assignRoles(admin.auth_id, roles, [
-                      authRoles.bishopAdmin.id,
+                      authRoles.adminBishop.id,
                     ])
 
                     //Write Auth0 ID of Admin to Neo4j DB
@@ -291,13 +291,13 @@ export const resolvers = {
             (key, i) => (admin[key] = response.records[0]._fields[i])
           )
 
-          //Check auth0 roles and remove roles 'bishopAdmin'
+          //Check auth0 roles and remove roles 'adminBishop'
           axios(getUserRoles(admin.auth_id))
             .then((res) => {
               const roles = res.data.map((role) => role.name)
 
               //If the person is only a bishop Admin, delete auth0 profile
-              if (roles.includes('bishopAdmin') && roles.length === 1) {
+              if (roles.includes('adminBishop') && roles.length === 1) {
                 axios(deleteAuthUserConfig(admin.auth_id)).then(async () => {
                   console.log(
                     `Auth0 Account successfully deleted for ${admin.firstName} ${admin.lastName}`
@@ -312,8 +312,8 @@ export const resolvers = {
               }
 
               //If the person is a bishops admin as well as any other position, remove role bishops admin
-              if (roles.includes('bishopAdmin') && roles.length > 1) {
-                removeRoles(admin.auth_id, roles, authRoles.bishopAdmin.id)
+              if (roles.includes('adminBishop') && roles.length > 1) {
+                removeRoles(admin.auth_id, roles, authRoles.adminBishop.id)
               }
             })
             .catch((error) => {
@@ -366,7 +366,7 @@ export const resolvers = {
                     const roles = []
 
                     assignRoles(auth_id, roles, [
-                      authRoles.constituencyAdmin.id,
+                      authRoles.adminConstituency.id,
                     ])
                     console.log(
                       `Auth0 Account successfully created for ${admin.firstName} ${admin.lastName}`
@@ -392,13 +392,13 @@ export const resolvers = {
                     )
                   )
               } else if (admin.auth_id) {
-                //Check auth0 roles and add roles 'constituencyAdmin'
+                //Check auth0 roles and add roles 'adminConstituency'
                 axios(getUserRoles(admin.auth_id))
                   .then((res) => {
                     const roles = res.data.map((role) => role.name)
 
                     assignRoles(admin.auth_id, roles, [
-                      authRoles.constituencyAdmin.id,
+                      authRoles.adminConstituency.id,
                     ])
 
                     //Write Auth0 ID of Admin to Neo4j DB
@@ -447,13 +447,13 @@ export const resolvers = {
             (key, i) => (admin[key] = response.records[0]._fields[i])
           )
 
-          //Check auth0 roles and remove roles 'constituencyAdmin'
+          //Check auth0 roles and remove roles 'adminConstituency'
           axios(getUserRoles(admin.auth_id))
             .then((res) => {
               const roles = res.data.map((role) => role.name)
 
               //If the person is only a constituency Admin, delete auth0 profile
-              if (roles.includes('constituencyAdmin') && roles.length === 1) {
+              if (roles.includes('adminConstituency') && roles.length === 1) {
                 axios(deleteAuthUserConfig(admin.auth_id)).then(async () => {
                   console.log(
                     `Auth0 Account successfully deleted for ${admin.firstName} ${admin.lastName}`
@@ -468,11 +468,11 @@ export const resolvers = {
               }
 
               //If the person is a bishops admin as well as any other position, remove role bishops admin
-              if (roles.includes('constituencyAdmin') && roles.length > 1) {
+              if (roles.includes('adminConstituency') && roles.length > 1) {
                 removeRoles(
                   admin.auth_id,
                   roles,
-                  authRoles.constituencyAdmin.id
+                  authRoles.adminConstituency.id
                 )
               }
             })
@@ -527,7 +527,7 @@ export const resolvers = {
                     const roles = []
 
                     assignRoles(auth_id, roles, [
-                      authRoles.constituencyAdmin.id,
+                      authRoles.adminConstituency.id,
                     ])
                     console.log(
                       `Auth0 Account successfully created for ${admin.firstName} ${admin.lastName}`
@@ -553,13 +553,13 @@ export const resolvers = {
                     )
                   )
               } else if (admin.auth_id) {
-                //Check auth0 roles and add roles 'constituencyAdmin'
+                //Check auth0 roles and add roles 'adminConstituency'
                 axios(getUserRoles(admin.auth_id))
                   .then((res) => {
                     const roles = res.data.map((role) => role.name)
 
                     assignRoles(admin.auth_id, roles, [
-                      authRoles.constituencyAdmin.id,
+                      authRoles.adminConstituency.id,
                     ])
 
                     //Write Auth0 ID of Admin to Neo4j DB
@@ -605,13 +605,13 @@ export const resolvers = {
             (key, i) => (admin[key] = response.records[0]._fields[i])
           )
 
-          //Check auth0 roles and remove roles 'constituencyAdmin'
+          //Check auth0 roles and remove roles 'adminConstituency'
           axios(getUserRoles(admin.auth_id))
             .then((res) => {
               const roles = res.data.map((role) => role.name)
 
               //If the person is only a constituency Admin, delete auth0 profile
-              if (roles.includes('constituencyAdmin') && roles.length === 1) {
+              if (roles.includes('adminConstituency') && roles.length === 1) {
                 axios(deleteAuthUserConfig(admin.auth_id)).then(async () => {
                   console.log(
                     `Auth0 Account successfully deleted for ${admin.firstName} ${admin.lastName}`
@@ -626,11 +626,11 @@ export const resolvers = {
               }
 
               //If the person is a bishops admin as well as any other position, remove role bishops admin
-              if (roles.includes('constituencyAdmin') && roles.length > 1) {
+              if (roles.includes('adminConstituency') && roles.length > 1) {
                 removeRoles(
                   admin.auth_id,
                   roles,
-                  authRoles.constituencyAdmin.id
+                  authRoles.adminConstituency.id
                 )
               }
             })

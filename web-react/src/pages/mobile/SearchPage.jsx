@@ -9,7 +9,7 @@ import {
 import { MemberContext, SearchContext } from '../../contexts/MemberContext'
 import Spinner from '../../components/Spinner.jsx'
 import MemberDisplayCard from '../../components/card/MemberDisplayCard'
-import { isAuthorised } from 'global-utils.js'
+import { capitalise, isAuthorised } from 'global-utils.js'
 
 const SearchPageMobile = () => {
   const { searchKey } = useContext(SearchContext)
@@ -18,14 +18,17 @@ const SearchPageMobile = () => {
   const [combinedData, setCombinedData] = useState([])
 
   const whichSearch = () => {
-    if (isAuthorised(['federalAdmin'], currentUser.roles)) {
-      return { fedkey: searchKey }
+    if (isAuthorised(['adminFederal'], currentUser.roles)) {
+      return capitalise(searchKey)
     }
-    if (isAuthorised(['bishopAdmin'], currentUser.roles)) {
-      return { key: searchKey, bishop: currentUser.bishop }
+    if (isAuthorised(['adminBishop'], currentUser.roles)) {
+      return { key: capitalise(searchKey), bishop: currentUser.bishop }
     }
-    if (isAuthorised(['constituencyAdmin'], currentUser.roles)) {
-      return { key: searchKey, constituency: currentUser.constituency }
+    if (isAuthorised(['adminConstituency'], currentUser.roles)) {
+      return {
+        key: capitalise(searchKey),
+        constituency: currentUser.constituency,
+      }
     }
     return
   }
@@ -35,9 +38,9 @@ const SearchPageMobile = () => {
   const { data: federalData, loading: federalLoading } = useQuery(
     FEDERAL_NEO_SEARCH,
     {
-      variables: { searchKey: searchVars?.fedKey },
+      variables: { searchKey: searchVars },
       onCompleted: (data) => {
-        if (!isAuthorised(['federalAdmin'], currentUser.roles)) {
+        if (!isAuthorised(['adminFederal'], currentUser.roles)) {
           return
         }
         setCombinedData([
@@ -55,7 +58,7 @@ const SearchPageMobile = () => {
   const { data: bishopData, loading: bishopLoading } = useQuery(BISHOP_SEARCH, {
     variables: { searchKey: searchVars?.key, bishopId: searchVars?.bishop },
     onCompleted: (data) => {
-      if (!isAuthorised(['bishopAdmin'], currentUser.roles)) {
+      if (!isAuthorised(['adminBishop'], currentUser.roles)) {
         return
       }
       setCombinedData([
@@ -77,7 +80,7 @@ const SearchPageMobile = () => {
         constituencyId: searchVars?.constituency ?? '',
       },
       onCompleted: (data) => {
-        if (!isAuthorised(['constituencyAdmin'], currentUser.roles)) {
+        if (!isAuthorised(['adminConstituency'], currentUser.roles)) {
           return
         }
 

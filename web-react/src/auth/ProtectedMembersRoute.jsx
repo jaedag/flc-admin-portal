@@ -17,7 +17,7 @@ const ProtectedMembersRoute = ({ component, roles, ...args }) => {
   )
 
   useEffect(() => {
-    if (isAuthenticated && !currentUser.roles.includes('federalAdmin')) {
+    if (isAuthenticated && !currentUser.roles.includes('adminFederal')) {
       setBishopId(currentUser.bishop)
       setChurch(currentUser.church)
       setTownId(currentUser.constituency)
@@ -37,7 +37,7 @@ const ProtectedMembersRoute = ({ component, roles, ...args }) => {
         {...args}
       />
     )
-  } else if (currentUser.roles.includes('bishopAdmin')) {
+  } else if (currentUser.roles.includes('adminBishop')) {
     //if the user does not have permission but is a Bishop's Admin
     return (
       <Route
@@ -48,7 +48,7 @@ const ProtectedMembersRoute = ({ component, roles, ...args }) => {
         {...args}
       />
     )
-  } else if (currentUser.roles.includes('constituencyAdmin')) {
+  } else if (currentUser.roles.includes('adminConstituency')) {
     //If the user does not have permission but is a CO Admin
     return (
       <Route

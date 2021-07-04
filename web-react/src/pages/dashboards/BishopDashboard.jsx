@@ -91,17 +91,17 @@ const BishopDashboard = () => {
     {
       link: '/bacenta/addbacenta',
       buttonText: 'Start a Bacenta',
-      roles: ['federalAdmin', 'bishopAdmin', 'constituencyAdmin'],
+      roles: ['adminFederal', 'adminBishop', 'adminConstituency'],
     },
     {
       link: '/centre/addcentre',
       buttonText: 'Start a Centre',
-      roles: ['federalAdmin', 'bishopAdmin', 'constituencyAdmin'],
+      roles: ['adminFederal', 'adminBishop', 'adminConstituency'],
     },
     {
       link: `/${churchStream}/add${churchStream}`,
       buttonText: `Add ${capitalise(churchStream)}`,
-      roles: ['federalAdmin', 'bishopAdmin'],
+      roles: ['adminFederal', 'adminBishop'],
     },
   ]
 
@@ -146,7 +146,7 @@ const BishopDashboard = () => {
             >
               {bishop?.hasAdmin ? adminName : null}
             </p>
-            <RoleView roles={['federalAdmin']}>
+            <RoleView roles={['adminFederal']}>
               <input
                 type="button"
                 className={`btn btn-primary text-nowrap`}

@@ -21,7 +21,7 @@ const NavBar = () => {
         <NavLink label="Home" linkTo="/" icon="home" />
 
         {atHome && (
-          <RoleView roles={['federalAdmin']}>
+          <RoleView roles={['adminFederal']}>
             <NavLink label="Bishop" linkTo="/dashboard" icon="bold" />
           </RoleView>
         )}
@@ -34,7 +34,7 @@ const NavBar = () => {
         )}
 
         {atHome && (
-          <RoleView roles={['federalAdmin', 'bishopAdmin']}>
+          <RoleView roles={['adminFederal', 'adminBishop']}>
             <NavLink
               linkTo={`/${church.church}/displayall`}
               label={`${capitalise(church.church)}`}

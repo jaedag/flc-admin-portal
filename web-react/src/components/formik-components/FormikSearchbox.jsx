@@ -56,7 +56,7 @@ function FormikSearchbox(props) {
         ...data.centres,
         ...data.bacentas,
       ]
-      if (currentUser.roles.includes('federalAdmin')) {
+      if (currentUser.roles.includes('adminFederal')) {
         getSuggestions(combinedData)
       }
     },
@@ -72,7 +72,7 @@ function FormikSearchbox(props) {
         ...data.bishopBacentaSearch,
       ]
 
-      if (currentUser.roles.includes('bishopAdmin')) {
+      if (currentUser.roles.includes('adminBishop')) {
         getSuggestions(combinedData)
       }
     },
@@ -86,19 +86,19 @@ function FormikSearchbox(props) {
         ...data.constituencyBacentaSearch,
       ]
 
-      if (currentUser.roles.includes('constituencyAdmin')) {
+      if (currentUser.roles.includes('adminConstituency')) {
         getSuggestions(combinedData)
       }
     },
   })
 
   const whichSearch = (searchString) => {
-    if (isAuthorised(['federalAdmin'], currentUser.roles)) {
+    if (isAuthorised(['adminFederal'], currentUser.roles)) {
       federalSearch({
         variables: { searchKey: capitalise(searchString.trim()) },
       })
     }
-    if (isAuthorised(['bishopAdmin'], currentUser.roles)) {
+    if (isAuthorised(['adminBishop'], currentUser.roles)) {
       bishopSearch({
         variables: {
           bishopId: currentUser.bishop,
@@ -106,7 +106,7 @@ function FormikSearchbox(props) {
         },
       })
     }
-    if (isAuthorised(['constituencyAdmin'], currentUser.roles)) {
+    if (isAuthorised(['adminConstituency'], currentUser.roles)) {
       constituencySearch({
         variables: {
           constituencyId: currentUser.constituency,

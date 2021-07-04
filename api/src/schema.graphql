@@ -82,8 +82,8 @@ type Member {
       OPTIONAL MATCH (centre)<-[:LEADS]-(centreLeader:Member)
       OPTIONAL MATCH (campusTown)<-[:LEADS]-(constituencyOverseer:Member)
       OPTIONAL MATCH (this)<-[:IS_ADMIN_FOR]-(admin:Member)
-      OPTIONAL MATCH (campusTown)<-[:IS_ADMIN_FOR]-(constituencyAdmin:Member)
-      UNWIND [member,bacentaLeader,centreLeader,constituencyOverseer,admin,constituencyAdmin] as members
+      OPTIONAL MATCH (campusTown)<-[:IS_ADMIN_FOR]-(adminConstituency:Member)
+      UNWIND [member,bacentaLeader,centreLeader,constituencyOverseer,admin,adminConstituency] as members
 
       WITH members WHERE members IS NOT NULL
 
@@ -98,31 +98,31 @@ type Member {
 
 extend type Member
   @auth(
-    rules: [{ roles: ["federalAdmin", "bishopAdmin", "constituencyAdmin"] }]
+    rules: [{ roles: ["adminFederal", "adminBishop", "adminConstituency"] }]
   )
 extend type Bacenta
   @auth(
-    rules: [{ roles: ["federalAdmin", "bishopAdmin", "constituencyAdmin"] }]
+    rules: [{ roles: ["adminFederal", "adminBishop", "adminConstituency"] }]
   )
 extend type Centre
   @auth(
-    rules: [{ roles: ["federalAdmin", "bishopAdmin", "constituencyAdmin"] }]
+    rules: [{ roles: ["adminFederal", "adminBishop", "adminConstituency"] }]
   )
 extend type Campus
   @auth(
-    rules: [{ roles: ["federalAdmin", "bishopAdmin", "constituencyAdmin"] }]
+    rules: [{ roles: ["adminFederal", "adminBishop", "adminConstituency"] }]
   )
 extend type Town
   @auth(
-    rules: [{ roles: ["federalAdmin", "bishopAdmin", "constituencyAdmin"] }]
+    rules: [{ roles: ["adminFederal", "adminBishop", "adminConstituency"] }]
   )
 extend type Sonta
   @auth(
-    rules: [{ roles: ["federalAdmin", "bishopAdmin", "constituencyAdmin"] }]
+    rules: [{ roles: ["adminFederal", "adminBishop", "adminConstituency"] }]
   )
 extend type Ministry
   @auth(
-    rules: [{ roles: ["federalAdmin", "bishopAdmin", "constituencyAdmin"] }]
+    rules: [{ roles: ["adminFederal", "adminBishop", "adminConstituency"] }]
   )
 
 type Gender {
@@ -254,8 +254,8 @@ type Campus {
       OPTIONAL MATCH (bacenta)<-[:LEADS]-(bacentaLeader:Member)
       OPTIONAL MATCH (centre)<-[:LEADS]-(centreLeader:Member)
       OPTIONAL MATCH (this)<-[:LEADS]-(constituencyOverseer:Member)
-       OPTIONAL MATCH (this)<-[:IS_ADMIN_FOR]-(constituencyAdmin:Member)
-      UNWIND [member,bacentaLeader,centreLeader,constituencyOverseer,constituencyAdmin] as members
+       OPTIONAL MATCH (this)<-[:IS_ADMIN_FOR]-(adminConstituency:Member)
+      UNWIND [member,bacentaLeader,centreLeader,constituencyOverseer,adminConstituency] as members
       WITH members WHERE members IS NOT NULL
       RETURN DISTINCT members ORDER BY members.firstName
       """
@@ -281,8 +281,8 @@ type Town {
       OPTIONAL MATCH (bacenta)<-[:LEADS]-(bacentaLeader:Member)
       OPTIONAL MATCH (centre)<-[:LEADS]-(centreLeader:Member)
       OPTIONAL MATCH (this)<-[:LEADS]-(constituencyOverseer:Member)
-       OPTIONAL MATCH (this)<-[:IS_ADMIN_FOR]-(constituencyAdmin:Member)
-      UNWIND [member,bacentaLeader,centreLeader,constituencyOverseer,constituencyAdmin] as members
+       OPTIONAL MATCH (this)<-[:IS_ADMIN_FOR]-(adminConstituency:Member)
+      UNWIND [member,bacentaLeader,centreLeader,constituencyOverseer,adminConstituency] as members
       WITH members WHERE members IS NOT NULL
       RETURN DISTINCT members ORDER BY members.firstName
       """
@@ -483,8 +483,8 @@ type Query {
   #     OPTIONAL MATCH (centre)<-[:LEADS]-(centreLeader:Member)
   #     OPTIONAL MATCH (campusTown)<-[:LEADS]-(constituencyOverseer:Member)
   #     OPTIONAL MATCH (bishop)<-[:IS_ADMIN_FOR]-(admin:Member)
-  #      OPTIONAL MATCH (campusTown)<-[:IS_ADMIN_FOR]-(constituencyAdmin:Member)
-  #     UNWIND [member,bacentaLeader,centreLeader,constituencyOverseer,admin,constituencyAdmin] as members
+  #      OPTIONAL MATCH (campusTown)<-[:IS_ADMIN_FOR]-(adminConstituency:Member)
+  #     UNWIND [member,bacentaLeader,centreLeader,constituencyOverseer,admin,adminConstituency] as members
   #     WITH members WHERE members IS NOT NULL
   #     RETURN DISTINCT members
   #     """
@@ -498,8 +498,8 @@ type Query {
       OPTIONAL MATCH (centre)<-[:LEADS]-(centreLeader:Member)
       OPTIONAL MATCH (campusTown)<-[:LEADS]-(constituencyOverseer:Member)
       OPTIONAL MATCH (bishop)<-[:IS_ADMIN_FOR]-(admin:Member)
-      OPTIONAL MATCH (campusTown)<-[:IS_ADMIN_FOR]-(constituencyAdmin:Member)
-      UNWIND [member,bacentaLeader,centreLeader,constituencyOverseer,admin,constituencyAdmin] as members
+      OPTIONAL MATCH (campusTown)<-[:IS_ADMIN_FOR]-(adminConstituency:Member)
+      UNWIND [member,bacentaLeader,centreLeader,constituencyOverseer,admin,adminConstituency] as members
       WITH members WHERE members IS NOT NULL
       AND toLower(members.firstName+ " " + members.lastName) CONTAINS toLower($nameSearch)
       RETURN DISTINCT members LIMIT 5
@@ -515,9 +515,9 @@ type Query {
       OPTIONAL MATCH (bacenta)<-[:LEADS]-(bacentaLeader:Member)
       OPTIONAL MATCH (centre)<-[:LEADS]-(centreLeader:Member)
       OPTIONAL MATCH (campusTown)<-[:LEADS]-(constituencyOverseer:Member)
-      OPTIONAL MATCH (bishop)<-[:IS_ADMIN_FOR]-(bishopAdmin:Member)
-      OPTIONAL MATCH (campusTown)<-[:IS_ADMIN_FOR]-(constituencyAdmin:Member)
-      UNWIND [member,bacentaLeader,centreLeader,constituencyOverseer,bishopAdmin,constituencyAdmin] as members
+      OPTIONAL MATCH (bishop)<-[:IS_ADMIN_FOR]-(adminBishop:Member)
+      OPTIONAL MATCH (campusTown)<-[:IS_ADMIN_FOR]-(adminConstituency:Member)
+      UNWIND [member,bacentaLeader,centreLeader,constituencyOverseer,adminBishop,adminConstituency] as members
       WITH members WHERE members IS NOT NULL
       RETURN COUNT(DISTINCT members)
       """
@@ -530,8 +530,8 @@ type Query {
   #     OPTIONAL MATCH (bacenta)<-[:LEADS]-(bacentaLeader:Member)
   #     OPTIONAL MATCH (centre)<-[:LEADS]-(centreLeader:Member)
   #     OPTIONAL MATCH (campusTown)<-[:LEADS]-(constituencyOverseer:Member)
-  #      OPTIONAL MATCH (campusTown)<-[:IS_ADMIN_FOR]-(constituencyAdmin:Member)
-  #     UNWIND [member,bacentaLeader,centreLeader,constituencyOverseer,constituencyAdmin] as members
+  #      OPTIONAL MATCH (campusTown)<-[:IS_ADMIN_FOR]-(adminConstituency:Member)
+  #     UNWIND [member,bacentaLeader,centreLeader,constituencyOverseer,adminConstituency] as members
   #     WITH members WHERE members IS NOT NULL
   #     RETURN DISTINCT members
   #     """
@@ -544,8 +544,8 @@ type Query {
   #     OPTIONAL MATCH (bacenta)<-[:LEADS]-(bacentaLeader:Member)
   #     OPTIONAL MATCH (centre)<-[:LEADS]-(centreLeader:Member)
   #     OPTIONAL MATCH (campusTown)<-[:LEADS]-(constituencyOverseer:Member)
-  #      OPTIONAL MATCH (campusTown)<-[:IS_ADMIN_FOR]-(constituencyAdmin:Member)
-  #     UNWIND [member,bacentaLeader,centreLeader,constituencyOverseer,constituencyAdmin] as members
+  #      OPTIONAL MATCH (campusTown)<-[:IS_ADMIN_FOR]-(adminConstituency:Member)
+  #     UNWIND [member,bacentaLeader,centreLeader,constituencyOverseer,adminConstituency] as members
   #     WITH members WHERE members IS NOT NULL
   #     RETURN DISTINCT members ORDER BY members.firstName
   #     """
@@ -577,8 +577,8 @@ type Query {
       OPTIONAL MATCH (bacenta)<-[:LEADS]-(bacentaLeader:Member)
       OPTIONAL MATCH (centre)<-[:LEADS]-(centreLeader:Member)
       OPTIONAL MATCH (campusTown)<-[:LEADS]-(constituencyOverseer:Member)
-       OPTIONAL MATCH (campusTown)<-[:IS_ADMIN_FOR]-(constituencyAdmin:Member)
-      UNWIND [member,bacentaLeader,centreLeader,constituencyOverseer,constituencyAdmin] as members
+       OPTIONAL MATCH (campusTown)<-[:IS_ADMIN_FOR]-(adminConstituency:Member)
+      UNWIND [member,bacentaLeader,centreLeader,constituencyOverseer,adminConstituency] as members
       WITH members WHERE members IS NOT NULL
       RETURN COUNT(DISTINCT members)
       """
@@ -622,8 +622,8 @@ type Query {
       OPTIONAL MATCH (bacenta)<-[:LEADS]-(bacentaLeader:Member)
       OPTIONAL MATCH (centre)<-[:LEADS]-(centreLeader:Member)
       OPTIONAL MATCH (campusTown)<-[:LEADS]-(constituencyOverseer:Member)
-       OPTIONAL MATCH (campusTown)<-[:IS_ADMIN_FOR]-(constituencyAdmin:Member)
-      UNWIND [member,bacentaLeader,centreLeader,constituencyOverseer,constituencyAdmin] as members
+       OPTIONAL MATCH (campusTown)<-[:IS_ADMIN_FOR]-(adminConstituency:Member)
+      UNWIND [member,bacentaLeader,centreLeader,constituencyOverseer,adminConstituency] as members
       WITH members WHERE members IS NOT NULL
       RETURN COUNT(DISTINCT members)
       """
@@ -807,9 +807,9 @@ type Query {
       OPTIONAL MATCH (bacenta)<-[:LEADS]-(bacentaLeader:Member)
       OPTIONAL MATCH (centre)<-[:LEADS]-(centreLeader:Member)
       OPTIONAL MATCH (campusTown)<-[:LEADS]-(constituencyOverseer:Member)
-      OPTIONAL MATCH (bishop)<-[:IS_ADMIN_FOR]-(bishopAdmin:Member)
-      OPTIONAL MATCH (campusTown)<-[:IS_ADMIN_FOR]-(constituencyAdmin:Member)
-      UNWIND [member,bacentaLeader,centreLeader,constituencyOverseer,bishopAdmin,constituencyAdmin] as members
+      OPTIONAL MATCH (bishop)<-[:IS_ADMIN_FOR]-(adminBishop:Member)
+      OPTIONAL MATCH (campusTown)<-[:IS_ADMIN_FOR]-(adminConstituency:Member)
+      UNWIND [member,bacentaLeader,centreLeader,constituencyOverseer,adminBishop,adminConstituency] as members
       WITH members WHERE members IS NOT NULL
 
       AND toLower(members.firstName) = toLower($searchKey)
@@ -832,8 +832,8 @@ type Query {
       OPTIONAL MATCH (bacenta)<-[:LEADS]-(bacentaLeader:Member)
       OPTIONAL MATCH (centre)<-[:LEADS]-(centreLeader:Member)
       OPTIONAL MATCH (constituency)<-[:LEADS]-(constituencyOverseer:Member)
-      OPTIONAL MATCH (constituency)<-[:IS_ADMIN_FOR]-(constituencyAdmin:Member)
-      UNWIND [member,bacentaLeader,centreLeader,constituencyOverseer,constituencyAdmin] as members
+      OPTIONAL MATCH (constituency)<-[:IS_ADMIN_FOR]-(adminConstituency:Member)
+      UNWIND [member,bacentaLeader,centreLeader,constituencyOverseer,adminConstituency] as members
       WITH members WHERE members IS NOT NULL
 
       AND toLower(members.firstName) = toLower($searchKey)
@@ -980,7 +980,6 @@ type Query {
       """
     )
 
-
   occupationList(searchKey: String!): [Occupation]
     @cypher(
       statement: "MATCH (occupation:Occupation) WHERE toLower(occupation.occupation) CONTAINS toLower($searchKey) RETURN occupation"
@@ -1015,7 +1014,7 @@ type Mutation {
     pictureUrl: String!
   ): Member
     @auth(
-      rules: [{ roles: ["federalAdmin", "bishopAdmin", "constituencyAdmin"] }]
+      rules: [{ roles: ["adminFederal", "adminBishop", "adminConstituency"] }]
     )
     @cypher(
       statement: """
@@ -1088,7 +1087,7 @@ type Mutation {
     )
 
   CreateTown(townName: String!, leaderId: ID!, bishopId: ID!): Town
-    @auth(rules: [{ roles: ["federalAdmin", "bishopAdmin"] }])
+    @auth(rules: [{ roles: ["adminFederal", "adminBishop"] }])
     @cypher(
       statement: """
        CREATE (town:Town {name:$townName})
@@ -1118,7 +1117,7 @@ type Mutation {
       """
     )
   CreateCampus(campusName: String!, leaderId: ID!, bishopId: ID!): Campus
-    @auth(rules: [{ roles: ["federalAdmin", "bishopAdmin"] }])
+    @auth(rules: [{ roles: ["adminFederal", "adminBishop"] }])
     @cypher(
       statement: """
       CREATE (campus:Campus {name:$campusName})
@@ -1150,7 +1149,7 @@ type Mutation {
 
   CreateCentre(centreName: String!, leaderId: ID!, townCampusId: ID!): Centre
     @auth(
-      rules: [{ roles: ["federalAdmin", "bishopAdmin", "constituencyAdmin"] }]
+      rules: [{ roles: ["adminFederal", "adminBishop", "adminConstituency"] }]
     )
     @cypher(
       statement: """
@@ -1183,7 +1182,7 @@ type Mutation {
     )
   CreateSonta(ministryId: ID!, leaderId: ID!, townCampusId: ID!): Sonta
     @auth(
-      rules: [{ roles: ["federalAdmin", "bishopAdmin", "constituencyAdmin"] }]
+      rules: [{ roles: ["adminFederal", "adminBishop", "adminConstituency"] }]
     )
     @cypher(
       statement: """
@@ -1227,7 +1226,7 @@ type Mutation {
     venueLatitude: Float
   ): Bacenta
     @auth(
-      rules: [{ roles: ["federalAdmin", "bishopAdmin", "constituencyAdmin"] }]
+      rules: [{ roles: ["adminFederal", "adminBishop", "adminConstituency"] }]
     )
     @cypher(
       statement: """
@@ -1279,7 +1278,7 @@ type Mutation {
     pictureUrl: String!
   ): Member
     @auth(
-      rules: [{ roles: ["federalAdmin", "bishopAdmin", "constituencyAdmin"] }]
+      rules: [{ roles: ["adminFederal", "adminBishop", "adminConstituency"] }]
     )
     @cypher(
       statement: """
@@ -1362,7 +1361,7 @@ type Mutation {
     leaderId: ID!
     bishopId: ID!
   ): Member
-    @auth(rules: [{ roles: ["federalAdmin", "bishopAdmin"] }])
+    @auth(rules: [{ roles: ["adminFederal", "adminBishop"] }])
     @cypher(
       statement: """
       MATCH (town:Town {id: $townId})
@@ -1398,7 +1397,7 @@ type Mutation {
     leaderId: ID!
     bishopId: ID!
   ): Member
-    @auth(rules: [{ roles: ["federalAdmin", "bishopAdmin"] }])
+    @auth(rules: [{ roles: ["adminFederal", "adminBishop"] }])
     @cypher(
       statement: """
            MATCH (campus:Campus {id: $campusId})
@@ -1435,7 +1434,7 @@ type Mutation {
     campusTownId: ID
   ): Member
     @auth(
-      rules: [{ roles: ["federalAdmin", "bishopAdmin", "constituencyAdmin"] }]
+      rules: [{ roles: ["adminFederal", "adminBishop", "adminConstituency"] }]
     )
     @cypher(
       statement: """
@@ -1476,7 +1475,7 @@ type Mutation {
     venueLatitude: Float
   ): Member
     @auth(
-      rules: [{ roles: ["federalAdmin", "bishopAdmin", "constituencyAdmin"] }]
+      rules: [{ roles: ["adminFederal", "adminBishop", "adminConstituency"] }]
     )
     @cypher(
       statement: """
@@ -1773,7 +1772,6 @@ type Mutation {
       MATCH (treasurer1:Member {id:$treasurer1})
       MATCH (treasurer2:Member {id:$treasurer2})
       MATCH (bacenta:Bacenta {id:$bacentaId})-[has_history:HAS_HISTORY]->(log:HistoryLog) WHERE has_history.current = true
-
 
       MERGE (serviceDate:TimeGraph {date:date($serviceDate)})
       MERGE (serviceRecord)-[:SERVICE_HELD_ON]->(serviceDate)

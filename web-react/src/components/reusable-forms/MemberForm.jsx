@@ -206,7 +206,7 @@ function MemberForm({ formik, initialValues }) {
         {/* <!-- End of Church Info Section--> */}
 
         {/* <!-- Beginning of Pastoral Appointments Section--> */}
-        <RoleView roles={['federalAdmin', 'bishopAdmin']}>
+        <RoleView roles={['adminFederal', 'adminBishop']}>
           <div className="col my-4">
             <HeadingBar title="Pastoral Appointments (if any)" />
             <FieldArray name="pastoralAppointment">
@@ -251,7 +251,7 @@ function MemberForm({ formik, initialValues }) {
         {/* <!--End of Pastoral Appointments Section--> */}
 
         {/* <!--Beginning of Pastoral History Section--> */}
-        <RoleView roles={['federalAdmin', 'bishopAdmin']}>
+        <RoleView roles={['adminFederal', 'adminBishop']}>
           <div className="col my-4">
             <HeadingBar title="Pastoral History" />
             <FieldArray name="pastoralHistory">

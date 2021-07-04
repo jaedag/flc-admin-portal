@@ -9,13 +9,13 @@ import ErrorScreen from '../../components/ErrorScreen'
 import { average, compareValues, parseNeoDate } from '../../global-utils'
 import { Link } from 'react-router-dom'
 import ChurchGraph from '../../components/ChurchGraph/ChurchGraph'
-import { BACENTA_LEADER_DASHBOARD } from '../dashboards/DashboardQueries'
+import { BACENTA_REPORT } from './ReportQueries'
 
 export const BacentaReport = () => {
   const { bacentaId } = useContext(ChurchContext)
 
   const [stats] = useState('attendance')
-  const { data, loading } = useQuery(BACENTA_LEADER_DASHBOARD, {
+  const { data, loading } = useQuery(BACENTA_REPORT, {
     variables: { bacentaId: bacentaId },
   })
 
@@ -52,15 +52,18 @@ export const BacentaReport = () => {
         <NavBar />
         <div className="container">
           <div className=" my-3">
-            <p className="mb-0">Welcome!</p>
-            <h5>{`${bacentas[0].leader.fullName}`}</h5>
+            <h5 className="mb-0">{`${bacentas[0].name} Bacenta`}</h5>{' '}
+            <p>
+              <span className="text-secondary font-weight-bold">Leader: </span>
+              {`${bacentas[0].leader.fullName}`}
+            </p>
           </div>
 
           <div className="row">
             <div className="col">
               <div className="card rounded-corners membership-card">
                 <Link to="/bacenta/members" className="card-body white">
-                  <span className="fas fa-users fa-2x  px-1 membership-icon" />
+                  <span className="fas fa-users fa-2x px-1 membership-icon" />
                   <p className="card-title dashboard-title mb-0">Membership</p>
                   <div className="info-text">{bacentaMemberCount}</div>
                 </Link>

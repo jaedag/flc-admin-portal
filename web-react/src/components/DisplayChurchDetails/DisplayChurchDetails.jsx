@@ -110,7 +110,7 @@ const DisplayChurchDetails = (props) => {
           <Breadcrumb breadcrumb={breadcrumb} />
           <h3 className="mx-3 mt-3 font-weight-bold">
             {`${name} ${churchType}`}
-            <RoleView roles={['federalAdmin', 'bishopAdmin']}>
+            <RoleView roles={['adminFederal', 'adminBishop']}>
               <EditButton link={editlink} />
             </RoleView>
           </h3>
@@ -126,7 +126,7 @@ const DisplayChurchDetails = (props) => {
             </Link>
           )}
           {isConstituency && (
-            <RoleView roles={['federalAdmin', 'bishopAdmin']}>
+            <RoleView roles={['adminFederal', 'adminBishop']}>
               <input
                 type="button"
                 className={`btn btn-primary text-nowrap`}

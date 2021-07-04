@@ -70,7 +70,7 @@ const DisplayAllTownCampuses = () => {
                   </Link>
                 ) : null}
               </div>
-              <RoleView roles={['federalAdmin', 'bishopAdmin']}>
+              <RoleView roles={['adminFederal', 'adminBishop']}>
                 <div className="col-auto">
                   <Link to="/town/addtown" className="btn btn-primary">
                     Add Town
@@ -124,7 +124,7 @@ const DisplayAllTownCampuses = () => {
                   </Link>
                 ) : null}
               </div>
-              <RoleView roles={['federalAdmin', 'bishopAdmin']}>
+              <RoleView roles={['adminFederal', 'adminBishop']}>
                 <div className="col-auto">
                   <Link to="/campus/addcampus" className="btn btn-primary">
                     Add Campus

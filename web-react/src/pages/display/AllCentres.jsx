@@ -56,7 +56,7 @@ const DisplayAllCentres = () => {
                 </Link>
               </div>
               <RoleView
-                roles={['federalAdmin', 'bishopAdmin', 'constituencyAdmin']}
+                roles={['adminFederal', 'adminBishop', 'adminConstituency']}
               >
                 <div className="col-auto">
                   <Link
@@ -120,7 +120,7 @@ const DisplayAllCentres = () => {
                 </Link>
               </div>
               <RoleView
-                roles={['federalAdmin', 'bishopAdmin', 'constituencyAdmin']}
+                roles={['adminFederal', 'adminBishop', 'adminConstituency']}
               >
                 <div className="col-auto">
                   <Link

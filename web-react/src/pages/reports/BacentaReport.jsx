@@ -6,7 +6,7 @@ import { useQuery } from '@apollo/client'
 
 import LoadingScreen from '../../components/LoadingScreen'
 import ErrorScreen from '../../components/ErrorScreen'
-import { average, compareValues, parseNeoDate } from '../../global-utils'
+import { average, sortingFunction, parseNeoDate } from '../../global-utils'
 import { Link } from 'react-router-dom'
 import ChurchGraph from '../../components/ChurchGraph/ChurchGraph'
 import { BACENTA_REPORT } from './ReportQueries'
@@ -39,7 +39,7 @@ export const BacentaReport = () => {
       })
     })
 
-    serviceData.sort(compareValues('date'))
+    serviceData.sort(sortingFunction('date'))
 
     const monthlyStatAverage = (data, stat) => {
       const statArray = data.map((service) => service[`${stat}`])

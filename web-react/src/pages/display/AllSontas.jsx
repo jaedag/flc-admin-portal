@@ -51,18 +51,20 @@ const DisplayAllSontas = () => {
                   )}`}</h4>
                 </Link>
               </div>
-              <RoleView
-                roles={['adminFederal', 'adminBishop', 'adminConstituency']}
-              >
-                <div className="col-auto">
-                  <Link
-                    to="/sonta/addsonta"
-                    className="btn btn-primary text-nowrap"
-                  >
-                    Add Sonta
-                  </Link>
-                </div>
-              </RoleView>
+              {campusCentreData.sontas.length < 10 && (
+                <RoleView
+                  roles={['adminFederal', 'adminBishop', 'adminConstituency']}
+                >
+                  <div className="col-auto">
+                    <Link
+                      to="/sonta/addsonta"
+                      className="btn btn-primary text-nowrap"
+                    >
+                      Add Sonta
+                    </Link>
+                  </div>
+                </RoleView>
+              )}
             </div>
             <div className="row">
               <div className="col">
@@ -112,18 +114,21 @@ const DisplayAllSontas = () => {
                   )}`}</h4>
                 </Link>
               </div>
-              <RoleView
-                roles={['adminFederal', 'adminBishop', 'adminConstituency']}
-              >
-                <div className="col-auto">
-                  <Link
-                    to="/sonta/addsonta"
-                    className="btn btn-primary text-nowrap"
-                  >
-                    Add Sonta
-                  </Link>
-                </div>
-              </RoleView>
+
+              {townCentreData.sontas.length < 10 && (
+                <RoleView
+                  roles={['adminFederal', 'adminBishop', 'adminConstituency']}
+                >
+                  <div className="col-auto">
+                    <Link
+                      to="/sonta/addsonta"
+                      className="btn btn-primary text-nowrap"
+                    >
+                      Add Sonta
+                    </Link>
+                  </div>
+                </RoleView>
+              )}
             </div>
             <div className="row">
               <div className="col">

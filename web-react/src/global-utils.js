@@ -175,7 +175,7 @@ export const getMemberDob = (displayMember) => {
   } else return null
 }
 
-export const compareValues = (key, order = 'asc') => {
+export const sortingFunction = (key, order = 'asc') => {
   return function innerSort(a, b) {
     // eslint-disable-next-line no-prototype-builtins
     if (!a.hasOwnProperty(key) || !b.hasOwnProperty(key)) {

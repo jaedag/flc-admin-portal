@@ -61,7 +61,12 @@ const ChurchGraph = ({ stat1, stat2, serviceData }) => {
                 </linearGradient>
               </defs>
 
-              <Bar dataKey={`${stat1}`} barSize={30} fill="url(#colorPrimary)">
+              <Bar
+                name={capitalise(stat1)}
+                dataKey={`${stat1}`}
+                barSize={30}
+                fill="url(#colorPrimary)"
+              >
                 <LabelList
                   dataKey={`${stat1}`}
                   position="top"
@@ -70,6 +75,7 @@ const ChurchGraph = ({ stat1, stat2, serviceData }) => {
                 />
               </Bar>
               <Bar
+                name={capitalise(stat2)}
                 dataKey={`${stat2}`}
                 barSize={35}
                 fill="url(#colorSecondary)"

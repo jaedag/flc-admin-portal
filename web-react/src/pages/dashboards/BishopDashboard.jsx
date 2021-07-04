@@ -99,6 +99,11 @@ const BishopDashboard = () => {
       roles: ['adminFederal', 'adminBishop', 'adminConstituency'],
     },
     {
+      link: '/sonta/addsonta',
+      buttonText: 'Start a Sonta',
+      roles: ['adminFederal', 'adminBishop', 'adminConstituency'],
+    },
+    {
       link: `/${churchStream}/add${churchStream}`,
       buttonText: `Add ${capitalise(churchStream)}`,
       roles: ['adminFederal', 'adminBishop'],

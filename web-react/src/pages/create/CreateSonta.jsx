@@ -6,8 +6,6 @@ import * as Yup from 'yup'
 import FormikControl from '../../components/formik-components/FormikControl'
 
 import {
-  GET_BISHOP_CAMPUSES,
-  GET_BISHOP_TOWNS,
   GET_CAMPUS_CENTRES,
   GET_TOWN_CENTRES,
   BISHOP_MEMBER_DROPDOWN,
@@ -18,24 +16,41 @@ import NavBar from '../../components/nav/NavBar'
 import ErrorScreen from '../../components/ErrorScreen'
 import LoadingScreen from '../../components/LoadingScreen'
 import { ChurchContext } from '../../contexts/ChurchContext'
-import { capitalise, makeSelectOptions } from '../../global-utils'
+import { capitalise, makeSelectOptions } from 'global-utils'
+import { DISPLAY_CAMPUS, DISPLAY_TOWN } from 'pages/display/ReadQueries'
 
 function CreateSonta() {
+  const { church, bishopId, campusId, townId, setSontaId } = useContext(
+    ChurchContext
+  )
+
+  const { data: ministryListData, loading: ministryListLoading } = useQuery(
+    GET_MINISTRIES
+  )
+  const { data: townData, loading: townLoading } = useQuery(DISPLAY_TOWN, {
+    variables: { id: church.church === 'town' ? townId : campusId },
+  })
+  const { data: campusData, loading: campusLoading } = useQuery(
+    DISPLAY_CAMPUS,
+    {
+      variables: { id: church.church === 'town' ? townId : campusId },
+    }
+  )
+
+  const isCampus = church.church === 'campus'
+  const campusTownLoading = isCampus ? campusLoading : townLoading
+
+  const campusTownData = isCampus ? campusData?.campuses[0] : townData?.towns[0]
+
   const initialValues = {
     ministrySelect: '',
     leaderId: '',
-    campusTownSelect: '',
+    campusTown: campusTownData?.name ?? '',
   }
 
-  const { church, bishopId, setTownId, setCampusId, setSontaId } = useContext(
-    ChurchContext
-  )
   const history = useHistory()
 
   const validationSchema = Yup.object({
-    campusTownSelect: Yup.string().required(
-      `You must choose a ${church.chuch}`
-    ),
     ministrySelect: Yup.string().required('You must choose a ministry'),
     leaderId: Yup.string().required('Please choose a leader from the dropdown'),
   })
@@ -50,42 +65,22 @@ function CreateSonta() {
     ],
   })
 
-  const { data: townListData, loading: townListLoading } = useQuery(
-    GET_BISHOP_TOWNS,
-    {
-      variables: { id: bishopId },
-    }
-  )
-  const { data: campusListData, loading: campusListLoading } = useQuery(
-    GET_BISHOP_CAMPUSES,
-    {
-      variables: { id: bishopId },
-    }
-  )
-  const { data: ministryListData, loading: ministryListLoading } = useQuery(
-    GET_MINISTRIES
-  )
-
-  if (townListData && campusListData && ministryListData) {
-    const townOptions = makeSelectOptions(townListData.members[0].townBishop)
-    const campusOptions = makeSelectOptions(
-      campusListData.members[0].campusBishop
-    )
+  if (ministryListData && campusTownData) {
     const ministryOptions = makeSelectOptions(ministryListData.ministries)
+
+    const sontasNotInCampusTown = ministryOptions.filter((ministry) => {
+      return !campusTownData.sontas.some(
+        (sonta) => sonta['name'] === `${campusTownData?.name} ${ministry.key}`
+      )
+    })
 
     //onSubmit receives the form state as argument
     const onSubmit = (values, onSubmitProps) => {
-      if (church.church === 'town') {
-        setTownId(values.campusTownSelect)
-      } else if (church.church === 'campus') {
-        setCampusId(values.campusTownSelect)
-      }
-
       CreateSonta({
         variables: {
           ministryId: values.ministrySelect,
           leaderId: values.leaderId,
-          townCampusId: values.campusTownSelect,
+          townCampusId: campusTownData?.id,
         },
       }).then(() => {
         onSubmitProps.setSubmitting(false)
@@ -112,19 +107,14 @@ function CreateSonta() {
                     <div className="col mb-2">
                       <div className="form-row row-cols-2">
                         <div className="col-10">
-                          <FormikControl
-                            className="form-control"
-                            control="select"
-                            name="campusTownSelect"
-                            options={
-                              church.church === 'town'
-                                ? townOptions
-                                : campusOptions
-                            }
-                            defaultOption={`Select a ${capitalise(
+                          <label className="label">{`${capitalise(
+                            church.church
+                          )}:`}</label>
+                          <div className="pl-2">
+                            <p>{`${campusTownData?.name} ${capitalise(
                               church.church
-                            )}`}
-                          />
+                            )}`}</p>
+                          </div>
                         </div>
                       </div>
 
@@ -135,7 +125,7 @@ function CreateSonta() {
                             label="Ministry*"
                             control="select"
                             name="ministrySelect"
-                            options={ministryOptions}
+                            options={sontasNotInCampusTown}
                             defaultOption="Ministry"
                           />
                         </div>
@@ -178,7 +168,7 @@ function CreateSonta() {
         </Formik>
       </>
     )
-  } else if (townListLoading || campusListLoading || ministryListLoading) {
+  } else if (campusTownLoading || ministryListLoading) {
     return <LoadingScreen />
   } else {
     return <ErrorScreen />

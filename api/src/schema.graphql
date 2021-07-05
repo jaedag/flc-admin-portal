@@ -125,22 +125,22 @@ extend type Ministry
     rules: [{ roles: ["adminFederal", "adminBishop", "adminConstituency"] }]
   )
 
-type Gender {
+type Gender @auth(rules: [{ isAuthenticated: true }]) {
   gender: String
   members: [Member] @relationship(type: "HAS_GENDER", direction: IN)
 }
 
-type MaritalStatus {
+type MaritalStatus @auth(rules: [{ isAuthenticated: true }]) {
   status: String
   members: [Member] @relationship(type: "HAS_MARITAL_STATUS", direction: IN)
 }
 
-type Occupation {
+type Occupation @auth(rules: [{ isAuthenticated: true }]) {
   occupation: String
   members: [Member] @relationship(type: "HAS_OCCUPATION", direction: IN)
 }
 
-type Title {
+type Title @auth(rules: [{ isAuthenticated: true }]) {
   title: String! #Pastor, Reverend, Apostle, Bishop (Mother)
   members: [Member] @relationship(type: "HAS_TITLE", direction: IN)
 }
@@ -179,7 +179,7 @@ type Title {
 #   current: Boolean
 # }
 
-type TimeGraph {
+type TimeGraph @auth(rules: [{ isAuthenticated: true }]) {
   date: Date
   memberDob: Member @relationship(type: "WAS_BORN_ON", direction: IN)
   # titleAppointmentDate: Member @relationship(type: "APPOINTED_ON", direction: IN)
@@ -203,7 +203,7 @@ type TimeGraph {
 #     @relationship(type: "HAS_RECORD", direction: OUT)
 # }
 
-type ServiceRecord {
+type ServiceRecord @auth(rules: [{ isAuthenticated: true }]) {
   id: ID!
   created_at: Date
   serviceDate: TimeGraph @relationship(type: "SERVICE_HELD_ON", direction: OUT)
@@ -213,7 +213,7 @@ type ServiceRecord {
   historyLog: HistoryLog @relationship(type: "HAS_RECORD", direction: IN)
 }
 
-type ServiceLog {
+type ServiceLog @auth(rules: [{ isAuthenticated: true }]) {
   id: ID
   historyRecord: String #leader was transferred to
   created_at: TimeGraph @relationship(type: "RECORDED_ON", direction: OUT)
@@ -228,7 +228,7 @@ type ServiceLog {
   Sonta: [Sonta] @relationship(type: "HAS_HISTORY", direction: IN)
 }
 
-type HistoryLog {
+type HistoryLog @auth(rules: [{ isAuthenticated: true }]) {
   id: ID @id
   timeStamp: Date
   historyRecord: String #leader was transferred to
@@ -353,7 +353,7 @@ type Bacenta {
 #   srid: Int!
 # }
 
-type ServiceDay {
+type ServiceDay @auth(rules: [{ isAuthenticated: true }]) {
   day: String!
   dayNum: Int
   bacenta: Bacenta @relationship(type: "MEETS_ON", direction: IN)
@@ -784,6 +784,7 @@ type Query {
     )
 
   federalMemberSearch(searchKey: String!): [Member]
+    @auth(rules: [{ roles: ["adminFederal"] }])
     @cypher(
       statement: """
       MATCH (member:Member)
@@ -798,6 +799,7 @@ type Query {
       """
     )
   bishopMemberSearch(searchKey: String, bishopId: ID): [Member]
+    @auth(rules: [{ roles: ["adminBishop"] }])
     @cypher(
       statement: """
       MATCH (bishop:Member {id: $bishopId})-[:HAS_TOWN|:HAS_CAMPUS]->(campusTown)
@@ -823,6 +825,7 @@ type Query {
       """
     )
   constituencyMemberSearch(searchKey: String, constituencyId: ID): [Member]
+    @auth(rules: [{ roles: ["adminConstituency"] }])
     @cypher(
       statement: """
       MATCH (constituency {id:$constituencyId}) WHERE constituency:Campus OR constituency:Town
@@ -847,6 +850,7 @@ type Query {
       """
     )
   federalBacentaSearch(searchKey: String): [Bacenta]
+    @auth(rules: [{ roles: ["adminFederal"] }])
     @cypher(
       statement: """
       MATCH (bacenta:Bacenta)
@@ -856,6 +860,7 @@ type Query {
       """
     )
   bishopBacentaSearch(searchKey: String, bishopId: ID): [Bacenta]
+    @auth(rules: [{ roles: ["adminBishop"] }])
     @cypher(
       statement: """
       MATCH (bishop:Member {id: $bishopId})-[:HAS_TOWN|:HAS_CAMPUS]->(campusTown)
@@ -868,6 +873,7 @@ type Query {
       """
     )
   constituencyBacentaSearch(searchKey: String, constituencyId: ID): [Bacenta]
+    @auth(rules: [{ roles: ["adminConstituency"] }])
     @cypher(
       statement: """
       MATCH (constituency {id:$constituencyId}) WHERE constituency:Campus OR constituency:Town
@@ -880,6 +886,7 @@ type Query {
       """
     )
   federalCentreSearch(searchKey: String): [Centre]
+    @auth(rules: [{ roles: ["adminFederal"] }])
     @cypher(
       statement: """
       MATCH (centre:Centre)
@@ -889,6 +896,7 @@ type Query {
       """
     )
   bishopCentreSearch(searchKey: String, bishopId: ID): [Centre]
+    @auth(rules: [{ roles: ["adminBishop"] }])
     @cypher(
       statement: """
       MATCH (bishop:Member {id: $bishopId})-[:HAS_TOWN|:HAS_CAMPUS]->(campusTown)
@@ -900,6 +908,7 @@ type Query {
       """
     )
   constituencyCentreSearch(searchKey: String, constituencyId: ID): [Bacenta]
+    @auth(rules: [{ roles: ["adminConstituency"] }])
     @cypher(
       statement: """
       MATCH (constituency {id:$constituencyId}) WHERE constituency:Campus OR constituency:Town
@@ -911,6 +920,7 @@ type Query {
       """
     )
   federalCampusSearch(searchKey: String): [Campus]
+    @auth(rules: [{ roles: ["adminFederal"] }])
     @cypher(
       statement: """
       MATCH (campus:Campus)
@@ -920,6 +930,7 @@ type Query {
       """
     )
   bishopCampusSearch(searchKey: String, bishopId: ID): [Campus]
+    @auth(rules: [{ roles: ["adminBishop"] }])
     @cypher(
       statement: """
       MATCH (bishop:Member {id: $bishopId})-[:HAS_TOWN|:HAS_CAMPUS]->(campus)
@@ -930,6 +941,7 @@ type Query {
       """
     )
   federalTownSearch(searchKey: String): [Town]
+    @auth(rules: [{ roles: ["adminFederal"] }])
     @cypher(
       statement: """
       MATCH (town:Town)
@@ -939,6 +951,7 @@ type Query {
       """
     )
   bishopTownSearch(searchKey: String, bishopId: ID): [Town]
+    @auth(rules: [{ roles: ["adminBishop"] }])
     @cypher(
       statement: """
       MATCH (bishop:Member {id: $bishopId})-[:HAS_TOWN|:HAS_CAMPUS]->(town)
@@ -949,6 +962,7 @@ type Query {
       """
     )
   federalSontaSearch(searchKey: String): [Sonta]
+    @auth(rules: [{ roles: ["adminFederal"] }])
     @cypher(
       statement: """
       MATCH (sonta:Sonta)
@@ -958,6 +972,7 @@ type Query {
       """
     )
   bishopSontaSearch(searchKey: String, bishopId: ID): [Sonta]
+    @auth(rules: [{ roles: ["adminBishop"] }])
     @cypher(
       statement: """
       MATCH (bishop:Member {id: $bishopId})-[:HAS_TOWN|:HAS_CAMPUS]->(campusTown)
@@ -969,6 +984,7 @@ type Query {
       """
     )
   constituencySontaSearch(searchKey: String, constituencyId: ID): [Bacenta]
+    @auth(rules: [{ roles: ["adminConstituency"] }])
     @cypher(
       statement: """
       MATCH (constituency {id:$constituencyId}) WHERE constituency:Campus OR constituency:Town
@@ -1519,38 +1535,38 @@ type Mutation {
   ): Bacenta
     @cypher(
       statement: """
-       MATCH  (bacenta:Bacenta {id: $bacentaId})
-       MATCH (admin:Member {auth_id: $auth.jwt.sub})
-       CREATE (log:HistoryLog {id: apoc.create.uuid()})
-         SET log.historyRecord = $historyRecord,
-           log.timeStamp = time()
-       MERGE (date:TimeGraph {date: date()})
-       MERGE (bacenta)-[r:HAS_HISTORY]->(log)
-       MERGE (log)-[:RECORDED_ON]->(date)
-       MERGE (log)-[:LOGGED_BY]->(admin)
-
-       
+      MATCH  (bacenta:Bacenta {id: $bacentaId})
+      MATCH (admin:Member {auth_id: $auth.jwt.sub})
+      CREATE (log:HistoryLog {id: apoc.create.uuid()})
+        SET log.historyRecord = $historyRecord,
+          log.timeStamp = time()
+      MERGE (date:TimeGraph {date: date()})
+      MERGE (bacenta)-[r:HAS_HISTORY]->(log)
+      MERGE (log)-[:RECORDED_ON]->(date)
+      MERGE (log)-[:LOGGED_BY]->(admin)
 
 
-       WITH log,bacenta
-       CALL{
-         WITH log
-         WITH log WHERE $oldCentreId IS NOT NULL
-         MATCH (oldCentre:Centre {id: $oldCentreId})
-         MERGE (oldCentre)-[:HAS_HISTORY]->(log)
-         RETURN COUNT(log)
-       }
 
-       WITH log,bacenta
-       CALL{
-         WITH log
-         WITH log WHERE $newCentreId IS NOT NULL
-         MATCH (newCentre:Centre {id: $newCentreId})
-         MERGE (newCentre)-[:HAS_HISTORY]->(log)
-         RETURN COUNT(log)
-       }
 
-       RETURN bacenta
+      WITH log,bacenta
+      CALL{
+        WITH log
+        WITH log WHERE $oldCentreId IS NOT NULL
+        MATCH (oldCentre:Centre {id: $oldCentreId})
+        MERGE (oldCentre)-[:HAS_HISTORY]->(log)
+        RETURN COUNT(log)
+      }
+
+      WITH log,bacenta
+      CALL{
+        WITH log
+        WITH log WHERE $newCentreId IS NOT NULL
+        MATCH (newCentre:Centre {id: $newCentreId})
+        MERGE (newCentre)-[:HAS_HISTORY]->(log)
+        RETURN COUNT(log)
+      }
+
+      RETURN bacenta
       """
     )
   LogCentreHistory(

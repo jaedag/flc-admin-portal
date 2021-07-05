@@ -3,7 +3,7 @@ import { gql } from '@apollo/client'
 export const LOG_BACENTA_HISTORY = gql`
   mutation LogBacentaHistory(
     $bacentaId: ID!
-    $historyRecord: String
+    $historyRecord: String!
     $oldLeaderId: ID
     $newLeaderId: ID
     $oldCentreId: ID
@@ -39,7 +39,7 @@ export const LOG_BACENTA_HISTORY = gql`
 export const LOG_CENTRE_HISTORY = gql`
   mutation LogCentreHistory(
     $centreId: ID!
-    $historyRecord: String
+    $historyRecord: String!
     $oldLeaderId: ID
     $newLeaderId: ID
     $oldCampusTownId: ID
@@ -70,7 +70,7 @@ export const LOG_CENTRE_HISTORY = gql`
 export const LOG_CAMPUSTOWN_HISTORY = gql`
   mutation LogCampusTownHistory(
     $campusTownId: ID!
-    $historyRecord: String
+    $historyRecord: String!
     $oldLeaderId: ID
     $newLeaderId: ID
     $oldBishopId: ID
@@ -101,7 +101,7 @@ export const LOG_CAMPUSTOWN_HISTORY = gql`
 export const LOG_SONTA_HISTORY = gql`
   mutation LogSontaHistory(
     $sontaId: ID!
-    $historyRecord: String
+    $historyRecord: String!
     $oldLeaderId: ID
     $newLeaderId: ID
     $oldCampusTownId: ID

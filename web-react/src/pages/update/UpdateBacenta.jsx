@@ -29,6 +29,7 @@ import { ChurchContext } from '../../contexts/ChurchContext'
 import { DISPLAY_BACENTA } from '../display/ReadQueries'
 import Spinner from '../../components/Spinner.jsx'
 import { LOG_BACENTA_HISTORY } from './LogMutations'
+import { MAKE_BACENTA_LEADER } from './ChangeLeaderMutations'
 
 const UpdateBacenta = () => {
   const { church, bishopId, centreId, setCentreId, bacentaId } = useContext(
@@ -77,25 +78,8 @@ const UpdateBacenta = () => {
   const [LogBacentaHistory] = useMutation(LOG_BACENTA_HISTORY, {
     refetchQueries: [{ query: DISPLAY_BACENTA, variables: { id: bacentaId } }],
   })
-
+  const [MakeBacentaLeader] = useMutation(MAKE_BACENTA_LEADER)
   const [UpdateBacenta] = useMutation(UPDATE_BACENTA, {
-    onCompleted: (updatedInfo) => {
-      let newLeaderInfo = updatedInfo.UpdateBacentaDetails
-      //Log if the Leader Changes
-
-      if (newLeaderInfo?.id !== initialValues.leaderSelect) {
-        LogBacentaHistory({
-          variables: {
-            bacentaId: bacentaId,
-            oldLeaderId: bacenta?.leader.id,
-            newLeaderId: newLeaderInfo?.id ?? '',
-            oldCentreId: '',
-            newCentreId: '',
-            historyRecord: `${newLeaderInfo?.firstName} ${newLeaderInfo?.lastName} was transferred to become the new Bacenta Leader for ${initialValues.bacentaName} replacing ${bacenta?.leader.firstName} ${bacenta?.leader.lastName}`,
-          },
-        })
-      }
-    },
     refetchQueries: [
       { query: GET_CENTRE_BACENTAS, variables: { id: centreId } },
       {
@@ -157,6 +141,17 @@ const UpdateBacenta = () => {
           venueLatitude: parseFloat(values.venueLongitude),
         },
       })
+
+      //Log if the Leader Changes
+
+      if (values.leaderSelect !== initialValues.leaderSelect) {
+        MakeBacentaLeader({
+          variables: {
+            leaderId: values.leaderSelect,
+            bacentaId: bacentaId,
+          },
+        }).catch((err) => alert(err))
+      }
 
       //Log If The Centre Changes
       if (values.centreSelect !== initialValues.centreSelect) {

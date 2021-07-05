@@ -1,5 +1,5 @@
 export const matchMemberQuery = `
-MATCH (member:Member {id:$from}) 
+MATCH (member:Member {id:$id}) 
   RETURN 
   member.id AS id,
   member.firstName AS firstName, 
@@ -120,7 +120,7 @@ CREATE (log:HistoryLog)
    log.id = apoc.create.uuid(),
    log.timeStamp = time(),
    log.name=admin.lastName,
-   log.historyRecord = admin.firstName + ' ' + admin.lastName+ ' became the admin for ' + town.name
+   log.historyRecord = admin.firstName + ' ' + admin.lastName+ ' was removed as the admin for ' + town.name
          
   MERGE (log)-[:LOGGED_BY]->(currentUser)
   MERGE (date:TimeGraph {date: date()})
@@ -168,7 +168,7 @@ CREATE (log:HistoryLog)
   SET
    log.id = apoc.create.uuid(),
    log.timeStamp = time(),
-   log.historyRecord = admin.firstName + ' ' +admin.lastName + ' became the admin for ' + campus.name
+   log.historyRecord = admin.firstName + ' ' +admin.lastName +  was removed as the admin for ' + campus.name
          
   MERGE (log)-[:LOGGED_BY]->(currentUser)
   MERGE (date:TimeGraph {date: date()})
@@ -181,42 +181,41 @@ RETURN admin.auth_id
 
 export const makeBacentaLeader = `
 MATCH (leader:Member {id:$leaderId})
-
-WITH leader
 MATCH (bacenta:Bacenta {id:$bacentaId})
-MATCH (currentUser:Member {auth_id:$auth.jwt.sub})
-OPTIONAL MATCH (bacenta)<-[r:LEADS]-(oldLeader:Member)
- DELETE r
-
-CREATE (log:HistoryLog)
-  SET
+CREATE (log:HistoryLog:ServiceLog)
+  SET leader.auth_id = $auth_id,
    log.id = apoc.create.uuid(),
    log.timeStamp = time(),
    log.historyRecord = leader.firstName + ' ' +leader.lastName + ' became the bacenta leader for ' + bacenta.name
 
+WITH leader,bacenta, log
+OPTIONAL MATCH (bacenta)<-[oldLeads:LEADS]-(oldLeader:Member)
+OPTIONAL MATCH (bacenta)-[oldHistory:HAS_HISTORY]->()-[oldLeaderHistory:HAS_HISTORY]-(oldLeader)
+
+SET oldHistory.current = false, oldLeaderHistory.current = false //nullify old history relationship
+   DELETE oldLeads //Delete old relationship
+
+WITH log,bacenta,oldLeader,leader
+       CALL{
+         WITH log,bacenta,oldLeader, leader
+         WITH log,bacenta,oldLeader, leader
+         WHERE EXISTS (oldLeader.firstName)
+        
+       MERGE (oldLeader)-[:HAS_HISTORY]->(log)
+        SET log.historyRecord = leader.firstName + ' ' +leader.lastName + ' became the leader for ' + bacenta.name + " Bacenta replacing " + oldLeader.firstName +" "+oldLeader.lastName
+       RETURN COUNT(log)
+       }
+  
+   MATCH (currentUser:Member {auth_id:$auth.jwt.sub}) 
+   WITH currentUser, leader, bacenta, log
    MERGE (leader)-[:LEADS]->(bacenta)
    MERGE (log)-[:LOGGED_BY]->(currentUser)
    MERGE (date:TimeGraph {date: date()})
    MERGE (log)-[:RECORDED_ON]->(date)
-   MERGE (leader)-[:HAS_HISTORY]->(log)
-   MERGE (bacenta)-[r:HAS_HISTORY]->(log)
+   MERGE (leader)-[r1:HAS_HISTORY]->(log)
+   MERGE (bacenta)-[r2:HAS_HISTORY]->(log)
+   SET r1.current = true,
+   r2.current = true
 
-   WITH log,bacenta,oldLeader
-       CALL{
-         WITH log
-         WITH log WHERE $newLeaderId IS NOT NULL
-      OPTIONAL MATCH (oldLeader:Member {id: $oldLeaderId})
-       MATCH (newLeader:Member {id: $newLeaderId})
-         SET log :ServiceLog
-         WITH log, newLeader, oldLeader
-       OPTIONAl MATCH ()-[r0:HAS_HISTORY]->(log)
-         SET r0.current = false
-         WITH log,newLeader, oldLeader
-       CREATE (oldLeader)-[:HAS_HISTORY]->(log)
-       CREATE (newLeader)-[r:HAS_HISTORY]->(log)
-          SET r.current = true
-       RETURN COUNT(log)
-       }
-  
    RETURN leader.id AS id, leader.auth_id AS auth_id, leader.firstName AS firstName, leader.lastName AS lastName
 `

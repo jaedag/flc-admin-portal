@@ -41,7 +41,7 @@ export const BISH_DASHBOARD_COUNTS = gql`
 `
 export const MAKE_BISHOP_ADMIN = gql`
   mutation($bishopId: ID!, $adminId: ID!) {
-    MakeBishopAdmin(to: $bishopId, from: $adminId) {
+    MakeBishopAdmin(bishopId: $bishopId, adminId: $adminId) {
       id
     }
   }
@@ -49,14 +49,14 @@ export const MAKE_BISHOP_ADMIN = gql`
 
 export const REMOVE_BISHOP_ADMIN = gql`
   mutation($bishopId: ID!, $adminId: ID!) {
-    RemoveBishopAdmin(from: $adminId, to: $bishopId) {
+    RemoveBishopAdmin(adminId: $adminId, bishopId: $bishopId) {
       id
     }
   }
 `
 
 export const BACENTA_LEADER_DASHBOARD = gql`
-  query bacentaLeaderDashboard($bacentaId: ID) {
+  query bacentaLeaderDashboard($bacentaId: ID!) {
     bacentas(where: { id: $bacentaId }) {
       id
       name

@@ -14,6 +14,11 @@ const errorHandling = (member) => {
     throw `${member.firstName} ${member.lastName} does not have a valid picture`
   }
 }
+const isAuth = (permittedRoles, userRoles) => {
+  if (!permittedRoles.some((r) => userRoles.includes(r))) {
+    throw 'You are not permitted to run this mutation'
+  }
+}
 
 const getTokenConfig = {
   method: 'post',
@@ -189,9 +194,12 @@ export const resolvers = {
 
   Mutation: {
     MakeBishopAdmin: async (object, args, context) => {
+      const permittedRoles = ['adminFederal']
+      isAuth(permittedRoles, context.auth.roles)
+
       const session = context.driver.session()
       let admin = {}
-      let bishop = { id: args.to }
+      let bishop = { id: args.bishopId }
 
       await session
         .run(cypher.matchMemberQuery, args)
@@ -224,7 +232,7 @@ export const resolvers = {
                     session
                       .run(cypher.setBishopAdmin, {
                         adminId: admin.id,
-                        bishopId: args.to,
+                        bishopId: args.bishopId,
                         auth_id: admin.auth_id,
                         auth: context.auth,
                       })
@@ -253,7 +261,7 @@ export const resolvers = {
                     session
                       .run(cypher.setBishopAdmin, {
                         adminId: admin.id,
-                        bishopId: args.to,
+                        bishopId: args.bishopId,
                         auth_id: admin.auth_id,
                         auth: context.auth,
                       })
@@ -280,11 +288,14 @@ export const resolvers = {
       return admin
     },
     RemoveBishopAdmin: async (object, args, context) => {
+      const permittedRoles = ['adminFederal']
+      isAuth(permittedRoles, context.auth.roles)
+
       const session = context.driver.session()
       let admin = {}
 
       await session
-        .run(cypher.matchMemberQuery, args)
+        .run(cypher.matchMemberQuery, { id: args.adminId })
         .then(async (response) => {
           // Rearrange member object
           response.records[0].keys.forEach(
@@ -327,7 +338,7 @@ export const resolvers = {
               session
                 .run(cypher.removeBishopAdmin, {
                   adminId: admin.id,
-                  bishopId: args.to,
+                  bishopId: args.bishopId,
                   auth: context.auth,
                 })
                 .then(console.log('Cypher query ran successfully'))
@@ -339,12 +350,15 @@ export const resolvers = {
       return admin
     },
     MakeTownAdmin: async (object, args, context) => {
+      const permittedRoles = ['adminFederal', 'adminBishop']
+      isAuth(permittedRoles, context.auth.roles)
+
       const session = context.driver.session()
       let admin = {}
-      let town = { id: args.to }
+      let town = { id: args.townId }
 
       await session
-        .run(cypher.matchMemberQuery, args)
+        .run(cypher.matchMemberQuery, { id: args.adminId })
         .then(async (response) => {
           // Rearrange member object
           response.records[0].keys.forEach(
@@ -376,7 +390,7 @@ export const resolvers = {
                     session
                       .run(cypher.setTownAdmin, {
                         adminId: admin.id,
-                        townId: args.to,
+                        townId: args.townId,
                         auth_id: admin.auth_id,
                         auth: context.auth,
                       })
@@ -435,12 +449,15 @@ export const resolvers = {
       return admin
     },
     RemoveTownAdmin: async (object, args, context) => {
+      const permittedRoles = ['adminFederal', 'adminBishop']
+      isAuth(permittedRoles, context.auth.roles)
+
       const session = context.driver.session()
       let admin = {}
-      let town = { id: args.to }
+      let town = { id: args.townId }
 
       await session
-        .run(cypher.matchMemberQuery, args)
+        .run(cypher.matchMemberQuery, { id: args.adminId })
         .then(async (response) => {
           // Rearrange member object
           response.records[0].keys.forEach(
@@ -500,12 +517,15 @@ export const resolvers = {
       return admin
     },
     MakeCampusAdmin: async (object, args, context) => {
+      const permittedRoles = ['adminFederal', 'adminBishop']
+      isAuth(permittedRoles, context.auth.roles)
+
       const session = context.driver.session()
       let admin = {}
-      let campus = { id: args.to }
+      let campus = { id: args.campusId }
 
       await session
-        .run(cypher.matchMemberQuery, args)
+        .run(cypher.matchMemberQuery, { id: args.adminId })
         .then(async (response) => {
           // Rearrange member object
           response.records[0].keys.forEach(
@@ -566,7 +586,7 @@ export const resolvers = {
                     session
                       .run(cypher.setCampusAdmin, {
                         adminId: admin.id,
-                        campusId: args.to,
+                        campusId: args.campusId,
                         auth_id: admin.auth_id,
                         auth: context.auth,
                       })
@@ -593,12 +613,15 @@ export const resolvers = {
       return admin
     },
     RemoveCampusAdmin: async (object, args, context) => {
+      const permittedRoles = ['adminFederal', 'adminBishop']
+      isAuth(permittedRoles, context.auth.roles)
+
       const session = context.driver.session()
       let admin = {}
-      let campus = { id: args.to }
+      let campus = { id: args.campusId }
 
       await session
-        .run(cypher.matchMemberQuery, args)
+        .run(cypher.matchMemberQuery, { id: args.adminId })
         .then(async (response) => {
           // Rearrange member object
           response.records[0].keys.forEach(
@@ -657,12 +680,19 @@ export const resolvers = {
       return admin
     },
     MakeBacentaLeader: async (object, args, context) => {
+      const permittedRoles = [
+        'adminFederal',
+        'adminBishop',
+        'adminConstituency',
+      ]
+      isAuth(permittedRoles, context.auth.roles)
+
       const session = context.driver.session()
       let leader = {}
       let bacenta = { id: args.bacentaId }
 
       await session
-        .run(cypher.matchMemberQuery, args)
+        .run(cypher.matchMemberQuery, { id: args.leaderId })
         .then(async (response) => {
           // Rearrange member object
           response.records[0].keys.forEach(
@@ -690,7 +720,7 @@ export const resolvers = {
 
                     //Write Auth0 ID of Leader to Neo4j DB
                     session
-                      .run(cypher.setBacentaLeader, {
+                      .run(cypher.makeBacentaLeader, {
                         leaderId: leader.id,
                         bacentaId: bacenta.id,
                         auth_id: leader.auth_id,
@@ -748,12 +778,19 @@ export const resolvers = {
       return leader
     },
     RemoveBacentaLeader: async (object, args, context) => {
+      const permittedRoles = [
+        'adminFederal',
+        'adminBishop',
+        'adminConstituency',
+      ]
+      isAuth(permittedRoles, context.auth.roles)
+
       const session = context.driver.session()
       let leader = {}
       let bacenta = { id: args.bacentaId }
 
       await session
-        .run(cypher.matchMemberQuery, args)
+        .run(cypher.matchMemberQuery, { id: args.leaderId })
         .then(async (response) => {
           // Rearrange member object
           response.records[0].keys.forEach(
@@ -780,7 +817,7 @@ export const resolvers = {
                 })
               }
 
-              //If the person is a bishops admin as well as any other position, remove role bishops admin
+              //If the person is a bacenta leader as well as any other position, remove role bacenta leader
               if (roles.includes('leaderBacenta') && roles.length > 1) {
                 removeRoles(leader.auth_id, roles, authRoles.leaderBacenta.id)
               }
@@ -791,16 +828,7 @@ export const resolvers = {
                 error.response.data ?? error
               )
             })
-            .then(async () =>
-              //Remove Bacenta Leader relationship in Neo4j DB
-              session
-                .run(cypher.removeBacentaLeader, {
-                  leaderId: leader.id,
-                  bacentaId: bacenta.id,
-                  auth: context.auth,
-                })
-                .then(console.log('Cypher query ran successfully'))
-            )
+          //Relationship inn Neo4j will be removed when the replacement leader is being added
         })
 
       errorHandling(leader)

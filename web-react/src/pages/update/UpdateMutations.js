@@ -105,9 +105,8 @@ export const UPDATE_CENTRE_MUTATION = gql`
 
 export const UPDATE_BACENTA = gql`
   mutation UpdateBacenta(
-    $id: ID
-    $name: String
-    $leaderId: ID
+    $id: ID!
+    $name: String!
     $meetingDay: String
     $venueLatitude: Float
     $venueLongitude: Float
@@ -115,7 +114,6 @@ export const UPDATE_BACENTA = gql`
     UpdateBacentaDetails(
       id: $id
       name: $name
-      leaderId: $leaderId
       meetingDay: $meetingDay
       venueLatitude: $venueLatitude
       venueLongitude: $venueLongitude

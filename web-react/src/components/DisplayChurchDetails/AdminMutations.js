@@ -2,7 +2,7 @@ import { gql } from '@apollo/client'
 
 export const REMOVE_TOWN_ADMIN = gql`
   mutation($townId: ID!, $adminId: ID!) {
-    RemoveTownAdmin(from: $adminId, to: $townId) {
+    RemoveTownAdmin(adminId: $adminId, townId: $townId) {
       id
     }
   }
@@ -10,7 +10,7 @@ export const REMOVE_TOWN_ADMIN = gql`
 
 export const MAKE_TOWN_ADMIN = gql`
   mutation($townId: ID!, $adminId: ID!) {
-    MakeTownAdmin(to: $townId, from: $adminId) {
+    MakeTownAdmin(townId: $townId, adminId: $adminId) {
       id
     }
   }
@@ -18,7 +18,7 @@ export const MAKE_TOWN_ADMIN = gql`
 
 export const REMOVE_CAMPUS_ADMIN = gql`
   mutation($campusId: ID!, $adminId: ID!) {
-    RemoveCampusAdmin(from: $adminId, to: $campusId) {
+    RemoveCampusAdmin(adminId: $adminId, campusId: $campusId) {
       id
     }
   }
@@ -26,7 +26,7 @@ export const REMOVE_CAMPUS_ADMIN = gql`
 
 export const MAKE_CAMPUS_ADMIN = gql`
   mutation($campusId: ID!, $adminId: ID!) {
-    MakeCampusAdmin(to: $campusId, from: $adminId) {
+    MakeCampusAdmin(campusId: $campusId, adminId: $adminId) {
       id
     }
   }

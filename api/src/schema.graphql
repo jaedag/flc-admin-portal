@@ -1005,14 +1005,16 @@ type Query {
 #Mutation Definitions
 type Mutation {
   #resolver Mutations
-  MakeBishopAdmin(from: ID, to: ID): Member
-  RemoveBishopAdmin(from: ID, to: ID): Member
-  MakeTownAdmin(from: ID, to: ID): Member
-  RemoveTownAdmin(from: ID, to: ID): Member
-  MakeCampusAdmin(from: ID, to: ID): Member
-  RemoveCampusAdmin(from: ID, to: ID): Member
-  MakeBacentaLeader(memberId: ID!, bacentaId: ID!): Member
-  RemoveBacentaLeader(memberId: ID!, bacentaId: ID!): Member
+  MakeBishopAdmin(adminId: ID!, bishopId: ID!): Member
+    # @auth(rules: [{ roles: ["adminFederal"] }])
+  RemoveBishopAdmin(adminId: ID!, bishopId: ID!): Member
+    # @auth(rules: [{ roles: ["adminFederal"] }])
+  MakeTownAdmin(from: ID!, to: ID!): Member
+  RemoveTownAdmin(from: ID!, to: ID!): Member
+  MakeCampusAdmin(from: ID!, to: ID!): Member
+  RemoveCampusAdmin(from: ID!, to: ID!): Member
+  MakeBacentaLeader(leaderId: ID!, bacentaId: ID!): Member
+  RemoveBacentaLeader(leaderId: ID!, bacentaId: ID!): Member
 
   #CREATE OPERATIONS
   # Add Member to the Database
@@ -1497,7 +1499,6 @@ type Mutation {
     id: ID!
     name: String!
     meetingDay: String
-    leaderId: ID
     venueLongitude: Float
     venueLatitude: Float
   ): Member
@@ -1544,8 +1545,6 @@ type Mutation {
       MERGE (bacenta)-[r:HAS_HISTORY]->(log)
       MERGE (log)-[:RECORDED_ON]->(date)
       MERGE (log)-[:LOGGED_BY]->(admin)
-
-
 
 
       WITH log,bacenta

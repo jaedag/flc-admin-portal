@@ -26,11 +26,11 @@ export const SERVICE_DAY_OPTIONS = [
   { key: 'Saturday', value: 'Saturday' },
 ]
 
-export const isAuthorised = (roles, userRoles) => {
-  if (roles.includes('all')) {
+export const isAuthorised = (permittedRoles, userRoles) => {
+  if (permittedRoles.includes('all')) {
     return true
   }
-  return roles.some((r) => userRoles.includes(r))
+  return permittedRoles.some((r) => userRoles.includes(r))
 }
 export const capitalise = (str) => {
   return str?.charAt(0).toUpperCase() + str?.slice(1)

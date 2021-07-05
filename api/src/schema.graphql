@@ -1006,15 +1006,19 @@ type Query {
 type Mutation {
   #resolver Mutations
   MakeBishopAdmin(adminId: ID!, bishopId: ID!): Member
-    # @auth(rules: [{ roles: ["adminFederal"] }])
   RemoveBishopAdmin(adminId: ID!, bishopId: ID!): Member
-    # @auth(rules: [{ roles: ["adminFederal"] }])
   MakeTownAdmin(from: ID!, to: ID!): Member
   RemoveTownAdmin(from: ID!, to: ID!): Member
   MakeCampusAdmin(from: ID!, to: ID!): Member
   RemoveCampusAdmin(from: ID!, to: ID!): Member
   MakeBacentaLeader(leaderId: ID!, bacentaId: ID!): Member
   RemoveBacentaLeader(leaderId: ID!, bacentaId: ID!): Member
+  MakeCentreLeader(leaderId: ID!, centreId: ID!): Member
+  RemoveCentreLeader(leaderId: ID!, centreId: ID!): Member
+  MakeTownLeader(leaderId: ID!, townId: ID!): Member
+  RemoveTownLeader(leaderId: ID!, townId: ID!): Member
+  MakeCampusLeader(leaderId: ID!, campusId: ID!): Member
+  RemoveCampusLeader(leaderId: ID!, campusId: ID!): Member
 
   #CREATE OPERATIONS
   # Add Member to the Database

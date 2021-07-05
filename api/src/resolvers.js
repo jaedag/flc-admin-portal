@@ -188,7 +188,7 @@ export const resolvers = {
   // },
 
   Mutation: {
-    MergeMemberIsBishopAdminFor: async (object, args, context) => {
+    MakeBishopAdmin: async (object, args, context) => {
       const session = context.driver.session()
       let admin = {}
       let bishop = { id: args.to }
@@ -279,7 +279,7 @@ export const resolvers = {
 
       return admin
     },
-    RemoveMemberIsBishopAdminFor: async (object, args, context) => {
+    RemoveBishopAdmin: async (object, args, context) => {
       const session = context.driver.session()
       let admin = {}
 
@@ -338,7 +338,7 @@ export const resolvers = {
 
       return admin
     },
-    MergeMemberIsTownAdminFor: async (object, args, context) => {
+    MakeTownAdmin: async (object, args, context) => {
       const session = context.driver.session()
       let admin = {}
       let town = { id: args.to }
@@ -434,7 +434,7 @@ export const resolvers = {
 
       return admin
     },
-    RemoveMemberIsTownAdminFor: async (object, args, context) => {
+    RemoveTownAdmin: async (object, args, context) => {
       const session = context.driver.session()
       let admin = {}
       let town = { id: args.to }
@@ -499,7 +499,7 @@ export const resolvers = {
 
       return admin
     },
-    MergeMemberIsCampusAdminFor: async (object, args, context) => {
+    MakeCampusAdmin: async (object, args, context) => {
       const session = context.driver.session()
       let admin = {}
       let campus = { id: args.to }
@@ -592,7 +592,7 @@ export const resolvers = {
 
       return admin
     },
-    RemoveMemberIsCampusAdminFor: async (object, args, context) => {
+    RemoveCampusAdmin: async (object, args, context) => {
       const session = context.driver.session()
       let admin = {}
       let campus = { id: args.to }
@@ -655,6 +655,157 @@ export const resolvers = {
       errorHandling(admin)
 
       return admin
+    },
+    MakeBacentaLeader: async (object, args, context) => {
+      const session = context.driver.session()
+      let leader = {}
+      let bacenta = { id: args.bacentaId }
+
+      await session
+        .run(cypher.matchMemberQuery, args)
+        .then(async (response) => {
+          // Rearrange member object
+          response.records[0].keys.forEach(
+            (key, i) => (leader[key] = response.records[0]._fields[i])
+          )
+
+          //Check for AuthID of Leader
+          axios(getAuthIdConfig(leader))
+            .then(async (res) => {
+              leader.auth_id = res.data[0]?.user_id
+
+              if (!leader.auth_id) {
+                //If leader Does Not Have Auth0 Profile, Create One
+                axios(createAuthUserConfig(leader))
+                  .then((res) => {
+                    const auth_id = res.data.user_id
+                    leader.auth_id = res.data.user_id
+
+                    const roles = []
+
+                    assignRoles(auth_id, roles, [authRoles.leaderBacenta.id])
+                    console.log(
+                      `Auth0 Account successfully created for ${leader.firstName} ${leader.lastName}`
+                    )
+
+                    //Write Auth0 ID of Leader to Neo4j DB
+                    session
+                      .run(cypher.setBacentaLeader, {
+                        leaderId: leader.id,
+                        bacentaId: bacenta.id,
+                        auth_id: leader.auth_id,
+                        auth: context.auth,
+                      })
+                      .then(console.log('Cypher Query Executed Successfully'))
+                      .catch((err) =>
+                        console.error('Error running cypher query', err)
+                      )
+                  })
+                  .catch((err) =>
+                    console.error(
+                      'Error Creating User',
+                      err.response.data ?? err
+                    )
+                  )
+              } else if (leader.auth_id) {
+                //Check auth0 roles and add roles 'leaderBacenta'
+                axios(getUserRoles(leader.auth_id))
+                  .then((res) => {
+                    const roles = res.data.map((role) => role.name)
+
+                    assignRoles(leader.auth_id, roles, [
+                      authRoles.leaderBacenta.id,
+                    ])
+
+                    //Write Auth0 ID of Admin to Neo4j DB
+                    session
+                      .run(cypher.makeBacentaLeader, {
+                        leaderId: leader.id,
+                        bacentaId: bacenta.id,
+                        auth_id: leader.auth_id,
+                        auth: context.auth,
+                      })
+                      .then(console.log('Cypher Query Executed Successfully'))
+                      .catch((err) =>
+                        console.error('Error running cypher query', err)
+                      )
+                  })
+                  .catch((error) =>
+                    console.error('getUserRoles Failed to Run', error)
+                  )
+              }
+            })
+            .catch((err) =>
+              console.error(
+                'There was an error obtaining the auth Id ',
+                err?.response?.data ?? err
+              )
+            )
+        })
+
+      errorHandling(leader)
+
+      return leader
+    },
+    RemoveBacentaLeader: async (object, args, context) => {
+      const session = context.driver.session()
+      let leader = {}
+      let bacenta = { id: args.bacentaId }
+
+      await session
+        .run(cypher.matchMemberQuery, args)
+        .then(async (response) => {
+          // Rearrange member object
+          response.records[0].keys.forEach(
+            (key, i) => (leader[key] = response.records[0]._fields[i])
+          )
+
+          //Check auth0 roles and remove roles 'leaderBacenta'
+          axios(getUserRoles(leader.auth_id))
+            .then((res) => {
+              const roles = res.data.map((role) => role.name)
+
+              //If the person is only a constituency Admin, delete auth0 profile
+              if (roles.includes('leaderBacenta') && roles.length === 1) {
+                axios(deleteAuthUserConfig(leader.auth_id)).then(async () => {
+                  console.log(
+                    `Auth0 Account successfully deleted for ${leader.firstName} ${leader.lastName}`
+                  )
+                  //Remove Auth0 ID of Leader from Neo4j DB
+                  session.run(cypher.removeMemberAuthId, {
+                    log: `${leader.firstName} ${leader.lastName} was removed as a bacenta leader`,
+                    auth_id: leader.auth_id,
+                    auth: context.auth,
+                  })
+                })
+              }
+
+              //If the person is a bishops admin as well as any other position, remove role bishops admin
+              if (roles.includes('leaderBacenta') && roles.length > 1) {
+                removeRoles(leader.auth_id, roles, authRoles.leaderBacenta.id)
+              }
+            })
+            .catch((error) => {
+              console.error(
+                'getUserRoles Failed to Run',
+                error.response.data ?? error
+              )
+            })
+            .then(async () =>
+              //Remove Bacenta Leader relationship in Neo4j DB
+              session
+                .run(cypher.removeBacentaLeader, {
+                  leaderId: leader.id,
+                  bacentaId: bacenta.id,
+                  auth: context.auth,
+                })
+                .then(console.log('Cypher query ran successfully'))
+            )
+        })
+
+      errorHandling(leader)
+
+      return leader
     },
   },
 }

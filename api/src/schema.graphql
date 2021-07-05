@@ -989,12 +989,14 @@ type Query {
 #Mutation Definitions
 type Mutation {
   #resolver Mutations
-  MergeMemberIsBishopAdminFor(from: ID, to: ID): Member
-  RemoveMemberIsBishopAdminFor(from: ID, to: ID): Member
-  MergeMemberIsTownAdminFor(from: ID, to: ID): Member
-  RemoveMemberIsTownAdminFor(from: ID, to: ID): Member
-  MergeMemberIsCampusAdminFor(from: ID, to: ID): Member
-  RemoveMemberIsCampusAdminFor(from: ID, to: ID): Member
+  MakeBishopAdmin(from: ID, to: ID): Member
+  RemoveBishopAdmin(from: ID, to: ID): Member
+  MakeTownAdmin(from: ID, to: ID): Member
+  RemoveTownAdmin(from: ID, to: ID): Member
+  MakeCampusAdmin(from: ID, to: ID): Member
+  RemoveCampusAdmin(from: ID, to: ID): Member
+  MakeBacentaLeader(memberId: ID!, bacentaId: ID!): Member
+  RemoveBacentaLeader(memberId: ID!, bacentaId: ID!): Member
 
   #CREATE OPERATIONS
   # Add Member to the Database
@@ -1014,7 +1016,16 @@ type Mutation {
     pictureUrl: String!
   ): Member
     @auth(
-      rules: [{ roles: ["adminFederal", "adminBishop", "adminConstituency"] }]
+      rules: [
+        {
+          roles: [
+            "adminFederal"
+            "adminBishop"
+            "adminConstituency"
+            "leaderBacenta"
+          ]
+        }
+      ]
     )
     @cypher(
       statement: """
@@ -1467,8 +1478,8 @@ type Mutation {
       """
     )
   UpdateBacentaDetails(
-    id: ID
-    name: String
+    id: ID!
+    name: String!
     meetingDay: String
     leaderId: ID
     venueLongitude: Float
@@ -1483,16 +1494,6 @@ type Mutation {
                	SET bacenta.name = $name
               	SET bacenta.location = point({latitude:toFloat($venueLatitude), longitude:toFloat($venueLongitude), crs:'WGS-84'})
 
-              WITH bacenta
-                    CALL {
-                     	WITH bacenta
-                      WITH bacenta WHERE $leaderId IS NOT NULL
-                      MATCH (leader:Member {id: $leaderId})
-                      OPTIONAL MATCH (bacenta)<-[r:LEADS]-()
-                      DELETE r
-                      MERGE (leader)-[:LEADS]->(bacenta)
-                     	RETURN count(bacenta)
-                     	}
                WITH bacenta
                     CALL {
                      	WITH bacenta
@@ -1510,7 +1511,7 @@ type Mutation {
   #DIFFERENT LOG HISTORY MUTATIONS
   LogBacentaHistory(
     bacentaId: ID!
-    historyRecord: String
+    historyRecord: String!
     oldLeaderId: ID
     newLeaderId: ID
     oldCentreId: ID
@@ -1528,22 +1529,7 @@ type Mutation {
        MERGE (log)-[:RECORDED_ON]->(date)
        MERGE (log)-[:LOGGED_BY]->(admin)
 
-       WITH log,bacenta
-       CALL{
-         WITH log
-         WITH log WHERE $newLeaderId IS NOT NULL
-      OPTIONAL MATCH (oldLeader:Member {id: $oldLeaderId})
-       MATCH (newLeader:Member {id: $newLeaderId})
-         SET log :ServiceLog
-         WITH log, newLeader, oldLeader
-       OPTIONAl MATCH ()-[r0:HAS_HISTORY]->(log)
-         SET r0.current = false
-         WITH log,newLeader, oldLeader
-       CREATE (oldLeader)-[:HAS_HISTORY]->(log)
-       CREATE (newLeader)-[r:HAS_HISTORY]->(log)
-          SET r.current = true
-       RETURN COUNT(log)
-       }
+       
 
 
        WITH log,bacenta
@@ -1569,7 +1555,7 @@ type Mutation {
     )
   LogCentreHistory(
     centreId: ID!
-    historyRecord: String
+    historyRecord: String!
     newLeaderId: ID
     oldLeaderId: ID
     newCampusTownId: ID
@@ -1629,7 +1615,7 @@ type Mutation {
     )
   LogCampusTownHistory(
     campusTownId: ID!
-    historyRecord: String
+    historyRecord: String!
     newLeaderId: ID
     oldLeaderId: ID
     newBishopId: ID
@@ -1696,7 +1682,7 @@ type Mutation {
     )
   LogSontaHistory(
     sontaId: ID!
-    historyRecord: String
+    historyRecord: String!
     newLeaderId: ID
     oldLeaderId: ID
     newCampusTownId: ID
@@ -1760,7 +1746,7 @@ type Mutation {
     bacentaId: ID!
     serviceDate: String!
     attendance: Int!
-    income: Float
+    income: Float!
     treasurers: [ID]!
   ): ServiceRecord
     @cypher(

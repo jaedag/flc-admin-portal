@@ -50,10 +50,10 @@ const DisplayChurchDetails = (props) => {
   const { clickCard, campusId, townId, bishopId } = useContext(ChurchContext)
   //Change Admin Initialised
 
-  const [MergeMemberIsTownAdminFor] = useMutation(MAKE_TOWN_ADMIN)
-  const [RemoveMemberIsTownAdminFor] = useMutation(REMOVE_TOWN_ADMIN)
-  const [MergeMemberIsCampusAdminFor] = useMutation(MAKE_CAMPUS_ADMIN)
-  const [RemoveMemberIsCampusAdminFor] = useMutation(REMOVE_CAMPUS_ADMIN)
+  const [MakeTownAdmin] = useMutation(MAKE_TOWN_ADMIN)
+  const [RemoveTownAdmin] = useMutation(REMOVE_TOWN_ADMIN)
+  const [MakeCampusAdmin] = useMutation(MAKE_CAMPUS_ADMIN)
+  const [RemoveCampusAdmin] = useMutation(REMOVE_CAMPUS_ADMIN)
   const [isOpen, setIsOpen] = useState(false)
   const togglePopup = () => {
     setIsOpen(!isOpen)
@@ -69,28 +69,28 @@ const DisplayChurchDetails = (props) => {
   })
   const onSubmit = (values, onSubmitProps) => {
     if (churchType === 'Town') {
-      RemoveMemberIsTownAdminFor({
+      RemoveTownAdmin({
         variables: {
           townId: townId,
           adminId: initialValues.adminSelect,
         },
       })
 
-      MergeMemberIsTownAdminFor({
+      MakeTownAdmin({
         variables: {
           townId: townId,
           adminId: values.adminSelect,
         },
       })
     } else if (churchType === 'Campus') {
-      RemoveMemberIsCampusAdminFor({
+      RemoveCampusAdmin({
         variables: {
           campusId: campusId,
           adminId: initialValues.adminSelect,
         },
       })
 
-      MergeMemberIsCampusAdminFor({
+      MakeCampusAdmin({
         variables: {
           campusId: campusId,
           adminId: values.adminSelect,

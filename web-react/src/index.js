@@ -362,6 +362,7 @@ const PastorsAdmin = () => {
     }
   }
 
+  // const version = 'v0/5/2'
   return (
     <Router>
       <ChurchContext.Provider

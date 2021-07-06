@@ -7,6 +7,7 @@ dotenv.config()
 const baseURL = 'https://flcadmin.us.auth0.com/'
 let authToken
 let authRoles = {}
+
 const errorHandling = (member) => {
   if (!member.email) {
     throw `${member.firstName} ${member.lastName} does not have a valid email address`
@@ -175,22 +176,6 @@ export const resolvers = {
       return `${obj.firstName} ${obj.lastName}`
     },
   },
-
-  //Query from the github Something OGM
-  // Query: {
-  //   me: async (nothing, args, context, info) => {
-  //     const subset = info.operation.selectionSet.selections.find(
-  //       (item) => item.name.value === 'me'
-  //     )
-  //     const selectionSet = print(subset.selectionSet)
-  //     const User = ogm.model('User')
-  //     const [me] = await User({
-  //       selectionSet,
-  //       where: { /* jwt, etc */ },
-  //     })
-  //     return me
-  //   },
-  // },
 
   Mutation: {
     MakeBishopAdmin: async (object, args, context) => {

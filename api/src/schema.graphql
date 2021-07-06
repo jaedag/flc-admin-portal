@@ -1771,18 +1771,20 @@ type Mutation {
     @cypher(
       statement: """
       CREATE (serviceRecord:ServiceRecord {created_at:datetime()})
-        SET serviceRecord.attendance = $attendance,
+        SET serviceRecord.id = apoc.create.uuid(),
+        serviceRecord.attendance = $attendance,
         serviceRecord.income = $income
       WITH serviceRecord
-      MATCH (treasurer1:Member {id:$treasurer1})
-      MATCH (treasurer2:Member {id:$treasurer2})
       MATCH (bacenta:Bacenta {id:$bacentaId})-[has_history:HAS_HISTORY]->(log:HistoryLog) WHERE has_history.current = true
 
       MERGE (serviceDate:TimeGraph {date:date($serviceDate)})
       MERGE (serviceRecord)-[:SERVICE_HELD_ON]->(serviceDate)
       MERGE (log)-[:HAS_RECORD]->(serviceRecord)
-      MERGE (treasurer1)-[:WAS_TREASURER_FOR]->(serviceRecord)
-      MERGE (treasurer2)-[:WAS_TREASURER_FOR]->(serviceRecord)
+
+      WITH serviceRecord
+      UNWIND $treasurers AS treasurerId WITH treasurerId, serviceRecord
+      MATCH (treasurer:Member {id: treasurerId})
+      MERGE (treasurer)-[:WAS_TREASURER_FOR]->(serviceRecord)
 
       RETURN serviceRecord
       """

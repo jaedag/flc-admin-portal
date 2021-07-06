@@ -211,8 +211,13 @@ const DisplayChurchDetails = (props) => {
             <DetailsCard heading={churchHeading} detail={churchNo} />
           </div>
           <div className="col-9 col-md-6 col-lg-4 pl-3">
-            <DashboardButton btnLink="/bacenta/report">
+            <DashboardButton btnLink={`/${churchType.toLowerCase()}/report`}>
               View Records
+            </DashboardButton>
+            <DashboardButton
+              btnLink={`/${churchType.toLowerCase()}/record-service`}
+            >
+              Fill Service Form
             </DashboardButton>
           </div>
         </div>

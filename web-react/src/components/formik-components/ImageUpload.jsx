@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { ErrorMessage } from 'formik'
 import Spinner from '../Spinner'
 import TextError from './TextError'
-import DashboardButton from '../buttons/DashboardButton'
 
 function ImageUpload(props) {
   const {
@@ -65,7 +64,7 @@ function ImageUpload(props) {
           onChange={uploadImage}
           {...rest}
         />
-        <DashboardButton>{placeholder}</DashboardButton>
+        <p className="btn btn-primary px-4">{placeholder}</p>
       </label>
       {props.error && <TextError>{props.error}</TextError>}
       {!props.error ?? <ErrorMessage name={name} component={TextError} />}

@@ -5,7 +5,7 @@ export const RECORD_BACENTA_SERVICE = gql`
     $bacentaId: ID!
     $serviceDate: String!
     $attendance: Int!
-    $income: Float
+    $income: Float!
     $treasurers: [ID]!
   ) {
     RecordBacentaService(

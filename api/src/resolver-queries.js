@@ -1,13 +1,17 @@
 export const matchMemberQuery = `
-MATCH (member:Member {id:$id}) 
-  RETURN 
-  member.id AS id,
-  member.firstName AS firstName, 
-  member.lastName AS lastName,
-  member.email AS email,
-  member.auth_id AS auth_id,
-  member.phoneNumber AS phoneNumber,
-  member.pictureUrl AS pictureUrl`
+WITH apoc.cypher.runFirstColumn(
+  "MATCH (member:Member {id:$id})
+  RETURN member", {offset:0, first:5, id: $id}, True) AS x UNWIND x AS member 
+  RETURN member { .id,.auth_id, .firstName,.lastName,.email,.phoneNumber,.pictureUrl,
+  leadsBacenta: [ member_bacentas IN apoc.cypher.runFirstColumn("MATCH (this)-[:LEADS]-(bacenta:Bacenta)
+  RETURN bacenta", {this: member}, true) | member_bacentas { .id,.name }],
+  leadsCentre: [ member_centres IN apoc.cypher.runFirstColumn("MATCH (this)-[:LEADS]-(centre:Centre)
+  RETURN centre", {this: member}, true) | member_centres { .id,.name }],
+  leadsCampus: [ member_campus IN apoc.cypher.runFirstColumn("MATCH (this)-[:LEADS]-(campus:Campus)
+  RETURN campus", {this: member}, true) | member_campus { .id,.name }],
+  leadsTown: [ member_town IN apoc.cypher.runFirstColumn("MATCH (this)-[:LEADS]-(town:Town)
+  RETURN town", {this: member}, true) | member_town { .id,.name }] } AS member
+  `
 
 export const setMemberAuthId = `
 MATCH (member:Member {id:$id})
@@ -182,11 +186,12 @@ RETURN admin.auth_id
 export const makeBacentaLeader = `
 MATCH (leader:Member {id:$leaderId})
 MATCH (bacenta:Bacenta {id:$bacentaId})
+OPTIONAL MATCH (bacenta)<-[:HAS_BACENTA]-(centre:Centre)
 CREATE (log:HistoryLog:ServiceLog)
   SET leader.auth_id = $auth_id,
    log.id = apoc.create.uuid(),
    log.timeStamp = time(),
-   log.historyRecord = leader.firstName + ' ' +leader.lastName + ' became the bacenta leader of ' + bacenta.name
+   log.historyRecord = leader.firstName + ' ' +leader.lastName + ' started ' + bacenta.name+' Bacenta under '+ centre.name + ' Centre'
 
 WITH leader,bacenta, log
 OPTIONAL MATCH (bacenta)<-[oldLeads:LEADS]-(oldLeader:Member)
@@ -223,11 +228,13 @@ WITH log,bacenta,oldLeader,leader
 export const makeCentreLeader = `
 MATCH (leader:Member {id:$leaderId})
 MATCH (centre:Centre {id:$centreId})
+OPTIONAL MATCH (centre)<-[:HAS_CENTRE]-(campusTown) 
+UNWIND labels(campusTown) AS stream
 CREATE (log:HistoryLog:ServiceLog)
   SET leader.auth_id = $auth_id,
    log.id = apoc.create.uuid(),
    log.timeStamp = time(),
-   log.historyRecord = leader.firstName + ' ' +leader.lastName + ' became the Centre leader of ' + centre.name
+   log.historyRecord = leader.firstName + ' ' +leader.lastName + ' started ' + centre.name +' Centre under '+ campusTown.name + ' ' + stream
 
 WITH leader,centre, log
 OPTIONAL MATCH (centre)<-[oldLeads:LEADS]-(oldLeader:Member)
@@ -264,11 +271,12 @@ WITH log,centre,oldLeader,leader
 export const makeCampusLeader = `
 MATCH (leader:Member {id:$leaderId})
 MATCH (campus:Campus {id:$campusId})
+OPTIONAL MATCH (campus)<-[:HAS_CAMPUS]-(bishop:Member)
 CREATE (log:HistoryLog:ServiceLog)
   SET leader.auth_id = $auth_id,
    log.id = apoc.create.uuid(),
    log.timeStamp = time(),
-   log.historyRecord = leader.firstName + ' ' +leader.lastName + ' became the Campus CO for ' + campus.name
+   log.historyRecord = leader.firstName + ' ' +leader.lastName + 'started ' + campus.name+ ' Campus under Bishop'+ bishop.firstName+' '+bishop.lastName
 
 WITH leader,campus, log
 OPTIONAL MATCH (campus)<-[oldLeads:LEADS]-(oldLeader:Member)
@@ -305,11 +313,12 @@ WITH log,campus,oldLeader,leader
 export const makeTownLeader = `
 MATCH (leader:Member {id:$leaderId})
 MATCH (town:Town {id:$townId})
+OPTIONAL MATCH (town)<-[:HAS_TOWN]-(bishop:Member)
 CREATE (log:HistoryLog:ServiceLog)
   SET leader.auth_id = $auth_id,
    log.id = apoc.create.uuid(),
    log.timeStamp = time(),
-   log.historyRecord = leader.firstName + ' ' +leader.lastName + ' became the Town CO for ' + town.name
+   log.historyRecord = leader.firstName + ' ' +leader.lastName + 'started ' + town.name+ ' Town under Bishop'+ bishop.firstName+' '+bishop.lastName
 
 WITH leader,town, log
 OPTIONAL MATCH (town)<-[oldLeads:LEADS]-(oldLeader:Member)

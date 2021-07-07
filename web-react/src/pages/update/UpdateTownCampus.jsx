@@ -36,6 +36,7 @@ import PlusSign from '../../components/buttons/PlusSign'
 import MinusSign from '../../components/buttons/MinusSign'
 import { LOG_CAMPUSTOWN_HISTORY, LOG_CENTRE_HISTORY } from './LogMutations'
 import { BISHOP_CENTRE_DROPDOWN } from '../../components/formik-components/ComboboxQueries'
+import { MAKE_CAMPUS_LEADER, MAKE_TOWN_LEADER } from './ChangeLeaderMutations'
 
 const UpdateTownCampus = () => {
   const { church, campusId, townId, bishopId, setBishopId } = useContext(
@@ -94,88 +95,33 @@ const UpdateTownCampus = () => {
     ],
   })
 
-  const [UpdateTown] = useMutation(
-    UPDATE_TOWN_MUTATION,
-    {
-      onCompleted: (updatedInfo) => {
-        let newLeaderInfo = updatedInfo.UpdateTownDetails
-        let historyRecord
-        if (campusTownData?.leader) {
-          historyRecord = `${newLeaderInfo.firstName} ${newLeaderInfo.lastName} was transferred to become the new Town CO for ${initialValues.campusTownName} replacing ${campusTownData?.leader.firstName} ${campusTownData?.leader.lastName}`
-        }
-        if (!campusTownData?.leader) {
-          historyRecord = `${newLeaderInfo.firstName} ${newLeaderInfo.lastName} was transferred to become the new Town CO for ${initialValues.campusTownName}`
-        }
-
-        //Log if the Leader Changes
-        if (newLeaderInfo.id !== initialValues.leaderSelect) {
-          LogCampusTownHistory({
-            variables: {
-              campusTownId: townId,
-              newLeaderId: newLeaderInfo?.id ?? '',
-              oldLeaderId: campusTownData.leader?.id ?? '',
-              oldBishopId: '',
-              newBishopId: '',
-              historyRecord: historyRecord,
-            },
-          })
-        }
+  const [MakeTownLeader] = useMutation(MAKE_TOWN_LEADER)
+  const [UpdateTown] = useMutation(UPDATE_TOWN_MUTATION, {
+    refetchQueries: [
+      { query: DISPLAY_TOWN, variables: { id: townId } },
+      { query: GET_TOWN_CENTRES, variables: { id: townId } },
+      { query: GET_BISHOP_TOWNS, variables: { id: bishopId } },
+      {
+        query: GET_BISHOP_TOWNS,
+        variables: { id: initialValues.bishopSelect },
       },
-    },
-    {
-      refetchQueries: [
-        { query: DISPLAY_TOWN, variables: { id: townId } },
-        { query: GET_TOWN_CENTRES, variables: { id: townId } },
-        { query: GET_BISHOP_TOWNS, variables: { id: bishopId } },
-        {
-          query: GET_BISHOP_TOWNS,
-          variables: { id: initialValues.bishopSelect },
-        },
-        { query: BISH_DASHBOARD_COUNTS, variables: { id: bishopId } },
-      ],
-    }
-  )
+      { query: BISH_DASHBOARD_COUNTS, variables: { id: bishopId } },
+    ],
+  })
 
-  const [UpdateCampus] = useMutation(
-    UPDATE_CAMPUS_MUTATION,
-    {
-      onCompleted: (updatedInfo) => {
-        let newLeaderInfo = updatedInfo.UpdateCampusDetails
-        let historyRecord
-        if (campusTownData?.leader) {
-          historyRecord = `${newLeaderInfo.firstName} ${newLeaderInfo.lastName} was transferred to become the new Campus CO for ${initialValues.campusTownName} replacing ${campusTownData?.leader.firstName} ${campusTownData?.leader.lastName}`
-        }
-        if (!campusTownData?.leader) {
-          historyRecord = `${newLeaderInfo.firstName} ${newLeaderInfo.lastName} was transferred to become the new Campus CO for ${initialValues.campusTownName}`
-        }
-        //Log if the Leader Changes
-        if (newLeaderInfo.id !== initialValues.leaderSelect) {
-          LogCampusTownHistory({
-            variables: {
-              campusTownId: campusId,
-              newLeaderId: newLeaderInfo?.id ?? '',
-              oldLeaderId: campusTownData.leader?.id ?? '',
-              oldBishopId: '',
-              newBishopId: '',
-              historyRecord: historyRecord,
-            },
-          })
-        }
+  const [MakeCampusLeader] = useMutation(MAKE_CAMPUS_LEADER)
+  const [UpdateCampus] = useMutation(UPDATE_CAMPUS_MUTATION, {
+    refetchQueries: [
+      { query: DISPLAY_CAMPUS, variables: { id: campusId } },
+      { query: GET_CAMPUS_CENTRES, variables: { id: campusId } },
+      { query: GET_BISHOP_CAMPUSES, variables: { id: bishopId } },
+      {
+        query: GET_BISHOP_CAMPUSES,
+        variables: { id: initialValues.bishopSelect },
       },
-    },
-    {
-      refetchQueries: [
-        { query: DISPLAY_CAMPUS, variables: { id: campusId } },
-        { query: GET_CAMPUS_CENTRES, variables: { id: campusId } },
-        { query: GET_BISHOP_CAMPUSES, variables: { id: bishopId } },
-        {
-          query: GET_BISHOP_CAMPUSES,
-          variables: { id: initialValues.bishopSelect },
-        },
-        { query: BISH_DASHBOARD_COUNTS, variables: { id: bishopId } },
-      ],
-    }
-  )
+      { query: BISH_DASHBOARD_COUNTS, variables: { id: bishopId } },
+    ],
+  })
 
   //Changes downwards. ie. Centre Changes underneath CampusTown
   const [AddCampusCentres] = useMutation(ADD_CAMPUS_CENTRES)
@@ -390,6 +336,16 @@ const UpdateTownCampus = () => {
           })
         }
 
+        //Log if the Leader Changes
+        if (values.leaderSelect !== initialValues.leaderSelect) {
+          MakeCampusLeader({
+            variables: {
+              leaderId: values.leaderSelect,
+              campusId: campusId,
+            },
+          }).catch((err) => alert(err))
+        }
+
         //Log if Bishop Changes
         if (values.bishopSelect !== initialValues.bishopSelect) {
           RemoveCampusBishop({
@@ -427,6 +383,16 @@ const UpdateTownCampus = () => {
               historyRecord: `Town name has been changed from ${initialValues.campusTownName} to ${values.campusTownName}`,
             },
           })
+        }
+
+        //Log if the Leader Changes
+        if (values.leaderSelect !== initialValues.leaderSelect) {
+          MakeTownLeader({
+            variables: {
+              leaderId: values.leaderSelect,
+              townId: townId,
+            },
+          }).catch((err) => alert(err))
         }
 
         //Log If The Bishop Changes

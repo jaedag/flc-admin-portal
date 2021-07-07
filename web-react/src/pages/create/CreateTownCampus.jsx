@@ -19,6 +19,7 @@ import { ChurchContext } from '../../contexts/ChurchContext'
 import PlusSign from '../../components/buttons/PlusSign'
 import MinusSign from '../../components/buttons/MinusSign'
 import { BISHOP_CENTRE_DROPDOWN } from '../../components/formik-components/ComboboxQueries'
+import { NEW_CAMPUS_LEADER, NEW_TOWN_LEADER } from './MakeLeaderMutations'
 
 function CreateTownCampus() {
   const { church, bishopId, setTownId, setCampusId, setBishopId } = useContext(
@@ -46,6 +47,7 @@ function CreateTownCampus() {
     ),
   })
 
+  const [NewTownLeader] = useMutation(NEW_TOWN_LEADER)
   const [CreateTown] = useMutation(CREATE_TOWN_MUTATION, {
     refetchQueries: [{ query: GET_BISHOP_TOWNS, variables: { id: bishopId } }],
     onCompleted: (newTownData) => {
@@ -54,14 +56,11 @@ function CreateTownCampus() {
     },
   })
 
+  const [NewCampusLeader] = useMutation(NEW_CAMPUS_LEADER)
   const [CreateCampus] = useMutation(CREATE_CAMPUS_MUTATION, {
     refetchQueries: [
       { query: GET_BISHOP_CAMPUSES, variables: { id: bishopId } },
     ],
-    onCompleted: (newCampusData) => {
-      setCampusId(newCampusData.CreateCampus.id)
-      history.push(`/${church.church}/displaydetails`)
-    },
   })
 
   const {
@@ -102,6 +101,17 @@ function CreateTownCampus() {
             centreIds: values.centres,
           },
         })
+          .then((res) => {
+            NewTownLeader({
+              variables: {
+                leaderId: values.leaderId,
+                townId: res.data.CreateTown.id,
+              },
+            }).catch((error) => alert('There was an error', error))
+            setTownId(res.data.CreateTown.id)
+            history.push(`/${church.church}/displaydetails`)
+          })
+          .catch((error) => alert('There was an error', error))
       } else if (church.church === 'campus') {
         CreateCampus({
           variables: {
@@ -111,6 +121,17 @@ function CreateTownCampus() {
             centreIds: values.centres,
           },
         })
+          .then((res) => {
+            NewCampusLeader({
+              variables: {
+                leaderId: values.leaderId,
+                campusId: res.data.CreateCampus.id,
+              },
+            }).catch((error) => alert('There was an error', error))
+            setCampusId(res.data.CreateCampus.id)
+            history.push(`/${church.church}/displaydetails`)
+          })
+          .catch((error) => alert('There was an error', error))
       }
 
       onSubmitProps.setSubmitting(false)

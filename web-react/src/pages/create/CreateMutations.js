@@ -95,7 +95,6 @@ export const ADD_LEADER_HISTORY_MUTATION = gql`
 export const CREATE_BACENTA_MUTATION = gql`
   mutation CreateBacenta(
     $bacentaName: String!
-    $leaderId: ID!
     $centreId: ID!
     $meetingDay: String!
     $venueLongitude: Float
@@ -103,7 +102,6 @@ export const CREATE_BACENTA_MUTATION = gql`
   ) {
     CreateBacenta(
       bacentaName: $bacentaName
-      leaderId: $leaderId
       centreId: $centreId
       meetingDay: $meetingDay
       venueLongitude: $venueLongitude
@@ -116,16 +114,8 @@ export const CREATE_BACENTA_MUTATION = gql`
 `
 
 export const CREATE_CENTRE_MUTATION = gql`
-  mutation CreateCentre(
-    $centreName: String!
-    $leaderId: ID!
-    $townCampusId: ID!
-  ) {
-    CreateCentre(
-      centreName: $centreName
-      leaderId: $leaderId
-      townCampusId: $townCampusId
-    ) {
+  mutation CreateCentre($centreName: String!, $townCampusId: ID!) {
+    CreateCentre(centreName: $centreName, townCampusId: $townCampusId) {
       id
       name
     }

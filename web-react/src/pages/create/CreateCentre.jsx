@@ -21,6 +21,7 @@ import PlusSign from '../../components/buttons/PlusSign'
 import MinusSign from '../../components/buttons/MinusSign'
 import { capitalise, makeSelectOptions } from '../../global-utils'
 import { BISHOP_BACENTA_DROPDOWN } from '../../components/formik-components/ComboboxQueries'
+import { NEW_CENTRE_LEADER } from './MakeLeaderMutations'
 
 function CreateCentre() {
   const initialValues = {
@@ -43,10 +44,8 @@ function CreateCentre() {
     ),
   })
 
+  const [NewCentreLeader] = useMutation(NEW_CENTRE_LEADER)
   const [CreateCentre] = useMutation(CREATE_CENTRE_MUTATION, {
-    onCompleted: (data) => {
-      setCentreId(data.CreateCentre.id)
-    },
     refetchQueries: [
       { query: GET_CAMPUS_CENTRES, variables: { id: bishopId } },
       { query: GET_TOWN_CENTRES, variables: { id: bishopId } },
@@ -87,11 +86,20 @@ function CreateCentre() {
           townCampusId: values.campusTownSelect,
           bacentas: values.bacentas,
         },
-      }).then(() => {
-        onSubmitProps.setSubmitting(false)
-        onSubmitProps.resetForm()
-        history.push('/centre/displaydetails')
       })
+        .then((res) => {
+          NewCentreLeader({
+            variables: {
+              leaderId: values.leaderId,
+              centreId: res.data.CreateCentre.id,
+            },
+          }).catch((error) => alert('There was an error', error))
+          setCentreId(res.data.CreateCentre.id)
+          onSubmitProps.setSubmitting(false)
+          onSubmitProps.resetForm()
+          history.push('/centre/displaydetails')
+        })
+        .catch((error) => alert('There was an error', error))
     }
 
     return (

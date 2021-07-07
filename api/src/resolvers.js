@@ -20,6 +20,12 @@ const isAuth = (permittedRoles, userRoles) => {
     throw 'You are not permitted to run this mutation'
   }
 }
+const rearrangeMemberObject = (member, response) => {
+  response.records[0].keys.forEach(
+    (key, i) => (member[key] = response.records[0]._fields[i])
+  )
+  return member.member
+}
 
 const getTokenConfig = {
   method: 'post',
@@ -73,9 +79,6 @@ const createAuthUserConfig = (member) => ({
   data: {
     connection: 'flcadmin',
     email: member.email,
-    user_metadata: {
-      admin: true,
-    },
     given_name: member.firstName,
     family_name: member.lastName,
     name: `${member.firstName} ${member.lastName}`,
@@ -189,10 +192,8 @@ export const resolvers = {
       await session
         .run(cypher.matchMemberQuery, args)
         .then(async (response) => {
-          // Rearrange member object
-          response.records[0].keys.forEach(
-            (key, i) => (admin[key] = response.records[0]._fields[i])
-          )
+          //Rearrange member object
+          admin = rearrangeMemberObject(admin, response)
 
           //Check for AuthID of Admin
           axios(getAuthIdConfig(admin))
@@ -282,10 +283,8 @@ export const resolvers = {
       await session
         .run(cypher.matchMemberQuery, { id: args.adminId })
         .then(async (response) => {
-          // Rearrange member object
-          response.records[0].keys.forEach(
-            (key, i) => (admin[key] = response.records[0]._fields[i])
-          )
+          //Rearrange member object
+          admin = rearrangeMemberObject(admin, response)
 
           //Check auth0 roles and remove roles 'adminBishop'
           axios(getUserRoles(admin.auth_id))
@@ -345,10 +344,8 @@ export const resolvers = {
       await session
         .run(cypher.matchMemberQuery, { id: args.adminId })
         .then(async (response) => {
-          // Rearrange member object
-          response.records[0].keys.forEach(
-            (key, i) => (admin[key] = response.records[0]._fields[i])
-          )
+          //Rearrange member object
+          admin = rearrangeMemberObject(admin, response)
 
           //Check for AuthID of Admin
           axios(getAuthIdConfig(admin))
@@ -444,10 +441,8 @@ export const resolvers = {
       await session
         .run(cypher.matchMemberQuery, { id: args.adminId })
         .then(async (response) => {
-          // Rearrange member object
-          response.records[0].keys.forEach(
-            (key, i) => (admin[key] = response.records[0]._fields[i])
-          )
+          //Rearrange member object
+          admin = rearrangeMemberObject(admin, response)
 
           //Check auth0 roles and remove roles 'adminConstituency'
           axios(getUserRoles(admin.auth_id))
@@ -512,10 +507,8 @@ export const resolvers = {
       await session
         .run(cypher.matchMemberQuery, { id: args.adminId })
         .then(async (response) => {
-          // Rearrange member object
-          response.records[0].keys.forEach(
-            (key, i) => (admin[key] = response.records[0]._fields[i])
-          )
+          //Rearrange member object
+          admin = rearrangeMemberObject(admin, response)
 
           //Check for AuthID of Admin
           axios(getAuthIdConfig(admin))
@@ -608,10 +601,8 @@ export const resolvers = {
       await session
         .run(cypher.matchMemberQuery, { id: args.adminId })
         .then(async (response) => {
-          // Rearrange member object
-          response.records[0].keys.forEach(
-            (key, i) => (admin[key] = response.records[0]._fields[i])
-          )
+          //Rearrange member object
+          admin = rearrangeMemberObject(admin, response)
 
           //Check auth0 roles and remove roles 'adminConstituency'
           axios(getUserRoles(admin.auth_id))
@@ -679,10 +670,8 @@ export const resolvers = {
       await session
         .run(cypher.matchMemberQuery, { id: args.leaderId })
         .then(async (response) => {
-          // Rearrange member object
-          response.records[0].keys.forEach(
-            (key, i) => (leader[key] = response.records[0]._fields[i])
-          )
+          // Rearrange member
+          leader = rearrangeMemberObject(leader, response)
 
           //Check for AuthID of Leader
           axios(getAuthIdConfig(leader))
@@ -768,6 +757,7 @@ export const resolvers = {
         'adminBishop',
         'adminConstituency',
       ]
+
       isAuth(permittedRoles, context.auth.roles)
 
       const session = context.driver.session()
@@ -778,16 +768,19 @@ export const resolvers = {
         .run(cypher.matchMemberQuery, { id: args.leaderId })
         .then(async (response) => {
           // Rearrange member object
-          response.records[0].keys.forEach(
-            (key, i) => (leader[key] = response.records[0]._fields[i])
-          )
+          leader = rearrangeMemberObject(leader, response)
+
+          if (leader.leadsBacenta.length > 1) {
+            //If he leads more than one bacenta don't touch his Auth0 roles
+            return
+          }
 
           //Check auth0 roles and remove roles 'leaderBacenta'
           axios(getUserRoles(leader.auth_id))
             .then((res) => {
               const roles = res.data.map((role) => role.name)
 
-              //If the person is only a constituency Admin, delete auth0 profile
+              //If the person is only a bacentaLeader, delete auth0 profile
               if (roles.includes('leaderBacenta') && roles.length === 1) {
                 axios(deleteAuthUserConfig(leader.auth_id)).then(async () => {
                   console.log(
@@ -836,9 +829,7 @@ export const resolvers = {
         .run(cypher.matchMemberQuery, { id: args.leaderId })
         .then(async (response) => {
           // Rearrange member object
-          response.records[0].keys.forEach(
-            (key, i) => (leader[key] = response.records[0]._fields[i])
-          )
+          leader = rearrangeMemberObject(leader, response)
 
           //Check for AuthID of Leader
           axios(getAuthIdConfig(leader))
@@ -854,7 +845,7 @@ export const resolvers = {
 
                     const roles = []
 
-                    assignRoles(auth_id, roles, [authRoles.leaderCentre.id])
+                    assignRoles(auth_id, roles, [authRoles.leadsCampus.id])
                     console.log(
                       `Auth0 Account successfully created for ${leader.firstName} ${leader.lastName}`
                     )
@@ -934,9 +925,12 @@ export const resolvers = {
         .run(cypher.matchMemberQuery, { id: args.leaderId })
         .then(async (response) => {
           // Rearrange member object
-          response.records[0].keys.forEach(
-            (key, i) => (leader[key] = response.records[0]._fields[i])
-          )
+          leader = rearrangeMemberObject(leader, response)
+
+          if (leader.leadsCentre.length > 1) {
+            //If he leads more than one Centre don't touch his Auth0 roles
+            return
+          }
 
           //Check auth0 roles and remove roles 'leaderCentre'
           axios(getUserRoles(leader.auth_id))
@@ -986,15 +980,13 @@ export const resolvers = {
 
       const session = context.driver.session()
       let leader = {}
-      let centre = { id: args.centreId }
+      let campus = { id: args.campusId }
 
       await session
         .run(cypher.matchMemberQuery, { id: args.leaderId })
         .then(async (response) => {
           // Rearrange member object
-          response.records[0].keys.forEach(
-            (key, i) => (leader[key] = response.records[0]._fields[i])
-          )
+          leader = rearrangeMemberObject(leader, response)
 
           //Check for AuthID of Leader
           axios(getAuthIdConfig(leader))
@@ -1010,16 +1002,16 @@ export const resolvers = {
 
                     const roles = []
 
-                    assignRoles(auth_id, roles, [authRoles.leaderCentre.id])
+                    assignRoles(auth_id, roles, [authRoles.leaderCampus.id])
                     console.log(
                       `Auth0 Account successfully created for ${leader.firstName} ${leader.lastName}`
                     )
 
                     //Write Auth0 ID of Leader to Neo4j DB
                     session
-                      .run(cypher.makeCentreLeader, {
+                      .run(cypher.makeCampusLeader, {
                         leaderId: leader.id,
-                        centreId: centre.id,
+                        campusId: campus.id,
                         auth_id: leader.auth_id,
                         auth: context.auth,
                       })
@@ -1035,20 +1027,20 @@ export const resolvers = {
                     )
                   )
               } else if (leader.auth_id) {
-                //Check auth0 roles and add roles 'leaderCentre'
+                //Check auth0 roles and add roles 'leaderCampus'
                 axios(getUserRoles(leader.auth_id))
                   .then((res) => {
                     const roles = res.data.map((role) => role.name)
 
                     assignRoles(leader.auth_id, roles, [
-                      authRoles.leaderCentre.id,
+                      authRoles.leaderCampus.id,
                     ])
 
                     //Write Auth0 ID of Admin to Neo4j DB
                     session
-                      .run(cypher.makeCentreLeader, {
+                      .run(cypher.makeCampusLeader, {
                         leaderId: leader.id,
-                        centreId: centre.id,
+                        campusId: campus.id,
                         auth_id: leader.auth_id,
                         auth: context.auth,
                       })
@@ -1084,39 +1076,41 @@ export const resolvers = {
 
       const session = context.driver.session()
       let leader = {}
-      let centre = { id: args.centreId }
+      let campus = { id: args.campusId }
 
       await session
         .run(cypher.matchMemberQuery, { id: args.leaderId })
         .then(async (response) => {
-          // Rearrange member object
-          response.records[0].keys.forEach(
-            (key, i) => (leader[key] = response.records[0]._fields[i])
-          )
+          leader = rearrangeMemberObject(leader, response)
 
-          //Check auth0 roles and remove roles 'leaderCentre'
+          if (leader.leadsCampus.length > 1) {
+            //If he leads more than one Campus don't touch his Auth0 roles
+            return
+          }
+
+          //Check auth0 roles and remove roles 'leaderCampus'
           axios(getUserRoles(leader.auth_id))
             .then((res) => {
               const roles = res.data.map((role) => role.name)
 
               //If the person is only a constituency Admin, delete auth0 profile
-              if (roles.includes('leaderCentre') && roles.length === 1) {
+              if (roles.includes('leaderCampus') && roles.length === 1) {
                 axios(deleteAuthUserConfig(leader.auth_id)).then(async () => {
                   console.log(
                     `Auth0 Account successfully deleted for ${leader.firstName} ${leader.lastName}`
                   )
                   //Remove Auth0 ID of Leader from Neo4j DB
                   session.run(cypher.removeMemberAuthId, {
-                    log: `${leader.firstName} ${leader.lastName} was removed as a centre leader`,
+                    log: `${leader.firstName} ${leader.lastName} was removed as a Campus CO`,
                     auth_id: leader.auth_id,
                     auth: context.auth,
                   })
                 })
               }
 
-              //If the person is a centre leader as well as any other position, remove role centre leader
-              if (roles.includes('leaderCentre') && roles.length > 1) {
-                removeRoles(leader.auth_id, roles, authRoles.leaderCentre.id)
+              //If the person is a Campus leader as well as any other position, remove role Campus leader
+              if (roles.includes('leaderCampus') && roles.length > 1) {
+                removeRoles(leader.auth_id, roles, authRoles.leadsCampus.id)
               }
             })
             .catch((error) => {
@@ -1126,6 +1120,161 @@ export const resolvers = {
               )
             })
           //Relationship inn Neo4j will be removed when the replacement leader is being added
+        })
+
+      errorHandling(leader)
+
+      return leader
+    },
+    MakeTownLeader: async (object, args, context) => {
+      const permittedRoles = [
+        'adminFederal',
+        'adminBishop',
+        'adminConstituency',
+      ]
+      isAuth(permittedRoles, context.auth.roles)
+
+      const session = context.driver.session()
+      let leader = {}
+      let town = { id: args.townId }
+
+      await session
+        .run(cypher.matchMemberQuery, { id: args.leaderId })
+        .then(async (response) => {
+          leader = rearrangeMemberObject(leader, response)
+
+          //Check for AuthID of Leader
+          axios(getAuthIdConfig(leader))
+            .then(async (res) => {
+              leader.auth_id = res.data[0]?.user_id
+
+              if (!leader.auth_id) {
+                //If leader Does Not Have Auth0 Profile, Create One
+                axios(createAuthUserConfig(leader))
+                  .then((res) => {
+                    const auth_id = res.data.user_id
+                    leader.auth_id = res.data.user_id
+
+                    const roles = []
+
+                    assignRoles(auth_id, roles, [authRoles.leaderTown.id])
+                    console.log(
+                      `Auth0 Account successfully created for ${leader.firstName} ${leader.lastName}`
+                    )
+
+                    //Write Auth0 ID of Leader to Neo4j DB
+                    session
+                      .run(cypher.makeTownLeader, {
+                        leaderId: leader.id,
+                        townId: town.id,
+                        auth_id: leader.auth_id,
+                        auth: context.auth,
+                      })
+                      .then(console.log('Cypher Query Executed Successfully'))
+                      .catch((err) =>
+                        console.error('Error running cypher query', err)
+                      )
+                  })
+                  .catch((err) =>
+                    console.error(
+                      'Error Creating User',
+                      err.response.data ?? err
+                    )
+                  )
+              } else if (leader.auth_id) {
+                //Check auth0 roles and add roles 'leaderTown'
+                axios(getUserRoles(leader.auth_id))
+                  .then((res) => {
+                    const roles = res.data.map((role) => role.name)
+
+                    assignRoles(leader.auth_id, roles, [
+                      authRoles.leaderTown.id,
+                    ])
+
+                    //Write Auth0 ID of Admin to Neo4j DB
+                    session
+                      .run(cypher.makeTownLeader, {
+                        leaderId: leader.id,
+                        townId: town.id,
+                        auth_id: leader.auth_id,
+                        auth: context.auth,
+                      })
+                      .then(console.log('Cypher Query Executed Successfully'))
+                      .catch((err) =>
+                        console.error('Error running cypher query', err)
+                      )
+                  })
+                  .catch((error) =>
+                    console.error('getUserRoles Failed to Run', error)
+                  )
+              }
+            })
+            .catch((err) =>
+              console.error(
+                'There was an error obtaining the auth Id ',
+                err?.response?.data ?? err
+              )
+            )
+        })
+
+      errorHandling(leader)
+
+      return leader
+    },
+    RemoveTownLeader: async (object, args, context) => {
+      const permittedRoles = [
+        'adminFederal',
+        'adminBishop',
+        'adminConstituency',
+      ]
+      isAuth(permittedRoles, context.auth.roles)
+
+      const session = context.driver.session()
+      let leader = {}
+      let town = { id: args.townId }
+
+      await session
+        .run(cypher.matchMemberQuery, { id: args.leaderId })
+        .then(async (response) => {
+          leader = rearrangeMemberObject(leader, response)
+
+          if (leader.leadsTown.length > 1) {
+            //If he leads more than one Town don't touch his Auth0 roles
+            return
+          }
+
+          //Check auth0 roles and remove roles 'leaderTown'
+          axios(getUserRoles(leader.auth_id))
+            .then((res) => {
+              const roles = res.data.map((role) => role.name)
+
+              //If the person is only a constituency Admin, delete auth0 profile
+              if (roles.includes('leaderTown') && roles.length === 1) {
+                axios(deleteAuthUserConfig(leader.auth_id)).then(async () => {
+                  console.log(
+                    `Auth0 Account successfully deleted for ${leader.firstName} ${leader.lastName}`
+                  )
+                  //Remove Auth0 ID of Leader from Neo4j DB
+                  session.run(cypher.removeMemberAuthId, {
+                    log: `${leader.firstName} ${leader.lastName} was removed as a Town CO`,
+                    auth_id: leader.auth_id,
+                    auth: context.auth,
+                  })
+                })
+              }
+
+              //If the person is a Town leader as well as any other position, remove role Town leader
+              if (roles.includes('leaderTown') && roles.length > 1) {
+                removeRoles(leader.auth_id, roles, authRoles.leadsCampus.id)
+              }
+            })
+            .catch((error) => {
+              console.error(
+                'getUserRoles Failed to Run',
+                error.response.data ?? error
+              )
+            })
+          //Relationship in Neo4j will be removed when the replacement leader is being added
         })
 
       errorHandling(leader)

@@ -143,7 +143,6 @@ const UpdateBacenta = () => {
       })
 
       //Log if the Leader Changes
-
       if (values.leaderSelect !== initialValues.leaderSelect) {
         MakeBacentaLeader({
           variables: {

@@ -51,6 +51,7 @@ export const FEDERAL_SEARCH = gql`
       id
       name
       centre {
+        id
         town {
           id
           bishop {
@@ -263,6 +264,7 @@ export const FEDERAL_NEO_SEARCH = gql`
       id
       name
       centre {
+        id
         town {
           id
           bishop {

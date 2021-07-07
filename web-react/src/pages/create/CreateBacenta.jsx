@@ -24,6 +24,7 @@ import { ChurchContext } from '../../contexts/ChurchContext'
 import ErrorScreen from '../../components/ErrorScreen'
 import LoadingScreen from '../../components/LoadingScreen'
 import Spinner from '../../components/Spinner.jsx'
+import { NEW_BACENTA_LEADER } from './MakeLeaderMutations'
 
 const CreateBacenta = () => {
   const initialValues = {
@@ -60,12 +61,8 @@ const CreateBacenta = () => {
 
   const history = useHistory()
   const [positionLoading, setPositionLoading] = useState(false)
-  const [CreateBacenta] = useMutation(CREATE_BACENTA_MUTATION, {
-    onCompleted: (newBacentaData) => {
-      setBacentaId(newBacentaData.CreateBacenta.id)
-      history.push('/bacenta/displaydetails')
-    },
-  })
+  const [NewBacentaLeader] = useMutation(NEW_BACENTA_LEADER)
+  const [CreateBacenta] = useMutation(CREATE_BACENTA_MUTATION)
 
   const { data: townListData, loading: townListLoading } = useQuery(
     GET_BISHOP_TOWNS,
@@ -85,17 +82,29 @@ const CreateBacenta = () => {
     CreateBacenta({
       variables: {
         bacentaName: values.bacentaName,
-        leaderId: values.leaderId,
         centreId: values.centreSelect,
         meetingDay: values.meetingDay,
         venueLongitude: parseFloat(values.venueLongitude),
         venueLatitude: parseFloat(values.venueLatitude),
       },
-    }).then(() => {
-      // console.log('Form data', values)
-      onSubmitProps.setSubmitting(false)
-      onSubmitProps.resetForm()
     })
+      .then((res) => {
+        NewBacentaLeader({
+          variables: {
+            leaderId: values.leaderId,
+            bacentaId: res.data.CreateBacenta.id,
+          },
+        })
+          .then(() => {
+            onSubmitProps.setSubmitting(false)
+            onSubmitProps.resetForm()
+          })
+          .catch((error) => alert('There was an error', error))
+
+        setBacentaId(res.data.CreateBacenta.id)
+        history.push('/bacenta/displaydetails')
+      })
+      .catch((error) => alert('There was an error', error))
   }
 
   if (townListLoading || campusListLoading) {

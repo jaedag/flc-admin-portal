@@ -82,3 +82,57 @@ export const BACENTA_LEADER_DASHBOARD = gql`
     bacentaMemberCount(id: $bacentaId)
   }
 `
+
+export const SERVANTS_DASHBOARD = gql`
+  query servantsDashboard($id: ID!) {
+    members(where: { id: $id }) {
+      id
+      firstName
+      lastName
+      fullName
+      # The person is an admin
+      isTownAdminFor {
+        id
+      }
+      isCampusAdminFor {
+        id
+      }
+      isBishopAdminFor {
+        id
+      }
+
+      # The person leads in the Bacenta side
+      leadsBacenta {
+        id
+        name
+        services {
+          id
+          historyRecord
+          serviceRecords {
+            created_at
+            attendance
+            income
+            serviceDate {
+              date
+            }
+          }
+        }
+      }
+      leadsCentre {
+        id
+      }
+      leadsTown {
+        id
+      }
+      leadsCampus {
+        id
+      }
+      leadsSonta {
+        id
+      }
+      leadsMinistry {
+        id
+      }
+    }
+  }
+`

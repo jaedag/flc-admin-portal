@@ -31,6 +31,7 @@ import { DISPLAY_CENTRE } from '../display/ReadQueries'
 import { LOG_CENTRE_HISTORY, LOG_BACENTA_HISTORY } from './LogMutations'
 import PlusSign from '../../components/buttons/PlusSign'
 import MinusSign from '../../components/buttons/MinusSign'
+import { MAKE_CENTRE_LEADER } from './ChangeLeaderMutations'
 
 const UpdateCentre = () => {
   const {
@@ -97,24 +98,8 @@ const UpdateCentre = () => {
     refetchQueries: [{ query: DISPLAY_CENTRE, variables: { id: centreId } }],
   })
 
+  const [MakeCentreLeader] = useMutation(MAKE_CENTRE_LEADER)
   const [UpdateCentre] = useMutation(UPDATE_CENTRE_MUTATION, {
-    onCompleted: (updatedInfo) => {
-      let newLeaderInfo = updatedInfo.UpdateCentreDetails
-      //Log if the Leader Changes
-
-      if (newLeaderInfo.id !== initialValues.leaderSelect) {
-        LogCentreHistory({
-          variables: {
-            centreId: centreId,
-            newLeaderId: newLeaderInfo.id,
-            oldLeaderId: centre?.leader.id,
-            oldCampusTownId: '',
-            newCampusTownId: '',
-            historyRecord: `${newLeaderInfo.firstName} ${newLeaderInfo.lastName} was transferred to become the new Centre Leader for ${initialValues.centreName} replacing ${centre?.leader.firstName} ${centre?.leader.lastName}`,
-          },
-        })
-      }
-    },
     refetchQueries: [
       { query: DISPLAY_CENTRE, variables: { id: centreId } },
       { query: GET_TOWN_CENTRES, variables: { id: townId } },
@@ -316,6 +301,16 @@ const UpdateCentre = () => {
             historyRecord: `Centre name has been changed from ${initialValues.centreName} to ${values.centreName}`,
           },
         })
+      }
+
+      //Log if the Leader Changes
+      if (values.leaderSelect !== initialValues.leaderSelect) {
+        MakeCentreLeader({
+          variables: {
+            leaderId: values.leaderSelect,
+            centreId: centreId,
+          },
+        }).catch((err) => alert(err))
       }
 
       //Log If The TownCampus Changes

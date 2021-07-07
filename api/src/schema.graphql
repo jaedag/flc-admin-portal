@@ -1180,7 +1180,7 @@ type Mutation {
       """
     )
 
-  CreateCentre(centreName: String!, leaderId: ID!, townCampusId: ID!): Centre
+  CreateCentre(centreName: String!, townCampusId: ID!): Centre
     @auth(
       rules: [{ roles: ["adminFederal", "adminBishop", "adminConstituency"] }]
     )
@@ -1190,26 +1190,8 @@ type Mutation {
          	SET
       	centre.id = apoc.create.uuid()
       WITH centre
-       MATCH (leader:Member {id: $leaderId})
-       MATCH (currentUser:Member {auth_id:$auth.jwt.sub})
        MATCH (campusTown {id:$townCampusId}) WHERE campusTown:Town OR campusTown:Campus
-       UNWIND labels(campusTown) AS typename
-
-       CREATE (log:HistoryLog:ServiceLog)
-        SET
-         log.id = apoc.create.uuid(),
-         log.timeStamp = time(),
-         log.historyRecord = leader.firstName + ' ' +leader.lastName + ' started ' + $centreName +' Centre under '+ campusTown.name+ ' '+typename
-       MERGE (date:TimeGraph {date: date()})
        MERGE (campusTown)-[:HAS_CENTRE]->(centre)
-       MERGE (leader)-[:LEADS]->(centre)
-
-       MERGE (log)-[:LOGGED_BY]->(currentUser)
-       MERGE (log)-[:RECORDED_ON]->(date)
-       MERGE (campusTown)-[:HAS_HISTORY]->(log)
-       MERGE (centre)-[:HAS_HISTORY]->(log)
-       MERGE (leader)-[r:HAS_HISTORY]->(log)
-         SET r.current = true
       RETURN centre
       """
     )
@@ -1252,7 +1234,6 @@ type Mutation {
     )
   CreateBacenta(
     bacentaName: String!
-    leaderId: ID!
     centreId: ID!
     meetingDay: String!
     venueLongitude: Float
@@ -1270,26 +1251,9 @@ type Mutation {
       WITH bacenta
       MATCH (centre:Centre {id: $centreId})
       MATCH (meetingDay:ServiceDay {day: $meetingDay})
-      MATCH (leader:Member {id: $leaderId})
-      MATCH (currentUser:Member {auth_id:$auth.jwt.sub})
-
-        CREATE (log:HistoryLog:ServiceLog)
-         SET
-          log.id = apoc.create.uuid(),
-          log.timeStamp = time(),
-          log.historyRecord = leader.firstName + ' ' +leader.lastName + ' started ' + $bacentaName +' Bacenta under '+ centre.name + ' Centre'
-        MERGE (date:TimeGraph {date: date()})
-        MERGE (centre)-[:HAS_BACENTA]->(bacenta)
-        MERGE (bacenta)-[:MEETS_ON]->(meetingDay)
-        MERGE (leader)-[:LEADS]->(bacenta)
-
-        MERGE (log)-[:LOGGED_BY]->(currentUser)
-        MERGE (log)-[:RECORDED_ON]->(date)
-        MERGE (leader)-[r:HAS_HISTORY]->(log)
-        MERGE (centre)-[:HAS_HISTORY]->(log)
-        MERGE (bacenta)-[:HAS_HISTORY]->(log)
-          SET r.current = true
-         RETURN bacenta
+      MERGE (centre)-[:HAS_BACENTA]->(bacenta)
+      MERGE (bacenta)-[:MEETS_ON]->(meetingDay)
+      RETURN bacenta
       """
     )
 

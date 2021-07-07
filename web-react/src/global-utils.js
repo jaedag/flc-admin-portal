@@ -205,3 +205,28 @@ export const average = (array) => {
   }
   return sum / len
 }
+
+export const getServiceGraphData = (churches) => {
+  let data = []
+  churches[0].services.map((service) => {
+    service.serviceRecords.map((record, index) => {
+      if (index >= 6) {
+        return
+      }
+
+      data.push({
+        date: parseNeoDate(record.serviceDate.date),
+        attendance: record.attendance,
+        income: record.income,
+      })
+    })
+  })
+
+  return data.sort(sortingFunction('date'))
+}
+
+export const monthlyStatAverage = (data, stat, numberOfWeeks) => {
+  const statArray = data.map((service) => service[`${stat}`])
+  //Calculate average of the last four weeks of service
+  return average(statArray.slice(-numberOfWeeks)).toFixed(2)
+}

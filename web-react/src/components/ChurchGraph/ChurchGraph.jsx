@@ -11,7 +11,7 @@ import {
 import { capitalise } from '../../global-utils'
 import './ChurchGraph.css'
 
-const ChurchGraph = ({ stat1, stat2, serviceData }) => {
+const ChurchGraph = ({ stat1, stat2, serviceData, secondaryTitle }) => {
   return (
     <>
       <div className="row mt-2">
@@ -19,7 +19,9 @@ const ChurchGraph = ({ stat1, stat2, serviceData }) => {
           <p className="chart-title font-weight-bold m-0">{`${capitalise(
             stat1
           )} and ${capitalise(stat2)}`}</p>
-          {/* <p className="chart-title church-name">{`${churchData[0].name} ${churchData[0].__typename}`}</p> */}
+          {secondaryTitle && (
+            <p className="chart-title church-name">{`${secondaryTitle}`}</p>
+          )}
           <ResponsiveContainer width="100%" height={330}>
             <BarChart data={serviceData}>
               <defs>

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext } from 'react'
 import NavBar from '../../components/nav/NavBar'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import './BacentaReport.css'
@@ -6,7 +6,7 @@ import { useQuery } from '@apollo/client'
 
 import LoadingScreen from '../../components/LoadingScreen'
 import ErrorScreen from '../../components/ErrorScreen'
-import { average, sortingFunction, parseNeoDate } from '../../global-utils'
+import { getServiceGraphData, monthlyStatAverage } from '../../global-utils'
 import { Link } from 'react-router-dom'
 import ChurchGraph from '../../components/ChurchGraph/ChurchGraph'
 import { BACENTA_REPORT } from './ReportQueries'
@@ -14,7 +14,6 @@ import { BACENTA_REPORT } from './ReportQueries'
 export const BacentaReport = () => {
   const { bacentaId } = useContext(ChurchContext)
 
-  const [stats] = useState('attendance')
   const { data, loading } = useQuery(BACENTA_REPORT, {
     variables: { bacentaId: bacentaId },
   })
@@ -23,30 +22,8 @@ export const BacentaReport = () => {
     return <LoadingScreen />
   } else if (data) {
     const { bacentas, bacentaMemberCount } = data
-    const serviceData = []
-
-    bacentas[0].services.map((service) => {
-      service.serviceRecords.map((record, index) => {
-        if (index >= 6) {
-          return
-        }
-
-        serviceData.push({
-          date: parseNeoDate(record.serviceDate.date),
-          attendance: record.attendance,
-          income: record.income,
-          [`${stats}`]: record[`${stats}`],
-        })
-      })
-    })
-
-    serviceData.sort(sortingFunction('date'))
-
-    const monthlyStatAverage = (data, stat) => {
-      const statArray = data.map((service) => service[`${stat}`])
-      //Calculate average of the last four weeks of service
-      return average(statArray.slice(-4)).toFixed(2)
-    }
+    const serviceData = getServiceGraphData(bacentas)
+    const numberOfWeeks = 4
 
     return (
       <>
@@ -75,14 +52,14 @@ export const BacentaReport = () => {
             <div className="col">
               <p className="dashboard-title">Avg Attendance</p>
               <p className="info-text">
-                {monthlyStatAverage(serviceData, 'attendance')}
+                {monthlyStatAverage(serviceData, 'attendance', numberOfWeeks)}
               </p>
             </div>
 
             <div className="col">
               <p className="dashboard-title">Avg Income (in GH₵)</p>
               <p className="info-text">
-                {`${monthlyStatAverage(serviceData, 'income')}`}
+                {`${monthlyStatAverage(serviceData, 'income', numberOfWeeks)}`}
               </p>
             </div>
           </div>

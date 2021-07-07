@@ -1,0 +1,37 @@
+.role-card {
+  border: none;
+  border-radius: 30px;
+  width: 120px;
+  height: 120px;
+}
+
+.colour-bacentas,
+.colour-bacenta {
+  background-image: linear-gradient(#38760b, #173d07, #082b07);
+}
+.colour-centres {
+  background-image: linear-gradient(#770e0b, #4e0a09, #2b0707);
+}
+.colour-admin {
+  background-image: linear-gradient(#1b0e36, #2c0b53, #3c096f);
+}
+
+.church-number {
+  font-size: 3.7rem;
+  font-weight: bold;
+  margin: 0px;
+  height: 80px;
+  font-family: 'Roboto';
+}
+
+.roboto {
+  font-family: 'Roboto';
+}
+
+.church-string {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 0px;
+  height: 80px;
+  font-family: 'Roboto';
+}

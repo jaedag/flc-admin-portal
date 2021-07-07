@@ -2,6 +2,7 @@ import React, { useContext } from 'react'
 import { useHistory } from 'react-router'
 import { ChurchContext } from '../contexts/ChurchContext'
 import { capitalise } from '../global-utils'
+import DashboardButton from './buttons/DashboardButton'
 
 const MemberRankList = ({ member }) => {
   const { clickCard, determineStream } = useContext(ChurchContext)
@@ -19,8 +20,10 @@ const MemberRankList = ({ member }) => {
     adminBishop: [],
     adminConstituency: [],
   }
+  let isServant = false
 
   const updateRank = (member, churchType) => {
+    isServant = true
     if (churchType === 'bishop') {
       if (member.townBishop[0]) {
         member.townBishop.map((church) => {
@@ -142,8 +145,16 @@ const MemberRankList = ({ member }) => {
     updateRank(member, 'adminConstituency')
   }
 
+  if (!isServant) {
+    return null
+  }
+
   return (
     <div className="font-weight-light card-text text-center">
+      <DashboardButton btnLink="/dashboard/servants">
+        View Records
+      </DashboardButton>
+      <br />
       {member.townBishop[0] || member.campusBishop[0] ? (
         <span
           onClick={() => {

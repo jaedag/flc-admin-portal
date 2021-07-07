@@ -30,6 +30,7 @@ export const BacentaReport = () => {
         if (index >= 6) {
           return
         }
+
         serviceData.push({
           date: parseNeoDate(record.serviceDate.date),
           attendance: record.attendance,

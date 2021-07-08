@@ -120,6 +120,40 @@ export const SERVANTS_DASHBOARD = gql`
       }
       leadsCentre {
         id
+        name
+        campus {
+          id
+          bishop {
+            id
+          }
+        }
+        town {
+          id
+          bishop {
+            id
+          }
+        }
+        services {
+          id
+          historyRecord
+          serviceRecords {
+            created_at
+            attendance
+            income
+            serviceDate {
+              date
+            }
+          }
+          centreBacentaRecords(id: $id) {
+            id
+            created_at
+            attendance
+            income
+            serviceDate {
+              date
+            }
+          }
+        }
       }
       leadsTown {
         id

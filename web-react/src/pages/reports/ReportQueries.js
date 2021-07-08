@@ -29,7 +29,7 @@ export const BACENTA_REPORT = gql`
 `
 
 export const CENTRE_REPORT = gql`
-  query centreReports($centreId: ID) {
+  query centreReports($centreId: ID!) {
     centres(where: { id: $centreId }) {
       id
       name
@@ -50,16 +50,13 @@ export const CENTRE_REPORT = gql`
             date
           }
         }
-        bacentaServices {
+        centreBacentaRecords(id: $centreId) {
           id
-          historyRecord
-          serviceRecords {
-            created_at
-            attendance
-            income
-            serviceDate {
-              date
-            }
+          created_at
+          attendance
+          income
+          serviceDate {
+            date
           }
         }
       }

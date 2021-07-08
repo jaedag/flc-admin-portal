@@ -221,11 +221,34 @@ type ServiceLog @auth(rules: [{ isAuthenticated: true }]) {
   serviceRecords: [ServiceRecord]
     @relationship(type: "HAS_RECORD", direction: OUT)
   leaders: [Member] @relationship(type: "HAS_HISTORY", direction: IN)
-  Bacenta: [Bacenta] @relationship(type: "HAS_HISTORY", direction: IN)
-  Centre: [Centre] @relationship(type: "HAS_HISTORY", direction: IN)
-  Campus: [Campus] @relationship(type: "HAS_HISTORY", direction: IN)
-  Town: [Town] @relationship(type: "HAS_HISTORY", direction: IN)
-  Sonta: [Sonta] @relationship(type: "HAS_HISTORY", direction: IN)
+  bacenta: [Bacenta] @relationship(type: "HAS_HISTORY", direction: IN)
+  centre: [Centre] @relationship(type: "HAS_HISTORY", direction: IN)
+  centreBacentaRecords(id: ID!): [CentreBacentaServiceRecord]
+    @cypher(
+      statement: """
+      OPTIONAL MATCH (centres1:Centre {id:$id})
+      OPTIONAL MATCH (:Member {id:$id})-[:LEADS]->(centres2:Centre)
+      UNWIND [centres1,centres2] AS centre
+      MATCH (centre)-[:HAS_HISTORY]->(log:ServiceLog)
+      OPTIONAL MATCH (log)-[:HAS_BACENTA]->(:ServiceLog)-[:HAS_RECORD]->(records)
+      OPTIONAL MATCH (records)-[:SERVICE_HELD_ON]->(date:TimeGraph)
+
+      RETURN records
+      """
+    )
+  campus: [Campus] @relationship(type: "HAS_HISTORY", direction: IN)
+  town: [Town] @relationship(type: "HAS_HISTORY", direction: IN)
+  sonta: [Sonta] @relationship(type: "HAS_HISTORY", direction: IN)
+}
+
+type CentreBacentaServiceRecord {
+  id: ID!
+  created_at: Date
+  serviceDate: TimeGraph @relationship(type: "SERVICE_HELD_ON", direction: OUT)
+  attendance: Int!
+  income: Float!
+  treasurers: [Member]! @relationship(type: "WAS_TREASURER_FOR", direction: IN)
+  historyLog: HistoryLog @relationship(type: "HAS_RECORD", direction: IN)
 }
 
 type HistoryLog @auth(rules: [{ isAuthenticated: true }]) {
@@ -318,8 +341,7 @@ type Centre {
   town: Town @relationship(type: "HAS_CENTRE", direction: IN)
   campus: Campus @relationship(type: "HAS_CENTRE", direction: IN)
   history: [HistoryLog] @relationship(type: "HAS_HISTORY", direction: OUT)
-  serviceRecord: [ServiceRecord]
-    @relationship(type: "HAS_RECORD", direction: OUT)
+  services: [ServiceLog] @relationship(type: "HAS_HISTORY", direction: OUT)
 }
 
 # Shared Units: Bacenta, Bacenta, Sonta
@@ -344,14 +366,6 @@ type Bacenta {
   history: [HistoryLog] @relationship(type: "HAS_HISTORY", direction: OUT)
   services: [ServiceLog] @relationship(type: "HAS_HISTORY", direction: OUT)
 }
-
-# type CustomPoint {
-#   longitude: Float
-#   latitude: Float
-#   height: Float
-#   crs: String!
-#   srid: Int!
-# }
 
 type ServiceDay @auth(rules: [{ isAuthenticated: true }]) {
   day: String!

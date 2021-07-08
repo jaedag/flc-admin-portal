@@ -10,8 +10,12 @@ import { SERVANTS_DASHBOARD } from './DashboardQueries'
 import LoadingScreen from 'components/LoadingScreen'
 import ErrorScreen from 'components/ErrorScreen'
 import RoleCard from './RoleCard'
-import { getServiceGraphData, monthlyStatAverage } from 'global-utils'
+import {
+  getServiceGraphData,
+  monthlyStatAverage,
+} from '../reports/report-utils'
 import { ChurchContext } from 'contexts/ChurchContext'
+import StatDisplay from 'pages/reports/CompStatDisplay'
 
 const ServantsDashboard = () => {
   const { memberId } = useContext(MemberContext)
@@ -39,8 +43,7 @@ const ServantsDashboard = () => {
           clickCard(servant.leadsBacenta[0])
         },
         link: leadsOneChurch ? '/bacenta/reports' : '/servants/bacenta-list',
-      }),
-        (assessmentChurchData = getServiceGraphData(servant.leadsBacenta))
+      })
       assessmentChurch = servant.leadsBacenta[0]
     }
     if (servant.leadsCentre?.length) {
@@ -52,8 +55,7 @@ const ServantsDashboard = () => {
           clickCard(servant.leadsCentre[0])
         },
         link: leadsOneChurch ? '/centre/reports' : '/servants/centre-list',
-      }),
-        (assessmentChurchData = getServiceGraphData(servant.leadsCentre))
+      })
       assessmentChurch = servant.leadsCentre[0]
     }
     if (servant.leadsTown?.length) {
@@ -89,6 +91,9 @@ const ServantsDashboard = () => {
     if (servant.isTownAdminFor?.length) {
       roles.push({ name: 'Admin', number: 'Town Admin' })
     }
+
+    //run the get graph function after all checking is done to avoid multiple unnecessary runs
+    assessmentChurchData = getServiceGraphData(assessmentChurch)
 
     return (
       <>
@@ -127,32 +132,31 @@ const ServantsDashboard = () => {
             <>
               <div className="row mt-3">
                 <div className="col">
-                  <p className="dashboard-title">Avg Attendance</p>
-                  <p className="info-text">
-                    {monthlyStatAverage(
+                  <StatDisplay
+                    title="Avg Attendance"
+                    statistic={monthlyStatAverage(
                       assessmentChurchData,
                       'attendance',
                       numberOfWeeks
                     )}
-                  </p>
+                  />
                 </div>
 
                 <div className="col">
-                  <p className="dashboard-title">Avg Income (in GH₵)</p>
-                  <p className="info-text">
-                    {monthlyStatAverage(
+                  <StatDisplay
+                    title="Avg Income (in GH₵)"
+                    statistic={monthlyStatAverage(
                       assessmentChurchData,
                       'income',
                       numberOfWeeks
                     )}
-                  </p>
+                  />
                 </div>
               </div>
               <ChurchGraph
-                churchData={servant.leadsBacenta}
                 stat1="attendance"
                 stat2="income"
-                serviceData={assessmentChurchData}
+                churchData={assessmentChurchData}
                 secondaryTitle={`${assessmentChurch.name} ${assessmentChurch.__typename}`}
               />
             </>

@@ -206,8 +206,9 @@ WITH log,bacenta,oldLeader,leader
          WITH log,bacenta,oldLeader, leader
          WHERE EXISTS (oldLeader.firstName)
         
-       MERGE (oldLeader)-[:HAS_HISTORY]->(log)
-        SET log.historyRecord = leader.firstName + ' ' +leader.lastName + ' became the leader of ' + bacenta.name + " Bacenta replacing " + oldLeader.firstName +" "+oldLeader.lastName
+       MERGE (oldLeader)-[hasHistory:HAS_HISTORY]->(log)
+        SET hasHistory.neverLed = true,
+        log.historyRecord = leader.firstName + ' ' +leader.lastName + ' became the leader of ' + bacenta.name + " Bacenta replacing " + oldLeader.firstName +" "+oldLeader.lastName
        RETURN COUNT(log)
        }
   
@@ -249,8 +250,9 @@ WITH log,centre,oldLeader,leader
          WITH log,centre,oldLeader, leader
          WHERE EXISTS (oldLeader.firstName)
         
-       MERGE (oldLeader)-[:HAS_HISTORY]->(log)
-        SET log.historyRecord = leader.firstName + ' ' +leader.lastName + ' became the leader of ' + centre.name + " Centre replacing " + oldLeader.firstName +" "+oldLeader.lastName
+       MERGE (oldLeader)-[hasHistory:HAS_HISTORY]->(log)
+       SET hasHistory.neverLed = true,
+       log.historyRecord = leader.firstName + ' ' +leader.lastName + ' became the leader of ' + centre.name + " Centre replacing " + oldLeader.firstName +" "+oldLeader.lastName
        RETURN COUNT(log)
        }
   
@@ -291,8 +293,9 @@ WITH log,campus,oldLeader,leader
          WITH log,campus,oldLeader, leader
          WHERE EXISTS (oldLeader.firstName)
         
-       MERGE (oldLeader)-[:HAS_HISTORY]->(log)
-        SET log.historyRecord = leader.firstName + ' ' +leader.lastName + ' became the leader of ' + campus.name + " Campus replacing " + oldLeader.firstName +" "+oldLeader.lastName
+       MERGE (oldLeader)-[hasHistory:HAS_HISTORY]->(log)
+       SET hasHistory.neverLed = true,
+       log.historyRecord = leader.firstName + ' ' +leader.lastName + ' became the leader of ' + campus.name + " Campus replacing " + oldLeader.firstName +" "+oldLeader.lastName
        RETURN COUNT(log)
        }
   
@@ -333,8 +336,9 @@ WITH log,town,oldLeader,leader
          WITH log,town,oldLeader, leader
          WHERE EXISTS (oldLeader.firstName)
         
-       MERGE (oldLeader)-[:HAS_HISTORY]->(log)
-        SET log.historyRecord = leader.firstName + ' ' +leader.lastName + ' became the leader of ' + town.name + " Town replacing " + oldLeader.firstName +" "+oldLeader.lastName
+       MERGE (oldLeader)-[hasHistory:HAS_HISTORY]->(log)
+       SET hasHistory.neverLed = true,
+       log.historyRecord = leader.firstName + ' ' +leader.lastName + ' became the leader of ' + town.name + " Town replacing " + oldLeader.firstName +" "+oldLeader.lastName
        RETURN COUNT(log)
        }
   

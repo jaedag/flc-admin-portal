@@ -175,27 +175,6 @@ export const getMemberDob = (displayMember) => {
   } else return null
 }
 
-export const sortingFunction = (key, order = 'asc') => {
-  return function innerSort(a, b) {
-    // eslint-disable-next-line no-prototype-builtins
-    if (!a.hasOwnProperty(key) || !b.hasOwnProperty(key)) {
-      //property doesn't exist on either object
-      return 0
-    }
-
-    const varA = typeof a[key] === 'string' ? a[key].toLowerCase() : a[key]
-    const varB = typeof b[key] === 'string' ? b[key].toLowerCase() : b[key]
-
-    let comparison = 0
-    if (varA > varB) {
-      comparison = 1
-    } else if (varA < varB) {
-      comparison = -1
-    }
-    return order === 'desc' ? comparison * -1 : comparison
-  }
-}
-
 export const average = (array) => {
   var i = 0,
     sum = 0,
@@ -204,29 +183,4 @@ export const average = (array) => {
     sum = sum + array[i++]
   }
   return sum / len
-}
-
-export const getServiceGraphData = (churches) => {
-  let data = []
-  churches[0].services.map((service) => {
-    service.serviceRecords.map((record, index) => {
-      if (index >= 6) {
-        return
-      }
-
-      data.push({
-        date: parseNeoDate(record.serviceDate.date),
-        attendance: record.attendance,
-        income: record.income,
-      })
-    })
-  })
-
-  return data.sort(sortingFunction('date'))
-}
-
-export const monthlyStatAverage = (data, stat, numberOfWeeks) => {
-  const statArray = data.map((service) => service[`${stat}`])
-  //Calculate average of the last four weeks of service
-  return average(statArray.slice(-numberOfWeeks)).toFixed(2)
 }

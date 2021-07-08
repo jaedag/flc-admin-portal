@@ -78,7 +78,9 @@ const UpdateBacenta = () => {
   const [LogBacentaHistory] = useMutation(LOG_BACENTA_HISTORY, {
     refetchQueries: [{ query: DISPLAY_BACENTA, variables: { id: bacentaId } }],
   })
-  const [MakeBacentaLeader] = useMutation(MAKE_BACENTA_LEADER)
+  const [MakeBacentaLeader] = useMutation(MAKE_BACENTA_LEADER, {
+    refetchQueries: [{ query: DISPLAY_BACENTA, variables: { id: bacentaId } }],
+  })
   const [UpdateBacenta] = useMutation(UPDATE_BACENTA, {
     refetchQueries: [
       { query: GET_CENTRE_BACENTAS, variables: { id: centreId } },

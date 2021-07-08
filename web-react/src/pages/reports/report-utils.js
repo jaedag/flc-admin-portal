@@ -1,6 +1,8 @@
 import { average, parseNeoDate } from 'global-utils'
 
-export const monthlyStatAverage = (data, stat, numberOfWeeks) => {
+export const getMonthlyStatAverage = (data, stat) => {
+  const numberOfWeeks = 4
+
   const statArray = data.map((service) => service[`${stat}`])
   //Calculate average of the last four weeks of service
   return average(statArray.slice(-numberOfWeeks)).toFixed(2)
@@ -67,7 +69,7 @@ const combineSameDayServices = (servicesArray) => {
   let servicesOnDate = []
 
   //Code to Obtain the Unique Dates from the Bacenta Services under a Centre
-  //Since many bacentas could have service on the same day, the date would be repeated
+  //Since many bacentas could have had service on the same day, the date would be repeated
   let dates = servicesArray.map((bacentaServices) => {
     return parseNeoDate(bacentaServices.serviceDate.date)
   })

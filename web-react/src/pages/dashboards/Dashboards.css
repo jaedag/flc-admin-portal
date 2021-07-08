@@ -36,3 +36,9 @@
   height: 80px;
   font-family: 'Roboto';
 }
+
+.leader-img {
+  width: 30px;
+  border: 2px solid var(--infobar-color);
+  border-radius: 100px;
+}

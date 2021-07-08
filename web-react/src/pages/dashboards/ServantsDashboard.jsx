@@ -12,7 +12,7 @@ import ErrorScreen from 'components/ErrorScreen'
 import RoleCard from './RoleCard'
 import {
   getServiceGraphData,
-  monthlyStatAverage,
+  getMonthlyStatAverage,
 } from '../reports/report-utils'
 import { ChurchContext } from 'contexts/ChurchContext'
 import StatDisplay from 'pages/reports/CompStatDisplay'
@@ -29,71 +29,75 @@ const ServantsDashboard = () => {
     return <LoadingScreen />
   } else if (data) {
     const servant = data.members[0]
-    const numberOfWeeks = 4
+
     // What leadership roles does this person play?
     let roles = []
     let assessmentChurchData, assessmentChurch
 
-    if (servant.leadsBacenta?.length) {
-      const leadsOneChurch = servant.leadsBacenta.length === 1 ?? false
-      roles.push({
-        name: leadsOneChurch ? 'Bacenta' : 'Bacentas',
-        number: servant.leadsBacenta.length,
-        clickCard: () => {
-          clickCard(servant.leadsBacenta[0])
-        },
-        link: leadsOneChurch ? '/bacenta/reports' : '/servants/bacenta-list',
-      })
-      assessmentChurch = servant.leadsBacenta[0]
-    }
-    if (servant.leadsCentre?.length) {
-      const leadsOneChurch = servant.leadsCentre.length === 1 ?? false
-      roles.push({
-        name: leadsOneChurch ? 'Centre' : 'Centres',
-        number: servant.leadsCentre.length,
-        clickCard: () => {
-          clickCard(servant.leadsCentre[0])
-        },
-        link: leadsOneChurch ? '/centre/reports' : '/servants/centre-list',
-      })
-      assessmentChurch = servant.leadsCentre[0]
-    }
-    if (servant.leadsTown?.length) {
-      roles.push({ name: 'Towns', number: servant.leadsTown.length })
-      assessmentChurchData = getServiceGraphData(servant.leadsTown)
-    }
-    if (servant.leadsCampus?.length) {
-      roles.push({ name: 'Campus', number: servant.leadsCampus.length })
-      assessmentChurchData = getServiceGraphData(servant.leadsCampus)
-    }
-    if (servant.leadsSonta?.length) {
-      roles.push({ name: 'Sontas', number: servant.leadsSonta.length })
-      assessmentChurchData = getServiceGraphData(servant.leadsBacenta)
-    }
-    if (servant.leadsBasonta?.length) {
-      roles.push({ name: 'Basontas', number: servant.leadsBasonta.length })
-    }
-    if (servant.leadsMinistry?.length) {
-      roles.push({ name: 'Ministries', number: servant.leadsMinistry.length })
-    }
-    if (servant.townBishop?.length) {
-      roles.push({ name: 'Campus Bishop', number: 'Bishop' })
-    }
-    if (servant.campusBishop?.length) {
-      roles.push({ name: 'Town Bishop', number: 'Bishop' })
-    }
-    if (servant.isBishopAdminFor?.length) {
-      roles.push({ name: 'Admin', number: 'Bishops Admin' })
-    }
-    if (servant.isCampusAdminFor?.length) {
-      roles.push({ name: 'Admin', number: 'Campus Admin' })
-    }
-    if (servant.isTownAdminFor?.length) {
-      roles.push({ name: 'Admin', number: 'Town Admin' })
+    const getServantRoles = (servant) => {
+      if (servant.leadsBacenta?.length) {
+        const leadsOneChurch = servant.leadsBacenta.length === 1 ?? false
+        roles.push({
+          name: leadsOneChurch ? 'Bacenta' : 'Bacentas',
+          number: servant.leadsBacenta.length,
+          clickCard: () => {
+            clickCard(servant.leadsBacenta[0])
+          },
+          link: leadsOneChurch ? '/bacenta/reports' : '/servants/bacenta-list',
+        })
+        assessmentChurch = servant.leadsBacenta[0]
+      }
+      if (servant.leadsCentre?.length) {
+        const leadsOneChurch = servant.leadsCentre.length === 1 ?? false
+        roles.push({
+          name: leadsOneChurch ? 'Centre' : 'Centres',
+          number: servant.leadsCentre.length,
+          clickCard: () => {
+            clickCard(servant.leadsCentre[0])
+          },
+          link: leadsOneChurch ? '/centre/reports' : '/servants/centre-list',
+        })
+        assessmentChurch = servant.leadsCentre[0]
+      }
+      if (servant.leadsTown?.length) {
+        roles.push({ name: 'Towns', number: servant.leadsTown.length })
+        assessmentChurchData = getServiceGraphData(servant.leadsTown)
+      }
+      if (servant.leadsCampus?.length) {
+        roles.push({ name: 'Campus', number: servant.leadsCampus.length })
+        assessmentChurchData = getServiceGraphData(servant.leadsCampus)
+      }
+      if (servant.leadsSonta?.length) {
+        roles.push({ name: 'Sontas', number: servant.leadsSonta.length })
+        assessmentChurchData = getServiceGraphData(servant.leadsBacenta)
+      }
+      if (servant.leadsBasonta?.length) {
+        roles.push({ name: 'Basontas', number: servant.leadsBasonta.length })
+      }
+      if (servant.leadsMinistry?.length) {
+        roles.push({ name: 'Ministries', number: servant.leadsMinistry.length })
+      }
+      if (servant.townBishop?.length) {
+        roles.push({ name: 'Campus Bishop', number: 'Bishop' })
+      }
+      if (servant.campusBishop?.length) {
+        roles.push({ name: 'Town Bishop', number: 'Bishop' })
+      }
+      if (servant.isBishopAdminFor?.length) {
+        roles.push({ name: 'Admin', number: 'Bishops Admin' })
+      }
+      if (servant.isCampusAdminFor?.length) {
+        roles.push({ name: 'Admin', number: 'Campus Admin' })
+      }
+      if (servant.isTownAdminFor?.length) {
+        roles.push({ name: 'Admin', number: 'Town Admin' })
+      }
+
+      //run the get graph function after all checking is done to avoid multiple unnecessary runs
+      return getServiceGraphData(assessmentChurch)
     }
 
-    //run the get graph function after all checking is done to avoid multiple unnecessary runs
-    assessmentChurchData = getServiceGraphData(assessmentChurch)
+    assessmentChurchData = getServantRoles(servant)
 
     return (
       <>
@@ -134,10 +138,9 @@ const ServantsDashboard = () => {
                 <div className="col">
                   <StatDisplay
                     title="Avg Attendance"
-                    statistic={monthlyStatAverage(
+                    statistic={getMonthlyStatAverage(
                       assessmentChurchData,
-                      'attendance',
-                      numberOfWeeks
+                      'attendance'
                     )}
                   />
                 </div>
@@ -145,10 +148,9 @@ const ServantsDashboard = () => {
                 <div className="col">
                   <StatDisplay
                     title="Avg Income (in GH₵)"
-                    statistic={monthlyStatAverage(
+                    statistic={getMonthlyStatAverage(
                       assessmentChurchData,
-                      'income',
-                      numberOfWeeks
+                      'income'
                     )}
                   />
                 </div>

@@ -6,7 +6,7 @@ import { useQuery } from '@apollo/client'
 
 import LoadingScreen from '../../components/LoadingScreen'
 import ErrorScreen from '../../components/ErrorScreen'
-import { getServiceGraphData, monthlyStatAverage } from './report-utils'
+import { getServiceGraphData, getMonthlyStatAverage } from './report-utils'
 import ChurchGraph from '../../components/ChurchGraph/ChurchGraph'
 import { CENTRE_REPORT } from './ReportQueries'
 import MembershipCard from './CompMembershipCard'
@@ -24,8 +24,6 @@ export const CentreReport = () => {
   } else if (data) {
     const { centres, centreMemberCount } = data
     const churchData = getServiceGraphData(centres[0])
-
-    const numberOfWeeks = 4
 
     return (
       <>
@@ -52,22 +50,14 @@ export const CentreReport = () => {
             <div className="col">
               <StatDisplay
                 title="Avg Attendance"
-                statistic={monthlyStatAverage(
-                  churchData,
-                  'attendance',
-                  numberOfWeeks
-                )}
+                statistic={getMonthlyStatAverage(churchData, 'attendance')}
               />
             </div>
 
             <div className="col">
               <StatDisplay
                 title="Avg Income"
-                statistic={monthlyStatAverage(
-                  churchData,
-                  'income',
-                  numberOfWeeks
-                )}
+                statistic={getMonthlyStatAverage(churchData, 'income')}
               />
             </div>
           </div>

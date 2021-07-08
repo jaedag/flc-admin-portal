@@ -90,6 +90,7 @@ export const SERVANTS_DASHBOARD = gql`
       firstName
       lastName
       fullName
+      pictureUrl
       # The person is an admin
       isTownAdminFor {
         id

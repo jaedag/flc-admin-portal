@@ -50,6 +50,7 @@ import CreateSonta from './pages/create/CreateSonta'
 import BacentaService from './pages/record-service/BacentaService'
 import BacentaReport from './pages/reports/BacentaReport'
 import ServantsDashboard from 'pages/dashboards/ServantsDashboard'
+import CentreReport from 'pages/reports/CentreReport'
 
 const AppWithApollo = () => {
   const [accessToken, setAccessToken] = useState()
@@ -415,9 +416,28 @@ const PastorsAdmin = () => {
                 exact
               />
               <ProtectedRoute
-                roles={['adminFederal', 'bacentaLeader']}
+                roles={[
+                  'adminFederal',
+                  'adminBishop',
+                  'adminConstituency',
+                  'leaderBacenta',
+                  'leaderCentre',
+                  'leaderConstituency',
+                ]}
                 path="/bacenta/reports"
                 component={BacentaReport}
+              />
+              <ProtectedRoute
+                roles={[
+                  'adminFederal',
+                  'adminBishop',
+                  'adminConstituency',
+                  'leaderBacenta',
+                  'leaderCentre',
+                  'leaderConstituency',
+                ]}
+                path="/centre/reports"
+                component={CentreReport}
               />
               {/* Member Display and Edit Pages */}
               <Route
@@ -656,7 +676,7 @@ const PastorsAdmin = () => {
               />
               {/* Bacenta Leader Routes */}
               <ProtectedRoute
-                roles={['adminFederal', 'bacentaLeader']}
+                roles={['adminFederal', 'leaderBacenta']}
                 path="/bacenta/record-service"
                 component={BacentaService}
               />

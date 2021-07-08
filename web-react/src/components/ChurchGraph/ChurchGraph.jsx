@@ -11,7 +11,7 @@ import {
 import { capitalise } from '../../global-utils'
 import './ChurchGraph.css'
 
-const ChurchGraph = ({ stat1, stat2, serviceData, secondaryTitle }) => {
+const ChurchGraph = ({ stat1, stat2, churchData, secondaryTitle }) => {
   return (
     <>
       <div className="row mt-2">
@@ -23,7 +23,7 @@ const ChurchGraph = ({ stat1, stat2, serviceData, secondaryTitle }) => {
             <p className="chart-title church-name">{`${secondaryTitle}`}</p>
           )}
           <ResponsiveContainer width="100%" height={330}>
-            <BarChart data={serviceData}>
+            <BarChart data={churchData}>
               <defs>
                 <linearGradient
                   id="colorPrimary"

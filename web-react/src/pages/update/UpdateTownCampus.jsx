@@ -366,7 +366,6 @@ const UpdateTownCampus = () => {
           variables: {
             townId: townId,
             townName: values.campusTownName,
-            leaderId: values.leaderSelect,
             bishopId: values.bishopSelect,
           },
         })

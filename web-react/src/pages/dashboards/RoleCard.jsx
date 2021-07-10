@@ -9,9 +9,9 @@ const RoleCard = ({ number, role }) => {
     >
       <p className="white text-center align-items-center my-auto">
         <div>
-          <p className={isString ? 'church-string' : `church-number`}>
+          <div className={isString ? 'church-string' : `church-number`}>
             {number}
-          </p>
+          </div>
           <p className="dashboard-title">{role}</p>
         </div>
       </p>

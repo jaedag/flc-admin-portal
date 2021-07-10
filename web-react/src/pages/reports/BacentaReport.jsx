@@ -62,10 +62,9 @@ export const BacentaReport = () => {
             </div>
           </div>
           <ChurchGraph
-            churchData={bacentas}
             stat1="attendance"
             stat2="income"
-            serviceData={serviceData}
+            churchData={serviceData}
           />
         </div>
       </>

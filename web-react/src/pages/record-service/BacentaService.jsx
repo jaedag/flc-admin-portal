@@ -10,7 +10,6 @@ import ServiceForm from './ServiceForm'
 
 const BacentaService = () => {
   const { bacentaId } = useContext(ChurchContext)
-
   const {
     data: bacentaData,
     loading: bacentaLoading,

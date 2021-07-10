@@ -41,16 +41,10 @@ export const UPDATE_MEMBER_MUTATION = gql`
 `
 
 export const UPDATE_TOWN_MUTATION = gql`
-  mutation UpdateTown(
-    $townId: ID!
-    $townName: String!
-    $leaderId: ID!
-    $bishopId: ID!
-  ) {
+  mutation UpdateTown($townId: ID!, $townName: String!, $bishopId: ID!) {
     UpdateTownDetails(
       townId: $townId
       townName: $townName
-      leaderId: $leaderId
       bishopId: $bishopId
     ) {
       id
@@ -62,16 +56,10 @@ export const UPDATE_TOWN_MUTATION = gql`
 `
 
 export const UPDATE_CAMPUS_MUTATION = gql`
-  mutation UpdateCampus(
-    $campusId: ID!
-    $campusName: String!
-    $leaderId: ID!
-    $bishopId: ID!
-  ) {
+  mutation UpdateCampus($campusId: ID!, $campusName: String!, $bishopId: ID!) {
     UpdateCampusDetails(
       campusId: $campusId
       campusName: $campusName
-      leaderId: $leaderId
       bishopId: $bishopId
     ) {
       id
@@ -84,15 +72,13 @@ export const UPDATE_CAMPUS_MUTATION = gql`
 
 export const UPDATE_CENTRE_MUTATION = gql`
   mutation UpdateCentre(
-    $centreId: ID
-    $centreName: String
-    $leaderId: ID
-    $campusTownId: ID
+    $centreId: ID!
+    $centreName: String!
+    $campusTownId: ID!
   ) {
     UpdateCentreDetails(
       centreId: $centreId
       centreName: $centreName
-      leaderId: $leaderId
       campusTownId: $campusTownId
     ) {
       id

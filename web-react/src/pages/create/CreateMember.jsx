@@ -149,7 +149,7 @@ const CreateMember = () => {
           <div className="body-card container body-container mt-5">
             <h3 className="my-3">Register a New Member</h3>
             <Form className="form-group">
-              <MemberForm formik={formik} />
+              <MemberForm formik={formik} initialValues={initialValues} />
             </Form>
           </div>
         )}

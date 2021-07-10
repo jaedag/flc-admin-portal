@@ -230,8 +230,8 @@ type ServiceLog @auth(rules: [{ isAuthenticated: true }]) {
       OPTIONAL MATCH (:Member {id:$id})-[:LEADS]->(centres2:Centre)
       UNWIND [centres1,centres2] AS centre
       MATCH (centre)-[:HAS_HISTORY]->(log:ServiceLog)
-      OPTIONAL MATCH (log)-[:HAS_BACENTA]->(:ServiceLog)-[:HAS_RECORD]->(records)
-      OPTIONAL MATCH (records)-[:SERVICE_HELD_ON]->(date:TimeGraph)
+      # OPTIONAL MATCH (log)-[:HAS_BACENTA]->(:ServiceLog)-[:HAS_RECORD]->(records)
+      # OPTIONAL MATCH (records)-[:SERVICE_HELD_ON]->(date:TimeGraph)
 
       RETURN records
       """
@@ -1366,27 +1366,12 @@ type Mutation {
       """
     )
 
-  UpdateTownDetails(
-    townId: ID!
-    townName: String!
-    leaderId: ID!
-    bishopId: ID!
-  ): Member
+  UpdateTownDetails(townId: ID!, townName: String!, bishopId: ID!): Member
     @auth(rules: [{ roles: ["adminFederal", "adminBishop"] }])
     @cypher(
       statement: """
       MATCH (town:Town {id: $townId})
       	SET town.name = $townName
-
-      WITH town
-         CALL {
-          WITH town
-          MATCH (leader:Member {id: $leaderId})
-          OPTIONAL MATCH (town)<-[r:LEADS]-()
-          DELETE r
-          MERGE (leader)-[:LEADS]->(town)
-          RETURN count(town)
-         	}
 
       WITH town
          CALL {
@@ -1405,7 +1390,6 @@ type Mutation {
   UpdateCampusDetails(
     campusId: ID!
     campusName: String!
-    leaderId: ID!
     bishopId: ID!
   ): Member
     @auth(rules: [{ roles: ["adminFederal", "adminBishop"] }])
@@ -1413,16 +1397,6 @@ type Mutation {
       statement: """
            MATCH (campus:Campus {id: $campusId})
            	SET campus.name = $campusName
-
-           WITH campus
-              CALL {
-              	WITH campus
-                  MATCH (leader:Member {id: $leaderId})
-                  OPTIONAL MATCH (campus)<-[r:LEADS]-()
-                  DELETE r
-                  MERGE (leader)-[:LEADS]->(campus)
-              	RETURN count(campus)
-              	}
 
            WITH campus
               CALL {
@@ -1439,10 +1413,9 @@ type Mutation {
       """
     )
   UpdateCentreDetails(
-    centreId: ID
-    centreName: String
-    leaderId: ID
-    campusTownId: ID
+    centreId: ID!
+    centreName: String!
+    campusTownId: ID!
   ): Member
     @auth(
       rules: [{ roles: ["adminFederal", "adminBishop", "adminConstituency"] }]
@@ -1451,17 +1424,6 @@ type Mutation {
       statement: """
       MATCH (centre:Centre {id: $centreId})
       	SET centre.name = $centreName
-
-      WITH centre
-         CALL {
-         	WITH centre
-
-            MATCH (leader:Member {id: $leaderId})
-            OPTIONAL MATCH (centre)<-[r:LEADS]-()
-            DELETE r
-            MERGE (leader)-[:LEADS]->(centre)
-         	RETURN count(centre)
-         	}
 
       WITH centre
          CALL {
@@ -1745,15 +1707,52 @@ type Mutation {
     attendance: Int!
     income: Float!
     treasurers: [ID]!
+    treasurerSelfie: String!
+    servicePicture: String!
   ): ServiceRecord
     @cypher(
       statement: """
       CREATE (serviceRecord:ServiceRecord {created_at:datetime()})
         SET serviceRecord.id = apoc.create.uuid(),
         serviceRecord.attendance = $attendance,
-        serviceRecord.income = $income
+        serviceRecord.income = $income,
+        serviceRecord.treasurerSelfie = $treasurerSelfie,
+        serviceRecord.servicePicture = $servicePicture
       WITH serviceRecord
       MATCH (bacenta:Bacenta {id:$bacentaId})-[has_history:HAS_HISTORY]->(log:HistoryLog) WHERE has_history.current = true
+
+      MERGE (serviceDate:TimeGraph {date:date($serviceDate)})
+      MERGE (serviceRecord)-[:SERVICE_HELD_ON]->(serviceDate)
+      MERGE (log)-[:HAS_RECORD]->(serviceRecord)
+
+      WITH serviceRecord
+      UNWIND $treasurers AS treasurerId WITH treasurerId, serviceRecord
+      MATCH (treasurer:Member {id: treasurerId})
+      MERGE (treasurer)-[:WAS_TREASURER_FOR]->(serviceRecord)
+
+      RETURN serviceRecord
+      """
+    )
+
+  RecordCentreService(
+    centreId: ID!
+    serviceDate: String!
+    attendance: Int!
+    income: Float!
+    treasurers: [ID]!
+    treasurerSelfie: String!
+    servicePicture: String!
+  ): ServiceRecord
+    @cypher(
+      statement: """
+      CREATE (serviceRecord:ServiceRecord {created_at:datetime()})
+        SET serviceRecord.id = apoc.create.uuid(),
+        serviceRecord.attendance = $attendance,
+        serviceRecord.income = $income,
+        serviceRecord.treasurerSelfie = $treasurerSelfie,
+        serviceRecord.servicePicture = $servicePicture
+      WITH serviceRecord
+      MATCH (centre:Centre {id:$centreId})-[has_history:HAS_HISTORY]->(log:HistoryLog) WHERE has_history.current = true
 
       MERGE (serviceDate:TimeGraph {date:date($serviceDate)})
       MERGE (serviceRecord)-[:SERVICE_HELD_ON]->(serviceDate)

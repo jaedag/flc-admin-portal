@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client'
 
 export const RECORD_BACENTA_SERVICE = gql`
-  mutation RecordBacentaService(
-    $bacentaId: ID!
+  mutation RecordService(
+    $id: ID!
     $serviceDate: String!
     $attendance: Int!
     $income: Float!
@@ -10,8 +10,8 @@ export const RECORD_BACENTA_SERVICE = gql`
     $treasurerSelfie: String!
     $servicePicture: String!
   ) {
-    RecordBacentaService(
-      bacentaId: $bacentaId
+    RecordService(
+      id: $id
       serviceDate: $serviceDate
       attendance: $attendance
       income: $income
@@ -20,6 +20,33 @@ export const RECORD_BACENTA_SERVICE = gql`
       servicePicture: $servicePicture
     ) {
       id
+    }
+  }
+`
+
+export const DISPLAY_BACENTA_SERVICE = gql`
+  query DisplayServiceRecords($serviceId: ID!, $bacentaId: ID!) {
+    serviceRecords(where: { id: $serviceId }) {
+      id
+      created_at
+      serviceDate {
+        date
+      }
+      attendance
+      income
+      foreignCurrency
+      treasurerSelfie
+      servicePicture
+      treasurers {
+        id
+        firstName
+        lastName
+        fullName
+      }
+    }
+    bacentas(where: { id: $bacentaId }) {
+      id
+      name
     }
   }
 `

@@ -209,6 +209,9 @@ type ServiceRecord @auth(rules: [{ isAuthenticated: true }]) {
   serviceDate: TimeGraph @relationship(type: "SERVICE_HELD_ON", direction: OUT)
   attendance: Int!
   income: Float!
+  foreignCurrency: String
+  servicePicture: String
+  treasurerSelfie: String
   treasurers: [Member]! @relationship(type: "WAS_TREASURER_FOR", direction: IN)
   historyLog: HistoryLog @relationship(type: "HAS_RECORD", direction: IN)
 }
@@ -258,11 +261,11 @@ type HistoryLog @auth(rules: [{ isAuthenticated: true }]) {
   created_at: TimeGraph @relationship(type: "RECORDED_ON", direction: OUT)
   loggedBy: Member @relationship(type: "LOGGED_BY", direction: OUT)
   leaders: [Member] @relationship(type: "HAS_HISTORY", direction: IN)
-  Bacenta: [Bacenta] @relationship(type: "HAS_HISTORY", direction: IN)
-  Centre: [Centre] @relationship(type: "HAS_HISTORY", direction: IN)
-  Campus: [Campus] @relationship(type: "HAS_HISTORY", direction: IN)
-  Town: [Town] @relationship(type: "HAS_HISTORY", direction: IN)
-  Sonta: [Sonta] @relationship(type: "HAS_HISTORY", direction: IN)
+  bacenta: [Bacenta] @relationship(type: "HAS_HISTORY", direction: IN)
+  centre: [Centre] @relationship(type: "HAS_HISTORY", direction: IN)
+  campus: [Campus] @relationship(type: "HAS_HISTORY", direction: IN)
+  town: [Town] @relationship(type: "HAS_HISTORY", direction: IN)
+  sonta: [Sonta] @relationship(type: "HAS_HISTORY", direction: IN)
 }
 
 # Campus-Centre, Town-Centre
@@ -1701,11 +1704,12 @@ type Mutation {
     )
 
   #SERVICE RECORDS MUTATIONS
-  RecordBacentaService(
-    bacentaId: ID!
+  RecordService(
+    id: ID!
     serviceDate: String!
     attendance: Int!
     income: Float!
+    foreignCurrency: String
     treasurers: [ID]!
     treasurerSelfie: String!
     servicePicture: String!
@@ -1716,10 +1720,12 @@ type Mutation {
         SET serviceRecord.id = apoc.create.uuid(),
         serviceRecord.attendance = $attendance,
         serviceRecord.income = $income,
+        serviceRecord.foreignCurrency = $foreignCurrency,
         serviceRecord.treasurerSelfie = $treasurerSelfie,
         serviceRecord.servicePicture = $servicePicture
       WITH serviceRecord
-      MATCH (bacenta:Bacenta {id:$bacentaId})-[has_history:HAS_HISTORY]->(log:HistoryLog) WHERE has_history.current = true
+      MATCH (church {id:$id}) WHERE church:Bacenta OR church:Centre OR church:Campus OR church:Town
+      MATCH (church)-[has_history:HAS_HISTORY]->(log:HistoryLog) WHERE has_history.current = true
 
       MERGE (serviceDate:TimeGraph {date:date($serviceDate)})
       MERGE (serviceRecord)-[:SERVICE_HELD_ON]->(serviceDate)

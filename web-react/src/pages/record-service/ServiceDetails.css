@@ -1,0 +1,10 @@
+.report-picture {
+  max-width: 300px;
+  max-height: 170px;
+  margin: 10px;
+}
+
+.table-dark {
+  color: #fff;
+  background-color: #0000;
+}

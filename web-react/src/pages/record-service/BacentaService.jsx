@@ -15,7 +15,7 @@ const BacentaService = () => {
     loading: bacentaLoading,
     error: bacentaError,
   } = useQuery(DISPLAY_BACENTA, { variables: { id: bacentaId } })
-  const [RecordBacentaService] = useMutation(RECORD_BACENTA_SERVICE)
+  const [RecordService] = useMutation(RECORD_BACENTA_SERVICE)
 
   if (bacentaLoading) {
     return <LoadingScreen />
@@ -27,7 +27,7 @@ const BacentaService = () => {
     <>
       <NavBar />
       <ServiceForm
-        RecordServiceMutation={RecordBacentaService}
+        RecordServiceMutation={RecordService}
         church={bacentaData.bacentas[0]}
         churchId={bacentaId}
         churchType="bacenta"

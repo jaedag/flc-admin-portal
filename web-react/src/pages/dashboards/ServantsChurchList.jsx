@@ -43,7 +43,7 @@ const ServantsChurchList = () => {
         })
       }
       if (servant.leadsCentre?.length) {
-        console.log('muga')
+        // console.log('muga')
       }
       if (servant.leadsTown?.length) {
         churches.push({ name: 'Towns', number: servant.leadsTown.length })

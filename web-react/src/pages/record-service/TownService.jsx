@@ -3,23 +3,23 @@ import { ChurchContext } from '../../contexts/ChurchContext'
 import NavBar from '../../components/nav/NavBar'
 import { useMutation, useQuery } from '@apollo/client'
 import { RECORD_SERVICE } from './RecordServiceMutations'
-import { DISPLAY_CENTRE } from '../display/ReadQueries'
+import { DISPLAY_TOWN } from '../display/ReadQueries'
 import LoadingScreen from '../../components/LoadingScreen'
 import ErrorScreen from '../../components/ErrorScreen'
 import ServiceForm from './ServiceForm'
 
-const CentreService = () => {
-  const { centreId } = useContext(ChurchContext)
+const TownService = () => {
+  const { townId } = useContext(ChurchContext)
   const {
-    data: centreData,
-    loading: centreLoading,
-    error: centreError,
-  } = useQuery(DISPLAY_CENTRE, { variables: { id: centreId } })
+    data: townData,
+    loading: townLoading,
+    error: townError,
+  } = useQuery(DISPLAY_TOWN, { variables: { id: townId } })
   const [RecordService] = useMutation(RECORD_SERVICE)
 
-  if (centreLoading) {
+  if (townLoading) {
     return <LoadingScreen />
-  } else if (centreError) {
+  } else if (townError) {
     return <ErrorScreen />
   }
 
@@ -28,12 +28,12 @@ const CentreService = () => {
       <NavBar />
       <ServiceForm
         RecordServiceMutation={RecordService}
-        church={centreData.centres[0]}
-        churchId={centreId}
-        churchType="centre"
+        church={townData.towns[0]}
+        churchId={townId}
+        churchType="town"
       />
     </>
   )
 }
 
-export default CentreService
+export default TownService

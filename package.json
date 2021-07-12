@@ -40,5 +40,6 @@
     "type": "git",
     "url": "git://github.com/jaedag/fl-admin-portal.git"
   },
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "version": "0.0.1"
 }

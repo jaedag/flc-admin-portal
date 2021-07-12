@@ -7,6 +7,7 @@ import * as Yup from 'yup'
 import { BISHOP_MEMBER_DROPDOWN } from 'queries/ListQueries'
 import React, { useContext } from 'react'
 import { useHistory } from 'react-router'
+import { ServiceContext } from 'contexts/ServiceContext'
 
 const ServiceForm = ({
   church,
@@ -15,6 +16,7 @@ const ServiceForm = ({
   RecordServiceMutation,
 }) => {
   const { bishopId } = useContext(ChurchContext)
+  const { setServiceRecordId } = useContext(ServiceContext)
   const history = useHistory()
 
   const initialValues = {
@@ -59,7 +61,7 @@ const ServiceForm = ({
   const onSubmit = (values, onSubmitProps) => {
     RecordServiceMutation({
       variables: {
-        [`${churchType}Id`]: churchId,
+        id: churchId,
         serviceDate: values.serviceDate,
         attendance: parseInt(values.attendance),
         income: parseFloat(values.cediIncome),
@@ -68,9 +70,10 @@ const ServiceForm = ({
         treasurerSelfie: values.treasurerSelfie,
         servicePicture: values.servicePicture,
       },
-    }).then(() => {
+    }).then((res) => {
       onSubmitProps.setSubmitting(false)
       onSubmitProps.resetForm()
+      setServiceRecordId(res.data.RecordService.id)
       history.push(`/${churchType}/service-details`)
     })
   }
@@ -89,7 +92,7 @@ const ServiceForm = ({
               {/* <!-- Service Form--> */}
               <div className="col mb-2">
                 <div className="form-row d-flex justify-content-center">
-                  <h5>{`${church.name} Bacenta`}</h5>
+                  <h5>{`${church.name} ${church.__typename}`}</h5>
                   <div className="col-11">
                     <small htmlFor="dateofservice" className="form-text label">
                       Date of Service*

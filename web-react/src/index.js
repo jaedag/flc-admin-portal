@@ -53,6 +53,13 @@ import ServantsDashboard from 'pages/dashboards/ServantsDashboard'
 import CentreReport from 'pages/reports/CentreReport'
 import ServantsChurchList from 'pages/dashboards/ServantsChurchList'
 import CentreService from 'pages/record-service/CentreService'
+import BacentaServiceDetails from 'pages/record-service/BacentaServiceDetails'
+import { ServiceContext } from 'contexts/ServiceContext'
+import CentreServiceDetails from 'pages/record-service/CentreServiceDetails'
+import TownService from 'pages/record-service/TownService'
+import TownServiceDetails from 'pages/record-service/TownServiceDetails'
+import CampusService from 'pages/record-service/CampusService'
+import CampusServiceDetails from 'pages/record-service/CampusServiceDetails'
 
 const AppWithApollo = () => {
   const [accessToken, setAccessToken] = useState()
@@ -126,6 +133,11 @@ const PastorsAdmin = () => {
     sessionStorage.getItem('bacentaId')
       ? sessionStorage.getItem('bacentaId')
       : ''
+  )
+  const [serviceRecordId, setServiceRecordId] = useState(
+    sessionStorage.getItem('serviceRecordsId')
+      ? sessionStorage.getItem('serviceRecordsId')
+      : 'fd650cf3-50ce-428c-aa22-d6af5d0d4597'
   )
   const [centreId, setCentreId] = useState(
     sessionStorage.getItem('centreId') ? sessionStorage.getItem('centreId') : ''
@@ -366,7 +378,6 @@ const PastorsAdmin = () => {
     }
   }
 
-  // const version = 'v0/5/2'
   return (
     <Router>
       <ChurchContext.Provider
@@ -697,16 +708,90 @@ const PastorsAdmin = () => {
                 exact
               />
               {/* Bacenta Leader Routes */}
-              <ProtectedRoute
-                roles={['adminFederal', 'leaderBacenta']}
-                path="/bacenta/record-service"
-                component={BacentaService}
-              />
-              <ProtectedRoute
-                roles={['adminFederal', 'leaderCentre']}
-                path="/centre/record-service"
-                component={CentreService}
-              />
+              <ServiceContext.Provider
+                value={{ setServiceRecordId, serviceRecordId }}
+              >
+                <ProtectedRoute
+                  roles={[
+                    'adminFederal',
+                    'adminBishop',
+                    'adminConstituency',
+                    'leaderBacenta',
+                  ]}
+                  path="/bacenta/service-details"
+                  component={BacentaServiceDetails}
+                />
+                <ProtectedRoute
+                  roles={[
+                    'adminFederal',
+                    'adminBishop',
+                    'adminConstituency',
+                    'leaderBacenta',
+                  ]}
+                  path="/bacenta/record-service"
+                  component={BacentaService}
+                />
+                <ProtectedRoute
+                  roles={[
+                    'adminFederal',
+                    'adminBishop',
+                    'adminConstituency',
+                    'leaderCentre',
+                  ]}
+                  path="/centre/record-service"
+                  component={CentreService}
+                />
+                <ProtectedRoute
+                  roles={[
+                    'adminFederal',
+                    'adminBishop',
+                    'adminConstituency',
+                    'leaderCentre',
+                  ]}
+                  path="/centre/service-details"
+                  component={CentreServiceDetails}
+                />
+                <ProtectedRoute
+                  roles={[
+                    'adminFederal',
+                    'adminBishop',
+                    'adminConstituency',
+                    'leaderConstituency',
+                  ]}
+                  path="/town/record-service"
+                  component={TownService}
+                />
+                <ProtectedRoute
+                  roles={[
+                    'adminFederal',
+                    'adminBishop',
+                    'adminConstituency',
+                    'leaderConstituency',
+                  ]}
+                  path="/town/service-details"
+                  component={TownServiceDetails}
+                />
+                <ProtectedRoute
+                  roles={[
+                    'adminFederal',
+                    'adminBishop',
+                    'adminConstituency',
+                    'leaderConstituency',
+                  ]}
+                  path="/campus/record-service"
+                  component={CampusService}
+                />
+                <ProtectedRoute
+                  roles={[
+                    'adminFederal',
+                    'adminBishop',
+                    'adminConstituency',
+                    'leaderConstituency',
+                  ]}
+                  path="/campus/service-details"
+                  component={CampusServiceDetails}
+                />
+              </ServiceContext.Provider>
             </Switch>
           </SearchContext.Provider>
         </MemberContext.Provider>

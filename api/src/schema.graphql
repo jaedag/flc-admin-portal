@@ -206,6 +206,7 @@ type TimeGraph @auth(rules: [{ isAuthenticated: true }]) {
 type ServiceRecord @auth(rules: [{ isAuthenticated: true }]) {
   id: ID!
   created_at: Date
+  created_by: Member @relationship(type: "LOGGED_BY", direction: OUT)
   serviceDate: TimeGraph @relationship(type: "SERVICE_HELD_ON", direction: OUT)
   attendance: Int!
   income: Float!
@@ -1726,40 +1727,9 @@ type Mutation {
       WITH serviceRecord
       MATCH (church {id:$id}) WHERE church:Bacenta OR church:Centre OR church:Campus OR church:Town
       MATCH (church)-[has_history:HAS_HISTORY]->(log:HistoryLog) WHERE has_history.current = true
+      MATCH (leader:Member {auth_id: $auth.jwt.sub})
 
-      MERGE (serviceDate:TimeGraph {date:date($serviceDate)})
-      MERGE (serviceRecord)-[:SERVICE_HELD_ON]->(serviceDate)
-      MERGE (log)-[:HAS_RECORD]->(serviceRecord)
-
-      WITH serviceRecord
-      UNWIND $treasurers AS treasurerId WITH treasurerId, serviceRecord
-      MATCH (treasurer:Member {id: treasurerId})
-      MERGE (treasurer)-[:WAS_TREASURER_FOR]->(serviceRecord)
-
-      RETURN serviceRecord
-      """
-    )
-
-  RecordCentreService(
-    centreId: ID!
-    serviceDate: String!
-    attendance: Int!
-    income: Float!
-    treasurers: [ID]!
-    treasurerSelfie: String!
-    servicePicture: String!
-  ): ServiceRecord
-    @cypher(
-      statement: """
-      CREATE (serviceRecord:ServiceRecord {created_at:datetime()})
-        SET serviceRecord.id = apoc.create.uuid(),
-        serviceRecord.attendance = $attendance,
-        serviceRecord.income = $income,
-        serviceRecord.treasurerSelfie = $treasurerSelfie,
-        serviceRecord.servicePicture = $servicePicture
-      WITH serviceRecord
-      MATCH (centre:Centre {id:$centreId})-[has_history:HAS_HISTORY]->(log:HistoryLog) WHERE has_history.current = true
-
+      MERGE (serviceRecord)-[:LOGGED_BY]->(leader)
       MERGE (serviceDate:TimeGraph {date:date($serviceDate)})
       MERGE (serviceRecord)-[:SERVICE_HELD_ON]->(serviceDate)
       MERGE (log)-[:HAS_RECORD]->(serviceRecord)

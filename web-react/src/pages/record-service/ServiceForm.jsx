@@ -92,7 +92,7 @@ const ServiceForm = ({
               {/* <!-- Service Form--> */}
               <div className="col mb-2">
                 <div className="form-row d-flex justify-content-center">
-                  <h5>{`${church.name} Bacenta`}</h5>
+                  <h5>{`${church.name} ${church.__typename}`}</h5>
                   <div className="col-11">
                     <small htmlFor="dateofservice" className="form-text label">
                       Date of Service*

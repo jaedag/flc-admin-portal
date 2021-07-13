@@ -94,12 +94,17 @@ export const SERVANTS_DASHBOARD = gql`
       # The person is an admin
       isTownAdminFor {
         id
+        name
       }
       isCampusAdminFor {
         id
+        name
       }
       isBishopAdminFor {
         id
+        firstName
+        lastName
+        fullName
       }
 
       # The person leads in the Bacenta side

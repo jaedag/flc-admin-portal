@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { useHistory } from 'react-router'
+import { useHistory, useLocation } from 'react-router'
 import NavBar from 'components/nav/NavBar'
 import ChurchGraph from 'components/ChurchGraph/ChurchGraph'
 // import '../reports/BacentaReport.css'
@@ -18,11 +18,13 @@ import { ChurchContext } from 'contexts/ChurchContext'
 import StatDisplay from 'pages/reports/CompStatDisplay'
 
 const ServantsDashboard = () => {
-  const { memberId } = useContext(MemberContext)
+  const { memberId, currentUser } = useContext(MemberContext)
   const { clickCard } = useContext(ChurchContext)
   const history = useHistory()
+  const location = useLocation()
+  const atHome = location.pathname === '/'
   const { data, loading } = useQuery(SERVANTS_DASHBOARD, {
-    variables: { id: memberId },
+    variables: { id: atHome ? currentUser.id : memberId },
   })
 
   if (loading) {
@@ -90,11 +92,23 @@ const ServantsDashboard = () => {
         roles.push({ name: 'Admin', number: 'Campus Admin' })
       }
       if (servant.isTownAdminFor?.length) {
-        roles.push({ name: 'Admin', number: 'Town Admin' })
+        const leadsOneChurch = servant.isTownAdminFor.length === 1 ?? false
+        roles.push({
+          name: 'Admin',
+          number: 'Town Admin',
+          clickCard: () => {
+            clickCard(servant.isTownAdminFor[0])
+          },
+          link: leadsOneChurch ? '/town/displaydetails' : '/servants/town-list',
+        })
+        assessmentChurch = servant.isTownAdminFor[0]
       }
 
       //run the get graph function after all checking is done to avoid multiple unnecessary runs
-      return getServiceGraphData(assessmentChurch)
+      if (assessmentChurch) {
+        return getServiceGraphData(assessmentChurch)
+      }
+      return
     }
 
     assessmentChurchData = getServantRoles(servant)
@@ -104,8 +118,8 @@ const ServantsDashboard = () => {
         <NavBar />
         <div className="container">
           <div className=" my-3">
-            <p className="mb-0">{`Welcome!`}</p>
-            <h5 className="font-weight-bold roboto">{`${servant.fullName}`}</h5>
+            <p className="mb-0">{`Welcome to`}</p>
+            <h5 className="font-weight-bold roboto">{`${servant.fullName}'s Dashboard`}</h5>
           </div>
 
           <div className="card-button-row">

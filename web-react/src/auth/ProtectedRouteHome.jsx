@@ -5,10 +5,10 @@ import { UnauthMsg } from './UnauthMsg'
 import { MemberContext } from '../contexts/MemberContext'
 import BishopDashboard from '../pages/dashboards/BishopDashboard.jsx'
 import { ChurchContext } from '../contexts/ChurchContext'
-import DisplayCampusTownDetails from '../pages/display/DetailsCampusTown.jsx'
+// import DisplayCampusTownDetails from '../pages/display/DetailsCampusTown.jsx'
 import LoadingScreen from '../components/LoadingScreen'
 import { isAuthorised } from '../global-utils'
-import BacentaReport from '../pages/reports/BacentaReport'
+import ServantsDashboard from 'pages/dashboards/ServantsDashboard'
 
 const ProtectedRoute = ({ component, roles, ...args }) => {
   const { currentUser } = useContext(MemberContext)
@@ -57,7 +57,7 @@ const ProtectedRoute = ({ component, roles, ...args }) => {
     //If the user does not have permission but is a CO Admin
     return (
       <Route
-        component={withAuthenticationRequired(DisplayCampusTownDetails, {
+        component={withAuthenticationRequired(ServantsDashboard, {
           // eslint-disable-next-line react/display-name
           onRedirecting: () => {
             return <LoadingScreen />
@@ -66,11 +66,11 @@ const ProtectedRoute = ({ component, roles, ...args }) => {
         {...args}
       />
     )
-  } else if (currentUser.roles.includes('bacentaLeader')) {
+  } else if (currentUser.roles.includes('leaderBacenta')) {
     //If the user does not have permission but is a Bacenta Leader
     return (
       <Route
-        component={withAuthenticationRequired(BacentaReport, {
+        component={withAuthenticationRequired(ServantsDashboard, {
           // eslint-disable-next-line react/display-name
           onRedirecting: () => {
             return <LoadingScreen />

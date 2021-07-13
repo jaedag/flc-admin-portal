@@ -7,14 +7,14 @@ const RoleCard = ({ number, role }) => {
     <div
       className={`card rounded-corners role-card colour-${role.toLowerCase()}`}
     >
-      <p className="white text-center align-items-center my-auto">
+      <div className="white text-center align-items-center my-auto">
         <div>
           <div className={isString ? 'church-string' : `church-number`}>
             {number}
           </div>
           <p className="dashboard-title">{role}</p>
         </div>
-      </p>
+      </div>
     </div>
   )
 }

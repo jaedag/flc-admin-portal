@@ -16,7 +16,13 @@ function UserProfileIcon() {
   const { currentUser, setCurrentUser } = useContext(MemberContext)
   const [memberByEmail] = useLazyQuery(GET_LOGGED_IN_USER, {
     onCompleted: (data) => {
-      const isTown = data.members[0].bacenta.centre?.town
+      let church
+      if (data.members[0].bacenta.centre?.town) {
+        church = 'town'
+      }
+      if (data.members[0].bacenta.centre?.campus) {
+        church = 'campus'
+      }
 
       setCurrentUser({
         ...currentUser,
@@ -24,15 +30,9 @@ function UserProfileIcon() {
         firstName: data.members[0].firstName,
         lastName: data.members[0].lastName,
         picture: data.members[0]?.pictureUrl ?? null,
-        bishop: isTown
-          ? data.members[0]?.bacenta?.centre?.town.bishop.id
-          : data.members[0]?.bacenta?.centre?.campus.bishop.id,
-        constituency: isTown
-          ? data.members[0]?.bacenta?.centre?.town.id
-          : data.members[0]?.bacenta?.centre?.campus.id,
-        church: isTown
-          ? { church: 'town', subChurch: 'centre' }
-          : { church: 'campus', subChurch: 'centre' },
+        bishop: data.members[0]?.bacenta?.centre[`${church}`]?.bishop.id,
+        constituency: data.members[0]?.bacenta?.centre[`${church}`]?.id,
+        church: { church: church, subChurch: 'centre' },
         email: user?.email,
         roles: user ? user[`https://flcadmin.netlify.app/roles`] : [],
       })

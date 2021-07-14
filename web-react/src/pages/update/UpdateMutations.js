@@ -35,7 +35,13 @@ export const UPDATE_MEMBER_MUTATION = gql`
     ) {
       id
       firstName
+      middleName
       lastName
+      fullName
+      email
+      phoneNumber
+      whatsappNumber
+      pictureUrl
     }
   }
 `

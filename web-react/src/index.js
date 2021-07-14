@@ -485,7 +485,7 @@ const PastorsAdmin = () => {
                 component={DisplayMemberDetails}
                 exact
               />
-              <Route
+              <ProtectedRoute
                 roles={['all']}
                 path="/user-profile/edit"
                 component={UserProfileEditPage}

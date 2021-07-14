@@ -812,7 +812,7 @@ type Query {
       OR toLower(member.lastName) STARTS WITH toLower($searchKey)
       OR toLower(member.firstName) CONTAINS toLower($searchKey)
       OR toLower(member.lastName) CONTAINS toLower($searchKey)
-      OR toLower(member.firstName+ " " + member.lastName) CONTAINS toLower($searchKey)
+      OR toLower(member.firstName + " " + member.lastName) CONTAINS toLower($searchKey)
       RETURN member LIMIT 5
       """
     )
@@ -1304,6 +1304,7 @@ type Mutation {
       	member.lastName = $lastName,
       	member.email = $email,
       	member.phoneNumber = $phoneNumber,
+        member.whatsappNumber = $whatsappNumber,
       	member.pictureUrl = $pictureUrl
 
       WITH member

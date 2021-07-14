@@ -7,6 +7,7 @@ function ImageUpload(props) {
   const {
     label,
     name,
+    initialValue,
     setFieldValue,
     uploadPreset,
     placeholder,
@@ -51,7 +52,11 @@ function ImageUpload(props) {
         </div>
       ) : (
         <div>
-          <img src={image} className="profile-img rounded my-3" alt="" />
+          <img
+            src={image || initialValue}
+            className="profile-img rounded my-3"
+            alt=""
+          />
         </div>
       )}
       <label>

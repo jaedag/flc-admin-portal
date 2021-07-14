@@ -370,7 +370,7 @@ export const resolvers = {
 
                     //Write Auth0 ID of Admin to Neo4j DB
                     session
-                      .run(cypher.setTownAdmin, {
+                      .run(cypher.makeTownAdmin, {
                         adminId: admin.id,
                         townId: args.townId,
                         auth_id: admin.auth_id,
@@ -399,7 +399,7 @@ export const resolvers = {
 
                     //Write Auth0 ID of Admin to Neo4j DB
                     session
-                      .run(cypher.setTownAdmin, {
+                      .run(cypher.makeTownAdmin, {
                         adminId: admin.id,
                         townId: town.id,
                         auth_id: admin.auth_id,
@@ -533,7 +533,7 @@ export const resolvers = {
 
                     //Write Auth0 ID of Admin to Neo4j DB
                     session
-                      .run(cypher.setCampusAdmin, {
+                      .run(cypher.makeCampusAdmin, {
                         adminId: admin.id,
                         campusId: campus.id,
                         auth_id: admin.auth_id,
@@ -562,7 +562,7 @@ export const resolvers = {
 
                     //Write Auth0 ID of Admin to Neo4j DB
                     session
-                      .run(cypher.setCampusAdmin, {
+                      .run(cypher.makeCampusAdmin, {
                         adminId: admin.id,
                         campusId: args.campusId,
                         auth_id: admin.auth_id,
@@ -604,6 +604,11 @@ export const resolvers = {
           //Rearrange member object
           admin = rearrangeMemberObject(admin, response)
 
+          if (admin.isCampusAdminFor?.length > 1) {
+            //If he is admin for more than one Campus don't touch his Auth0 roles
+            return
+          }
+
           //Check auth0 roles and remove roles 'adminConstituency'
           axios(getUserRoles(admin.auth_id))
             .then((res) => {
@@ -624,7 +629,7 @@ export const resolvers = {
                 })
               }
 
-              //If the person is a bishops admin as well as any other position, remove role bishops admin
+              //If the person is a constituency admin as well as any other position, remove role constituency admin
               if (roles.includes('adminConstituency') && roles.length > 1) {
                 removeRoles(
                   admin.auth_id,
@@ -639,16 +644,7 @@ export const resolvers = {
                 error.response.data ?? error
               )
             })
-            .then(async () =>
-              //Remove Admin relationship in Neo4j DB
-              session
-                .run(cypher.removeCampusAdmin, {
-                  adminId: admin.id,
-                  campusId: campus.id,
-                  auth: context.auth,
-                })
-                .then(console.log('Cypher query ran successfully'))
-            )
+          //Relationship in Neo4j will be removed when the replacement admin is being added
         })
 
       errorHandling(admin)
@@ -1095,7 +1091,7 @@ export const resolvers = {
             .then((res) => {
               const roles = res.data.map((role) => role.name)
 
-              //If the person is only a constituency Admin, delete auth0 profile
+              //If the person is only a constituency overseer, delete auth0 profile
               if (roles.includes('leaderConstituency') && roles.length === 1) {
                 axios(deleteAuthUserConfig(leader.auth_id)).then(async () => {
                   console.log(
@@ -1121,7 +1117,7 @@ export const resolvers = {
                 error.response.data ?? error
               )
             })
-          //Relationship inn Neo4j will be removed when the replacement leader is being added
+          //Relationship in Neo4j will be removed when the replacement leader is being added
         })
 
       errorHandling(leader)

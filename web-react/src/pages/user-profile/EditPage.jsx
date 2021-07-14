@@ -41,7 +41,7 @@ const UserProfileEditPage = () => {
     maritalStatus: member?.maritalStatus ? member?.maritalStatus.status : '',
     occupation: member?.occupation ? member?.occupation.occupation : '',
     pictureUrl: member?.pictureUrl ? member?.pictureUrl : '',
-    bacenta: member?.bacenta ? member?.bacenta.name : '',
+    bacenta: member?.bacenta?.name ?? '',
     ministry: member?.ministry ? member?.ministry.id : '',
 
     pastoralHistory: [

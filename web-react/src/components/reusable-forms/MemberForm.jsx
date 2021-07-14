@@ -42,6 +42,7 @@ function MemberForm({ formik, initialValues }) {
           <FormikControl
             control="imageUpload"
             name="pictureUrl"
+            initialValue={initialValues.pictureUrl}
             uploadPreset="member-pictures"
             placeholder="Upload an Image"
             setFieldValue={formik.setFieldValue}
@@ -292,20 +293,20 @@ function MemberForm({ formik, initialValues }) {
                 )
               }}
             </FieldArray>
-            <div className="row mt-4">
-              <div className="col d-flex justify-content-center">
-                <button
-                  type="submit"
-                  disabled={!formik.isValid || formik.isSubmitting}
-                  className="btn btn-primary btn-medium my-3 text-center"
-                >
-                  Submit
-                </button>
-              </div>
-            </div>
+            {/* <!--End of Pastoral History Section--> */}
           </div>
         </RoleView>
-        {/* <!--End of Pastoral History Section--> */}
+        <div className="row mt-4">
+          <div className="col d-flex justify-content-center">
+            <button
+              type="submit"
+              disabled={!formik.isValid || formik.isSubmitting}
+              className="btn btn-primary btn-medium my-3 text-center"
+            >
+              Submit
+            </button>
+          </div>
+        </div>
       </div>
     )
   } else {

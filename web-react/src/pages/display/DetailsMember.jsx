@@ -206,7 +206,7 @@ const DisplayMemberDetails = () => {
 
             <div className="col">
               {/* Leadership History Timeline */}
-              {member.history[0] ? (
+              {member.history?.length ? (
                 <div className="row">
                   <div className="col">
                     <MemberDetailsCard title="History Timeline" editlink="#">

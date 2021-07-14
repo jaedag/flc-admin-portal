@@ -36,13 +36,13 @@ const UpdateMember = () => {
     gender: member?.gender?.gender ?? '',
     phoneNumber: member?.phoneNumber ? `+${member?.phoneNumber}` : '',
     whatsappNumber: member?.whatsappNumber ? `+${member?.whatsappNumber}` : '',
-    email: member?.email ? member?.email : '',
+    email: member?.email ?? '',
     dob: member?.dob ? parseNeoDate(member.dob.date) : '',
-    maritalStatus: member?.maritalStatus ? member?.maritalStatus.status : '',
+    maritalStatus: member?.maritalStatus?.status ?? '',
     occupation: member?.occupation?.occupation ?? '',
-    pictureUrl: member?.pictureUrl ? member?.pictureUrl : '',
-    bacenta: member?.bacenta ? member?.bacenta.name : '',
-    ministry: member?.ministry ? member?.ministry.id : '',
+    pictureUrl: member?.pictureUrl ?? '',
+    bacenta: member?.bacenta ? member?.bacenta?.name : '',
+    ministry: member?.ministry ? member?.ministry?.id : '',
 
     pastoralHistory: [
       {

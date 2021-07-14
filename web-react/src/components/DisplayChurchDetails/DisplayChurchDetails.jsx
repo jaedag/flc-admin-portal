@@ -74,28 +74,28 @@ const DisplayChurchDetails = (props) => {
           townId: townId,
           adminId: initialValues.adminSelect,
         },
-      })
+      }).catch((e) => alert(e))
 
       MakeTownAdmin({
         variables: {
           townId: townId,
           adminId: values.adminSelect,
         },
-      })
+      }).catch((e) => alert(e))
     } else if (churchType === 'Campus') {
       RemoveCampusAdmin({
         variables: {
           campusId: campusId,
           adminId: initialValues.adminSelect,
         },
-      })
+      }).catch((e) => alert(e))
 
       MakeCampusAdmin({
         variables: {
           campusId: campusId,
           adminId: values.adminSelect,
         },
-      })
+      }).catch((e) => alert(e))
     }
 
     onSubmitProps.setSubmitting(false)

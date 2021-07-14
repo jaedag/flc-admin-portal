@@ -89,17 +89,30 @@ const ServantsDashboard = () => {
         roles.push({ name: 'Admin', number: 'Bishops Admin' })
       }
       if (servant.isCampusAdminFor?.length) {
-        roles.push({ name: 'Admin', number: 'Campus Admin' })
+        const adminsOneChurch = servant.isCampusAdminFor.length === 1 ?? false
+        roles.push({
+          name: 'Admin',
+          number: 'Campus Admin',
+          clickCard: () => {
+            clickCard(servant.isCampusAdminFor[0])
+          },
+          link: adminsOneChurch
+            ? '/campus/displaydetails'
+            : '/servants/campus-list',
+        })
+        assessmentChurch = servant.isCampusAdminFor[0]
       }
       if (servant.isTownAdminFor?.length) {
-        const leadsOneChurch = servant.isTownAdminFor.length === 1 ?? false
+        const adminsOneChurch = servant.isTownAdminFor.length === 1 ?? false
         roles.push({
           name: 'Admin',
           number: 'Town Admin',
           clickCard: () => {
             clickCard(servant.isTownAdminFor[0])
           },
-          link: leadsOneChurch ? '/town/displaydetails' : '/servants/town-list',
+          link: adminsOneChurch
+            ? '/town/displaydetails'
+            : '/servants/town-list',
         })
         assessmentChurch = servant.isTownAdminFor[0]
       }

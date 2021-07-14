@@ -85,7 +85,7 @@ CREATE (log:HistoryLog)
 RETURN admin.auth_id
 `
 
-export const setTownAdmin = `
+export const makeTownAdmin = `
 MATCH (admin:Member {id:$adminId})
 SET admin.auth_id = $auth_id
 
@@ -135,52 +135,41 @@ CREATE (log:HistoryLog)
 RETURN admin
 `
 
-export const setCampusAdmin = `
+export const makeCampusAdmin = `
 MATCH (admin:Member {id:$adminId})
-SET admin.auth_id = $auth_id
-
-WITH admin
 MATCH (campus:Campus {id:$campusId})
-MATCH (currentUser:Member {auth_id:$auth.jwt.sub})
-MERGE (admin)-[:IS_ADMIN_FOR]->(campus)
-
 CREATE (log:HistoryLog)
-  SET
+  SET admin.auth_id = $auth_id,
    log.id = apoc.create.uuid(),
    log.timeStamp = time(),
-   log.historyRecord = admin.firstName + ' ' +admin.lastName + ' became the admin for ' + campus.name
-         
-  MERGE (log)-[:LOGGED_BY]->(currentUser)
-  MERGE (date:TimeGraph {date: date()})
-  MERGE (log)-[:RECORDED_ON]->(date)
-  MERGE (admin)-[:HAS_HISTORY]->(log)
-  MERGE (campus)-[:HAS_HISTORY]->(log)
+   log.historyRecord = admin.firstName + " " +admin.lastName + "became the admin for " + campus.name+ " Campus"
 
-RETURN admin.auth_id
-`
+WITH admin,campus, log
+OPTIONAL MATCH (campus)<-[oldLeads:IS_ADMIN_FOR]-(oldAdmin:Member)
+OPTIONAL MATCH (campus)-[oldHistory:HAS_HISTORY]->()-[oldAdminHistory:HAS_HISTORY]-(oldAdmin)
+  DELETE oldLeads //Delete old relationship
 
-export const removeCampusAdmin = `
-MATCH (admin:Member {id:$adminId})
+WITH log,campus,oldAdmin,admin
+       CALL{
+         WITH log,campus,oldAdmin, admin
+         WITH log,campus,oldAdmin, admin
+         WHERE EXISTS (oldAdmin.firstName)
+        
+       MERGE (oldAdmin)-[hasHistory:HAS_HISTORY]->(log)
+      SET log.historyRecord = admin.firstName + " " +admin.lastName + " became the admin of " + campus.name + " Campus replacing " + oldAdmin.firstName +" "+oldAdmin.lastName
+       RETURN COUNT(log)
+       }
+  
+   MATCH (currentUser:Member {auth_id:$auth.jwt.sub}) 
+   WITH currentUser, admin, campus, log
+   MERGE (admin)-[:IS_ADMIN_FOR]->(campus)
+   MERGE (log)-[:LOGGED_BY]->(currentUser)
+   MERGE (date:TimeGraph {date: date()})
+   MERGE (log)-[:RECORDED_ON]->(date)
+   MERGE (admin)-[:HAS_HISTORY]->(log)
+   MERGE (campus)-[:HAS_HISTORY]->(log)
 
-WITH admin
-MATCH (campus:Campus {id:$townId})
-MATCH (currentUser:Member {auth_id:$auth.jwt.sub})
-MATCH (admin)-[r:IS_ADMIN_FOR]->(campus)
-DELETE r 
-
-CREATE (log:HistoryLog)
-  SET
-   log.id = apoc.create.uuid(),
-   log.timeStamp = time(),
-   log.historyRecord = admin.firstName + ' ' +admin.lastName +  was removed as the admin for ' + campus.name
-         
-  MERGE (log)-[:LOGGED_BY]->(currentUser)
-  MERGE (date:TimeGraph {date: date()})
-  MERGE (log)-[:RECORDED_ON]->(date)
-  MERGE (admin)-[:HAS_HISTORY]->(log)
-  MERGE (campus)-[:HAS_HISTORY]->(log)
-
-RETURN admin.auth_id
+   RETURN admin.id AS id, admin.auth_id AS auth_id, admin.firstName AS firstName, admin.lastName AS lastName
 `
 
 export const makeBacentaLeader = `

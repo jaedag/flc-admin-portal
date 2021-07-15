@@ -50,15 +50,11 @@ export const CENTRE_REPORT = gql`
             date
           }
         }
-        centreBacentaRecords(id: $centreId) {
-          id
-          created_at
-          attendance
-          income
-          serviceDate {
-            date
-          }
-        }
+      }
+      bacentaServiceAggregate {
+        serviceDate
+        attendance
+        income
       }
     }
     centreMemberCount(id: $centreId)

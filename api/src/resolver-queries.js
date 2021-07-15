@@ -344,3 +344,14 @@ WITH log,town,oldLeader,leader
 
    RETURN leader.id AS id, leader.auth_id AS auth_id, leader.firstName AS firstName, leader.lastName AS lastName
 `
+export const getCentreBacentaServiceAggregates = `
+  MATCH (centre:Centre {id:$id})
+  
+ 
+  MATCH (centre)-[:HAS_HISTORY]->(log:ServiceLog)
+  OPTIONAL MATCH (log)-[:HAS_BACENTA]->(bacentaServices:ServiceLog)-[:HAS_RECORD]->(records:ServiceRecord)
+  OPTIONAL MATCH (records)-[:SERVICE_HELD_ON]->(date:TimeGraph)
+
+  WITH date, records WHERE date.date IS NOT NULL
+  RETURN date.date AS serviceDate,SUM(records.attendance) AS attendance, SUM(records.income) AS income ORDER BY date.date DESC LIMIT 12
+`

@@ -150,15 +150,11 @@ export const SERVANTS_DASHBOARD = gql`
               date
             }
           }
-          centreBacentaRecords(id: $id) {
-            id
-            created_at
-            attendance
-            income
-            serviceDate {
-              date
-            }
-          }
+        }
+        bacentaServiceAggregate {
+          serviceDate
+          attendance
+          income
         }
       }
       leadsTown {

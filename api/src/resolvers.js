@@ -179,6 +179,27 @@ export const resolvers = {
       return `${obj.firstName} ${obj.lastName}`
     },
   },
+  Centre: {
+    bacentaServiceAggregate: async (obj, args, context) => {
+      let serviceAggregates = []
+
+      const session = context.driver.session()
+      await session
+        .run(cypher.getCentreBacentaServiceAggregates, obj)
+        .then((response) =>
+          response.records.map((record) => {
+            let serviceAggregate = {}
+            record.keys.forEach(
+              (key, i) => (serviceAggregate[key] = record._fields[i])
+            )
+            serviceAggregates.push(serviceAggregate)
+          })
+        )
+        .catch((error) => console.log(error))
+
+      return serviceAggregates
+    },
+  },
 
   Mutation: {
     MakeBishopAdmin: async (object, args, context) => {

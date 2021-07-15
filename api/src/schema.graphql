@@ -208,7 +208,7 @@ type ServiceRecord @auth(rules: [{ isAuthenticated: true }]) {
   created_at: Date
   created_by: Member @relationship(type: "LOGGED_BY", direction: OUT)
   serviceDate: TimeGraph @relationship(type: "SERVICE_HELD_ON", direction: OUT)
-  attendance: Int!
+  attendance: Date!
   income: Float!
   foreignCurrency: String
   servicePicture: String
@@ -227,32 +227,16 @@ type ServiceLog @auth(rules: [{ isAuthenticated: true }]) {
   leaders: [Member] @relationship(type: "HAS_HISTORY", direction: IN)
   bacenta: [Bacenta] @relationship(type: "HAS_HISTORY", direction: IN)
   centre: [Centre] @relationship(type: "HAS_HISTORY", direction: IN)
-  centreBacentaRecords(id: ID!): [CentreBacentaServiceRecord]
-    @cypher(
-      statement: """
-      OPTIONAL MATCH (centres1:Centre {id:$id})
-      OPTIONAL MATCH (:Member {id:$id})-[:LEADS]->(centres2:Centre)
-      UNWIND [centres1,centres2] AS centre
-      MATCH (centre)-[:HAS_HISTORY]->(log:ServiceLog)
-      # OPTIONAL MATCH (log)-[:HAS_BACENTA]->(:ServiceLog)-[:HAS_RECORD]->(records)
-      # OPTIONAL MATCH (records)-[:SERVICE_HELD_ON]->(date:TimeGraph)
-
-      RETURN records
-      """
-    )
+  # centreBacentaRecords(centreId: ID!): [CentreBacentaServiceRecords]
   campus: [Campus] @relationship(type: "HAS_HISTORY", direction: IN)
   town: [Town] @relationship(type: "HAS_HISTORY", direction: IN)
-  sonta: [Sonta] @relationship(type: "HAS_HISTORY", direction: IN)
+sonta: [Sonta] @relationship(type: "HAS_HISTORY", direction: IN)
 }
 
-type CentreBacentaServiceRecord {
-  id: ID!
-  created_at: Date
-  serviceDate: TimeGraph @relationship(type: "SERVICE_HELD_ON", direction: OUT)
-  attendance: Int!
-  income: Float!
-  treasurers: [Member]! @relationship(type: "WAS_TREASURER_FOR", direction: IN)
-  historyLog: HistoryLog @relationship(type: "HAS_RECORD", direction: IN)
+type CentreBacentaServiceAggregate {
+  serviceDate: Date!
+  attendance: Date!
+  income: Date!
 }
 
 type HistoryLog @auth(rules: [{ isAuthenticated: true }]) {
@@ -346,6 +330,7 @@ type Centre {
   campus: Campus @relationship(type: "HAS_CENTRE", direction: IN)
   history: [HistoryLog] @relationship(type: "HAS_HISTORY", direction: OUT)
   services: [ServiceLog] @relationship(type: "HAS_HISTORY", direction: OUT)
+  bacentaServiceAggregate: [CentreBacentaServiceAggregate] @ignore
 }
 
 # Shared Units: Bacenta, Bacenta, Sonta
@@ -1077,6 +1062,7 @@ type Mutation {
       	member.lastName = $lastName,
       	member.email = $email,
       	member.phoneNumber = $phoneNumber,
+        member.whatsappNumber = $whatsappNumber,
       	member.pictureUrl = $pictureUrl
       CREATE (log:HistoryLog)<-[:HAS_HISTORY]-(b)
         SET

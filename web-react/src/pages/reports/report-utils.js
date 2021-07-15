@@ -33,23 +33,34 @@ export const getServiceGraphData = (church) => {
   let data = []
 
   const pushIntoData = (array) => {
+    if (array[0]?.__typename === 'CentreBacentaServiceAggregate') {
+      array.map((record) => {
+        data.push({
+          date: parseNeoDate(record?.serviceDate),
+          attendance: record.attendance.low,
+          income: record.income,
+        })
+      })
+
+      return
+    }
+
     array.map((record) => {
       data.push({
         date: record?.serviceDate?.date
           ? parseNeoDate(record?.serviceDate?.date)
           : record.date,
-        attendance: record.attendance,
+        attendance: record.attendance.low,
         income: record.income,
       })
     })
   }
 
   if (church.__typename === 'Centre') {
+    pushIntoData(church.bacentaServiceAggregate) //Push in Bacenta Service Aggregates
+
     church.services.map((service) => {
       pushIntoData(service.serviceRecords) //if there was a centre joint
-      // console.log(data)
-      pushIntoData(combineSameDayServices(service.centreBacentaRecords))
-      // console.log(data)
     })
   }
 
@@ -60,39 +71,5 @@ export const getServiceGraphData = (church) => {
   }
   data = data.sort(sortingFunction('date'))
 
-  return data.slice(0, numberOfWeeks)
-}
-
-//Helper Functions
-const combineSameDayServices = (servicesArray) => {
-  let servicesOnDate = []
-
-  //Code to Obtain the Unique Dates from the Bacenta Services under a Centre
-  //Since many bacentas could have had service on the same day, the date would be repeated
-  let dates = servicesArray.map((bacentaServices) => {
-    if (!bacentaServices?.serviceDate.date) {
-      return null
-    }
-    return parseNeoDate(bacentaServices.serviceDate.date)
-  })
-
-  const uniqueDates = [...new Set(dates)]
-
-  for (let i = 0; i < uniqueDates.length; i++) {
-    //Loops through the unique dates to find the services that happened on that day
-    //and extract them into a variable called 'addingServices'
-
-    let addingServices = { attendance: 0, income: 0, date: '' }
-    servicesArray.map((bacentaService) => {
-      if (parseNeoDate(bacentaService?.serviceDate.date) === uniqueDates[i]) {
-        //if the service is seen to have happened on date i...
-        addingServices.date = uniqueDates[i]
-        addingServices.attendance += bacentaService.attendance
-        addingServices.income += bacentaService.income
-      }
-    })
-    if (addingServices.date !== '') servicesOnDate.push(addingServices)
-  }
-
-  return servicesOnDate
+  return data.slice(data.length - numberOfWeeks - 1, data.length - 1)
 }

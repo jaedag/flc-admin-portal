@@ -20,7 +20,7 @@
 }
 
 .dashboard-title {
-  opacity: 50%;
+  opacity: 0.5;
   font-size: 10pt;
   margin-bottom: 0px;
   font-weight: normal;
@@ -37,7 +37,7 @@
 
 .membership-icon {
   border: thin;
-  opacity: 75%;
+  opacity: 0.75;
 }
 
 .info-text {

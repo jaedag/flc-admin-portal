@@ -33,11 +33,11 @@ export const getServiceGraphData = (church) => {
   let data = []
 
   const pushIntoData = (array) => {
-    if (array[0]?.__typename === 'CentreBacentaServiceAggregate') {
+    if (array[0]?.__typename === 'ComponentServiceAggregate') {
       array.map((record) => {
         data.push({
           date: parseNeoDate(record?.serviceDate),
-          attendance: record.attendance.low,
+          attendance: record.attendance?.low || record.attendance,
           income: record.income,
         })
       })
@@ -50,7 +50,7 @@ export const getServiceGraphData = (church) => {
         date: record?.serviceDate?.date
           ? parseNeoDate(record?.serviceDate?.date)
           : record.date,
-        attendance: record.attendance.low,
+        attendance: record.attendance?.low || record.attendance,
         income: record.income,
       })
     })
@@ -58,18 +58,17 @@ export const getServiceGraphData = (church) => {
 
   if (church.__typename === 'Centre') {
     pushIntoData(church.bacentaServiceAggregate) //Push in Bacenta Service Aggregates
-
-    church.services.map((service) => {
-      pushIntoData(service.serviceRecords) //if there was a centre joint
-    })
   }
 
-  if (church.__typename === 'Bacenta') {
-    church.services.map((service) => {
-      pushIntoData(service.serviceRecords)
-    })
+  if (church.__typename === ('Campus' || 'Town')) {
+    pushIntoData(church.componentServiceAggregate) //Push in Bacenta Service Aggregates
   }
+  //Pushing in direct service data eg. Joint Services and Bacenta Services
+  church.services.map((service) => {
+    pushIntoData(service.serviceRecords)
+  })
+
   data = data.sort(sortingFunction('date'))
 
-  return data.slice(data.length - numberOfWeeks - 1, data.length - 1)
+  return data.slice(data.length - numberOfWeeks, data.length)
 }

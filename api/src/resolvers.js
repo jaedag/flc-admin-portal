@@ -200,6 +200,50 @@ export const resolvers = {
       return serviceAggregates
     },
   },
+  Campus: {
+    componentServiceAggregate: async (obj, args, context) => {
+      let serviceAggregates = []
+
+      const session = context.driver.session()
+      await session
+        .run(cypher.getCampusTownServiceAggregates, obj)
+        .then((response) =>
+          response.records.map((record) => {
+            let serviceAggregate = {}
+
+            record.keys.forEach(
+              (key, i) => (serviceAggregate[key] = record._fields[i])
+            )
+            serviceAggregates.push(serviceAggregate)
+          })
+        )
+        .catch((error) => console.log(error))
+
+      return serviceAggregates
+    },
+  },
+  Town: {
+    componentServiceAggregate: async (obj, args, context) => {
+      let serviceAggregates = []
+
+      const session = context.driver.session()
+      await session
+        .run(cypher.getCampusTownServiceAggregates, obj)
+        .then((response) =>
+          response.records.map((record) => {
+            let serviceAggregate = {}
+
+            record.keys.forEach(
+              (key, i) => (serviceAggregate[key] = record._fields[i])
+            )
+            serviceAggregates.push(serviceAggregate)
+          })
+        )
+        .catch((error) => console.log(error))
+
+      return serviceAggregates
+    },
+  },
 
   Mutation: {
     MakeBishopAdmin: async (object, args, context) => {

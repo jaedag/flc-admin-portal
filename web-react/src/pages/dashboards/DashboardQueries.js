@@ -95,10 +95,56 @@ export const SERVANTS_DASHBOARD = gql`
       isTownAdminFor {
         id
         name
+        leader {
+          id
+          firstName
+          lastName
+          fullName
+        }
+        services {
+          id
+          historyRecord
+          serviceRecords {
+            created_at
+            attendance
+            income
+            serviceDate {
+              date
+            }
+          }
+        }
+        componentServiceAggregate {
+          serviceDate
+          attendance
+          income
+        }
       }
       isCampusAdminFor {
         id
         name
+        leader {
+          id
+          firstName
+          lastName
+          fullName
+        }
+        services {
+          id
+          historyRecord
+          serviceRecords {
+            created_at
+            attendance
+            income
+            serviceDate {
+              date
+            }
+          }
+        }
+        componentServiceAggregate {
+          serviceDate
+          attendance
+          income
+        }
       }
       isBishopAdminFor {
         id
@@ -159,9 +205,57 @@ export const SERVANTS_DASHBOARD = gql`
       }
       leadsTown {
         id
+        name
+        leader {
+          id
+          firstName
+          lastName
+          fullName
+        }
+        services {
+          id
+          historyRecord
+          serviceRecords {
+            created_at
+            attendance
+            income
+            serviceDate {
+              date
+            }
+          }
+        }
+        componentServiceAggregate {
+          serviceDate
+          attendance
+          income
+        }
       }
       leadsCampus {
         id
+        name
+        leader {
+          id
+          firstName
+          lastName
+          fullName
+        }
+        services {
+          id
+          historyRecord
+          serviceRecords {
+            created_at
+            attendance
+            income
+            serviceDate {
+              date
+            }
+          }
+        }
+        componentServiceAggregate {
+          serviceDate
+          attendance
+          income
+        }
       }
       leadsSonta {
         id

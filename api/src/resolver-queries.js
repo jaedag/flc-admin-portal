@@ -355,3 +355,20 @@ export const getCentreBacentaServiceAggregates = `
   WITH date, records WHERE date.date IS NOT NULL
   RETURN date.date AS serviceDate,SUM(records.attendance) AS attendance, SUM(records.income) AS income ORDER BY date.date DESC LIMIT 12
 `
+
+// Adding both centre and bacenta services to get weekly constituency attendance
+export const getCampusTownServiceAggregates = `
+  MATCH (campusTown {id:$id})  WHERE campusTown:Town OR campusTown:Campus
+
+  MATCH (campusTown)-[:HAS_HISTORY]->(log:ServiceLog)
+  OPTIONAL MATCH (log)-[:HAS_CENTRE]->(centreServices:ServiceLog)
+  MATCH (centreServices)-[:HAS_BACENTA]->(bacentaServices:ServiceLog)
+  OPTIONAL MATCH (centreServices)-[:HAS_RECORD]->(centreRecords:ServiceRecord)
+  OPTIONAL MATCH (bacentaServices)-[:HAS_RECORD]->(bacentaRecords:ServiceRecord) 
+
+    UNWIND [centreRecords,bacentaRecords] AS records
+    WITH DISTINCT records 
+    MATCH (records)-[:SERVICE_HELD_ON]->(date:TimeGraph)
+
+  RETURN date.date AS serviceDate,SUM(records.attendance) AS attendance, SUM(records.income) AS income ORDER BY date.date DESC LIMIT 12
+`

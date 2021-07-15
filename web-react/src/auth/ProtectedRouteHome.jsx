@@ -11,7 +11,7 @@ import { isAuthorised } from '../global-utils'
 import ServantsDashboard from 'pages/dashboards/ServantsDashboard'
 
 const ProtectedRoute = ({ component, roles, ...args }) => {
-  const { currentUser } = useContext(MemberContext)
+  const { currentUser, setMemberId } = useContext(MemberContext)
   const { isAuthenticated } = useAuth0()
   const { setBishopId, setTownId, setCampusId, setChurch } = useContext(
     ChurchContext
@@ -54,6 +54,7 @@ const ProtectedRoute = ({ component, roles, ...args }) => {
       />
     )
   } else if (currentUser.roles.includes('adminConstituency')) {
+    setMemberId(currentUser.id)
     //If the user does not have permission but is a CO Admin
     return (
       <Route

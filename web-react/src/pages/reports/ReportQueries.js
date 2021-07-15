@@ -60,3 +60,36 @@ export const CENTRE_REPORT = gql`
     centreMemberCount(id: $centreId)
   }
 `
+
+export const CAMPUS_REPORT = gql`
+  query campusReports($campusId: ID!) {
+    campuses(where: { id: $campusId }) {
+      id
+      name
+      leader {
+        id
+        firstName
+        lastName
+        fullName
+      }
+      services {
+        id
+        historyRecord
+        serviceRecords {
+          created_at
+          attendance
+          income
+          serviceDate {
+            date
+          }
+        }
+      }
+      componentServiceAggregate {
+        serviceDate
+        attendance
+        income
+      }
+    }
+    campusMemberCount(id: $campusId)
+  }
+`

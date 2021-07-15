@@ -23,6 +23,7 @@ const ServantsDashboard = () => {
   const history = useHistory()
   const location = useLocation()
   const atHome = location.pathname === '/'
+
   const { data, loading } = useQuery(SERVANTS_DASHBOARD, {
     variables: { id: atHome ? currentUser.id : memberId },
   })
@@ -62,12 +63,28 @@ const ServantsDashboard = () => {
         assessmentChurch = servant.leadsCentre[0]
       }
       if (servant.leadsTown?.length) {
-        roles.push({ name: 'Towns', number: servant.leadsTown.length })
-        assessmentChurchData = getServiceGraphData(servant.leadsTown)
+        const leadsOneChurch = servant.leadsTown.length === 1 ?? false
+        roles.push({
+          name: leadsOneChurch ? 'Town' : 'Towns',
+          number: servant.leadsTown.length,
+          clickCard: () => {
+            clickCard(servant.leadsTown[0])
+          },
+          link: leadsOneChurch ? '/town/reports' : '/servants/town-list',
+        })
+        assessmentChurch = servant.leadsTown[0]
       }
       if (servant.leadsCampus?.length) {
-        roles.push({ name: 'Campus', number: servant.leadsCampus.length })
-        assessmentChurchData = getServiceGraphData(servant.leadsCampus)
+        const leadsOneChurch = servant.leadsCampus.length === 1 ?? false
+        roles.push({
+          name: leadsOneChurch ? 'Campus' : 'Campuses',
+          number: servant.leadsCampus.length,
+          clickCard: () => {
+            clickCard(servant.leadsCampus[0])
+          },
+          link: leadsOneChurch ? '/campus/reports' : '/servants/campus-list',
+        })
+        assessmentChurch = servant.leadsCampus[0]
       }
       if (servant.leadsSonta?.length) {
         roles.push({ name: 'Sontas', number: servant.leadsSonta.length })
@@ -116,7 +133,7 @@ const ServantsDashboard = () => {
         })
         assessmentChurch = servant.isTownAdminFor[0]
       }
-
+      console.log(assessmentChurch)
       //run the get graph function after all checking is done to avoid multiple unnecessary runs
       if (assessmentChurch) {
         return getServiceGraphData(assessmentChurch)

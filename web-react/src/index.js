@@ -60,6 +60,7 @@ import TownService from 'pages/record-service/TownService'
 import TownServiceDetails from 'pages/record-service/TownServiceDetails'
 import CampusService from 'pages/record-service/CampusService'
 import CampusServiceDetails from 'pages/record-service/CampusServiceDetails'
+import CampusReport from 'pages/reports/CampusReport'
 
 const AppWithApollo = () => {
   const [accessToken, setAccessToken] = useState()
@@ -465,12 +466,21 @@ const PastorsAdmin = () => {
                   'adminFederal',
                   'adminBishop',
                   'adminConstituency',
-                  'leaderBacenta',
                   'leaderCentre',
                   'leaderConstituency',
                 ]}
                 path="/centre/reports"
                 component={CentreReport}
+              />
+              <ProtectedRoute
+                roles={[
+                  'adminFederal',
+                  'adminBishop',
+                  'adminConstituency',
+                  'leaderConstituency',
+                ]}
+                path="/campus/reports"
+                component={CampusReport}
               />
               {/* Member Display and Edit Pages */}
               <Route

@@ -208,6 +208,11 @@ type ServiceRecord @auth(rules: [{ isAuthenticated: true }]) {
   created_at: Date
   created_by: Member @relationship(type: "LOGGED_BY", direction: OUT)
   serviceDate: TimeGraph @relationship(type: "SERVICE_HELD_ON", direction: OUT)
+  week: String @cypher(statement:"""
+  MATCH (this)-[:SERVICE_HELD_ON]->(date:TimeGraph)
+  RETURN toString(date(date.date).week)
+  """
+  )
   attendance: Date!
   income: Float!
   foreignCurrency: String
@@ -234,7 +239,7 @@ type ServiceLog @auth(rules: [{ isAuthenticated: true }]) {
 }
 
 type ComponentServiceAggregate {
-  serviceDate: Date!
+  week: Date!
   attendance: Date!
   income: Date!
 }
@@ -1702,6 +1707,7 @@ type Mutation {
     attendance: Int!
     income: Float!
     foreignCurrency: String
+    numberOfTithers: Int
     treasurers: [ID]!
     treasurerSelfie: String!
     servicePicture: String!
@@ -1713,6 +1719,7 @@ type Mutation {
         serviceRecord.attendance = $attendance,
         serviceRecord.income = $income,
         serviceRecord.foreignCurrency = $foreignCurrency,
+        serviceRecord.numberOfTithers = $numberOfTithers,
         serviceRecord.treasurerSelfie = $treasurerSelfie,
         serviceRecord.servicePicture = $servicePicture
       WITH serviceRecord

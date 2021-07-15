@@ -42,12 +42,14 @@ const ServiceForm = ({
     numberOfTithers: Yup.number()
       .typeError('Please enter a valid number')
       .positive()
+      .integer('You cannot enter decimals here')
       .required(
         'You cannot submit this form without entering your number of tithers'
       ),
     attendance: Yup.number()
       .typeError('Please enter a valid number')
       .positive()
+      .integer('You cannot have attendance with decimals!')
       .required('You cannot submit this form without entering your attendance'),
     treasurerSelfie: Yup.string().required('You must take a treasurers selfie'),
     servicePicture: Yup.string().required(
@@ -66,6 +68,7 @@ const ServiceForm = ({
         attendance: parseInt(values.attendance),
         income: parseFloat(values.cediIncome),
         foreignCurrency: values.foreignCurrency,
+        numberOfTithers: values.numberOfTithers,
         treasurers: values?.treasurers,
         treasurerSelfie: values.treasurerSelfie,
         servicePicture: values.servicePicture,
@@ -147,7 +150,7 @@ const ServiceForm = ({
                                   <FormikControl
                                     control="combobox2"
                                     name={`treasurers[${index}]`}
-                                    placeholder="Type a name"
+                                    placeholder="Start typing"
                                     setFieldValue={formik.setFieldValue}
                                     optionsQuery={BISHOP_MEMBER_DROPDOWN}
                                     queryVariable1="id"

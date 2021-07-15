@@ -18,6 +18,7 @@ export const BACENTA_REPORT = gql`
           created_at
           attendance
           income
+          week
           serviceDate {
             date
           }
@@ -46,13 +47,14 @@ export const CENTRE_REPORT = gql`
           created_at
           attendance
           income
+          week
           serviceDate {
             date
           }
         }
       }
       bacentaServiceAggregate {
-        serviceDate
+        week
         attendance
         income
       }
@@ -79,17 +81,52 @@ export const CAMPUS_REPORT = gql`
           created_at
           attendance
           income
+          week
           serviceDate {
             date
           }
         }
       }
       componentServiceAggregate {
-        serviceDate
+        week
         attendance
         income
       }
     }
     campusMemberCount(id: $campusId)
+  }
+`
+
+export const TOWN_REPORT = gql`
+  query townReports($townId: ID!) {
+    towns(where: { id: $townId }) {
+      id
+      name
+      leader {
+        id
+        firstName
+        lastName
+        fullName
+      }
+      services {
+        id
+        historyRecord
+        serviceRecords {
+          created_at
+          attendance
+          income
+          week
+          serviceDate {
+            date
+          }
+        }
+      }
+      componentServiceAggregate {
+        week
+        attendance
+        income
+      }
+    }
+    townMemberCount(id: $townId)
   }
 `

@@ -37,6 +37,7 @@ export const getServiceGraphData = (church) => {
       array.map((record) => {
         data.push({
           date: parseNeoDate(record?.serviceDate),
+          week: record.week.low,
           attendance: record.attendance?.low || record.attendance,
           income: record.income,
         })
@@ -50,6 +51,7 @@ export const getServiceGraphData = (church) => {
         date: record?.serviceDate?.date
           ? parseNeoDate(record?.serviceDate?.date)
           : record.date,
+        week: record.week,
         attendance: record.attendance?.low || record.attendance,
         income: record.income,
       })
@@ -68,7 +70,7 @@ export const getServiceGraphData = (church) => {
     pushIntoData(service.serviceRecords)
   })
 
-  data = data.sort(sortingFunction('date'))
+  data = data.sort(sortingFunction('week'))
 
   return data.slice(data.length - numberOfWeeks, data.length)
 }

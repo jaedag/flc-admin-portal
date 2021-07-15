@@ -7,6 +7,7 @@ export const RECORD_SERVICE = gql`
     $attendance: Int!
     $income: Float!
     $foreignCurrency: String
+    $numberOfTithers: Int!
     $treasurers: [ID]!
     $treasurerSelfie: String!
     $servicePicture: String!
@@ -17,6 +18,7 @@ export const RECORD_SERVICE = gql`
       attendance: $attendance
       income: $income
       foreignCurrency: $foreignCurrency
+      numberOfTithers: $numberOfTithers
       treasurers: $treasurers
       treasurerSelfie: $treasurerSelfie
       servicePicture: $servicePicture

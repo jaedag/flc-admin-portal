@@ -53,22 +53,19 @@ const ProtectedRoute = ({ component, roles, ...args }) => {
         {...args}
       />
     )
-  } else if (currentUser.roles.includes('adminConstituency')) {
+  } else if (
+    isAuthorised(
+      [
+        'adminConstituency',
+        'leaderConstituency',
+        'leaderCentre',
+        'leaderBacenta',
+      ],
+      currentUser.roles
+    )
+  ) {
     setMemberId(currentUser.id)
     //If the user does not have permission but is a CO Admin
-    return (
-      <Route
-        component={withAuthenticationRequired(ServantsDashboard, {
-          // eslint-disable-next-line react/display-name
-          onRedirecting: () => {
-            return <LoadingScreen />
-          },
-        })}
-        {...args}
-      />
-    )
-  } else if (currentUser.roles.includes('leaderBacenta')) {
-    //If the user does not have permission but is a Bacenta Leader
     return (
       <Route
         component={withAuthenticationRequired(ServantsDashboard, {

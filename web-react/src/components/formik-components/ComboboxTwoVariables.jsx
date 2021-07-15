@@ -28,7 +28,7 @@ function ComboboxTwoVariables(props) {
     onCompleted: (data) => {
       if (props.church === 'bacenta') {
         setSuggestions(
-          data.members[0].bacentas.map((row) => {
+          data.members[0]?.bacentas.map((row) => {
             return {
               id: row.id,
               name: row[`${suggestionText}`],

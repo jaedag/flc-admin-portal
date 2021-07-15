@@ -1,9 +1,7 @@
 import React, { useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useMutation } from '@apollo/client'
-import { Formik, Form } from 'formik'
-import * as Yup from 'yup'
-import { parsePhoneNum, PHONE_NUM_REGEX_VALIDATION } from '../../global-utils'
+import { parsePhoneNum } from '../../global-utils'
 import {
   ADD_MEMBER_TITLE_MUTATION,
   CREATE_MEMBER_MUTATION,
@@ -54,29 +52,6 @@ const CreateMember = () => {
   const { clickCard } = useContext(ChurchContext)
   const { setMemberId } = useContext(MemberContext)
 
-  const validationSchema = Yup.object({
-    firstName: Yup.string().required('First Name is a required field'),
-    lastName: Yup.string().required('Last Name is a required field'),
-    gender: Yup.string().required('Gender is a required field'),
-    email: Yup.string().email('Please enter a valid email address'),
-    maritalStatus: Yup.string().required('Marital Status is a required field'),
-    dob: Yup.date()
-      .max(new Date(), "You can't be born after today")
-      .required('Date of Birth is a required field'),
-    phoneNumber: Yup.string()
-      .matches(
-        PHONE_NUM_REGEX_VALIDATION,
-        `Phone Number must start with + and country code (eg. '+233')`
-      )
-      .required('Phone Number is required'),
-    whatsappNumber: Yup.string().matches(
-      PHONE_NUM_REGEX_VALIDATION,
-      `Phone Number must start with + and country code (eg. '+233')`
-    ),
-    bacenta: Yup.string().required('Please pick a bacenta from the dropdown'),
-    ministry: Yup.string().required('Ministry is a required field'),
-  })
-
   //All of the Hooks!
 
   const [CreateMember] = useMutation(CREATE_MEMBER_MUTATION, {
@@ -111,7 +86,7 @@ const CreateMember = () => {
         gender: values.gender,
         phoneNumber: parsePhoneNum(values.phoneNumber),
         whatsappNumber: parsePhoneNum(values.whatsappNumber),
-        email: values.email,
+        email: values.email.trim(),
         dob: values.dob,
         maritalStatus: values.maritalStatus,
         occupation: values.occupation,
@@ -140,20 +115,11 @@ const CreateMember = () => {
   return (
     <>
       <NavBar />
-      <Formik
+      <MemberForm
+        title="Register a New Member"
         initialValues={initialValues}
-        validationSchema={validationSchema}
         onSubmit={onSubmit}
-      >
-        {(formik) => (
-          <div className="body-card container body-container mt-5">
-            <h3 className="my-3">Register a New Member</h3>
-            <Form className="form-group">
-              <MemberForm formik={formik} initialValues={initialValues} />
-            </Form>
-          </div>
-        )}
-      </Formik>
+      />
     </>
   )
 }

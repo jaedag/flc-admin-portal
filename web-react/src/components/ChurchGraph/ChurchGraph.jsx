@@ -90,14 +90,11 @@ const ChurchGraph = ({ stat1, stat2, churchData, secondaryTitle }) => {
               </Bar>
 
               <XAxis
-                dataKey="date"
+                dataKey="week"
                 tickLine={false}
                 fontSize="13"
-                tickFormatter={(date) => {
-                  return new Date(date).toLocaleDateString('en-gb', {
-                    month: 'short',
-                    day: 'numeric',
-                  })
+                tickFormatter={(week) => {
+                  return 'Wk ' + week
                 }}
               />
               {/* <YAxis scale="log" domain={['auto', 'auto']} label={false} /> */}

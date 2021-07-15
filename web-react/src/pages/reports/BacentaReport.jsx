@@ -1,9 +1,7 @@
 import React, { useContext } from 'react'
 import NavBar from '../../components/nav/NavBar'
 import { ChurchContext } from '../../contexts/ChurchContext'
-import './Report.css'
 import { useQuery } from '@apollo/client'
-
 import LoadingScreen from '../../components/LoadingScreen'
 import ErrorScreen from '../../components/ErrorScreen'
 import { getServiceGraphData, getMonthlyStatAverage } from './report-utils'

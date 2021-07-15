@@ -1,4 +1,5 @@
 import React from 'react'
+import './Report.css'
 
 const StatDisplay = ({ title, statistic }) => {
   if (isNaN(statistic)) {

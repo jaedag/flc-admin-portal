@@ -108,13 +108,14 @@ export const SERVANTS_DASHBOARD = gql`
             created_at
             attendance
             income
+            week
             serviceDate {
               date
             }
           }
         }
         componentServiceAggregate {
-          serviceDate
+          week
           attendance
           income
         }
@@ -135,13 +136,14 @@ export const SERVANTS_DASHBOARD = gql`
             created_at
             attendance
             income
+            week
             serviceDate {
               date
             }
           }
         }
         componentServiceAggregate {
-          serviceDate
+          week
           attendance
           income
         }
@@ -164,6 +166,7 @@ export const SERVANTS_DASHBOARD = gql`
             created_at
             attendance
             income
+            week
             serviceDate {
               date
             }
@@ -192,13 +195,14 @@ export const SERVANTS_DASHBOARD = gql`
             created_at
             attendance
             income
+            week
             serviceDate {
               date
             }
           }
         }
         bacentaServiceAggregate {
-          serviceDate
+          week
           attendance
           income
         }
@@ -219,13 +223,14 @@ export const SERVANTS_DASHBOARD = gql`
             created_at
             attendance
             income
+            week
             serviceDate {
               date
             }
           }
         }
         componentServiceAggregate {
-          serviceDate
+          week
           attendance
           income
         }
@@ -246,13 +251,14 @@ export const SERVANTS_DASHBOARD = gql`
             created_at
             attendance
             income
+            week
             serviceDate {
               date
             }
           }
         }
         componentServiceAggregate {
-          serviceDate
+          week
           attendance
           income
         }

@@ -906,7 +906,9 @@ export const resolvers = {
 
                     const roles = []
 
-                    assignRoles(auth_id, roles, [authRoles.leadsCampus.id])
+                    assignRoles(auth_id, roles, [
+                      authRoles.leadsConstituency.id,
+                    ])
                     console.log(
                       `Auth0 Account successfully created for ${leader.firstName} ${leader.lastName}`
                     )
@@ -1173,7 +1175,11 @@ export const resolvers = {
 
               //If the person is a Campus leader as well as any other position, remove role Campus leader
               if (roles.includes('leaderConstituency') && roles.length > 1) {
-                removeRoles(leader.auth_id, roles, authRoles.leadsCampus.id)
+                removeRoles(
+                  leader.auth_id,
+                  roles,
+                  authRoles.leadsConstituency.id
+                )
               }
             })
             .catch((error) => {
@@ -1330,7 +1336,11 @@ export const resolvers = {
 
               //If the person is a Town leader as well as any other position, remove role Town leader
               if (roles.includes('leaderConstituency') && roles.length > 1) {
-                removeRoles(leader.auth_id, roles, authRoles.leadsCampus.id)
+                removeRoles(
+                  leader.auth_id,
+                  roles,
+                  authRoles.leadsConstituency.id
+                )
               }
             })
             .catch((error) => {

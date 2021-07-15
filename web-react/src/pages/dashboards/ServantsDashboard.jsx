@@ -133,7 +133,7 @@ const ServantsDashboard = () => {
         })
         assessmentChurch = servant.isTownAdminFor[0]
       }
-      console.log(assessmentChurch)
+
       //run the get graph function after all checking is done to avoid multiple unnecessary runs
       if (assessmentChurch) {
         return getServiceGraphData(assessmentChurch)

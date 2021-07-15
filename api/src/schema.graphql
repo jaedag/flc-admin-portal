@@ -96,34 +96,13 @@ type Member {
     @relationship(type: "WAS_TREASURER_FOR", direction: OUT)
 }
 
-extend type Member
-  @auth(
-    rules: [{ roles: ["adminFederal", "adminBishop", "adminConstituency"] }]
-  )
-extend type Bacenta
-  @auth(
-    rules: [{ roles: ["adminFederal", "adminBishop", "adminConstituency"] }]
-  )
-extend type Centre
-  @auth(
-    rules: [{ roles: ["adminFederal", "adminBishop", "adminConstituency"] }]
-  )
-extend type Campus
-  @auth(
-    rules: [{ roles: ["adminFederal", "adminBishop", "adminConstituency"] }]
-  )
-extend type Town
-  @auth(
-    rules: [{ roles: ["adminFederal", "adminBishop", "adminConstituency"] }]
-  )
-extend type Sonta
-  @auth(
-    rules: [{ roles: ["adminFederal", "adminBishop", "adminConstituency"] }]
-  )
-extend type Ministry
-  @auth(
-    rules: [{ roles: ["adminFederal", "adminBishop", "adminConstituency"] }]
-  )
+extend type Member @auth(rules: [{ isAuthenticated: true }])
+extend type Bacenta @auth(rules: [{ isAuthenticated: true }])
+extend type Centre @auth(rules: [{ isAuthenticated: true }])
+extend type Campus @auth(rules: [{ isAuthenticated: true }])
+extend type Town @auth(rules: [{ isAuthenticated: true }])
+extend type Sonta @auth(rules: [{ isAuthenticated: true }])
+extend type Ministry @auth(rules: [{ isAuthenticated: true }])
 
 type Gender @auth(rules: [{ isAuthenticated: true }]) {
   gender: String
@@ -208,11 +187,13 @@ type ServiceRecord @auth(rules: [{ isAuthenticated: true }]) {
   created_at: Date
   created_by: Member @relationship(type: "LOGGED_BY", direction: OUT)
   serviceDate: TimeGraph @relationship(type: "SERVICE_HELD_ON", direction: OUT)
-  week: String @cypher(statement:"""
-  MATCH (this)-[:SERVICE_HELD_ON]->(date:TimeGraph)
-  RETURN toString(date(date.date).week)
-  """
-  )
+  week: String
+    @cypher(
+      statement: """
+      MATCH (this)-[:SERVICE_HELD_ON]->(date:TimeGraph)
+      RETURN toString(date(date.date).week)
+      """
+    )
   attendance: Date!
   income: Float!
   foreignCurrency: String

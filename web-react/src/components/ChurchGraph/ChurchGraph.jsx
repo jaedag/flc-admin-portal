@@ -99,11 +99,17 @@ const ChurchGraph = ({ stat1, stat2, churchData, secondaryTitle }) => {
                   return 'Wk ' + week
                 }}
               />
-              {/* <YAxis scale="log" domain={['auto', 'auto']} label={false} /> */}
-              <Tooltip
-                wrapperStyle={{ backgroundColor: '#ccc', opacity: 0.1 }}
-              />
 
+              <Tooltip
+                wrapperStyle={{
+                  background: 'rgba(24, 24, 24, 0.3)',
+                }}
+                contentStyle={{
+                  backgroundColor: 'rgba(24, 24, 24, 0.2)',
+                  color: '#FFFFFF',
+                }}
+                cursor={{ stroke: 'grey', strokeWidth: 1, fillOpacity: 0 }}
+              />
               <Legend />
             </BarChart>
           </ResponsiveContainer>

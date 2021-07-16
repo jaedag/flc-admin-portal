@@ -61,6 +61,7 @@ import TownServiceDetails from 'pages/record-service/TownServiceDetails'
 import CampusService from 'pages/record-service/CampusService'
 import CampusServiceDetails from 'pages/record-service/CampusServiceDetails'
 import CampusReport from 'pages/reports/CampusReport'
+import CacheBuster from 'CacheBuster'
 
 const AppWithApollo = () => {
   const [accessToken, setAccessToken] = useState()
@@ -810,17 +811,28 @@ const PastorsAdmin = () => {
   )
 }
 
-const Main = () => (
-  <Auth0Provider
-    domain={process.env.REACT_APP_AUTH0_DOMAIN}
-    clientId={process.env.REACT_APP_AUTH0_CLIENT_ID}
-    redirectUri={window.location.origin}
-    audience="https://flcadmin.netlify.app/graphql"
-    scope
-  >
-    <AppWithApollo />
-  </Auth0Provider>
+const App = () => (
+  <CacheBuster>
+    {({ loading, isLatestVersion, refreshCacheAndReload }) => {
+      if (loading) return null
+      if (!loading && !isLatestVersion) {
+        refreshCacheAndReload()
+      }
+
+      return (
+        <Auth0Provider
+          domain={process.env.REACT_APP_AUTH0_DOMAIN}
+          clientId={process.env.REACT_APP_AUTH0_CLIENT_ID}
+          redirectUri={window.location.origin}
+          audience="https://flcadmin.netlify.app/graphql"
+          scope
+        >
+          <AppWithApollo />
+        </Auth0Provider>
+      )
+    }}
+  </CacheBuster>
 )
 
-ReactDOM.render(<Main />, document.getElementById('root'))
+ReactDOM.render(<App />, document.getElementById('root'))
 // registerServiceWorker()

@@ -24,12 +24,13 @@
   font-size: 10pt;
   margin-bottom: 0px;
   font-weight: normal;
-  font-family: 'Poppins';
+  font-family: 'Poppins', 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS',
+    sans-serif;
 }
 
 .membership-card-body {
   background-color: white;
-  font-family: 'Roboto';
+  font-family: 'Roboto', Calibri, 'Trebuchet MS', sans-serif;
   font-size: 2.5rem;
   font-weight: bold;
   color: white;
@@ -44,7 +45,7 @@
   font-size: 3.2rem;
   font-weight: bold;
   margin: 0px;
-  font-family: 'Roboto';
+  font-family: 'Roboto', Calibri, 'Trebuchet MS', sans-serif;
 }
 
 a.white-links {

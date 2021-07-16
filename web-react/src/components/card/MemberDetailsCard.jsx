@@ -17,7 +17,7 @@ const MemberDetailsCard = (props) => {
         {isAuthenticated && (
           <div className="col-auto my-auto d-flex justify-content-end">
             <RoleView
-              roles={['adminFederal', 'BishopAdmin', 'adminConstituency']}
+              roles={['adminFederal', 'adminBishop', 'adminConstituency']}
             >
               <EditButton link={editlink} />
             </RoleView>

@@ -18,10 +18,15 @@ const ProtectedMembersRoute = ({ component, roles, ...args }) => {
 
   useEffect(() => {
     if (isAuthenticated && !currentUser.roles.includes('adminFederal')) {
+      //if User is not a federal admin
       setBishopId(currentUser.bishop)
       setChurch(currentUser.church)
-      setTownId(currentUser.constituency)
-      setCampusId(currentUser.constituency)
+
+      if (!currentUser.roles.includes('adminBishop')) {
+        //User is not a Bishops Admin the he can only be looking at his constituency membership
+        setTownId(currentUser.constituency)
+        setCampusId(currentUser.constituency)
+      }
     }
     // eslint-disable-next-line
   }, [currentUser, setBishopId, setTownId, setCampusId, setChurch])

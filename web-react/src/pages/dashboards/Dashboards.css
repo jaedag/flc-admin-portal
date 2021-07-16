@@ -26,11 +26,11 @@
   font-weight: bold;
   margin: 0px;
   height: 80px;
-  font-family: 'Roboto';
+  font-family: 'Roboto', Calibri, 'Trebuchet MS', sans-serif;
 }
 
 .roboto {
-  font-family: 'Roboto';
+  font-family: 'Roboto', Calibri, 'Trebuchet MS', sans-serif;
 }
 
 .church-string {
@@ -38,7 +38,7 @@
   font-weight: bold;
   margin: 0px;
   height: 80px;
-  font-family: 'Roboto';
+  font-family: 'Roboto', Calibri, 'Trebuchet MS', sans-serif;
 }
 
 .leader-img {

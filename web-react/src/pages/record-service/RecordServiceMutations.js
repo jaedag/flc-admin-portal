@@ -33,6 +33,12 @@ export const DISPLAY_BACENTA_SERVICE = gql`
     serviceRecords(where: { id: $serviceId }) {
       id
       created_at
+      created_by {
+        id
+        firstName
+        lastName
+        fullName
+      }
       serviceDate {
         date
       }

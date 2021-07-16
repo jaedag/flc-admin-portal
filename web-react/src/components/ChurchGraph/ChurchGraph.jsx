@@ -22,7 +22,7 @@ const ChurchGraph = ({ stat1, stat2, churchData, secondaryTitle }) => {
             <p className="chart-title church-name">{`${secondaryTitle}`}</p>
           )}
           <ResponsiveContainer width="100%" height={330}>
-            <BarChart data={churchData}>
+            <BarChart data={churchData} margin={{ top: 20 }}>
               <defs>
                 <linearGradient
                   id="colorPrimary"
@@ -66,6 +66,7 @@ const ChurchGraph = ({ stat1, stat2, churchData, secondaryTitle }) => {
                 name={capitalise(stat1)}
                 dataKey={`${stat1}`}
                 barSize={30}
+                yAxisId="left"
                 fill="url(#colorPrimary)"
               >
                 <LabelList
@@ -79,6 +80,7 @@ const ChurchGraph = ({ stat1, stat2, churchData, secondaryTitle }) => {
                 name={capitalise(stat2)}
                 dataKey={`${stat2}`}
                 barSize={35}
+                yAxisId="right"
                 fill="url(#colorSecondary)"
               >
                 <LabelList
@@ -98,7 +100,10 @@ const ChurchGraph = ({ stat1, stat2, churchData, secondaryTitle }) => {
                 }}
               />
               {/* <YAxis scale="log" domain={['auto', 'auto']} label={false} /> */}
-              <Tooltip />
+              <Tooltip
+                wrapperStyle={{ backgroundColor: '#ccc', opacity: 0.1 }}
+              />
+
               <Legend />
             </BarChart>
           </ResponsiveContainer>

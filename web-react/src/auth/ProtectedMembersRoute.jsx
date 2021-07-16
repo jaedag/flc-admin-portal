@@ -37,7 +37,7 @@ const ProtectedMembersRoute = ({ component, roles, ...args }) => {
         {...args}
       />
     )
-  } else if (currentUser.roles.includes('adminBishop')) {
+  } else if (isAuthorised(['adminBishop', 'bishop'], currentUser.roles)) {
     //if the user does not have permission but is a Bishop's Admin
     return (
       <Route
@@ -48,7 +48,9 @@ const ProtectedMembersRoute = ({ component, roles, ...args }) => {
         {...args}
       />
     )
-  } else if (currentUser.roles.includes('adminConstituency')) {
+  } else if (
+    isAuthorised(['adminConstituency', 'leaderConstituency'], currentUser.roles)
+  ) {
     //If the user does not have permission but is a CO Admin
     return (
       <Route

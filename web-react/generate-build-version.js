@@ -1,6 +1,6 @@
 /* eslint-disable */
 const fs = require('fs')
-const packageJson = require('../package.json')
+const packageJson = require('./package.json')
 
 const appVersion = packageJson.version
 

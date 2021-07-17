@@ -317,7 +317,6 @@ const UpdateTownCampus = () => {
           variables: {
             campusId: campusId,
             campusName: values.campusTownName,
-            leaderId: values.leaderSelect,
             bishopId: values.bishopSelect,
           },
         })
@@ -340,7 +339,8 @@ const UpdateTownCampus = () => {
         if (values.leaderSelect !== initialValues.leaderSelect) {
           MakeCampusLeader({
             variables: {
-              leaderId: values.leaderSelect,
+              oldLeaderId: initialValues.leaderSelect,
+              newLeaderId: values.leaderSelect,
               campusId: campusId,
             },
           }).catch((err) => alert(err))
@@ -388,7 +388,8 @@ const UpdateTownCampus = () => {
         if (values.leaderSelect !== initialValues.leaderSelect) {
           MakeTownLeader({
             variables: {
-              leaderId: values.leaderSelect,
+              oldLeaderId: initialValues.leaderSelect,
+              newLeaderId: values.leaderSelect,
               townId: townId,
             },
           }).catch((err) => alert(err))

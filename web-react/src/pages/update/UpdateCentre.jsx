@@ -307,7 +307,8 @@ const UpdateCentre = () => {
       if (values.leaderSelect !== initialValues.leaderSelect) {
         MakeCentreLeader({
           variables: {
-            leaderId: values.leaderSelect,
+            oldLeaderId: initialValues.leaderSelect,
+            newLeaderId: values.leaderSelect,
             centreId: centreId,
           },
         }).catch((err) => alert(err))
@@ -458,7 +459,7 @@ const UpdateCentre = () => {
                             control="combobox2"
                             name="leaderSelect"
                             initialValue={initialValues.leaderName}
-                            label="Select a CentreLeader"
+                            label="Select a Centre Leader"
                             placeholder="Select a Leader"
                             setFieldValue={formik.setFieldValue}
                             optionsQuery={BISHOP_MEMBER_DROPDOWN}

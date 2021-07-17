@@ -24,9 +24,7 @@ const DisplayBacentaDetails = () => {
     const bacenta = bacentaData.bacentas[0]
 
     let breadcrumb = [
-      bacenta?.centre?.town
-        ? bacenta?.centre?.town.bishop
-        : bacenta?.centre?.campus.bishop,
+      bacenta?.centre?.town?.bishop ?? bacenta?.centre?.campus?.bishop,
       bacenta?.centre?.town ? bacenta?.centre?.town : bacenta?.centre?.campus,
       bacenta?.centre,
       bacenta,

@@ -11,7 +11,7 @@ import userIcon from '../../img/user.png'
 import Timeline from '../../components/Timeline/Timeline.jsx'
 import { getNameWithTitle, getMemberDob } from '../../global-utils'
 import AuthButton from '../../components/buttons/AuthButton'
-import MemberRankList from '../../components/MemberRankList'
+import MemberRankList from '../../components/MemberRoleList'
 
 const UserProfileDisplayPage = () => {
   const { currentUser } = useContext(MemberContext)

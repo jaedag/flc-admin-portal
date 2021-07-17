@@ -9,7 +9,7 @@ import { MemberContext } from '../../contexts/MemberContext'
 import userIcon from '../../img/user.png'
 import Timeline from '../../components/Timeline/Timeline'
 import { getNameWithTitle, getMemberDob } from '../../global-utils'
-import MemberRankList from '../../components/MemberRankList'
+import MemberRoleList from '../../components/MemberRoleList'
 
 const DisplayMemberDetails = () => {
   const { memberId } = useContext(MemberContext)
@@ -65,7 +65,7 @@ const DisplayMemberDetails = () => {
                         </h5>
                       </div>
                       <div className="col d-flex justify-content-center mb-2">
-                        <MemberRankList member={member} />
+                        <MemberRoleList member={member} />
                       </div>
                     </div>
                   </MemberDetailsCard>
@@ -232,7 +232,7 @@ const DisplayMemberDetails = () => {
                         </div>
                         <div className="col">
                           <p className="font-weight-bold card-text">
-                            {member?.bishop.fullName}
+                            {member?.bishop?.fullName}
                           </p>
                         </div>
                       </div>

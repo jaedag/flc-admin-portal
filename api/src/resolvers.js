@@ -8,16 +8,20 @@ const baseURL = 'https://flcadmin.us.auth0.com/'
 let authToken
 let authRoles = {}
 
+const isAuth = (permittedRoles, userRoles) => {
+  if (!permittedRoles.some((r) => userRoles.includes(r))) {
+    throw 'You are not permitted to run this mutation'
+  }
+}
+const throwErrorMsg = (message, error) => {
+  console.error(message, error?.response?.data ?? error)
+  throw 'There was a problem making your changes, please try again'
+}
 const errorHandling = (member) => {
   if (!member.email) {
     throw `${member.firstName} ${member.lastName} does not have a valid email address`
   } else if (!member.pictureUrl) {
     throw `${member.firstName} ${member.lastName} does not have a valid picture`
-  }
-}
-const isAuth = (permittedRoles, userRoles) => {
-  if (!permittedRoles.some((r) => userRoles.includes(r))) {
-    throw 'You are not permitted to run this mutation'
   }
 }
 const rearrangeMemberObject = (member, response) => {
@@ -146,9 +150,7 @@ const assignRoles = (userId, userRoles, rolesToAssign) => {
   if (!userRoles.includes(rolesToAssign[0])) {
     axios(setUserRoles(userId, rolesToAssign))
       .then(console.log('User Role successfully added'))
-      .catch((err) =>
-        console.error('There was an error assigning role', err.response.data)
-      )
+      .catch((err) => throwErrorMsg('There was an error assigning role', err))
   }
 }
 const removeRoles = (userId, userRoles, rolesToRemove) => {
@@ -158,12 +160,7 @@ const removeRoles = (userId, userRoles, rolesToRemove) => {
   if (userRoleIds.includes(rolesToRemove)) {
     axios(deleteUserRoles(userId, [rolesToRemove]))
       .then(console.log('User Role sucessfully removed'))
-      .catch((err) =>
-        console.error(
-          'There was an error removing role',
-          err?.response?.data ?? err
-        )
-      )
+      .catch((err) => throwErrorMsg('There was an error removing role', err))
   }
 }
 
@@ -255,10 +252,11 @@ export const resolvers = {
       let bishop = { id: args.bishopId }
 
       await session
-        .run(cypher.matchMemberQuery, args)
+        .run(cypher.matchMemberQuery, { id: args.adminId })
         .then(async (response) => {
           //Rearrange member object
           admin = rearrangeMemberObject(admin, response)
+          errorHandling(admin)
 
           //Check for AuthID of Admin
           axios(getAuthIdConfig(admin))
@@ -289,15 +287,10 @@ export const resolvers = {
                       })
                       .then(console.log('Cypher Query Executed Successfully'))
                       .catch((err) =>
-                        console.error('Error running cypher query', err)
+                        throwErrorMsg('Error running cypher query', err)
                       )
                   })
-                  .catch((err) =>
-                    console.error(
-                      'Error Creating User',
-                      err?.response?.data ?? err
-                    )
-                  )
+                  .catch((err) => throwErrorMsg('Error Creating User', err))
               } else if (admin.auth_id) {
                 //Check auth0 roles and add roles 'adminBishop'
                 axios(getUserRoles(admin.auth_id))
@@ -318,23 +311,19 @@ export const resolvers = {
                       })
                       .then(console.log('Cypher Query Executed Successfully'))
                       .catch((err) =>
-                        console.error('Error running cypher query', err)
+                        throwErrorMsg('Error running cypher query', err)
                       )
                   })
                   .catch((error) =>
-                    console.error('getUserRoles Failed to Run', error)
+                    throwErrorMsg('getUserRoles Failed to Run', error)
                   )
               }
             })
-            .catch((err) =>
-              console.error(
-                'There was an error obtaining the auth Id ',
-                err?.response?.data ?? err
-              )
-            )
+            .catch((err) => {
+              throwErrorMsg('There was an error obtaining the auth Id ', err)
+            })
         })
-
-      errorHandling(admin)
+        .catch((err) => throwErrorMsg('', err))
 
       return admin
     },
@@ -350,6 +339,7 @@ export const resolvers = {
         .then(async (response) => {
           //Rearrange member object
           admin = rearrangeMemberObject(admin, response)
+          errorHandling(admin)
 
           //Check auth0 roles and remove roles 'adminBishop'
           axios(getUserRoles(admin.auth_id))
@@ -377,10 +367,7 @@ export const resolvers = {
               }
             })
             .catch((error) => {
-              console.error(
-                'getUserRoles Failed to Run',
-                error.response?.data ?? error
-              )
+              throwErrorMsg('getUserRoles Failed to Run', error)
             })
             .then(async () =>
               //Remove Admin relationship in Neo4j DB
@@ -391,10 +378,15 @@ export const resolvers = {
                   auth: context.auth,
                 })
                 .then(console.log('Cypher query ran successfully'))
+                .catch((err) =>
+                  throwErrorMsg(
+                    'There was a problem connecting to the database',
+                    err
+                  )
+                )
             )
         })
-
-      errorHandling(admin)
+        .catch((err) => throwErrorMsg('', err))
 
       return admin
     },
@@ -411,6 +403,7 @@ export const resolvers = {
         .then(async (response) => {
           //Rearrange member object
           admin = rearrangeMemberObject(admin, response)
+          errorHandling(admin)
 
           //Check for AuthID of Admin
           axios(getAuthIdConfig(admin))
@@ -443,15 +436,10 @@ export const resolvers = {
                       })
                       .then(console.log('Cypher Query Executed Successfully'))
                       .catch((err) =>
-                        console.error('Error running cypher query', err)
+                        throwErrorMsg('Error running cypher query', err)
                       )
                   })
-                  .catch((err) =>
-                    console.error(
-                      'Error Creating User',
-                      err?.response?.data ?? err
-                    )
-                  )
+                  .catch((err) => throwErrorMsg('Error Creating User', err))
               } else if (admin.auth_id) {
                 //Check auth0 roles and add roles 'adminConstituency'
                 axios(getUserRoles(admin.auth_id))
@@ -472,26 +460,19 @@ export const resolvers = {
                       })
                       .then(console.log('Cypher Query Executed Successfully'))
                       .catch((err) =>
-                        console.error('Error running cypher query', err)
+                        throwErrorMsg('Error running cypher query', err)
                       )
                   })
                   .catch((error) =>
-                    console.error('getUserRoles Failed to Run', error)
+                    throwErrorMsg('getUserRoles Failed to Run', error)
                   )
               }
             })
-            // .then(async (res) => {
-            //   console.log(res)
-            // })
             .catch((err) =>
-              console.error(
-                'There was an error obtaining the auth Id ',
-                err?.response?.data ?? err
-              )
+              throwErrorMsg('There was an error obtaining the auth Id ', err)
             )
         })
-
-      errorHandling(admin)
+        .catch((err) => throwErrorMsg('', err))
 
       return admin
     },
@@ -508,6 +489,7 @@ export const resolvers = {
         .then(async (response) => {
           //Rearrange member object
           admin = rearrangeMemberObject(admin, response)
+          errorHandling(admin)
 
           //Check auth0 roles and remove roles 'adminConstituency'
           axios(getUserRoles(admin.auth_id))
@@ -540,10 +522,7 @@ export const resolvers = {
             })
 
             .catch((error) => {
-              console.error(
-                'getUserRoles Failed to Run',
-                error.response.data ?? error
-              )
+              throwErrorMsg('getUserRoles Failed to Run', error)
             })
             .then(async () =>
               //Remove Admin relationship in Neo4j DB
@@ -556,8 +535,7 @@ export const resolvers = {
                 .then(console.log('Cypher query ran successfully'))
             )
         })
-
-      errorHandling(admin)
+        .catch((err) => throwErrorMsg('', err))
 
       return admin
     },
@@ -574,6 +552,7 @@ export const resolvers = {
         .then(async (response) => {
           //Rearrange member object
           admin = rearrangeMemberObject(admin, response)
+          errorHandling(admin)
 
           //Check for AuthID of Admin
           axios(getAuthIdConfig(admin))
@@ -606,15 +585,10 @@ export const resolvers = {
                       })
                       .then(console.log('Cypher Query Executed Successfully'))
                       .catch((err) =>
-                        console.error('Error running cypher query', err)
+                        throwErrorMsg('Error running cypher query', err)
                       )
                   })
-                  .catch((err) =>
-                    console.error(
-                      'Error Creating User',
-                      err.response.data ?? err
-                    )
-                  )
+                  .catch((err) => throwErrorMsg('Error Creating User', err))
               } else if (admin.auth_id) {
                 //Check auth0 roles and add roles 'adminConstituency'
                 axios(getUserRoles(admin.auth_id))
@@ -635,23 +609,19 @@ export const resolvers = {
                       })
                       .then(console.log('Cypher Query Executed Successfully'))
                       .catch((err) =>
-                        console.error('Error running cypher query', err)
+                        throwErrorMsg('Error running cypher query', err)
                       )
                   })
                   .catch((error) =>
-                    console.error('getUserRoles Failed to Run', error)
+                    throwErrorMsg('getUserRoles Failed to Run', error)
                   )
               }
             })
             .catch((err) =>
-              console.error(
-                'There was an error obtaining the auth Id ',
-                err?.response?.data ?? err
-              )
+              throwErrorMsg('There was an error obtaining the auth Id ', err)
             )
         })
-
-      errorHandling(admin)
+        .catch((err) => throwErrorMsg('', err))
 
       return admin
     },
@@ -668,6 +638,7 @@ export const resolvers = {
         .then(async (response) => {
           //Rearrange member object
           admin = rearrangeMemberObject(admin, response)
+          errorHandling(admin)
 
           if (admin.isCampusAdminFor?.length > 1) {
             //If he is admin for more than one Campus don't touch his Auth0 roles
@@ -704,15 +675,11 @@ export const resolvers = {
               }
             })
             .catch((error) => {
-              console.error(
-                'getUserRoles Failed to Run',
-                error.response.data ?? error
-              )
+              throwErrorMsg('getUserRoles Failed to Run', error)
             })
           //Relationship in Neo4j will be removed when the replacement admin is being added
         })
-
-      errorHandling(admin)
+        .catch((err) => throwErrorMsg('', err))
 
       return admin
     },
@@ -733,6 +700,7 @@ export const resolvers = {
         .then(async (response) => {
           // Rearrange member
           leader = rearrangeMemberObject(leader, response)
+          errorHandling(leader)
 
           //Check for AuthID of Leader
           axios(getAuthIdConfig(leader))
@@ -763,15 +731,10 @@ export const resolvers = {
                       })
                       .then(console.log('Cypher Query Executed Successfully'))
                       .catch((err) =>
-                        console.error('Error running cypher query', err)
+                        throwErrorMsg('Error running cypher query', err)
                       )
                   })
-                  .catch((err) =>
-                    console.error(
-                      'Error Creating User',
-                      err.response.data ?? err
-                    )
-                  )
+                  .catch((err) => throwErrorMsg('Error Creating User', err))
               } else if (leader.auth_id) {
                 //Check auth0 roles and add roles 'leaderBacenta'
                 axios(getUserRoles(leader.auth_id))
@@ -792,23 +755,19 @@ export const resolvers = {
                       })
                       .then(console.log('Cypher Query Executed Successfully'))
                       .catch((err) =>
-                        console.error('Error running cypher query', err)
+                        throwErrorMsg('Error running cypher query', err)
                       )
                   })
                   .catch((error) =>
-                    console.error('getUserRoles Failed to Run', error)
+                    throwErrorMsg('getUserRoles Failed to Run', error)
                   )
               }
             })
             .catch((err) =>
-              console.error(
-                'There was an error obtaining the auth Id ',
-                err?.response?.data ?? err
-              )
+              throwErrorMsg('There was an error obtaining the auth Id ', err)
             )
         })
-
-      errorHandling(leader)
+        .catch((err) => throwErrorMsg('', err))
 
       return leader
     },
@@ -830,6 +789,7 @@ export const resolvers = {
         .then(async (response) => {
           // Rearrange member object
           leader = rearrangeMemberObject(leader, response)
+          errorHandling(leader)
 
           if (leader.leadsBacenta.length > 1) {
             //If he leads more than one bacenta don't touch his Auth0 roles
@@ -862,15 +822,11 @@ export const resolvers = {
               }
             })
             .catch((error) => {
-              console.error(
-                'getUserRoles Failed to Run',
-                error.response.data ?? error
-              )
+              throwErrorMsg('getUserRoles Failed to Run', error)
             })
           //Relationship inn Neo4j will be removed when the replacement leader is being added
         })
-
-      errorHandling(leader)
+        .catch((err) => throwErrorMsg('', err))
 
       return leader
     },
@@ -891,6 +847,7 @@ export const resolvers = {
         .then(async (response) => {
           // Rearrange member object
           leader = rearrangeMemberObject(leader, response)
+          errorHandling(leader)
 
           //Check for AuthID of Leader
           axios(getAuthIdConfig(leader))
@@ -906,9 +863,7 @@ export const resolvers = {
 
                     const roles = []
 
-                    assignRoles(auth_id, roles, [
-                      authRoles.leadsConstituency.id,
-                    ])
+                    assignRoles(auth_id, roles, [authRoles.leaderCentre.id])
                     console.log(
                       `Auth0 Account successfully created for ${leader.firstName} ${leader.lastName}`
                     )
@@ -923,15 +878,10 @@ export const resolvers = {
                       })
                       .then(console.log('Cypher Query Executed Successfully'))
                       .catch((err) =>
-                        console.error('Error running cypher query', err)
+                        throwErrorMsg('Error running cypher query', err)
                       )
                   })
-                  .catch((err) =>
-                    console.error(
-                      'Error Creating User',
-                      err.response.data ?? err
-                    )
-                  )
+                  .catch((err) => throwErrorMsg('Error Creating User', err))
               } else if (leader.auth_id) {
                 //Check auth0 roles and add roles 'leaderCentre'
                 axios(getUserRoles(leader.auth_id))
@@ -952,23 +902,19 @@ export const resolvers = {
                       })
                       .then(console.log('Cypher Query Executed Successfully'))
                       .catch((err) =>
-                        console.error('Error running cypher query', err)
+                        throwErrorMsg('Error running cypher query', err)
                       )
                   })
                   .catch((error) =>
-                    console.error('getUserRoles Failed to Run', error)
+                    throwErrorMsg('getUserRoles Failed to Run', error)
                   )
               }
             })
             .catch((err) =>
-              console.error(
-                'There was an error obtaining the auth Id ',
-                err?.response?.data ?? err
-              )
+              throwErrorMsg('There was an error obtaining the auth Id ', err)
             )
         })
-
-      errorHandling(leader)
+        .catch((err) => throwErrorMsg('', err))
 
       return leader
     },
@@ -989,6 +935,7 @@ export const resolvers = {
         .then(async (response) => {
           // Rearrange member object
           leader = rearrangeMemberObject(leader, response)
+          errorHandling(leader)
 
           if (leader.leadsCentre.length > 1) {
             //If he leads more than one Centre don't touch his Auth0 roles
@@ -1021,15 +968,11 @@ export const resolvers = {
               }
             })
             .catch((error) => {
-              console.error(
-                'getUserRoles Failed to Run',
-                error.response.data ?? error
-              )
+              throwErrorMsg('getUserRoles Failed to Run', error)
             })
           //Relationship inn Neo4j will be removed when the replacement leader is being added
         })
-
-      errorHandling(leader)
+        .catch((err) => throwErrorMsg('', err))
 
       return leader
     },
@@ -1050,6 +993,7 @@ export const resolvers = {
         .then(async (response) => {
           // Rearrange member object
           leader = rearrangeMemberObject(leader, response)
+          errorHandling(leader)
 
           //Check for AuthID of Leader
           axios(getAuthIdConfig(leader))
@@ -1082,15 +1026,10 @@ export const resolvers = {
                       })
                       .then(console.log('Cypher Query Executed Successfully'))
                       .catch((err) =>
-                        console.error('Error running cypher query', err)
+                        throwErrorMsg('Error running cypher query', err)
                       )
                   })
-                  .catch((err) =>
-                    console.error(
-                      'Error Creating User',
-                      err.response.data ?? err
-                    )
-                  )
+                  .catch((err) => throwErrorMsg('Error Creating User', err))
               } else if (leader.auth_id) {
                 //Check auth0 roles and add roles 'leaderConstituency'
                 axios(getUserRoles(leader.auth_id))
@@ -1111,23 +1050,19 @@ export const resolvers = {
                       })
                       .then(console.log('Cypher Query Executed Successfully'))
                       .catch((err) =>
-                        console.error('Error running cypher query', err)
+                        throwErrorMsg('Error running cypher query', err)
                       )
                   })
                   .catch((error) =>
-                    console.error('getUserRoles Failed to Run', error)
+                    throwErrorMsg('getUserRoles Failed to Run', error)
                   )
               }
             })
             .catch((err) =>
-              console.error(
-                'There was an error obtaining the auth Id ',
-                err?.response?.data ?? err
-              )
+              throwErrorMsg('There was an error obtaining the auth Id ', err)
             )
         })
-
-      errorHandling(leader)
+        .catch((err) => throwErrorMsg('', err))
 
       return leader
     },
@@ -1147,6 +1082,7 @@ export const resolvers = {
         .run(cypher.matchMemberQuery, { id: args.leaderId })
         .then(async (response) => {
           leader = rearrangeMemberObject(leader, response)
+          errorHandling(leader)
 
           if (leader.leadsCampus.length > 1) {
             //If he leads more than one Campus don't touch his Auth0 roles
@@ -1178,20 +1114,16 @@ export const resolvers = {
                 removeRoles(
                   leader.auth_id,
                   roles,
-                  authRoles.leadsConstituency.id
+                  authRoles.leaderConstituency.id
                 )
               }
             })
             .catch((error) => {
-              console.error(
-                'getUserRoles Failed to Run',
-                error.response.data ?? error
-              )
+              throwErrorMsg('getUserRoles Failed to Run', error)
             })
           //Relationship in Neo4j will be removed when the replacement leader is being added
         })
-
-      errorHandling(leader)
+        .catch((err) => throwErrorMsg('', err))
 
       return leader
     },
@@ -1211,6 +1143,7 @@ export const resolvers = {
         .run(cypher.matchMemberQuery, { id: args.leaderId })
         .then(async (response) => {
           leader = rearrangeMemberObject(leader, response)
+          errorHandling(leader)
 
           //Check for AuthID of Leader
           axios(getAuthIdConfig(leader))
@@ -1243,15 +1176,10 @@ export const resolvers = {
                       })
                       .then(console.log('Cypher Query Executed Successfully'))
                       .catch((err) =>
-                        console.error('Error running cypher query', err)
+                        throwErrorMsg('Error running cypher query', err)
                       )
                   })
-                  .catch((err) =>
-                    console.error(
-                      'Error Creating User',
-                      err.response.data ?? err
-                    )
-                  )
+                  .catch((err) => throwErrorMsg('Error Creating User', err))
               } else if (leader.auth_id) {
                 //Check auth0 roles and add roles 'leaderConstituency'
                 axios(getUserRoles(leader.auth_id))
@@ -1272,23 +1200,19 @@ export const resolvers = {
                       })
                       .then(console.log('Cypher Query Executed Successfully'))
                       .catch((err) =>
-                        console.error('Error running cypher query', err)
+                        throwErrorMsg('Error running cypher query', err)
                       )
                   })
                   .catch((error) =>
-                    console.error('getUserRoles Failed to Run', error)
+                    throwErrorMsg('getUserRoles Failed to Run', error)
                   )
               }
             })
             .catch((err) =>
-              console.error(
-                'There was an error obtaining the auth Id ',
-                err?.response?.data ?? err
-              )
+              throwErrorMsg('There was an error obtaining the auth Id', err)
             )
         })
-
-      errorHandling(leader)
+        .catch((err) => throwErrorMsg('', err))
 
       return leader
     },
@@ -1308,6 +1232,7 @@ export const resolvers = {
         .run(cypher.matchMemberQuery, { id: args.leaderId })
         .then(async (response) => {
           leader = rearrangeMemberObject(leader, response)
+          errorHandling(leader)
 
           if (leader.leadsTown.length > 1) {
             //If he leads more than one Town don't touch his Auth0 roles
@@ -1339,20 +1264,16 @@ export const resolvers = {
                 removeRoles(
                   leader.auth_id,
                   roles,
-                  authRoles.leadsConstituency.id
+                  authRoles.leaderConstituency.id
                 )
               }
             })
             .catch((error) => {
-              console.error(
-                'getUserRoles Failed to Run',
-                error.response.data ?? error
-              )
+              throwErrorMsg('getUserRoles Failed to Run', error)
             })
           //Relationship in Neo4j will be removed when the replacement leader is being added
         })
-
-      errorHandling(leader)
+        .catch((err) => throwErrorMsg('', err))
 
       return leader
     },

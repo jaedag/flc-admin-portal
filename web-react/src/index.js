@@ -233,15 +233,11 @@ const PastorsAdmin = () => {
           })
         )
         setBishopId(
-          member.centre?.town
-            ? member.centre?.town.bishop.id
-            : member.centre?.campus.bishop.id
+          member.centre?.town?.bishop.id ?? member.centre?.campus?.bishop.id
         )
         sessionStorage.setItem(
           'bishopId',
-          member.centre?.town
-            ? member.centre?.town.bishop.id
-            : member.centre?.campus.bishop.id
+          member.centre?.town?.bishop.id ?? member.centre?.campus?.bishop.id
         )
         break
       default:

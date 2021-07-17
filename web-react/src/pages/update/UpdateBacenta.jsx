@@ -37,12 +37,13 @@ const UpdateBacenta = () => {
   )
   let townCampusIdVar
 
-  const { data: bacentaData, loading: bacentaLoading } = useQuery(
-    DISPLAY_BACENTA,
-    {
-      variables: { id: bacentaId },
-    }
-  )
+  const {
+    data: bacentaData,
+    loading: bacentaLoading,
+    error: bacentaError,
+  } = useQuery(DISPLAY_BACENTA, {
+    variables: { id: bacentaId },
+  })
 
   const history = useHistory()
   const [positionLoading, setPositionLoading] = useState(false)
@@ -148,7 +149,8 @@ const UpdateBacenta = () => {
       if (values.leaderSelect !== initialValues.leaderSelect) {
         MakeBacentaLeader({
           variables: {
-            leaderId: values.leaderSelect,
+            oldLeaderId: initialValues.leaderSelect,
+            newLeaderId: values.leaderSelect,
             bacentaId: bacentaId,
           },
         }).catch((err) => alert(err))
@@ -402,8 +404,10 @@ const UpdateBacenta = () => {
         </Formik>
       </>
     )
-  } else {
+  } else if (bacentaError) {
     return <ErrorScreen />
+  } else {
+    return <LoadingScreen />
   }
 }
 

@@ -4,7 +4,7 @@ import { ChurchContext } from '../contexts/ChurchContext'
 import { capitalise } from '../global-utils'
 import DashboardButton from './buttons/DashboardButton'
 
-const MemberRankList = ({ member }) => {
+const MemberRoleList = ({ member }) => {
   const { clickCard, determineStream } = useContext(ChurchContext)
   const history = useHistory()
 
@@ -198,4 +198,4 @@ const MemberRankList = ({ member }) => {
   )
 }
 
-export default MemberRankList
+export default MemberRoleList

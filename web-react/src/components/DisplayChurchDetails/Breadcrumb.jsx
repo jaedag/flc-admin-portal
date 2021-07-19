@@ -9,7 +9,7 @@ const Breadcrumb = ({ breadcrumb }) => {
       {breadcrumb
         ? breadcrumb.map((bread, i) => {
             let breadname
-            if (bread.__typename === 'Sonta') {
+            if (bread?.__typename === 'Sonta') {
               bread.campus &&
                 (breadname = bread.name.replace(bread.campus.name, ''))
               bread.town &&

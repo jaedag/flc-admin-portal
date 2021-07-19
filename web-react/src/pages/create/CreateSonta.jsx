@@ -4,7 +4,6 @@ import { useQuery, useMutation } from '@apollo/client'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 import FormikControl from '../../components/formik-components/FormikControl'
-
 import {
   GET_CAMPUS_CENTRES,
   GET_TOWN_CENTRES,

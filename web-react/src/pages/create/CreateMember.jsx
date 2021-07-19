@@ -10,6 +10,7 @@ import NavBar from '../../components/nav/NavBar'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import { MemberContext } from '../../contexts/MemberContext'
 import MemberForm from '../../components/reusable-forms/MemberForm'
+import { filterPastoralTitles } from 'components/reusable-forms/form-utils'
 
 const CreateMember = () => {
   const initialValues = {
@@ -69,14 +70,7 @@ const CreateMember = () => {
     const { setSubmitting, resetForm } = onSubmitProps
     // Variables that are not controlled by formik
 
-    let pastoralAppointment = values.pastoralAppointment.filter(
-      (pastoralAppointment) => {
-        if (pastoralAppointment.date) {
-          return pastoralAppointment
-        }
-        return null
-      }
-    )
+    const pastoralAppointment = filterPastoralTitles(values.pastoralAppointment)
 
     CreateMember({
       variables: {
@@ -96,16 +90,15 @@ const CreateMember = () => {
         ministry: values.ministry,
       },
     }).then((res) => {
-      pastoralAppointment.forEach((apppointmentDetails) => {
-        AddMemberTitle({
-          variables: {
-            memberId: res.data.CreateMember.id,
-            title: apppointmentDetails.title,
-            status: true,
-            date: apppointmentDetails.date,
-          },
-        })
+      AddMemberTitle({
+        variables: {
+          memberId: res.data.CreateMember.id,
+          title: pastoralAppointment.map((title) => title.title),
+          status: true,
+          date: pastoralAppointment.map((title) => title.date),
+        },
       })
+
       setSubmitting(false)
       resetForm()
       history.push('/member/displaydetails')

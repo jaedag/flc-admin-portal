@@ -76,7 +76,7 @@ function MemberForm({ initialValues, onSubmit, title }) {
                     control="imageUpload"
                     name="pictureUrl"
                     initialValue={initialValues.pictureUrl}
-                    uploadPreset="member-pictures"
+                    uploadPreset={process.env.CLOUDINARY_MEMBERS}
                     placeholder="Upload an Image"
                     setFieldValue={formik.setFieldValue}
                     aria-describedby="ImageUpload"
@@ -86,7 +86,7 @@ function MemberForm({ initialValues, onSubmit, title }) {
                       Please note that * are required to submit the form
                     </small>
                   </p>
-                  <div className="form-row row-cols-1 row-cols-md-2">
+                  <div className="form-row row-cols-1 row-cols-md-2 justify-content-center">
                     <div className="col-10">
                       <FormikControl
                         label="First Name*"
@@ -150,7 +150,7 @@ function MemberForm({ initialValues, onSubmit, title }) {
                     </div>
                   </div>
 
-                  <div className="form-row row-cols-1 row-cols-md-2">
+                  <div className="form-row row-cols-1 row-cols-md-2 justify-content-center">
                     <div className="col-10">
                       <FormikControl
                         label="Marital Status*"
@@ -173,7 +173,7 @@ function MemberForm({ initialValues, onSubmit, title }) {
                       />
                     </div>
                   </div>
-                  <div className="form-row">
+                  <div className="form-row justify-content-center">
                     <div className="col-10">
                       <FormikControl
                         label="Email Address*"
@@ -206,7 +206,7 @@ function MemberForm({ initialValues, onSubmit, title }) {
                 <div className="col my-4">
                   <HeadingBar title="Church Info" />
 
-                  <div className="form-row row-cols-1 row-cols-md-2">
+                  <div className="form-row row-cols-1 row-cols-md-2 justify-content-center">
                     <div className="col-10">
                       <FormikControl
                         control="combobox2"

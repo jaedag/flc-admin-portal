@@ -10,6 +10,8 @@ import ErrorScreen from '../../components/ErrorScreen'
 import LoadingScreen from '../../components/LoadingScreen'
 import { MemberContext } from '../../contexts/MemberContext'
 import MemberForm from '../../components/reusable-forms/MemberForm'
+import { ADD_MEMBER_TITLE_MUTATION } from 'pages/create/CreateMutations'
+import { filterPastoralTitles } from 'components/reusable-forms/form-utils'
 
 const UpdateMember = () => {
   const { memberId } = useContext(MemberContext)
@@ -23,7 +25,7 @@ const UpdateMember = () => {
   })
 
   const member = memberData?.members[0]
-
+  console.log(member)
   const initialValues = {
     firstName: member?.firstName ?? '',
     middleName: member?.middleName ?? '',
@@ -47,7 +49,15 @@ const UpdateMember = () => {
     ],
     pastoralAppointment: [
       {
-        title: '',
+        title: 'Pastor',
+        date: '',
+      },
+      {
+        title: 'Reverend',
+        date: '',
+      },
+      {
+        title: 'Bishop',
         date: '',
       },
     ],
@@ -56,9 +66,12 @@ const UpdateMember = () => {
   const history = useHistory()
 
   const [UpdateMember] = useMutation(UPDATE_MEMBER_MUTATION)
+  const [AddMemberTitle] = useMutation(ADD_MEMBER_TITLE_MUTATION)
 
   const onSubmit = async (values, onSubmitProps) => {
     //Variables that are not controlled by formik
+
+    const pastoralAppointment = filterPastoralTitles(values.pastoralAppointment)
 
     UpdateMember({
       variables: {
@@ -78,11 +91,20 @@ const UpdateMember = () => {
         bacenta: values.bacenta,
         ministry: values.ministry,
       },
-    })
+    }).then((res) => {
+      AddMemberTitle({
+        variables: {
+          memberId: res.data.UpdateMemberDetails.id,
+          title: pastoralAppointment.map((title) => title.title),
+          status: true,
+          date: pastoralAppointment.map((title) => title.date),
+        },
+      })
 
-    onSubmitProps.setSubmitting(false)
-    onSubmitProps.resetForm()
-    history.push('/member/displaydetails')
+      onSubmitProps.setSubmitting(false)
+      onSubmitProps.resetForm()
+      history.push('/member/displaydetails')
+    })
   }
 
   if (memberError || memberId === '') {

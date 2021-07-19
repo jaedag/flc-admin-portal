@@ -59,22 +59,19 @@ export const CREATE_MEMBER_MUTATION = gql`
 export const ADD_MEMBER_TITLE_MUTATION = gql`
   mutation AddMemberTitle(
     $memberId: ID!
-    $title: String!
-    $status: Boolean
-    $date: String
+    $title: [String] # $status: Boolean # $date: String
   ) {
-    AddMemberTitle(
-      from: { id: $memberId }
-      to: { title: $title }
-      data: { status: $status, yearAppointed: { formatted: $date } }
+    updateMembers(
+      where: { id: $memberId }
+      connect: { title: { where: { title_IN: $title } } }
     ) {
-      from {
+      members {
         id
         firstName
         lastName
-      }
-      to {
-        title
+        title {
+          title
+        }
       }
     }
   }

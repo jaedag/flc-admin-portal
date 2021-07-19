@@ -183,7 +183,7 @@ const ServiceForm = ({
                     <FormikControl
                       control="imageUpload"
                       name="treasurerSelfie"
-                      uploadPreset="treasurer-selfies"
+                      uploadPreset={process.env.CLOUDINARY_TREASURERS}
                       placeholder="Upload Treasurer Selfie"
                       setFieldValue={formik.setFieldValue}
                       aria-describedby="ImageUpload"
@@ -191,7 +191,7 @@ const ServiceForm = ({
                     <FormikControl
                       control="imageUpload"
                       name="servicePicture"
-                      uploadPreset="service-pictures"
+                      uploadPreset={process.env.CLOUDINARY_SERVICES}
                       placeholder="Upload a Picture of Your Service"
                       setFieldValue={formik.setFieldValue}
                       aria-describedby="UploadServicePicture"

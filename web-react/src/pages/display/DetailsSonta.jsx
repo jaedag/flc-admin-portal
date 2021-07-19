@@ -41,7 +41,7 @@ const DisplaySontaDetails = () => {
           subChurch="Basonta Leaders"
           membership={sontaMemberCount}
           churchNo={sontaBasontaLeaderList.length}
-          // editlink="/sonta/editsonta"
+          editlink="/sonta/editsonta"
           history={sontas[0]?.history.length !== 0 && sontas[0]?.history}
           breadcrumb={breadcrumb}
           buttons={['']}

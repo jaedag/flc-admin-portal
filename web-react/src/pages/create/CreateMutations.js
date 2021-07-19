@@ -106,6 +106,13 @@ export const CREATE_BACENTA_MUTATION = gql`
     ) {
       id
       name
+      centre {
+        id
+        bacentas {
+          id
+          name
+        }
+      }
     }
   }
 `

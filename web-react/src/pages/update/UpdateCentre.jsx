@@ -101,7 +101,6 @@ const UpdateCentre = () => {
   const [MakeCentreLeader] = useMutation(MAKE_CENTRE_LEADER)
   const [UpdateCentre] = useMutation(UPDATE_CENTRE_MUTATION, {
     refetchQueries: [
-      { query: DISPLAY_CENTRE, variables: { id: centreId } },
       { query: GET_TOWN_CENTRES, variables: { id: townId } },
       { query: GET_CAMPUS_CENTRES, variables: { id: campusId } },
       {

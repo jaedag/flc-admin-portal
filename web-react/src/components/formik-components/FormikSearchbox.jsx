@@ -8,7 +8,7 @@ import { useHistory } from 'react-router-dom'
 import {
   BISHOP_SEARCH,
   CONSTITUENCY_SEARCH,
-  FEDERAL_NEO_SEARCH,
+  FEDERAL_SEARCH,
 } from '../../pages/mobile/SearchQuery.js'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import { capitalise, isAuthorised } from '../../global-utils'
@@ -46,15 +46,15 @@ function FormikSearchbox(props) {
       }))
     )
   }
-  const [federalSearch] = useLazyQuery(FEDERAL_NEO_SEARCH, {
+  const [federalSearch] = useLazyQuery(FEDERAL_SEARCH, {
     onCompleted: (data) => {
       const combinedData = [
-        ...data.members,
-        ...data.campuses,
-        ...data.towns,
-        ...data.sontas,
-        ...data.centres,
-        ...data.bacentas,
+        ...data.federalMemberSearch,
+        ...data.federalCampusSearch,
+        ...data.federalTownSearch,
+        ...data.federalSontaSearch,
+        ...data.federalCentreSearch,
+        ...data.federalBacentaSearch,
       ]
       if (currentUser.roles.includes('adminFederal')) {
         getSuggestions(combinedData)

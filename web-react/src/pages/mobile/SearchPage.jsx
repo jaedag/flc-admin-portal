@@ -4,7 +4,7 @@ import MobileSearchNav from '../../components/MobileSearchNav.jsx'
 import {
   BISHOP_SEARCH,
   CONSTITUENCY_SEARCH,
-  FEDERAL_NEO_SEARCH,
+  FEDERAL_SEARCH,
 } from './SearchQuery'
 import { MemberContext, SearchContext } from '../../contexts/MemberContext'
 import Spinner from '../../components/Spinner.jsx'
@@ -36,20 +36,21 @@ const SearchPageMobile = () => {
   const searchVars = whichSearch()
 
   const { data: federalData, loading: federalLoading } = useQuery(
-    FEDERAL_NEO_SEARCH,
+    FEDERAL_SEARCH,
     {
       variables: { searchKey: searchVars },
       onCompleted: (data) => {
         if (!isAuthorised(['adminFederal'], currentUser.roles)) {
           return
         }
+
         setCombinedData([
-          ...data.members,
-          ...data.campuses,
-          ...data.towns,
-          ...data.sontas,
-          ...data.centres,
-          ...data.bacentas,
+          ...data.federalMemberSearch,
+          ...data.federalCampusSearch,
+          ...data.federalTownSearch,
+          ...data.federalSontaSearch,
+          ...data.federalCentreSearch,
+          ...data.federalBacentaSearch,
         ])
         return
       },

@@ -1,4 +1,3 @@
-import { parseNeoDate } from 'global-utils'
 import React from 'react'
 import './ServiceDetails.css'
 
@@ -15,11 +14,7 @@ const ServiceDetails = ({ service, church }) => {
               <tbody>
                 <tr>
                   <td>Date of Service</td>
-                  <td>
-                    {new Date(
-                      parseNeoDate(service.serviceDate.date)
-                    ).toDateString()}
-                  </td>
+                  <td>{new Date(service.serviceDate.date).toDateString()}</td>
                 </tr>
                 <tr>
                   <td>Attendance</td>

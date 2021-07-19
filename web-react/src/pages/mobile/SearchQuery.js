@@ -66,62 +66,62 @@ export const FEDERAL_SEARCH = gql`
         }
       }
     }
-    # federalMemberSearch(searchKey: $searchKey) {
-    #   id
-    #   firstName
-    #   lastName
-    #   pictureUrl
-    #   bacenta {
-    #     id
-    #     name
-    #     leader {
-    #       id
-    #       firstName
-    #       lastName
-    #     }
-    #     centre {
-    #       id
-    #       town {
-    #         id
-    #         bishop {
-    #           id
-    #         }
-    #       }
-    #       campus {
-    #         id
-    #         bishop {
-    #           id
-    #         }
-    #       }
-    #     }
-    #   }
-    #   ministry {
-    #     id
-    #     name
-    #   }
-    #   leadsCampus {
-    #     id
-    #     name
-    #     bishop {
-    #       id
-    #     }
-    #   }
-    #   leadsTown {
-    #     id
-    #     name
-    #     bishop {
-    #       id
-    #     }
-    #   }
-    #   townBishop {
-    #     id
-    #     name
-    #   }
-    #   campusBishop {
-    #     id
-    #     name
-    #   }
-    # }
+    federalMemberSearch(searchKey: $searchKey) {
+      id
+      firstName
+      lastName
+      pictureUrl
+      bacenta {
+        id
+        name
+        leader {
+          id
+          firstName
+          lastName
+        }
+        centre {
+          id
+          town {
+            id
+            bishop {
+              id
+            }
+          }
+          campus {
+            id
+            bishop {
+              id
+            }
+          }
+        }
+      }
+      ministry {
+        id
+        name
+      }
+      leadsCampus {
+        id
+        name
+        bishop {
+          id
+        }
+      }
+      leadsTown {
+        id
+        name
+        bishop {
+          id
+        }
+      }
+      townBishop {
+        id
+        name
+      }
+      campusBishop {
+        id
+        name
+      }
+    }
   }
 `
 
@@ -189,160 +189,6 @@ export const CONSTITUENCY_SEARCH = gql`
       lastName
       fullName
       pictureUrl
-    }
-  }
-`
-
-export const FEDERAL_NEO_SEARCH = gql`
-  query federalSearch($searchKey: String) {
-    sontas(
-      where: {
-        OR: [{ name_STARTS_WITH: $searchKey }, { name_CONTAINS: $searchKey }]
-      }
-    ) {
-      id
-      name
-      town {
-        id
-        bishop {
-          id
-        }
-      }
-      campus {
-        bishop {
-          id
-        }
-      }
-    }
-    towns(
-      where: {
-        OR: [{ name_STARTS_WITH: $searchKey }, { name_CONTAINS: $searchKey }]
-      }
-    ) {
-      id
-      name
-      bishop {
-        id
-      }
-    }
-    campuses(
-      where: {
-        OR: [{ name_STARTS_WITH: $searchKey }, { name_CONTAINS: $searchKey }]
-      }
-    ) {
-      id
-      name
-      bishop {
-        id
-      }
-    }
-    centres(
-      where: {
-        OR: [{ name_STARTS_WITH: $searchKey }, { name_CONTAINS: $searchKey }]
-      }
-    ) {
-      id
-      name
-      town {
-        id
-        bishop {
-          id
-        }
-      }
-      campus {
-        id
-        bishop {
-          id
-        }
-      }
-    }
-    bacentas(
-      where: {
-        OR: [{ name_STARTS_WITH: $searchKey }, { name_CONTAINS: $searchKey }]
-      }
-    ) {
-      id
-      name
-      centre {
-        id
-        town {
-          id
-          bishop {
-            id
-          }
-        }
-        campus {
-          id
-          bishop {
-            id
-          }
-        }
-      }
-    }
-    members(
-      where: {
-        OR: [
-          { firstName_STARTS_WITH: $searchKey }
-          { firstName_CONTAINS: $searchKey }
-          { lastName_CONTAINS: $searchKey }
-          { lastName_CONTAINS: $searchKey }
-        ]
-      }
-    ) {
-      id
-      firstName
-      lastName
-      pictureUrl
-      bacenta {
-        id
-        name
-        leader {
-          id
-          firstName
-          lastName
-        }
-        centre {
-          id
-          town {
-            id
-            bishop {
-              id
-            }
-          }
-          campus {
-            id
-            bishop {
-              id
-            }
-          }
-        }
-      }
-      ministry {
-        id
-        name
-      }
-      leadsCampus {
-        id
-        name
-        bishop {
-          id
-        }
-      }
-      leadsTown {
-        id
-        name
-        bishop {
-          id
-        }
-      }
-      townBishop {
-        id
-        name
-      }
-      campusBishop {
-        id
-        name
-      }
     }
   }
 `

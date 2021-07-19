@@ -55,6 +55,11 @@ export const LOG_CENTRE_HISTORY = gql`
     ) {
       id
       name
+      leader {
+        id
+        firstName
+        lastName
+      }
       history {
         id
         historyRecord
@@ -86,6 +91,11 @@ export const LOG_CAMPUSTOWN_HISTORY = gql`
     ) {
       id
       name
+      leader {
+        id
+        firstName
+        lastName
+      }
       history {
         id
         historyRecord
@@ -117,6 +127,11 @@ export const LOG_SONTA_HISTORY = gql`
     ) {
       id
       name
+      leader {
+        id
+        firstName
+        lastName
+      }
       history {
         id
         historyRecord

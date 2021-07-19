@@ -40,7 +40,7 @@ const SideBar = () => {
     setFilters(values)
     onSubmitProps.setSubmitting(false)
 
-    location.pathname === '/filter-members' && history.push('/mb-members')
+    location.pathname === '/filter-members' && history.push('/members')
   }
 
   return (

@@ -187,14 +187,14 @@ type ServiceRecord @auth(rules: [{ isAuthenticated: true }]) {
   created_at: Date
   created_by: Member @relationship(type: "LOGGED_BY", direction: OUT)
   serviceDate: TimeGraph @relationship(type: "SERVICE_HELD_ON", direction: OUT)
-  week: String
+  week: Int
     @cypher(
       statement: """
       MATCH (this)-[:SERVICE_HELD_ON]->(date:TimeGraph)
-      RETURN toString(date(date.date).week)
+      RETURN date(date.date).week
       """
     )
-  attendance: Date!
+  attendance: Int!
   income: Float!
   foreignCurrency: String
   servicePicture: String
@@ -220,14 +220,14 @@ type ServiceLog @auth(rules: [{ isAuthenticated: true }]) {
 }
 
 type ComponentServiceAggregate {
-  week: Date!
-  attendance: Date!
-  income: Date!
+  week: Int!
+  attendance: Int!
+  income: Float!
 }
 
 type HistoryLog @auth(rules: [{ isAuthenticated: true }]) {
   id: ID @id
-  timeStamp: Date
+  timeStamp: DateTime
   historyRecord: String #leader was transferred to
   created_at: TimeGraph @relationship(type: "RECORDED_ON", direction: OUT)
   loggedBy: Member @relationship(type: "LOGGED_BY", direction: OUT)
@@ -776,7 +776,7 @@ type Query {
       """
     )
 
-  federalMemberSearch(searchKey: String!): [Member]
+  federalMemberSearch(searchKey: String): [Member]
     @auth(rules: [{ roles: ["adminFederal"] }])
     @cypher(
       statement: """
@@ -787,7 +787,7 @@ type Query {
       OR toLower(member.lastName) STARTS WITH toLower($searchKey)
       OR toLower(member.firstName) CONTAINS toLower($searchKey)
       OR toLower(member.lastName) CONTAINS toLower($searchKey)
-      OR toLower(member.firstName + " " + member.lastName) CONTAINS toLower($searchKey)
+      OR toLower(member.firstName + ' ' + member.lastName) CONTAINS toLower($searchKey)
       RETURN member LIMIT 5
       """
     )
@@ -1347,7 +1347,7 @@ type Mutation {
       """
     )
 
-  UpdateTownDetails(townId: ID!, townName: String!, bishopId: ID!): Member
+  UpdateTownDetails(townId: ID!, townName: String!, bishopId: ID!): Town
     @auth(rules: [{ roles: ["adminFederal", "adminBishop"] }])
     @cypher(
       statement: """
@@ -1365,14 +1365,14 @@ type Mutation {
          	}
 
       MATCH (town)<-[:LEADS]-(leader:Member)
-      RETURN leader
+      RETURN town
       """
     )
   UpdateCampusDetails(
     campusId: ID!
     campusName: String!
     bishopId: ID!
-  ): Member
+  ): Campus
     @auth(rules: [{ roles: ["adminFederal", "adminBishop"] }])
     @cypher(
       statement: """
@@ -1390,14 +1390,14 @@ type Mutation {
               	RETURN count(campus)
               	}
       MATCH (campus)<-[:LEADS]-(leader:Member)
-      RETURN leader
+      RETURN campus
       """
     )
   UpdateCentreDetails(
     centreId: ID!
     centreName: String!
     campusTownId: ID!
-  ): Member
+  ): Centre
     @auth(
       rules: [{ roles: ["adminFederal", "adminBishop", "adminConstituency"] }]
     )
@@ -1417,7 +1417,7 @@ type Mutation {
          	RETURN count(centre)
          	}
       MATCH (centre)<-[:LEADS]-(leader:Member)
-      RETURN leader
+      RETURN centre
       """
     )
   UpdateBacentaDetails(
@@ -1426,7 +1426,7 @@ type Mutation {
     meetingDay: String
     venueLongitude: Float
     venueLatitude: Float
-  ): Member
+  ): Bacenta
     @auth(
       rules: [{ roles: ["adminFederal", "adminBishop", "adminConstituency"] }]
     )
@@ -1447,7 +1447,7 @@ type Mutation {
                      	RETURN count(bacenta)
                      	}
       MATCH (bacenta)-[:LEADS]-(leader:Member)
-      RETURN leader
+      RETURN bacenta
       """
     )
   #DIFFERENT LOG HISTORY MUTATIONS

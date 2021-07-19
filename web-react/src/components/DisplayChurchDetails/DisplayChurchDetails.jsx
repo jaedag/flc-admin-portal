@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import DetailsCard from '../card/DetailsCard'
 import { MemberContext } from '../../contexts/MemberContext'
 import { ChurchContext } from '../../contexts/ChurchContext'
@@ -48,6 +48,18 @@ const DisplayChurchDetails = (props) => {
   const isConstituency = churchType === 'Campus' || churchType === 'Town'
   const { setMemberId } = useContext(MemberContext)
   const { clickCard, campusId, townId, bishopId } = useContext(ChurchContext)
+  const location = useLocation()
+
+  //Setting the editing permission based on url
+  let permittedRoles = ['adminFederal', 'adminBishop']
+  if (
+    location.pathname === '/bacenta/editbacenta' ||
+    location.pathname === '/centre/editcentre' ||
+    location.pathname === '/sonta/editsonta'
+  ) {
+    permittedRoles.push('adminConstituency')
+  }
+
   //Change Admin Initialised
 
   const [MakeTownAdmin] = useMutation(MAKE_TOWN_ADMIN)
@@ -110,7 +122,7 @@ const DisplayChurchDetails = (props) => {
           <Breadcrumb breadcrumb={breadcrumb} />
           <h3 className="mx-3 mt-3 font-weight-bold">
             {`${name} ${churchType}`}
-            <RoleView roles={['adminFederal', 'adminBishop']}>
+            <RoleView roles={permittedRoles}>
               <EditButton link={editlink} />
             </RoleView>
           </h3>

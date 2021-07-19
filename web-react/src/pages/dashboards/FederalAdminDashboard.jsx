@@ -7,6 +7,8 @@ import NavBar from '../../components/nav/NavBar'
 import Spinner from '../../components/Spinner.jsx'
 import Logo from '../../img/flc-logo-small.png'
 import { MemberContext } from '../../contexts/MemberContext'
+import TabletDesktopView from 'components/responsive-design/TabletDesktopView'
+import MobileView from 'components/responsive-design/MobileView'
 
 const FederalAdminDashboard = () => {
   const { determineStream } = useContext(ChurchContext)
@@ -20,48 +22,52 @@ const FederalAdminDashboard = () => {
     return (
       <>
         <NavBar />
-        <div className="container text-center my-5  d-none d-lg-block">
-          <img
-            src={Logo}
-            alt="logo"
-            className="img-fluid mx-auto"
-            style={{ maxWidth: '30%' }}
-          />
-          <h3>FLC Admin Dashboard </h3>
-          <h5 className="text-secondary">Loading...</h5>
-          <div className="spinner-border-center full-center" role="status">
-            <Spinner />
-            <div className="sr-only">Loading...</div>
+        <TabletDesktopView>
+          <div className="container text-center my-5">
+            <img
+              src={Logo}
+              alt="logo"
+              className="img-fluid mx-auto"
+              style={{ maxWidth: '30%' }}
+            />
+            <h3>FLC Admin Dashboard </h3>
+            <h5 className="text-secondary">Loading...</h5>
+            <div className="spinner-border-center full-center" role="status">
+              <Spinner />
+              <div className="sr-only">Loading...</div>
+            </div>
           </div>
-        </div>
-        <div className="container d-lg-none">
-          {/* <!--Mobile--> */}
-          <div className="row d-flex align-items-center justify-content-center d-lg-none">
-            <div className="col-12 col-lg-6">
-              <img
-                src={Logo}
-                alt="logo"
-                className="img-fluid mx-auto d-block d-lg-none"
-                style={{ maxWidth: '30%' }}
-              />
-              <div className="text-center">
-                <h3>FLC Admin Dashboard</h3>
-                <h5 className="text-secondary mt-5">Loading...</h5>
-                <div
-                  className="spinner-border-center full-center mb-5"
-                  role="status"
-                >
-                  <Spinner />
-                  <div className="sr-only">Loading...</div>
+        </TabletDesktopView>
+
+        <MobileView>
+          <div className="container">
+            <div className="row d-flex align-items-center justify-content-center ">
+              <div className="col-12 col-lg-6">
+                <img
+                  src={Logo}
+                  alt="logo"
+                  className="img-fluid mx-auto d-block "
+                  style={{ maxWidth: '30%' }}
+                />
+                <div className="text-center">
+                  <h3>FLC Admin Dashboard</h3>
+                  <h5 className="text-secondary mt-5">Loading...</h5>
+                  <div
+                    className="spinner-border-center full-center mb-5"
+                    role="status"
+                  >
+                    <Spinner />
+                    <div className="sr-only">Loading...</div>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div className="col-12 col-lg-6 d-flex justify-content-center my-3 ">
-              <div className="d-lg-none flex-grow-1" />
+              <div className="col-12 col-lg-6 d-flex justify-content-center my-3 ">
+                <div className=" flex-grow-1" />
+              </div>
             </div>
           </div>
-        </div>
+        </MobileView>
       </>
     )
   } else if (data) {

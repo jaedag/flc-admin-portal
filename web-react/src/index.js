@@ -43,7 +43,7 @@ import ProtectedRoute from './auth/ProtectedRoute.jsx'
 import ProtectedRouteHome from './auth/ProtectedRouteHome.jsx'
 import ProtectedMembersRoute from './auth/ProtectedMembersRoute.jsx'
 import MemberFiltersMobile from './pages/mobile/MemberFilters'
-import MemberTableMobile from './components/MemberTableMobile.jsx'
+// import MobileMemberTable from './components/members-grids/MobileMemberTable'
 import UserProfileDisplayPage from './pages/user-profile/DisplayPage'
 import UserProfileEditPage from './pages/user-profile/EditPage'
 import CreateSonta from './pages/create/CreateSonta'
@@ -62,6 +62,7 @@ import CampusService from 'pages/record-service/CampusService'
 import CampusServiceDetails from 'pages/record-service/CampusServiceDetails'
 import CampusReport from 'pages/reports/CampusReport'
 import CacheBuster from 'CacheBuster'
+import MemberTable from 'components/members-grids/MemberTable'
 
 const AppWithApollo = () => {
   const [accessToken, setAccessToken] = useState()
@@ -575,7 +576,7 @@ const PastorsAdmin = () => {
               <ProtectedMembersRoute
                 roles={['adminFederal', 'adminBishop', 'adminConstituency']}
                 path="/mb-members"
-                component={MemberTableMobile}
+                component={MemberTable}
                 exact
               />
               <ProtectedRoute

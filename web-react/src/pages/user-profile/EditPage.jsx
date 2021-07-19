@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/client'
-import { parsePhoneNum, parseNeoDate } from '../../global-utils'
+import { parsePhoneNum } from '../../global-utils'
 
 import { UPDATE_MEMBER_MUTATION } from '../update/UpdateMutations'
 import { DISPLAY_MEMBER } from '../display/ReadQueries'
@@ -31,7 +31,7 @@ const UserProfileEditPage = () => {
     phoneNumber: member?.phoneNumber ? `+${member?.phoneNumber}` : '',
     whatsappNumber: member?.whatsappNumber ? `+${member?.whatsappNumber}` : '',
     email: member?.email ? member?.email : '',
-    dob: member?.dob ? parseNeoDate(member?.dob.date) : '',
+    dob: member?.dob ? member?.dob.date : '',
     maritalStatus: member?.maritalStatus ? member?.maritalStatus.status : '',
     occupation: member?.occupation ? member?.occupation.occupation : '',
     pictureUrl: member?.pictureUrl ? member?.pictureUrl : '',
@@ -52,11 +52,7 @@ const UserProfileEditPage = () => {
     ],
   }
 
-  const [UpdateMember] = useMutation(UPDATE_MEMBER_MUTATION, {
-    refetchQueries: [
-      { query: DISPLAY_MEMBER, variables: { id: currentUser.id } },
-    ],
-  })
+  const [UpdateMember] = useMutation(UPDATE_MEMBER_MUTATION)
 
   const onSubmit = async (values, onSubmitProps) => {
     //Variables that are not controlled by formik

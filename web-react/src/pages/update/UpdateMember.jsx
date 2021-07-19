@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/client'
 
-import { parsePhoneNum, parseNeoDate } from '../../global-utils'
+import { parsePhoneNum } from '../../global-utils'
 import { UPDATE_MEMBER_MUTATION } from './UpdateMutations'
 import { DISPLAY_MEMBER } from '../display/ReadQueries'
 import NavBar from '../../components/nav/NavBar'
@@ -25,7 +25,7 @@ const UpdateMember = () => {
   })
 
   const member = memberData?.members[0]
-  console.log(member)
+
   const initialValues = {
     firstName: member?.firstName ?? '',
     middleName: member?.middleName ?? '',
@@ -34,7 +34,7 @@ const UpdateMember = () => {
     phoneNumber: member?.phoneNumber ? `+${member?.phoneNumber}` : '',
     whatsappNumber: member?.whatsappNumber ? `+${member?.whatsappNumber}` : '',
     email: member?.email ?? '',
-    dob: member?.dob ? parseNeoDate(member.dob.date) : '',
+    dob: member?.dob ? member.dob.date : '',
     maritalStatus: member?.maritalStatus?.status ?? '',
     occupation: member?.occupation?.occupation ?? '',
     pictureUrl: member?.pictureUrl ?? '',

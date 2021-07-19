@@ -42,6 +42,184 @@ export const UPDATE_MEMBER_MUTATION = gql`
       phoneNumber
       whatsappNumber
       pictureUrl
+      gender {
+        gender
+      }
+      maritalStatus {
+        status
+      }
+      dob {
+        date
+      }
+      bishop {
+        id
+        firstName
+        lastName
+        fullName
+      }
+      bacenta {
+        id
+        name
+        leader {
+          firstName
+          lastName
+        }
+        centre {
+          id
+          name
+          town {
+            id
+            name
+            bishop {
+              id
+              firstName
+              lastName
+              fullName
+            }
+          }
+          campus {
+            id
+            name
+            bishop {
+              id
+              firstName
+              lastName
+              fullName
+            }
+          }
+        }
+      }
+      ministry {
+        id
+        name
+        leader {
+          firstName
+          lastName
+        }
+      }
+      occupation {
+        occupation
+      }
+      title {
+        title
+      }
+      history(options: { limit: 3 }) {
+        id
+        timeStamp
+        created_at {
+          date
+        }
+        loggedBy {
+          id
+          firstName
+          lastName
+        }
+        historyRecord
+      }
+      leadsBacenta {
+        id
+        name
+        leader {
+          firstName
+          lastName
+        }
+        centre {
+          id
+          name
+          town {
+            id
+            name
+            bishop {
+              firstName
+              lastName
+            }
+          }
+          campus {
+            id
+            name
+            bishop {
+              firstName
+              lastName
+            }
+          }
+        }
+      }
+      leadsCentre {
+        id
+        name
+        town {
+          id
+          name
+          bishop {
+            id
+            firstName
+            lastName
+          }
+        }
+        campus {
+          id
+          name
+          bishop {
+            id
+            firstName
+            lastName
+          }
+        }
+      }
+      leadsTown {
+        id
+        name
+        bishop {
+          id
+          firstName
+          lastName
+        }
+      }
+      leadsCampus {
+        id
+        name
+        bishop {
+          id
+          firstName
+          lastName
+        }
+      }
+      leadsSonta {
+        id
+        name
+      }
+      leadsBasonta {
+        id
+        name
+        sonta {
+          id
+        }
+      }
+      leadsMinistry {
+        id
+        name
+      }
+      townBishop {
+        id
+        name
+      }
+      campusBishop {
+        id
+        name
+      }
+      isBishopAdminFor {
+        id
+        firstName
+        lastName
+      }
+      isCampusAdminFor {
+        id
+        name
+      }
+      isTownAdminFor {
+        id
+        name
+      }
     }
   }
 `
@@ -54,9 +232,78 @@ export const UPDATE_TOWN_MUTATION = gql`
       bishopId: $bishopId
     ) {
       id
-      firstName
-      lastName
-      whatsappNumber
+      name
+      centres {
+        id
+        name
+        town {
+          id
+          name
+          bishop {
+            id
+          }
+        }
+        campus {
+          id
+          name
+          bishop {
+            id
+          }
+        }
+      }
+      sontas {
+        id
+        name
+      }
+      admin {
+        id
+        firstName
+        lastName
+        bacenta {
+          id
+          centre {
+            id
+            town {
+              id
+              name
+              bishop {
+                id
+              }
+            }
+            campus {
+              id
+              name
+              bishop {
+                id
+              }
+            }
+          }
+        }
+      }
+      bishop {
+        id
+        firstName
+        lastName
+        fullName
+      }
+      leader {
+        id
+        firstName
+        lastName
+      }
+      history(options: { limit: 10 }) {
+        id
+        timeStamp
+        created_at {
+          date
+        }
+        loggedBy {
+          id
+          firstName
+          lastName
+        }
+        historyRecord
+      }
     }
   }
 `
@@ -69,9 +316,78 @@ export const UPDATE_CAMPUS_MUTATION = gql`
       bishopId: $bishopId
     ) {
       id
-      firstName
-      lastName
-      whatsappNumber
+      name
+      centres {
+        id
+        name
+        town {
+          id
+          name
+          bishop {
+            id
+          }
+        }
+        campus {
+          id
+          name
+          bishop {
+            id
+          }
+        }
+      }
+      sontas {
+        id
+        name
+      }
+      admin {
+        id
+        firstName
+        lastName
+        bacenta {
+          id
+          centre {
+            id
+            town {
+              id
+              name
+              bishop {
+                id
+              }
+            }
+            campus {
+              id
+              name
+              bishop {
+                id
+              }
+            }
+          }
+        }
+      }
+      bishop {
+        id
+        firstName
+        lastName
+        fullName
+      }
+      leader {
+        id
+        firstName
+        lastName
+      }
+      history(options: { limit: 10 }) {
+        id
+        timeStamp
+        created_at {
+          date
+        }
+        loggedBy {
+          id
+          firstName
+          lastName
+        }
+        historyRecord
+      }
     }
   }
 `
@@ -88,9 +404,67 @@ export const UPDATE_CENTRE_MUTATION = gql`
       campusTownId: $campusTownId
     ) {
       id
-      firstName
-      lastName
-      whatsappNumber
+      name
+      bacentas {
+        id
+        name
+        centre {
+          id
+          name
+          town {
+            id
+            bishop {
+              id
+            }
+          }
+          campus {
+            id
+            bishop {
+              id
+            }
+          }
+        }
+      }
+      town {
+        id
+        name
+        bishop {
+          id
+          firstName
+          lastName
+        }
+      }
+      campus {
+        id
+        name
+        bishop {
+          id
+          firstName
+          lastName
+        }
+      }
+      leader {
+        id
+        firstName
+        lastName
+        whatsappNumber
+        title {
+          title
+        }
+      }
+      history(options: { limit: 10 }) {
+        id
+        timeStamp
+        created_at {
+          date
+        }
+        loggedBy {
+          id
+          firstName
+          lastName
+        }
+        historyRecord
+      }
     }
   }
 `
@@ -111,9 +485,54 @@ export const UPDATE_BACENTA = gql`
       venueLongitude: $venueLongitude
     ) {
       id
-      firstName
-      lastName
-      whatsappNumber
+      name
+      meetingDay {
+        day
+      }
+      centre {
+        id
+        name
+        town {
+          id
+          name
+          bishop {
+            id
+            firstName
+            lastName
+          }
+        }
+        campus {
+          id
+          name
+          bishop {
+            id
+            firstName
+            lastName
+          }
+        }
+      }
+      leader {
+        id
+        firstName
+        lastName
+        whatsappNumber
+        title {
+          title
+        }
+      }
+      history(options: { limit: 10 }) {
+        id
+        timeStamp
+        created_at {
+          date
+        }
+        loggedBy {
+          id
+          firstName
+          lastName
+        }
+        historyRecord
+      }
     }
   }
 `

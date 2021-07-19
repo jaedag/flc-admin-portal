@@ -1,11 +1,11 @@
 import React, { useContext, useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import NavBar from './nav/NavBar'
-import SideBar from './SideBar.jsx'
-import MemberTable from './MemberTable.jsx'
-import { ChurchContext } from '../contexts/ChurchContext'
-import { memberFilter } from './member-filter-utils'
-import { debounce } from '../global-utils'
+import NavBar from '../nav/NavBar'
+import SideBar from '../SideBar.jsx'
+import MemberTable from '../members-grids/MemberTable'
+import { memberFilter } from '../member-filter-utils'
+import { debounce } from '../../global-utils'
+import { ChurchContext } from 'contexts/ChurchContext'
 
 const MembersGrid = (props) => {
   const { memberData, memberError, memberLoading, title } = props

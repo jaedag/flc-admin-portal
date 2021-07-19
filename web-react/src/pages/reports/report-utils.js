@@ -1,4 +1,4 @@
-import { average, parseNeoDate } from 'global-utils'
+import { average } from 'global-utils'
 
 const numberOfWeeks = 4
 export const getMonthlyStatAverage = (data, stat) => {
@@ -36,9 +36,9 @@ export const getServiceGraphData = (church) => {
     if (array[0]?.__typename === 'ComponentServiceAggregate') {
       array.map((record) => {
         data.push({
-          date: parseNeoDate(record?.serviceDate),
-          week: record.week.low,
-          attendance: record.attendance?.low || record.attendance,
+          date: record?.serviceDate,
+          week: record.week,
+          attendance: record.attendance,
           income: record.income,
         })
       })
@@ -48,11 +48,9 @@ export const getServiceGraphData = (church) => {
 
     array.map((record) => {
       data.push({
-        date: record?.serviceDate?.date
-          ? parseNeoDate(record?.serviceDate?.date)
-          : record.date,
+        date: record?.serviceDate?.date || record.date,
         week: record.week,
-        attendance: record.attendance?.low || record.attendance,
+        attendance: record.attendance,
         income: record.income,
       })
     })

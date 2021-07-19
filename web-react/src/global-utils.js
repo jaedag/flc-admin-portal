@@ -81,21 +81,18 @@ export const makeSelectOptions = (data) => {
     key: data.name ? data.name : data.firstName + ' ' + data.lastName,
   }))
 }
-function pad(d) {
-  return d < 10 ? '0' + d.toString() : d.toString()
-}
-export const parseNeoDate = (date) => {
-  if (!date) {
-    return
-  }
 
-  return `${date.year.low}-${pad(date.month.low)}-${pad(date.day.low)}`
-}
 export const parseNeoTime = (time) => {
   if (!time) {
     return
   }
-  return `${pad(time.hour.low)}:${pad(time.minute.low)}`
+  let data = new Date(time)
+  let hrs = data.getHours()
+  let mins = data.getMinutes()
+  if (hrs <= 9) hrs = '0' + hrs
+  if (mins < 10) mins = '0' + mins
+  const postTime = hrs + ':' + mins
+  return postTime
 }
 
 export const parseDate = (date) => {
@@ -105,7 +102,7 @@ export const parseDate = (date) => {
   let todaysDate = new Date()
 
   // Create date from input value
-  let inputDate = new Date(parseNeoDate(date))
+  let inputDate = new Date(date)
 
   // call setHours to take the time out of the comparison
   if (inputDate.toDateString() === todaysDate.toDateString()) {
@@ -165,14 +162,11 @@ export const getNameWithTitle = (member) => {
 
 export const getMemberDob = (displayMember) => {
   if (displayMember.dob?.date) {
-    return new Date(parseNeoDate(displayMember.dob?.date)).toLocaleDateString(
-      'en-gb',
-      {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      }
-    )
+    return new Date(displayMember.dob?.date).toLocaleDateString('en-gb', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    })
   } else return null
 }
 

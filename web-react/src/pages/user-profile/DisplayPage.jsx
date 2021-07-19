@@ -290,7 +290,7 @@ const UserProfileDisplayPage = () => {
                             </div>
                             <div className="col">
                               <p className="font-weight-bold card-text">
-                                {displayMember.title[0].Title.title}
+                                {displayMember.title[0].title}
                               </p>
                             </div>
                           </div>
@@ -302,7 +302,7 @@ const UserProfileDisplayPage = () => {
                             </div>
                             <div className="col">
                               <p className="font-weight-bold card-text">
-                                {`${displayMember.title[0].yearAppointed.year}`}
+                                {`${displayMember.title[0]?.yearAppointed?.year}`}
                               </p>
                             </div>
                           </div>

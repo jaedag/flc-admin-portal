@@ -6,8 +6,8 @@ import './Dashboards.css'
 import { MemberContext } from 'contexts/MemberContext'
 import { useQuery } from '@apollo/client'
 import { SERVANTS_DASHBOARD } from './DashboardQueries'
-import LoadingScreen from 'components/LoadingScreen'
-import ErrorScreen from 'components/ErrorScreen'
+import LoadingScreen from 'components/base-component/LoadingScreen'
+import ErrorScreen from 'components/base-component/ErrorScreen'
 import RoleCard from './RoleCard'
 import {
   getServiceGraphData,
@@ -15,6 +15,7 @@ import {
 } from '../reports/report-utils'
 import { ChurchContext } from 'contexts/ChurchContext'
 import StatDisplay from 'pages/reports/CompStatDisplay'
+import { authorisedLink, plural } from 'global-utils'
 
 const ServantsDashboard = () => {
   const { memberId, currentUser } = useContext(MemberContext)
@@ -36,101 +37,125 @@ const ServantsDashboard = () => {
     let roles = []
     let assessmentChurchData, assessmentChurch
 
+    const setServantRoles = (servant, servantType, churchType) => {
+      let verb
+
+      switch (servantType) {
+        case 'Leader':
+          verb = `leads${churchType}`
+          break
+        case 'Admin':
+          verb = `isAdminFor${churchType}`
+          break
+        case 'Bishop':
+          verb = `isBishopFor${churchType}`
+          break
+        default:
+          break
+      }
+
+      if (servantType === 'Bishop') {
+        roles.push({
+          name: 'Bishop',
+          number: `${churchType} Bishop`,
+          clickCard: () => {
+            clickCard(servant[`${verb}`][0])
+          },
+          link: authorisedLink(
+            currentUser,
+            ['adminFederal', 'adminBishop', 'leaderBishop'],
+            '/dashboard'
+          ),
+        })
+        return
+      }
+
+      if (churchType === 'Bishop' && servantType === 'Admin') {
+        roles.push({
+          name: 'Admin',
+          number: 'Bishop Admin',
+          clickCard: () => {
+            clickCard(servant[`${verb}`][0])
+          },
+          link: authorisedLink(
+            currentUser,
+            ['adminFederal', 'adminBishop'],
+            '/dashboard'
+          ),
+        })
+        return
+      }
+
+      if (servantType === 'Admin') {
+        const adminsOneChurch = servant[`${verb}`].length === 1 ?? false
+        roles.push({
+          name: 'Admin',
+          number: `${churchType} Admin`,
+          clickCard: () => {
+            clickCard(servant[`${verb}`][0])
+          },
+          link: authorisedLink(
+            currentUser,
+            ['adminFederal', 'adminBishop', 'adminConstituency'],
+            adminsOneChurch
+              ? `/${churchType.toLowerCase()}/displaydetails`
+              : `/servants/${churchType.toLowerCase()}-list`
+          ),
+        })
+        assessmentChurch = servant[`${verb}`][0]
+        return
+      }
+
+      const leadsOneChurch = servant[`${verb}`].length === 1 ?? false
+      roles.push({
+        name: leadsOneChurch ? churchType : plural(churchType),
+        number: servant[`${verb}`]?.length,
+        clickCard: () => {
+          clickCard(servant[`${verb}`][0])
+        },
+        link: leadsOneChurch
+          ? `/${churchType.toLowerCase()}/reports`
+          : `/servants/${churchType.toLowerCase()}-list`,
+      })
+      assessmentChurch = servant[`${verb}`][0]
+    }
+
     const getServantRoles = (servant) => {
       if (servant.leadsBacenta?.length) {
-        const leadsOneChurch = servant.leadsBacenta.length === 1 ?? false
-        roles.push({
-          name: leadsOneChurch ? 'Bacenta' : 'Bacentas',
-          number: servant.leadsBacenta.length,
-          clickCard: () => {
-            clickCard(servant.leadsBacenta[0])
-          },
-          link: leadsOneChurch ? '/bacenta/reports' : '/servants/bacenta-list',
-        })
-        assessmentChurch = servant.leadsBacenta[0]
+        setServantRoles(servant, 'Leader', 'Bacenta')
       }
       if (servant.leadsCentre?.length) {
-        const leadsOneChurch = servant.leadsCentre.length === 1 ?? false
-        roles.push({
-          name: leadsOneChurch ? 'Centre' : 'Centres',
-          number: servant.leadsCentre.length,
-          clickCard: () => {
-            clickCard(servant.leadsCentre[0])
-          },
-          link: leadsOneChurch ? '/centre/reports' : '/servants/centre-list',
-        })
-        assessmentChurch = servant.leadsCentre[0]
+        setServantRoles(servant, 'Leader', 'Centre')
       }
       if (servant.leadsTown?.length) {
-        const leadsOneChurch = servant.leadsTown.length === 1 ?? false
-        roles.push({
-          name: leadsOneChurch ? 'Town' : 'Towns',
-          number: servant.leadsTown.length,
-          clickCard: () => {
-            clickCard(servant.leadsTown[0])
-          },
-          link: leadsOneChurch ? '/town/reports' : '/servants/town-list',
-        })
-        assessmentChurch = servant.leadsTown[0]
+        setServantRoles(servant, 'Leader', 'Town')
       }
       if (servant.leadsCampus?.length) {
-        const leadsOneChurch = servant.leadsCampus.length === 1 ?? false
-        roles.push({
-          name: leadsOneChurch ? 'Campus' : 'Campuses',
-          number: servant.leadsCampus.length,
-          clickCard: () => {
-            clickCard(servant.leadsCampus[0])
-          },
-          link: leadsOneChurch ? '/campus/reports' : '/servants/campus-list',
-        })
-        assessmentChurch = servant.leadsCampus[0]
+        setServantRoles(servant, 'Leader', 'Campus')
       }
       if (servant.leadsSonta?.length) {
-        roles.push({ name: 'Sontas', number: servant.leadsSonta.length })
-        assessmentChurchData = getServiceGraphData(servant.leadsBacenta)
+        setServantRoles(servant, 'Leader', 'Sonta')
       }
       if (servant.leadsBasonta?.length) {
-        roles.push({ name: 'Basontas', number: servant.leadsBasonta.length })
+        setServantRoles(servant, 'Leader', 'Basonta')
       }
       if (servant.leadsMinistry?.length) {
-        roles.push({ name: 'Ministries', number: servant.leadsMinistry.length })
+        setServantRoles(servant, 'Leader', 'Ministry')
       }
-      if (servant.townBishop?.length) {
-        roles.push({ name: 'Campus Bishop', number: 'Bishop' })
+      if (servant.isBishopForTown?.length) {
+        setServantRoles(servant, 'Bishop', 'Town')
       }
-      if (servant.campusBishop?.length) {
-        roles.push({ name: 'Town Bishop', number: 'Bishop' })
+      if (servant.isBishopForCampus?.length) {
+        setServantRoles(servant, 'Bishop', 'Campus')
       }
-      if (servant.isBishopAdminFor?.length) {
-        roles.push({ name: 'Admin', number: 'Bishops Admin' })
+      if (servant.isAdminForBishop?.length) {
+        setServantRoles(servant, 'Admin', 'Bishop')
       }
-      if (servant.isCampusAdminFor?.length) {
-        const adminsOneChurch = servant.isCampusAdminFor.length === 1 ?? false
-        roles.push({
-          name: 'Admin',
-          number: 'Campus Admin',
-          clickCard: () => {
-            clickCard(servant.isCampusAdminFor[0])
-          },
-          link: adminsOneChurch
-            ? '/campus/displaydetails'
-            : '/servants/campus-list',
-        })
-        assessmentChurch = servant.isCampusAdminFor[0]
+      if (servant.isAdminForCampus?.length) {
+        setServantRoles(servant, 'Admin', 'Campus')
       }
-      if (servant.isTownAdminFor?.length) {
-        const adminsOneChurch = servant.isTownAdminFor.length === 1 ?? false
-        roles.push({
-          name: 'Admin',
-          number: 'Town Admin',
-          clickCard: () => {
-            clickCard(servant.isTownAdminFor[0])
-          },
-          link: adminsOneChurch
-            ? '/town/displaydetails'
-            : '/servants/town-list',
-        })
-        assessmentChurch = servant.isTownAdminFor[0]
+      if (servant.isAdminForTown?.length) {
+        setServantRoles(servant, 'Admin', 'Town')
       }
 
       //run the get graph function after all checking is done to avoid multiple unnecessary runs

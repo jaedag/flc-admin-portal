@@ -7,7 +7,7 @@ const StatDisplay = ({ title, statistic }) => {
   }
   return (
     <>
-      <p className="dashboard-title">{title}</p>
+      <p className="dashboard-title text-truncate">{title}</p>
       <p className="info-text">{statistic}</p>
     </>
   )

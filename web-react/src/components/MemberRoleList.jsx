@@ -25,8 +25,8 @@ const MemberRoleList = ({ member }) => {
   const updateRank = (member, churchType) => {
     isServant = true
     if (churchType === 'bishop') {
-      if (member.townBishop[0]) {
-        member.townBishop.map((church) => {
+      if (member.isBishopForTown[0]) {
+        member.isBishopForTown.map((church) => {
           rank.bishop.push({
             name: church.name,
             church: church,
@@ -36,8 +36,8 @@ const MemberRoleList = ({ member }) => {
           return null
         })
         return
-      } else if (member.campusBishop[0]) {
-        member.campusBishop.map((church) => {
+      } else if (member.isBishopForCampus[0]) {
+        member.isBishopForCampus.map((church) => {
           rank.bishop.push({
             name: church.name,
             church: church,
@@ -51,7 +51,7 @@ const MemberRoleList = ({ member }) => {
     }
 
     if (churchType === 'adminBishop') {
-      member.isBishopAdminFor.map((adminFor) => {
+      member.isAdminForBishop.map((adminFor) => {
         rank.adminBishop.push({
           admin: true,
           name: `Bishop ${adminFor.firstName} ${adminFor.lastName}`,
@@ -64,8 +64,8 @@ const MemberRoleList = ({ member }) => {
     }
 
     if (churchType === 'adminConstituency') {
-      if (member.isCampusAdminFor[0]) {
-        member.isCampusAdminFor.map((adminFor) => {
+      if (member.isAdminForCampus[0]) {
+        member.isAdminForCampus.map((adminFor) => {
           rank.adminConstituency.push({
             constituency: true,
             name: `${adminFor.name}`,
@@ -75,8 +75,8 @@ const MemberRoleList = ({ member }) => {
           return null
         })
         return
-      } else if (member.isTownAdminFor[0]) {
-        member.isTownAdminFor.map((adminFor) => {
+      } else if (member.isAdminForTown[0]) {
+        member.isAdminForTown.map((adminFor) => {
           rank.adminConstituency.push({
             constituency: true,
             name: `${adminFor.name}`,
@@ -129,19 +129,19 @@ const MemberRoleList = ({ member }) => {
   if (member.leadsMinistry[0]) {
     updateRank(member, 'ministry')
   }
-  if (member.townBishop[0]) {
+  if (member.isBishopForTown[0]) {
     updateRank(member, 'bishop')
   }
-  if (member.campusBishop[0]) {
+  if (member.isBishopForCampus[0]) {
     updateRank(member, 'bishop')
   }
-  if (member.isBishopAdminFor[0]) {
+  if (member.isAdminForBishop[0]) {
     updateRank(member, 'adminBishop')
   }
-  if (member.isCampusAdminFor[0]) {
+  if (member.isAdminForCampus[0]) {
     updateRank(member, 'adminConstituency')
   }
-  if (member.isTownAdminFor[0]) {
+  if (member.isAdminForTown[0]) {
     updateRank(member, 'adminConstituency')
   }
 
@@ -155,20 +155,25 @@ const MemberRoleList = ({ member }) => {
         View Records
       </DashboardButton>
       <br />
-      {member.townBishop[0] || member.campusBishop[0] ? (
+      {(member.isBishopForTown[0] || member.isBishopForCampus[0]) && (
         <span
           onClick={() => {
             determineStream(member)
             history.push('/dashboard')
           }}
         >{`Bishop in the First Love Centre`}</span>
-      ) : (
+      )}
+      <br />
+      {
         //Rank Discussions */}
         Object.entries(rank).map((rank) => {
           return rank[1].map((place, i) => {
             let leader
 
             if (place.__typename === 'Campus' || place.__typename === 'Town') {
+              if (member.isBishopForTown[0] || member.isBishopForCampus[0]) {
+                return
+              }
               leader = 'CO'
             } else {
               leader = 'Leader'
@@ -193,7 +198,7 @@ const MemberRoleList = ({ member }) => {
             )
           })
         })
-      )}
+      }
     </div>
   )
 }

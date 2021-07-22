@@ -28,6 +28,24 @@ export const RECORD_SERVICE = gql`
   }
 `
 
+export const RECORD_SERVICE_NO_OFFERING = gql`
+  mutation RecordServiceNoOffering(
+    $id: ID!
+    $serviceDate: String!
+    $attendance: Int!
+    $servicePicture: String!
+  ) {
+    RecordServiceNoOffering(
+      id: $id
+      serviceDate: $serviceDate
+      attendance: $attendance
+      servicePicture: $servicePicture
+    ) {
+      id
+    }
+  }
+`
+
 export const DISPLAY_BACENTA_SERVICE = gql`
   query DisplayServiceRecords($serviceId: ID!, $bacentaId: ID!) {
     serviceRecords(where: { id: $serviceId }) {

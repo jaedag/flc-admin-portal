@@ -63,6 +63,35 @@ export const CENTRE_REPORT = gql`
   }
 `
 
+export const SONTA_REPORT = gql`
+  query sontaReports($sontaId: ID!) {
+    sontas(where: { id: $sontaId }) {
+      id
+      name
+      leader {
+        id
+        firstName
+        lastName
+        fullName
+      }
+      services {
+        id
+        historyRecord
+        serviceRecords {
+          created_at
+          attendance
+          income
+          week
+          serviceDate {
+            date
+          }
+        }
+      }
+    }
+    sontaMemberCount(id: $sontaId)
+  }
+`
+
 export const CAMPUS_REPORT = gql`
   query campusReports($campusId: ID!) {
     campuses(where: { id: $campusId }) {

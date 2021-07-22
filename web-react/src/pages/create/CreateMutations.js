@@ -122,19 +122,23 @@ export const CREATE_CENTRE_MUTATION = gql`
     CreateCentre(centreName: $centreName, townCampusId: $townCampusId) {
       id
       name
+      centres {
+        id
+        name
+      }
     }
   }
 `
 
 export const CREATE_SONTA_MUTATION = gql`
-  mutation CreateSonta($ministryId: ID!, $leaderId: ID!, $townCampusId: ID!) {
-    CreateSonta(
-      ministryId: $ministryId
-      leaderId: $leaderId
-      townCampusId: $townCampusId
-    ) {
+  mutation CreateSonta($ministryId: ID!, $townCampusId: ID!) {
+    CreateSonta(ministryId: $ministryId, townCampusId: $townCampusId) {
       id
       name
+      sontas {
+        id
+        name
+      }
     }
   }
 `

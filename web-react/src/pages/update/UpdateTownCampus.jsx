@@ -28,8 +28,8 @@ import {
   ADD_TOWN_CENTRES,
 } from './UpdateMutations'
 import NavBar from '../../components/nav/NavBar'
-import ErrorScreen from '../../components/ErrorScreen'
-import LoadingScreen from '../../components/LoadingScreen'
+import ErrorScreen from '../../components/base-component/ErrorScreen'
+import LoadingScreen from '../../components/base-component/LoadingScreen'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import { DISPLAY_CAMPUS, DISPLAY_TOWN } from '../display/ReadQueries'
 import PlusSign from '../../components/buttons/PlusSign'
@@ -299,12 +299,12 @@ const UpdateTownCampus = () => {
     //Refactoring the Options into Something that can be read by my formik component
     const bishopCampusOptions = makeSelectOptions(
       bishopsData.members.filter(
-        (bishop) => bishop.campusBishop.length > 0 && bishop
+        (bishop) => bishop.isBishopForCampus.length > 0 && bishop
       )
     )
     const bishopTownOptions = makeSelectOptions(
       bishopsData.members.filter(
-        (bishop) => bishop.townBishop.length > 0 && bishop
+        (bishop) => bishop.isBishopForTown.length > 0 && bishop
       )
     )
 

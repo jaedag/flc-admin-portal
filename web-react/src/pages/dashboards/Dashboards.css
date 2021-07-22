@@ -10,7 +10,9 @@
   background-image: linear-gradient(#38760b, #173d07, #082b07);
 }
 .colour-centres,
-.colour-centre {
+.colour-centre,
+.colour-sonta,
+.colour-sontas {
   background-image: linear-gradient(#770e0b, #4e0a09, #2b0707);
 }
 .colour-campuses,
@@ -18,6 +20,9 @@
   background-image: linear-gradient(#1b0e36, #2c0b53, #3c096f);
 }
 .colour-admin {
+  background-image: linear-gradient(#1b0e36, #2c0b53, #3c096f);
+}
+.colour-bishop {
   background-image: linear-gradient(#1b0e36, #2c0b53, #3c096f);
 }
 

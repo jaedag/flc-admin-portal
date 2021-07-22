@@ -14,7 +14,7 @@ import {
 import { GET_MINISTRIES } from '../../queries/ListQueries'
 import MinusSign from '../buttons/MinusSign'
 import PlusSign from '../buttons/PlusSign'
-import ErrorScreen from '../ErrorScreen'
+import ErrorScreen from '../base-component/ErrorScreen'
 import { BISHOP_BACENTA_DROPDOWN } from '../formik-components/ComboboxQueries'
 import FormikControl from '../formik-components/FormikControl'
 import { HeadingBar } from '../HeadingBar/HeadingBar'
@@ -76,7 +76,7 @@ function MemberForm({ initialValues, onSubmit, title }) {
                     control="imageUpload"
                     name="pictureUrl"
                     initialValue={initialValues.pictureUrl}
-                    uploadPreset={process.env.CLOUDINARY_MEMBERS}
+                    uploadPreset={process.env.REACT_APP_CLOUDINARY_MEMBERS}
                     placeholder="Upload an Image"
                     setFieldValue={formik.setFieldValue}
                     aria-describedby="ImageUpload"

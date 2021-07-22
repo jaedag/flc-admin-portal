@@ -6,7 +6,7 @@ import { MemberContext } from '../contexts/MemberContext'
 import { ChurchContext } from '../contexts/ChurchContext'
 import BishopMembers from '../pages/grids/BishopMembers.jsx'
 import CampusTownMembers from '../pages/grids/CampusTownMembers.jsx'
-import LoadingScreen from '../components/LoadingScreen'
+import LoadingScreen from '../components/base-component/LoadingScreen'
 import { isAuthorised } from '../global-utils'
 
 const ProtectedMembersRoute = ({ component, roles, ...args }) => {

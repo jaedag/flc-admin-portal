@@ -63,11 +63,11 @@ type Member {
   leadsBasonta: [Basonta] @relationship(type: "LEADS", direction: OUT)
   leadsTown: [Town] @relationship(type: "LEADS", direction: OUT)
   leadsCampus: [Campus] @relationship(type: "LEADS", direction: OUT)
-  townBishop: [Town] @relationship(type: "HAS_TOWN", direction: OUT)
-  campusBishop: [Campus] @relationship(type: "HAS_CAMPUS", direction: OUT)
-  isBishopAdminFor: [Member] @relationship(type: "IS_ADMIN_FOR", direction: OUT) #@neo4j_ignore
-  isCampusAdminFor: [Campus] @relationship(type: "IS_ADMIN_FOR", direction: OUT)
-  isTownAdminFor: [Town] @relationship(type: "IS_ADMIN_FOR", direction: OUT)
+  isBishopForTown: [Town] @relationship(type: "HAS_TOWN", direction: OUT)
+  isBishopForCampus: [Campus] @relationship(type: "HAS_CAMPUS", direction: OUT)
+  isAdminForBishop: [Member] @relationship(type: "IS_ADMIN_FOR", direction: OUT) #@neo4j_ignore
+  isAdminForCampus: [Campus] @relationship(type: "IS_ADMIN_FOR", direction: OUT)
+  isAdminForTown: [Town] @relationship(type: "IS_ADMIN_FOR", direction: OUT)
   hasAdmin: Member @relationship(type: "IS_ADMIN_FOR", direction: IN)
 
   #Members
@@ -168,7 +168,7 @@ type TimeGraph @auth(rules: [{ isAuthenticated: true }]) {
     @relationship(type: "LEADER_ENDED_ON", direction: OUT)
   historyDate: Member @relationship(type: "RECORDED_ON", direction: OUT)
   serviceDate: [ServiceRecord]
-    @relationship(type: "SERVICE_HELD_ON", direction: IN)
+    @relationship(type:  "SERVICE_HELD_ON", direction: IN)
 }
 
 # type LeaderHistory {
@@ -195,7 +195,7 @@ type ServiceRecord @auth(rules: [{ isAuthenticated: true }]) {
       """
     )
   attendance: Int!
-  income: Float!
+  income: Float
   foreignCurrency: String
   servicePicture: String
   treasurerSelfie: String
@@ -377,6 +377,7 @@ type Sonta {
   town: Town @relationship(type: "HAS_SONTA", direction: IN)
   history: [HistoryLog] @relationship(type: "HAS_HISTORY", direction: OUT)
   campus: Campus @relationship(type: "HAS_SONTA", direction: IN)
+  services: [ServiceLog] @relationship(type: "HAS_HISTORY", direction: OUT)
 }
 type Basonta {
   id: ID @id
@@ -494,7 +495,7 @@ type Query {
       OPTIONAL MATCH (campusTown)<-[:IS_ADMIN_FOR]-(adminConstituency:Member)
       UNWIND [member,bacentaLeader,centreLeader,constituencyOverseer,admin,adminConstituency] as members
       WITH members WHERE members IS NOT NULL
-      AND toLower(members.firstName+ " " + members.lastName) CONTAINS toLower($nameSearch)
+      AND toLower(members.firstName+ ' ' + members.lastName) CONTAINS toLower($nameSearch)
       RETURN DISTINCT members LIMIT 5
       """
     )
@@ -813,7 +814,7 @@ type Query {
       OR toLower(members.lastName) STARTS WITH toLower($searchKey)
       OR toLower(members.firstName) CONTAINS toLower($searchKey)
       OR toLower(members.lastName) CONTAINS toLower($searchKey)
-      OR toLower(members.firstName+ " " + members.lastName) CONTAINS toLower($searchKey)
+      OR toLower(members.firstName+ ' ' + members.lastName) CONTAINS toLower($searchKey)
       RETURN DISTINCT(members) LIMIT 5
       """
     )
@@ -838,7 +839,7 @@ type Query {
       OR toLower(members.lastName) STARTS WITH toLower($searchKey)
       OR toLower(members.firstName) CONTAINS toLower($searchKey)
       OR toLower(members.lastName) CONTAINS toLower($searchKey)
-      OR toLower(members.firstName+ " " + members.lastName) CONTAINS toLower($searchKey)
+      OR toLower(members.firstName+ ' ' + members.lastName) CONTAINS toLower($searchKey)
       RETURN DISTINCT(members) LIMIT 5
       """
     )
@@ -1008,6 +1009,8 @@ type Mutation {
   RemoveBacentaLeader(leaderId: ID!, bacentaId: ID!): Member
   MakeCentreLeader(leaderId: ID!, centreId: ID!): Member
   RemoveCentreLeader(leaderId: ID!, centreId: ID!): Member
+  MakeSontaLeader(leaderId: ID!, sontaId: ID!): Member
+  RemoveSontaLeader(leaderId: ID!, sontaId: ID!): Member
   MakeTownLeader(leaderId: ID!, townId: ID!): Member
   RemoveTownLeader(leaderId: ID!, townId: ID!): Member
   MakeCampusLeader(leaderId: ID!, campusId: ID!): Member
@@ -1057,7 +1060,7 @@ type Mutation {
       CREATE (log:HistoryLog)<-[:HAS_HISTORY]-(b)
         SET
         log.id =  apoc.create.uuid(),
-        log.timeStamp = time(),
+        log.timeStamp = datetime(),
         log.historyRecord = $firstName + $lastName+' was registered on '+toString(date())
 
       MERGE (date:TimeGraph {date: date()})
@@ -1128,7 +1131,7 @@ type Mutation {
        CREATE (log:HistoryLog)
         SET
         log.id =  apoc.create.uuid(),
-        log.timeStamp = time(),
+        log.timeStamp = datetime(),
         log.historyRecord = leader.firstName + ' ' +leader.lastName + ' started ' + $townName +' Town Church under Bishop '+ bishop.firstName+ ' ' + bishop.lastName
       MERGE (date:TimeGraph {date: date(date())})
       MERGE (bishop)-[:HAS_TOWN]->(town)
@@ -1158,7 +1161,7 @@ type Mutation {
        CREATE (log:HistoryLog)
         SET
         log.id =  apoc.create.uuid(),
-        log.timeStamp = time(),
+        log.timeStamp = datetime(),
         log.historyRecord = leader.firstName + ' ' +leader.lastName + ' started ' + $campusName +' Campus Church under Bishop '+ bishop.firstName+ ' ' + bishop.lastName
       MERGE (date:TimeGraph {date: date(date())})
       MERGE (bishop)-[:HAS_CAMPUS]->(campus)
@@ -1174,7 +1177,7 @@ type Mutation {
       """
     )
 
-  CreateCentre(centreName: String!, townCampusId: ID!): Centre
+  CreateCentre(centreName: String!, townCampusId: ID!): Town  #Return town and drill down to get centre info
     @auth(
       rules: [{ roles: ["adminFederal", "adminBishop", "adminConstituency"] }]
     )
@@ -1186,10 +1189,10 @@ type Mutation {
       WITH centre
        MATCH (campusTown {id:$townCampusId}) WHERE campusTown:Town OR campusTown:Campus
        MERGE (campusTown)-[:HAS_CENTRE]->(centre)
-      RETURN centre
+      RETURN campusTown
       """
     )
-  CreateSonta(ministryId: ID!, leaderId: ID!, townCampusId: ID!): Sonta
+  CreateSonta(ministryId: ID!, townCampusId: ID!): Town
     @auth(
       rules: [{ roles: ["adminFederal", "adminBishop", "adminConstituency"] }]
     )
@@ -1199,31 +1202,15 @@ type Mutation {
          	SET
       	sonta.id = apoc.create.uuid()
       WITH sonta
-       MATCH (leader:Member {id: $leaderId})
        MATCH (currentUser:Member {auth_id:$auth.jwt.sub})
        MATCH (ministry:Ministry {id:$ministryId})
        MATCH (campusTown {id:$townCampusId}) WHERE campusTown:Town OR campusTown:Campus
        UNWIND labels(campusTown) AS typename
-       SET sonta.name = campusTown.name + " " + ministry.name
-
-       CREATE (log:HistoryLog:ServiceLog)
-        SET
-         log.id = apoc.create.uuid(),
-         log.timeStamp = time(),
-         log.historyRecord = leader.firstName + ' ' +leader.lastName + ' started ' + sonta.name +' Sonta under '+ campusTown.name+ ' '+typename
-       MERGE (date:TimeGraph {date: date()})
+       SET sonta.name = campusTown.name + ' ' + ministry.name
        MERGE (ministry)-[:HAS_SONTA]->(sonta)
        MERGE (campusTown)-[:HAS_SONTA]->(sonta)
-       MERGE (leader)-[:LEADS]->(sonta)
 
-       MERGE (log)-[:LOGGED_BY]->(currentUser)
-       MERGE (log)-[:RECORDED_ON]->(date)
-       MERGE (campusTown)-[:HAS_HISTORY]->(log)
-       MERGE (sonta)-[:HAS_HISTORY]->(log)
-       MERGE (ministry)-[:HAS_HISTORY]->(log)
-       MERGE (leader)-[r:HAS_HISTORY]->(log)
-         SET r.current = true
-      RETURN sonta
+      RETURN campusTown
       """
     )
   CreateBacenta(
@@ -1465,7 +1452,7 @@ type Mutation {
       MATCH (admin:Member {auth_id: $auth.jwt.sub})
       CREATE (log:HistoryLog {id: apoc.create.uuid()})
         SET log.historyRecord = $historyRecord,
-          log.timeStamp = time()
+          log.timeStamp = datetime()
       MERGE (date:TimeGraph {date: date()})
       MERGE (bacenta)-[r:HAS_HISTORY]->(log)
       MERGE (log)-[:RECORDED_ON]->(date)
@@ -1507,7 +1494,7 @@ type Mutation {
        MATCH (admin:Member {auth_id: $auth.jwt.sub})
        CREATE (log:HistoryLog {id: apoc.create.uuid()})
          SET log.historyRecord = $historyRecord,
-           log.timeStamp = time()
+           log.timeStamp = datetime()
        MERGE (date:TimeGraph {date: date()})
        MERGE (centre)-[r:HAS_HISTORY]->(log)
        MERGE (log)-[:RECORDED_ON]->(date)
@@ -1567,7 +1554,7 @@ type Mutation {
       MATCH (admin:Member {auth_id: $auth.jwt.sub})
       CREATE (log:HistoryLog {id: apoc.create.uuid()})
         SET log.historyRecord = $historyRecord,
-          log.timeStamp = time()
+          log.timeStamp = datetime()
       MERGE (date:TimeGraph {date: date()})
       MERGE (campusTown)-[r:HAS_HISTORY]->(log)
       MERGE (log)-[:RECORDED_ON]->(date)
@@ -1634,7 +1621,7 @@ type Mutation {
        MATCH (admin:Member {auth_id: $auth.jwt.sub})
        CREATE (log:HistoryLog {id: apoc.create.uuid()})
          SET log.historyRecord = $historyRecord,
-           log.timeStamp = time()
+           log.timeStamp = datetime()
        MERGE (date:TimeGraph {date: date()})
        MERGE (sonta)-[r:HAS_HISTORY]->(log)
        MERGE (log)-[:RECORDED_ON]->(date)
@@ -1722,13 +1709,10 @@ type Mutation {
       """
     )
 
-  RecordCentreService(
-    centreId: ID!
+  RecordServiceNoOffering(
+    id: ID!
     serviceDate: String!
     attendance: Int!
-    income: Float!
-    treasurers: [ID]!
-    treasurerSelfie: String!
     servicePicture: String!
   ): ServiceRecord
     @cypher(
@@ -1736,20 +1720,16 @@ type Mutation {
       CREATE (serviceRecord:ServiceRecord {created_at:datetime()})
         SET serviceRecord.id = apoc.create.uuid(),
         serviceRecord.attendance = $attendance,
-        serviceRecord.income = $income,
-        serviceRecord.treasurerSelfie = $treasurerSelfie,
         serviceRecord.servicePicture = $servicePicture
       WITH serviceRecord
-      MATCH (centre:Centre {id:$centreId})-[has_history:HAS_HISTORY]->(log:HistoryLog) WHERE has_history.current = true
+      MATCH (church {id:$id}) WHERE church:Bacenta OR church:Centre OR church:Sonta OR church:Campus OR church:Town
+      MATCH (church)-[has_history:HAS_HISTORY]->(log:HistoryLog) WHERE has_history.current = true
+      MATCH (leader:Member {auth_id: $auth.jwt.sub})
 
+      MERGE (serviceRecord)-[:LOGGED_BY]->(leader)
       MERGE (serviceDate:TimeGraph {date:date($serviceDate)})
       MERGE (serviceRecord)-[:SERVICE_HELD_ON]->(serviceDate)
       MERGE (log)-[:HAS_RECORD]->(serviceRecord)
-
-      WITH serviceRecord
-      UNWIND $treasurers AS treasurerId WITH treasurerId, serviceRecord
-      MATCH (treasurer:Member {id: treasurerId})
-      MERGE (treasurer)-[:WAS_TREASURER_FOR]->(serviceRecord)
 
       RETURN serviceRecord
       """
@@ -1764,7 +1744,7 @@ type Mutation {
        SET newBacenta.name = bacenta.name,
        newBacenta.location = bacenta.location
       CREATE (log:HistoryLog {id:apoc.create.uuid()})
-        SET log.timeStamp = time(),
+        SET log.timeStamp = datetime(),
         log.historyRecord = bacenta.name + ' was made into a Centre with '+ newBacenta.name+' as a bacenta under it.'
 
       WITH newBacenta, log, bacenta

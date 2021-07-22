@@ -13,8 +13,8 @@ import {
 } from '../../queries/ListQueries'
 import { CREATE_TOWN_MUTATION, CREATE_CAMPUS_MUTATION } from './CreateMutations'
 import NavBar from '../../components/nav/NavBar'
-import ErrorScreen from '../../components/ErrorScreen'
-import LoadingScreen from '../../components/LoadingScreen'
+import ErrorScreen from '../../components/base-component/ErrorScreen'
+import LoadingScreen from '../../components/base-component/LoadingScreen'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import PlusSign from '../../components/buttons/PlusSign'
 import MinusSign from '../../components/buttons/MinusSign'
@@ -79,12 +79,12 @@ function CreateTownCampus() {
   ) {
     const bishopTownOptions = makeSelectOptions(
       bishopsData.members.filter(
-        (bishop) => bishop.townBishop.length > 0 && bishop
+        (bishop) => bishop.isBishopForTown.length > 0 && bishop
       )
     )
     const bishopCampusOptions = makeSelectOptions(
       bishopsData.members.filter(
-        (bishop) => bishop.campusBishop.length > 0 && bishop
+        (bishop) => bishop.isBishopForCampus.length > 0 && bishop
       )
     )
 

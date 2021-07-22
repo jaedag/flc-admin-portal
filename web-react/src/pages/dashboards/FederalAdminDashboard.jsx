@@ -90,9 +90,9 @@ const FederalAdminDashboard = () => {
         <div className="row row-cols-sm-1 row-cols-lg-4 d-flex justify-content-center px-5">
           {data.members.map((bishop, index) => {
             let bishopStream
-            if (bishop.townBishop?.length) {
+            if (bishop.isBishopForTown?.length) {
               bishopStream = 'Town'
-            } else if (bishop.campusBishop?.length) {
+            } else if (bishop.isBishopForCampus?.length) {
               bishopStream = 'Campus'
             }
 

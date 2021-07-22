@@ -5,18 +5,17 @@ import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 import FormikControl from '../../components/formik-components/FormikControl'
 import {
-  GET_CAMPUS_CENTRES,
-  GET_TOWN_CENTRES,
   BISHOP_MEMBER_DROPDOWN,
   GET_MINISTRIES,
 } from '../../queries/ListQueries.js'
 import { CREATE_SONTA_MUTATION } from './CreateMutations'
 import NavBar from '../../components/nav/NavBar'
-import ErrorScreen from '../../components/ErrorScreen'
-import LoadingScreen from '../../components/LoadingScreen'
+import ErrorScreen from '../../components/base-component/ErrorScreen'
+import LoadingScreen from '../../components/base-component/LoadingScreen'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import { capitalise, makeSelectOptions } from 'global-utils'
 import { DISPLAY_CAMPUS, DISPLAY_TOWN } from 'pages/display/ReadQueries'
+import { NEW_SONTA_LEADER } from './MakeLeaderMutations'
 
 function CreateSonta() {
   const { church, bishopId, campusId, townId, setSontaId } = useContext(
@@ -54,15 +53,8 @@ function CreateSonta() {
     leaderId: Yup.string().required('Please choose a leader from the dropdown'),
   })
 
-  const [CreateSonta] = useMutation(CREATE_SONTA_MUTATION, {
-    onCompleted: (data) => {
-      setSontaId(data.CreateSonta.id)
-    },
-    refetchQueries: [
-      { query: GET_CAMPUS_CENTRES, variables: { id: bishopId } },
-      { query: GET_TOWN_CENTRES, variables: { id: bishopId } },
-    ],
-  })
+  const [CreateSonta] = useMutation(CREATE_SONTA_MUTATION)
+  const [NewSontaLeader] = useMutation(NEW_SONTA_LEADER)
 
   if (ministryListData && campusTownData) {
     const ministryOptions = makeSelectOptions(ministryListData.ministries)
@@ -78,14 +70,22 @@ function CreateSonta() {
       CreateSonta({
         variables: {
           ministryId: values.ministrySelect,
-          leaderId: values.leaderId,
           townCampusId: campusTownData?.id,
         },
-      }).then(() => {
-        onSubmitProps.setSubmitting(false)
-        onSubmitProps.resetForm()
-        history.push('/sonta/displaydetails')
       })
+        .then((res) => {
+          NewSontaLeader({
+            variables: {
+              leaderId: values.leaderId,
+              sontaId: res.data.CreateSonta.sontas[0].id,
+            },
+          }).catch((error) => alert('There was an error', error))
+          setSontaId(res.data.CreateSonta.sontas[0].id)
+          onSubmitProps.setSubmitting(false)
+          onSubmitProps.resetForm()
+          history.push('/sonta/displaydetails')
+        })
+        .catch((error) => alert('There was an error', error))
     }
 
     return (

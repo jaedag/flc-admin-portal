@@ -43,7 +43,6 @@ import ProtectedRoute from './auth/ProtectedRoute.jsx'
 import ProtectedRouteHome from './auth/ProtectedRouteHome.jsx'
 import ProtectedMembersRoute from './auth/ProtectedMembersRoute.jsx'
 import MemberFiltersMobile from './pages/mobile/MemberFilters'
-// import MobileMemberTable from './components/members-grids/MobileMemberTable'
 import UserProfileDisplayPage from './pages/user-profile/DisplayPage'
 import UserProfileEditPage from './pages/user-profile/EditPage'
 import CreateSonta from './pages/create/CreateSonta'
@@ -62,7 +61,8 @@ import CampusService from 'pages/record-service/CampusService'
 import CampusServiceDetails from 'pages/record-service/CampusServiceDetails'
 import CampusReport from 'pages/reports/CampusReport'
 import CacheBuster from 'CacheBuster'
-import MemberTable from 'components/members-grids/MemberTable'
+import SontaReport from 'pages/reports/SontaReport'
+import SontaService from 'pages/record-service/SontaService'
 
 const AppWithApollo = () => {
   const [accessToken, setAccessToken] = useState()
@@ -245,10 +245,10 @@ const PastorsAdmin = () => {
     }
 
     if (!member?.bacenta) {
-      if (!member.townBishop) {
+      if (!member.isBishopForTown) {
         return
       }
-      if (member.townBishop[0]) {
+      if (member.isBishopForTown[0]) {
         setChurch({ church: 'town', subChurch: 'centre' })
         sessionStorage.setItem(
           'church',
@@ -260,7 +260,7 @@ const PastorsAdmin = () => {
         setBishopId(member.id)
         sessionStorage.setItem('bishopId', member.id)
         return
-      } else if (member.campusBishop[0]) {
+      } else if (member.isBishopForCampus[0]) {
         setChurch({ church: 'campus', subChurch: 'centre' })
         sessionStorage.setItem(
           'church',
@@ -475,6 +475,18 @@ const PastorsAdmin = () => {
                   'adminFederal',
                   'adminBishop',
                   'adminConstituency',
+                  'leaderCentre',
+                  'leaderSonta',
+                  'leaderConstituency',
+                ]}
+                path="/sonta/reports"
+                component={SontaReport}
+              />
+              <ProtectedRoute
+                roles={[
+                  'adminFederal',
+                  'adminBishop',
+                  'adminConstituency',
                   'leaderConstituency',
                 ]}
                 path="/campus/reports"
@@ -571,12 +583,6 @@ const PastorsAdmin = () => {
                 roles={['adminFederal', 'adminBishop', 'adminConstituency']}
                 path="/sonta/members"
                 component={SontaMembers}
-                exact
-              />
-              <ProtectedMembersRoute
-                roles={['adminFederal', 'adminBishop', 'adminConstituency']}
-                path="/mb-members"
-                component={MemberTable}
                 exact
               />
               <ProtectedRoute
@@ -748,6 +754,16 @@ const PastorsAdmin = () => {
                   ]}
                   path="/centre/record-service"
                   component={CentreService}
+                />
+                <ProtectedRoute
+                  roles={[
+                    'adminFederal',
+                    'adminBishop',
+                    'adminConstituency',
+                    'leaderSonta',
+                  ]}
+                  path="/sonta/record-service"
+                  component={SontaService}
                 />
                 <ProtectedRoute
                   roles={[

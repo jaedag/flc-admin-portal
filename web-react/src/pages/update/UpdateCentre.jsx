@@ -24,8 +24,8 @@ import {
 } from './UpdateMutations'
 import { BISHOP_BACENTA_DROPDOWN } from '../../components/formik-components/ComboboxQueries'
 import NavBar from '../../components/nav/NavBar'
-import ErrorScreen from '../../components/ErrorScreen'
-import LoadingScreen from '../../components/LoadingScreen'
+import ErrorScreen from '../../components/base-component/ErrorScreen'
+import LoadingScreen from '../../components/base-component/LoadingScreen'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import { DISPLAY_CENTRE } from '../display/ReadQueries'
 import { LOG_CENTRE_HISTORY, LOG_BACENTA_HISTORY } from './LogMutations'
@@ -264,10 +264,10 @@ const UpdateCentre = () => {
   } else if (centreData && (townListData || campusListData)) {
     //Refactoring the Options into Something that can be read by my formik component
     const townOptions = townListData
-      ? makeSelectOptions(townListData.members[0].townBishop)
+      ? makeSelectOptions(townListData.members[0].isBishopForTown)
       : []
     const campusOptions = campusListData
-      ? makeSelectOptions(campusListData.members[0].campusBishop)
+      ? makeSelectOptions(campusListData.members[0].isBishopForCampus)
       : []
 
     //onSubmit receives the form state as argument

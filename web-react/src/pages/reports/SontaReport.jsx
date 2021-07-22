@@ -6,62 +6,62 @@ import LoadingScreen from '../../components/base-component/LoadingScreen'
 import ErrorScreen from '../../components/base-component/ErrorScreen'
 import { getServiceGraphData, getMonthlyStatAverage } from './report-utils'
 import ChurchGraph from '../../components/ChurchGraph/ChurchGraph'
-import { CENTRE_REPORT } from './ReportQueries'
+import { SONTA_REPORT } from './ReportQueries'
 import MembershipCard from './CompMembershipCard'
 import StatDisplay from './CompStatDisplay'
 
-export const CentreReport = () => {
-  const { centreId } = useContext(ChurchContext)
+export const SontaReport = () => {
+  const { sontaId } = useContext(ChurchContext)
 
-  const { data, loading } = useQuery(CENTRE_REPORT, {
-    variables: { centreId: centreId },
+  const { data, loading } = useQuery(SONTA_REPORT, {
+    variables: { sontaId: sontaId },
   })
 
   if (loading) {
     return <LoadingScreen />
   } else if (data) {
-    const { centres, centreMemberCount } = data
-    const churchData = getServiceGraphData(centres[0])
+    const { sontas, sontaMemberCount } = data
+    const churchData = getServiceGraphData(sontas[0])
 
     return (
       <>
         <NavBar />
         <div className="container">
           <div className=" my-3">
-            <h5 className="mb-0">{`${centres[0].name} Centre`}</h5>{' '}
+            <h5 className="mb-0">{`${sontas[0].name} Sonta`}</h5>{' '}
             <p>
               <span className="text-secondary font-weight-bold">Leader: </span>
-              {`${centres[0].leader.fullName}`}
+              {`${sontas[0].leader.fullName}`}
             </p>
           </div>
 
           <div className="row">
             <div className="col">
               <MembershipCard
-                link="/centre/members"
+                link="/sonta/members"
                 title="Membership"
-                count={centreMemberCount}
+                count={sontaMemberCount}
               />
             </div>
           </div>
-          <div className="row mt-3">
+          <div className="row row-cols-2 mt-3">
             <div className="col">
               <StatDisplay
-                title="Avg Attendance"
-                statistic={getMonthlyStatAverage(churchData, 'attendance')}
+                title="Avg Rehearsal Attendance"
+                statistic={getMonthlyStatAverage(churchData, 'rehearsal')}
               />
             </div>
 
             <div className="col">
               <StatDisplay
-                title="Avg Income"
-                statistic={getMonthlyStatAverage(churchData, 'income')}
+                title="Avg Service Attendance"
+                statistic={getMonthlyStatAverage(churchData, 'sunday')}
               />
             </div>
           </div>
           <ChurchGraph
-            stat1="attendance"
-            stat2="income"
+            stat1="rehearsal"
+            stat2="service"
             churchData={churchData}
           />
         </div>
@@ -72,4 +72,4 @@ export const CentreReport = () => {
   }
 }
 
-export default CentreReport
+export default SontaReport

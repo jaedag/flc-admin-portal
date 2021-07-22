@@ -23,8 +23,8 @@ import {
   UPDATE_BACENTA,
 } from './UpdateMutations'
 import NavBar from '../../components/nav/NavBar'
-import ErrorScreen from '../../components/ErrorScreen'
-import LoadingScreen from '../../components/LoadingScreen'
+import ErrorScreen from '../../components/base-component/ErrorScreen'
+import LoadingScreen from '../../components/base-component/LoadingScreen'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import { DISPLAY_BACENTA } from '../display/ReadQueries'
 import Spinner from '../../components/Spinner.jsx'
@@ -124,10 +124,10 @@ const UpdateBacenta = () => {
     return <LoadingScreen />
   } else if (bacenta && campuses && towns) {
     const townOptions = towns
-      ? makeSelectOptions(towns.members[0]?.townBishop)
+      ? makeSelectOptions(towns.members[0]?.isBishopForTown)
       : []
     const campusOptions = campuses
-      ? makeSelectOptions(campuses.members[0]?.campusBishop)
+      ? makeSelectOptions(campuses.members[0]?.isBishopForCampus)
       : []
 
     //onSubmit receives the form state as argument

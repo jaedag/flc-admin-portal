@@ -175,24 +175,24 @@ export const DISPLAY_MEMBER = gql`
         id
         name
       }
-      townBishop {
+      isBishopForTown {
         id
         name
       }
-      campusBishop {
+      isBishopForCampus {
         id
         name
       }
-      isBishopAdminFor {
+      isAdminForBishop {
         id
         firstName
         lastName
       }
-      isCampusAdminFor {
+      isAdminForCampus {
         id
         name
       }
-      isTownAdminFor {
+      isAdminForTown {
         id
         name
       }
@@ -205,6 +205,10 @@ export const DISPLAY_BACENTA = gql`
     bacentas(where: { id: $id }) {
       id
       name
+      location {
+        longitude
+        latitude
+      }
       meetingDay {
         day
       }

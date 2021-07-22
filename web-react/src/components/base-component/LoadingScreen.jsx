@@ -1,6 +1,6 @@
+import NavBar from 'components/nav/NavBar'
+import SpinnerPage from 'components/SpinnerPage'
 import React from 'react'
-import NavBar from './nav/NavBar'
-import SpinnerPage from './SpinnerPage.jsx'
 
 const LoadingScreen = () => {
   return (

@@ -92,7 +92,7 @@ export const SERVANTS_DASHBOARD = gql`
       fullName
       pictureUrl
       # The person is an admin
-      isTownAdminFor {
+      isAdminForTown {
         id
         name
         leader {
@@ -120,7 +120,7 @@ export const SERVANTS_DASHBOARD = gql`
           income
         }
       }
-      isCampusAdminFor {
+      isAdminForCampus {
         id
         name
         leader {
@@ -148,11 +148,20 @@ export const SERVANTS_DASHBOARD = gql`
           income
         }
       }
-      isBishopAdminFor {
+      isAdminForBishop {
         id
         firstName
         lastName
         fullName
+      }
+
+      isBishopForCampus {
+        id
+        name
+      }
+      isBishopForTown {
+        id
+        name
       }
 
       # The person leads in the Bacenta side

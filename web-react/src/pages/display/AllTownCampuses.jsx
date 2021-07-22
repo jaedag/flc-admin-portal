@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom'
 import { useQuery } from '@apollo/client'
 import DisplayChurchList from '../../components/DisplayChurchList'
 import NavBar from '../../components/nav/NavBar'
-import ErrorScreen from '../../components/ErrorScreen'
-import LoadingScreen from '../../components/LoadingScreen'
+import ErrorScreen from '../../components/base-component/ErrorScreen'
+import LoadingScreen from '../../components/base-component/LoadingScreen'
 import {
   GET_BISHOP_TOWNS,
   GET_BISHOP_CAMPUSES,
@@ -41,7 +41,7 @@ const DisplayAllTownCampuses = () => {
     // Spinner Icon for Loading Screens
     return <LoadingScreen />
   } else if (church.church === 'town') {
-    const towns = bishopTowns.members[0].townBishop
+    const towns = bishopTowns.members[0].isBishopForTown
 
     return (
       <>
@@ -95,7 +95,7 @@ const DisplayAllTownCampuses = () => {
       </>
     )
   } else if (church.church === 'campus') {
-    const campus = bishopCampuses.members[0].campusBishop
+    const campus = bishopCampuses.members[0].isBishopForCampus
 
     return (
       <>

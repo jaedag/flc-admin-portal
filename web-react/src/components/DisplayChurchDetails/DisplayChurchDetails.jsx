@@ -53,9 +53,9 @@ const DisplayChurchDetails = (props) => {
   //Setting the editing permission based on url
   let permittedRoles = ['adminFederal', 'adminBishop']
   if (
-    location.pathname === '/bacenta/editbacenta' ||
-    location.pathname === '/centre/editcentre' ||
-    location.pathname === '/sonta/editsonta'
+    location.pathname === '/bacenta/displaydetails' ||
+    location.pathname === '/centre/displaydetails' ||
+    location.pathname === '/sonta/displaydetails'
   ) {
     permittedRoles.push('adminConstituency')
   }

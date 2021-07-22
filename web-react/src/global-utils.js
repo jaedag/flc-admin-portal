@@ -33,6 +33,14 @@ export const isAuthorised = (permittedRoles, userRoles) => {
   }
   return permittedRoles.some((r) => userRoles.includes(r))
 }
+
+export const authorisedLink = (currentUser, permittedRoles, link) => {
+  if (isAuthorised(permittedRoles, currentUser.roles)) {
+    return link
+  }
+  return '#'
+}
+
 export const capitalise = (str) => {
   return str?.charAt(0).toUpperCase() + str?.slice(1)
 }

@@ -1,8 +1,8 @@
 import React, { useContext } from 'react'
 import { useHistory } from 'react-router'
 import { useQuery } from '@apollo/client'
-import ErrorScreen from 'components/ErrorScreen'
-import LoadingScreen from 'components/LoadingScreen'
+import ErrorScreen from 'components/base-component/ErrorScreen'
+import LoadingScreen from 'components/base-component/LoadingScreen'
 import { ChurchContext } from 'contexts/ChurchContext'
 import { MemberContext } from 'contexts/MemberContext'
 import { SERVANTS_DASHBOARD } from './DashboardQueries'
@@ -63,19 +63,19 @@ const ServantsChurchList = () => {
           number: servant.leadsMinistry.length,
         })
       }
-      if (servant.townBishop?.length) {
+      if (servant.isBishopForTown?.length) {
         churches.push({ name: 'Campus Bishop', number: 'Bishop' })
       }
-      if (servant.campusBishop?.length) {
+      if (servant.isBishopForCampus?.length) {
         churches.push({ name: 'Town Bishop', number: 'Bishop' })
       }
-      if (servant.isBishopAdminFor?.length) {
+      if (servant.isAdminForBishop?.length) {
         churches.push({ name: 'Admin', number: 'Bishops Admin' })
       }
-      if (servant.isCampusAdminFor?.length) {
+      if (servant.isAdminForCampus?.length) {
         churches.push({ name: 'Admin', number: 'Campus Admin' })
       }
-      if (servant.isTownAdminFor?.length) {
+      if (servant.isAdminForTown?.length) {
         churches.push({ name: 'Admin', number: 'Town Admin' })
       }
 

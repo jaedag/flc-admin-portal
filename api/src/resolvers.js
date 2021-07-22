@@ -164,6 +164,223 @@ const removeRoles = (userId, userRoles, rolesToRemove) => {
   }
 }
 
+const MakeServant = async (
+  context,
+  args,
+  permittedRoles,
+  churchType,
+  servantType
+) => {
+  isAuth(permittedRoles, context.auth.roles)
+
+  const churchLower = churchType.toLowerCase()
+  const servantLower = servantType.toLowerCase()
+  let verb
+  if (servantType === 'Leader') {
+    verb = `leads${churchType}`
+  }
+
+  if (servantType === 'Admin') {
+    verb = `isAdminFor${churchType}`
+  }
+
+  const session = context.driver.session()
+  let servant = {}
+  let church = { id: args[`${churchLower}Id`] }
+
+  await session
+    .run(cypher.matchMemberQuery, { id: args[`${servantLower}Id`] })
+    .then(async (response) => {
+      // Rearrange member object
+      servant = rearrangeMemberObject(servant, response)
+      errorHandling(servant)
+
+      //Check for AuthID of servant
+      axios(getAuthIdConfig(servant))
+        .then(async (res) => {
+          servant.auth_id = res.data[0]?.user_id
+
+          if (!servant.auth_id) {
+            //If servant Does Not Have Auth0 Profile, Create One
+            axios(createAuthUserConfig(servant))
+              .then((res) => {
+                const auth_id = res.data.user_id
+                servant.auth_id = res.data.user_id
+
+                const roles = []
+
+                assignRoles(auth_id, roles, [
+                  authRoles[`${servantLower}${churchType}`].id,
+                ])
+                console.log(
+                  `Auth0 Account successfully created for ${servant.firstName} ${servant.lastName}`
+                )
+
+                //Write Auth0 ID of Leader to Neo4j DB
+                session
+                  .run(cypher[`make${churchType}${servant}`], {
+                    [`${servantLower}Id`]: servant.id,
+                    [`${churchLower}Id`]: church.id,
+                    auth_id: servant.auth_id,
+                    auth: context.auth,
+                  })
+                  .then(console.log('Cypher Query Executed Successfully'))
+                  .catch((err) =>
+                    throwErrorMsg('Error running cypher query', err)
+                  )
+              })
+              .catch((err) => throwErrorMsg('Error Creating User', err))
+          } else if (servant.auth_id) {
+            //Check auth0 roles and add roles 'leaderCentre'
+            axios(getUserRoles(servant.auth_id))
+              .then((res) => {
+                const roles = res.data.map((role) => role.name)
+
+                assignRoles(servant.auth_id, roles, [
+                  authRoles[`${servantLower}${churchType}`].id,
+                ])
+
+                //Write Auth0 ID of Admin to Neo4j DB
+                session
+                  .run(cypher[`make${churchType}${servantType}`], {
+                    [`${servantLower}Id`]: servant.id,
+                    [`${churchLower}Id`]: church.id,
+                    auth_id: servant.auth_id,
+                    auth: context.auth,
+                  })
+                  .then(console.log('Cypher Query Executed Successfully'))
+                  .catch((err) =>
+                    throwErrorMsg('Error running cypher query', err)
+                  )
+              })
+              .catch((error) =>
+                throwErrorMsg('getUserRoles Failed to Run', error)
+              )
+          }
+        })
+        .catch((err) =>
+          throwErrorMsg('There was an error obtaining the auth Id ', err)
+        )
+    })
+    .catch((err) => throwErrorMsg('', err))
+
+  //Returning the data such that it can update apollo cache
+  servant[`${verb}`].push({
+    id: church.id,
+    leader: {
+      id: servant.id,
+      firstName: servant.firstName,
+      lastName: servant.lastName,
+    },
+  })
+
+  servant[`${verb}`].map((church) => {
+    church.leader = {
+      id: servant.id,
+      firstName: servant.firstName,
+      lastName: servant.lastName,
+    }
+  })
+
+  return servant
+}
+const RemoveServant = async (
+  context,
+  args,
+  permittedRoles,
+  churchType,
+  servantType
+) => {
+  isAuth(permittedRoles, context.auth.roles)
+
+  const churchLower = churchType.toLowerCase()
+  const servantLower = servantType.toLowerCase()
+  let verb
+  if (servantType === 'Leader') {
+    verb = `leads${churchType}`
+  }
+
+  if (servantType === 'Admin') {
+    verb = `isAdminFor${churchType}`
+  }
+
+  const session = context.driver.session()
+  let servant = {}
+  let church = { id: args[`${churchLower}Id`] }
+
+  await session
+    .run(cypher.matchMemberQuery, { id: args[`${servantLower}Id`] })
+    .then(async (response) => {
+      // Rearrange member object
+      servant = rearrangeMemberObject(servant, response)
+      errorHandling(servant)
+
+      if (servant[`${verb}`].length > 1) {
+        //If he leads more than one Church don't touch his Auth0 roles
+        return
+      }
+
+      //Check auth0 roles and remove roles 'leaderCentre'
+      axios(getUserRoles(servant.auth_id))
+        .then((res) => {
+          const roles = res.data.map((role) => role.name)
+
+          //If the person is only a constituency Admin, delete auth0 profile
+          if (roles.includes(`leader${churchType}`) && roles.length === 1) {
+            axios(deleteAuthUserConfig(servant.auth_id))
+              .then(async () => {
+                console.log(
+                  `Auth0 Account successfully deleted for ${servant.firstName} ${servant.lastName}`
+                )
+                //Remove Auth0 ID of Leader from Neo4j DB
+                session.run(cypher.removeMemberAuthId, {
+                  log: `${servant.firstName} ${servant.lastName} was removed as a ${churchType} ${servantType}`,
+                  auth_id: servant.auth_id,
+                  auth: context.auth,
+                })
+              })
+              .catch((error) => {
+                throwErrorMsg('Cypher Query Failed To Run', error)
+              })
+          }
+
+          //If the person is a centre leader as well as any other position, remove role centre leader
+          if (roles.includes(`leader${churchType}`) && roles.length > 1) {
+            removeRoles(
+              servant.auth_id,
+              roles,
+              authRoles[`${servantLower}${churchType}`].id
+            )
+          }
+        })
+        .catch((error) => {
+          throwErrorMsg('getUserRoles Failed to Run', error)
+        })
+      //Relationship inn Neo4j will be removed when the replacement leader is being added
+    })
+    .catch((err) => throwErrorMsg('', err))
+
+  //Returning the data such that it can update apollo cache
+  servant[`${verb}`].push({
+    id: church.id,
+    leader: {
+      id: servant.id,
+      firstName: servant.firstName,
+      lastName: servant.lastName,
+    },
+  })
+
+  servant[`${verb}`].map((church) => {
+    church.leader = {
+      id: servant.id,
+      firstName: servant.firstName,
+      lastName: servant.lastName,
+    }
+  })
+
+  return servant
+}
+
 export const resolvers = {
   // Resolver Parameters
   // Object: the parent result of a previous resolver
@@ -391,891 +608,130 @@ export const resolvers = {
       return admin
     },
     MakeTownAdmin: async (object, args, context) => {
-      const permittedRoles = ['adminFederal', 'adminBishop']
-      isAuth(permittedRoles, context.auth.roles)
-
-      const session = context.driver.session()
-      let admin = {}
-      let town = { id: args.townId }
-
-      await session
-        .run(cypher.matchMemberQuery, { id: args.adminId })
-        .then(async (response) => {
-          //Rearrange member object
-          admin = rearrangeMemberObject(admin, response)
-          errorHandling(admin)
-
-          //Check for AuthID of Admin
-          axios(getAuthIdConfig(admin))
-            .then(async (res) => {
-              admin.auth_id = res.data[0]?.user_id
-
-              if (!admin.auth_id) {
-                //If admin Does Not Have Auth0 Profile, Create One
-                axios(createAuthUserConfig(admin))
-                  .then((res) => {
-                    const auth_id = res.data.user_id
-                    admin.auth_id = res.data.user_id
-
-                    const roles = []
-
-                    assignRoles(auth_id, roles, [
-                      authRoles.adminConstituency.id,
-                    ])
-                    console.log(
-                      `Auth0 Account successfully created for ${admin.firstName} ${admin.lastName}`
-                    )
-
-                    //Write Auth0 ID of Admin to Neo4j DB
-                    session
-                      .run(cypher.makeTownAdmin, {
-                        adminId: admin.id,
-                        townId: args.townId,
-                        auth_id: admin.auth_id,
-                        auth: context.auth,
-                      })
-                      .then(console.log('Cypher Query Executed Successfully'))
-                      .catch((err) =>
-                        throwErrorMsg('Error running cypher query', err)
-                      )
-                  })
-                  .catch((err) => throwErrorMsg('Error Creating User', err))
-              } else if (admin.auth_id) {
-                //Check auth0 roles and add roles 'adminConstituency'
-                axios(getUserRoles(admin.auth_id))
-                  .then((res) => {
-                    const roles = res.data.map((role) => role.name)
-
-                    assignRoles(admin.auth_id, roles, [
-                      authRoles.adminConstituency.id,
-                    ])
-
-                    //Write Auth0 ID of Admin to Neo4j DB
-                    session
-                      .run(cypher.makeTownAdmin, {
-                        adminId: admin.id,
-                        townId: town.id,
-                        auth_id: admin.auth_id,
-                        auth: context.auth,
-                      })
-                      .then(console.log('Cypher Query Executed Successfully'))
-                      .catch((err) =>
-                        throwErrorMsg('Error running cypher query', err)
-                      )
-                  })
-                  .catch((error) =>
-                    throwErrorMsg('getUserRoles Failed to Run', error)
-                  )
-              }
-            })
-            .catch((err) =>
-              throwErrorMsg('There was an error obtaining the auth Id ', err)
-            )
-        })
-        .catch((err) => throwErrorMsg('', err))
-
-      return admin
+      return MakeServant(
+        context,
+        args,
+        ['adminFederal', 'adminBishop'],
+        'Town',
+        'Admin'
+      )
     },
     RemoveTownAdmin: async (object, args, context) => {
-      const permittedRoles = ['adminFederal', 'adminBishop']
-      isAuth(permittedRoles, context.auth.roles)
-
-      const session = context.driver.session()
-      let admin = {}
-      let town = { id: args.townId }
-
-      await session
-        .run(cypher.matchMemberQuery, { id: args.adminId })
-        .then(async (response) => {
-          //Rearrange member object
-          admin = rearrangeMemberObject(admin, response)
-          errorHandling(admin)
-
-          //Check auth0 roles and remove roles 'adminConstituency'
-          axios(getUserRoles(admin.auth_id))
-            .then((res) => {
-              const roles = res.data.map((role) => role.name)
-
-              //If the person is only a constituency Admin, delete auth0 profile
-              if (roles.includes('adminConstituency') && roles.length === 1) {
-                axios(deleteAuthUserConfig(admin.auth_id)).then(async () => {
-                  console.log(
-                    `Auth0 Account successfully deleted for ${admin.firstName} ${admin.lastName}`
-                  )
-                  //Remove Auth0 ID of Admin from Neo4j DB
-                  session.run(cypher.removeMemberAuthId, {
-                    log: `${admin.firstName} ${admin.lastName} was removed as a constituency admin`,
-                    auth_id: admin.auth_id,
-                    auth: context.auth,
-                  })
-                })
-              }
-
-              //If the person is a bishops admin as well as any other position, remove role bishops admin
-              if (roles.includes('adminConstituency') && roles.length > 1) {
-                removeRoles(
-                  admin.auth_id,
-                  roles,
-                  authRoles.adminConstituency.id
-                )
-              }
-            })
-
-            .catch((error) => {
-              throwErrorMsg('getUserRoles Failed to Run', error)
-            })
-            .then(async () =>
-              //Remove Admin relationship in Neo4j DB
-              session
-                .run(cypher.removeTownAdmin, {
-                  adminId: admin.id,
-                  townId: town.id,
-                  auth: context.auth,
-                })
-                .then(console.log('Cypher query ran successfully'))
-            )
-        })
-        .catch((err) => throwErrorMsg('', err))
-
-      return admin
+      return RemoveServant(
+        context,
+        args,
+        ['adminFederal', 'adminBishop'],
+        'Town',
+        'Admin'
+      )
     },
     MakeCampusAdmin: async (object, args, context) => {
-      const permittedRoles = ['adminFederal', 'adminBishop']
-      isAuth(permittedRoles, context.auth.roles)
-
-      const session = context.driver.session()
-      let admin = {}
-      let campus = { id: args.campusId }
-
-      await session
-        .run(cypher.matchMemberQuery, { id: args.adminId })
-        .then(async (response) => {
-          //Rearrange member object
-          admin = rearrangeMemberObject(admin, response)
-          errorHandling(admin)
-
-          //Check for AuthID of Admin
-          axios(getAuthIdConfig(admin))
-            .then(async (res) => {
-              admin.auth_id = res.data[0]?.user_id
-
-              if (!admin.auth_id) {
-                //If admin Does Not Have Auth0 Profile, Create One
-                axios(createAuthUserConfig(admin))
-                  .then((res) => {
-                    const auth_id = res.data.user_id
-                    admin.auth_id = res.data.user_id
-
-                    const roles = []
-
-                    assignRoles(auth_id, roles, [
-                      authRoles.adminConstituency.id,
-                    ])
-                    console.log(
-                      `Auth0 Account successfully created for ${admin.firstName} ${admin.lastName}`
-                    )
-
-                    //Write Auth0 ID of Admin to Neo4j DB
-                    session
-                      .run(cypher.makeCampusAdmin, {
-                        adminId: admin.id,
-                        campusId: campus.id,
-                        auth_id: admin.auth_id,
-                        auth: context.auth,
-                      })
-                      .then(console.log('Cypher Query Executed Successfully'))
-                      .catch((err) =>
-                        throwErrorMsg('Error running cypher query', err)
-                      )
-                  })
-                  .catch((err) => throwErrorMsg('Error Creating User', err))
-              } else if (admin.auth_id) {
-                //Check auth0 roles and add roles 'adminConstituency'
-                axios(getUserRoles(admin.auth_id))
-                  .then((res) => {
-                    const roles = res.data.map((role) => role.name)
-
-                    assignRoles(admin.auth_id, roles, [
-                      authRoles.adminConstituency.id,
-                    ])
-
-                    //Write Auth0 ID of Admin to Neo4j DB
-                    session
-                      .run(cypher.makeCampusAdmin, {
-                        adminId: admin.id,
-                        campusId: args.campusId,
-                        auth_id: admin.auth_id,
-                        auth: context.auth,
-                      })
-                      .then(console.log('Cypher Query Executed Successfully'))
-                      .catch((err) =>
-                        throwErrorMsg('Error running cypher query', err)
-                      )
-                  })
-                  .catch((error) =>
-                    throwErrorMsg('getUserRoles Failed to Run', error)
-                  )
-              }
-            })
-            .catch((err) =>
-              throwErrorMsg('There was an error obtaining the auth Id ', err)
-            )
-        })
-        .catch((err) => throwErrorMsg('', err))
-
-      return admin
+      return MakeServant(
+        context,
+        args,
+        ['adminFederal', 'adminBishop'],
+        'Campus',
+        'Admin'
+      )
     },
     RemoveCampusAdmin: async (object, args, context) => {
-      const permittedRoles = ['adminFederal', 'adminBishop']
-      isAuth(permittedRoles, context.auth.roles)
-
-      const session = context.driver.session()
-      let admin = {}
-      let campus = { id: args.campusId }
-
-      await session
-        .run(cypher.matchMemberQuery, { id: args.adminId })
-        .then(async (response) => {
-          //Rearrange member object
-          admin = rearrangeMemberObject(admin, response)
-          errorHandling(admin)
-
-          if (admin.isCampusAdminFor?.length > 1) {
-            //If he is admin for more than one Campus don't touch his Auth0 roles
-            return
-          }
-
-          //Check auth0 roles and remove roles 'adminConstituency'
-          axios(getUserRoles(admin.auth_id))
-            .then((res) => {
-              const roles = res.data.map((role) => role.name)
-
-              //If the person is only a constituency Admin, delete auth0 profile
-              if (roles.includes('adminConstituency') && roles.length === 1) {
-                axios(deleteAuthUserConfig(admin.auth_id)).then(async () => {
-                  console.log(
-                    `Auth0 Account successfully deleted for ${admin.firstName} ${admin.lastName}`
-                  )
-                  //Remove Auth0 ID of Admin from Neo4j DB
-                  session.run(cypher.removeMemberAuthId, {
-                    log: `${admin.firstName} ${admin.lastName} was removed as a constituency admin`,
-                    auth_id: admin.auth_id,
-                    auth: context.auth,
-                  })
-                })
-              }
-
-              //If the person is a constituency admin as well as any other position, remove role constituency admin
-              if (roles.includes('adminConstituency') && roles.length > 1) {
-                removeRoles(
-                  admin.auth_id,
-                  roles,
-                  authRoles.adminConstituency.id
-                )
-              }
-            })
-            .catch((error) => {
-              throwErrorMsg('getUserRoles Failed to Run', error)
-            })
-          //Relationship in Neo4j will be removed when the replacement admin is being added
-        })
-        .catch((err) => throwErrorMsg('', err))
-
-      return admin
+      return RemoveServant(
+        context,
+        args,
+        ['adminFederal', 'adminBishop'],
+        'Campus',
+        'Admin'
+      )
     },
     MakeBacentaLeader: async (object, args, context) => {
-      const permittedRoles = [
-        'adminFederal',
-        'adminBishop',
-        'adminConstituency',
-      ]
-      isAuth(permittedRoles, context.auth.roles)
-
-      const session = context.driver.session()
-      let leader = {}
-      let bacenta = { id: args.bacentaId }
-
-      await session
-        .run(cypher.matchMemberQuery, { id: args.leaderId })
-        .then(async (response) => {
-          // Rearrange member
-          leader = rearrangeMemberObject(leader, response)
-          errorHandling(leader)
-
-          //Check for AuthID of Leader
-          axios(getAuthIdConfig(leader))
-            .then(async (res) => {
-              leader.auth_id = res.data[0]?.user_id
-
-              if (!leader.auth_id) {
-                //If leader Does Not Have Auth0 Profile, Create One
-                axios(createAuthUserConfig(leader))
-                  .then((res) => {
-                    const auth_id = res.data.user_id
-                    leader.auth_id = res.data.user_id
-
-                    const roles = []
-
-                    assignRoles(auth_id, roles, [authRoles.leaderBacenta.id])
-                    console.log(
-                      `Auth0 Account successfully created for ${leader.firstName} ${leader.lastName}`
-                    )
-
-                    //Write Auth0 ID of Leader to Neo4j DB
-                    session
-                      .run(cypher.makeBacentaLeader, {
-                        leaderId: leader.id,
-                        bacentaId: bacenta.id,
-                        auth_id: leader.auth_id,
-                        auth: context.auth,
-                      })
-                      .then(console.log('Cypher Query Executed Successfully'))
-                      .catch((err) =>
-                        throwErrorMsg('Error running cypher query', err)
-                      )
-                  })
-                  .catch((err) => throwErrorMsg('Error Creating User', err))
-              } else if (leader.auth_id) {
-                //Check auth0 roles and add roles 'leaderBacenta'
-                axios(getUserRoles(leader.auth_id))
-                  .then((res) => {
-                    const roles = res.data.map((role) => role.name)
-
-                    assignRoles(leader.auth_id, roles, [
-                      authRoles.leaderBacenta.id,
-                    ])
-
-                    //Write Auth0 ID of Admin to Neo4j DB
-                    session
-                      .run(cypher.makeBacentaLeader, {
-                        leaderId: leader.id,
-                        bacentaId: bacenta.id,
-                        auth_id: leader.auth_id,
-                        auth: context.auth,
-                      })
-                      .then(console.log('Cypher Query Executed Successfully'))
-                      .catch((err) =>
-                        throwErrorMsg('Error running cypher query', err)
-                      )
-                  })
-                  .catch((error) =>
-                    throwErrorMsg('getUserRoles Failed to Run', error)
-                  )
-              }
-            })
-            .catch((err) =>
-              throwErrorMsg('There was an error obtaining the auth Id ', err)
-            )
-        })
-        .catch((err) => throwErrorMsg('', err))
-
-      return leader
+      return MakeServant(
+        context,
+        args,
+        ['adminFederal', 'adminBishop', 'adminConstituency'],
+        'Bacenta',
+        'Leader'
+      )
     },
     RemoveBacentaLeader: async (object, args, context) => {
-      const permittedRoles = [
-        'adminFederal',
-        'adminBishop',
-        'adminConstituency',
-      ]
-
-      isAuth(permittedRoles, context.auth.roles)
-
-      const session = context.driver.session()
-      let leader = {}
-      let bacenta = { id: args.bacentaId }
-
-      await session
-        .run(cypher.matchMemberQuery, { id: args.leaderId })
-        .then(async (response) => {
-          // Rearrange member object
-          leader = rearrangeMemberObject(leader, response)
-          errorHandling(leader)
-
-          if (leader.leadsBacenta.length > 1) {
-            //If he leads more than one bacenta don't touch his Auth0 roles
-            return
-          }
-
-          //Check auth0 roles and remove roles 'leaderBacenta'
-          axios(getUserRoles(leader.auth_id))
-            .then((res) => {
-              const roles = res.data.map((role) => role.name)
-
-              //If the person is only a bacentaLeader, delete auth0 profile
-              if (roles.includes('leaderBacenta') && roles.length === 1) {
-                axios(deleteAuthUserConfig(leader.auth_id)).then(async () => {
-                  console.log(
-                    `Auth0 Account successfully deleted for ${leader.firstName} ${leader.lastName}`
-                  )
-                  //Remove Auth0 ID of Leader from Neo4j DB
-                  session.run(cypher.removeMemberAuthId, {
-                    log: `${leader.firstName} ${leader.lastName} was removed as a bacenta leader`,
-                    auth_id: leader.auth_id,
-                    auth: context.auth,
-                  })
-                })
-              }
-
-              //If the person is a bacenta leader as well as any other position, remove role bacenta leader
-              if (roles.includes('leaderBacenta') && roles.length > 1) {
-                removeRoles(leader.auth_id, roles, authRoles.leaderBacenta.id)
-              }
-            })
-            .catch((error) => {
-              throwErrorMsg('getUserRoles Failed to Run', error)
-            })
-          //Relationship inn Neo4j will be removed when the replacement leader is being added
-        })
-        .catch((err) => throwErrorMsg('', err))
-
-      return leader
+      return RemoveServant(
+        context,
+        args,
+        ['adminFederal', 'adminBishop', 'adminConstituency'],
+        'Bacenta',
+        'Leader'
+      )
+    },
+    MakeSontaLeader: async (object, args, context) => {
+      return MakeServant(
+        context,
+        args,
+        ['adminFederal', 'adminBishop', 'adminConstituency'],
+        'Sonta',
+        'Leader'
+      )
+    },
+    RemoveSontaLeader: (object, args, context) => {
+      return RemoveServant(
+        context,
+        args,
+        ['adminFederal', 'adminBishop', 'adminConstituency'],
+        'Sonta',
+        'Leader'
+      )
     },
     MakeCentreLeader: async (object, args, context) => {
-      const permittedRoles = [
-        'adminFederal',
-        'adminBishop',
-        'adminConstituency',
-      ]
-      isAuth(permittedRoles, context.auth.roles)
-
-      const session = context.driver.session()
-      let leader = {}
-      let centre = { id: args.centreId }
-
-      await session
-        .run(cypher.matchMemberQuery, { id: args.leaderId })
-        .then(async (response) => {
-          // Rearrange member object
-          leader = rearrangeMemberObject(leader, response)
-          errorHandling(leader)
-
-          //Check for AuthID of Leader
-          axios(getAuthIdConfig(leader))
-            .then(async (res) => {
-              leader.auth_id = res.data[0]?.user_id
-
-              if (!leader.auth_id) {
-                //If leader Does Not Have Auth0 Profile, Create One
-                axios(createAuthUserConfig(leader))
-                  .then((res) => {
-                    const auth_id = res.data.user_id
-                    leader.auth_id = res.data.user_id
-
-                    const roles = []
-
-                    assignRoles(auth_id, roles, [authRoles.leaderCentre.id])
-                    console.log(
-                      `Auth0 Account successfully created for ${leader.firstName} ${leader.lastName}`
-                    )
-
-                    //Write Auth0 ID of Leader to Neo4j DB
-                    session
-                      .run(cypher.makeCentreLeader, {
-                        leaderId: leader.id,
-                        centreId: centre.id,
-                        auth_id: leader.auth_id,
-                        auth: context.auth,
-                      })
-                      .then(console.log('Cypher Query Executed Successfully'))
-                      .catch((err) =>
-                        throwErrorMsg('Error running cypher query', err)
-                      )
-                  })
-                  .catch((err) => throwErrorMsg('Error Creating User', err))
-              } else if (leader.auth_id) {
-                //Check auth0 roles and add roles 'leaderCentre'
-                axios(getUserRoles(leader.auth_id))
-                  .then((res) => {
-                    const roles = res.data.map((role) => role.name)
-
-                    assignRoles(leader.auth_id, roles, [
-                      authRoles.leaderCentre.id,
-                    ])
-
-                    //Write Auth0 ID of Admin to Neo4j DB
-                    session
-                      .run(cypher.makeCentreLeader, {
-                        leaderId: leader.id,
-                        centreId: centre.id,
-                        auth_id: leader.auth_id,
-                        auth: context.auth,
-                      })
-                      .then(console.log('Cypher Query Executed Successfully'))
-                      .catch((err) =>
-                        throwErrorMsg('Error running cypher query', err)
-                      )
-                  })
-                  .catch((error) =>
-                    throwErrorMsg('getUserRoles Failed to Run', error)
-                  )
-              }
-            })
-            .catch((err) =>
-              throwErrorMsg('There was an error obtaining the auth Id ', err)
-            )
-        })
-        .catch((err) => throwErrorMsg('', err))
-
-      return leader
+      MakeServant(
+        context,
+        args,
+        ['adminFederal', 'adminBishop', 'adminConstituency'],
+        'Centre',
+        'Leader'
+      )
     },
     RemoveCentreLeader: async (object, args, context) => {
-      const permittedRoles = [
-        'adminFederal',
-        'adminBishop',
-        'adminConstituency',
-      ]
-      isAuth(permittedRoles, context.auth.roles)
-
-      const session = context.driver.session()
-      let leader = {}
-      let centre = { id: args.centreId }
-
-      await session
-        .run(cypher.matchMemberQuery, { id: args.leaderId })
-        .then(async (response) => {
-          // Rearrange member object
-          leader = rearrangeMemberObject(leader, response)
-          errorHandling(leader)
-
-          if (leader.leadsCentre.length > 1) {
-            //If he leads more than one Centre don't touch his Auth0 roles
-            return
-          }
-
-          //Check auth0 roles and remove roles 'leaderCentre'
-          axios(getUserRoles(leader.auth_id))
-            .then((res) => {
-              const roles = res.data.map((role) => role.name)
-
-              //If the person is only a constituency Admin, delete auth0 profile
-              if (roles.includes('leaderCentre') && roles.length === 1) {
-                axios(deleteAuthUserConfig(leader.auth_id)).then(async () => {
-                  console.log(
-                    `Auth0 Account successfully deleted for ${leader.firstName} ${leader.lastName}`
-                  )
-                  //Remove Auth0 ID of Leader from Neo4j DB
-                  session.run(cypher.removeMemberAuthId, {
-                    log: `${leader.firstName} ${leader.lastName} was removed as a centre leader`,
-                    auth_id: leader.auth_id,
-                    auth: context.auth,
-                  })
-                })
-              }
-
-              //If the person is a centre leader as well as any other position, remove role centre leader
-              if (roles.includes('leaderCentre') && roles.length > 1) {
-                removeRoles(leader.auth_id, roles, authRoles.leaderCentre.id)
-              }
-            })
-            .catch((error) => {
-              throwErrorMsg('getUserRoles Failed to Run', error)
-            })
-          //Relationship inn Neo4j will be removed when the replacement leader is being added
-        })
-        .catch((err) => throwErrorMsg('', err))
-
-      return leader
+      RemoveServant(
+        context,
+        args,
+        ['adminFederal', 'adminBishop', 'adminConstituency'],
+        'Centre',
+        'Leader'
+      )
     },
     MakeCampusLeader: async (object, args, context) => {
-      const permittedRoles = [
-        'adminFederal',
-        'adminBishop',
-        'adminConstituency',
-      ]
-      isAuth(permittedRoles, context.auth.roles)
-
-      const session = context.driver.session()
-      let leader = {}
-      let campus = { id: args.campusId }
-
-      await session
-        .run(cypher.matchMemberQuery, { id: args.leaderId })
-        .then(async (response) => {
-          // Rearrange member object
-          leader = rearrangeMemberObject(leader, response)
-          errorHandling(leader)
-
-          //Check for AuthID of Leader
-          axios(getAuthIdConfig(leader))
-            .then(async (res) => {
-              leader.auth_id = res.data[0]?.user_id
-
-              if (!leader.auth_id) {
-                //If leader Does Not Have Auth0 Profile, Create One
-                axios(createAuthUserConfig(leader))
-                  .then((res) => {
-                    const auth_id = res.data.user_id
-                    leader.auth_id = res.data.user_id
-
-                    const roles = []
-
-                    assignRoles(auth_id, roles, [
-                      authRoles.leaderConstituency.id,
-                    ])
-                    console.log(
-                      `Auth0 Account successfully created for ${leader.firstName} ${leader.lastName}`
-                    )
-
-                    //Write Auth0 ID of Leader to Neo4j DB
-                    session
-                      .run(cypher.makeCampusLeader, {
-                        leaderId: leader.id,
-                        campusId: campus.id,
-                        auth_id: leader.auth_id,
-                        auth: context.auth,
-                      })
-                      .then(console.log('Cypher Query Executed Successfully'))
-                      .catch((err) =>
-                        throwErrorMsg('Error running cypher query', err)
-                      )
-                  })
-                  .catch((err) => throwErrorMsg('Error Creating User', err))
-              } else if (leader.auth_id) {
-                //Check auth0 roles and add roles 'leaderConstituency'
-                axios(getUserRoles(leader.auth_id))
-                  .then((res) => {
-                    const roles = res.data.map((role) => role.name)
-
-                    assignRoles(leader.auth_id, roles, [
-                      authRoles.leaderConstituency.id,
-                    ])
-
-                    //Write Auth0 ID of Admin to Neo4j DB
-                    session
-                      .run(cypher.makeCampusLeader, {
-                        leaderId: leader.id,
-                        campusId: campus.id,
-                        auth_id: leader.auth_id,
-                        auth: context.auth,
-                      })
-                      .then(console.log('Cypher Query Executed Successfully'))
-                      .catch((err) =>
-                        throwErrorMsg('Error running cypher query', err)
-                      )
-                  })
-                  .catch((error) =>
-                    throwErrorMsg('getUserRoles Failed to Run', error)
-                  )
-              }
-            })
-            .catch((err) =>
-              throwErrorMsg('There was an error obtaining the auth Id ', err)
-            )
-        })
-        .catch((err) => throwErrorMsg('', err))
-
-      return leader
+      return MakeServant(
+        context,
+        args,
+        ['adminFederal', 'adminBishop'],
+        'Campus',
+        'Leader'
+      )
     },
     RemoveCampusLeader: async (object, args, context) => {
-      const permittedRoles = [
-        'adminFederal',
-        'adminBishop',
-        'adminConstituency',
-      ]
-      isAuth(permittedRoles, context.auth.roles)
-
-      const session = context.driver.session()
-      let leader = {}
-      let campus = { id: args.campusId }
-
-      await session
-        .run(cypher.matchMemberQuery, { id: args.leaderId })
-        .then(async (response) => {
-          leader = rearrangeMemberObject(leader, response)
-          errorHandling(leader)
-
-          if (leader.leadsCampus.length > 1) {
-            //If he leads more than one Campus don't touch his Auth0 roles
-            return
-          }
-
-          //Check auth0 roles and remove roles 'leaderConstituency'
-          axios(getUserRoles(leader.auth_id))
-            .then((res) => {
-              const roles = res.data.map((role) => role.name)
-
-              //If the person is only a constituency overseer, delete auth0 profile
-              if (roles.includes('leaderConstituency') && roles.length === 1) {
-                axios(deleteAuthUserConfig(leader.auth_id)).then(async () => {
-                  console.log(
-                    `Auth0 Account successfully deleted for ${leader.firstName} ${leader.lastName}`
-                  )
-                  //Remove Auth0 ID of Leader from Neo4j DB
-                  session.run(cypher.removeMemberAuthId, {
-                    log: `${leader.firstName} ${leader.lastName} was removed as a Campus CO`,
-                    auth_id: leader.auth_id,
-                    auth: context.auth,
-                  })
-                })
-              }
-
-              //If the person is a Campus leader as well as any other position, remove role Campus leader
-              if (roles.includes('leaderConstituency') && roles.length > 1) {
-                removeRoles(
-                  leader.auth_id,
-                  roles,
-                  authRoles.leaderConstituency.id
-                )
-              }
-            })
-            .catch((error) => {
-              throwErrorMsg('getUserRoles Failed to Run', error)
-            })
-          //Relationship in Neo4j will be removed when the replacement leader is being added
-        })
-        .catch((err) => throwErrorMsg('', err))
-
-      return leader
+      return RemoveServant(
+        context,
+        args,
+        ['adminFederal', 'adminBishop'],
+        'Campus',
+        'Leader'
+      )
     },
     MakeTownLeader: async (object, args, context) => {
-      const permittedRoles = [
-        'adminFederal',
-        'adminBishop',
-        'adminConstituency',
-      ]
-      isAuth(permittedRoles, context.auth.roles)
-
-      const session = context.driver.session()
-      let leader = {}
-      let town = { id: args.townId }
-
-      await session
-        .run(cypher.matchMemberQuery, { id: args.leaderId })
-        .then(async (response) => {
-          leader = rearrangeMemberObject(leader, response)
-          errorHandling(leader)
-
-          //Check for AuthID of Leader
-          axios(getAuthIdConfig(leader))
-            .then(async (res) => {
-              leader.auth_id = res.data[0]?.user_id
-
-              if (!leader.auth_id) {
-                //If leader Does Not Have Auth0 Profile, Create One
-                axios(createAuthUserConfig(leader))
-                  .then((res) => {
-                    const auth_id = res.data.user_id
-                    leader.auth_id = res.data.user_id
-
-                    const roles = []
-
-                    assignRoles(auth_id, roles, [
-                      authRoles.leaderConstituency.id,
-                    ])
-                    console.log(
-                      `Auth0 Account successfully created for ${leader.firstName} ${leader.lastName}`
-                    )
-
-                    //Write Auth0 ID of Leader to Neo4j DB
-                    session
-                      .run(cypher.makeTownLeader, {
-                        leaderId: leader.id,
-                        townId: town.id,
-                        auth_id: leader.auth_id,
-                        auth: context.auth,
-                      })
-                      .then(console.log('Cypher Query Executed Successfully'))
-                      .catch((err) =>
-                        throwErrorMsg('Error running cypher query', err)
-                      )
-                  })
-                  .catch((err) => throwErrorMsg('Error Creating User', err))
-              } else if (leader.auth_id) {
-                //Check auth0 roles and add roles 'leaderConstituency'
-                axios(getUserRoles(leader.auth_id))
-                  .then((res) => {
-                    const roles = res.data.map((role) => role.name)
-
-                    assignRoles(leader.auth_id, roles, [
-                      authRoles.leaderConstituency.id,
-                    ])
-
-                    //Write Auth0 ID of Admin to Neo4j DB
-                    session
-                      .run(cypher.makeTownLeader, {
-                        leaderId: leader.id,
-                        townId: town.id,
-                        auth_id: leader.auth_id,
-                        auth: context.auth,
-                      })
-                      .then(console.log('Cypher Query Executed Successfully'))
-                      .catch((err) =>
-                        throwErrorMsg('Error running cypher query', err)
-                      )
-                  })
-                  .catch((error) =>
-                    throwErrorMsg('getUserRoles Failed to Run', error)
-                  )
-              }
-            })
-            .catch((err) =>
-              throwErrorMsg('There was an error obtaining the auth Id', err)
-            )
-        })
-        .catch((err) => throwErrorMsg('', err))
-
-      return leader
+      return MakeServant(
+        context,
+        args,
+        ['adminFederal', 'adminBishop'],
+        'Town',
+        'Leader'
+      )
     },
     RemoveTownLeader: async (object, args, context) => {
-      const permittedRoles = [
-        'adminFederal',
-        'adminBishop',
-        'adminConstituency',
-      ]
-      isAuth(permittedRoles, context.auth.roles)
-
-      const session = context.driver.session()
-      let leader = {}
-      let town = { id: args.townId }
-
-      await session
-        .run(cypher.matchMemberQuery, { id: args.leaderId })
-        .then(async (response) => {
-          leader = rearrangeMemberObject(leader, response)
-          errorHandling(leader)
-
-          if (leader.leadsTown.length > 1) {
-            //If he leads more than one Town don't touch his Auth0 roles
-            return
-          }
-
-          //Check auth0 roles and remove roles 'leaderConstituency'
-          axios(getUserRoles(leader.auth_id))
-            .then((res) => {
-              const roles = res.data.map((role) => role.name)
-
-              //If the person is only a constituency Admin, delete auth0 profile
-              if (roles.includes('leaderConstituency') && roles.length === 1) {
-                axios(deleteAuthUserConfig(leader.auth_id)).then(async () => {
-                  console.log(
-                    `Auth0 Account successfully deleted for ${leader.firstName} ${leader.lastName}`
-                  )
-                  //Remove Auth0 ID of Leader from Neo4j DB
-                  session.run(cypher.removeMemberAuthId, {
-                    log: `${leader.firstName} ${leader.lastName} was removed as a Town CO`,
-                    auth_id: leader.auth_id,
-                    auth: context.auth,
-                  })
-                })
-              }
-
-              //If the person is a Town leader as well as any other position, remove role Town leader
-              if (roles.includes('leaderConstituency') && roles.length > 1) {
-                removeRoles(
-                  leader.auth_id,
-                  roles,
-                  authRoles.leaderConstituency.id
-                )
-              }
-            })
-            .catch((error) => {
-              throwErrorMsg('getUserRoles Failed to Run', error)
-            })
-          //Relationship in Neo4j will be removed when the replacement leader is being added
-        })
-        .catch((err) => throwErrorMsg('', err))
-
-      return leader
+      return RemoveServant(
+        context,
+        args,
+        ['adminFederal', 'adminBishop'],
+        'Town',
+        'Leader'
+      )
     },
   },
 }

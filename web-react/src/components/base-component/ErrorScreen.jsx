@@ -1,7 +1,11 @@
 import React from 'react'
-import NavBar from './nav/NavBar'
+import NavBar from '../nav/NavBar'
 
-const ErrorScreen = () => {
+const ErrorScreen = ({ error }) => {
+  if (error) {
+    // eslint-disable-next-line no-console
+    console.log(error)
+  }
   return (
     <>
       <NavBar />

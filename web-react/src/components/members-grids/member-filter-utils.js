@@ -149,9 +149,9 @@ export const memberFilter = (memberData, filters) => {
   if (filters.leaderRank.includes('Admin')) {
     leaderData.admins = filteredData.filter((member) => {
       if (
-        member.isTownAdminFor[0] ||
-        member.isCampusAdminFor[0] ||
-        member.isBishopAdminFor[0]
+        member.isAdminForTown[0] ||
+        member.isAdminForCampus[0] ||
+        member.isAdminForBishop[0]
       ) {
         return member
       }

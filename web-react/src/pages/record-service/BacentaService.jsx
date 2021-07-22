@@ -4,8 +4,8 @@ import NavBar from '../../components/nav/NavBar'
 import { useMutation, useQuery } from '@apollo/client'
 import { RECORD_SERVICE } from '././RecordServiceMutations'
 import { DISPLAY_BACENTA } from '../display/ReadQueries'
-import LoadingScreen from '../../components/LoadingScreen'
-import ErrorScreen from '../../components/ErrorScreen'
+import LoadingScreen from '../../components/base-component/LoadingScreen'
+import ErrorScreen from '../../components/base-component/ErrorScreen'
 import ServiceForm from './ServiceForm'
 
 const BacentaService = () => {

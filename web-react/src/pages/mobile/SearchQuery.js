@@ -113,11 +113,11 @@ export const FEDERAL_SEARCH = gql`
           id
         }
       }
-      townBishop {
+      isBishopForTown {
         id
         name
       }
-      campusBishop {
+      isBishopForCampus {
         id
         name
       }

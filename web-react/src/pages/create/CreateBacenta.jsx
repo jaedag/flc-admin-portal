@@ -21,8 +21,8 @@ import {
 import { CREATE_BACENTA_MUTATION } from './CreateMutations'
 import NavBar from '../../components/nav/NavBar'
 import { ChurchContext } from '../../contexts/ChurchContext'
-import ErrorScreen from '../../components/ErrorScreen'
-import LoadingScreen from '../../components/LoadingScreen'
+import ErrorScreen from '../../components/base-component/ErrorScreen'
+import LoadingScreen from '../../components/base-component/LoadingScreen'
 import Spinner from '../../components/Spinner.jsx'
 import { NEW_BACENTA_LEADER } from './MakeLeaderMutations'
 
@@ -111,10 +111,10 @@ const CreateBacenta = () => {
     return <LoadingScreen />
   } else if (townListData && campusListData) {
     const townOptions = townListData
-      ? makeSelectOptions(townListData.members[0]?.townBishop)
+      ? makeSelectOptions(townListData.members[0]?.isBishopForTown)
       : []
     const campusOptions = campusListData
-      ? makeSelectOptions(campusListData.members[0]?.campusBishop)
+      ? makeSelectOptions(campusListData.members[0]?.isBishopForCampus)
       : []
 
     return (

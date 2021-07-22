@@ -6,7 +6,7 @@ import { MemberContext } from '../contexts/MemberContext'
 import BishopDashboard from '../pages/dashboards/BishopDashboard.jsx'
 import { ChurchContext } from '../contexts/ChurchContext'
 // import DisplayCampusTownDetails from '../pages/display/DetailsCampusTown.jsx'
-import LoadingScreen from '../components/LoadingScreen'
+import LoadingScreen from '../components/base-component/LoadingScreen'
 import { isAuthorised } from '../global-utils'
 import ServantsDashboard from 'pages/dashboards/ServantsDashboard'
 
@@ -19,10 +19,15 @@ const ProtectedRoute = ({ component, roles, ...args }) => {
 
   useEffect(() => {
     if (isAuthenticated && !currentUser.roles.includes('adminFederal')) {
+      //if User is not a federal admin
       setBishopId(currentUser.bishop)
       setChurch(currentUser.church)
-      setTownId(currentUser.constituency)
-      setCampusId(currentUser.constituency)
+
+      if (!currentUser.roles.includes('adminBishop')) {
+        //User is not a Bishops Admin the he can only be looking at his constituency membership
+        setTownId(currentUser.constituency)
+        setCampusId(currentUser.constituency)
+      }
     }
     // eslint-disable-next-line
   }, [currentUser, setBishopId, setTownId, setCampusId, setChurch])

@@ -8,14 +8,12 @@ import FormikControl from '../../components/formik-components/FormikControl'
 import {
   GET_BISHOP_CAMPUSES,
   GET_BISHOP_TOWNS,
-  GET_CAMPUS_CENTRES,
-  GET_TOWN_CENTRES,
   BISHOP_MEMBER_DROPDOWN,
 } from '../../queries/ListQueries.js'
 import { CREATE_CENTRE_MUTATION } from './CreateMutations'
 import NavBar from '../../components/nav/NavBar'
-import ErrorScreen from '../../components/ErrorScreen'
-import LoadingScreen from '../../components/LoadingScreen'
+import ErrorScreen from '../../components/base-component/ErrorScreen'
+import LoadingScreen from '../../components/base-component/LoadingScreen'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import PlusSign from '../../components/buttons/PlusSign'
 import MinusSign from '../../components/buttons/MinusSign'
@@ -45,12 +43,7 @@ function CreateCentre() {
   })
 
   const [NewCentreLeader] = useMutation(NEW_CENTRE_LEADER)
-  const [CreateCentre] = useMutation(CREATE_CENTRE_MUTATION, {
-    refetchQueries: [
-      { query: GET_CAMPUS_CENTRES, variables: { id: bishopId } },
-      { query: GET_TOWN_CENTRES, variables: { id: bishopId } },
-    ],
-  })
+  const [CreateCentre] = useMutation(CREATE_CENTRE_MUTATION)
 
   const { data: townsData, loading: townsLoading } = useQuery(
     GET_BISHOP_TOWNS,
@@ -66,9 +59,9 @@ function CreateCentre() {
   )
 
   if (townsData && campusesData) {
-    const townOptions = makeSelectOptions(townsData.members[0].townBishop)
+    const townOptions = makeSelectOptions(townsData.members[0].isBishopForTown)
     const campusOptions = makeSelectOptions(
-      campusesData.members[0].campusBishop
+      campusesData.members[0].isBishopForCampus
     )
 
     //onSubmit receives the form state as argument
@@ -82,7 +75,6 @@ function CreateCentre() {
       CreateCentre({
         variables: {
           centreName: values.centreName,
-          leaderId: values.leaderId,
           townCampusId: values.campusTownSelect,
           bacentas: values.bacentas,
         },

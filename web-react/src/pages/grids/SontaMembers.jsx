@@ -13,8 +13,8 @@ const SontaMembers = () => {
 
   return (
     <MembersGrid
-      title={data ? `${data.displaySonta?.name} Sonta` : null}
-      memberData={data?.sontaMemberList}
+      title={data ? `${data.sontas[0]?.name} Sonta` : null}
+      memberData={data?.sontas[0]?.members}
       memberLoading={loading}
       memberError={error}
     />

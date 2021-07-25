@@ -2,7 +2,7 @@ import { gql } from '@apollo/client'
 
 export const BISHOP_BACENTA_DROPDOWN = gql`
   query($id: ID, $bacentaName: String) {
-    members(where: { id: $id }, options: { limit: 8 }) {
+    members(where: { id: $id }) {
       id
       firstName
       lastName

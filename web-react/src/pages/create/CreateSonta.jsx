@@ -18,7 +18,7 @@ import { DISPLAY_CAMPUS, DISPLAY_TOWN } from 'pages/display/ReadQueries'
 import { NEW_SONTA_LEADER } from './MakeLeaderMutations'
 
 function CreateSonta() {
-  const { church, bishopId, campusId, townId, setSontaId } = useContext(
+  const { church, bishopId, campusId, townId, clickCard } = useContext(
     ChurchContext
   )
 
@@ -71,19 +71,20 @@ function CreateSonta() {
         variables: {
           ministryId: values.ministrySelect,
           townCampusId: campusTownData?.id,
+          leaderId: values.leaderId,
         },
       })
         .then((res) => {
+          clickCard(res.data.CreateSonta.sontas[0])
           NewSontaLeader({
             variables: {
               leaderId: values.leaderId,
               sontaId: res.data.CreateSonta.sontas[0].id,
             },
           }).catch((error) => alert('There was an error', error))
-          setSontaId(res.data.CreateSonta.sontas[0].id)
+          history.push('/sonta/displaydetails')
           onSubmitProps.setSubmitting(false)
           onSubmitProps.resetForm()
-          history.push('/sonta/displaydetails')
         })
         .catch((error) => alert('There was an error', error))
     }

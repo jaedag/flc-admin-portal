@@ -72,7 +72,7 @@ const UpdateCentre = () => {
     leaderName: centre?.leader
       ? `${centre?.leader.firstName} ${centre?.leader.lastName}`
       : '',
-    leaderSelect: centre?.leader?.id,
+    leaderSelect: centre?.leader?.id || '',
     campusTownSelect:
       church.church === 'town' ? centre?.town?.id : centre?.campus?.id,
     bacentas: centre?.bacentas.length ? centre?.bacentas : [''],

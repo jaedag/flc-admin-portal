@@ -198,8 +198,8 @@ SET oldHistory.current = false, oldLeaderHistory.current = false //nullify old h
 WITH log,bacenta,oldLeader,leader
        CALL{
          WITH log,bacenta,oldLeader, leader
-         WITH log,bacenta,oldLeader, leader
-         WHERE EXISTS (oldLeader.firstName)
+         WITH log,bacenta,oldLeader, leader WHERE leader.id <> $leaderId
+         AND EXISTS (oldLeader.firstName)
         
        MERGE (oldLeader)-[hasHistory:HAS_HISTORY]->(log)
         SET hasHistory.neverLed = true,
@@ -242,8 +242,8 @@ SET oldHistory.current = false, oldLeaderHistory.current = false //nullify old h
 WITH log,centre,oldLeader,leader
        CALL{
          WITH log,centre,oldLeader, leader
-         WITH log,centre,oldLeader, leader
-         WHERE EXISTS (oldLeader.firstName)
+         WITH log,centre,oldLeader, leader WHERE leader.id <> $leaderId
+         AND EXISTS (oldLeader.firstName)
         
        MERGE (oldLeader)-[hasHistory:HAS_HISTORY]->(log)
        SET hasHistory.neverLed = true,
@@ -283,11 +283,11 @@ OPTIONAL MATCH (sonta)-[oldHistory:HAS_HISTORY]->()-[oldLeaderHistory:HAS_HISTOR
 SET oldHistory.current = false, oldLeaderHistory.current = false //nullify old history relationship
    DELETE oldLeads //Delete old relationship
 
-WITH log,sonta,oldLeader,leader
+WITH log,sonta,oldLeader,leader 
        CALL{
          WITH log,sonta,oldLeader, leader
-         WITH log,sonta,oldLeader, leader
-         WHERE EXISTS (oldLeader.firstName)
+         WITH log,sonta,oldLeader, leader WHERE leader.id <> $leaderId
+         AND EXISTS (oldLeader.firstName)
         
        MERGE (oldLeader)-[hasHistory:HAS_HISTORY]->(log)
        SET hasHistory.neverLed = true,
@@ -329,8 +329,8 @@ SET oldHistory.current = false, oldLeaderHistory.current = false //nullify old h
 WITH log,campus,oldLeader,leader
        CALL{
          WITH log,campus,oldLeader, leader
-         WITH log,campus,oldLeader, leader
-         WHERE EXISTS (oldLeader.firstName)
+         WITH log,campus,oldLeader, leader WHERE leader.id <> $leaderId
+         AND EXISTS (oldLeader.firstName)
         
        MERGE (oldLeader)-[hasHistory:HAS_HISTORY]->(log)
        SET hasHistory.neverLed = true,
@@ -372,8 +372,8 @@ SET oldHistory.current = false, oldLeaderHistory.current = false //nullify old h
 WITH log,town,oldLeader,leader
        CALL{
          WITH log,town,oldLeader, leader
-         WITH log,town,oldLeader, leader
-         WHERE EXISTS (oldLeader.firstName)
+         WITH log,town,oldLeader, leader WHERE leader.id <> $leaderId
+         AND EXISTS (oldLeader.firstName)
         
        MERGE (oldLeader)-[hasHistory:HAS_HISTORY]->(log)
        SET hasHistory.neverLed = true,

@@ -5,6 +5,10 @@ import { capitalise } from '../global-utils'
 import DashboardButton from './buttons/DashboardButton'
 
 const MemberRoleList = ({ member }) => {
+  if (!member) {
+    return null
+  }
+
   const { clickCard, determineStream } = useContext(ChurchContext)
   const history = useHistory()
 

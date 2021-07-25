@@ -84,6 +84,10 @@ export const parsePhoneNum = (phoneNumber) => {
 }
 
 export const makeSelectOptions = (data) => {
+  if (!data) {
+    return null
+  }
+
   return data.map((data) => ({
     value: data.id,
     key: data.name ? data.name : data.firstName + ' ' + data.lastName,
@@ -138,6 +142,9 @@ export function debounce(func, wait) {
 }
 
 export const getNameWithTitle = (member) => {
+  if (!member) {
+    return null
+  }
   let displayName = {
     name: `${member.fullName}`,
     title: '',
@@ -169,6 +176,9 @@ export const getNameWithTitle = (member) => {
 }
 
 export const getMemberDob = (displayMember) => {
+  if (!displayMember) {
+    return
+  }
   if (displayMember.dob?.date) {
     return new Date(displayMember.dob?.date).toLocaleDateString('en-gb', {
       year: 'numeric',

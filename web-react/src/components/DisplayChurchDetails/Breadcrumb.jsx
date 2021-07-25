@@ -4,10 +4,15 @@ import { ChurchContext } from '../../contexts/ChurchContext'
 
 const Breadcrumb = ({ breadcrumb }) => {
   const { clickCard } = useContext(ChurchContext)
+
   return (
     <>
       {breadcrumb
         ? breadcrumb.map((bread, i) => {
+            if (!bread) {
+              return null
+            }
+
             let breadname
             if (bread?.__typename === 'Sonta') {
               bread.campus &&

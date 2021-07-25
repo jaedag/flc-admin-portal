@@ -93,6 +93,7 @@ export const CREATE_BACENTA_MUTATION = gql`
   mutation CreateBacenta(
     $bacentaName: String!
     $centreId: ID!
+    $leaderId: ID!
     $meetingDay: String!
     $venueLongitude: Float
     $venueLatitude: Float
@@ -100,6 +101,7 @@ export const CREATE_BACENTA_MUTATION = gql`
     CreateBacenta(
       bacentaName: $bacentaName
       centreId: $centreId
+      leaderId: $leaderId
       meetingDay: $meetingDay
       venueLongitude: $venueLongitude
       venueLatitude: $venueLatitude
@@ -118,26 +120,50 @@ export const CREATE_BACENTA_MUTATION = gql`
 `
 
 export const CREATE_CENTRE_MUTATION = gql`
-  mutation CreateCentre($centreName: String!, $townCampusId: ID!) {
-    CreateCentre(centreName: $centreName, townCampusId: $townCampusId) {
+  mutation CreateCentre(
+    $centreName: String!
+    $townCampusId: ID!
+    $leaderId: ID!
+  ) {
+    CreateCentre(
+      centreName: $centreName
+      townCampusId: $townCampusId
+      leaderId: $leaderId
+    ) {
       id
       name
       centres {
         id
         name
+        leader {
+          id
+          firstName
+          lastName
+          fullName
+        }
       }
     }
   }
 `
 
 export const CREATE_SONTA_MUTATION = gql`
-  mutation CreateSonta($ministryId: ID!, $townCampusId: ID!) {
-    CreateSonta(ministryId: $ministryId, townCampusId: $townCampusId) {
+  mutation CreateSonta($ministryId: ID!, $townCampusId: ID!, $leaderId: ID!) {
+    CreateSonta(
+      ministryId: $ministryId
+      townCampusId: $townCampusId
+      leaderId: $leaderId
+    ) {
       id
       name
       sontas {
         id
         name
+        leader {
+          id
+          firstName
+          lastName
+          fullName
+        }
       }
     }
   }

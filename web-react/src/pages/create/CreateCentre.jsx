@@ -76,6 +76,7 @@ function CreateCentre() {
         variables: {
           centreName: values.centreName,
           townCampusId: values.campusTownSelect,
+          leaderId: values.leaderId,
           bacentas: values.bacentas,
         },
       })
@@ -184,6 +185,7 @@ function CreateCentre() {
                                       queryVariable2="bacentaName"
                                       suggestionText="name"
                                       suggestionID="id"
+                                      church="bacenta"
                                       dataset="bishopBacentaDropdown"
                                       aria-describedby="Bacenta Name"
                                       className="form-control"

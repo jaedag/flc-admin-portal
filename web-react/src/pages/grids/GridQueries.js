@@ -22,13 +22,7 @@ export const GET_FEDERAL_MEMBERS = gql`
         gender
       }
       title {
-        Title {
-          title
-        }
-        status
-        yearAppointed {
-          year
-        }
+        title
       }
       leadsBacenta {
         name
@@ -97,13 +91,7 @@ export const GET_FEDERAL_PASTORS = gql`
         gender
       }
       title {
-        Title {
-          title
-        }
-        status
-        yearAppointed {
-          year
-        }
+        title
       }
       leadsBacenta {
         id
@@ -568,44 +556,30 @@ export const GET_SONTA_MEMBERS = gql`
           gender
         }
         title {
-          Title {
-            title
-          }
-          status
-          yearAppointed {
-            year
-          }
+          title
         }
         leadsBacenta {
-          id
           name
         }
         leadsCentre {
-          id
           name
         }
         leadsMinistry {
-          id
           name
         }
         leadsSonta {
-          id
           name
         }
         leadsBasonta {
-          id
           name
         }
         leadsTown {
-          id
           name
         }
         leadsCampus {
-          id
           name
         }
         isBishopForTown {
-          id
           name
         }
         isBishopForCampus {

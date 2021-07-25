@@ -8,43 +8,40 @@ import BaseComponent from 'components/base-component/BaseComponent'
 
 const DisplayCentreDetails = () => {
   const { centreId } = useContext(ChurchContext)
-  const { data: centreData, loading: centreLoading } = useQuery(
-    DISPLAY_CENTRE,
-    {
-      variables: { id: centreId },
-    }
-  )
+  const { data, loading, error } = useQuery(DISPLAY_CENTRE, {
+    variables: { id: centreId },
+  })
 
-  const displayCentre = centreData?.centres[0]
-  const { centreMemberCount, centreBacentaCount } = centreData
+  const displayCentre = data?.centres[0]
+
   let breadcrumb = [
-    displayCentre.town
-      ? displayCentre.town.bishop
-      : displayCentre.campus.bishop,
-    displayCentre.town ? displayCentre.town : displayCentre.campus,
+    displayCentre?.town
+      ? displayCentre?.town.bishop
+      : displayCentre?.campus.bishop,
+    displayCentre?.town ? displayCentre?.town : displayCentre?.campus,
     displayCentre,
   ]
   return (
-    <BaseComponent loadingState={centreLoading}>
+    <BaseComponent loadingState={loading} errorState={error}>
       <NavBar />
       <DisplayChurchDetails
         name={displayCentre?.name}
         leaderTitle="Centre Leader"
         leaderName={
           displayCentre?.leader
-            ? `${displayCentre.leader.firstName} ${displayCentre.leader.lastName}`
+            ? `${displayCentre?.leader.firstName} ${displayCentre?.leader.lastName}`
             : '-'
         }
         leaderId={displayCentre?.leader?.id}
         churchHeading="No of Bacentas"
         churchType="Centre"
         subChurch="Bacenta"
-        membership={centreMemberCount}
-        churchNo={centreBacentaCount}
+        membership={data?.centreMemberCount}
+        churchNo={data?.centreBacentaCount}
         editlink="/centre/editcentre"
         history={displayCentre?.history.length !== 0 && displayCentre?.history}
         breadcrumb={breadcrumb && breadcrumb}
-        buttons={displayCentre ? displayCentre.bacentas : []}
+        buttons={displayCentre ? displayCentre?.bacentas : []}
       />
     </BaseComponent>
   )

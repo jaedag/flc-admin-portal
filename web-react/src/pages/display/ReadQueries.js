@@ -262,7 +262,7 @@ export const DISPLAY_BACENTA = gql`
 `
 
 export const DISPLAY_SONTA = gql`
-  query($id: ID) {
+  query DisplaySonta($id: ID) {
     sontas(where: { id: $id }) {
       id
       name
@@ -270,6 +270,7 @@ export const DISPLAY_SONTA = gql`
         id
         firstName
         lastName
+        fullName
         whatsappNumber
         title {
           title

@@ -365,6 +365,7 @@ const PastorsAdmin = () => {
       default:
         break
     }
+
     if (card.__typename === 'Basonta') {
       card.link = '/sonta/displaydetails'
     }

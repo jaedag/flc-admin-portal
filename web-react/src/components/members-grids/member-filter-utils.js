@@ -13,7 +13,7 @@ export const memberFilter = (memberData, filters) => {
 
       if (subsubfield === 'title') {
         for (let i = 0; i < member.title.length; i++) {
-          if (member.title[i]?.Title?.title === criteria) {
+          if (member.title[i]?.title === criteria) {
             return member
           }
         }

@@ -15,7 +15,8 @@ const isAuth = (permittedRoles, userRoles) => {
 }
 const throwErrorMsg = (message, error) => {
   console.error(message, error?.response?.data ?? error)
-  throw 'There was a problem making your changes, please try again'
+  throw message
+  // throw 'There was a problem making your changes, please try again'
 }
 const errorHandling = (member) => {
   if (!member.email) {

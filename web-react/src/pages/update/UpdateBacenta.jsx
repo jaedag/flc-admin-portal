@@ -18,7 +18,7 @@ const UpdateBacenta = () => {
 
   const {
     data: bacentaData,
-    // loading: bacentaLoading,
+    loading: bacentaLoading,
     // error: bacentaError,
   } = useQuery(DISPLAY_BACENTA, {
     variables: { id: bacentaId },
@@ -30,7 +30,7 @@ const UpdateBacenta = () => {
 
   const initialValues = {
     bacentaName: bacenta?.name,
-    leaderSelect: bacenta?.leader?.id,
+    leaderId: bacenta?.leader?.id,
     leaderName: `${bacenta?.leader?.firstName} ${bacenta?.leader?.lastName} `,
     townCampusSelect: bacenta?.centre?.town?.id ?? bacenta?.centre?.campus?.id,
     centreSelect: bacenta?.centre?.id,
@@ -91,19 +91,19 @@ const UpdateBacenta = () => {
       variables: {
         id: bacentaId,
         name: values.bacentaName,
-        leaderId: values.leaderSelect,
+        leaderId: values.leaderId,
         meetingDay: values.meetingDay,
         venueLongitude: parseFloat(values.venueLongitude),
-        venueLatitude: parseFloat(values.venueLongitude),
+        venueLatitude: parseFloat(values.venueLatitude),
       },
     })
 
     //Log if the Leader Changes
-    if (values.leaderSelect !== initialValues.leaderSelect) {
+    if (values.leaderId !== initialValues.leaderId) {
       MakeBacentaLeader({
         variables: {
-          oldLeaderId: initialValues.leaderSelect,
-          newLeaderId: values.leaderSelect,
+          oldLeaderId: initialValues.leaderId,
+          newLeaderId: values.leaderId,
           bacentaId: bacentaId,
         },
       }).catch((err) => alert(err))
@@ -176,6 +176,7 @@ const UpdateBacenta = () => {
       title="Update Bacenta"
       initialValues={initialValues}
       onSubmit={onSubmit}
+      loadingState={bacentaLoading}
     />
   )
 }

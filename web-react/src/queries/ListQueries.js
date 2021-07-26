@@ -189,6 +189,7 @@ export const GET_SONTAS_BY_CAMPUSTOWN = gql`
 export const GET_BISHOP_CAMPUSES = gql`
   query($id: ID) {
     members(where: { id: $id }) {
+      id
       isBishopForCampus {
         name
         id

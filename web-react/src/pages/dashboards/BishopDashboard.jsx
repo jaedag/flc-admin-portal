@@ -105,7 +105,7 @@ const BishopDashboard = () => {
     },
     {
       link: `/${churchStream}/add${churchStream}`,
-      buttonText: `Add ${capitalise(churchStream)}`,
+      buttonText: `Start a ${capitalise(churchStream)}`,
       roles: ['adminFederal', 'adminBishop'],
     },
   ]

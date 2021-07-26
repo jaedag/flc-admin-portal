@@ -32,7 +32,7 @@ const DisplaySontaDetails = () => {
       sontaData?.sontas[0],
     ]
   }
-  console.log(sontaData?.sontas[0]?.history)
+
   return (
     <BaseComponent loadingState={sontaLoading} errorState={sontaError}>
       <NavBar />

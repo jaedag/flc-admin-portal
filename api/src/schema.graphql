@@ -1126,7 +1126,7 @@ type Mutation {
       WITH town
       MATCH (leader:Member {id: $leaderId})
       MATCH (currentUser:Member {auth_id:$auth.jwt.sub})
-      MATCH (bishop:Member {bishopId: $id})
+      MATCH (bishop:Member {id: $bishopId})
 
        CREATE (log:HistoryLog)
         SET
@@ -1143,10 +1143,29 @@ type Mutation {
       MERGE (town)-[:HAS_HISTORY]->(log)
       MERGE (leader)-[r:HAS_HISTORY]->(log)
         SET r.current = true
-      RETURN town
+
+      WITH town, bishop
+      CALL {
+        WITH town
+        WITH town WHERE $centres <> []
+        UNWIND $centres AS centreIds
+        MATCH (centre:Centre {id:centreIds})
+        OPTIONAL MATCH (oldCampusTown)-[r:HAS_CENTRE]->(centre)
+        DELETE r
+
+        MERGE (town)-[:HAS_CENTRE]->(centre)
+        RETURN count(town)
+      }
+
+      RETURN bishop
       """
     )
-  CreateCampus(campusName: String!, leaderId: ID!, bishopId: ID!): Campus
+  CreateCampus(
+    campusName: String!
+    leaderId: ID!
+    bishopId: ID!
+    centres: [ID]
+  ): Member
     @auth(rules: [{ roles: ["adminFederal", "adminBishop"] }])
     @cypher(
       statement: """
@@ -1156,7 +1175,7 @@ type Mutation {
       WITH campus
       MATCH (leader:Member {id: $leaderId})
       MATCH (currentUser:Member {auth_id:$auth.jwt.sub})
-      MATCH (bishop:Member {id: $id})
+      MATCH (bishop:Member {id: $bishopId})
 
        CREATE (log:HistoryLog)
         SET
@@ -1173,11 +1192,30 @@ type Mutation {
       MERGE (campus)-[:HAS_HISTORY]->(log)
       MERGE (leader)-[r:HAS_HISTORY]->(log)
         SET r.current = true
-      RETURN campus
+
+      WITH campus, bishop
+      CALL {
+        WITH campus
+        WITH campus WHERE $centres <> []
+        UNWIND $centres AS centreIds
+        MATCH (centre:Centre {id:centreIds})
+        OPTIONAL MATCH (oldCampusTown)-[r:HAS_CENTRE]->(centre)
+        DELETE r
+
+        MERGE (campus)-[:HAS_CENTRE]->(centre)
+        RETURN count(campus)
+      }
+
+      RETURN bishop
       """
     )
 
-  CreateCentre(centreName: String!, townCampusId: ID!, leaderId: ID!): Town  #Return town and drill down to get centre info
+  CreateCentre(
+    centreName: String!
+    townCampusId: ID!
+    leaderId: ID!
+    bacentas: [ID]
+  ): Town  #Return town and drill down to get centre info
     @auth(
       rules: [{ roles: ["adminFederal", "adminBishop", "adminConstituency"] }]
     )
@@ -1191,6 +1229,20 @@ type Mutation {
        MATCH (campusTown {id:$townCampusId}) WHERE campusTown:Town OR campusTown:Campus
        MERGE (campusTown)-[:HAS_CENTRE]->(centre)
        MERGE (leader)-[:LEADS]->(centre)
+
+       WITH centre, campusTown
+      CALL {
+        WITH centre
+        WITH centre WHERE $bacentas <> []
+        UNWIND $bacentas AS bacentaIds
+        MATCH (bacenta:Bacenta {id:bacentaIds})
+        OPTIONAL MATCH (oldCentre)-[r:HAS_BACENTA]->(bacenta)
+        DELETE r
+
+        MERGE (centre)-[:HAS_BACENTA]->(bacenta)
+        RETURN count(centre)
+      }
+
       RETURN campusTown
       """
     )

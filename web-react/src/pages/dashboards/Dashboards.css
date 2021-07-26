@@ -17,13 +17,13 @@
 }
 .colour-campuses,
 .colour-campus {
-  background-image: linear-gradient(#1b0e36, #2c0b53, #3c096f);
+  background-image: linear-gradient(#3c096f, #2c0b53, #1b0e36);
 }
 .colour-admin {
-  background-image: linear-gradient(#1b0e36, #2c0b53, #3c096f);
+  background-image: linear-gradient(#3c096f, #2c0b53, #1b0e36);
 }
 .colour-bishop {
-  background-image: linear-gradient(#1b0e36, #2c0b53, #3c096f);
+  background-image: linear-gradient(#3c096f, #2c0b53, #1b0e36);
 }
 
 .church-number {

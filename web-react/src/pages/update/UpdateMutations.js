@@ -626,10 +626,10 @@ export const REMOVE_CENTRE_CAMPUS = gql`
 `
 
 export const ADD_CENTRE_BACENTAS = gql`
-  mutation AddCentreBacentas($centreId: ID!, $bacentaId: ID!) {
+  mutation AddCentreBacentas($centreId: ID!, $bacentaId: [ID!]) {
     updateCentres(
       where: { id: $centreId }
-      connect: { bacentas: { where: { id: $bacentaId } } }
+      connect: { bacentas: { where: { id_IN: $bacentaId } } }
     ) {
       centres {
         bacentas {
@@ -657,9 +657,9 @@ export const REMOVE_CENTRE_BACENTAS = gql`
 `
 
 export const REMOVE_BACENTA_CENTRE = gql`
-  mutation RemoveBacentaFromCentre($centreId: ID!, $bacentaId: ID!) {
+  mutation RemoveBacentaFromCentre($centreId: ID!, $bacentaIds: [ID!]) {
     updateBacentas(
-      where: { id: $bacentaId }
+      where: { id_IN: $bacentaIds }
       disconnect: { centre: { where: { id: $centreId } } }
     ) {
       bacentas {

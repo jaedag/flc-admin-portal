@@ -21,7 +21,7 @@ import { ChurchContext } from 'contexts/ChurchContext'
 import FormikControl from 'components/formik-components/FormikControl'
 import Spinner from 'components/Spinner'
 
-const BacentaForm = ({ initialValues, onSubmit, title }) => {
+const BacentaForm = ({ initialValues, onSubmit, title, loadingState }) => {
   const { church, bishopId } = useContext(ChurchContext)
 
   const {
@@ -38,8 +38,6 @@ const BacentaForm = ({ initialValues, onSubmit, title }) => {
   } = useQuery(GET_BISHOP_CAMPUSES, {
     variables: { id: bishopId },
   })
-
-  let townCampusIdVar
 
   const validationSchema = Yup.object({
     bacentaName: Yup.string().required('Bacenta Name is a required field'),
@@ -67,10 +65,12 @@ const BacentaForm = ({ initialValues, onSubmit, title }) => {
   const campusOptions = campusListData
     ? makeSelectOptions(campusListData.members[0]?.isBishopForCampus)
     : []
+  let townCampusIdVar =
+    church.church === 'town' ? townOptions[0]?.value : campusOptions[0]?.value
 
   return (
     <BaseComponent
-      loadingState={townListLoading || campusListLoading}
+      loadingState={townListLoading || campusListLoading || loadingState}
       errorState={townListError || campusListError}
     >
       <NavBar />
@@ -92,14 +92,17 @@ const BacentaForm = ({ initialValues, onSubmit, title }) => {
                         <FormikControl
                           className="form-control"
                           control="select"
-                          name="townSelect"
+                          name="townCampusSelect"
                           options={
                             church.church === 'town'
                               ? townOptions
                               : campusOptions
                           }
                           onChange={(e) => {
-                            formik.setFieldValue('townSelect', e.target.value)
+                            formik.setFieldValue(
+                              'townCampusSelect',
+                              e.target.value
+                            )
                             townCampusIdVar = e.target.value
                           }}
                           defaultOption={`Select a ${capitalise(
@@ -147,6 +150,7 @@ const BacentaForm = ({ initialValues, onSubmit, title }) => {
                         <FormikControl
                           control="combobox2"
                           name="leaderId"
+                          initialValue={initialValues.leaderName}
                           placeholder="Select a Leader"
                           setFieldValue={formik.setFieldValue}
                           optionsQuery={BISHOP_MEMBER_DROPDOWN}

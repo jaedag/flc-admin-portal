@@ -37,7 +37,7 @@ const CreateBacenta = () => {
       },
     })
       .then((res) => {
-        clickCard(res.data.CreateBacenta.id)
+        clickCard(res.data.CreateBacenta)
         NewBacentaLeader({
           variables: {
             leaderId: values.leaderId,

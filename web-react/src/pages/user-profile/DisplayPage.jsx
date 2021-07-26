@@ -3,8 +3,6 @@ import { useQuery } from '@apollo/client'
 import NavBar from '../../components/nav/NavBar'
 import MemberDetailsCard from '../../components/card/MemberDetailsCard'
 import { DISPLAY_MEMBER } from '../display/ReadQueries'
-import ErrorScreen from '../../components/base-component/ErrorScreen'
-import LoadingScreen from '../../components/base-component/LoadingScreen'
 import { MemberContext } from '../../contexts/MemberContext'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import userIcon from '../../img/user.png'
@@ -12,27 +10,28 @@ import Timeline from '../../components/Timeline/Timeline.jsx'
 import { getNameWithTitle, getMemberDob } from '../../global-utils'
 import AuthButton from '../../components/buttons/AuthButton'
 import MemberRankList from '../../components/MemberRoleList'
+import BaseComponent from 'components/base-component/BaseComponent'
 
 const UserProfileDisplayPage = () => {
   const { currentUser } = useContext(MemberContext)
   const { church } = useContext(ChurchContext)
 
-  const { data: memberData, loading: memberLoading } = useQuery(
-    DISPLAY_MEMBER,
-    {
-      variables: { id: currentUser.id },
-    }
-  )
+  const {
+    data: memberData,
+    loading: memberLoading,
+    error: memberError,
+  } = useQuery(DISPLAY_MEMBER, {
+    variables: { id: currentUser.id },
+  })
+  const displayMember = memberData?.members[0]
+  const memberBirthday = getMemberDob(displayMember)
+  let nameAndTitle = getNameWithTitle(displayMember)
 
-  if (memberLoading) {
-    // Spinner Icon for Loading Screens
-    return <LoadingScreen />
-  } else if (memberData && currentUser.id) {
-    const displayMember = memberData.members[0]
-    const memberBirthday = getMemberDob(displayMember)
-    let nameAndTitle = getNameWithTitle(displayMember)
-
-    return (
+  return (
+    <BaseComponent
+      loadingState={memberLoading}
+      errorState={!currentUser.id || memberError}
+    >
       <div className="container pt-5">
         <NavBar />
         <div className="container pt-2">
@@ -65,18 +64,18 @@ const UserProfileDisplayPage = () => {
                       <div className="col d-flex justify-content-center">
                         <img
                           src={
-                            displayMember.pictureUrl
-                              ? displayMember.pictureUrl
+                            displayMember?.pictureUrl
+                              ? displayMember?.pictureUrl
                               : userIcon
                           }
                           className="m-2 rounded profile-img"
-                          alt={`${displayMember.firstName} ${displayMember.lastName}`}
+                          alt={`${displayMember?.firstName} ${displayMember?.lastName}`}
                         />
                       </div>
 
                       <div className="col d-flex justify-content-center mt-2">
                         <h5 className="font-weight-bold ">
-                          {`${displayMember.firstName} ${displayMember.lastName}`}
+                          {`${displayMember?.firstName} ${displayMember?.lastName}`}
                         </h5>
                       </div>
                       <div className="col d-flex justify-content-center mb-2">
@@ -97,7 +96,7 @@ const UserProfileDisplayPage = () => {
                         </div>
                         <div className="col">
                           <p className="font-weight-bold card-text">
-                            {displayMember.firstName}
+                            {displayMember?.firstName}
                           </p>
                         </div>
                       </div>
@@ -109,7 +108,7 @@ const UserProfileDisplayPage = () => {
                         </div>
                         <div className="col">
                           <p className="font-weight-bold card-text">
-                            {displayMember.middleName}
+                            {displayMember?.middleName}
                           </p>
                         </div>
                       </div>
@@ -119,7 +118,7 @@ const UserProfileDisplayPage = () => {
                         </div>
                         <div className="col">
                           <p className="font-weight-bold card-text">
-                            {displayMember.lastName}
+                            {displayMember?.lastName}
                           </p>
                         </div>
                       </div>
@@ -131,7 +130,7 @@ const UserProfileDisplayPage = () => {
                         </div>
                         <div className="col-6">
                           <p className="font-weight-bold card-text text-truncate">
-                            {displayMember.email}
+                            {displayMember?.email}
                           </p>
                         </div>
                       </div>
@@ -153,8 +152,8 @@ const UserProfileDisplayPage = () => {
                         </div>
                         <div className="col">
                           <p className="font-weight-bold card-text">
-                            {displayMember.gender
-                              ? displayMember.gender.gender
+                            {displayMember?.gender
+                              ? displayMember?.gender.gender
                               : null}
                           </p>
                         </div>
@@ -167,8 +166,8 @@ const UserProfileDisplayPage = () => {
                         </div>
                         <div className="col">
                           <p className="font-weight-bold card-text">
-                            {displayMember.maritalStatus
-                              ? displayMember.maritalStatus.status
+                            {displayMember?.maritalStatus
+                              ? displayMember?.maritalStatus.status
                               : null}
                           </p>
                         </div>
@@ -179,8 +178,8 @@ const UserProfileDisplayPage = () => {
                         </div>
                         <div className="col">
                           <p className="font-weight-bold card-text">
-                            {displayMember.occupation
-                              ? displayMember.occupation.occupation
+                            {displayMember?.occupation
+                              ? displayMember?.occupation.occupation
                               : '-'}
                           </p>
                         </div>
@@ -194,9 +193,9 @@ const UserProfileDisplayPage = () => {
                         <div className="col">
                           <a
                             className="font-weight-bold card-text"
-                            href={`tel:${displayMember.phoneNumber}`}
+                            href={`tel:${displayMember?.phoneNumber}`}
                           >
-                            {displayMember.phoneNumber}
+                            {displayMember?.phoneNumber}
                           </a>
                         </div>
                       </div>
@@ -209,9 +208,9 @@ const UserProfileDisplayPage = () => {
                         <div className="col">
                           <a
                             className="font-weight-bold card-text"
-                            href={`https://wa.me/${displayMember.whatsappNumber}`}
+                            href={`https://wa.me/${displayMember?.whatsappNumber}`}
                           >
-                            {displayMember.whatsappNumber}
+                            {displayMember?.whatsappNumber}
                           </a>
                         </div>
                       </div>
@@ -223,12 +222,12 @@ const UserProfileDisplayPage = () => {
 
             <div className="col">
               {/* Leadership History Timeline */}
-              {displayMember.history[0] ? (
+              {displayMember?.history[0] ? (
                 <div className="row">
                   <div className="col">
                     <MemberDetailsCard title="History Timeline" editlink="#">
                       <div className="row">
-                        <Timeline record={displayMember.history} limit={3} />
+                        <Timeline record={displayMember?.history} limit={3} />
                       </div>
                     </MemberDetailsCard>
                   </div>
@@ -250,7 +249,7 @@ const UserProfileDisplayPage = () => {
                         <div className="col">
                           <p className="font-weight-bold card-text">
                             {`${
-                              displayMember.bacenta.centre[`${church.church}`]
+                              displayMember?.bacenta.centre[`${church.church}`]
                                 ?.bishop.fullName
                             }`}
                           </p>
@@ -262,9 +261,9 @@ const UserProfileDisplayPage = () => {
                         </div>
                         <div className="col">
                           <p className="font-weight-bold card-text">
-                            {displayMember.bacenta
-                              ? displayMember.bacenta.name
-                                ? displayMember.bacenta.name
+                            {displayMember?.bacenta
+                              ? displayMember?.bacenta.name
+                                ? displayMember?.bacenta.name
                                 : null
                               : null}
                           </p>
@@ -276,13 +275,13 @@ const UserProfileDisplayPage = () => {
                         </div>
                         <div className="col">
                           <p className="font-weight-bold card-text">
-                            {displayMember.ministry
-                              ? `${displayMember.ministry.name}`
+                            {displayMember?.ministry
+                              ? `${displayMember?.ministry.name}`
                               : null}
                           </p>
                         </div>
                       </div>
-                      {displayMember.title[0] ? (
+                      {displayMember?.title[0] ? (
                         <div>
                           <div className="row mb-2">
                             <div className="col">
@@ -290,7 +289,7 @@ const UserProfileDisplayPage = () => {
                             </div>
                             <div className="col">
                               <p className="font-weight-bold card-text">
-                                {displayMember.title[0].title}
+                                {displayMember?.title[0].title}
                               </p>
                             </div>
                           </div>
@@ -302,7 +301,7 @@ const UserProfileDisplayPage = () => {
                             </div>
                             <div className="col">
                               <p className="font-weight-bold card-text">
-                                {`${displayMember.title[0]?.yearAppointed?.year}`}
+                                {`${displayMember?.title[0]?.yearAppointed?.year}`}
                               </p>
                             </div>
                           </div>
@@ -321,10 +320,8 @@ const UserProfileDisplayPage = () => {
           </div>
         </div>
       </div>
-    )
-  } else {
-    return <ErrorScreen />
-  }
+    </BaseComponent>
+  )
 }
 
 export default UserProfileDisplayPage

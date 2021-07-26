@@ -4,7 +4,7 @@ import './DashboardCard.css'
 
 const DashboardCard = (props) => {
   let icon = ''
-  const { name, detail1, detail2, cardLink } = props
+  const { name, detail1, detail2, cardLink, ...rest } = props
 
   if (name === 'Towns' || name === 'Campuses') {
     icon = 'landmark'
@@ -17,7 +17,7 @@ const DashboardCard = (props) => {
   }
 
   return (
-    <>
+    <div {...rest}>
       <Link
         to={cardLink}
         className="d-none d-md-block text-center card dashboard-card align-self-center card-body mx-2 mb-2 p-3"
@@ -49,7 +49,7 @@ const DashboardCard = (props) => {
           </div>
         </div>
       </Link>
-    </>
+    </div>
   )
 }
 

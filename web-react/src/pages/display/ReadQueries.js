@@ -364,6 +364,7 @@ export const DISPLAY_CENTRE = gql`
         id
         firstName
         lastName
+        fullName
         whatsappNumber
         title {
           title

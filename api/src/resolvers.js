@@ -188,6 +188,9 @@ const deleteUserRoles = (memberId, roles) => ({
 })
 
 const assignRoles = (userId, userRoles, rolesToAssign) => {
+  console.log('user', userId)
+  console.log('user roles', userRoles)
+  console.log('roles to assign', rolesToAssign)
   //An assign roles function to simplify assigning roles with an axios request
   if (!userRoles.includes(rolesToAssign[0])) {
     axios(setUserRoles(userId, rolesToAssign))

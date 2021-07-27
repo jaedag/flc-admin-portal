@@ -632,6 +632,7 @@ export const ADD_CENTRE_BACENTAS = gql`
       connect: { bacentas: { where: { id_IN: $bacentaId } } }
     ) {
       centres {
+        id
         bacentas {
           id
           name
@@ -647,6 +648,7 @@ export const REMOVE_CENTRE_BACENTAS = gql`
       disconnect: { bacentas: { where: { id: $bacentaId } } }
     ) {
       centres {
+        id
         bacentas {
           id
           name

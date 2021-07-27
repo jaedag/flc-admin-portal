@@ -341,7 +341,7 @@ const UpdateCentre = () => {
       AddCentreBacentas({
         variables: {
           centreId: centreId,
-          bacentaId: bacenta.id,
+          bacentaId: [bacenta.id],
         },
       })
     })

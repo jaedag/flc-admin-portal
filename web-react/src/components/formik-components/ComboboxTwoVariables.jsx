@@ -79,9 +79,6 @@ function ComboboxTwoVariables(props) {
           })
         )
       }
-      console.log('API Call', data)
-
-      // setSearchString(debouncedText)
     },
   })
 

@@ -1,75 +1,87 @@
-import React, { useState } from 'react'
+import React, { useContext } from 'react'
 import { useAuth0 } from '@auth0/auth0-react'
 import Popup from '../Popup/Popup'
+import { useLocation } from 'react-router'
+import Spinner from 'components/Spinner'
+import { ChurchContext } from 'contexts/ChurchContext'
 
 const AuthButton = (props) => {
   const { loginWithRedirect, logout, isAuthenticated } = useAuth0()
+  const { togglePopup, isOpen } = useContext(ChurchContext)
   const { mobileFullSize } = props
-  const [isOpen, setIsOpen] = useState(false)
-  const togglePopup = () => {
-    setIsOpen(!isOpen)
+
+  const location = useLocation()
+
+  if (!isAuthenticated) {
+    return (
+      <>
+        <button
+          className={`btn btn-primary text-nowrap px-4 ${
+            !mobileFullSize && `d-none d-md-inline`
+          }`}
+          onClick={() => loginWithRedirect()}
+        >
+          Log In
+        </button>
+        {!mobileFullSize && (
+          <i
+            className="fas fa-sign-in-alt fa-2x d-md-none"
+            onClick={() => loginWithRedirect()}
+          />
+        )}
+      </>
+    )
   }
 
-  return (
-    <>
-      {!isAuthenticated && (
-        <>
-          <button
-            className={`btn btn-primary text-nowrap px-4 ${
-              !mobileFullSize && `d-none d-md-inline`
-            }`}
-            onClick={() => loginWithRedirect()}
-          >
-            Log In
-          </button>
-          {!mobileFullSize && (
-            <i
-              className="fas fa-sign-in-alt fa-2x d-md-none"
-              onClick={() => loginWithRedirect()}
-            />
-          )}
-        </>
-      )}
-      {isAuthenticated && (
-        <>
-          <input
-            type="button"
-            className={`btn btn-primary text-nowrap px-4 ${
-              !mobileFullSize && `d-none d-md-inline`
-            }`}
-            value="Logout"
-            onClick={togglePopup}
-          />
-          {isOpen && (
-            <Popup
-              content={
-                <>
-                  <b>Confirm Log Out</b>
-                  <p>Are you sure you want to Log Out?</p>
-                  <button
-                    className={`btn btn-primary text-nowrap px-4 ${
-                      !mobileFullSize && `d-none d-md-inline`
-                    }`}
-                    onClick={() => logout({ returnTo: window.location.origin })}
-                  >
-                    Log Out
-                  </button>
-                </>
-              }
-              handleClose={togglePopup}
-            />
-          )}
+  if (isAuthenticated && location.pathname === '/') {
+    return (
+      <div className="text-secondary text-center">
+        <p>Please wait while we log you in</p>
+        <Spinner />
+      </div>
+    )
+  }
 
-          {!mobileFullSize && (
-            <i
-              className="fas fa-sign-out-alt fa-2x d-md-none"
-              onClick={() => logout({ returnTo: window.location.origin })}
-            />
-          )}
-        </>
-      )}
-    </>
-  )
+  if (isAuthenticated) {
+    return (
+      <>
+        <input
+          type="button"
+          className={`btn btn-primary text-nowrap px-4 ${
+            !mobileFullSize && `d-none d-md-inline`
+          }`}
+          value="Logout"
+          onClick={togglePopup}
+        />
+        {isOpen && (
+          <Popup handleClose={togglePopup}>
+            <>
+              <b>Confirm Log Out</b>
+              <p>Are you sure you want to Log Out?</p>
+              <button
+                className={`btn btn-primary text-nowrap px-4 ${
+                  !mobileFullSize && `d-none d-md-inline`
+                }`}
+                onClick={() => {
+                  logout({ returnTo: window.location.origin })
+                  togglePopup()
+                }}
+              >
+                Log Out
+              </button>
+            </>
+          </Popup>
+        )}
+
+        {!mobileFullSize && (
+          <i
+            className="fas fa-sign-out-alt fa-2x d-md-none"
+            onClick={() => logout({ returnTo: window.location.origin })}
+          />
+        )}
+      </>
+    )
+  }
 }
 
 export default AuthButton

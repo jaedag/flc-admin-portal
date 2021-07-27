@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import DetailsCard from '../card/DetailsCard'
 import { MemberContext } from '../../contexts/MemberContext'
@@ -47,7 +47,14 @@ const DisplayChurchDetails = (props) => {
   } = props
   const isConstituency = churchType === 'Campus' || churchType === 'Town'
   const { setMemberId } = useContext(MemberContext)
-  const { clickCard, campusId, townId, bishopId } = useContext(ChurchContext)
+  const {
+    clickCard,
+    togglePopup,
+    isOpen,
+    campusId,
+    townId,
+    bishopId,
+  } = useContext(ChurchContext)
   const location = useLocation()
 
   //Setting the editing permission based on url
@@ -66,10 +73,7 @@ const DisplayChurchDetails = (props) => {
   const [RemoveTownAdmin] = useMutation(REMOVE_TOWN_ADMIN)
   const [MakeCampusAdmin] = useMutation(MAKE_CAMPUS_ADMIN)
   const [RemoveCampusAdmin] = useMutation(REMOVE_CAMPUS_ADMIN)
-  const [isOpen, setIsOpen] = useState(false)
-  const togglePopup = () => {
-    setIsOpen(!isOpen)
-  }
+
   const initialValues = {
     adminName: admin ? `${admin?.firstName} ${admin.lastName}` : '',
     adminSelect: admin?.id ?? '',
@@ -149,54 +153,50 @@ const DisplayChurchDetails = (props) => {
           )}
 
           {isOpen && (
-            <Popup
-              content={
-                <>
-                  <b>Change {`${churchType}`} Admin</b>
-                  <p>Please enter the name of the new administrator</p>
+            <Popup handleClose={togglePopup}>
+              <b>Change {`${churchType}`} Admin</b>
+              <p>Please enter the name of the new administrator</p>
 
-                  <Formik
-                    initialValues={initialValues}
-                    validationSchema={validationSchema}
-                    onSubmit={onSubmit}
-                  >
-                    {(formik) => (
-                      <Form>
-                        <div className="form-row">
-                          <div className="col-9">
-                            <FormikControl
-                              control="combobox2"
-                              name="adminSelect"
-                              initialValue={initialValues.adminName}
-                              placeholder="Select an Admin"
-                              setFieldValue={formik.setFieldValue}
-                              optionsQuery={BISHOP_MEMBER_DROPDOWN}
-                              queryVariable1="id"
-                              variable1={bishopId}
-                              queryVariable2="nameSearch"
-                              suggestionText="name"
-                              suggestionID="id"
-                              dataset="bishopMemberDropdown"
-                              aria-describedby="Bishop Member List"
-                              className="form-control"
-                              error={formik.errors.admin}
-                            />
-                          </div>
-                        </div>
-                        <button
-                          type="submit"
-                          disabled={!formik.isValid || formik.isSubmitting}
-                          className={`btn btn-primary text-nowrap px-4`}
-                        >
-                          Confirm Change
-                        </button>
-                      </Form>
-                    )}
-                  </Formik>
-                </>
-              }
-              handleClose={togglePopup}
-            />
+              <Formik
+                initialValues={initialValues}
+                validationSchema={validationSchema}
+                onSubmit={onSubmit}
+              >
+                {(formik) => (
+                  <Form>
+                    <div className="form-row">
+                      <div className="col-9">
+                        <FormikControl
+                          control="combobox2"
+                          name="adminSelect"
+                          initialValue={initialValues.adminName}
+                          placeholder="Select an Admin"
+                          setFieldValue={formik.setFieldValue}
+                          optionsQuery={BISHOP_MEMBER_DROPDOWN}
+                          queryVariable1="id"
+                          variable1={bishopId}
+                          queryVariable2="nameSearch"
+                          suggestionText="name"
+                          suggestionID="id"
+                          dataset="bishopMemberDropdown"
+                          aria-describedby="Bishop Member List"
+                          className="form-control"
+                          error={formik.errors.admin}
+                        />
+                      </div>
+                    </div>
+                    <button
+                      type="submit"
+                      disabled={!formik.isValid || formik.isSubmitting}
+                      className={`btn btn-primary text-nowrap px-4`}
+                      onClick={togglePopup}
+                    >
+                      Confirm Change
+                    </button>
+                  </Form>
+                )}
+              </Formik>
+            </Popup>
           )}
         </div>
       </div>

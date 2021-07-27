@@ -14,6 +14,7 @@ import { BISHOP_CENTRE_DROPDOWN } from 'components/formik-components/ComboboxQue
 import { MAKE_CAMPUSTOWN_INACTIVE } from 'pages/update/CloseChurchMutations'
 import { BISH_DASHBOARD_COUNTS } from 'pages/dashboards/DashboardQueries'
 import { useHistory } from 'react-router'
+import Popup from 'components/Popup/Popup'
 
 const CampusTownForm = ({
   initialValues,
@@ -22,9 +23,15 @@ const CampusTownForm = ({
   loadingState,
   newConstituency,
 }) => {
-  const { church, clickCard, campusId, townId, bishopId } = useContext(
-    ChurchContext
-  )
+  const {
+    church,
+    togglePopup,
+    isOpen,
+    clickCard,
+    campusId,
+    townId,
+    bishopId,
+  } = useContext(ChurchContext)
 
   const history = useHistory()
   const {
@@ -200,33 +207,46 @@ const CampusTownForm = ({
               </div>
             </Form>
 
+            {isOpen && (
+              <Popup handleClose={togglePopup}>
+                Are you sure you want to close down this bacenta?
+                <div
+                  className="btn btn-primary"
+                  onClick={() => {
+                    MakeCampusTownInactive({
+                      variables: {
+                        campusTownId:
+                          church.church === 'campus' ? campusId : townId,
+                      },
+                    })
+                      .then((res) => {
+                        clickCard(
+                          res.data.MakeCampusTownInactive?.campusBishop ??
+                            res.data.MakeCampusTownInactive?.townBishop
+                        )
+                        togglePopup()
+                        history.push(`/${church.church}/displayall`)
+                      })
+                      .catch((error) => {
+                        // eslint-disable-next-line no-console
+                        console.error(error)
+                        alert(
+                          `There was an error closing down this ${church.church}`,
+                          error
+                        )
+                      })
+                  }}
+                >
+                  {`Yes, I'm sure`}
+                </div>
+                <div className="btn btn-primary" onClick={togglePopup}>
+                  No, take me back
+                </div>
+              </Popup>
+            )}
+
             {!newConstituency && (
-              <div
-                className="btn btn-primary"
-                onClick={() => {
-                  MakeCampusTownInactive({
-                    variables: {
-                      campusTownId:
-                        church.church === 'campus' ? campusId : townId,
-                    },
-                  })
-                    .then((res) => {
-                      clickCard(
-                        res.data.MakeCampusTownInactive?.campusBishop ??
-                          res.data.MakeCampusTownInactive?.townBishop
-                      )
-                      history.push(`/town/displayall`)
-                    })
-                    .catch((error) => {
-                      // eslint-disable-next-line no-console
-                      console.error(error)
-                      alert(
-                        `There was an error closing down this ${church.church}`,
-                        error
-                      )
-                    })
-                }}
-              >
+              <div className="btn btn-primary" onClick={togglePopup}>
                 {`Close Down ${capitalise(church.church)}`}
               </div>
             )}

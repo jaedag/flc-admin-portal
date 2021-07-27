@@ -22,6 +22,7 @@ import FormikControl from 'components/formik-components/FormikControl'
 import Spinner from 'components/Spinner'
 import { MAKE_BACENTA_INACTIVE } from 'pages/update/CloseChurchMutations'
 import { useHistory } from 'react-router'
+import Popup from 'components/Popup/Popup'
 
 const BacentaForm = ({
   initialValues,
@@ -30,7 +31,14 @@ const BacentaForm = ({
   loadingState,
   newBacenta,
 }) => {
-  const { church, clickCard, bacentaId, bishopId } = useContext(ChurchContext)
+  const {
+    church,
+    clickCard,
+    isOpen,
+    togglePopup,
+    bacentaId,
+    bishopId,
+  } = useContext(ChurchContext)
   const history = useHistory()
 
   const {
@@ -251,30 +259,42 @@ const BacentaForm = ({
                 </button>
               </div>
             </Form>
+            {isOpen && (
+              <Popup handleClose={togglePopup}>
+                Are you sure you want to close down this bacenta?
+                <div
+                  className="btn btn-primary"
+                  onClick={() => {
+                    MakeBacentaInactive({
+                      variables: {
+                        bacentaId: bacentaId,
+                      },
+                    })
+                      .then((res) => {
+                        clickCard(res.data.MakeBacentaInactive.centre)
+                        togglePopup()
+                        history.push('/centre/displaydetails')
+                      })
+                      .catch((error) => {
+                        // eslint-disable-next-line no-console
+                        console.error(error)
+                        alert(
+                          'There was an error closing down this bacenta',
+                          error
+                        )
+                      })
+                  }}
+                >
+                  {`Yes, I'm sure`}
+                </div>
+                <div className="btn btn-primary" onClick={togglePopup}>
+                  No, take me back
+                </div>
+              </Popup>
+            )}
 
             {!newBacenta && (
-              <div
-                className="btn btn-primary"
-                onClick={() => {
-                  MakeBacentaInactive({
-                    variables: {
-                      bacentaId: bacentaId,
-                    },
-                  })
-                    .then((res) => {
-                      clickCard(res.data.MakeBacentaInactive.centre)
-                      history.push('/centre/displaydetails')
-                    })
-                    .catch((error) => {
-                      // eslint-disable-next-line no-console
-                      console.error(error)
-                      alert(
-                        'There was an error closing down this bacenta',
-                        error
-                      )
-                    })
-                }}
-              >
+              <div className="btn btn-primary" onClick={togglePopup}>
                 Close Down Bacenta
               </div>
             )}

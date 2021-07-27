@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import ReactDOM from 'react-dom'
 // import registerServiceWorker from './registerServiceWorker'
-import { Route, Switch, BrowserRouter as Router } from 'react-router-dom'
+import { Switch, BrowserRouter as Router } from 'react-router-dom'
 import {
   ApolloProvider,
   ApolloClient,
@@ -178,6 +178,12 @@ const PastorsAdmin = () => {
     leaderRank: [],
     ministry: '',
   })
+
+  //Setting Up for Popup
+  const [isOpen, setIsOpen] = useState(false)
+  const togglePopup = () => {
+    setIsOpen(!isOpen)
+  }
 
   const determineStream = (member) => {
     //switch case for other church types
@@ -385,6 +391,8 @@ const PastorsAdmin = () => {
         value={{
           clickCard,
           determineStream,
+          isOpen,
+          togglePopup,
           filters,
           setFilters,
           church,
@@ -495,7 +503,7 @@ const PastorsAdmin = () => {
                 component={CampusReport}
               />
               {/* Member Display and Edit Pages */}
-              <Route
+              <ProtectedRoute
                 roles={['all']}
                 path="/user-profile"
                 component={UserProfileDisplayPage}

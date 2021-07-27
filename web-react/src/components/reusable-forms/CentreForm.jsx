@@ -17,6 +17,7 @@ import MinusSign from 'components/buttons/MinusSign'
 import { BISHOP_BACENTA_DROPDOWN } from 'components/formik-components/ComboboxQueries'
 import { useHistory } from 'react-router'
 import { MAKE_CENTRE_INACTIVE } from 'pages/update/CloseChurchMutations'
+import Popup from 'components/Popup/Popup'
 
 const CentreForm = ({
   initialValues,
@@ -25,7 +26,14 @@ const CentreForm = ({
   loadingState,
   newCentre,
 }) => {
-  const { church, clickCard, centreId, bishopId } = useContext(ChurchContext)
+  const {
+    church,
+    togglePopup,
+    isOpen,
+    clickCard,
+    centreId,
+    bishopId,
+  } = useContext(ChurchContext)
   const history = useHistory()
 
   const [MakeCentreInactive] = useMutation(MAKE_CENTRE_INACTIVE)
@@ -190,33 +198,44 @@ const CentreForm = ({
                 </button>
               </div>
             </Form>
-
+            {isOpen && (
+              <Popup handleClose={togglePopup}>
+                Are you sure you want to close down this centre?
+                <div
+                  className="btn btn-primary"
+                  onClick={() => {
+                    MakeCentreInactive({
+                      variables: {
+                        centreId: centreId,
+                      },
+                    })
+                      .then((res) => {
+                        clickCard(
+                          res.data.MakeCentreInactive?.campus ||
+                            res.data.MakeCentreInactive?.town
+                        )
+                        togglePopup()
+                        history.push(`/${church.church}/displaydetails`)
+                      })
+                      .catch((error) => {
+                        // eslint-disable-next-line no-console
+                        console.error(error)
+                        alert(
+                          'There was an error closing down this centre',
+                          error
+                        )
+                      })
+                  }}
+                >
+                  {`Yes, I'm sure`}
+                </div>
+                <div className="btn btn-primary" onClick={togglePopup}>
+                  No, take me back
+                </div>
+              </Popup>
+            )}
             {!newCentre && (
-              <div
-                className="btn btn-primary"
-                onClick={() => {
-                  MakeCentreInactive({
-                    variables: {
-                      centreId: centreId,
-                    },
-                  })
-                    .then((res) => {
-                      clickCard(
-                        res.data.MakeCentreInactive?.campus ||
-                          res.data.MakeCentreInactive?.town
-                      )
-                      history.push(`/${church.church}/displaydetails`)
-                    })
-                    .catch((error) => {
-                      // eslint-disable-next-line no-console
-                      console.error(error)
-                      alert(
-                        'There was an error closing down this centre',
-                        error
-                      )
-                    })
-                }}
-              >
+              <div className="btn btn-primary" onClick={togglePopup}>
                 Close Down Centre
               </div>
             )}

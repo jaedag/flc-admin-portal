@@ -1465,6 +1465,22 @@ type Mutation {
       RETURN centre
       """
     )
+
+  UpdateSontaDetails(sontaId: ID!, sontaName: String!): Sonta
+    @auth(
+      rules: [{ roles: ["adminFederal", "adminBishop", "adminConstituency"] }]
+    )
+    @cypher(
+      statement: """
+      MATCH (sonta:Sonta {id: $sontaId})
+      	SET sonta.name = $sontaName
+
+
+      MATCH (sonta)<-[:LEADS]-(leader:Member)
+      RETURN sonta
+      """
+    )
+
   UpdateBacentaDetails(
     id: ID!
     name: String!
@@ -1670,8 +1686,6 @@ type Mutation {
     historyRecord: String!
     newLeaderId: ID
     oldLeaderId: ID
-    newCampusTownId: ID
-    oldCampusTownId: ID
   ): Sonta
     @cypher(
       statement: """
@@ -1703,24 +1717,6 @@ type Mutation {
        RETURN COUNT(log)
        }
 
-
-       WITH log,sonta
-       CALL {
-         WITH log
-         WITH log WHERE $oldCampusTownId IS NOT NULL
-         MATCH (campusTown {id: $oldCampusTownId}) WHERE campusTown:Town OR campusTown:Campus
-         MERGE (campusTown)-[:HAS_HISTORY]->(log)
-         RETURN COUNT(log)
-       }
-
-       WITH log,sonta
-       CALL {
-         WITH log
-         WITH log WHERE $newCampusTownId IS NOT NULL
-         MATCH (campusTown {id: $newCampusTownId}) WHERE campusTown:Town OR campusTown:Campus
-         MERGE (campusTown)-[:HAS_HISTORY]->(log)
-         RETURN COUNT(log)
-       }
 
        RETURN sonta
       """

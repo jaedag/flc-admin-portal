@@ -16,7 +16,7 @@ import PlusSign from 'components/buttons/PlusSign'
 import MinusSign from 'components/buttons/MinusSign'
 import { BISHOP_BACENTA_DROPDOWN } from 'components/formik-components/ComboboxQueries'
 
-const BacentaForm = ({
+const CentreForm = ({
   initialValues,
   onSubmit,
   title,
@@ -193,4 +193,4 @@ const BacentaForm = ({
   )
 }
 
-export default BacentaForm
+export default CentreForm

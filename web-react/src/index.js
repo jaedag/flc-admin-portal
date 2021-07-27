@@ -63,6 +63,7 @@ import CampusReport from 'pages/reports/CampusReport'
 import CacheBuster from 'CacheBuster'
 import SontaReport from 'pages/reports/SontaReport'
 import SontaService from 'pages/record-service/SontaService'
+import UpdateSonta from 'pages/update/UpdateSonta'
 
 const AppWithApollo = () => {
   const [accessToken, setAccessToken] = useState()
@@ -708,6 +709,12 @@ const PastorsAdmin = () => {
                 roles={['adminFederal', 'adminBishop', 'adminConstituency']}
                 path="/centre/editcentre"
                 component={UpdateCentre}
+                exact
+              />
+              <ProtectedRoute
+                roles={['adminFederal', 'adminBishop', 'adminConstituency']}
+                path="/sonta/editsonta"
+                component={UpdateSonta}
                 exact
               />
               <ProtectedRoute

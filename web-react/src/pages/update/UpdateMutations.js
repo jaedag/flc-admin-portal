@@ -469,6 +469,55 @@ export const UPDATE_CENTRE_MUTATION = gql`
   }
 `
 
+export const UPDATE_SONTA_MUTATION = gql`
+  mutation UpdateSonta($sontaId: ID!, $sontaName: String!) {
+    UpdateSontaDetails(sontaId: $sontaId, sontaName: $sontaName) {
+      id
+      name
+      town {
+        id
+        name
+        bishop {
+          id
+          firstName
+          lastName
+        }
+      }
+      campus {
+        id
+        name
+        bishop {
+          id
+          firstName
+          lastName
+        }
+      }
+      leader {
+        id
+        firstName
+        lastName
+        whatsappNumber
+        title {
+          title
+        }
+      }
+      history(options: { limit: 10 }) {
+        id
+        timeStamp
+        created_at {
+          date
+        }
+        loggedBy {
+          id
+          firstName
+          lastName
+        }
+        historyRecord
+      }
+    }
+  }
+`
+
 export const UPDATE_BACENTA = gql`
   mutation UpdateBacenta(
     $id: ID!

@@ -38,6 +38,25 @@ export const MAKE_CENTRE_LEADER = gql`
   }
 `
 
+export const MAKE_SONTA_LEADER = gql`
+  mutation MakeSontaLeader(
+    $sontaId: ID!
+    $newLeaderId: ID!
+    $oldLeaderId: ID!
+  ) {
+    RemoveSontaLeader(sontaId: $sontaId, leaderId: $oldLeaderId) {
+      id
+      firstName
+      lastName
+    }
+    MakeSontaLeader(sontaId: $sontaId, leaderId: $newLeaderId) {
+      id
+      firstName
+      lastName
+    }
+  }
+`
+
 export const MAKE_CAMPUS_LEADER = gql`
   mutation MakeCampusLeader(
     $campusId: ID!

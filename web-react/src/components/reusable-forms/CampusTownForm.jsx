@@ -12,7 +12,13 @@ import PlusSign from 'components/buttons/PlusSign'
 import MinusSign from 'components/buttons/MinusSign'
 import { BISHOP_CENTRE_DROPDOWN } from 'components/formik-components/ComboboxQueries'
 
-const BacentaForm = ({ initialValues, onSubmit, title, loadingState }) => {
+const CampusTownForm = ({
+  initialValues,
+  onSubmit,
+  title,
+  loadingState,
+  newConstituency,
+}) => {
   const { church, bishopId } = useContext(ChurchContext)
   const {
     data: bishopsData,
@@ -38,9 +44,11 @@ const BacentaForm = ({ initialValues, onSubmit, title, loadingState }) => {
     leaderId: Yup.string().required(
       'Please choose a leader from the drop down'
     ),
-    centres: Yup.array().of(
-      Yup.string().required('Please pick a centre from the dropdown')
-    ),
+    centres: newConstituency
+      ? null
+      : Yup.array().of(
+          Yup.string().required('Please pick a centre from the dropdown')
+        ),
   })
 
   return (
@@ -180,4 +188,4 @@ const BacentaForm = ({ initialValues, onSubmit, title, loadingState }) => {
   )
 }
 
-export default BacentaForm
+export default CampusTownForm

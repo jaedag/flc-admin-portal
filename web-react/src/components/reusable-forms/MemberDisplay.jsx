@@ -5,7 +5,11 @@ import MemberDetailsCard from '../../components/card/MemberDetailsCard'
 import userIcon from '../../img/user.png'
 import Timeline from '../../components/Timeline/Timeline'
 import MemberRoleList from '../../components/MemberRoleList'
-import { getNameWithTitle, getMemberDob } from '../../global-utils'
+import {
+  getNameWithTitle,
+  getMemberDob,
+  transformCloudinaryImg,
+} from '../../global-utils'
 import BaseComponent from 'components/base-component/BaseComponent'
 import { DISPLAY_MEMBER } from 'pages/display/ReadQueries'
 
@@ -43,7 +47,12 @@ const MemberDisplay = ({ memberId }) => {
                     <div className="row row-cols-1 my-2">
                       <div className="col d-flex justify-content-center">
                         <img
-                          src={member?.pictureUrl || userIcon}
+                          src={
+                            transformCloudinaryImg(
+                              member?.pictureUrl,
+                              'large'
+                            ) || userIcon
+                          }
                           className="m-2 rounded profile-img"
                           alt={`${member?.fullName}`}
                         />

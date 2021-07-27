@@ -6,6 +6,7 @@ import './MemberTable.css'
 import TabletDesktopView from '../responsive-design/TabletDesktopView'
 import MobileView from '../responsive-design/MobileView'
 import { ChurchContext } from 'contexts/ChurchContext.js'
+import { transformCloudinaryImg } from 'global-utils.js'
 
 const MemberTable = (props) => {
   const {
@@ -57,7 +58,9 @@ const MemberTable = (props) => {
                     >
                       <img
                         className="card-img-top"
-                        src={soul?.pictureUrl ? soul.pictureUrl : userIcon}
+                        src={
+                          transformCloudinaryImg(soul?.pictureUrl) || userIcon
+                        }
                         alt={soul?.firstName + ' ' + soul?.lastName}
                       />
 
@@ -81,6 +84,7 @@ const MemberTable = (props) => {
               } else if (index >= offset + numberOfRecords) {
                 return null
               }
+
               return (
                 <div
                   key={index}
@@ -93,9 +97,10 @@ const MemberTable = (props) => {
                   <div className="media">
                     <img
                       className="mr-3 rounded-circle img-search"
-                      src={soul?.pictureUrl ? soul.pictureUrl : userIcon}
+                      src={transformCloudinaryImg(soul?.pictureUrl) || userIcon}
                       alt={`${soul?.firstName} ${soul?.lastName}`}
                     />
+                    {/* )} */}
                     <div className="media-body">
                       <h5 className="mt-0">{`${soul?.firstName} ${soul?.lastName}`}</h5>
                       {soul?.bacenta ? (

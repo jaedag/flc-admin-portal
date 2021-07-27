@@ -6,6 +6,8 @@ import * as Yup from 'yup'
 import FormikControl from '../../components/formik-components/FormikControl'
 import {
   BISHOP_MEMBER_DROPDOWN,
+  GET_BISHOP_CAMPUSES,
+  GET_BISHOP_TOWNS,
   GET_MINISTRIES,
 } from '../../queries/ListQueries.js'
 import { CREATE_SONTA_MUTATION } from './CreateMutations'
@@ -16,12 +18,24 @@ import { ChurchContext } from '../../contexts/ChurchContext'
 import { capitalise, makeSelectOptions } from 'global-utils'
 import { DISPLAY_CAMPUS, DISPLAY_TOWN } from 'pages/display/ReadQueries'
 import { NEW_SONTA_LEADER } from './MakeLeaderMutations'
+import RoleView from 'auth/RoleView'
 
 function CreateSonta() {
   const { church, bishopId, campusId, townId, clickCard } = useContext(
     ChurchContext
   )
-
+  const { data: townsData, loading: townsLoading } = useQuery(
+    GET_BISHOP_TOWNS,
+    {
+      variables: { id: bishopId },
+    }
+  )
+  const { data: campusesData, loading: campusesLoading } = useQuery(
+    GET_BISHOP_CAMPUSES,
+    {
+      variables: { id: bishopId },
+    }
+  )
   const { data: ministryListData, loading: ministryListLoading } = useQuery(
     GET_MINISTRIES
   )
@@ -56,8 +70,12 @@ function CreateSonta() {
   const [CreateSonta] = useMutation(CREATE_SONTA_MUTATION)
   const [NewSontaLeader] = useMutation(NEW_SONTA_LEADER)
 
-  if (ministryListData && campusTownData) {
+  if (ministryListData && campusTownData && campusesData && townsData) {
     const ministryOptions = makeSelectOptions(ministryListData.ministries)
+    const townOptions = makeSelectOptions(townsData?.members[0].isBishopForTown)
+    const campusOptions = makeSelectOptions(
+      campusesData?.members[0].isBishopForCampus
+    )
 
     const sontasNotInCampusTown = ministryOptions.filter((ministry) => {
       return !campusTownData.sontas.some(
@@ -107,14 +125,32 @@ function CreateSonta() {
                     <div className="col mb-2">
                       <div className="form-row row-cols-2">
                         <div className="col-10">
-                          <label className="label">{`${capitalise(
-                            church.church
-                          )}:`}</label>
-                          <div className="pl-2">
-                            <p>{`${campusTownData?.name} ${capitalise(
+                          <RoleView roles={['adminFederal', 'adminBishop']}>
+                            <FormikControl
+                              className="form-control"
+                              control="select"
+                              label={`Select a ${capitalise(church.church)}`}
+                              name="campusTown"
+                              options={
+                                church.church === 'town'
+                                  ? townOptions
+                                  : campusOptions
+                              }
+                              defaultOption={`Select a ${capitalise(
+                                church.church
+                              )}`}
+                            />
+                          </RoleView>
+                          <RoleView roles={['adminConstituency']}>
+                            <label className="label">{`${capitalise(
                               church.church
-                            )}`}</p>
-                          </div>
+                            )}:`}</label>
+                            <div className="pl-2">
+                              <p>{`${campusTownData?.name} ${capitalise(
+                                church.church
+                              )}`}</p>
+                            </div>
+                          </RoleView>
                         </div>
                       </div>
 
@@ -168,7 +204,12 @@ function CreateSonta() {
         </Formik>
       </>
     )
-  } else if (campusTownLoading || ministryListLoading) {
+  } else if (
+    campusTownLoading ||
+    ministryListLoading ||
+    campusesLoading ||
+    townsLoading
+  ) {
     return <LoadingScreen />
   } else {
     return <ErrorScreen />

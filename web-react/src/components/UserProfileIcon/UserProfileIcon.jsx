@@ -9,6 +9,7 @@ import { MemberContext } from '../../contexts/MemberContext.js'
 import userIcon from '../../img/user.png'
 import Spinner from '../Spinner'
 import { ChurchContext } from '../../contexts/ChurchContext'
+import { transformCloudinaryImg } from 'global-utils'
 
 function UserProfileIcon() {
   const { user, isAuthenticated } = useAuth0()
@@ -58,8 +59,8 @@ function UserProfileIcon() {
           <span>
             <img
               className="user-navbar-img "
-              src={currentUser?.picture ? currentUser.picture : userIcon}
-              alt={currentUser ? currentUser.firstName : null}
+              src={transformCloudinaryImg(currentUser?.picture) || userIcon}
+              alt={currentUser?.firstName || null}
             />
           </span>
           <span className="d-none d-md-inline">

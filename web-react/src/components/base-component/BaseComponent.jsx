@@ -4,6 +4,7 @@ import LoadingScreen from './LoadingScreen'
 
 const BaseComponent = (props) => {
   const { loadingState, errorState } = props
+
   if (loadingState) {
     return <LoadingScreen />
   } else if (errorState) {

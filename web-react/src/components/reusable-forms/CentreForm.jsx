@@ -16,7 +16,13 @@ import PlusSign from 'components/buttons/PlusSign'
 import MinusSign from 'components/buttons/MinusSign'
 import { BISHOP_BACENTA_DROPDOWN } from 'components/formik-components/ComboboxQueries'
 
-const BacentaForm = ({ initialValues, onSubmit, title, loadingState }) => {
+const BacentaForm = ({
+  initialValues,
+  onSubmit,
+  title,
+  loadingState,
+  newCentre,
+}) => {
   const { church, bishopId } = useContext(ChurchContext)
 
   const {
@@ -42,9 +48,11 @@ const BacentaForm = ({ initialValues, onSubmit, title, loadingState }) => {
   const validationSchema = Yup.object({
     centreName: Yup.string().required('Centre Name is a required field'),
     leaderId: Yup.string().required('Please choose a leader from the dropdown'),
-    bacentas: Yup.array().of(
-      Yup.string().required('Please pick a bacenta from the dropdown')
-    ),
+    bacentas: newCentre
+      ? null
+      : Yup.array().of(
+          Yup.string().required('Please pick a bacenta from the dropdown')
+        ),
   })
 
   return (

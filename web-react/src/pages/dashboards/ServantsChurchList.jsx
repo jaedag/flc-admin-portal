@@ -11,6 +11,7 @@ import {
   getServiceGraphData,
 } from 'pages/reports/report-utils'
 import NavBar from 'components/nav/NavBar'
+import { transformCloudinaryImg } from 'global-utils'
 
 const ServantsChurchList = () => {
   const { memberId } = useContext(MemberContext)
@@ -119,7 +120,7 @@ const ServantsChurchList = () => {
                     <td className="col-auto pr-2">
                       <img
                         className="leader-img"
-                        src={church.leaderPic}
+                        src={transformCloudinaryImg(church.leaderPic)}
                         // alt={church.leader}
                       />
                     </td>

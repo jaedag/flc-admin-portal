@@ -9,6 +9,7 @@ import Logo from '../../img/flc-logo-small.png'
 import { MemberContext } from '../../contexts/MemberContext'
 import TabletDesktopView from 'components/responsive-design/TabletDesktopView'
 import MobileView from 'components/responsive-design/MobileView'
+import { transformCloudinaryImg } from 'global-utils'
 
 const FederalAdminDashboard = () => {
   const { determineStream } = useContext(ChurchContext)
@@ -108,7 +109,7 @@ const FederalAdminDashboard = () => {
                 <div className="media">
                   <img
                     className="mr-3 rounded-circle img-search"
-                    src={bishop.pictureUrl}
+                    src={transformCloudinaryImg(bishop.pictureUrl)}
                     alt={`${bishop.firstName} ${bishop.lastName}`}
                   />
                   <div className="media-body">

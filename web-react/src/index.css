@@ -46,7 +46,8 @@ a:active {
 
 .full-body-center {
   width: 100vw;
-  height: 100vh;
+  position: fixed;
+  /* height: 50vh; */
 }
 
 .full-body-center p {

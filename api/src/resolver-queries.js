@@ -30,7 +30,7 @@ SET member.auth_id = $auth_id
 RETURN member.auth_id`
 
 export const removeMemberAuthId = `
-MATCH (member:Member {id:$id})
+MATCH (member:Member {auth_id:$auth_id})
 REMOVE member.auth_id
 
 CREATE (log:HistoryLog)

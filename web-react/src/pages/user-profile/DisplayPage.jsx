@@ -7,10 +7,15 @@ import { MemberContext } from '../../contexts/MemberContext'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import userIcon from '../../img/user.png'
 import Timeline from '../../components/Timeline/Timeline.jsx'
-import { getNameWithTitle, getMemberDob } from '../../global-utils'
+import {
+  getNameWithTitle,
+  getMemberDob,
+  transformCloudinaryImg,
+} from '../../global-utils'
 import AuthButton from '../../components/buttons/AuthButton'
 import MemberRankList from '../../components/MemberRoleList'
 import BaseComponent from 'components/base-component/BaseComponent'
+// import { Image } from 'cloudinary-react'
 
 const UserProfileDisplayPage = () => {
   const { currentUser } = useContext(MemberContext)
@@ -64,9 +69,8 @@ const UserProfileDisplayPage = () => {
                       <div className="col d-flex justify-content-center">
                         <img
                           src={
-                            displayMember?.pictureUrl
-                              ? displayMember?.pictureUrl
-                              : userIcon
+                            transformCloudinaryImg(displayMember?.pictureUrl) ??
+                            userIcon
                           }
                           className="m-2 rounded profile-img"
                           alt={`${displayMember?.firstName} ${displayMember?.lastName}`}

@@ -155,7 +155,8 @@ const SontaForm = ({
                       <div className="col">
                         <FormikControl
                           control="combobox2"
-                          initialValue={initialValues.leaderName}
+                          name="leaderId"
+                          initialValue={initialValues?.leaderName}
                           placeholder="Select a Leader"
                           setFieldValue={formik.setFieldValue}
                           optionsQuery={BISHOP_MEMBER_DROPDOWN}

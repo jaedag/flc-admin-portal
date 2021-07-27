@@ -69,8 +69,10 @@ const UserProfileDisplayPage = () => {
                       <div className="col d-flex justify-content-center">
                         <img
                           src={
-                            transformCloudinaryImg(displayMember?.pictureUrl) ??
-                            userIcon
+                            transformCloudinaryImg(
+                              displayMember?.pictureUrl,
+                              'large'
+                            ) ?? userIcon
                           }
                           className="m-2 rounded profile-img"
                           alt={`${displayMember?.firstName} ${displayMember?.lastName}`}

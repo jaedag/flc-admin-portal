@@ -41,8 +41,8 @@ export const authorisedLink = (currentUser, permittedRoles, link) => {
   return '#'
 }
 
-export const transformCloudinaryImg = (url, option) => {
-  if (option === 'large') {
+export const transformCloudinaryImg = (url, size) => {
+  if (size === 'large') {
     return url?.replace(
       'https://res.cloudinary.com/firstlovecenter/image/upload/',
       'https://res.cloudinary.com/firstlovecenter/image/upload/c_fill,g_face,h_300,w_300/'

@@ -1022,7 +1022,7 @@ type Mutation {
     firstName: String!
     middleName: String
     lastName: String!
-    email: String
+    email: String!
     phoneNumber: String!
     whatsappNumber: String
     dob: String!
@@ -1047,7 +1047,7 @@ type Mutation {
     )
     @cypher(
       statement: """
-      CREATE (member:Member {whatsappNumber:$whatsappNumber})
+      MERGE (member:Member {whatsappNumber:$whatsappNumber})
       SET
       	member.id = apoc.create.uuid(),
       	member.firstName = $firstName,

@@ -110,6 +110,7 @@ const CreateTownCampus = () => {
       initialValues={initialValues}
       onSubmit={onSubmit}
       title={`Create a New ${capitalise(church.church)}`}
+      newConstituency={true}
     />
   )
 }

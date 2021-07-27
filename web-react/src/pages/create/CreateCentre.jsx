@@ -63,6 +63,7 @@ const CreateCentre = () => {
       initialValues={initialValues}
       onSubmit={onSubmit}
       title="Start a New Centre"
+      newCentre={true}
     />
   )
 }

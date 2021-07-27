@@ -41,6 +41,19 @@ export const authorisedLink = (currentUser, permittedRoles, link) => {
   return '#'
 }
 
+export const transformCloudinaryImg = (url, option) => {
+  if (option === 'large') {
+    return url?.replace(
+      'https://res.cloudinary.com/firstlovecenter/image/upload/',
+      'https://res.cloudinary.com/firstlovecenter/image/upload/c_fill,g_face,h_300,w_300/'
+    )
+  }
+
+  return url?.replace(
+    'https://res.cloudinary.com/firstlovecenter/image/upload/',
+    'https://res.cloudinary.com/firstlovecenter/image/upload/c_thumb,g_face,h_150,w_150,z_0.7/'
+  )
+}
 export const capitalise = (str) => {
   return str?.charAt(0).toUpperCase() + str?.slice(1)
 }

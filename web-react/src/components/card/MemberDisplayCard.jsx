@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import user from '../../img/user.png'
 import bussolid from '../../img/bus-solid.svg'
+import { transformCloudinaryImg } from 'global-utils'
 
 const MemberDisplayCard = (props) => {
   const { member, ...rest } = props
@@ -47,7 +48,7 @@ const MemberDisplayCard = (props) => {
         {member.pictureUrl ? (
           <img
             className="mr-3 rounded-circle img-search"
-            src={`${member.pictureUrl}`}
+            src={transformCloudinaryImg(member.pictureUrl)}
             alt={`${
               member.name
                 ? member.name

@@ -37,7 +37,7 @@ const DisplayCampusTownDetails = () => {
             }
             leaderId={townData?.towns[0].leader?.id}
             churchHeading="No of Centres"
-            churchNo={townData?.townCentreCount}
+            churchNo={townData?.towns[0].centres.length}
             admin={townData?.towns[0].admin}
             churchType={`${capitalise(church.church)}`}
             subChurch={`${capitalise(church.subChurch)}`}
@@ -67,7 +67,7 @@ const DisplayCampusTownDetails = () => {
             }
             leaderId={campusData?.campuses[0].leader?.id}
             churchHeading="No of Centres"
-            churchNo={campusData?.campusCentreCount}
+            churchNo={campusData?.campuses[0].centres.length}
             admin={campusData?.campuses[0].admin}
             churchType={`${capitalise(church.church)}`}
             subChurch={`${capitalise(church.subChurch)}`}

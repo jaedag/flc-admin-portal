@@ -37,7 +37,7 @@ const DisplayCentreDetails = () => {
         churchType="Centre"
         subChurch="Bacenta"
         membership={data?.centreMemberCount}
-        churchNo={data?.centreBacentaCount}
+        churchNo={displayCentre?.bacentas.length}
         editlink="/centre/editcentre"
         history={displayCentre?.history.length !== 0 && displayCentre?.history}
         breadcrumb={breadcrumb && breadcrumb}

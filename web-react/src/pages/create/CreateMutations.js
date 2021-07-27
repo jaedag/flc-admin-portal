@@ -134,27 +134,29 @@ export const CREATE_CENTRE_MUTATION = gql`
     ) {
       id
       name
-      centres {
+      campus {
         id
-        name
-        campus {
+        centres {
           id
-          bishop {
-            id
-          }
         }
-        town {
+        bishop {
           id
-          bishop {
-            id
-          }
         }
-        leader {
+      }
+      town {
+        id
+        centres {
           id
-          firstName
-          lastName
-          fullName
         }
+        bishop {
+          id
+        }
+      }
+      leader {
+        id
+        firstName
+        lastName
+        fullName
       }
     }
   }

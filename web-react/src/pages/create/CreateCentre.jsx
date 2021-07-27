@@ -39,11 +39,11 @@ const CreateCentre = () => {
       },
     })
       .then((res) => {
-        clickCard(res.data.CreateCentre.centres[0])
+        clickCard(res.data.CreateCentre)
         NewCentreLeader({
           variables: {
             leaderId: values.leaderId,
-            centreId: res.data.CreateCentre.centres[0].id,
+            centreId: res.data.CreateCentre.id,
           },
         }).catch((error) => alert('There was an error adding leader', error))
 

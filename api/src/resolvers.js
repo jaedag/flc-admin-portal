@@ -188,13 +188,24 @@ const deleteUserRoles = (memberId, roles) => ({
 })
 
 const assignRoles = (userId, userRoles, rolesToAssign) => {
-  console.log('user', userId)
-  console.log('user roles', userRoles)
-  console.log('roles to assign', rolesToAssign)
+  const userRoleIds = userRoles.map((role) => authRoles[role].id)
+  const nameOfRoles = Object.entries(authRoles)
+    .map((role) => {
+      if (rolesToAssign[0] === role[1].id) {
+        return role[1].name
+      }
+    })
+    .filter((role) => role)
+
+  if (userRoleIds.includes(rolesToAssign[0])) {
+    console.log('User already has the role ', nameOfRoles[0])
+    return
+  }
+
   //An assign roles function to simplify assigning roles with an axios request
-  if (!userRoles.includes(rolesToAssign[0])) {
+  if (!userRoleIds.includes(rolesToAssign[0])) {
     axios(setUserRoles(userId, rolesToAssign))
-      .then(console.log('User Role successfully added'))
+      .then(console.log(nameOfRoles[0], ' Role successfully added to user'))
       .catch((err) => throwErrorMsg('There was an error assigning role', err))
   }
 }

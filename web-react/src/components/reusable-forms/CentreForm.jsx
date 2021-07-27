@@ -49,9 +49,11 @@ const CentreForm = ({
     centreName: Yup.string().required('Centre Name is a required field'),
     leaderId: Yup.string().required('Please choose a leader from the dropdown'),
     bacentas: newCentre
-      ? null
-      : Yup.array().of(
+      ? Yup.array().of(
           Yup.string().required('Please pick a bacenta from the dropdown')
+        )
+      : Yup.array().of(
+          Yup.object().required('Please pick a bacenta from the dropdown')
         ),
   })
 

@@ -44,11 +44,11 @@ const UpdateSonta = () => {
       { query: GET_CAMPUS_CENTRES, variables: { id: campusId } },
       {
         query: GET_TOWN_CENTRES,
-        variables: { id: initialValues.campusTownSelect },
+        variables: { id: initialValues.campusTown },
       },
       {
         query: GET_CAMPUS_CENTRES,
-        variables: { id: initialValues.campusTownSelect },
+        variables: { id: initialValues.campusTown },
       },
     ],
   })
@@ -56,10 +56,10 @@ const UpdateSonta = () => {
   //onSubmit receives the form state as argument
   const onSubmit = (values, onSubmitProps) => {
     if (church.church === 'town') {
-      setTownId(values.campusTownSelect)
+      setTownId(values.campusTown)
     }
     if (church.church === 'campus') {
-      setCampusId(values.campusTownSelect)
+      setCampusId(values.campusTown)
     }
 
     UpdateSonta({

@@ -308,19 +308,21 @@ const UpdateCentre = () => {
       return !oldBacentaList.includes(value.id)
     })
 
-    RemoveBacentaFromCentre({
-      variables: {
-        centreId: centreId,
-        bacentaId: removeBacentas,
-      },
-    })
+    if (removeBacentas.length) {
+      RemoveBacentaFromCentre({
+        variables: {
+          centreId: centreId,
+          bacentaIds: removeBacentas,
+        },
+      })
+    }
 
     addBacentas.forEach((bacenta) => {
       if (bacenta.centre) {
         RemoveBacentaFromCentre({
           variables: {
             centreId: bacenta.centre.id,
-            bacentaId: [bacenta.id],
+            bacentaIds: [bacenta.id],
           },
         })
       } else {

@@ -150,6 +150,7 @@ const BacentaForm = ({
                                     queryVariable2="bacentaName"
                                     suggestionText="name"
                                     suggestionID="id"
+                                    returnObject={!newCentre && true}
                                     church="bacenta"
                                     dataset="bishopBacentaDropdown"
                                     aria-describedby="Bacenta Name"

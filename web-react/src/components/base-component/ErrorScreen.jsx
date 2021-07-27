@@ -10,7 +10,7 @@ const ErrorScreen = ({ error }) => {
   return (
     <>
       <NavBar />
-      <div className="container full-body-center">
+      <div className="container full-body-center h-100">
         <p className="text-center full-center">
           There seems to be an error loading data
         </p>

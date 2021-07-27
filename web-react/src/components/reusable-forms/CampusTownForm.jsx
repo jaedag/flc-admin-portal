@@ -148,6 +148,7 @@ const CampusTownForm = ({
                                     suggestionID="id"
                                     dataset="bishopCentreDropdown"
                                     church="centre"
+                                    returnObject={!newConstituency && true}
                                     aria-describedby="Centre Name"
                                     className="form-control"
                                     error={

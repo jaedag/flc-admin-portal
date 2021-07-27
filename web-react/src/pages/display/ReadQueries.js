@@ -385,7 +385,6 @@ export const DISPLAY_CENTRE = gql`
       }
     }
     centreMemberCount(id: $id)
-    centreBacentaCount(id: $id)
   }
 `
 
@@ -467,7 +466,6 @@ export const DISPLAY_TOWN = gql`
       }
     }
     townMemberCount(id: $id)
-    townCentreCount(id: $id)
   }
 `
 
@@ -549,6 +547,5 @@ export const DISPLAY_CAMPUS = gql`
       }
     }
     campusMemberCount(id: $id)
-    campusCentreCount(id: $id)
   }
 `

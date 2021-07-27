@@ -79,17 +79,18 @@ function ComboboxTwoVariables(props) {
           })
         )
       }
+      console.log('API Call', data)
+
+      // setSearchString(debouncedText)
     },
   })
 
   useEffect(() => {
     const timerId = setTimeout(() => {
-      setDebouncedText(searchString)
-
       query({
         variables: {
           [`${queryVariable1}`]: variable1,
-          [`${queryVariable2}`]: debouncedText?.trim(),
+          [`${queryVariable2}`]: searchString?.trim(),
         },
       })
     }, DEBOUNCE_TIMER)
@@ -98,7 +99,7 @@ function ComboboxTwoVariables(props) {
       clearTimeout(timerId)
     }
     // eslint-disable-next-line
-  }, [searchString])
+  }, [searchString, query])
 
   return (
     <div>
@@ -124,6 +125,7 @@ function ComboboxTwoVariables(props) {
           if (!value) {
             setSuggestions([])
           }
+
           try {
             query({
               variables: {

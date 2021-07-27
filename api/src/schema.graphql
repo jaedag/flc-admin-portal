@@ -1215,7 +1215,7 @@ type Mutation {
     townCampusId: ID!
     leaderId: ID!
     bacentas: [ID]
-  ): Town  #Return town and drill down to get centre info
+  ): Centre  #Return town and drill down to get centre info
     @auth(
       rules: [{ roles: ["adminFederal", "adminBishop", "adminConstituency"] }]
     )
@@ -1230,7 +1230,7 @@ type Mutation {
        MERGE (campusTown)-[:HAS_CENTRE]->(centre)
        MERGE (leader)-[:LEADS]->(centre)
 
-       WITH centre, campusTown
+       WITH centre
       CALL {
         WITH centre
         WITH centre WHERE $bacentas <> []
@@ -1243,7 +1243,7 @@ type Mutation {
         RETURN count(centre)
       }
 
-      RETURN campusTown
+      RETURN centre
       """
     )
   CreateSonta(ministryId: ID!, townCampusId: ID!, leaderId: ID!): Town

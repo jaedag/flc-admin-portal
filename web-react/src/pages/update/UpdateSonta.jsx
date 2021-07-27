@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/client'
 import { GET_CAMPUS_CENTRES, GET_TOWN_CENTRES } from '../../queries/ListQueries'
-import { UPDATE_CENTRE_MUTATION } from './UpdateMutations'
+import { UPDATE_SONTA_MUTATION } from './UpdateMutations'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import { DISPLAY_SONTA } from '../display/ReadQueries'
 import { LOG_SONTA_HISTORY } from './LogMutations'
@@ -27,11 +27,10 @@ const UpdateSonta = () => {
   const sonta = sontaData?.sontas[0]
 
   const initialValues = {
-    centreName: sonta?.name,
+    sontaName: sonta?.name,
     leaderName: sonta?.leader.fullName ?? '',
     leaderId: sonta?.leader?.id || '',
-    campusTownSelect:
-      church.church === 'town' ? sonta?.town?.id : sonta?.campus?.id,
+    campusTown: church.church === 'town' ? sonta?.town?.id : sonta?.campus?.id,
   }
 
   const [LogSontaHistory] = useMutation(LOG_SONTA_HISTORY, {
@@ -39,7 +38,7 @@ const UpdateSonta = () => {
   })
 
   const [MakeSontaLeader] = useMutation(MAKE_SONTA_LEADER)
-  const [UpdateSonta] = useMutation(UPDATE_CENTRE_MUTATION, {
+  const [UpdateSonta] = useMutation(UPDATE_SONTA_MUTATION, {
     refetchQueries: [
       { query: GET_TOWN_CENTRES, variables: { id: townId } },
       { query: GET_CAMPUS_CENTRES, variables: { id: campusId } },
@@ -72,13 +71,13 @@ const UpdateSonta = () => {
     })
 
     //Log if Sonta Name Changes
-    if (values.centreName !== initialValues.centreName) {
+    if (values.sontaName !== initialValues.sontaName) {
       LogSontaHistory({
         variables: {
           sontaId: sontaId,
           newLeaderId: '',
           oldLeaderId: '',
-          historyRecord: `Sonta name has been changed from ${initialValues.centreName} to ${values.centreName}`,
+          historyRecord: `Sonta name has been changed from ${initialValues.sontaName} to ${values.sontaName}`,
         },
       })
     }

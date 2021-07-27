@@ -430,7 +430,7 @@ const RemoveServant = async (
                 sendMail(
                   servant.email,
                   'Your Servant Account Has Been Deleted',
-                  `Hi ${servant.firstName}\nYour account has been deleted from our portal. You will no longer have access to data. If you feel that this is a mistake, please contact your bishops admin.\nThank you\nRegards\nThe Admiinstrator\nFirst Love Center\nAccra`
+                  `Hi ${servant.firstName}\nYour account has been deleted from our portal. You will no longer have access to any data.\nThis is due to the fact that you have been removed as a ${churchType} ${servantType} for ${church.name} ${church.type[0]}.\nIf you feel that this is a mistake, please contact your bishops admin.\nThank you\nRegards\nThe Admiinstrator\nFirst Love Center\nAccra`
                 )
 
                 //Remove Auth0 ID of Leader from Neo4j DB

@@ -241,13 +241,12 @@ export const UPDATE_TOWN_MUTATION = gql`
           name
           bishop {
             id
-          }
-        }
-        campus {
-          id
-          name
-          bishop {
-            id
+            isBishopForTown {
+              id
+            }
+            isBishopForCampus {
+              id
+            }
           }
         }
       }
@@ -320,18 +319,17 @@ export const UPDATE_CAMPUS_MUTATION = gql`
       centres {
         id
         name
-        town {
-          id
-          name
-          bishop {
-            id
-          }
-        }
         campus {
           id
           name
           bishop {
             id
+            isBishopForTown {
+              id
+            }
+            isBishopForCampus {
+              id
+            }
           }
         }
       }

@@ -1,4 +1,4 @@
-import { useQuery } from '@apollo/client'
+import { useMutation, useQuery } from '@apollo/client'
 import BaseComponent from 'components/base-component/BaseComponent'
 import NavBar from 'components/nav/NavBar'
 import { Form, Formik } from 'formik'
@@ -20,9 +20,18 @@ import React, { useContext, useState } from 'react'
 import { ChurchContext } from 'contexts/ChurchContext'
 import FormikControl from 'components/formik-components/FormikControl'
 import Spinner from 'components/Spinner'
+import { MAKE_BACENTA_INACTIVE } from 'pages/update/CloseChurchMutations'
+import { useHistory } from 'react-router'
 
-const BacentaForm = ({ initialValues, onSubmit, title, loadingState }) => {
-  const { church, bishopId } = useContext(ChurchContext)
+const BacentaForm = ({
+  initialValues,
+  onSubmit,
+  title,
+  loadingState,
+  newBacenta,
+}) => {
+  const { church, clickCard, bacentaId, bishopId } = useContext(ChurchContext)
+  const history = useHistory()
 
   const {
     data: townListData,
@@ -38,6 +47,7 @@ const BacentaForm = ({ initialValues, onSubmit, title, loadingState }) => {
   } = useQuery(GET_BISHOP_CAMPUSES, {
     variables: { id: bishopId },
   })
+  const [MakeBacentaInactive] = useMutation(MAKE_BACENTA_INACTIVE)
 
   const validationSchema = Yup.object({
     bacentaName: Yup.string().required('Bacenta Name is a required field'),
@@ -241,6 +251,33 @@ const BacentaForm = ({ initialValues, onSubmit, title, loadingState }) => {
                 </button>
               </div>
             </Form>
+
+            {!newBacenta && (
+              <div
+                className="btn btn-primary"
+                onClick={() => {
+                  MakeBacentaInactive({
+                    variables: {
+                      bacentaId: bacentaId,
+                    },
+                  })
+                    .then((res) => {
+                      clickCard(res.data.MakeBacentaInactive.centre)
+                      history.push('/centre/displaydetails')
+                    })
+                    .catch((error) => {
+                      // eslint-disable-next-line no-console
+                      console.error(error)
+                      alert(
+                        'There was an error closing down this bacenta',
+                        error
+                      )
+                    })
+                }}
+              >
+                Close Down Bacenta
+              </div>
+            )}
           </div>
         )}
       </Formik>

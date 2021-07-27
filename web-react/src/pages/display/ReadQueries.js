@@ -238,6 +238,7 @@ export const DISPLAY_BACENTA = gql`
         id
         firstName
         lastName
+        fullName
         whatsappNumber
         title {
           title
@@ -450,6 +451,7 @@ export const DISPLAY_TOWN = gql`
         id
         firstName
         lastName
+        fullName
       }
       history(options: { limit: 10 }) {
         id
@@ -531,6 +533,7 @@ export const DISPLAY_CAMPUS = gql`
         id
         firstName
         lastName
+        fullName
       }
       history(options: { limit: 10 }) {
         id

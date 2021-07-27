@@ -60,6 +60,7 @@ const CreateBacenta = () => {
       title="Start a New Bacenta"
       initialValues={initialValues}
       onSubmit={onSubmit}
+      newBacenta={true}
     />
   )
 }

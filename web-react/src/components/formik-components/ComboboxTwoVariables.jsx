@@ -146,6 +146,7 @@ function ComboboxTwoVariables(props) {
           }
 
           setDebouncedText(suggestion.name)
+
           if (props.returnObject) {
             setFieldValue(`${name}`, suggestion)
           } else {

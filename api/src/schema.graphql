@@ -240,6 +240,36 @@ type HistoryLog @auth(rules: [{ isAuthenticated: true }]) {
 }
 
 # Campus-Centre, Town-Centre
+type Constituency {
+  id: ID @id
+  name: String
+  members: [Member]
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS_CENTRE]->(centre:Centre)-[:HAS_BACENTA]->(bacenta:Bacenta)
+      OPTIONAL MATCH (bacenta)<-[:BELONGS_TO*]-(member:Member)
+      OPTIONAL MATCH (bacenta)<-[:LEADS]-(bacentaLeader:Member)
+      OPTIONAL MATCH (centre)<-[:LEADS]-(centreLeader:Member)
+      OPTIONAL MATCH (this)<-[:LEADS]-(constituencyOverseer:Member)
+       OPTIONAL MATCH (this)<-[:IS_ADMIN_FOR]-(adminConstituency:Member)
+      UNWIND [member,bacentaLeader,centreLeader,constituencyOverseer,adminConstituency] as members
+      WITH members WHERE members IS NOT NULL
+      RETURN DISTINCT members ORDER BY members.firstName
+      """
+    )
+  leader: Member @relationship(type: "LEADS", direction: IN)
+  sontas: [Sonta] @relationship(type: "HAS_SONTA", direction: OUT)
+  centres: [Centre] @relationship(type: "HAS_CENTRE", direction: OUT)
+  campusBishop: Member @relationship(type: "HAS_CAMPUS", direction: IN)
+  townBishop: Member @relationship(type: "HAS_TOWN", direction: IN)
+  admin: Member @relationship(type: "IS_ADMIN_FOR", direction: IN)
+  history: [HistoryLog] @relationship(type: "HAS_HISTORY", direction: OUT)
+  serviceRecord: [ServiceRecord]
+    @relationship(type: "HAS_RECORD", direction: OUT)
+  services: [ServiceLog] @relationship(type: "HAS_HISTORY", direction: OUT)
+  componentServiceAggregate: [ComponentServiceAggregate] @ignore
+}
+
 type Campus {
   id: ID @id
   name: String
@@ -414,7 +444,7 @@ type Query {
   #At the Episcopal Level
   bishopCampusTownCount(id: ID): Int!
     @cypher(
-      statement: "MATCH (:Member {id: $id})-[:HAS_TOWN|:HAS_CAMPUS]->(campusTown) RETURN COUNT(DISTINCT campusTown)"
+      statement: "MATCH (:Member {id: $id})-[:HAS_TOWN|:HAS_CAMPUS]->(campusTown) WHERE campusTown:Campus OR campusTown:Town RETURN COUNT(DISTINCT campusTown)"
     )
   bishopCentreCount(id: ID): Int!
     @cypher(
@@ -1061,7 +1091,7 @@ type Mutation {
         SET
         log.id =  apoc.create.uuid(),
         log.timeStamp = datetime(),
-        log.historyRecord = $firstName + $lastName+' was registered on '+toString(date())
+        log.historyRecord = $firstName +" " +$lastName+' was registered on '+toString(date())
 
       MERGE (date:TimeGraph {date: date()})
 
@@ -1465,6 +1495,22 @@ type Mutation {
       RETURN centre
       """
     )
+
+  UpdateSontaDetails(sontaId: ID!, sontaName: String!): Sonta
+    @auth(
+      rules: [{ roles: ["adminFederal", "adminBishop", "adminConstituency"] }]
+    )
+    @cypher(
+      statement: """
+      MATCH (sonta:Sonta {id: $sontaId})
+      	SET sonta.name = $sontaName
+
+
+      MATCH (sonta)<-[:LEADS]-(leader:Member)
+      RETURN sonta
+      """
+    )
+
   UpdateBacentaDetails(
     id: ID!
     name: String!
@@ -1670,8 +1716,6 @@ type Mutation {
     historyRecord: String!
     newLeaderId: ID
     oldLeaderId: ID
-    newCampusTownId: ID
-    oldCampusTownId: ID
   ): Sonta
     @cypher(
       statement: """
@@ -1703,24 +1747,6 @@ type Mutation {
        RETURN COUNT(log)
        }
 
-
-       WITH log,sonta
-       CALL {
-         WITH log
-         WITH log WHERE $oldCampusTownId IS NOT NULL
-         MATCH (campusTown {id: $oldCampusTownId}) WHERE campusTown:Town OR campusTown:Campus
-         MERGE (campusTown)-[:HAS_HISTORY]->(log)
-         RETURN COUNT(log)
-       }
-
-       WITH log,sonta
-       CALL {
-         WITH log
-         WITH log WHERE $newCampusTownId IS NOT NULL
-         MATCH (campusTown {id: $newCampusTownId}) WHERE campusTown:Town OR campusTown:Campus
-         MERGE (campusTown)-[:HAS_HISTORY]->(log)
-         RETURN COUNT(log)
-       }
 
        RETURN sonta
       """
@@ -1790,6 +1816,82 @@ type Mutation {
       MERGE (log)-[:HAS_RECORD]->(serviceRecord)
 
       RETURN serviceRecord
+      """
+    )
+
+  #DELETE OPERATIONS
+  # In the context of church data we never delete, we only render inactive
+  MakeBacentaInactive(bacentaId: ID!): Bacenta
+    @cypher(
+      statement: """
+      MATCH (bacenta:Bacenta {id:$bacentaId})
+      OPTIONAL MATCH (bacenta)-[:HAS_BACENTA]-(centre)
+
+      CREATE (log:HistoryLog {id:apoc.create.uuid()})
+        SET log.timeStamp = datetime(),
+        log.historyRecord = bacenta.name + ' Bacenta was closed down under ' + centre.name +' Centre'
+
+
+      MERGE (date:TimeGraph {date:date()})
+      MERGE (log)-[:RECORDED_ON]->(date)
+      MERGE (bacenta)-[:HAS_HISTORY]->(log)
+      MERGE (centre)-[:HAS_HISTORY]->(log)
+
+      SET bacenta:InactiveBacenta
+      REMOVE bacenta:Bacenta
+
+      RETURN bacenta
+      """
+    )
+
+  MakeCentreInactive(centreId: ID!): Centre
+    @cypher(
+      statement: """
+      MATCH (centre:Centre {id:$centreId})
+      OPTIONAL MATCH (centre)-[:HAS_CENTRE]-(campusTown)
+      OPTIONAL MATCH (centre)-[:HAS_BACENTA]->(bacentas)
+      UNWIND labels(campusTown) AS stream
+
+      CREATE (log:HistoryLog {id:apoc.create.uuid()})
+        SET log.timeStamp = datetime(),
+        log.historyRecord = centre.name + ' Centre was closed down under ' + campusTown.name +' '+stream
+
+
+      MERGE (date:TimeGraph {date:date()})
+      MERGE (log)-[:RECORDED_ON]->(date)
+      MERGE (centre)-[:HAS_HISTORY]->(log)
+      MERGE (campusTown)-[:HAS_HISTORY]->(log)
+
+      SET centre:InactiveCentre, bacenta:InactiveBacenta
+      REMOVE centre:Centre,  bacentas:Bacenta
+
+
+      RETURN centre
+      """
+    )
+
+  MakeCampusTownInactive(campusTownId: ID!): Constituency
+    @cypher(
+      statement: """
+      MATCH (campusTown {id:$campusTownId}) WHERE campusTown:Campus OR campusTown:Town
+      OPTIONAL MATCH (campusTown)-[:HAS_CAMPUS|HAS_TOWN]-(bishop)
+      OPTIONAL MATCH (campusTown)-[:HAS_CENTRE]->(centres)-[:HAS_BACENTA]->(bacentas)
+      UNWIND labels(campusTown) AS stream
+
+      CREATE (log:HistoryLog {id:apoc.create.uuid()})
+        SET log.timeStamp = datetime(),
+        log.historyRecord = campusTown.name + ' '+stream +' was closed down under Bishop ' + bishop.firstName +' '+bishop.lastName
+
+
+      MERGE (date:TimeGraph {date:date()})
+      MERGE (log)-[:RECORDED_ON]->(date)
+      MERGE (campusTown)-[:HAS_HISTORY]->(log)
+      MERGE (bishop)-[:HAS_HISTORY]->(log)
+
+      SET campusTown:InactiveCampusTown, centres:InactiveCentre, bacentas:InactiveBacenta
+      REMOVE campusTown:Campus:Town,centres:Centre,bacentas:Bacenta
+
+      RETURN campusTown
       """
     )
 

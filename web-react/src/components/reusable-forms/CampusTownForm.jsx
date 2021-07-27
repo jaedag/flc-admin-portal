@@ -1,4 +1,4 @@
-import { useQuery } from '@apollo/client'
+import { useMutation, useQuery } from '@apollo/client'
 import BaseComponent from 'components/base-component/BaseComponent'
 import NavBar from 'components/nav/NavBar'
 import { FieldArray, Form, Formik } from 'formik'
@@ -11,6 +11,9 @@ import FormikControl from 'components/formik-components/FormikControl'
 import PlusSign from 'components/buttons/PlusSign'
 import MinusSign from 'components/buttons/MinusSign'
 import { BISHOP_CENTRE_DROPDOWN } from 'components/formik-components/ComboboxQueries'
+import { MAKE_CAMPUSTOWN_INACTIVE } from 'pages/update/CloseChurchMutations'
+import { BISH_DASHBOARD_COUNTS } from 'pages/dashboards/DashboardQueries'
+import { useHistory } from 'react-router'
 
 const CampusTownForm = ({
   initialValues,
@@ -19,12 +22,21 @@ const CampusTownForm = ({
   loadingState,
   newConstituency,
 }) => {
-  const { church, bishopId } = useContext(ChurchContext)
+  const { church, clickCard, campusId, townId, bishopId } = useContext(
+    ChurchContext
+  )
+
+  const history = useHistory()
   const {
     data: bishopsData,
     loading: bishopsLoading,
     error: bishopsError,
   } = useQuery(GET_BISHOPS)
+  const [MakeCampusTownInactive] = useMutation(MAKE_CAMPUSTOWN_INACTIVE, {
+    refetchQueries: [
+      { query: BISH_DASHBOARD_COUNTS, variables: { id: bishopId } },
+    ],
+  })
 
   const bishopTownOptions = makeSelectOptions(
     bishopsData?.members.filter(
@@ -47,7 +59,7 @@ const CampusTownForm = ({
     centres: newConstituency
       ? null
       : Yup.array().of(
-          Yup.string().required('Please pick a centre from the dropdown')
+          Yup.object().required('Please pick a centre from the dropdown')
         ),
   })
 
@@ -76,6 +88,7 @@ const CampusTownForm = ({
                           className="form-control"
                           control="select"
                           name="bishopSelect"
+                          label="Select a Bishop"
                           options={
                             church.church === 'campus'
                               ? bishopCampusOptions
@@ -92,6 +105,7 @@ const CampusTownForm = ({
                           className="form-control"
                           control="input"
                           name="campusTownName"
+                          label={`Name of ${capitalise(church.church)}`}
                           placeholder={`Name of ${capitalise(church.church)}`}
                         />
                       </div>
@@ -101,7 +115,9 @@ const CampusTownForm = ({
                         <FormikControl
                           control="combobox2"
                           name="leaderId"
-                          placeholder="Select a Leader"
+                          label="Choose a CO"
+                          placeholder="Start typing..."
+                          initialValue={initialValues?.leaderName}
                           setFieldValue={formik.setFieldValue}
                           optionsQuery={BISHOP_MEMBER_DROPDOWN}
                           queryVariable1="id"
@@ -132,13 +148,14 @@ const CampusTownForm = ({
 
                         return (
                           <div>
-                            {centres.map((centres, index) => (
+                            {centres.map((centre, index) => (
                               <div key={index} className="form-row row-cols">
                                 <div className="col-9">
                                   <FormikControl
                                     control="combobox2"
                                     name={`centres[${index}]`}
                                     placeholder="Centre Name"
+                                    initialValue={centre?.name}
                                     setFieldValue={formik.setFieldValue}
                                     optionsQuery={BISHOP_CENTRE_DROPDOWN}
                                     queryVariable1="id"
@@ -182,6 +199,37 @@ const CampusTownForm = ({
                 </button>
               </div>
             </Form>
+
+            {!newConstituency && (
+              <div
+                className="btn btn-primary"
+                onClick={() => {
+                  MakeCampusTownInactive({
+                    variables: {
+                      campusTownId:
+                        church.church === 'campus' ? campusId : townId,
+                    },
+                  })
+                    .then((res) => {
+                      clickCard(
+                        res.data.MakeCampusTownInactive?.campusBishop ??
+                          res.data.MakeCampusTownInactive?.townBishop
+                      )
+                      history.push(`/town/displayall`)
+                    })
+                    .catch((error) => {
+                      // eslint-disable-next-line no-console
+                      console.error(error)
+                      alert(
+                        `There was an error closing down this ${church.church}`,
+                        error
+                      )
+                    })
+                }}
+              >
+                {`Close Down ${capitalise(church.church)}`}
+              </div>
+            )}
           </div>
         )}
       </Formik>

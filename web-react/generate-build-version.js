@@ -1,6 +1,6 @@
 /* eslint-disable */
 const fs = require('fs')
-const packageJson = require('../package.json')
+const packageJson = require('./package.json') // file is imported from the web-react dir
 
 const appVersion = packageJson.version
 
@@ -16,7 +16,10 @@ fs.writeFile('./public/meta.json', jsonContent, 'utf8', function (err) {
     return console.log(err)
   }
 
-  console.log('meta.json file has been saved with latest version number')
+  console.log(
+    'meta.json file has been saved with latest version number',
+    appVersion
+  )
 })
 
 /* eslint-enable */

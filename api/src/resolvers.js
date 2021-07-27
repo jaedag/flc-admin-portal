@@ -288,6 +288,13 @@ const MakeServant = async (
                   `Auth0 Account successfully created for ${servant.firstName} ${servant.lastName}`
                 )
 
+                //Send Email Using Mailgun
+                sendMail(
+                  servant.email,
+                  'Servanthood Status Update',
+                  `Hi ${servant.firstName}\nCongratulations! You have just been made a ${churchType} ${servantType} for ${church.name} ${church.type[0]}.\nRegards,\nThe Administrator,\nFirst Love Centre,\nAccra.`
+                )
+
                 //Write Auth0 ID of Leader to Neo4j DB
                 session
                   .run(cypher[`make${churchType}${servant}`], {
@@ -312,6 +319,13 @@ const MakeServant = async (
                   authRoles[`${servantLower}${churchType}`].id,
                 ])
 
+                //Send Email Using Mailgun
+                sendMail(
+                  servant.email,
+                  'Servanthood Status Update',
+                  `Hi ${servant.firstName}\nCongratulations! You have just been made a ${churchType} ${servantType} for ${church.name} ${church.type[0]}.\nRegards,\nThe Administrator,\nFirst Love Centre,\nAccra.`
+                )
+
                 //Write Auth0 ID of Admin to Neo4j DB
                 session
                   .run(cypher[`make${churchType}${servantType}`], {
@@ -329,13 +343,6 @@ const MakeServant = async (
                 throwErrorMsg('getUserRoles Failed to Run', error)
               )
           }
-
-          //Send Email Using Mailgun
-          sendMail(
-            servant.email,
-            'Servanthood Status Update',
-            `Hi ${servant.firstName}\nCongratulations! You have just been made a ${churchType} ${servantType} for ${church.name} ${church.type[0]}.\nRegards,\nThe Administrator,\nFirst Love Centre,\nAccra.`
-          )
         })
         .catch((err) =>
           throwErrorMsg('There was an error obtaining the auth Id ', err)
@@ -423,7 +430,7 @@ const RemoveServant = async (
                 sendMail(
                   servant.email,
                   'Your Servant Account Has Been Deleted',
-                  `Hi ${servant.firstName}\nYour account has been deleted from our portal. You will no longer have access to data. If you feel that this is a mistake, please contact your bishops admin.\nThank you\nRegards\nThe Admiinstrator\nFirst Love Center\nAccra`
+                  `Hi ${servant.firstName}\nYour account has been deleted from our portal. You will no longer have access to any data.\nThis is due to the fact that you have been removed as a ${churchType} ${servantType} for ${church.name} ${church.type[0]}.\nIf you feel that this is a mistake, please contact your bishops admin.\nThank you\nRegards\nThe Admiinstrator\nFirst Love Center\nAccra`
                 )
 
                 //Remove Auth0 ID of Leader from Neo4j DB
@@ -445,6 +452,13 @@ const RemoveServant = async (
               roles,
               authRoles[`${servantLower}${churchType}`].id
             )
+
+            //Send Email Using Mailgun
+            sendMail(
+              servant.email,
+              'ServantHood Status Update',
+              `Hi ${servant.firstName}\nUnfortunately You have just been removed as a ${churchType} ${servantType} for ${church.name} ${church.type[0]}.\nRegards,\nThe Administrator,\nFirst Love Centre,\nAccra.`
+            )
           }
         })
         .catch((error) => {
@@ -453,13 +467,6 @@ const RemoveServant = async (
       //Relationship in Neo4j will be removed when the replacement leader is being added
     })
     .catch((err) => throwErrorMsg('', err))
-
-  //Send Email Using Mailgun
-  sendMail(
-    servant.email,
-    'ServantHood Status Update',
-    `Hi ${servant.firstName}\nUnfortunately You have just been removed as a ${churchType} ${servantType} for ${church.name} ${church.type[0]}.\nRegards,\nThe Administrator,\nFirst Love Centre,\nAccra.`
-  )
 
   errorHandling(servant)
 

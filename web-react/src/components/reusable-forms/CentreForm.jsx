@@ -1,4 +1,4 @@
-import { useQuery } from '@apollo/client'
+import { useMutation, useQuery } from '@apollo/client'
 import BaseComponent from 'components/base-component/BaseComponent'
 import NavBar from 'components/nav/NavBar'
 import { FieldArray, Form, Formik } from 'formik'
@@ -15,16 +15,20 @@ import FormikControl from 'components/formik-components/FormikControl'
 import PlusSign from 'components/buttons/PlusSign'
 import MinusSign from 'components/buttons/MinusSign'
 import { BISHOP_BACENTA_DROPDOWN } from 'components/formik-components/ComboboxQueries'
+import { useHistory } from 'react-router'
+import { MAKE_CENTRE_INACTIVE } from 'pages/update/CloseChurchMutations'
 
-const BacentaForm = ({
+const CentreForm = ({
   initialValues,
   onSubmit,
   title,
   loadingState,
   newCentre,
 }) => {
-  const { church, bishopId } = useContext(ChurchContext)
+  const { church, clickCard, centreId, bishopId } = useContext(ChurchContext)
+  const history = useHistory()
 
+  const [MakeCentreInactive] = useMutation(MAKE_CENTRE_INACTIVE)
   const {
     data: townsData,
     loading: townsLoading,
@@ -51,7 +55,7 @@ const BacentaForm = ({
     bacentas: newCentre
       ? null
       : Yup.array().of(
-          Yup.string().required('Please pick a bacenta from the dropdown')
+          Yup.object().required('Please pick a bacenta from the dropdown')
         ),
   })
 
@@ -107,7 +111,7 @@ const BacentaForm = ({
                         <FormikControl
                           control="combobox2"
                           name="leaderId"
-                          initialValue={initialValues.leaderName}
+                          initialValue={initialValues?.leaderName}
                           placeholder="Select a Leader"
                           setFieldValue={formik.setFieldValue}
                           optionsQuery={BISHOP_MEMBER_DROPDOWN}
@@ -186,6 +190,36 @@ const BacentaForm = ({
                 </button>
               </div>
             </Form>
+
+            {!newCentre && (
+              <div
+                className="btn btn-primary"
+                onClick={() => {
+                  MakeCentreInactive({
+                    variables: {
+                      centreId: centreId,
+                    },
+                  })
+                    .then((res) => {
+                      clickCard(
+                        res.data.MakeCentreInactive?.campus ||
+                          res.data.MakeCentreInactive?.town
+                      )
+                      history.push(`/${church.church}/displaydetails`)
+                    })
+                    .catch((error) => {
+                      // eslint-disable-next-line no-console
+                      console.error(error)
+                      alert(
+                        'There was an error closing down this centre',
+                        error
+                      )
+                    })
+                }}
+              >
+                Close Down Centre
+              </div>
+            )}
           </div>
         )}
       </Formik>
@@ -193,4 +227,4 @@ const BacentaForm = ({
   )
 }
 
-export default BacentaForm
+export default CentreForm

@@ -28,6 +28,7 @@ class CacheBuster extends React.Component {
       isLatestVersion: false,
       refreshCacheAndReload: async () => {
         console.log('Clearing cache and hard reloading...')
+
         if (caches) {
           // Service worker cache should be cleared with caches.delete()
           // caches.keys().then(async function (names) {

@@ -146,7 +146,9 @@ const SontaForm = ({
                           label="Ministry*"
                           control="select"
                           name="ministrySelect"
-                          options={sontasNotInCampusTown}
+                          options={
+                            newSonta ? sontasNotInCampusTown : ministryOptions
+                          }
                           defaultOption="Ministry"
                         />
                       </div>

@@ -78,8 +78,9 @@ const DisplayChurchDetails = (props) => {
   })
   const onSubmit = (values, onSubmitProps) => {
     if (
-      churchType === 'Town' &&
-      initialValues.adminSelect !== values.adminSelect
+      churchType === 'Town'
+      // &&
+      // initialValues.adminSelect !== values.adminSelect
     ) {
       MakeTownAdmin({
         variables: {
@@ -91,8 +92,9 @@ const DisplayChurchDetails = (props) => {
         .then(() => alert('Town Admin has been changed successfully'))
         .catch((e) => alert(e))
     } else if (
-      churchType === 'Campus' &&
-      initialValues.adminSelect !== values.adminSelect
+      churchType === 'Campus'
+      // &&
+      // initialValues.adminSelect !== values.adminSelect
     ) {
       MakeCampusAdmin({
         variables: {

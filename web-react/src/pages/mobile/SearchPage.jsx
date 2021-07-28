@@ -24,7 +24,7 @@ const SearchPageMobile = () => {
     if (isAuthorised(['adminBishop'], currentUser.roles)) {
       return { key: capitalise(searchKey), bishop: currentUser.bishop }
     }
-    if (isAuthorised(['adminConstituency'], currentUser.roles)) {
+    if (isAuthorised(['adminCampus', 'adminTown'], currentUser.roles)) {
       return {
         key: capitalise(searchKey),
         constituency: currentUser.constituency,
@@ -81,7 +81,7 @@ const SearchPageMobile = () => {
         constituencyId: searchVars?.constituency ?? '',
       },
       onCompleted: (data) => {
-        if (!isAuthorised(['adminConstituency'], currentUser.roles)) {
+        if (!isAuthorised(['adminCampus', 'adminTown'], currentUser.roles)) {
           return
         }
 

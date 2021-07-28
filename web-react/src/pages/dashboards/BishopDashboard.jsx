@@ -95,17 +95,17 @@ const BishopDashboard = () => {
     {
       link: '/bacenta/addbacenta',
       buttonText: 'Start a Bacenta',
-      roles: ['adminFederal', 'adminBishop', 'adminConstituency'],
+      roles: ['adminFederal', 'adminBishop', 'adminCampus', 'adminTown'],
     },
     {
       link: '/centre/addcentre',
       buttonText: 'Start a Centre',
-      roles: ['adminFederal', 'adminBishop', 'adminConstituency'],
+      roles: ['adminFederal', 'adminBishop', 'adminCampus', 'adminTown'],
     },
     {
       link: '/sonta/addsonta',
       buttonText: 'Start a Sonta',
-      roles: ['adminFederal', 'adminBishop', 'adminConstituency'],
+      roles: ['adminFederal', 'adminBishop', 'adminCampus', 'adminTown'],
     },
     {
       link: `/${churchStream}/add${churchStream}`,

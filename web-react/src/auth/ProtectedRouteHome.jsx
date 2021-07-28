@@ -61,7 +61,8 @@ const ProtectedRoute = ({ component, roles, ...args }) => {
   } else if (
     isAuthorised(
       [
-        'adminConstituency',
+        'adminCampus',
+        'adminTown',
         'leaderConstituency',
         'leaderCentre',
         'leaderBacenta',

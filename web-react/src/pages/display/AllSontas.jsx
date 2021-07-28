@@ -53,7 +53,12 @@ const DisplayAllSontas = () => {
               </div>
               {campusCentreData.sontas.length < 10 && (
                 <RoleView
-                  roles={['adminFederal', 'adminBishop', 'adminConstituency']}
+                  roles={[
+                    'adminFederal',
+                    'adminBishop',
+                    'adminCampus',
+                    'adminTown',
+                  ]}
                 >
                   <div className="col-auto">
                     <Link
@@ -117,7 +122,12 @@ const DisplayAllSontas = () => {
 
               {townCentreData.sontas.length < 10 && (
                 <RoleView
-                  roles={['adminFederal', 'adminBishop', 'adminConstituency']}
+                  roles={[
+                    'adminFederal',
+                    'adminBishop',
+                    'adminCampus',
+                    'adminTown',
+                  ]}
                 >
                   <div className="col-auto">
                     <Link

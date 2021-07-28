@@ -126,7 +126,7 @@ const SontaForm = ({
                             )}`}
                           />
                         </RoleView>
-                        <RoleView roles={['adminConstituency']}>
+                        <RoleView roles={['adminCampus', 'adminTown']}>
                           <label className="label">{`${capitalise(
                             church.church
                           )}:`}</label>

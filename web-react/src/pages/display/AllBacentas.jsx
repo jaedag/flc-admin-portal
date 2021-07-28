@@ -43,7 +43,12 @@ const DisplayAllBacentas = () => {
                 </Link>
               </div>
               <RoleView
-                roles={['adminFederal', 'adminBishop', 'adminConstituency']}
+                roles={[
+                  'adminFederal',
+                  'adminBishop',
+                  'adminCampus',
+                  'adminTown',
+                ]}
               >
                 <div className="col-auto">
                   <Link

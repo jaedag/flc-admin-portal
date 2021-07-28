@@ -67,7 +67,7 @@ const MemberRoleList = ({ member }) => {
       return
     }
 
-    if (churchType === 'adminConstituency') {
+    if (churchType === 'adminCampus' || churchType === 'adminTown') {
       if (member.isAdminForCampus[0]) {
         member.isAdminForCampus.map((adminFor) => {
           rank.adminConstituency.push({
@@ -143,10 +143,10 @@ const MemberRoleList = ({ member }) => {
     updateRank(member, 'adminBishop')
   }
   if (member.isAdminForCampus[0]) {
-    updateRank(member, 'adminConstituency')
+    updateRank(member, 'adminCampus', 'adminTown')
   }
   if (member.isAdminForTown[0]) {
-    updateRank(member, 'adminConstituency')
+    updateRank(member, 'adminCampus', 'adminTown')
   }
 
   if (!isServant) {

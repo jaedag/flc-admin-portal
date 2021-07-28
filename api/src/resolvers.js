@@ -622,7 +622,7 @@ export const resolvers = {
       return MakeServant(
         context,
         args,
-        ['adminFederal', 'adminBishop', 'adminConstituency'],
+        ['adminFederal', 'adminBishop', 'adminCampus', 'adminTown'],
         'Bacenta',
         'Leader'
       )
@@ -631,7 +631,7 @@ export const resolvers = {
       return RemoveServant(
         context,
         args,
-        ['adminFederal', 'adminBishop', 'adminConstituency'],
+        ['adminFederal', 'adminBishop', 'adminCampus', 'adminTown'],
         'Bacenta',
         'Leader'
       )
@@ -640,7 +640,7 @@ export const resolvers = {
       return MakeServant(
         context,
         args,
-        ['adminFederal', 'adminBishop', 'adminConstituency'],
+        ['adminFederal', 'adminBishop', 'adminCampus', 'adminTown'],
         'Sonta',
         'Leader'
       )
@@ -649,7 +649,7 @@ export const resolvers = {
       return RemoveServant(
         context,
         args,
-        ['adminFederal', 'adminBishop', 'adminConstituency'],
+        ['adminFederal', 'adminBishop', 'adminCampus', 'adminTown'],
         'Sonta',
         'Leader'
       )
@@ -658,7 +658,7 @@ export const resolvers = {
       MakeServant(
         context,
         args,
-        ['adminFederal', 'adminBishop', 'adminConstituency'],
+        ['adminFederal', 'adminBishop', 'adminCampus', 'adminTown'],
         'Centre',
         'Leader'
       )
@@ -667,7 +667,7 @@ export const resolvers = {
       RemoveServant(
         context,
         args,
-        ['adminFederal', 'adminBishop', 'adminConstituency'],
+        ['adminFederal', 'adminBishop', 'adminCampus', 'adminTown'],
         'Centre',
         'Leader'
       )

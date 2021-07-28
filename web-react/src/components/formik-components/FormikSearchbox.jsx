@@ -86,7 +86,7 @@ function FormikSearchbox(props) {
         ...data.constituencyBacentaSearch,
       ]
 
-      if (currentUser.roles.includes('adminConstituency')) {
+      if (currentUser.roles.includes('adminCampus', 'adminTown')) {
         getSuggestions(combinedData)
       }
     },
@@ -106,7 +106,7 @@ function FormikSearchbox(props) {
         },
       })
     }
-    if (isAuthorised(['adminConstituency'], currentUser.roles)) {
+    if (isAuthorised(['adminCampus', 'adminTown'], currentUser.roles)) {
       constituencySearch({
         variables: {
           constituencyId: currentUser.constituency,

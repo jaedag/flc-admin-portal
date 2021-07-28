@@ -92,7 +92,7 @@ const ServantsDashboard = () => {
         },
         link: authorisedLink(
           currentUser,
-          ['adminFederal', 'adminBishop', 'adminConstituency'],
+          ['adminFederal', 'adminBishop', 'adminCampus', 'adminTown'],
           adminsOneChurch
             ? `/${churchType.toLowerCase()}/displaydetails`
             : `/servants/${churchType.toLowerCase()}-list`

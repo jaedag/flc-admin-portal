@@ -437,7 +437,8 @@ const PastorsAdmin = () => {
                 roles={[
                   'adminFederal',
                   'adminBishop',
-                  'adminConstituency',
+                  'adminCampus',
+                  'adminTown',
                   'leaderBacenta',
                   'leaderCentre',
                   'leaderConstituency',
@@ -450,7 +451,8 @@ const PastorsAdmin = () => {
                 roles={[
                   'adminFederal',
                   'adminBishop',
-                  'adminConstituency',
+                  'adminCampus',
+                  'adminTown',
                   'leaderBacenta',
                   'leaderCentre',
                   'leaderConstituency',
@@ -461,7 +463,8 @@ const PastorsAdmin = () => {
                 roles={[
                   'adminFederal',
                   'adminBishop',
-                  'adminConstituency',
+                  'adminCampus',
+                  'adminTown',
                   'leaderBacenta',
                   'leaderCentre',
                   'leaderConstituency',
@@ -473,7 +476,8 @@ const PastorsAdmin = () => {
                 roles={[
                   'adminFederal',
                   'adminBishop',
-                  'adminConstituency',
+                  'adminCampus',
+                  'adminTown',
                   'leaderCentre',
                   'leaderConstituency',
                 ]}
@@ -484,7 +488,8 @@ const PastorsAdmin = () => {
                 roles={[
                   'adminFederal',
                   'adminBishop',
-                  'adminConstituency',
+                  'adminCampus',
+                  'adminTown',
                   'leaderCentre',
                   'leaderSonta',
                   'leaderConstituency',
@@ -496,7 +501,8 @@ const PastorsAdmin = () => {
                 roles={[
                   'adminFederal',
                   'adminBishop',
-                  'adminConstituency',
+                  'adminCampus',
+                  'adminTown',
                   'leaderConstituency',
                 ]}
                 path="/campus/reports"
@@ -522,13 +528,23 @@ const PastorsAdmin = () => {
                 exact
               />
               <ProtectedRoute
-                roles={['adminFederal', 'adminBishop', 'adminConstituency']}
+                roles={[
+                  'adminFederal',
+                  'adminBishop',
+                  'adminCampus',
+                  'adminTown',
+                ]}
                 path="/member/addmember"
                 component={CreateMember}
                 exact
               />
               <ProtectedRoute
-                roles={['adminFederal', 'adminBishop', 'adminConstituency']}
+                roles={[
+                  'adminFederal',
+                  'adminBishop',
+                  'adminCampus',
+                  'adminTown',
+                ]}
                 path="/member/editmember"
                 component={UpdateMember}
                 exact
@@ -561,19 +577,34 @@ const PastorsAdmin = () => {
                 exact
               />
               <ProtectedMembersRoute
-                roles={['adminFederal', 'adminBishop', 'adminConstituency']}
+                roles={[
+                  'adminFederal',
+                  'adminBishop',
+                  'adminCampus',
+                  'adminTown',
+                ]}
                 path="/campus/members"
                 component={CampusTownMembers}
                 exact
               />
               <ProtectedMembersRoute
-                roles={['adminFederal', 'adminBishop', 'adminConstituency']}
+                roles={[
+                  'adminFederal',
+                  'adminBishop',
+                  'adminCampus',
+                  'adminTown',
+                ]}
                 path="/town/members"
                 component={CampusTownMembers}
                 exact
               />
               <ProtectedMembersRoute
-                roles={['adminFederal', 'adminBishop', 'adminConstituency']}
+                roles={[
+                  'adminFederal',
+                  'adminBishop',
+                  'adminCampus',
+                  'adminTown',
+                ]}
                 path="/centre/members"
                 component={CentreMembers}
                 exact
@@ -582,7 +613,8 @@ const PastorsAdmin = () => {
                 roles={[
                   'adminFederal',
                   'adminBishop',
-                  'adminConstituency',
+                  'adminCampus',
+                  'adminTown',
                   'bacenta Leader',
                 ]}
                 path="/bacenta/members"
@@ -590,7 +622,12 @@ const PastorsAdmin = () => {
                 exact
               />
               <ProtectedMembersRoute
-                roles={['adminFederal', 'adminBishop', 'adminConstituency']}
+                roles={[
+                  'adminFederal',
+                  'adminBishop',
+                  'adminCampus',
+                  'adminTown',
+                ]}
                 path="/sonta/members"
                 component={SontaMembers}
                 exact
@@ -689,38 +726,68 @@ const PastorsAdmin = () => {
                 exact
               />
               <ProtectedRoute
-                roles={['adminFederal', 'adminBishop', 'adminConstituency']}
+                roles={[
+                  'adminFederal',
+                  'adminBishop',
+                  'adminCampus',
+                  'adminTown',
+                ]}
                 path="/centre/addcentre"
                 component={CreateCentre}
                 exact
               />
               <ProtectedRoute
-                roles={['adminFederal', 'adminBishop', 'adminConstituency']}
+                roles={[
+                  'adminFederal',
+                  'adminBishop',
+                  'adminCampus',
+                  'adminTown',
+                ]}
                 path="/bacenta/addbacenta"
                 component={CreateBacenta}
                 exact
               />
               <ProtectedRoute
-                roles={['adminFederal', 'adminBishop', 'adminConstituency']}
+                roles={[
+                  'adminFederal',
+                  'adminBishop',
+                  'adminCampus',
+                  'adminTown',
+                ]}
                 path="/sonta/addsonta"
                 component={CreateSonta}
                 exact
               />
               {/* Pages to Update Directory */}
               <ProtectedRoute
-                roles={['adminFederal', 'adminBishop', 'adminConstituency']}
+                roles={[
+                  'adminFederal',
+                  'adminBishop',
+                  'adminCampus',
+                  'adminTown',
+                ]}
                 path="/bacenta/editbacenta"
                 component={UpdateBacenta}
                 exact
               />
               <ProtectedRoute
-                roles={['adminFederal', 'adminBishop', 'adminConstituency']}
+                roles={[
+                  'adminFederal',
+                  'adminBishop',
+                  'adminCampus',
+                  'adminTown',
+                ]}
                 path="/centre/editcentre"
                 component={UpdateCentre}
                 exact
               />
               <ProtectedRoute
-                roles={['adminFederal', 'adminBishop', 'adminConstituency']}
+                roles={[
+                  'adminFederal',
+                  'adminBishop',
+                  'adminCampus',
+                  'adminTown',
+                ]}
                 path="/sonta/editsonta"
                 component={UpdateSonta}
                 exact
@@ -745,7 +812,8 @@ const PastorsAdmin = () => {
                   roles={[
                     'adminFederal',
                     'adminBishop',
-                    'adminConstituency',
+                    'adminCampus',
+                    'adminTown',
                     'leaderBacenta',
                   ]}
                   path="/bacenta/service-details"
@@ -755,7 +823,8 @@ const PastorsAdmin = () => {
                   roles={[
                     'adminFederal',
                     'adminBishop',
-                    'adminConstituency',
+                    'adminCampus',
+                    'adminTown',
                     'leaderBacenta',
                   ]}
                   path="/bacenta/record-service"
@@ -765,7 +834,8 @@ const PastorsAdmin = () => {
                   roles={[
                     'adminFederal',
                     'adminBishop',
-                    'adminConstituency',
+                    'adminCampus',
+                    'adminTown',
                     'leaderCentre',
                   ]}
                   path="/centre/record-service"
@@ -775,7 +845,8 @@ const PastorsAdmin = () => {
                   roles={[
                     'adminFederal',
                     'adminBishop',
-                    'adminConstituency',
+                    'adminCampus',
+                    'adminTown',
                     'leaderSonta',
                   ]}
                   path="/sonta/record-service"
@@ -785,7 +856,8 @@ const PastorsAdmin = () => {
                   roles={[
                     'adminFederal',
                     'adminBishop',
-                    'adminConstituency',
+                    'adminCampus',
+                    'adminTown',
                     'leaderCentre',
                   ]}
                   path="/centre/service-details"
@@ -795,7 +867,8 @@ const PastorsAdmin = () => {
                   roles={[
                     'adminFederal',
                     'adminBishop',
-                    'adminConstituency',
+                    'adminCampus',
+                    'adminTown',
                     'leaderConstituency',
                   ]}
                   path="/town/record-service"
@@ -805,7 +878,8 @@ const PastorsAdmin = () => {
                   roles={[
                     'adminFederal',
                     'adminBishop',
-                    'adminConstituency',
+                    'adminCampus',
+                    'adminTown',
                     'leaderConstituency',
                   ]}
                   path="/town/service-details"
@@ -815,7 +889,8 @@ const PastorsAdmin = () => {
                   roles={[
                     'adminFederal',
                     'adminBishop',
-                    'adminConstituency',
+                    'adminCampus',
+                    'adminTown',
                     'leaderConstituency',
                   ]}
                   path="/campus/record-service"
@@ -825,7 +900,8 @@ const PastorsAdmin = () => {
                   roles={[
                     'adminFederal',
                     'adminBishop',
-                    'adminConstituency',
+                    'adminCampus',
+                    'adminTown',
                     'leaderConstituency',
                   ]}
                   path="/campus/service-details"

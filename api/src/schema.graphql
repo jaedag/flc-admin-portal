@@ -849,7 +849,7 @@ type Query {
       """
     )
   constituencyMemberSearch(searchKey: String, constituencyId: ID): [Member]
-    @auth(rules: [{ roles: ["adminConstituency"] }])
+    @auth(rules: [{ roles: ["adminCampus", "adminTown"] }])
     @cypher(
       statement: """
       MATCH (constituency {id:$constituencyId}) WHERE constituency:Campus OR constituency:Town
@@ -897,7 +897,7 @@ type Query {
       """
     )
   constituencyBacentaSearch(searchKey: String, constituencyId: ID): [Bacenta]
-    @auth(rules: [{ roles: ["adminConstituency"] }])
+    @auth(rules: [{ roles: ["adminCampus", "adminTown"] }])
     @cypher(
       statement: """
       MATCH (constituency {id:$constituencyId}) WHERE constituency:Campus OR constituency:Town
@@ -932,7 +932,7 @@ type Query {
       """
     )
   constituencyCentreSearch(searchKey: String, constituencyId: ID): [Bacenta]
-    @auth(rules: [{ roles: ["adminConstituency"] }])
+    @auth(rules: [{ roles: ["adminCampus", "adminTown"] }])
     @cypher(
       statement: """
       MATCH (constituency {id:$constituencyId}) WHERE constituency:Campus OR constituency:Town
@@ -1008,7 +1008,7 @@ type Query {
       """
     )
   constituencySontaSearch(searchKey: String, constituencyId: ID): [Bacenta]
-    @auth(rules: [{ roles: ["adminConstituency"] }])
+    @auth(rules: [{ roles: ["adminCampus", "adminTown"] }])
     @cypher(
       statement: """
       MATCH (constituency {id:$constituencyId}) WHERE constituency:Campus OR constituency:Town
@@ -1069,7 +1069,8 @@ type Mutation {
           roles: [
             "adminFederal"
             "adminBishop"
-            "adminConstituency"
+            "adminCampus"
+            "adminTown"
             "leaderBacenta"
           ]
         }
@@ -1247,7 +1248,9 @@ type Mutation {
     bacentas: [ID]
   ): Centre  #Return town and drill down to get centre info
     @auth(
-      rules: [{ roles: ["adminFederal", "adminBishop", "adminConstituency"] }]
+      rules: [
+        { roles: ["adminFederal", "adminBishop", "adminCampus", "adminTown"] }
+      ]
     )
     @cypher(
       statement: """
@@ -1278,7 +1281,9 @@ type Mutation {
     )
   CreateSonta(ministryId: ID!, townCampusId: ID!, leaderId: ID!): Town
     @auth(
-      rules: [{ roles: ["adminFederal", "adminBishop", "adminConstituency"] }]
+      rules: [
+        { roles: ["adminFederal", "adminBishop", "adminCampus", "adminTown"] }
+      ]
     )
     @cypher(
       statement: """
@@ -1307,7 +1312,9 @@ type Mutation {
     venueLatitude: Float
   ): Bacenta
     @auth(
-      rules: [{ roles: ["adminFederal", "adminBishop", "adminConstituency"] }]
+      rules: [
+        { roles: ["adminFederal", "adminBishop", "adminCampus", "adminTown"] }
+      ]
     )
     @cypher(
       statement: """
@@ -1344,7 +1351,9 @@ type Mutation {
     pictureUrl: String!
   ): Member
     @auth(
-      rules: [{ roles: ["adminFederal", "adminBishop", "adminConstituency"] }]
+      rules: [
+        { roles: ["adminFederal", "adminBishop", "adminCampus", "adminTown"] }
+      ]
     )
     @cypher(
       statement: """
@@ -1474,7 +1483,9 @@ type Mutation {
     campusTownId: ID!
   ): Centre
     @auth(
-      rules: [{ roles: ["adminFederal", "adminBishop", "adminConstituency"] }]
+      rules: [
+        { roles: ["adminFederal", "adminBishop", "adminCampus", "adminTown"] }
+      ]
     )
     @cypher(
       statement: """
@@ -1498,7 +1509,9 @@ type Mutation {
 
   UpdateSontaDetails(sontaId: ID!, sontaName: String!): Sonta
     @auth(
-      rules: [{ roles: ["adminFederal", "adminBishop", "adminConstituency"] }]
+      rules: [
+        { roles: ["adminFederal", "adminBishop", "adminCampus", "adminTown"] }
+      ]
     )
     @cypher(
       statement: """
@@ -1519,7 +1532,9 @@ type Mutation {
     venueLatitude: Float
   ): Bacenta
     @auth(
-      rules: [{ roles: ["adminFederal", "adminBishop", "adminConstituency"] }]
+      rules: [
+        { roles: ["adminFederal", "adminBishop", "adminCampus", "adminTown"] }
+      ]
     )
     @cypher(
       statement: """

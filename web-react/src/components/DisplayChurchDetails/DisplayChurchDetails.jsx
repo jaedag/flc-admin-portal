@@ -59,7 +59,7 @@ const DisplayChurchDetails = (props) => {
     location.pathname === '/centre/displaydetails' ||
     location.pathname === '/sonta/displaydetails'
   ) {
-    permittedRoles.push('adminConstituency')
+    permittedRoles.push('adminCampus', 'adminTown')
   }
 
   //Change Admin Initialised

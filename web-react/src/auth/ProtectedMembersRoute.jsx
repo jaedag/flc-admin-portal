@@ -54,7 +54,10 @@ const ProtectedMembersRoute = ({ component, roles, ...args }) => {
       />
     )
   } else if (
-    isAuthorised(['adminConstituency', 'leaderConstituency'], currentUser.roles)
+    isAuthorised(
+      ['adminCampus', 'adminTown', 'leaderConstituency'],
+      currentUser.roles
+    )
   ) {
     //If the user does not have permission but is a CO Admin
     return (

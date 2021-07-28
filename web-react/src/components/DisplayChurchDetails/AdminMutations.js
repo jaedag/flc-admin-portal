@@ -9,9 +9,24 @@ export const REMOVE_TOWN_ADMIN = gql`
 `
 
 export const MAKE_TOWN_ADMIN = gql`
-  mutation($townId: ID!, $adminId: ID!) {
-    MakeTownAdmin(townId: $townId, adminId: $adminId) {
+  mutation MakeTownAdmin($townId: ID!, $newAdminId: ID!, $oldAdminId: ID!) {
+    RemoveTownAdmin(townId: $townId, adminId: $oldAdminId) {
       id
+      firstName
+      lastName
+    }
+    MakeTownAdmin(townId: $townId, adminId: $newAdminId) {
+      id
+      firstName
+      lastName
+      isAdminForTown {
+        id
+        admin {
+          id
+          firstName
+          lastName
+        }
+      }
     }
   }
 `
@@ -25,9 +40,24 @@ export const REMOVE_CAMPUS_ADMIN = gql`
 `
 
 export const MAKE_CAMPUS_ADMIN = gql`
-  mutation($campusId: ID!, $adminId: ID!) {
-    MakeCampusAdmin(campusId: $campusId, adminId: $adminId) {
+  mutation($campusId: ID!, $newAdminId: ID!, $oldAdminId: ID!) {
+    RemoveTownAdmin(townId: $townId, adminId: $oldAdminId) {
       id
+      firstName
+      lastName
+    }
+    MakeCampusAdmin(campusId: $campusId, adminId: $newAdminId) {
+      id
+      firstName
+      lastName
+      isAdminForCampus {
+        id
+        admin {
+          id
+          firstName
+          lastName
+        }
+      }
     }
   }
 `

@@ -14,12 +14,7 @@ import * as Yup from 'yup'
 import Popup from '../Popup/Popup'
 import { BISHOP_MEMBER_DROPDOWN } from '../../queries/ListQueries'
 import { useMutation } from '@apollo/client'
-import {
-  MAKE_TOWN_ADMIN,
-  MAKE_CAMPUS_ADMIN,
-  REMOVE_TOWN_ADMIN,
-  REMOVE_CAMPUS_ADMIN,
-} from './AdminMutations'
+import { MAKE_TOWN_ADMIN, MAKE_CAMPUS_ADMIN } from './AdminMutations'
 import FormikControl from '../formik-components/FormikControl'
 import { plural } from '../../global-utils'
 import Breadcrumb from './Breadcrumb'
@@ -70,9 +65,7 @@ const DisplayChurchDetails = (props) => {
   //Change Admin Initialised
 
   const [MakeTownAdmin] = useMutation(MAKE_TOWN_ADMIN)
-  const [RemoveTownAdmin] = useMutation(REMOVE_TOWN_ADMIN)
   const [MakeCampusAdmin] = useMutation(MAKE_CAMPUS_ADMIN)
-  const [RemoveCampusAdmin] = useMutation(REMOVE_CAMPUS_ADMIN)
 
   const initialValues = {
     adminName: admin ? `${admin?.firstName} ${admin.lastName}` : '',
@@ -84,34 +77,32 @@ const DisplayChurchDetails = (props) => {
     ),
   })
   const onSubmit = (values, onSubmitProps) => {
-    if (churchType === 'Town') {
-      RemoveTownAdmin({
-        variables: {
-          townId: townId,
-          adminId: initialValues.adminSelect,
-        },
-      }).catch((e) => alert(e))
-
+    if (
+      churchType === 'Town' &&
+      initialValues.adminSelect !== values.adminSelect
+    ) {
       MakeTownAdmin({
         variables: {
           townId: townId,
-          adminId: values.adminSelect,
+          newAdminId: values.adminSelect,
+          oldAdminId: initialValues.adminSelect,
         },
-      }).catch((e) => alert(e))
-    } else if (churchType === 'Campus') {
-      RemoveCampusAdmin({
-        variables: {
-          campusId: campusId,
-          adminId: initialValues.adminSelect,
-        },
-      }).catch((e) => alert(e))
-
+      })
+        .then(() => alert('Town Admin has been changed successfully'))
+        .catch((e) => alert(e))
+    } else if (
+      churchType === 'Campus' &&
+      initialValues.adminSelect !== values.adminSelect
+    ) {
       MakeCampusAdmin({
         variables: {
           campusId: campusId,
-          adminId: values.adminSelect,
+          newAdminId: values.adminSelect,
+          oldAdminId: initialValues.adminSelect,
         },
-      }).catch((e) => alert(e))
+      })
+        .then(() => alert('Campus Admin has been changed successfully'))
+        .catch((e) => alert(e))
     }
 
     onSubmitProps.setSubmitting(false)
@@ -169,7 +160,7 @@ const DisplayChurchDetails = (props) => {
                         <FormikControl
                           control="combobox2"
                           name="adminSelect"
-                          initialValue={initialValues.adminName}
+                          initialValue={initialValues?.adminName}
                           placeholder="Select an Admin"
                           setFieldValue={formik.setFieldValue}
                           optionsQuery={BISHOP_MEMBER_DROPDOWN}
@@ -189,7 +180,6 @@ const DisplayChurchDetails = (props) => {
                       type="submit"
                       disabled={!formik.isValid || formik.isSubmitting}
                       className={`btn btn-primary text-nowrap px-4`}
-                      onClick={togglePopup}
                     >
                       Confirm Change
                     </button>

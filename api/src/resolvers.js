@@ -340,7 +340,10 @@ const MakeServant = async (
                   )
               })
               .catch((error) =>
-                throwErrorMsg('getUserRoles Failed to Run', error)
+                throwErrorMsg(
+                  `Unable to access the roles of the user ${servant.firstName} ${servant.lastName}`,
+                  error
+                )
               )
           }
         })
@@ -363,13 +366,13 @@ const MakeServant = async (
   })
 
   servant[`${verb}`].map((church) => {
-    church.leader = {
+    church[`${servantLower}`] = {
       id: servant.id,
       firstName: servant.firstName,
       lastName: servant.lastName,
     }
   })
-
+  console.log(servant)
   return servant
 }
 const RemoveServant = async (
@@ -462,7 +465,10 @@ const RemoveServant = async (
           }
         })
         .catch((error) => {
-          throwErrorMsg('getUserRoles Failed to Run', error)
+          throwErrorMsg(
+            `Unable to access the roles of the user ${servant.firstName} ${servant.lastName}`,
+            error
+          )
         })
       //Relationship in Neo4j will be removed when the replacement leader is being added
     })

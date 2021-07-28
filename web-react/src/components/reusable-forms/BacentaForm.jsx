@@ -249,7 +249,7 @@ const BacentaForm = ({
                   </div>
                 </div>
               </div>
-              <div className="d-flex justify-content-center m">
+              <div className="d-flex justify-content-center">
                 <button
                   type="submit"
                   disabled={!formik.isValid || formik.isSubmitting}

@@ -5,6 +5,7 @@ import { CREATE_BACENTA_MUTATION } from './CreateMutations'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import { NEW_BACENTA_LEADER } from './MakeLeaderMutations'
 import BacentaForm from 'components/reusable-forms/BacentaForm'
+import { throwErrorMsg } from 'global-utils'
 
 const CreateBacenta = () => {
   const initialValues = {
@@ -48,12 +49,16 @@ const CreateBacenta = () => {
             onSubmitProps.setSubmitting(false)
             onSubmitProps.resetForm()
           })
-          .catch((error) => alert('There was an error', error))
+          .catch((error) =>
+            throwErrorMsg('There was an error setting the leader', error)
+          )
 
         setBacentaId(res.data.CreateBacenta.id)
         history.push('/bacenta/displaydetails')
       })
-      .catch((error) => alert('There was an error', error))
+      .catch((error) =>
+        throwErrorMsg('There was an error creating bacenta', error)
+      )
   }
   return (
     <BacentaForm

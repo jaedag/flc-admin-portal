@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useMutation } from '@apollo/client'
-import { capitalise } from '../../global-utils'
+import { capitalise, throwErrorMsg } from '../../global-utils'
 import {
   GET_BISHOP_TOWNS,
   GET_BISHOP_CAMPUSES,
@@ -62,14 +62,12 @@ const CreateTownCampus = () => {
               townId: res.data.CreateTown.isBishopForTown[0].id,
             },
           }).catch((error) => {
-            // eslint-disable-next-line no-console
-            console.error(error)
-            alert('There was an error adding leader', error)
+            throwErrorMsg('There was an error adding leader', error)
           })
 
           history.push(`/${church.church}/displaydetails`)
         })
-        .catch((error) => alert('There was an error', error))
+        .catch((error) => throwErrorMsg('There was an error', error))
     } else if (church.church === 'campus') {
       CreateCampus({
         variables: {
@@ -87,17 +85,13 @@ const CreateTownCampus = () => {
               campusId: res.data.CreateCampus.isBishopForCampus[0].id,
             },
           }).catch((error) => {
-            // eslint-disable-next-line no-console
-            console.error(error)
-            alert('There was an error adding leader', error)
+            throwErrorMsg('There was an error adding leader', error)
           })
 
           history.push(`/${church.church}/displaydetails`)
         })
         .catch((error) => {
-          // eslint-disable-next-line no-console
-          console.error(error)
-          alert('There was an error creating campus', error)
+          throwErrorMsg('There was an error creating campus', error)
         })
     }
 

@@ -5,6 +5,7 @@ import { CREATE_SONTA_MUTATION } from './CreateMutations'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import { NEW_SONTA_LEADER } from './MakeLeaderMutations'
 import SontaForm from 'components/reusable-forms/SontaForm'
+import { throwErrorMsg } from 'global-utils'
 
 function CreateSonta() {
   const { clickCard, townId, campusId, church } = useContext(ChurchContext)
@@ -30,12 +31,16 @@ function CreateSonta() {
             leaderId: values.leaderId,
             sontaId: res.data.CreateSonta.sontas[0].id,
           },
-        }).catch((error) => alert('There was an error adding leader', error))
+        }).catch((error) =>
+          throwErrorMsg('There was an error adding leader', error)
+        )
         history.push('/sonta/displaydetails')
         onSubmitProps.setSubmitting(false)
         onSubmitProps.resetForm()
       })
-      .catch((error) => alert('There was an error creating sonta', error))
+      .catch((error) =>
+        throwErrorMsg('There was an error creating sonta', error)
+      )
   }
 
   return (

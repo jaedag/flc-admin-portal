@@ -8,6 +8,7 @@ import { DISPLAY_SONTA } from '../display/ReadQueries'
 import { LOG_SONTA_HISTORY } from './LogMutations'
 import { MAKE_SONTA_LEADER } from './ChangeLeaderMutations'
 import SontaForm from 'components/reusable-forms/SontaForm'
+import { throwErrorMsg } from 'global-utils'
 
 const UpdateSonta = () => {
   const {
@@ -30,7 +31,7 @@ const UpdateSonta = () => {
     sontaName: sonta?.name,
     leaderName: sonta?.leader.fullName ?? '',
     leaderId: sonta?.leader?.id || '',
-    ministrySelect: sonta,
+    ministrySelect: sonta.ministry.id || '',
     campusTown: church.church === 'town' ? sonta?.town?.id : sonta?.campus?.id,
   }
 
@@ -69,7 +70,9 @@ const UpdateSonta = () => {
         sontaName: values.sontaName,
         leaderId: values.leaderId,
       },
-    })
+    }).catch((error) =>
+      throwErrorMsg('There was an error updating sonta', error)
+    )
 
     //Log if Sonta Name Changes
     if (values.sontaName !== initialValues.sontaName) {
@@ -91,12 +94,12 @@ const UpdateSonta = () => {
           newLeaderId: values.leaderId,
           sontaId: sontaId,
         },
-      }).catch((err) => alert(err))
+      }).catch((err) => throwErrorMsg('There was an error adding leader', err))
     }
 
     onSubmitProps.setSubmitting(false)
     onSubmitProps.resetForm()
-    history.push(`/${church.subChurch}/displaydetails`)
+    history.push(`/sonta/displaydetails`)
   }
 
   return (

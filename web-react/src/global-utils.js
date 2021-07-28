@@ -27,6 +27,12 @@ export const SERVICE_DAY_OPTIONS = [
   { key: 'Saturday', value: 'Saturday' },
 ]
 
+export const throwErrorMsg = (message, error) => {
+  // eslint-disable-next-line no-console
+  console.error(error)
+  alert(message, error)
+}
+
 export const isAuthorised = (permittedRoles, userRoles) => {
   if (permittedRoles.includes('all')) {
     return true

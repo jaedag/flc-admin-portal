@@ -7,7 +7,7 @@ import { transformCloudinaryImg } from 'global-utils'
 
 const MemberDisplayCard = (props) => {
   const { member, ...rest } = props
-  const { determineStream, clickCard } = useContext(ChurchContext)
+  const { clickCard } = useContext(ChurchContext)
   const history = useHistory()
   let icon
 
@@ -39,7 +39,6 @@ const MemberDisplayCard = (props) => {
       {...rest}
       className="card mobile-search-card p-2 py-3 my-4"
       onClick={() => {
-        determineStream(member)
         clickCard(member)
         history.push(`/${member.__typename.toLowerCase()}/displaydetails`)
       }}

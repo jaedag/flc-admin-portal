@@ -5,6 +5,7 @@ import { CREATE_CENTRE_MUTATION } from './CreateMutations'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import { NEW_CENTRE_LEADER } from './MakeLeaderMutations'
 import CentreForm from '../../components/reusable-forms/CentreForm'
+import { throwErrorMsg } from 'global-utils'
 
 const CreateCentre = () => {
   const initialValues = {
@@ -45,17 +46,17 @@ const CreateCentre = () => {
             leaderId: values.leaderId,
             centreId: res.data.CreateCentre.id,
           },
-        }).catch((error) => alert('There was an error adding leader', error))
+        }).catch((error) =>
+          throwErrorMsg('There was an error adding leader', error)
+        )
 
         onSubmitProps.setSubmitting(false)
         onSubmitProps.resetForm()
         history.push('/centre/displaydetails')
       })
-      .catch((error) => {
-        // eslint-disable-next-line no-console
-        console.error(error)
-        alert('There was an error creating centre', error)
-      })
+      .catch((error) =>
+        throwErrorMsg('There was an error creating centre', error)
+      )
   }
 
   return (

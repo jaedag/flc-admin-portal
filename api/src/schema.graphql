@@ -1518,7 +1518,7 @@ type Mutation {
       MATCH (sonta:Sonta {id: $sontaId})
       	SET sonta.name = $sontaName
 
-
+      WITH sonta
       MATCH (sonta)<-[:LEADS]-(leader:Member)
       RETURN sonta
       """

@@ -30,6 +30,7 @@ const UpdateSonta = () => {
     sontaName: sonta?.name,
     leaderName: sonta?.leader.fullName ?? '',
     leaderId: sonta?.leader?.id || '',
+    ministrySelect: sonta,
     campusTown: church.church === 'town' ? sonta?.town?.id : sonta?.campus?.id,
   }
 

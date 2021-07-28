@@ -267,6 +267,9 @@ export const DISPLAY_SONTA = gql`
     sontas(where: { id: $id }) {
       id
       name
+      ministry {
+        name
+      }
       leader {
         id
         firstName

@@ -62,7 +62,7 @@ const SontaForm = ({
     initialValuesForNewSonta = {
       ministrySelect: '',
       leaderId: '',
-      campusTown: campusTownData?.name ?? '',
+      campusTown: campusTownData?.id ?? '',
     }
   }
 
@@ -159,6 +159,7 @@ const SontaForm = ({
                           control="combobox2"
                           name="leaderId"
                           initialValue={initialValues?.leaderName}
+                          label="Select a Leader"
                           placeholder="Select a Leader"
                           setFieldValue={formik.setFieldValue}
                           optionsQuery={BISHOP_MEMBER_DROPDOWN}

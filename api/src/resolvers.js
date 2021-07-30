@@ -257,7 +257,7 @@ const MakeServant = async (
   await session
     .run(cypher.matchMemberQuery, { id: args[`${servantLower}Id`] })
     .then(async (response) => {
-      // Rearrange npm member object
+      // Rearrange  member object
       servant = rearrangeMemberObject(servant, response)
 
       //Check for AuthID of servant
@@ -419,7 +419,7 @@ const RemoveServant = async (
     .then(async (response) => {
       // Rearrange member object
       servant = rearrangeMemberObject(servant, response)
-      console.log(servant)
+
       if (servant[`${verb}`].length > 1) {
         //If he leads more than one Church don't touch his Auth0 roles
         console.log(

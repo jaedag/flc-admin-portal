@@ -268,6 +268,7 @@ export const DISPLAY_SONTA = gql`
       id
       name
       ministry {
+        id
         name
       }
       leader {

@@ -22,7 +22,8 @@ WITH apoc.cypher.runFirstColumn(
 export const matchChurchQuery = `
   MATCH (church {id:$id}) 
   WHERE church:Bacenta OR church:Centre OR church:Campus OR church:Town OR church:Sonta OR church:Ministry OR church:Member
-  RETURN church.id AS id, church.name AS name, church.firstName AS firstName, church.lastName AS lastName, labels(church) AS type`
+  RETURN church.id AS id, church.name AS name, church.firstName AS firstName, church.lastName AS lastName, labels(church) AS type
+  `
 
 export const setMemberAuthId = `
 MATCH (member:Member {id:$id})

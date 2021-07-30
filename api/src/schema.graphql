@@ -397,6 +397,8 @@ type Sonta {
     @cypher(
       statement: """
       MATCH (this)<-[:HAS_SONTA]-()-[:HAS_CENTRE]->()-[:HAS_BACENTA]->()<-[:BELONGS_TO]-(member:Member)
+      MATCH (this)<-[:HAS_SONTA]-(ministry:Ministry)
+      MATCH (member)-[:BELONGS_TO]->(ministry)
       RETURN member
       """
     )

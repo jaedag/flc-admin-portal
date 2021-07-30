@@ -627,6 +627,7 @@ const PastorsAdmin = () => {
                   'adminBishop',
                   'adminCampus',
                   'adminTown',
+                  'leaderSonta',
                 ]}
                 path="/sonta/members"
                 component={SontaMembers}

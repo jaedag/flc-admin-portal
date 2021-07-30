@@ -11,6 +11,7 @@ const SontaMembers = () => {
     variables: { id: sontaId },
   })
 
+  console.log(data)
   return (
     <MembersGrid
       title={data ? `${data.sontas[0]?.name} Sonta` : null}

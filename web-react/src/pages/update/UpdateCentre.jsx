@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/client'
-import { capitalise } from '../../global-utils'
+import { alertMsg, capitalise, throwErrorMsg } from '../../global-utils'
 
 import { GET_CAMPUS_CENTRES, GET_TOWN_CENTRES } from '../../queries/ListQueries'
 import {
@@ -20,14 +20,7 @@ import { MAKE_CENTRE_LEADER } from './ChangeLeaderMutations'
 import CentreForm from '../../components/reusable-forms/CentreForm'
 
 const UpdateCentre = () => {
-  const {
-    church,
-    centreId,
-    townId,
-    setTownId,
-    setCampusId,
-    campusId,
-  } = useContext(ChurchContext)
+  const { church, centreId, setTownId, setCampusId } = useContext(ChurchContext)
 
   const { data: centreData, loading: centreLoading } = useQuery(
     DISPLAY_CENTRE,
@@ -48,9 +41,7 @@ const UpdateCentre = () => {
     bacentas: centre?.bacentas.length ? centre?.bacentas : [''],
   }
 
-  const [LogCentreHistory] = useMutation(LOG_CENTRE_HISTORY, {
-    refetchQueries: [{ query: DISPLAY_CENTRE, variables: { id: centreId } }],
-  })
+  const [LogCentreHistory] = useMutation(LOG_CENTRE_HISTORY)
 
   const [LogBacentaHistory] = useMutation(LOG_BACENTA_HISTORY, {
     refetchQueries: [{ query: DISPLAY_CENTRE, variables: { id: centreId } }],
@@ -59,8 +50,6 @@ const UpdateCentre = () => {
   const [MakeCentreLeader] = useMutation(MAKE_CENTRE_LEADER)
   const [UpdateCentre] = useMutation(UPDATE_CENTRE_MUTATION, {
     refetchQueries: [
-      { query: GET_TOWN_CENTRES, variables: { id: townId } },
-      { query: GET_CAMPUS_CENTRES, variables: { id: campusId } },
       {
         query: GET_TOWN_CENTRES,
         variables: { id: initialValues.campusTownSelect },
@@ -226,15 +215,6 @@ const UpdateCentre = () => {
       setCampusId(values.campusTownSelect)
     }
 
-    UpdateCentre({
-      variables: {
-        centreId: centreId,
-        centreName: values.centreName,
-        leaderId: values.leaderId,
-        campusTownId: values.campusTownSelect,
-      },
-    })
-
     //Log if Centre Name Changes
     if (values.centreName !== initialValues.centreName) {
       LogCentreHistory({
@@ -257,7 +237,11 @@ const UpdateCentre = () => {
           newLeaderId: values.leaderId,
           centreId: centreId,
         },
-      }).catch((err) => alert(err))
+      })
+        .then(() => alertMsg('Leader Changed Successfully'))
+        .catch((err) =>
+          throwErrorMsg('There was an error changing the leader', err)
+        )
     }
 
     //Log If The TownCampus Changes
@@ -317,40 +301,54 @@ const UpdateCentre = () => {
       })
     }
 
-    addBacentas.forEach((bacenta) => {
-      if (bacenta.centre) {
-        RemoveBacentaFromCentre({
-          variables: {
-            centreId: bacenta.centre.id,
-            bacentaIds: [bacenta.id],
-          },
-        })
-      } else {
-        //Bacenta has no previous centre and is now joining. ie. RemoveBacentaFromCentre won't run
-        LogBacentaHistory({
-          variables: {
-            bacentaId: bacenta.id,
-            newLeaderId: '',
-            oldLeaderId: '',
-            newCentreId: centreId,
-            oldCentreId: '',
-            historyRecord: `${bacenta.name} 
+    if (removeBacentas.length) {
+      addBacentas.forEach((bacenta) => {
+        if (bacenta.centre) {
+          RemoveBacentaFromCentre({
+            variables: {
+              centreId: bacenta.centre.id,
+              bacentaIds: [bacenta.id],
+            },
+          })
+        } else {
+          //Bacenta has no previous centre and is now joining. ie. RemoveBacentaFromCentre won't run
+          LogBacentaHistory({
+            variables: {
+              bacentaId: bacenta.id,
+              newLeaderId: '',
+              oldLeaderId: '',
+              newCentreId: centreId,
+              oldCentreId: '',
+              historyRecord: `${bacenta.name} 
               Bacenta has been started again under ${initialValues.centreName} Centre`,
+            },
+          })
+        }
+
+        AddCentreBacentas({
+          variables: {
+            centreId: centreId,
+            bacentaId: [bacenta.id],
           },
         })
-      }
-
-      AddCentreBacentas({
-        variables: {
-          centreId: centreId,
-          bacentaId: [bacenta.id],
-        },
       })
+    }
+
+    UpdateCentre({
+      variables: {
+        centreId: centreId,
+        centreName: values.centreName,
+        leaderId: values.leaderId,
+        campusTownId: values.campusTownSelect,
+      },
     })
+      .then(() => history.push(`/${church.subChurch}/displaydetails`))
+      .catch((error) =>
+        throwErrorMsg('There was an error updating this centre', error)
+      )
 
     onSubmitProps.setSubmitting(false)
     onSubmitProps.resetForm()
-    history.push(`/${church.subChurch}/displaydetails`)
   }
 
   return (

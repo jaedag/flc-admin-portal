@@ -110,6 +110,7 @@ const BacentaForm = ({
                         <FormikControl
                           className="form-control"
                           control="select"
+                          label={`${capitalise(church.church)}`}
                           name="townCampusSelect"
                           options={
                             church.church === 'town'
@@ -131,6 +132,7 @@ const BacentaForm = ({
                           className="form-control"
                           control="selectWithQuery"
                           name="centreSelect"
+                          label="Centre"
                           optionsQuery={
                             church.church === 'town'
                               ? GET_TOWN_CENTRES
@@ -152,6 +154,7 @@ const BacentaForm = ({
                           className="form-control"
                           control="input"
                           name="bacentaName"
+                          label="Name of Bacenta"
                           placeholder="Name of Bacenta"
                         />
                       </div>
@@ -159,6 +162,7 @@ const BacentaForm = ({
                         <FormikControl
                           className="form-control"
                           control="select"
+                          label="Meeting Day"
                           name="meetingDay"
                           options={SERVICE_DAY_OPTIONS}
                           defaultOption="Pick a Service Day"
@@ -168,6 +172,7 @@ const BacentaForm = ({
                         <FormikControl
                           control="combobox2"
                           name="leaderId"
+                          label="Bacenta Leader"
                           initialValue={initialValues.leaderName}
                           placeholder="Select a Leader"
                           setFieldValue={formik.setFieldValue}

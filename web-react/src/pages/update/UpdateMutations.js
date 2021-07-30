@@ -426,6 +426,10 @@ export const UPDATE_CENTRE_MUTATION = gql`
       town {
         id
         name
+        centres {
+          id
+          name
+        }
         bishop {
           id
           firstName
@@ -435,6 +439,10 @@ export const UPDATE_CENTRE_MUTATION = gql`
       campus {
         id
         name
+        centres {
+          id
+          name
+        }
         bishop {
           id
           firstName

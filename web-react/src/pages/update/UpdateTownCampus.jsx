@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/client'
-import { capitalise } from '../../global-utils'
+import { alertMsg, capitalise, throwErrorMsg } from '../../global-utils'
 import {
   GET_BISHOP_TOWNS,
   GET_BISHOP_CAMPUSES,
@@ -293,7 +293,11 @@ const UpdateTownCampus = () => {
             newLeaderId: values.leaderId,
             campusId: campusId,
           },
-        }).catch((err) => alert(err))
+        })
+          .then(() => alertMsg('Leader Changed Successfully'))
+          .catch((err) =>
+            throwErrorMsg('There was a problem changing the leader', err)
+          )
       }
 
       //Log if Bishop Changes
@@ -342,7 +346,11 @@ const UpdateTownCampus = () => {
             newLeaderId: values.leaderId,
             townId: townId,
           },
-        }).catch((err) => alert(err))
+        })
+          .then(() => alertMsg('Leader Changed Successfully'))
+          .catch((err) =>
+            throwErrorMsg('There was a problem changing the leader', err)
+          )
       }
 
       //Log If The Bishop Changes

@@ -11,7 +11,12 @@ import DashboardCard from '../../components/card/DashboardCard'
 import DashboardButton from '../../components/buttons/DashboardButton'
 import DropdownButton from '../../components/buttons/DropdownButton'
 import { ChurchContext } from '../../contexts/ChurchContext'
-import { capitalise, isAuthorised, plural } from '../../global-utils'
+import {
+  capitalise,
+  isAuthorised,
+  plural,
+  throwErrorMsg,
+} from '../../global-utils'
 import { MemberContext } from '../../contexts/MemberContext'
 import Popup from '../../components/Popup/Popup'
 import RoleView from '../../auth/RoleView'
@@ -60,14 +65,17 @@ const BishopDashboard = () => {
         bishopId: bishopId,
         adminId: initialValues.adminSelect,
       },
-    }).catch((err) => alert(err))
-
+    }).catch((err) =>
+      throwErrorMsg('THere was a problem removing bishops admin', err)
+    )
     MakeBishopAdmin({
       variables: {
         bishopId: bishopId,
         adminId: values.adminSelect,
       },
-    }).catch((err) => alert(err))
+    }).catch((err) =>
+      throwErrorMsg('There was a problem adding bishop admin', err)
+    )
 
     onSubmitProps.setSubmitting(false)
     onSubmitProps.resetForm()
@@ -200,7 +208,6 @@ const BishopDashboard = () => {
                         type="submit"
                         disabled={!formik.isValid || formik.isSubmitting}
                         className={`btn btn-primary text-nowrap px-4`}
-                        onClick={togglePopup}
                       >
                         Confirm Change
                       </button>

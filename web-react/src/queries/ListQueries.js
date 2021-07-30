@@ -79,6 +79,10 @@ export const GET_TOWN_CENTRES = gql`
     centres(where: { town: { id: $id } }) {
       id
       name
+      # leader {
+      #   firstName
+      #   lastName
+      # }
       town {
         id
         name
@@ -93,10 +97,6 @@ export const GET_TOWN_CENTRES = gql`
         bishop {
           id
         }
-      }
-      leader {
-        firstName
-        lastName
       }
     }
     sontas(where: { town: { id: $id } }) {
@@ -131,10 +131,10 @@ export const GET_CAMPUS_CENTRES = gql`
           id
         }
       }
-      leader {
-        firstName
-        lastName
-      }
+      # leader {
+      #   firstName
+      #   lastName
+      # }
     }
     sontas(where: { campus: { id: $id } }) {
       id

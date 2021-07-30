@@ -15,6 +15,27 @@ export const MAKE_BACENTA_LEADER = gql`
       id
       firstName
       lastName
+      leadsBacenta {
+        id
+        leader {
+          id
+          firstName
+          lastName
+        }
+        # history(options: { limit: 10 }) {
+        #   id
+        #   timeStamp
+        #   created_at {
+        #     date
+        #   }
+        #   loggedBy {
+        #     id
+        #     firstName
+        #     lastName
+        #   }
+        #   historyRecord
+        # }
+      }
     }
   }
 `
@@ -34,6 +55,27 @@ export const MAKE_CENTRE_LEADER = gql`
       id
       firstName
       lastName
+      leadsCentre {
+        id
+        leader {
+          id
+          firstName
+          lastName
+        }
+        # history(options: { limit: 10 }) {
+        #   id
+        #   timeStamp
+        #   created_at {
+        #     date
+        #   }
+        #   loggedBy {
+        #     id
+        #     firstName
+        #     lastName
+        #   }
+        #   historyRecord
+        # }
+      }
     }
   }
 `
@@ -53,6 +95,27 @@ export const MAKE_SONTA_LEADER = gql`
       id
       firstName
       lastName
+      leadsSonta {
+        id
+        leader {
+          id
+          firstName
+          lastName
+        }
+        # history(options: { limit: 10 }) {
+        #   id
+        #   timeStamp
+        #   created_at {
+        #     date
+        #   }
+        #   loggedBy {
+        #     id
+        #     firstName
+        #     lastName
+        #   }
+        #   historyRecord
+        # }
+      }
     }
   }
 `
@@ -72,6 +135,27 @@ export const MAKE_CAMPUS_LEADER = gql`
       id
       firstName
       lastName
+      leadsCampus {
+        id
+        leader {
+          id
+          firstName
+          lastName
+        }
+        # history(options: { limit: 10 }) {
+        #   id
+        #   timeStamp
+        #   created_at {
+        #     date
+        #   }
+        #   loggedBy {
+        #     id
+        #     firstName
+        #     lastName
+        #   }
+        #   historyRecord
+        # }
+      }
     }
   }
 `
@@ -87,6 +171,27 @@ export const MAKE_TOWN_LEADER = gql`
       id
       firstName
       lastName
+      leadsCampus {
+        id
+        leader {
+          id
+          firstName
+          lastName
+        }
+        # history(options: { limit: 10 }) {
+        #   id
+        #   timeStamp
+        #   created_at {
+        #     date
+        #   }
+        #   loggedBy {
+        #     id
+        #     firstName
+        #     lastName
+        #   }
+        #   historyRecord
+        # }
+      }
     }
   }
 `

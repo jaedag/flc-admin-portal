@@ -33,6 +33,10 @@ export const throwErrorMsg = (message, error) => {
   alert(message, error)
 }
 
+export const alertMsg = (message) => {
+  alert(message)
+}
+
 export const isAuthorised = (permittedRoles, userRoles) => {
   if (permittedRoles.includes('all')) {
     return true

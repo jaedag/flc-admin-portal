@@ -24,13 +24,18 @@ export const LOG_BACENTA_HISTORY = gql`
         firstName
         lastName
       }
-      history {
+      history(options: { limit: 10 }) {
         id
-        historyRecord
         timeStamp
         created_at {
           date
         }
+        loggedBy {
+          id
+          firstName
+          lastName
+        }
+        historyRecord
       }
     }
   }
@@ -60,13 +65,18 @@ export const LOG_CENTRE_HISTORY = gql`
         firstName
         lastName
       }
-      history {
+      history(options: { limit: 10 }) {
         id
-        historyRecord
         timeStamp
         created_at {
           date
         }
+        loggedBy {
+          id
+          firstName
+          lastName
+        }
+        historyRecord
       }
     }
   }
@@ -96,13 +106,18 @@ export const LOG_CAMPUSTOWN_HISTORY = gql`
         firstName
         lastName
       }
-      history {
+      history(options: { limit: 10 }) {
         id
-        historyRecord
         timeStamp
         created_at {
           date
         }
+        loggedBy {
+          id
+          firstName
+          lastName
+        }
+        historyRecord
       }
     }
   }
@@ -132,13 +147,18 @@ export const LOG_SONTA_HISTORY = gql`
         firstName
         lastName
       }
-      history {
+      history(options: { limit: 10 }) {
         id
-        historyRecord
         timeStamp
         created_at {
           date
         }
+        loggedBy {
+          id
+          firstName
+          lastName
+        }
+        historyRecord
       }
     }
   }

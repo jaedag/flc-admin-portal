@@ -64,16 +64,6 @@ const UpdateSonta = () => {
       setCampusId(values.campusTown)
     }
 
-    UpdateSonta({
-      variables: {
-        sontaId: sontaId,
-        sontaName: values.sontaName,
-        leaderId: values.leaderId,
-      },
-    }).catch((error) =>
-      throwErrorMsg('There was an error updating sonta', error)
-    )
-
     //Log if Sonta Name Changes
     if (values.sontaName !== initialValues.sontaName) {
       LogSontaHistory({
@@ -97,9 +87,20 @@ const UpdateSonta = () => {
       }).catch((err) => throwErrorMsg('There was an error adding leader', err))
     }
 
+    UpdateSonta({
+      variables: {
+        sontaId: sontaId,
+        sontaName: values.sontaName,
+        leaderId: values.leaderId,
+      },
+    })
+      .then(() => history.push(`/sonta/displaydetails`))
+      .catch((error) =>
+        throwErrorMsg('There was an error updating this sonta', error)
+      )
+
     onSubmitProps.setSubmitting(false)
     onSubmitProps.resetForm()
-    history.push(`/sonta/displaydetails`)
   }
 
   return (

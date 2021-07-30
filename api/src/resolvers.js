@@ -39,10 +39,12 @@ const throwErrorMsg = (message, error) => {
 }
 const errorHandling = (member) => {
   if (!member.email) {
-    throw `${member.firstName} ${member.lastName} does not have a valid email address`
-  } else if (!member.pictureUrl) {
-    throw `${member.firstName} ${member.lastName} does not have a valid picture`
+    throw `${member.firstName} ${member.lastName} does not have a valid email address. Please add an email address and then try again`
   }
+  return
+  // else if (!member.pictureUrl) {
+  //   throw `${member.firstName} ${member.lastName} does not have a valid picture`
+  // }
 }
 const rearrangeMemberObject = (member, response) => {
   response.records[0].keys.forEach(
@@ -112,7 +114,9 @@ const createAuthUserConfig = (member) => ({
     given_name: member.firstName,
     family_name: member.lastName,
     name: `${member.firstName} ${member.lastName}`,
-    picture: member.pictureUrl ?? '',
+    picture:
+      member.pictureUrl ??
+      'https://raw.githubusercontent.com/jaedag/fl-admin-portal/deploy/web-react/src/img/user.png',
     user_id: member.id,
     password: 'rAndoMLetteRs',
   },
@@ -215,7 +219,7 @@ const removeRoles = (userId, userRoles, rolesToRemove) => {
   //A remove roles function to simplify removing roles with an axios request
   if (userRoleIds.includes(rolesToRemove)) {
     axios(deleteUserRoles(userId, [rolesToRemove]))
-      .then(console.log('User Role sucessfully removed'))
+      .then(console.log('User Role successfully removed'))
       .catch((err) => throwErrorMsg('There was an error removing role', err))
   }
 }
@@ -297,13 +301,18 @@ const MakeServant = async (
 
                 //Write Auth0 ID of Leader to Neo4j DB
                 session
-                  .run(cypher[`make${churchType}${servant}`], {
+                  .run(cypher[`make${churchType}${servantType}`], {
                     [`${servantLower}Id`]: servant.id,
                     [`${churchLower}Id`]: church.id,
                     auth_id: servant.auth_id,
                     auth: context.auth,
                   })
-                  .then(console.log('Cypher Query Executed Successfully'))
+                  .then(
+                    console.log(
+                      `make${churchType}${servantType}`,
+                      'Cypher Query Executed Successfully'
+                    )
+                  )
                   .catch((err) =>
                     throwErrorMsg('Error running cypher query', err)
                   )
@@ -356,7 +365,7 @@ const MakeServant = async (
   errorHandling(servant)
 
   //Returning the data such that it can update apollo cache
-  servant[`${verb}`].push({
+  servant[`${verb}`]?.push({
     id: church.id,
     leader: {
       id: servant.id,
@@ -372,7 +381,7 @@ const MakeServant = async (
       lastName: servant.lastName,
     }
   })
-  console.log(servant)
+
   return servant
 }
 const RemoveServant = async (
@@ -410,9 +419,12 @@ const RemoveServant = async (
     .then(async (response) => {
       // Rearrange member object
       servant = rearrangeMemberObject(servant, response)
-
+      console.log(servant)
       if (servant[`${verb}`].length > 1) {
         //If he leads more than one Church don't touch his Auth0 roles
+        console.log(
+          `${servant.firstName} ${servant.lastName} leads more than one ${churchType}`
+        )
         return
       }
 
@@ -655,7 +667,7 @@ export const resolvers = {
       )
     },
     MakeCentreLeader: async (object, args, context) => {
-      MakeServant(
+      return MakeServant(
         context,
         args,
         ['adminFederal', 'adminBishop', 'adminCampus', 'adminTown'],
@@ -664,7 +676,7 @@ export const resolvers = {
       )
     },
     RemoveCentreLeader: async (object, args, context) => {
-      RemoveServant(
+      return RemoveServant(
         context,
         args,
         ['adminFederal', 'adminBishop', 'adminCampus', 'adminTown'],

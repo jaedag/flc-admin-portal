@@ -63,8 +63,10 @@ const ProtectedRoute = ({ component, roles, ...args }) => {
       [
         'adminCampus',
         'adminTown',
-        'leaderConstituency',
+        'leaderCampus',
+        'leaderTown',
         'leaderCentre',
+        'leaderSonta',
         'leaderBacenta',
       ],
       currentUser.roles

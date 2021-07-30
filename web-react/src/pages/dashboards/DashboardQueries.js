@@ -274,6 +274,31 @@ export const SERVANTS_DASHBOARD = gql`
       }
       leadsSonta {
         id
+        name
+        campus {
+          id
+          bishop {
+            id
+          }
+        }
+        town {
+          id
+          bishop {
+            id
+          }
+        }
+        services {
+          id
+          historyRecord
+          serviceRecords {
+            created_at
+            attendance
+            week
+            serviceDate {
+              date
+            }
+          }
+        }
       }
       leadsMinistry {
         id

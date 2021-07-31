@@ -14,7 +14,7 @@ const mg = mailgun({
   apiKey: process.env.MAILGUN_API_KEY,
   domain: DOMAIN,
 })
-const sendMail = (recipients, subject, body) => {
+const notifyMember = (recipients, subject, body) => {
   const data = {
     from: 'Do Not Reply <no-reply@firstlovecenter.org>',
     to: recipients,
@@ -301,7 +301,7 @@ const MakeServant = async (
               .then((res) => {
                 axios(changePasswordConfig(servant)).then((res) => {
                   // Send Mail to the Person after Password Change Ticket has been generated
-                  sendMail(
+                  notifyMember(
                     servant.email,
                     'Your account has been created on the FL Admin Portal',
                     `Hi ${servant.firstName}\nYour account has just been created on the First Love Church Administrative Portal. Please set up your password by clicking ${res.data.ticket}. If you feel this is a mistake please contact your bishops admin.
@@ -320,13 +320,6 @@ const MakeServant = async (
                 ])
                 console.log(
                   `Auth0 Account successfully created for ${servant.firstName} ${servant.lastName}`
-                )
-
-                //Send Email Using Mailgun
-                sendMail(
-                  servant.email,
-                  'Servanthood Status Update',
-                  `Hi ${servant.firstName}\nCongratulations! You have just been made a ${churchType} ${servantType} for ${church.name} ${church.type[0]}.If you feel this is a mistake, please contact your bishop's admin\n\nRegards,\nThe Administrator,\nFirst Love Centre,\nAccra.`
                 )
 
                 //Write Auth0 ID of Leader to Neo4j DB
@@ -373,10 +366,10 @@ const MakeServant = async (
                 ])
 
                 //Send Email Using Mailgun
-                sendMail(
+                notifyMember(
                   servant.email,
                   'Servanthood Status Update',
-                  `Hi ${servant.firstName}\nCongratulations! You have just been made a ${churchType} ${servantType} for ${church.name} ${church.type[0]}.\nRegards,\nThe Administrator,\nFirst Love Centre,\nAccra.`
+                  `Hi ${servant.firstName}\nCongratulations! You have just been made a ${churchType} ${servantType} for ${church.name} ${church.type[0]}.If you feel this is a mistake, please contact your bishop's admin\n\nRegards,\nThe Administrator,\nFirst Love Centre,\nAccra.`
                 )
 
                 //Write Auth0 ID of Admin to Neo4j DB
@@ -487,7 +480,7 @@ const RemoveServant = async (
                 )
 
                 //Send a Mail to That Effect
-                sendMail(
+                notifyMember(
                   servant.email,
                   'Your Servant Account Has Been Deleted',
                   `Hi ${servant.firstName}\nYour account has been deleted from our portal. You will no longer have access to any data.\nThis is due to the fact that you have been removed as a ${churchType} ${servantType} for ${church.name} ${church.type[0]}.\nIf you feel that this is a mistake, please contact your bishops admin.\nThank you\nRegards\nThe Admiinstrator\nFirst Love Center\nAccra`
@@ -514,7 +507,7 @@ const RemoveServant = async (
             )
 
             //Send Email Using Mailgun
-            sendMail(
+            notifyMember(
               servant.email,
               'ServantHood Status Update',
               `Hi ${servant.firstName}\nUnfortunately You have just been removed as a ${churchType} ${servantType} for ${church.name} ${church.type[0]}.\nRegards,\nThe Administrator,\nFirst Love Centre,\nAccra.`

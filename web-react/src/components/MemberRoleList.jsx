@@ -1,5 +1,4 @@
 import { useMutation } from '@apollo/client'
-import RoleView from 'auth/RoleView'
 import {
   NEW_BACENTA_LEADER,
   NEW_CAMPUS_LEADER,
@@ -320,11 +319,11 @@ const MemberRoleList = ({ member }) => {
       <DashboardButton btnLink="/dashboard/servants">
         View Records
       </DashboardButton>
-      <RoleView roles={['adminBishop', 'adminCampus', 'adminTown']}>
-        <button className="btn btn-primary" onClick={createAccount}>
-          Click To Create Account
-        </button>
-      </RoleView>
+
+      <button className="btn btn-primary" onClick={createAccount}>
+        Click To Create Account
+      </button>
+
       <br />
       {(member.isBishopForTown[0] || member.isBishopForCampus[0]) && (
         <span

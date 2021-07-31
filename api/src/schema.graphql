@@ -1089,7 +1089,6 @@ type Mutation {
       	member.lastName = $lastName,
       	member.email = $email,
       	member.phoneNumber = $phoneNumber,
-        member.whatsappNumber = $whatsappNumber,
       	member.pictureUrl = $pictureUrl
       CREATE (log:HistoryLog)<-[:HAS_HISTORY]-(b)
         SET

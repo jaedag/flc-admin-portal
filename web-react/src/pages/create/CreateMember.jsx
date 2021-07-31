@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useMutation } from '@apollo/client'
-import { parsePhoneNum } from '../../global-utils'
+import { parsePhoneNum, throwErrorMsg } from '../../global-utils'
 import {
   ADD_MEMBER_TITLE_MUTATION,
   CREATE_MEMBER_MUTATION,
@@ -97,7 +97,9 @@ const CreateMember = () => {
           status: true,
           date: pastoralAppointment.map((title) => title.date),
         },
-      })
+      }).catch((error) =>
+        throwErrorMsg(`There was a problem creating member`, error)
+      )
 
       setSubmitting(false)
       resetForm()

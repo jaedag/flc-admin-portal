@@ -300,6 +300,7 @@ const MakeServant = async (
             axios(createAuthUserConfig(servant))
               .then((res) => {
                 axios(changePasswordConfig(servant)).then((res) => {
+                  nnpm
                   // Send Mail to the Person after Password Change Ticket has been generated
                   notifyMember(
                     servant.email,

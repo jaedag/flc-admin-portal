@@ -304,9 +304,9 @@ const MakeServant = async (
                   sendMail(
                     servant.email,
                     'Your account has been created on the FL Admin Portal',
-                    `Hi ${servant.firstName}\nYour account has just been created on the First Love Church Administrative Portal. Please set up your password by clicking ${res.data.ticket}
+                    `Hi ${servant.firstName}\nYour account has just been created on the First Love Church Administrative Portal. Please set up your password by clicking ${res.data.ticket}. If you feel this is a mistake please contact your bishops admin.
           
-                  Afterwards, you can login by clicking https://flcadmin.netlify.app/\nRegards\nThe Administrator\nFirst Love Center\nAccra`
+                  Afterwards, you can login by clicking https://flcadmin.netlify.app/\n\nRegards\nThe Administrator\nFirst Love Center\nAccra`
                   )
                 })
 
@@ -326,7 +326,7 @@ const MakeServant = async (
                 sendMail(
                   servant.email,
                   'Servanthood Status Update',
-                  `Hi ${servant.firstName}\nCongratulations! You have just been made a ${churchType} ${servantType} for ${church.name} ${church.type[0]}.\nRegards,\nThe Administrator,\nFirst Love Centre,\nAccra.`
+                  `Hi ${servant.firstName}\nCongratulations! You have just been made a ${churchType} ${servantType} for ${church.name} ${church.type[0]}.If you feel this is a mistake, please contact your bishop's admin\n\nRegards,\nThe Administrator,\nFirst Love Centre,\nAccra.`
                 )
 
                 //Write Auth0 ID of Leader to Neo4j DB

@@ -5,7 +5,6 @@ const mailgun = require('mailgun-js')
 
 dotenv.config()
 
-const baseURL = 'https://flcadmin.us.auth0.com/'
 let authToken
 let authRoles = {}
 
@@ -14,15 +13,54 @@ const mg = mailgun({
   apiKey: process.env.MAILGUN_API_KEY,
   domain: DOMAIN,
 })
-const notifyMember = (recipients, subject, body) => {
-  const data = {
+const notifyMember = (
+  member,
+  subject,
+  body,
+  whatsapp_template,
+  whatsapp_placeholders
+) => {
+  const mailData = {
     from: 'Do Not Reply <no-reply@firstlovecenter.org>',
-    to: recipients,
+    to: member.email,
     subject: subject,
     text: body,
   }
 
-  mg.messages().send(data, function (error, body) {
+  if (whatsapp_template) {
+    const sendWhatsAppConfig = {
+      method: 'post',
+      baseURL: process.env.INFOBIP_BASE_URL,
+      url: `/whatsapp/1/message/template`,
+      headers: {
+        Authorization: `App ${process.env.INFOBIP_API_KEY}`,
+      },
+      data: {
+        messages: [
+          {
+            from: '233508947494', //First Love Number
+            to: '233243343261', //David Dag's Number. Must be Changed
+            content: {
+              templateName: whatsapp_template,
+              templateData: {
+                body: {
+                  placeholders: whatsapp_placeholders,
+                },
+              },
+              language: 'en_GB',
+            },
+            // callbackData: 'Callback data',
+          },
+        ],
+      },
+    }
+
+    axios(sendWhatsAppConfig)
+      .then((res) => console.log('WhatsApp Message Sending'))
+      .catch((error) => throwErrorMsg('WhatsApp Message Failed to Send', error))
+  }
+
+  mg.messages().send(mailData, function (error, body) {
     console.log('Mailgun API response', body)
   })
 }
@@ -45,7 +83,6 @@ const noEmptyArgsValidation = (args) => {
 const throwErrorMsg = (message, error) => {
   console.error(message, error?.response?.data ?? error)
   throw message
-  // throw 'There was a problem making your changes, please try again'
 }
 const errorHandling = (member) => {
   if (!member.email) {
@@ -82,7 +119,7 @@ axios(getTokenConfig)
 
     const getRolesConfig = {
       method: 'get',
-      baseURL: baseURL,
+      baseURL: process.env.AUTH0_BASE_URL,
       url: `/api/v2/roles`,
       headers: {
         autho: '',
@@ -112,7 +149,7 @@ axios(getTokenConfig)
 
 const createAuthUserConfig = (member) => ({
   method: 'post',
-  baseURL: baseURL,
+  baseURL: process.env.AUTH0_BASE_URL,
   url: `/api/v2/users`,
   headers: {
     autho: '',
@@ -134,7 +171,7 @@ const createAuthUserConfig = (member) => ({
 
 const updateAuthUserConfig = (member) => ({
   method: 'patch',
-  baseURL: baseURL,
+  baseURL: process.env.AUTH0_BASE_URL,
   url: `/api/v2/users/${member.auth_id}`,
   headers: {
     autho: '',
@@ -154,7 +191,7 @@ const updateAuthUserConfig = (member) => ({
 
 const changePasswordConfig = (member) => ({
   method: 'post',
-  baseURL: baseURL,
+  baseURL: process.env.AUTH0_BASE_URL,
   url: `/api/v2/tickets/password-change`,
   headers: {
     autho: '',
@@ -163,14 +200,14 @@ const changePasswordConfig = (member) => ({
 
   data: {
     connection_id: 'con_dxnSvYK6VptkEBL0',
-    email: 'jaedagy@gmail.com',
+    email: member.email,
     mark_email_as_verified: true,
   },
 })
 
 const deleteAuthUserConfig = (memberId) => ({
   method: 'delete',
-  baseURL: baseURL,
+  baseURL: process.env.AUTH0_BASE_URL,
   url: `/api/v2/users/${memberId}`,
   headers: {
     autho: '',
@@ -180,7 +217,7 @@ const deleteAuthUserConfig = (memberId) => ({
 
 const getAuthIdConfig = (member) => ({
   method: 'get',
-  baseURL: baseURL,
+  baseURL: process.env.AUTH0_BASE_URL,
   url: `/api/v2/users-by-email?email=${member.email}`,
   headers: {
     autho: '',
@@ -189,7 +226,7 @@ const getAuthIdConfig = (member) => ({
 })
 const getUserRoles = (memberId) => ({
   method: 'get',
-  baseURL: baseURL,
+  baseURL: process.env.AUTH0_BASE_URL,
   url: `/api/v2/users/${memberId}/roles`,
   headers: {
     autho: '',
@@ -198,7 +235,7 @@ const getUserRoles = (memberId) => ({
 })
 const setUserRoles = (memberId, roles) => ({
   method: 'post',
-  baseURL: baseURL,
+  baseURL: process.env.AUTH0_BASE_URL,
   url: `/api/v2/users/${memberId}/roles`,
   headers: {
     autho: '',
@@ -210,7 +247,7 @@ const setUserRoles = (memberId, roles) => ({
 })
 const deleteUserRoles = (memberId, roles) => ({
   method: 'delete',
-  baseURL: baseURL,
+  baseURL: process.env.AUTH0_BASE_URL,
   url: `/api/v2/users/${memberId}/roles`,
   headers: {
     autho: '',
@@ -300,14 +337,15 @@ const MakeServant = async (
             axios(createAuthUserConfig(servant))
               .then((res) => {
                 axios(changePasswordConfig(servant)).then((res) => {
-                  nnpm
                   // Send Mail to the Person after Password Change Ticket has been generated
                   notifyMember(
-                    servant.email,
+                    servant,
                     'Your account has been created on the FL Admin Portal',
                     `Hi ${servant.firstName}\nYour account has just been created on the First Love Church Administrative Portal. Please set up your password by clicking ${res.data.ticket}. If you feel this is a mistake please contact your bishops admin.
           
-                  Afterwards, you can login by clicking https://flcadmin.netlify.app/\n\nRegards\nThe Administrator\nFirst Love Center\nAccra`
+                  Afterwards, you can login by clicking https://flcadmin.netlify.app/\n\nRegards\nThe Administrator\nFirst Love Center\nAccra`,
+                    'servant_account_created',
+                    [servant.firstName, res?.data?.ticket]
                   )
                 })
 
@@ -366,11 +404,25 @@ const MakeServant = async (
                   authRoles[`${servantLower}${churchType}`].id,
                 ])
 
+                const churchInEmail = church.name
+                  ? `${church.name} ${church.type[0]}`
+                  : `Bishop ${church.firstName} ${church.lastName}`
+
                 //Send Email Using Mailgun
                 notifyMember(
-                  servant.email,
+                  servant,
                   'Servanthood Status Update',
-                  `Hi ${servant.firstName}\nCongratulations! You have just been made a ${churchType} ${servantType} for ${church.name} ${church.type[0]}.If you feel this is a mistake, please contact your bishop's admin\n\nRegards,\nThe Administrator,\nFirst Love Centre,\nAccra.`
+                  `Hi ${servant.firstName}\nCongratulations! You have just been made a ${churchType} ${servantType} for ${churchInEmail}.If you feel this is a mistake, please contact your bishop's admin\n\nRegards,\nThe Administrator,\nFirst Love Centre,\nAccra.`,
+                  'servant_status_update',
+                  [
+                    servant.firstName,
+                    churchType,
+                    servantType,
+                    church.name ?? `Bishop`,
+                    church.type[0] !== 'Member'
+                      ? church.type[0]
+                      : `${church.firstName} ${church.lastName}`,
+                  ]
                 )
 
                 //Write Auth0 ID of Admin to Neo4j DB
@@ -482,9 +534,17 @@ const RemoveServant = async (
 
                 //Send a Mail to That Effect
                 notifyMember(
-                  servant.email,
+                  servant,
                   'Your Servant Account Has Been Deleted',
-                  `Hi ${servant.firstName}\nYour account has been deleted from our portal. You will no longer have access to any data.\nThis is due to the fact that you have been removed as a ${churchType} ${servantType} for ${church.name} ${church.type[0]}.\nIf you feel that this is a mistake, please contact your bishops admin.\nThank you\nRegards\nThe Admiinstrator\nFirst Love Center\nAccra`
+                  `Hi ${servant.firstName}\nYour account has been deleted from our portal. You will no longer have access to any data.\nThis is due to the fact that you have been removed as a ${churchType} ${servantType} for ${church.name} ${church.type[0]}.\nIf you feel that this is a mistake, please contact your bishops admin.\nThank you\nRegards\nThe Administrator\nFirst Love Center\nAccra`,
+                  'servant_account_deleted',
+                  [
+                    servant.firstName,
+                    churchType,
+                    servantType,
+                    church.name,
+                    church.type[0],
+                  ]
                 )
 
                 //Remove Auth0 ID of Leader from Neo4j DB
@@ -509,7 +569,7 @@ const RemoveServant = async (
 
             //Send Email Using Mailgun
             notifyMember(
-              servant.email,
+              servant,
               'ServantHood Status Update',
               `Hi ${servant.firstName}\nUnfortunately You have just been removed as a ${churchType} ${servantType} for ${church.name} ${church.type[0]}.\nRegards,\nThe Administrator,\nFirst Love Centre,\nAccra.`
             )

@@ -40,7 +40,7 @@ export const BISH_DASHBOARD_COUNTS = gql`
   }
 `
 export const MAKE_BISHOP_ADMIN = gql`
-  mutation($bishopId: ID!, $adminId: ID!) {
+  mutation MakeBishopAdmin($bishopId: ID!, $adminId: ID!) {
     MakeBishopAdmin(bishopId: $bishopId, adminId: $adminId) {
       id
     }
@@ -48,7 +48,7 @@ export const MAKE_BISHOP_ADMIN = gql`
 `
 
 export const REMOVE_BISHOP_ADMIN = gql`
-  mutation($bishopId: ID!, $adminId: ID!) {
+  mutation RemoveBishopAdmin($bishopId: ID!, $adminId: ID!) {
     RemoveBishopAdmin(adminId: $adminId, bishopId: $bishopId) {
       id
     }

@@ -1,8 +1,22 @@
+import { useMutation } from '@apollo/client'
+import RoleView from 'auth/RoleView'
+import {
+  NEW_BACENTA_LEADER,
+  NEW_CAMPUS_LEADER,
+  NEW_CENTRE_LEADER,
+  NEW_SONTA_LEADER,
+  NEW_TOWN_LEADER,
+} from 'pages/create/MakeLeaderMutations'
+import { MAKE_BISHOP_ADMIN } from 'pages/dashboards/DashboardQueries'
 import React, { useContext } from 'react'
 import { useHistory } from 'react-router'
 import { ChurchContext } from '../contexts/ChurchContext'
-import { capitalise } from '../global-utils'
+import { alertMsg, capitalise, throwErrorMsg } from '../global-utils'
 import DashboardButton from './buttons/DashboardButton'
+import {
+  MAKE_CAMPUS_ADMIN,
+  MAKE_TOWN_ADMIN,
+} from './DisplayChurchDetails/AdminMutations'
 
 const MemberRoleList = ({ member }) => {
   if (!member) {
@@ -22,7 +36,8 @@ const MemberRoleList = ({ member }) => {
     centreLeader: [],
     bacentaLeader: [],
     adminBishop: [],
-    adminConstituency: [],
+    adminCampus: [],
+    adminTown: [],
   }
   let isServant = false
 
@@ -70,7 +85,7 @@ const MemberRoleList = ({ member }) => {
     if (churchType === 'adminCampus' || churchType === 'adminTown') {
       if (member.isAdminForCampus[0]) {
         member.isAdminForCampus.map((adminFor) => {
-          rank.adminConstituency.push({
+          rank.adminCampus.push({
             constituency: true,
             name: `${adminFor.name}`,
             id: adminFor.id,
@@ -81,7 +96,7 @@ const MemberRoleList = ({ member }) => {
         return
       } else if (member.isAdminForTown[0]) {
         member.isAdminForTown.map((adminFor) => {
-          rank.adminConstituency.push({
+          rank.adminTown.push({
             constituency: true,
             name: `${adminFor.name}`,
             id: adminFor.id,
@@ -143,14 +158,161 @@ const MemberRoleList = ({ member }) => {
     updateRank(member, 'adminBishop')
   }
   if (member.isAdminForCampus[0]) {
-    updateRank(member, 'adminCampus', 'adminTown')
+    updateRank(member, 'adminCampus')
   }
   if (member.isAdminForTown[0]) {
-    updateRank(member, 'adminCampus', 'adminTown')
+    updateRank(member, 'adminTown')
   }
 
   if (!isServant) {
     return null
+  }
+
+  const [NewBacentaLeader] = useMutation(NEW_BACENTA_LEADER)
+  const [NewCentreLeader] = useMutation(NEW_CENTRE_LEADER)
+  const [NewCampusLeader] = useMutation(NEW_CAMPUS_LEADER)
+  const [NewTownLeader] = useMutation(NEW_TOWN_LEADER)
+  const [NewSontaLeader] = useMutation(NEW_SONTA_LEADER)
+  const [MakeTownAdmin] = useMutation(MAKE_TOWN_ADMIN)
+  const [MakeCampusAdmin] = useMutation(MAKE_CAMPUS_ADMIN)
+  const [MakeBishopAdmin] = useMutation(MAKE_BISHOP_ADMIN)
+
+  const createAccount = () => {
+    if (rank.bacentaLeader.length) {
+      NewBacentaLeader({
+        variables: {
+          bacentaId: rank.bacentaLeader[0].id,
+          leaderId: member.id,
+        },
+      })
+        .then(() =>
+          alertMsg(
+            member.fullName + ' Account Successfully Created as Bacenta Leader'
+          )
+        )
+        .catch((error) =>
+          throwErrorMsg('There was an making you a bacenta leader', error)
+        )
+    }
+    if (rank.centreLeader.length) {
+      NewCentreLeader({
+        variables: {
+          centreId: rank.centreLeader[0].id,
+          leaderId: member.id,
+        },
+      })
+        .then(() =>
+          alertMsg(
+            member.fullName + ' Account Successfully Created as Centre Leader'
+          )
+        )
+        .catch((error) =>
+          throwErrorMsg('There was an making you a centre leader', error)
+        )
+    }
+    if (rank.townLeader.length) {
+      NewTownLeader({
+        variables: {
+          townId: rank.townLeader[0].id,
+          leaderId: member.id,
+        },
+      })
+        .then(() =>
+          alertMsg(member.fullName, ' Account Successfully Created as Town CO')
+        )
+        .catch((error) =>
+          throwErrorMsg('There was an making you a town leader', error)
+        )
+    }
+    if (rank.campusLeader.length) {
+      NewCampusLeader({
+        variables: {
+          campusId: rank.campusLeader[0].id,
+          leaderId: member.id,
+        },
+      })
+        .then(() =>
+          alertMsg(
+            member.fullName + ' Account Successfully Created as Campus CO'
+          )
+        )
+        .catch((error) =>
+          throwErrorMsg('There was an making you a campus leader', error)
+        )
+    }
+    if (rank.sontaLeader.length) {
+      NewSontaLeader({
+        variables: {
+          sontaId: rank.sontaLeader[0].id,
+          leaderId: member.id,
+        },
+      })
+        .then(() =>
+          alertMsg(
+            member.fullName + ' Account Successfully Created as Sonta Leader'
+          )
+        )
+        .catch((error) =>
+          throwErrorMsg('There was an making you a sonta leader', error)
+        )
+    }
+    if (rank.adminCampus.length) {
+      MakeCampusAdmin({
+        variables: {
+          campusId: rank.adminCampus[0].id,
+          adminId: member.id,
+        },
+      })
+        .then(() =>
+          alertMsg(
+            member.fullName + ' Account Successfully Created as Campus Admin'
+          )
+        )
+        .catch((error) =>
+          throwErrorMsg(
+            `There was an making ${member.fullName} a campus admin`,
+            error
+          )
+        )
+    }
+    if (rank.adminTown.length) {
+      MakeTownAdmin({
+        variables: {
+          townId: rank.adminTown[0].id,
+          adminId: member.id,
+        },
+      })
+        .then(() =>
+          alertMsg(
+            member.fullName + ' Account Successfully Created as Town Admin'
+          )
+        )
+        .catch((error) =>
+          throwErrorMsg(
+            `There was an making ${member.fullName} a town admin`,
+            error
+          )
+        )
+    }
+    if (rank.adminBishop.length) {
+      MakeBishopAdmin({
+        variables: {
+          bishopId: rank.adminBishop[0].id,
+          adminId: member.id,
+        },
+      })
+        .then(() =>
+          alertMsg(
+            member.fullName + ' Account Successfully Created as Bishop Admin'
+          )
+        )
+        .catch((error) =>
+          throwErrorMsg(
+            `There was an making ${member.fullName} a bishop admin`,
+            error
+          )
+        )
+    }
   }
 
   return (
@@ -158,6 +320,11 @@ const MemberRoleList = ({ member }) => {
       <DashboardButton btnLink="/dashboard/servants">
         View Records
       </DashboardButton>
+      <RoleView roles={['adminBishop', 'adminCampus', 'adminTown']}>
+        <button className="btn btn-primary" onClick={createAccount}>
+          Click To Create Account
+        </button>
+      </RoleView>
       <br />
       {(member.isBishopForTown[0] || member.isBishopForCampus[0]) && (
         <span

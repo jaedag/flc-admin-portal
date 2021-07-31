@@ -13,6 +13,8 @@ WITH apoc.cypher.runFirstColumn(
   RETURN adminCampus", {this: member}, true) | member_adminCampuses { .id,.name }],
   isAdminForTown: [ member_adminTowns IN apoc.cypher.runFirstColumn("MATCH (this)-[:IS_ADMIN_FOR]-(adminTown:Town)
   RETURN adminTown", {this: member}, true) | member_adminTowns { .id,.name }],
+  isAdminForBishop: [ member_adminBishops IN apoc.cypher.runFirstColumn("MATCH (this)-[:IS_ADMIN_FOR]-(adminBishop:Member)
+  RETURN adminBishop", {this: member}, true) | member_adminBishops { .id,.firstName,.lastName }],
   leadsCampus: [ member_campus IN apoc.cypher.runFirstColumn("MATCH (this)-[:LEADS]-(campus:Campus)
   RETURN campus", {this: member}, true) | member_campus { .id,.name }],
   leadsTown: [ member_town IN apoc.cypher.runFirstColumn("MATCH (this)-[:LEADS]-(town:Town)

@@ -32,6 +32,16 @@ const isAuth = (permittedRoles, userRoles) => {
     throw 'You are not permitted to run this mutation'
   }
 }
+const noEmptyArgsValidation = (args) => {
+  if (!args.length) {
+    throwErrorMsg('args must be passed in array')
+  }
+  args.map((argument) => {
+    if (!argument) {
+      throwErrorMsg('Argument Cannot Be Empty')
+    }
+  })
+}
 const throwErrorMsg = (message, error) => {
   console.error(message, error?.response?.data ?? error)
   throw message
@@ -119,6 +129,26 @@ const createAuthUserConfig = (member) => ({
       'https://raw.githubusercontent.com/jaedag/fl-admin-portal/deploy/web-react/src/img/user.png',
     user_id: member.id,
     password: 'rAndoMLetteRs',
+  },
+})
+
+const updateAuthUserConfig = (member) => ({
+  method: 'patch',
+  baseURL: baseURL,
+  url: `/api/v2/users/${member.auth_id}`,
+  headers: {
+    autho: '',
+    Authorization: `Bearer ${authToken}`,
+  },
+  data: {
+    connection: 'flcadmin',
+    email: member.email,
+    given_name: member.firstName,
+    family_name: member.lastName,
+    name: `${member.firstName} ${member.lastName}`,
+    picture:
+      member.pictureUrl ??
+      'https://raw.githubusercontent.com/jaedag/fl-admin-portal/deploy/web-react/src/img/user.png',
   },
 })
 
@@ -231,10 +261,10 @@ const MakeServant = async (
   churchType,
   servantType
 ) => {
-  isAuth(permittedRoles, context.auth.roles)
-
   const churchLower = churchType.toLowerCase()
   const servantLower = servantType.toLowerCase()
+  isAuth(permittedRoles, context.auth.roles)
+  noEmptyArgsValidation([args[`${churchLower}Id`], args[`${servantLower}Id`]])
   let verb
   if (servantType === 'Leader') {
     verb = `leads${churchType}`
@@ -319,6 +349,20 @@ const MakeServant = async (
               })
               .catch((err) => throwErrorMsg('Error Creating User', err))
           } else if (servant.auth_id) {
+            //Update a user's Auth Profile with Picture and Name Details
+            axios(updateAuthUserConfig(servant))
+              .then(() => {
+                console.log(
+                  `${servant.firstName} ${servant.lastName} Auth Account Details Updated`
+                )
+              })
+              .catch((error) =>
+                throwErrorMsg(
+                  `There was an error updating ${servant.firstName} ${servant.lastName}'s auth account`,
+                  error
+                )
+              )
+
             //Check auth0 roles and add roles 'leaderCentre'
             axios(getUserRoles(servant.auth_id))
               .then((res) => {
@@ -391,10 +435,11 @@ const RemoveServant = async (
   churchType,
   servantType
 ) => {
-  isAuth(permittedRoles, context.auth.roles)
-
   const churchLower = churchType.toLowerCase()
   const servantLower = servantType.toLowerCase()
+  isAuth(permittedRoles, context.auth.roles)
+  noEmptyArgsValidation([args[`${churchLower}Id`], args[`${servantLower}Id`]])
+
   let verb
   if (servantType === 'Leader') {
     verb = `leads${churchType}`

@@ -770,6 +770,8 @@ type Query {
       statement: """
       MATCH (sonta:Sonta {id: $id})
       MATCH (sonta)<-[:HAS_SONTA]-()-[:HAS_CENTRE]->()-[:HAS_BACENTA]->()<-[:BELONGS_TO]-(member:Member)
+      MATCH (sonta)<-[:HAS_SONTA]-(ministry:Ministry)
+      MATCH (member)-[:BELONGS_TO]->(ministry)
       RETURN COUNT(member)
       """
     )

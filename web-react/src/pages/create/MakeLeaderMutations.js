@@ -6,6 +6,14 @@ export const NEW_BACENTA_LEADER = gql`
       id
       firstName
       lastName
+      leadsBacenta {
+        id
+        leader {
+          id
+          firstName
+          lastName
+        }
+      }
     }
   }
 `
@@ -34,6 +42,14 @@ export const NEW_CENTRE_LEADER = gql`
       id
       firstName
       lastName
+      leadsCentre {
+        id
+        leader {
+          id
+          firstName
+          lastName
+        }
+      }
     }
   }
 `
@@ -44,6 +60,14 @@ export const NEW_CAMPUS_LEADER = gql`
       id
       firstName
       lastName
+      leadsCampus {
+        id
+        leader {
+          id
+          firstName
+          lastName
+        }
+      }
     }
   }
 `
@@ -54,6 +78,14 @@ export const NEW_TOWN_LEADER = gql`
       id
       firstName
       lastName
+      leadsTown {
+        id
+        leader {
+          id
+          firstName
+          lastName
+        }
+      }
     }
   }
 `

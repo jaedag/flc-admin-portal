@@ -197,8 +197,11 @@ const PastorsAdmin = () => {
             subChurch: 'centre',
           })
         )
-        setBishopId(member.bishop?.id)
-        sessionStorage.setItem('bishopId', member.bishop?.id)
+
+        if (member.bishop?.id) {
+          setBishopId(member.bishop?.id)
+          sessionStorage.setItem('bishopId', member.bishop?.id)
+        }
         break
       case 'Campus':
         setChurch({ church: 'campus', subChurch: 'centre' })
@@ -209,8 +212,11 @@ const PastorsAdmin = () => {
             subChurch: 'centre',
           })
         )
-        setBishopId(member.bishop?.id)
-        sessionStorage.setItem('bishopId', member.bishop?.id)
+
+        if (member.bishop?.id) {
+          setBishopId(member.bishop?.id)
+          sessionStorage.setItem('bishopId', member.bishop?.id)
+        }
         break
       case 'Centre':
         setChurch({
@@ -224,29 +230,39 @@ const PastorsAdmin = () => {
             subChurch: 'centre',
           })
         )
-        setBishopId(
-          member.campus ? member.campus.bishop.id : member.town.bishop.id
-        )
-        sessionStorage.setItem(
-          'bishopId',
-          member.campus ? member.campus.bishop.id : member.town.bishop.id
-        )
+
+        if (member.campus) {
+          setBishopId(member?.campus.bishop.id)
+          sessionStorage.setItem('bishopId', member?.campus.bishop.id)
+        }
+        if (member.town) {
+          setBishopId(member?.town.bishop.id)
+          sessionStorage.setItem('bishopId', member?.town.bishop.id)
+        }
         break
       case 'Bacenta':
-        setChurch({ church: member.centre?.town ? 'town' : 'campus' })
+        setChurch({
+          church: member.centre?.town ? 'town' : 'campus',
+          subChurch: 'centre',
+        })
         sessionStorage.setItem(
           'church',
           JSON.stringify({
             church: member.centre?.town ? 'town' : 'campus',
+            subChurch: 'centre',
           })
         )
-        setBishopId(
-          member.centre?.town?.bishop.id ?? member.centre?.campus?.bishop.id
-        )
-        sessionStorage.setItem(
-          'bishopId',
-          member.centre?.town?.bishop.id ?? member.centre?.campus?.bishop.id
-        )
+
+        if (member.centre?.town?.bishop.id) {
+          setBishopId(member.centre?.town?.bishop.id)
+          sessionStorage.setItem('bishopId', member.centre?.town?.bishop.id)
+
+          if (member.centre?.campus?.bishop.id) {
+            setBishopId(member.centre?.campus?.bishop.id)
+            sessionStorage.setItem('bishopId', member.centre?.campus?.bishop.id)
+          }
+        }
+
         break
       default:
     }

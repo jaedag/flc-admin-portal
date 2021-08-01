@@ -1,6 +1,6 @@
 {
   "name": "grand-stack-starter-api",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "API app for GRANDstack",
   "main": "src/index.js",
   "scripts": {
@@ -20,8 +20,9 @@
     "apollo-server-lambda": "^2.19.0",
     "csv-parse": "^4.10.1",
     "dotenv": "^7.0.0",
+    "form-data": "^3.0.1",
     "graphql": "^15.5.1",
-    "mailgun-js": "^0.22.0",
+    "mailgun.js": "^3.5.2",
     "neo4j-driver": "^4.3.1",
     "node-fetch": "^2.6.0",
     "react": "^16.13.1"

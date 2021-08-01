@@ -2,7 +2,7 @@ export const matchMemberQuery = `
 WITH apoc.cypher.runFirstColumn(
   "MATCH (member:Member {id:$id})
   RETURN member", {offset:0, first:5, id: $id}, True) AS x UNWIND x AS member
-  RETURN member { .id,.auth_id, .firstName,.lastName,.email,.phoneNumber,.pictureUrl,
+  RETURN member { .id,.auth_id, .firstName,.lastName,.email,.phoneNumber,.whatsappNumber,.pictureUrl,
   leadsBacenta: [ member_bacentas IN apoc.cypher.runFirstColumn("MATCH (this)-[:LEADS]-(bacenta:Bacenta)
   RETURN bacenta", {this: member}, true) | member_bacentas { .id,.name }],
   leadsCentre: [ member_centres IN apoc.cypher.runFirstColumn("MATCH (this)-[:LEADS]-(centre:Centre)
@@ -234,6 +234,7 @@ MATCH (leader:Member {id:$leaderId})
 MATCH (centre:Centre {id:$centreId})
 OPTIONAL MATCH (centre)<-[:HAS_CENTRE]-(campusTown) 
 UNWIND labels(campusTown) AS stream
+
 CREATE (log:HistoryLog:ServiceLog)
   SET leader.auth_id = $auth_id,
    log.id = apoc.create.uuid(),
@@ -259,7 +260,8 @@ WITH log,centre,oldLeader,leader
        RETURN COUNT(log)
        }
   
-   MATCH (currentUser:Member {auth_id:$auth.jwt.sub}) 
+   MATCH (currentUser:Member {auth_id:$auth.jwt.sub})
+
    WITH currentUser, leader, centre, log
    MERGE (leader)-[:LEADS]->(centre)
    MERGE (log)-[:LOGGED_BY]->(currentUser)

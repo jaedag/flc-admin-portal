@@ -1,18 +1,17 @@
 const dotenv = require('dotenv')
 const axios = require('axios').default
 const cypher = require('./resolver-queries')
-const mailgun = require('mailgun-js')
 
 dotenv.config()
 
 let authToken
 let authRoles = {}
 
-const DOMAIN = 'mg.firstlovecenter.com'
-const mg = mailgun({
-  apiKey: process.env.MAILGUN_API_KEY,
-  domain: DOMAIN,
-})
+const formData = require('form-data')
+const Mailgun = require('mailgun.js')
+const mailgun = new Mailgun(formData)
+const mg = mailgun.client({ username: 'api', key: process.env.MAILGUN_API_KEY })
+
 const notifyMember = (
   member,
   subject,
@@ -20,14 +19,8 @@ const notifyMember = (
   whatsapp_template,
   whatsapp_placeholders
 ) => {
-  const mailData = {
-    from: 'Do Not Reply <no-reply@firstlovecenter.org>',
-    to: member.email,
-    subject: subject,
-    text: body,
-  }
-
   if (whatsapp_template) {
+    //Send WhatsApp or Not
     const sendWhatsAppConfig = {
       method: 'post',
       baseURL: process.env.INFOBIP_BASE_URL,
@@ -39,7 +32,7 @@ const notifyMember = (
         messages: [
           {
             from: '233508947494', //First Love Number
-            to: '233243343261', //David Dag's Number. Must be Changed
+            to: member.whatsappNumber, //Member's Number
             content: {
               templateName: whatsapp_template,
               templateData: {
@@ -56,13 +49,25 @@ const notifyMember = (
     }
 
     axios(sendWhatsAppConfig)
-      .then((res) => console.log('WhatsApp Message Sending'))
+      .then(() =>
+        console.log(
+          'WhatsApp Message Sending to',
+          member.firstName + ' ' + member.lastName
+        )
+      )
       .catch((error) => throwErrorMsg('WhatsApp Message Failed to Send', error))
   }
 
-  mg.messages().send(mailData, function (error, body) {
-    console.log('Mailgun API response', body)
-  })
+  mg.messages
+    .create('mg.firstlovecenter.com', {
+      from: 'FL Accra Admin <no-reply@firstlovecenter.org>',
+      to: [member.email, 'jaedagy@gmail.com'],
+      subject: subject,
+      text: body,
+      // html: '<h1>Testing some Mailgun awesomness!</h1>', //HTML Version of the Message for Better Styling
+    })
+    .then((msg) => console.log('Mailgun API response', msg)) // logs response data
+    .catch((err) => console.log('Mailgun API error', err)) // logs any error
 }
 
 const isAuth = (permittedRoles, userRoles) => {

@@ -190,7 +190,7 @@ const MemberRoleList = ({ member }) => {
           )
         )
         .catch((error) =>
-          throwErrorMsg('There was an making you a bacenta leader', error)
+          throwErrorMsg('There was error an making you a bacenta leader', error)
         )
     }
     if (rank.centreLeader.length) {
@@ -206,7 +206,7 @@ const MemberRoleList = ({ member }) => {
           )
         )
         .catch((error) =>
-          throwErrorMsg('There was an making you a centre leader', error)
+          throwErrorMsg('There was error an making you a centre leader', error)
         )
     }
     if (rank.townLeader.length) {
@@ -220,7 +220,7 @@ const MemberRoleList = ({ member }) => {
           alertMsg(member.fullName, ' Account Successfully Created as Town CO')
         )
         .catch((error) =>
-          throwErrorMsg('There was an making you a town leader', error)
+          throwErrorMsg('There was error an making you a town leader', error)
         )
     }
     if (rank.campusLeader.length) {
@@ -236,7 +236,7 @@ const MemberRoleList = ({ member }) => {
           )
         )
         .catch((error) =>
-          throwErrorMsg('There was an making you a campus leader', error)
+          throwErrorMsg('There was error an making you a campus leader', error)
         )
     }
     if (rank.sontaLeader.length) {
@@ -252,7 +252,7 @@ const MemberRoleList = ({ member }) => {
           )
         )
         .catch((error) =>
-          throwErrorMsg('There was an making you a sonta leader', error)
+          throwErrorMsg('There was error an making you a sonta leader', error)
         )
     }
     if (rank.adminCampus.length) {
@@ -269,7 +269,7 @@ const MemberRoleList = ({ member }) => {
         )
         .catch((error) =>
           throwErrorMsg(
-            `There was an making ${member.fullName} a campus admin`,
+            `There was error an making ${member.fullName} a campus admin`,
             error
           )
         )
@@ -288,7 +288,7 @@ const MemberRoleList = ({ member }) => {
         )
         .catch((error) =>
           throwErrorMsg(
-            `There was an making ${member.fullName} a town admin`,
+            `There was error an making ${member.fullName} a town admin`,
             error
           )
         )
@@ -307,7 +307,7 @@ const MemberRoleList = ({ member }) => {
         )
         .catch((error) =>
           throwErrorMsg(
-            `There was an making ${member.fullName} a bishop admin`,
+            `There was error an making ${member.fullName} a bishop admin`,
             error
           )
         )

@@ -326,6 +326,7 @@ const MakeServant = async (
     .then(async (response) => {
       // Rearrange  member object
       servant = rearrangeMemberObject(servant, response)
+      errorHandling(servant)
 
       //Check for AuthID of servant
       axios(getAuthIdConfig(servant))
@@ -516,6 +517,10 @@ const RemoveServant = async (
         console.log(
           `${servant.firstName} ${servant.lastName} leads more than one ${churchType}`
         )
+        return
+      }
+
+      if (!servant.auth_id) {
         return
       }
 

@@ -30,7 +30,7 @@ export const SERVICE_DAY_OPTIONS = [
 export const throwErrorMsg = (message, error) => {
   // eslint-disable-next-line no-console
   console.error(error)
-  alert(message, error)
+  alert(message + ' ' + error)
 }
 
 export const alertMsg = (message) => {

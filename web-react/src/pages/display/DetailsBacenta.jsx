@@ -46,6 +46,16 @@ const DisplayBacentaDetails = () => {
         churchType="Bacenta"
         buttons={['']}
         editlink="/bacenta/editbacenta"
+        editPermitted={[
+          'leaderBacenta',
+          'leaderCentre',
+          'leaderCampus',
+          'leaderTown',
+          'adminCampus',
+          'adminTown',
+          'adminBishop',
+          'adminFederal',
+        ]}
         history={bacenta?.history.length !== 0 && bacenta?.history}
         breadcrumb={breadcrumb && breadcrumb}
       />

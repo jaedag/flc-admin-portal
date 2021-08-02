@@ -47,6 +47,15 @@ const DisplaySontaDetails = () => {
         membership={sontaData?.sontaMemberCount}
         churchNo={sontaData?.sontaBasontaLeaderList.length}
         editlink="/sonta/editsonta"
+        editPermitted={[
+          'leaderSonta',
+          'leaderCampus',
+          'leaderTown',
+          'adminCampus',
+          'adminTown',
+          'adminBishop',
+          'adminFederal',
+        ]}
         history={
           sontaData?.sontas[0]?.history.length !== 0 &&
           sontaData?.sontas[0]?.history

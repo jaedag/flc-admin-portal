@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import DetailsCard from '../card/DetailsCard'
 import { MemberContext } from '../../contexts/MemberContext'
 import { ChurchContext } from '../../contexts/ChurchContext'
@@ -50,17 +50,6 @@ const DisplayChurchDetails = (props) => {
     townId,
     bishopId,
   } = useContext(ChurchContext)
-  const location = useLocation()
-
-  //Setting the editing permission based on url
-  let permittedRoles = ['adminFederal', 'adminBishop']
-  if (
-    location.pathname === '/bacenta/displaydetails' ||
-    location.pathname === '/centre/displaydetails' ||
-    location.pathname === '/sonta/displaydetails'
-  ) {
-    permittedRoles.push('adminCampus', 'adminTown')
-  }
 
   //Change Admin Initialised
 
@@ -119,7 +108,7 @@ const DisplayChurchDetails = (props) => {
           <Breadcrumb breadcrumb={breadcrumb} />
           <h3 className="mx-3 mt-3 font-weight-bold">
             {`${name} ${churchType}`}
-            <RoleView roles={permittedRoles}>
+            <RoleView roles={props.editPermitted}>
               <EditButton link={editlink} />
             </RoleView>
           </h3>

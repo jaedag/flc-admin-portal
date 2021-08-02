@@ -39,6 +39,15 @@ const DisplayCentreDetails = () => {
         membership={data?.centreMemberCount}
         churchNo={displayCentre?.bacentas.length}
         editlink="/centre/editcentre"
+        editPermitted={[
+          'leaderCentre',
+          'leaderCampus',
+          'leaderTown',
+          'adminCampus',
+          'adminTown',
+          'adminBishop',
+          'adminFederal',
+        ]}
         history={displayCentre?.history.length !== 0 && displayCentre?.history}
         breadcrumb={breadcrumb && breadcrumb}
         buttons={displayCentre ? displayCentre?.bacentas : []}

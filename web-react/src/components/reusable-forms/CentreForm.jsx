@@ -91,6 +91,7 @@ const CentreForm = ({
                         <FormikControl
                           className="form-control"
                           control="select"
+                          label={`Select a ${capitalise(church.church)}`}
                           name="campusTownSelect"
                           options={
                             church.church === 'town'
@@ -110,7 +111,8 @@ const CentreForm = ({
                           className="form-control"
                           control="input"
                           name="centreName"
-                          placeholder="Name of Centre"
+                          label="Name of Centre"
+                          placeholder="Enter Name Here"
                         />
                       </div>
                     </div>
@@ -120,7 +122,8 @@ const CentreForm = ({
                           control="combobox2"
                           name="leaderId"
                           initialValue={initialValues?.leaderName}
-                          placeholder="Select a Leader"
+                          placeholder="Start typing"
+                          label="Select a Leader"
                           setFieldValue={formik.setFieldValue}
                           optionsQuery={BISHOP_MEMBER_DROPDOWN}
                           queryVariable1="id"

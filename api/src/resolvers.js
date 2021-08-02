@@ -19,7 +19,7 @@ const notifyMember = (
   whatsapp_template,
   whatsapp_placeholders
 ) => {
-  if (whatsapp_template) {
+  if (whatsapp_template && member?.doWeHaveMoney) {
     //Send WhatsApp or Not
     const sendWhatsAppConfig = {
       method: 'post',
@@ -168,7 +168,7 @@ const createAuthUserConfig = (member) => ({
     name: `${member.firstName} ${member.lastName}`,
     picture:
       member.pictureUrl ??
-      'https://raw.githubusercontent.com/jaedag/fl-admin-portal/deploy/web-react/src/img/user.png',
+      'https://res.cloudinary.com/firstlovecenter/image/upload/v1627893621/user_qvwhs7.png',
     user_id: member.id,
     password: 'rAndoMLetteRs',
   },

@@ -15,7 +15,6 @@ import {
 import AuthButton from '../../components/buttons/AuthButton'
 import MemberRankList from '../../components/MemberRoleList'
 import BaseComponent from 'components/base-component/BaseComponent'
-// import { Image } from 'cloudinary-react'
 
 const UserProfileDisplayPage = () => {
   const { currentUser } = useContext(MemberContext)

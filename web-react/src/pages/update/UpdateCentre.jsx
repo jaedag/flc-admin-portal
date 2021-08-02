@@ -239,8 +239,8 @@ const UpdateCentre = () => {
         },
       })
         .then(() => alertMsg('Leader Changed Successfully'))
-        .catch((err) =>
-          throwErrorMsg('There was an error changing the leader', err)
+        .catch((error) =>
+          throwErrorMsg('There was an error changing the leader', error)
         )
     }
 

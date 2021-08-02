@@ -167,7 +167,7 @@ const createAuthUserConfig = (member) => ({
     family_name: member.lastName,
     name: `${member.firstName} ${member.lastName}`,
     picture:
-      member.pictureUrl ??
+      member.pictureUrl ||
       'https://res.cloudinary.com/firstlovecenter/image/upload/v1627893621/user_qvwhs7.png',
     user_id: member.id,
     password: 'rAndoMLetteRs',
@@ -331,7 +331,7 @@ const MakeServant = async (
     .then(async (response) => {
       // Rearrange  member object
       servant = rearrangeMemberObject(servant, response)
-      errorHandling(servant)
+      // errorHandling(servant)
 
       //Check for AuthID of servant
       axios(getAuthIdConfig(servant))
@@ -342,18 +342,25 @@ const MakeServant = async (
             //If servant Does Not Have Auth0 Profile, Create One
             axios(createAuthUserConfig(servant))
               .then((res) => {
-                axios(changePasswordConfig(servant)).then((res) => {
-                  // Send Mail to the Person after Password Change Ticket has been generated
-                  notifyMember(
-                    servant,
-                    'Your account has been created on the FL Admin Portal',
-                    `Hi ${servant.firstName}\nYour account has just been created on the First Love Church Administrative Portal. Please set up your password by clicking ${res.data.ticket}. If you feel this is a mistake please contact your bishops admin.
+                axios(changePasswordConfig(servant))
+                  .then((res) => {
+                    // Send Mail to the Person after Password Change Ticket has been generated
+                    notifyMember(
+                      servant,
+                      'Your account has been created on the FL Admin Portal',
+                      `Hi ${servant.firstName}\nYour account has just been created on the First Love Church Administrative Portal. Please set up your password by clicking ${res.data.ticket}. If you feel this is a mistake please contact your bishops admin.
           
                   Afterwards, you can login by clicking https://flcadmin.netlify.app/\n\nRegards\nThe Administrator\nFirst Love Center\nAccra`,
-                    'servant_account_created',
-                    [servant.firstName, res?.data?.ticket]
+                      'servant_account_created',
+                      [servant.firstName, res?.data?.ticket]
+                    )
+                  })
+                  .catch((err) =>
+                    throwErrorMsg(
+                      'Unable to generate password reset token',
+                      err
+                    )
                   )
-                })
 
                 const auth_id = res.data.user_id
                 servant.auth_id = res.data.user_id
@@ -510,6 +517,7 @@ const RemoveServant = async (
     .then(async (response) => {
       church = rearrangeMemberObject(church, response)
     })
+    .catch((err) => console.log('Unable to match church in DB', err))
 
   await session
     .run(cypher.matchMemberQuery, { id: args[`${servantLower}Id`] })
@@ -593,7 +601,7 @@ const RemoveServant = async (
         })
       //Relationship in Neo4j will be removed when the replacement leader is being added
     })
-    .catch((err) => throwErrorMsg('', err))
+    .catch((err) => throwErrorMsg('Unable to match church in DB', err))
 
   errorHandling(servant)
 

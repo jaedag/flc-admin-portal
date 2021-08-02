@@ -259,7 +259,8 @@ const MemberRoleList = ({ member }) => {
       MakeCampusAdmin({
         variables: {
           campusId: rank.adminCampus[0].id,
-          adminId: member.id,
+          newAdminId: member.id,
+          oldAdminId: '',
         },
       })
         .then(() =>
@@ -278,7 +279,8 @@ const MemberRoleList = ({ member }) => {
       MakeTownAdmin({
         variables: {
           townId: rank.adminTown[0].id,
-          adminId: member.id,
+          newAdminId: member.id,
+          oldAdminId: '',
         },
       })
         .then(() =>

@@ -8,6 +8,8 @@ import BishopMembers from '../pages/grids/BishopMembers.jsx'
 import CampusTownMembers from '../pages/grids/CampusTownMembers.jsx'
 import LoadingScreen from '../components/base-component/LoadingScreen'
 import { isAuthorised } from '../global-utils'
+import BacentaMembers from 'pages/grids/BacentaMembers'
+import CentreMembers from 'pages/grids/CentreMembers'
 
 const ProtectedMembersRoute = ({ component, roles, ...args }) => {
   const { currentUser } = useContext(MemberContext)
@@ -55,7 +57,7 @@ const ProtectedMembersRoute = ({ component, roles, ...args }) => {
     )
   } else if (
     isAuthorised(
-      ['adminCampus', 'adminTown', 'leaderConstituency'],
+      ['adminCampus', 'adminTown', 'leaderCampus', 'leaderTown'],
       currentUser.roles
     )
   ) {
@@ -63,6 +65,28 @@ const ProtectedMembersRoute = ({ component, roles, ...args }) => {
     return (
       <Route
         component={withAuthenticationRequired(CampusTownMembers, {
+          // eslint-disable-next-line react/display-name
+          onRedirecting: () => <LoadingScreen />,
+        })}
+        {...args}
+      />
+    )
+  } else if (isAuthorised(['leaderCentre'], currentUser.roles)) {
+    //If the user does not have permission but is a Centre Leader
+    return (
+      <Route
+        component={withAuthenticationRequired(CentreMembers, {
+          // eslint-disable-next-line react/display-name
+          onRedirecting: () => <LoadingScreen />,
+        })}
+        {...args}
+      />
+    )
+  } else if (isAuthorised(['leaderBacenta'], currentUser.roles)) {
+    //If the user does not have permission but is a Centre Leader
+    return (
+      <Route
+        component={withAuthenticationRequired(BacentaMembers, {
           // eslint-disable-next-line react/display-name
           onRedirecting: () => <LoadingScreen />,
         })}

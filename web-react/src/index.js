@@ -458,7 +458,8 @@ const PastorsAdmin = () => {
                   'adminTown',
                   'leaderBacenta',
                   'leaderCentre',
-                  'leaderConstituency',
+                  'leaderCampus',
+                  'leaderTown',
                 ]}
                 exact
               />
@@ -472,7 +473,8 @@ const PastorsAdmin = () => {
                   'adminTown',
                   'leaderBacenta',
                   'leaderCentre',
-                  'leaderConstituency',
+                  'leaderCampus',
+                  'leaderTown',
                 ]}
                 exact
               />
@@ -484,7 +486,8 @@ const PastorsAdmin = () => {
                   'adminTown',
                   'leaderBacenta',
                   'leaderCentre',
-                  'leaderConstituency',
+                  'leaderCampus',
+                  'leaderTown',
                 ]}
                 path="/bacenta/reports"
                 component={BacentaReport}
@@ -496,7 +499,8 @@ const PastorsAdmin = () => {
                   'adminCampus',
                   'adminTown',
                   'leaderCentre',
-                  'leaderConstituency',
+                  'leaderCampus',
+                  'leaderTown',
                 ]}
                 path="/centre/reports"
                 component={CentreReport}
@@ -509,7 +513,8 @@ const PastorsAdmin = () => {
                   'adminTown',
                   'leaderCentre',
                   'leaderSonta',
-                  'leaderConstituency',
+                  'leaderCampus',
+                  'leaderTown',
                 ]}
                 path="/sonta/reports"
                 component={SontaReport}
@@ -520,7 +525,8 @@ const PastorsAdmin = () => {
                   'adminBishop',
                   'adminCampus',
                   'adminTown',
-                  'leaderConstituency',
+                  'leaderCampus',
+                  'leaderTown',
                 ]}
                 path="/campus/reports"
                 component={CampusReport}
@@ -531,7 +537,8 @@ const PastorsAdmin = () => {
                   'adminBishop',
                   'adminCampus',
                   'adminTown',
-                  'leaderConstituency',
+                  'leaderCampus',
+                  'leaderTown',
                 ]}
                 path="/town/reports"
                 component={TownReport}
@@ -561,6 +568,10 @@ const PastorsAdmin = () => {
                   'adminBishop',
                   'adminCampus',
                   'adminTown',
+                  'leaderCampus',
+                  'leaderTown',
+                  'leaderCentre',
+                  'leaderBacenta',
                 ]}
                 path="/member/addmember"
                 component={CreateMember}
@@ -898,7 +909,8 @@ const PastorsAdmin = () => {
                     'adminBishop',
                     'adminCampus',
                     'adminTown',
-                    'leaderConstituency',
+                    'leaderCampus',
+                    'leaderTown',
                   ]}
                   path="/town/record-service"
                   component={TownService}
@@ -909,7 +921,8 @@ const PastorsAdmin = () => {
                     'adminBishop',
                     'adminCampus',
                     'adminTown',
-                    'leaderConstituency',
+                    'leaderCampus',
+                    'leaderTown',
                   ]}
                   path="/town/service-details"
                   component={TownServiceDetails}
@@ -920,7 +933,8 @@ const PastorsAdmin = () => {
                     'adminBishop',
                     'adminCampus',
                     'adminTown',
-                    'leaderConstituency',
+                    'leaderCampus',
+                    'leaderTown',
                   ]}
                   path="/campus/record-service"
                   component={CampusService}
@@ -931,7 +945,8 @@ const PastorsAdmin = () => {
                     'adminBishop',
                     'adminCampus',
                     'adminTown',
-                    'leaderConstituency',
+                    'leaderCampus',
+                    'leaderTown',
                   ]}
                   path="/campus/service-details"
                   component={CampusServiceDetails}

@@ -68,7 +68,7 @@ const ServiceForm = ({
         attendance: parseInt(values.attendance),
         income: parseFloat(values.cediIncome),
         foreignCurrency: values.foreignCurrency,
-        numberOfTithers: values.numberOfTithers,
+        numberOfTithers: parseInt(values.numberOfTithers),
         treasurers: values?.treasurers,
         treasurerSelfie: values.treasurerSelfie,
         servicePicture: values.servicePicture,

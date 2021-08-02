@@ -110,7 +110,7 @@ const ServantsDashboard = () => {
         clickCard(servant[`${verb}`][0])
       },
       link: leadsOneChurch
-        ? `/${churchType.toLowerCase()}/reports`
+        ? `/${churchType.toLowerCase()}/displaydetails`
         : `/servants/${churchType.toLowerCase()}-list`,
     })
     assessmentChurch = servant[`${verb}`][0]

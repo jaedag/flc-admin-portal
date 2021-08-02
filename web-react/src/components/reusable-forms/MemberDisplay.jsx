@@ -20,7 +20,7 @@ const MemberDisplay = ({ memberId }) => {
 
   const member = data?.members[0]
   const memberBirthday = getMemberDob(member)
-  let nameAndTitle = getNameWithTitle(member)
+  const nameAndTitle = getNameWithTitle(member)
 
   return (
     <BaseComponent loadingState={loading} errorState={error}>

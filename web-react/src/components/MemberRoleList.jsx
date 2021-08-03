@@ -177,6 +177,10 @@ const MemberRoleList = ({ member }) => {
   const [MakeBishopAdmin] = useMutation(MAKE_BISHOP_ADMIN)
 
   const createAccount = () => {
+    if (member.auth_id) {
+      alert(`${member.fullName} already has an account`)
+    }
+
     if (rank.bacentaLeader.length) {
       NewBacentaLeader({
         variables: {

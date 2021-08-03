@@ -1096,12 +1096,14 @@ type Mutation {
         log.timeStamp = datetime(),
         log.historyRecord = $firstName +' ' +$lastName+' was registered on '+toString(date())
 
-      MERGE (date:TimeGraph {date: date()})
+      
 
       WITH member, log
       MATCH (currentUser:Member {auth_id:$auth.jwt.sub})
+      MERGE (date:TimeGraph {date: date()})
       MERGE (log)-[:RECORDED_ON]->(date)
       MERGE (log)-[:LOGGED_BY]->(currentUser)
+      MERGE (member)-[:HAS_HISTORY]->(log)
 
       WITH member
       MATCH (maritalStatus:MaritalStatus {status:$maritalStatus})

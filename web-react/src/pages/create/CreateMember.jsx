@@ -74,9 +74,9 @@ const CreateMember = () => {
 
     CreateMember({
       variables: {
-        firstName: values.firstName,
-        middleName: values.middleName,
-        lastName: values.lastName,
+        firstName: values.firstName.trim(),
+        middleName: values.middleName.trim(),
+        lastName: values.lastName.trim(),
         gender: values.gender,
         phoneNumber: parsePhoneNum(values.phoneNumber),
         whatsappNumber: parsePhoneNum(values.whatsappNumber),

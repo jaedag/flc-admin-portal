@@ -23,6 +23,7 @@ import Spinner from 'components/Spinner'
 import { MAKE_BACENTA_INACTIVE } from 'pages/update/CloseChurchMutations'
 import { useHistory } from 'react-router'
 import Popup from 'components/Popup/Popup'
+import RoleView from 'auth/RoleView'
 
 const BacentaForm = ({
   initialValues,
@@ -90,6 +91,7 @@ const BacentaForm = ({
     <BaseComponent
       loadingState={townListLoading || campusListLoading || loadingState}
       errorState={townListError || campusListError}
+      data={campusListData && townListData}
     >
       <NavBar />
       <Formik
@@ -168,26 +170,37 @@ const BacentaForm = ({
                           defaultOption="Pick a Service Day"
                         />
                       </div>
-                      <div className="col-9">
-                        <FormikControl
-                          control="combobox2"
-                          name="leaderId"
-                          label="Bacenta Leader"
-                          initialValue={initialValues.leaderName}
-                          placeholder="Select a Leader"
-                          setFieldValue={formik.setFieldValue}
-                          optionsQuery={BISHOP_MEMBER_DROPDOWN}
-                          queryVariable1="id"
-                          variable1={bishopId}
-                          queryVariable2="nameSearch"
-                          suggestionText="name"
-                          suggestionID="id"
-                          dataset="bishopMemberDropdown"
-                          aria-describedby="Bishop Member List"
-                          className="form-control"
-                          error={formik.errors.leaderId}
-                        />
-                      </div>
+                      <RoleView
+                        roles={[
+                          'adminFederal',
+                          'adminCampus',
+                          'adminTown',
+                          'leaderCampus',
+                          'leaderTown',
+                          'leaderCentre',
+                        ]}
+                      >
+                        <div className="col-9">
+                          <FormikControl
+                            control="combobox2"
+                            name="leaderId"
+                            label="Bacenta Leader"
+                            initialValue={initialValues.leaderName}
+                            placeholder="Select a Leader"
+                            setFieldValue={formik.setFieldValue}
+                            optionsQuery={BISHOP_MEMBER_DROPDOWN}
+                            queryVariable1="id"
+                            variable1={bishopId}
+                            queryVariable2="nameSearch"
+                            suggestionText="name"
+                            suggestionID="id"
+                            dataset="bishopMemberDropdown"
+                            aria-describedby="Bishop Member List"
+                            className="form-control"
+                            error={formik.errors.leaderId}
+                          />
+                        </div>
+                      </RoleView>
                     </div>
                     <small className="text-muted">
                       Enter The Coordinates for the Service Venue

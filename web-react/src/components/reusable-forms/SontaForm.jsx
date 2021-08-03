@@ -93,6 +93,7 @@ const SontaForm = ({
         loadingState
       }
       errorState={townsError || campusesError}
+      data={townsData && campusesData && ministryListData}
     >
       <NavBar />
       <Formik

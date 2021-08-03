@@ -2,6 +2,10 @@ import { average } from 'global-utils'
 
 const numberOfWeeks = 4
 export const getMonthlyStatAverage = (data, stat) => {
+  if (!data) {
+    return
+  }
+
   const statArray = data.map((service) => service[`${stat}`])
   //Calculate average of the last four weeks of service
   return average(statArray.slice(-numberOfWeeks)).toFixed(2)
@@ -30,6 +34,10 @@ export const sortingFunction = (key, order = 'asc') => {
 }
 
 export const getServiceGraphData = (church) => {
+  if (!church) {
+    return
+  }
+
   let data = []
 
   const pushIntoData = (array) => {
@@ -40,6 +48,18 @@ export const getServiceGraphData = (church) => {
           week: record.week,
           attendance: record.attendance,
           income: record.income,
+        })
+      })
+
+      return
+    }
+
+    if (array[0]?.__typename === 'Sonta') {
+      array.map((record) => {
+        data.push({
+          date: record?.serviceDate,
+          week: record.week,
+          attendance: record.attendance,
         })
       })
 
@@ -60,9 +80,10 @@ export const getServiceGraphData = (church) => {
     pushIntoData(church.bacentaServiceAggregate) //Push in Bacenta Service Aggregates
   }
 
-  if (church.__typename === ('Campus' || 'Town')) {
+  if (church.__typename === 'Campus' || church.__typename === 'Town') {
     pushIntoData(church.componentServiceAggregate) //Push in Bacenta Service Aggregates
   }
+
   //Pushing in direct service data eg. Joint Services and Bacenta Services
   church.services.map((service) => {
     pushIntoData(service.serviceRecords)

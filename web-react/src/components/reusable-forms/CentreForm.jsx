@@ -18,6 +18,7 @@ import { BISHOP_BACENTA_DROPDOWN } from 'components/formik-components/ComboboxQu
 import { useHistory } from 'react-router'
 import { MAKE_CENTRE_INACTIVE } from 'pages/update/CloseChurchMutations'
 import Popup from 'components/Popup/Popup'
+import RoleView from 'auth/RoleView'
 
 const CentreForm = ({
   initialValues,
@@ -71,6 +72,7 @@ const CentreForm = ({
     <BaseComponent
       loadingState={campusesLoading || townsLoading || loadingState}
       errorState={townsError || campusesError}
+      data={townsData && campusesData}
     >
       <NavBar />
       <Formik
@@ -117,26 +119,36 @@ const CentreForm = ({
                       </div>
                     </div>
                     <div className="row d-flex align-items-center">
-                      <div className="col">
-                        <FormikControl
-                          control="combobox2"
-                          name="leaderId"
-                          initialValue={initialValues?.leaderName}
-                          placeholder="Start typing"
-                          label="Select a Leader"
-                          setFieldValue={formik.setFieldValue}
-                          optionsQuery={BISHOP_MEMBER_DROPDOWN}
-                          queryVariable1="id"
-                          variable1={bishopId}
-                          queryVariable2="nameSearch"
-                          suggestionText="name"
-                          suggestionID="id"
-                          dataset="bishopMemberDropdown"
-                          aria-describedby="Bishop Member List"
-                          className="form-control"
-                          error={formik.errors.leaderId}
-                        />
-                      </div>
+                      <RoleView
+                        roles={[
+                          'adminFederal',
+                          'adminCampus',
+                          'adminTown',
+                          'leaderCampus',
+                          'leaderTown',
+                        ]}
+                      >
+                        <div className="col">
+                          <FormikControl
+                            control="combobox2"
+                            name="leaderId"
+                            initialValue={initialValues?.leaderName}
+                            placeholder="Start typing"
+                            label="Select a Leader"
+                            setFieldValue={formik.setFieldValue}
+                            optionsQuery={BISHOP_MEMBER_DROPDOWN}
+                            queryVariable1="id"
+                            variable1={bishopId}
+                            queryVariable2="nameSearch"
+                            suggestionText="name"
+                            suggestionID="id"
+                            dataset="bishopMemberDropdown"
+                            aria-describedby="Bishop Member List"
+                            className="form-control"
+                            error={formik.errors.leaderId}
+                          />
+                        </div>
+                      </RoleView>
                     </div>
 
                     <small className="pt-2">

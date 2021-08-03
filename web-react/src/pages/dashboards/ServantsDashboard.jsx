@@ -164,7 +164,7 @@ const ServantsDashboard = () => {
   assessmentChurchData = servant && getServantRoles(servant)
 
   return (
-    <BaseComponent loadingState={loading} errorState={error}>
+    <BaseComponent loadingState={loading} errorState={error} data={data}>
       <NavBar />
       <div className="container">
         <div className=" my-3">

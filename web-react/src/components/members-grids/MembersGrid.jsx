@@ -62,6 +62,7 @@ const MembersGrid = (props) => {
 
             <div className="btn-toolbar mb-2 mb-md-0">
               <div className="btn-group mr-2" />
+
               <Link to="/member/addmember" className="btn btn-primary p-2 mx-1">
                 Add Member
               </Link>

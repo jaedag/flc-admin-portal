@@ -22,7 +22,7 @@ const DisplayCentreDetails = () => {
     displayCentre,
   ]
   return (
-    <BaseComponent loadingState={loading} errorState={error}>
+    <BaseComponent loadingState={loading} errorState={error} data={data}>
       <NavBar />
       <DisplayChurchDetails
         name={displayCentre?.name}

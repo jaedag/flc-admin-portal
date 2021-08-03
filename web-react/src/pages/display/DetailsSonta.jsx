@@ -34,7 +34,11 @@ const DisplaySontaDetails = () => {
   }
 
   return (
-    <BaseComponent loadingState={sontaLoading} errorState={sontaError}>
+    <BaseComponent
+      loadingState={sontaLoading}
+      errorState={sontaError}
+      data={sontaData}
+    >
       <NavBar />
       <DisplayChurchDetails
         name={sontaData?.sontas[0]?.name}

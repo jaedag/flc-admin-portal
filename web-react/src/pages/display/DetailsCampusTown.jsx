@@ -10,19 +10,27 @@ import BaseComponent from 'components/base-component/BaseComponent'
 const DisplayCampusTownDetails = () => {
   const { church, townId, campusId } = useContext(ChurchContext)
 
-  const { data: townData, loading: townLoading } = useQuery(DISPLAY_TOWN, {
-    variables: { id: townId },
-  })
-
-  const { data: campusData, loading: campusLoading } = useQuery(
-    DISPLAY_CAMPUS,
+  const { data: townData, loading: townLoading, error: townError } = useQuery(
+    DISPLAY_TOWN,
     {
-      variables: { id: campusId },
+      variables: { id: townId },
     }
   )
 
+  const {
+    data: campusData,
+    loading: campusLoading,
+    error: campusError,
+  } = useQuery(DISPLAY_CAMPUS, {
+    variables: { id: campusId },
+  })
+
   return (
-    <BaseComponent loadingState={townLoading || campusLoading}>
+    <BaseComponent
+      loadingState={townLoading || campusLoading}
+      errorState={townError || campusError}
+      data={campusData && townData}
+    >
       {church.church === 'town' && (
         <>
           <NavBar />

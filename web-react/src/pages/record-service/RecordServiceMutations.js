@@ -106,6 +106,33 @@ export const DISPLAY_CENTRE_SERVICE = gql`
   }
 `
 
+export const DISPLAY_SONTA_SERVICE = gql`
+  query DisplayServiceRecords($serviceId: ID!, $sontaId: ID!) {
+    serviceRecords(where: { id: $serviceId }) {
+      id
+      created_at
+      serviceDate {
+        date
+      }
+      attendance
+      income
+      foreignCurrency
+      treasurerSelfie
+      servicePicture
+      treasurers {
+        id
+        firstName
+        lastName
+        fullName
+      }
+    }
+    sontas(where: { id: $sontaId }) {
+      id
+      name
+    }
+  }
+`
+
 export const DISPLAY_TOWN_SERVICE = gql`
   query DisplayServiceRecords($serviceId: ID!, $townId: ID!) {
     serviceRecords(where: { id: $serviceId }) {

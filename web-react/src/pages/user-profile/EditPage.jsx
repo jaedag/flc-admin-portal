@@ -6,10 +6,9 @@ import { parsePhoneNum } from '../../global-utils'
 import { UPDATE_MEMBER_MUTATION } from '../update/UpdateMutations'
 import { DISPLAY_MEMBER } from '../display/ReadQueries'
 import NavBar from '../../components/nav/NavBar'
-import ErrorScreen from '../../components/base-component/ErrorScreen'
-import LoadingScreen from '../../components/base-component/LoadingScreen'
 import { MemberContext } from '../../contexts/MemberContext'
 import MemberForm from '../../components/reusable-forms/MemberForm'
+import BaseComponent from 'components/base-component/BaseComponent'
 
 const UserProfileEditPage = () => {
   const { currentUser } = useContext(MemberContext)
@@ -81,23 +80,20 @@ const UserProfileEditPage = () => {
     history.push(`/user-profile`)
   }
 
-  if (memberError || currentUser.id === '') {
-    return <ErrorScreen />
-  } else if (memberLoading) {
-    // Spinner Icon for Loading Screens
-    return <LoadingScreen />
-  } else {
-    return (
-      <>
-        <NavBar />
-        <MemberForm
-          title="Edit Your Details"
-          initialValues={initialValues}
-          onSubmit={onSubmit}
-        />
-      </>
-    )
-  }
+  return (
+    <BaseComponent
+      loadingState={memberLoading}
+      errorState={memberError || currentUser.id === ''}
+      data={memberData}
+    >
+      <NavBar />
+      <MemberForm
+        title="Edit Your Details"
+        initialValues={initialValues}
+        onSubmit={onSubmit}
+      />
+    </BaseComponent>
+  )
 }
 
 export default UserProfileEditPage

@@ -15,9 +15,11 @@ const ChurchGraph = ({ stat1, stat2, churchData, secondaryTitle }) => {
     <>
       <div className="row mt-2">
         <div className="col">
-          <p className="chart-title font-weight-bold m-0">{`${capitalise(
-            stat1
-          )} and ${capitalise(stat2)}`}</p>
+          <p className="chart-title font-weight-bold m-0">
+            {stat2
+              ? `${capitalise(stat1)} and ${capitalise(stat2)}`
+              : `${capitalise(stat1)} Graph`}
+          </p>
           {secondaryTitle && (
             <p className="chart-title church-name">{`${secondaryTitle}`}</p>
           )}
@@ -76,20 +78,22 @@ const ChurchGraph = ({ stat1, stat2, churchData, secondaryTitle }) => {
                   fontSize="12"
                 />
               </Bar>
-              <Bar
-                name={capitalise(stat2)}
-                dataKey={`${stat2}`}
-                barSize={35}
-                yAxisId="right"
-                fill="url(#colorSecondary)"
-              >
-                <LabelList
+              {stat2 && (
+                <Bar
+                  name={capitalise(stat2)}
                   dataKey={`${stat2}`}
-                  position="top"
-                  fill="#FFF"
-                  fontSize="12"
-                />
-              </Bar>
+                  barSize={35}
+                  yAxisId="right"
+                  fill="url(#colorSecondary)"
+                >
+                  <LabelList
+                    dataKey={`${stat2}`}
+                    position="top"
+                    fill="#FFF"
+                    fontSize="12"
+                  />
+                </Bar>
+              )}
 
               <XAxis
                 dataKey="week"

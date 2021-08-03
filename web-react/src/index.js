@@ -65,6 +65,7 @@ import SontaReport from 'pages/reports/SontaReport'
 import SontaService from 'pages/record-service/SontaService'
 import UpdateSonta from 'pages/update/UpdateSonta'
 import TownReport from 'pages/reports/TownReport'
+import SontaServiceDetails from 'pages/record-service/SontaServiceDetails'
 
 const AppWithApollo = () => {
   const [accessToken, setAccessToken] = useState()
@@ -887,6 +888,8 @@ const PastorsAdmin = () => {
                     'adminBishop',
                     'adminCampus',
                     'adminTown',
+                    'leaderCampus',
+                    'leaderTown',
                     'leaderSonta',
                   ]}
                   path="/sonta/record-service"
@@ -898,6 +901,21 @@ const PastorsAdmin = () => {
                     'adminBishop',
                     'adminCampus',
                     'adminTown',
+                    'leaderCampus',
+                    'leaderTown',
+                    'leaderCentre',
+                  ]}
+                  path="/sonta/service-details"
+                  component={SontaServiceDetails}
+                />
+                <ProtectedRoute
+                  roles={[
+                    'adminFederal',
+                    'adminBishop',
+                    'adminCampus',
+                    'adminTown',
+                    'leaderCampus',
+                    'leaderTown',
                     'leaderCentre',
                   ]}
                   path="/centre/service-details"
@@ -919,9 +937,7 @@ const PastorsAdmin = () => {
                   roles={[
                     'adminFederal',
                     'adminBishop',
-                    'adminCampus',
                     'adminTown',
-                    'leaderCampus',
                     'leaderTown',
                   ]}
                   path="/town/service-details"
@@ -932,9 +948,7 @@ const PastorsAdmin = () => {
                     'adminFederal',
                     'adminBishop',
                     'adminCampus',
-                    'adminTown',
                     'leaderCampus',
-                    'leaderTown',
                   ]}
                   path="/campus/record-service"
                   component={CampusService}
@@ -944,9 +958,7 @@ const PastorsAdmin = () => {
                     'adminFederal',
                     'adminBishop',
                     'adminCampus',
-                    'adminTown',
                     'leaderCampus',
-                    'leaderTown',
                   ]}
                   path="/campus/service-details"
                   component={CampusServiceDetails}

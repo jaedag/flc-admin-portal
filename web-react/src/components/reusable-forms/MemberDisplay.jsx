@@ -23,7 +23,7 @@ const MemberDisplay = ({ memberId }) => {
   const nameAndTitle = getNameWithTitle(member)
 
   return (
-    <BaseComponent loadingState={loading} errorState={error}>
+    <BaseComponent loadingState={loading} errorState={error} data={data}>
       <div className="container pt-5">
         <NavBar />
         <div className="container pt-2">
@@ -296,4 +296,5 @@ const MemberDisplay = ({ memberId }) => {
     </BaseComponent>
   )
 }
+
 export default MemberDisplay

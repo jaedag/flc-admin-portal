@@ -29,7 +29,11 @@ const DisplayBacentaDetails = () => {
   }
 
   return (
-    <BaseComponent loadingState={bacentaLoading} errorState={bacentaError}>
+    <BaseComponent
+      loadingState={bacentaLoading}
+      errorState={bacentaError}
+      data={bacentaData}
+    >
       <NavBar />
       <DisplayChurchDetails
         name={bacenta?.name}

@@ -462,7 +462,7 @@ const UpdateTownCampus = () => {
       initialValues={initialValues}
       onSubmit={onSubmit}
       title={`Update ${capitalise(church.church)} Form`}
-      loadingsState={townLoading || campusLoading}
+      loadingState={townLoading || campusLoading}
       newConstituency={false}
     />
   )

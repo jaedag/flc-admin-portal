@@ -5,6 +5,9 @@ import { ChurchContext } from '../contexts/ChurchContext'
 const DisplayChurchList = (props) => {
   const { data, churchType } = props
   const { clickCard } = useContext(ChurchContext)
+  if (!data) {
+    return
+  }
 
   return (
     <div className="container">

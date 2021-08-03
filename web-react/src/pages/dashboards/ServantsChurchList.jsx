@@ -20,6 +20,7 @@ const ServantsChurchList = () => {
   const { data, loading } = useQuery(SERVANTS_DASHBOARD, {
     variables: { id: memberId },
   })
+
   if (loading) {
     return <LoadingScreen />
   } else if (data) {

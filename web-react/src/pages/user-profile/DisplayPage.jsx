@@ -35,6 +35,7 @@ const UserProfileDisplayPage = () => {
     <BaseComponent
       loadingState={memberLoading}
       errorState={!currentUser.id || memberError}
+      data={memberData}
     >
       <div className="container pt-5">
         <NavBar />

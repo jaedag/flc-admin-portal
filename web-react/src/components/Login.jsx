@@ -6,7 +6,6 @@ import MobileView from './responsive-design/MobileView'
 import TabletDesktopView from './responsive-design/TabletDesktopView'
 
 const Login = () => {
-  const version = 'v0.5.2'
   return (
     <>
       <TabletDesktopView>
@@ -19,9 +18,6 @@ const Login = () => {
               <div className="m-5">
                 <div className="col-auto my-3">
                   <img src={Logo} alt="logo" className="img-fluid" />{' '}
-                  <sup>
-                    <small>{version}</small>
-                  </sup>
                   <div className="">
                     First Love Church is a church full of young people on fire
                     for the Lord
@@ -46,9 +42,6 @@ const Login = () => {
             />
             <div className=" text-center">
               <span className="h2 font-weight-bold">FLC Admin</span>
-              <sup>
-                <small>{version}</small>
-              </sup>
             </div>
             <div className="col-auto my-3 align-items-center text-center">
               First Love Church is a church full of young people on fire for the

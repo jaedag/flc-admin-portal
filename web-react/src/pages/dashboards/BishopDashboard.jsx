@@ -24,6 +24,7 @@ import { BISHOP_MEMBER_DROPDOWN } from '../../queries/ListQueries'
 import { Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import FormikControl from '../../components/formik-components/FormikControl'
+import LeaderPictureIcon from 'components/LeaderPictureIcon/LeaderPictureIcon'
 
 const BishopDashboard = () => {
   const {
@@ -152,8 +153,10 @@ const BishopDashboard = () => {
       <NavBar />
       <div className="container px-4">
         <div className="row justify-content-between py-3">
+          <div className="col-auto p-0"></div>
           <div className="col">
-            <h4>{`${bishopName}'s`} Church</h4>
+            <LeaderPictureIcon member={bishop} />
+            <h5>{`${bishopName}'s`} Church</h5>
             <p
               onClick={() => {
                 clickCard(bishop?.hasAdmin)

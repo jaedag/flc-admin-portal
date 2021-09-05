@@ -6,6 +6,7 @@ export const BISH_DASHBOARD_COUNTS = gql`
       id
       firstName
       lastName
+      pictureUrl
       hasAdmin {
         id
         firstName

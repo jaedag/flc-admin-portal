@@ -816,12 +816,12 @@ type Query {
       statement: """
       MATCH (member:Member)
       WHERE toLower(member.firstName) = toLower($searchKey)
+      OR toLower(member.middleName) = toLower($searchKey)
       OR toLower(member.lastName) = toLower($searchKey)
       OR toLower(member.firstName) STARTS WITH toLower($searchKey)
+      OR toLower(member.middleName) STARTS WITH toLower($searchKey)
       OR toLower(member.lastName) STARTS WITH toLower($searchKey)
-      OR toLower(member.firstName) CONTAINS toLower($searchKey)
-      OR toLower(member.lastName) CONTAINS toLower($searchKey)
-      OR toLower(member.firstName + ' ' + member.lastName) CONTAINS toLower($searchKey)
+      OR toLower(member.firstName + ' ' + member.middleName+ ' '+ member.lastName) CONTAINS toLower($searchKey)
       RETURN member LIMIT 5
       """
     )
@@ -845,9 +845,7 @@ type Query {
       OR toLower(members.lastName) = toLower($searchKey)
       OR toLower(members.firstName) STARTS WITH toLower($searchKey)
       OR toLower(members.lastName) STARTS WITH toLower($searchKey)
-      OR toLower(members.firstName) CONTAINS toLower($searchKey)
-      OR toLower(members.lastName) CONTAINS toLower($searchKey)
-      OR toLower(members.firstName+ ' ' + members.lastName) CONTAINS toLower($searchKey)
+      OR toLower(member.firstName + ' ' + member.middleName+ ' '+ member.lastName) CONTAINS toLower($searchKey)
       RETURN DISTINCT(members) LIMIT 5
       """
     )
@@ -870,9 +868,7 @@ type Query {
       OR toLower(members.lastName) = toLower($searchKey)
       OR toLower(members.firstName) STARTS WITH toLower($searchKey)
       OR toLower(members.lastName) STARTS WITH toLower($searchKey)
-      OR toLower(members.firstName) CONTAINS toLower($searchKey)
-      OR toLower(members.lastName) CONTAINS toLower($searchKey)
-      OR toLower(members.firstName+ ' ' + members.lastName) CONTAINS toLower($searchKey)
+      OR toLower(member.firstName + ' ' + member.middleName+ ' '+ member.lastName) CONTAINS toLower($searchKey)
       RETURN DISTINCT(members) LIMIT 5
       """
     )

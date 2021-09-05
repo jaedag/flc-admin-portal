@@ -16,8 +16,11 @@ export const GET_BACENTA_LEADERS = gql`
     townList(firstName: $firstName, lastName: $lastName) {
       id
       centres {
+        id
         bacentas {
+          id
           bacentaLeader {
+            id
             firstName
             lastName
           }
@@ -36,6 +39,7 @@ export const BACENTA_DROPDOWN = gql`
         id
         name
         campus {
+          id
           name
         }
         town {
@@ -92,6 +96,7 @@ export const GET_TOWN_CENTRES = gql`
           lastName
         }
         sontas {
+          id
           name
         }
         bishop {
@@ -103,6 +108,7 @@ export const GET_TOWN_CENTRES = gql`
       id
       name
       leader {
+        id
         firstName
         lastName
       }
@@ -125,6 +131,7 @@ export const GET_CAMPUS_CENTRES = gql`
           lastName
         }
         sontas {
+          id
           name
         }
         bishop {
@@ -140,6 +147,7 @@ export const GET_CAMPUS_CENTRES = gql`
       id
       name
       leader {
+        id
         firstName
         lastName
       }
@@ -154,6 +162,7 @@ export const GET_SONTAS_BY_CAMPUSTOWN = gql`
       id
       name
       bishop {
+        id
         firstName
         lastName
       }
@@ -161,6 +170,7 @@ export const GET_SONTAS_BY_CAMPUSTOWN = gql`
         id
         name
         leader {
+          id
           firstName
           lastName
         }
@@ -171,6 +181,7 @@ export const GET_SONTAS_BY_CAMPUSTOWN = gql`
       id
       name
       bishop {
+        id
         firstName
         lastName
       }
@@ -178,6 +189,7 @@ export const GET_SONTAS_BY_CAMPUSTOWN = gql`
         id
         name
         leader {
+          id
           firstName
           lastName
         }
@@ -216,7 +228,9 @@ export const GET_BISHOP_CAMPUSES = gql`
             firstName
             lastName
             bacenta {
+              id
               centre {
+                id
                 town {
                   id
                   name
@@ -225,6 +239,7 @@ export const GET_BISHOP_CAMPUSES = gql`
                   }
                 }
                 campus {
+                  id
                   name
                   bishop {
                     id
@@ -268,7 +283,9 @@ export const GET_BISHOP_TOWNS = gql`
             firstName
             lastName
             bacenta {
+              id
               centre {
+                id
                 town {
                   id
                   name
@@ -277,6 +294,7 @@ export const GET_BISHOP_TOWNS = gql`
                   }
                 }
                 campus {
+                  id
                   name
                   bishop {
                     id
@@ -326,10 +344,12 @@ export const GET_CENTRE_BACENTAS = gql`
         id
         name
         leader {
+          id
           firstName
           lastName
         }
         centre {
+          id
           name
           leader {
             id

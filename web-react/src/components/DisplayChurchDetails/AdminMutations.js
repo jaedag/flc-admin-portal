@@ -41,7 +41,7 @@ export const REMOVE_CAMPUS_ADMIN = gql`
 
 export const MAKE_CAMPUS_ADMIN = gql`
   mutation MakeCampusAdmin($campusId: ID!, $newAdminId: ID!, $oldAdminId: ID!) {
-    RemoveCampusAdmin(townId: $townId, adminId: $oldAdminId) {
+    RemoveCampusAdmin(campusId: $campusId, adminId: $oldAdminId) {
       id
       firstName
       lastName

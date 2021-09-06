@@ -22,6 +22,7 @@ const MemberDetailsCard = (props) => {
                 'adminBishop',
                 'adminCampus',
                 'adminTown',
+                'leaderBacenta',
               ]}
             >
               <EditButton link={editlink} />

@@ -81,7 +81,7 @@ const noEmptyArgsValidation = (args) => {
   }
   args.map((argument) => {
     if (!argument) {
-      throwErrorMsg('Argument Cannot Be Empty')
+      throwErrorMsg('Argument Cannot Be Empty', argument)
     }
   })
 }

@@ -3,7 +3,7 @@ import React from 'react'
 
 function LeaderPictureIcon({ member }) {
   if (!member) {
-    return
+    return null
   }
 
   return (

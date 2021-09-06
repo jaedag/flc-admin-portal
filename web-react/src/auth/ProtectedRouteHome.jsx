@@ -3,7 +3,6 @@ import { Route } from 'react-router-dom'
 import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react'
 import { UnauthMsg } from './UnauthMsg'
 import { MemberContext } from '../contexts/MemberContext'
-import BishopDashboard from '../pages/dashboards/BishopDashboard.jsx'
 import { ChurchContext } from '../contexts/ChurchContext'
 // import DisplayCampusTownDetails from '../pages/display/DetailsCampusTown.jsx'
 import LoadingScreen from '../components/base-component/LoadingScreen'
@@ -45,22 +44,10 @@ const ProtectedRoute = ({ component, roles, ...args }) => {
         {...args}
       />
     )
-  } else if (currentUser.roles.includes('adminBishop')) {
-    //if the user does not have permission but is a Bishop's Admin
-    return (
-      <Route
-        component={withAuthenticationRequired(BishopDashboard, {
-          // eslint-disable-next-line react/display-name
-          onRedirecting: () => {
-            return <LoadingScreen />
-          },
-        })}
-        {...args}
-      />
-    )
   } else if (
     isAuthorised(
       [
+        'adminBishop',
         'adminCampus',
         'adminTown',
         'leaderCampus',

@@ -103,8 +103,8 @@ const CreateMember = () => {
 
       setSubmitting(false)
       resetForm()
-      history.push('/member/displaydetails')
     })
+    history.push('/member/displaydetails')
   }
 
   return (

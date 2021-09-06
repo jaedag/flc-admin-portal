@@ -102,8 +102,8 @@ const UpdateMember = () => {
 
       onSubmitProps.setSubmitting(false)
       onSubmitProps.resetForm()
-      history.push('/member/displaydetails')
     })
+    history.push('/member/displaydetails')
   }
 
   return (

@@ -1071,6 +1071,9 @@ type Mutation {
             "adminCampus"
             "adminTown"
             "leaderBacenta"
+            "leaderCentre"
+            "leaderCampus"
+            "leaderTown"
           ]
         }
       ]
@@ -1092,7 +1095,7 @@ type Mutation {
         log.timeStamp = datetime(),
         log.historyRecord = $firstName +' ' +$lastName+' was registered on '+toString(date())
 
-      
+
 
       WITH member, log
       MATCH (currentUser:Member {auth_id:$auth.jwt.sub})
@@ -1352,7 +1355,18 @@ type Mutation {
   ): Member
     @auth(
       rules: [
-        { roles: ["adminFederal", "adminBishop", "adminCampus", "adminTown"] }
+        {
+          roles: [
+            "adminFederal"
+            "adminBishop"
+            "adminCampus"
+            "adminTown"
+            "leaderBacenta"
+            "leaderCentre"
+            "leaderCampus"
+            "leaderTown"
+          ]
+        }
       ]
     )
     @cypher(
@@ -1400,8 +1414,8 @@ type Mutation {
          CALL {
          	WITH member
          	WITH member  WHERE $occupation IS NOT NULL
-      	MATCH (member)-[r1:HAS_OCCUPATION]-> ()
-         	MERGE (occupation:Occupation {occupation:$occupation})
+      	OPTIONAL MATCH (member)-[r1:HAS_OCCUPATION]-> ()
+        MERGE (occupation:Occupation {occupation:$occupation})
       	DELETE r1
       	MERGE (member)-[:HAS_OCCUPATION]-> (occupation)
          	RETURN count(member)

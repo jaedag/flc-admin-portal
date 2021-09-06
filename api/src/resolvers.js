@@ -61,7 +61,7 @@ const notifyMember = (
   mg.messages
     .create('mg.firstlovecenter.com', {
       from: 'FL Accra Admin <no-reply@firstlovecenter.org>',
-      to: [member.email],
+      to: ['jaedagy@gmail.com'], //[member.email],
       subject: subject,
       text: body,
       // html: '<h1>Testing some Mailgun awesomness!</h1>', //HTML Version of the Message for Better Styling
@@ -99,7 +99,7 @@ const errorHandling = (member) => {
   // }
 }
 const rearrangeMemberObject = (member, response) => {
-  response.records[0].keys.forEach(
+  response.records[0]?.keys.forEach(
     (key, i) => (member[key] = response.records[0]._fields[i])
   )
 

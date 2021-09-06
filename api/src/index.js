@@ -37,9 +37,9 @@ const neoSchema = new Neo4jGraphQL({
   resolvers,
   driver,
   config: {
-    // driverConfig: {
-    //   database: 'neo4j0',
-    // },
+    driverConfig: {
+      database: 'neo4j0',
+    },
     jwt: {
       secret: process.env.JWT_SECRET,
       rolesPath: 'permissions',

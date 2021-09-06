@@ -5,7 +5,7 @@ export const CREATE_MEMBER_MUTATION = gql`
     $firstName: String!
     $middleName: String
     $lastName: String!
-    $email: String!
+    $email: String
     $phoneNumber: String!
     $whatsappNumber: String
     $dob: String!

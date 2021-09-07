@@ -33,11 +33,11 @@ const DisplayCentreDetails = () => {
             : '-'
         }
         leaderId={displayCentre?.leader?.id}
-        churchHeading="No of Bacentas"
+        churchHeading="Bacentas"
         churchType="Centre"
         subChurch="Bacenta"
         membership={data?.centreMemberCount}
-        churchNo={displayCentre?.bacentas.length}
+        churchCount={displayCentre?.bacentas.length}
         editlink="/centre/editcentre"
         editPermitted={[
           'leaderCentre',

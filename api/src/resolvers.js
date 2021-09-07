@@ -61,7 +61,8 @@ const notifyMember = (
   mg.messages
     .create('mg.firstlovecenter.com', {
       from: 'FL Accra Admin <no-reply@firstlovecenter.org>',
-      to: ['jaedagy@gmail.com'], //[member.email],
+      to: ['admin@firstlovecenter.com'],
+      // to: [member.email, 'admin@firstlovecenter.com'],
       subject: subject,
       text: body,
       // html: '<h1>Testing some Mailgun awesomness!</h1>', //HTML Version of the Message for Better Styling
@@ -189,7 +190,7 @@ const updateAuthUserConfig = (member) => ({
     family_name: member.lastName,
     name: `${member.firstName} ${member.lastName}`,
     picture:
-      member.pictureUrl ??
+      member.pictureUrl ||
       'https://raw.githubusercontent.com/jaedag/fl-admin-portal/deploy/web-react/src/img/user.png',
   },
 })
@@ -446,7 +447,12 @@ const MakeServant = async (
                     auth_id: servant.auth_id,
                     auth: context.auth,
                   })
-                  .then(console.log('Cypher Query Executed Successfully'))
+                  .then(
+                    console.log(
+                      `make${churchType}${servantType}`,
+                      'Cypher Query Executed Successfully'
+                    )
+                  )
                   .catch((err) =>
                     throwErrorMsg('Error running cypher query', err)
                   )

@@ -34,7 +34,7 @@ const UpdateCentre = () => {
 
   const initialValues = {
     centreName: centre?.name,
-    leaderName: centre?.leader.fullName ?? '',
+    leaderName: centre?.leader?.fullName ?? '',
     leaderId: centre?.leader?.id || '',
     campusTownSelect:
       church.church === 'town' ? centre?.town?.id : centre?.campus?.id,

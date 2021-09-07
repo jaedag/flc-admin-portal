@@ -1855,6 +1855,7 @@ type Mutation {
       statement: """
       MATCH (bacenta:Bacenta {id:$bacentaId})
       OPTIONAL MATCH (bacenta)-[:HAS_BACENTA]-(centre)
+      MATCH (admin:Member {auth_id: $auth.jwt.sub})
 
       CREATE (log:HistoryLog {id:apoc.create.uuid()})
         SET log.timeStamp = datetime(),
@@ -1862,6 +1863,7 @@ type Mutation {
 
 
       MERGE (date:TimeGraph {date:date()})
+      MERGE (log)-[:LOGGED_BY]->(admin)
       MERGE (log)-[:RECORDED_ON]->(date)
       MERGE (bacenta)-[:HAS_HISTORY]->(log)
       MERGE (centre)-[:HAS_HISTORY]->(log)
@@ -1877,6 +1879,7 @@ type Mutation {
     @cypher(
       statement: """
       MATCH (centre:Centre {id:$centreId})
+      MATCH (admin:Member {auth_id: $auth.jwt.sub})
       OPTIONAL MATCH (centre)-[:HAS_CENTRE]-(campusTown)
       OPTIONAL MATCH (centre)-[:HAS_BACENTA]->(bacentas)
       UNWIND labels(campusTown) AS stream
@@ -1887,6 +1890,7 @@ type Mutation {
 
 
       MERGE (date:TimeGraph {date:date()})
+      MERGE (log)-[:LOGGED_BY]->(admin)
       MERGE (log)-[:RECORDED_ON]->(date)
       MERGE (centre)-[:HAS_HISTORY]->(log)
       MERGE (campusTown)-[:HAS_HISTORY]->(log)
@@ -1903,6 +1907,7 @@ type Mutation {
     @cypher(
       statement: """
       MATCH (campusTown {id:$campusTownId}) WHERE campusTown:Campus OR campusTown:Town
+      MATCH (admin:Member {auth_id: $auth.jwt.sub})
       OPTIONAL MATCH (campusTown)-[:HAS_CAMPUS|HAS_TOWN]-(bishop)
       OPTIONAL MATCH (campusTown)-[:HAS_CENTRE]->(centres)-[:HAS_BACENTA]->(bacentas)
       UNWIND labels(campusTown) AS stream
@@ -1913,6 +1918,7 @@ type Mutation {
 
 
       MERGE (date:TimeGraph {date:date()})
+      MERGE (log)-[:LOGGED_BY]->(admin)
       MERGE (log)-[:RECORDED_ON]->(date)
       MERGE (campusTown)-[:HAS_HISTORY]->(log)
       MERGE (bishop)-[:HAS_HISTORY]->(log)
@@ -1929,6 +1935,7 @@ type Mutation {
     @cypher(
       statement: """
       MATCH (bacenta:Bacenta {id:$bacentaId})
+      MATCH (admin:Member {auth_id: $auth.jwt.sub})
       CREATE (newBacenta:Bacenta {id:apoc.create.uuid()})
        SET newBacenta.name = bacenta.name,
        newBacenta.location = bacenta.location
@@ -1952,6 +1959,7 @@ type Mutation {
       DELETE hasBacenta,meetsOnDay,belongsTo
 
       MERGE (log)-[:RECORDED_ON]->(date)
+      MERGE (log)-[:LOGGED_BY]->(admin)
       MERGE (bacenta)-[:HAS_HISTORY]->(log)
       MERGE (newBacenta)-[:HAS_HISTORY]->(log)
 

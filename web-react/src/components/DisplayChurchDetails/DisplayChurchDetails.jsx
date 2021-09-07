@@ -27,11 +27,9 @@ const DisplayChurchDetails = (props) => {
     leaderName,
     leaderId,
     admin,
-    churchHeading,
     subChurch,
     subChurchBasonta,
     churchType,
-    churchNo,
     membership,
     buttons,
     buttonsSecondRow,
@@ -201,7 +199,12 @@ const DisplayChurchDetails = (props) => {
             <DetailsCard heading={leaderTitle} detail={leaderName} />
           </Link>
           <div className="col-9 col-md-6 col-lg-4">
-            <DetailsCard heading={churchHeading} detail={churchNo} />
+            <DetailsCard
+              heading={props.churchHeading}
+              detail={props.churchCount}
+              heading2={props.church2Heading}
+              detail2={props.church2Count}
+            />
           </div>
           <div className="col-9 col-md-6 col-lg-4 pl-3">
             <DashboardButton btnLink={`/${churchType.toLowerCase()}/reports`}>

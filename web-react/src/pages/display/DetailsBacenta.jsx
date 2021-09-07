@@ -46,7 +46,7 @@ const DisplayBacentaDetails = () => {
         leaderId={bacenta?.leader?.id}
         membership={bacentaData?.bacentaMemberCount}
         churchHeading="Meeting Day"
-        churchNo={bacenta?.meetingDay?.day}
+        churchCount={bacenta?.meetingDay?.day}
         churchType="Bacenta"
         buttons={['']}
         editlink="/bacenta/editbacenta"

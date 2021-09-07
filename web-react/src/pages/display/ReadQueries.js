@@ -472,6 +472,7 @@ export const DISPLAY_TOWN = gql`
       }
     }
     townMemberCount(id: $id)
+    townBacentaCount(id: $id)
   }
 `
 
@@ -554,5 +555,6 @@ export const DISPLAY_CAMPUS = gql`
       }
     }
     campusMemberCount(id: $id)
+    campusBacentaCount(id: $id)
   }
 `

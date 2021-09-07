@@ -36,8 +36,8 @@ const UpdateBacenta = () => {
     townCampusSelect: bacenta?.centre?.town?.id ?? bacenta?.centre?.campus?.id,
     centreSelect: bacenta?.centre?.id,
     meetingDay: bacenta?.meetingDay?.day,
-    venueLatitude: bacenta?.location?.latitude ?? '',
-    venueLongitude: bacenta?.location?.longitude ?? '',
+    venueLatitude: bacenta?.location?.latitude ?? '0.0',
+    venueLongitude: bacenta?.location?.longitude || parseFloat(0),
   }
 
   const [LogBacentaHistory] = useMutation(LOG_BACENTA_HISTORY, {

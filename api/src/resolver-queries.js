@@ -207,7 +207,7 @@ WITH log,bacenta,oldLeader,leader
        CALL{
          WITH log,bacenta,oldLeader, leader
          WITH log,bacenta,oldLeader, leader WHERE
-         EXISTS (oldLeader.firstName)
+         EXISTS (oldLeader.firstName) AND oldLeader.id <> $leaderId
         
        MERGE (oldLeader)-[hasHistory:HAS_HISTORY]->(log)
         SET hasHistory.neverLed = true,
@@ -252,7 +252,7 @@ WITH log,centre,oldLeader,leader
        CALL{
          WITH log,centre,oldLeader, leader
          WITH log,centre,oldLeader, leader 
-         WHERE EXISTS (oldLeader.firstName)
+         WHERE EXISTS (oldLeader.firstName) AND oldLeader.id <> $leaderId
         
        MERGE (oldLeader)-[hasHistory:HAS_HISTORY]->(log)
        SET hasHistory.neverLed = true,
@@ -297,7 +297,7 @@ WITH log,sonta,oldLeader,leader
        CALL{
          WITH log,sonta,oldLeader, leader
          WITH log,sonta,oldLeader, leader 
-         WHERE EXISTS (oldLeader.firstName)
+         WHERE EXISTS (oldLeader.firstName) AND oldLeader.id <> $leaderId
         
        MERGE (oldLeader)-[hasHistory:HAS_HISTORY]->(log)
        SET hasHistory.neverLed = true,
@@ -340,7 +340,7 @@ WITH log,campus,oldLeader,leader
        CALL{
          WITH log,campus,oldLeader, leader
          WITH log,campus,oldLeader, leader 
-         WHERE EXISTS (oldLeader.firstName)
+         WHERE EXISTS (oldLeader.firstName) AND oldLeader.id <> $leaderId
         
        MERGE (oldLeader)-[hasHistory:HAS_HISTORY]->(log)
        SET hasHistory.neverLed = true,
@@ -383,7 +383,7 @@ WITH log,town,oldLeader,leader
        CALL{
          WITH log,town,oldLeader, leader
          WITH log,town,oldLeader, leader 
-         WHERE EXISTS (oldLeader.firstName)
+         WHERE EXISTS (oldLeader.firstName) AND oldLeader.id <> $leaderId
         
        MERGE (oldLeader)-[hasHistory:HAS_HISTORY]->(log)
        SET hasHistory.neverLed = true,

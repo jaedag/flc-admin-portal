@@ -11,7 +11,7 @@ const CreateBacenta = () => {
   const initialValues = {
     bacentaName: '',
     leaderId: '',
-    townSelect: '',
+    townCampusSelect: '',
     centreSelect: '',
     meetingDay: '',
     venueLatitude: '',

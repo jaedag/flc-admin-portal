@@ -40,7 +40,7 @@ const CampusTownForm = ({
     loading: bishopsLoading,
     error: bishopsError,
   } = useQuery(GET_BISHOPS)
-  const [MakeCampusTownInactive] = useMutation(MAKE_CAMPUSTOWN_INACTIVE, {
+  const [CloseDownCampusTown] = useMutation(MAKE_CAMPUSTOWN_INACTIVE, {
     refetchQueries: [
       { query: BISH_DASHBOARD_COUNTS, variables: { id: bishopId } },
     ],
@@ -219,7 +219,7 @@ const CampusTownForm = ({
                 <div
                   className="btn btn-primary"
                   onClick={() => {
-                    MakeCampusTownInactive({
+                    CloseDownCampusTown({
                       variables: {
                         campusTownId:
                           church.church === 'campus' ? campusId : townId,
@@ -227,8 +227,8 @@ const CampusTownForm = ({
                     })
                       .then((res) => {
                         clickCard(
-                          res.data.MakeCampusTownInactive?.campusBishop ??
-                            res.data.MakeCampusTownInactive?.townBishop
+                          res.data.CloseDownCampusTown?.campusBishop ??
+                            res.data.CloseDownCampusTown?.townBishop
                         )
                         togglePopup()
                         history.push(`/${church.church}/displayall`)

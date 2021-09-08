@@ -37,7 +37,7 @@ const CentreForm = ({
   } = useContext(ChurchContext)
   const history = useHistory()
 
-  const [MakeCentreInactive] = useMutation(MAKE_CENTRE_INACTIVE)
+  const [CloseDownCentre] = useMutation(MAKE_CENTRE_INACTIVE)
   const {
     data: townsData,
     loading: townsLoading,
@@ -219,15 +219,15 @@ const CentreForm = ({
                 <div
                   className="btn btn-primary"
                   onClick={() => {
-                    MakeCentreInactive({
+                    CloseDownCentre({
                       variables: {
                         centreId: centreId,
                       },
                     })
                       .then((res) => {
                         clickCard(
-                          res.data.MakeCentreInactive?.campus ||
-                            res.data.MakeCentreInactive?.town
+                          res.data.CloseDownCentre?.campus ||
+                            res.data.CloseDownCentre?.town
                         )
                         togglePopup()
                         history.push(`/${church.church}/displaydetails`)

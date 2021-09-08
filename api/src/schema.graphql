@@ -1850,7 +1850,7 @@ type Mutation {
 
   #DELETE OPERATIONS
   # In the context of church data we never delete, we only render inactive
-  MakeBacentaInactive(bacentaId: ID!): Bacenta
+  CloseDownBacenta(bacentaId: ID!): Bacenta
     @cypher(
       statement: """
       MATCH (bacenta:Bacenta {id:$bacentaId})
@@ -1868,14 +1868,14 @@ type Mutation {
       MERGE (bacenta)-[:HAS_HISTORY]->(log)
       MERGE (centre)-[:HAS_HISTORY]->(log)
 
-      SET bacenta:InactiveBacenta
+      SET bacenta:ClosedBacenta
       REMOVE bacenta:Bacenta
 
       RETURN bacenta
       """
     )
 
-  MakeCentreInactive(centreId: ID!): Centre
+  CloseDownCentre(centreId: ID!): Centre
     @cypher(
       statement: """
       MATCH (centre:Centre {id:$centreId})
@@ -1895,7 +1895,7 @@ type Mutation {
       MERGE (centre)-[:HAS_HISTORY]->(log)
       MERGE (campusTown)-[:HAS_HISTORY]->(log)
 
-      SET centre:InactiveCentre, bacenta:InactiveBacenta
+      SET centre:ClosedCentre, bacenta:ClosedBacenta
       REMOVE centre:Centre,  bacentas:Bacenta
 
 
@@ -1903,7 +1903,7 @@ type Mutation {
       """
     )
 
-  MakeCampusTownInactive(campusTownId: ID!): Constituency
+  CloseDownCampusTown(campusTownId: ID!): Constituency
     @cypher(
       statement: """
       MATCH (campusTown {id:$campusTownId}) WHERE campusTown:Campus OR campusTown:Town
@@ -1923,7 +1923,7 @@ type Mutation {
       MERGE (campusTown)-[:HAS_HISTORY]->(log)
       MERGE (bishop)-[:HAS_HISTORY]->(log)
 
-      SET campusTown:InactiveCampusTown, centres:InactiveCentre, bacentas:InactiveBacenta
+      SET campusTown:ClosedCampusTown, centres:ClosedCentre, bacentas:ClosedBacenta
       REMOVE campusTown:Campus:Town,centres:Centre,bacentas:Bacenta
 
       RETURN campusTown

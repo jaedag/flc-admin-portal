@@ -56,7 +56,7 @@ const BacentaForm = ({
   } = useQuery(GET_BISHOP_CAMPUSES, {
     variables: { id: bishopId },
   })
-  const [MakeBacentaInactive] = useMutation(MAKE_BACENTA_INACTIVE)
+  const [CloseDownBacenta] = useMutation(MAKE_BACENTA_INACTIVE)
 
   const validationSchema = Yup.object({
     bacentaName: Yup.string().required('Bacenta Name is a required field'),
@@ -283,13 +283,13 @@ const BacentaForm = ({
                 <div
                   className="btn btn-primary"
                   onClick={() => {
-                    MakeBacentaInactive({
+                    CloseDownBacenta({
                       variables: {
                         bacentaId: bacentaId,
                       },
                     })
                       .then((res) => {
-                        clickCard(res.data.MakeBacentaInactive.centre)
+                        clickCard(res.data.CloseDownBacenta.centre)
                         togglePopup()
                         history.push('/centre/displaydetails')
                       })

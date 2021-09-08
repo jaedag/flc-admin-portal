@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client'
 
 export const MAKE_BACENTA_INACTIVE = gql`
-  mutation MakeBacentaInactive($bacentaId: ID!) {
-    MakeBacentaInactive(bacentaId: $bacentaId) {
+  mutation CloseDownBacenta($bacentaId: ID!) {
+    CloseDownBacenta(bacentaId: $bacentaId) {
       id
       name
       centre {
@@ -42,8 +42,8 @@ export const MAKE_BACENTA_INACTIVE = gql`
 `
 
 export const MAKE_CENTRE_INACTIVE = gql`
-  mutation MakeCentreInactive($centreId: ID!) {
-    MakeCentreInactive(centreId: $centreId) {
+  mutation CloseDownCentre($centreId: ID!) {
+    CloseDownCentre(centreId: $centreId) {
       id
       name
       town {
@@ -95,8 +95,8 @@ export const MAKE_CENTRE_INACTIVE = gql`
 `
 
 export const MAKE_CAMPUSTOWN_INACTIVE = gql`
-  mutation MakeCampusTownInactive($campusTownId: ID!) {
-    MakeCampusTownInactive(campusTownId: $campusTownId) {
+  mutation CloseDownCampusTown($campusTownId: ID!) {
+    CloseDownCampusTown(campusTownId: $campusTownId) {
       id
       name
       campusBishop {

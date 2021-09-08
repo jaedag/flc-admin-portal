@@ -584,6 +584,10 @@ const PastorsAdmin = () => {
                   'adminBishop',
                   'adminCampus',
                   'adminTown',
+                  'leaderBacenta',
+                  'leaderCentre',
+                  'leaderTown',
+                  'leaderCampus',
                 ]}
                 path="/member/editmember"
                 component={UpdateMember}

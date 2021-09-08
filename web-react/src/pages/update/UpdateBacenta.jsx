@@ -36,8 +36,8 @@ const UpdateBacenta = () => {
     townCampusSelect: bacenta?.centre?.town?.id ?? bacenta?.centre?.campus?.id,
     centreSelect: bacenta?.centre?.id,
     meetingDay: bacenta?.meetingDay?.day,
-    venueLatitude: bacenta?.location?.latitude ?? '0.0',
-    venueLongitude: bacenta?.location?.longitude || parseFloat(0),
+    venueLatitude: parseFloat(bacenta?.location?.latitude) ?? '',
+    venueLongitude: parseFloat(bacenta?.location?.longitude) ?? '',
   }
 
   const [LogBacentaHistory] = useMutation(LOG_BACENTA_HISTORY, {
@@ -136,7 +136,7 @@ const UpdateBacenta = () => {
           oldCentreId: '',
           newCentreId: '',
 
-          historyRecord: `${values.bacentaName} has changed their meeting day from ${initialValues.meetingDay} to ${values.meetingDay}`,
+          historyRecord: `${values.bacentaName} Bacenta has changed their meeting day from ${initialValues.meetingDay} to ${values.meetingDay}`,
         },
       })
     }
@@ -154,7 +154,7 @@ const UpdateBacenta = () => {
           oldCentreId: '',
           newCentreId: '',
 
-          historyRecord: `${values.bacentaName} has changed their venue`,
+          historyRecord: `${values.bacentaName} Bacenta has changed their venue`,
         },
       })
     }

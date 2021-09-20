@@ -41,7 +41,6 @@ const ServiceForm = ({
     foreignCurrency: Yup.string(),
     numberOfTithers: Yup.number()
       .typeError('Please enter a valid number')
-      .positive()
       .integer('You cannot enter decimals here')
       .required(
         'You cannot submit this form without entering your number of tithers'

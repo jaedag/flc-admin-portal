@@ -1848,6 +1848,32 @@ type Mutation {
       """
     )
 
+  #Set Bacenta to be 'OnVacation
+  SetBacentaOnVacation(bacentaId: ID!): Bacenta
+    @cypher(
+      statement: """
+      MATCH (bacenta:Bacenta {id:$bacentaId})
+      OPTIONAL MATCH (bacenta)-[:HAS_BACENTA]-(centre)
+      MATCH (admin:Member {auth_id: $auth.jwt.sub})
+
+      CREATE (log:HistoryLog {id:apoc.create.uuid()})
+        SET log.timeStamp = datetime(),
+        log.historyRecord = bacenta.name + ' Bacenta was closed down under ' + centre.name +' Centre'
+
+
+      MERGE (date:TimeGraph {date:date()})
+      MERGE (log)-[:LOGGED_BY]->(admin)
+      MERGE (log)-[:RECORDED_ON]->(date)
+      MERGE (bacenta)-[:HAS_HISTORY]->(log)
+      MERGE (centre)-[:HAS_HISTORY]->(log)
+
+      SET bacenta:ClosedBacenta
+      REMOVE bacenta:Bacenta
+
+      RETURN bacenta
+      """
+    )
+
   #DELETE OPERATIONS
   # In the context of church data we never delete, we only render inactive
   CloseDownBacenta(bacentaId: ID!): Bacenta

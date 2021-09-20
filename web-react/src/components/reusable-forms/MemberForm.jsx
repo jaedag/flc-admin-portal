@@ -212,7 +212,7 @@ function MemberForm({ initialValues, onSubmit, title }) {
                         control="combobox2"
                         name="bacenta"
                         label="Bacenta*"
-                        placeholder="Bacenta Name"
+                        placeholder="Start Typing"
                         setFieldValue={formik.setFieldValue}
                         optionsQuery={BISHOP_BACENTA_DROPDOWN}
                         queryVariable1="id"

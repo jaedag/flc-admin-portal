@@ -8,7 +8,7 @@ export const BISHOP_MEMBER_COUNT = gql`
 
 export const DISPLAY_MEMBER = gql`
   query($id: ID) {
-    members(where: { id: $id }, options:{limit:1}) {
+    members(where: { id: $id }, options: { limit: 1 }) {
       id
       firstName
       middleName
@@ -202,7 +202,7 @@ export const DISPLAY_MEMBER = gql`
 
 export const DISPLAY_BACENTA = gql`
   query($id: ID) {
-    bacentas(where: { id: $id } , options:{limit:1}) {
+    bacentas(where: { id: $id }, options: { limit: 1 }) {
       id
       name
       location {
@@ -264,7 +264,7 @@ export const DISPLAY_BACENTA = gql`
 
 export const DISPLAY_SONTA = gql`
   query DisplaySonta($id: ID) {
-    sontas(where: { id: $id }, options:{limit:1}) {
+    sontas(where: { id: $id }, options: { limit: 1 }) {
       id
       name
       ministry {
@@ -324,7 +324,7 @@ export const DISPLAY_SONTA = gql`
 
 export const DISPLAY_CENTRE = gql`
   query($id: ID) {
-    centres(where: { id: $id }, options:{limit:1}) {
+    centres(where: { id: $id }, options: { limit: 1 }) {
       id
       name
       bacentas {
@@ -395,7 +395,7 @@ export const DISPLAY_CENTRE = gql`
 
 export const DISPLAY_TOWN = gql`
   query($id: ID) {
-    towns(where: { id: $id }, options:{limit:1}) {
+    towns(where: { id: $id }, options: { limit: 1 }) {
       id
       name
       centres {
@@ -478,7 +478,7 @@ export const DISPLAY_TOWN = gql`
 
 export const DISPLAY_CAMPUS = gql`
   query($id: ID) {
-    campuses(where: { id: $id }, options:{limit:1}) {
+    campuses(where: { id: $id }, options: { limit: 1 }) {
       id
       name
       centres {

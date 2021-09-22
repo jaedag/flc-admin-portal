@@ -9,6 +9,7 @@ import {
   getNameWithTitle,
   getMemberDob,
   transformCloudinaryImg,
+  getHumanReadableDate,
 } from '../../global-utils'
 import BaseComponent from 'components/base-component/BaseComponent'
 import { DISPLAY_MEMBER } from 'pages/display/ReadQueries'
@@ -241,11 +242,7 @@ const MemberDisplay = ({ memberId }) => {
                         </div>
                         <div className="col">
                           <p className="font-weight-bold card-text">
-                            {member?.bacenta
-                              ? member?.bacenta.name
-                                ? member?.bacenta.name
-                                : null
-                              : null}
+                            {member?.bacenta?.name}
                           </p>
                         </div>
                       </div>
@@ -261,7 +258,7 @@ const MemberDisplay = ({ memberId }) => {
                           </p>
                         </div>
                       </div>
-                      {member?.title[0] ? (
+                      {member?.titleConnection.edges[0] ? (
                         <div>
                           <div className="row mb-2">
                             <div className="col">
@@ -269,18 +266,23 @@ const MemberDisplay = ({ memberId }) => {
                             </div>
                             <div className="col">
                               <p className="font-weight-bold card-text">
-                                {member?.title[0].title}
+                                {member?.titleConnection.edges[0].node.title}
                               </p>
                             </div>
                           </div>
                           <div className="row mb-2">
                             <div className="col">
                               <p className="text-secondary card-text">
-                                Year Appointed
+                                Date Appointed
                               </p>
                             </div>
                             <div className="col">
-                              <p className="font-weight-bold card-text">{`-`}</p>
+                              <p className="font-weight-bold card-text">
+                                {getHumanReadableDate(
+                                  member?.titleConnection.edges[0]
+                                    ?.dateAppointed
+                                )}
+                              </p>
                             </div>
                           </div>
                         </div>

@@ -198,16 +198,23 @@ export const getNameWithTitle = (member) => {
   }
 }
 
+export const getHumanReadableDate = (date) => {
+  if (!date) {
+    return
+  }
+  return new Date(date).toLocaleDateString('en-gb', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  })
+}
+
 export const getMemberDob = (displayMember) => {
   if (!displayMember) {
     return
   }
   if (displayMember.dob?.date) {
-    return new Date(displayMember.dob?.date).toLocaleDateString('en-gb', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    })
+    return getHumanReadableDate(displayMember.dob?.date)
   } else return null
 }
 

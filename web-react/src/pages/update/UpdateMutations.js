@@ -595,8 +595,8 @@ export const UPDATE_BACENTA = gql`
 export const ADD_CENTRE_TOWN = gql`
   mutation AddCentreTown($townId: ID!, $centreId: ID!) {
     updateCentres(
-      where: { id: $centreId }
-      connect: { town: { where: { id: $townId } } }
+      where: { node: { id: $centreId } }
+      connect: { town: { where: { node: { id: $townId } } } }
     ) {
       centres {
         id
@@ -612,8 +612,8 @@ export const ADD_CENTRE_TOWN = gql`
 export const ADD_CENTRE_CAMPUS = gql`
   mutation AddCentreCampus($campusId: ID!, $centreId: ID!) {
     updateCentres(
-      where: { id: $centreId }
-      connect: { campus: { where: { id: $campusId } } }
+      where: { node: { id: $centreId } }
+      connect: { campus: { where: { node: { id: $campusId } } } }
     ) {
       centres {
         id
@@ -629,8 +629,8 @@ export const ADD_CENTRE_CAMPUS = gql`
 export const REMOVE_CENTRE_TOWN = gql`
   mutation RemoveCentreTown($townId: ID!, $centreId: ID!) {
     updateCentres(
-      where: { id: $centreId }
-      disconnect: { town: { where: { id: $townId } } }
+      where: { node: { id: $centreId } }
+      disconnect: { town: { where: { node: { id: $townId } } } }
     ) {
       centres {
         id
@@ -644,7 +644,7 @@ export const REMOVE_CENTRE_TOWN = gql`
         }
       }
     }
-    updateTowns(where: { id: $townId }) {
+    updateTowns(where: { node: { id: $townId } }) {
       towns {
         id
         name
@@ -659,8 +659,8 @@ export const REMOVE_CENTRE_TOWN = gql`
 export const REMOVE_CENTRE_CAMPUS = gql`
   mutation RemoveCentreCampus($campusId: ID!, $centreId: ID!) {
     updateCentres(
-      where: { id: $centreId }
-      disconnect: { campus: { where: { id: $campusId } } }
+      where: { node: { id: $centreId } }
+      disconnect: { campus: { where: { node: { id: $campusId } } } }
     ) {
       centres {
         id
@@ -671,7 +671,7 @@ export const REMOVE_CENTRE_CAMPUS = gql`
         }
       }
     }
-    updateCampuses(where: { id: $campusId }) {
+    updateCampuses(where: { node: { id: $campusId } }) {
       campuses {
         id
         name
@@ -683,8 +683,8 @@ export const REMOVE_CENTRE_CAMPUS = gql`
 export const ADD_CENTRE_BACENTAS = gql`
   mutation AddCentreBacentas($centreId: ID!, $bacentaId: [ID!]) {
     updateCentres(
-      where: { id: $centreId }
-      connect: { bacentas: { where: { id_IN: $bacentaId } } }
+      where: { node: { id: $centreId } }
+      connect: { bacentas: { where: { node: { id_IN: $bacentaId } } } }
     ) {
       centres {
         id
@@ -699,8 +699,8 @@ export const ADD_CENTRE_BACENTAS = gql`
 export const REMOVE_CENTRE_BACENTAS = gql`
   mutation RemoveCentreBacentas($centreId: ID!, $bacentaId: ID!) {
     updateCentres(
-      where: { id: $centreId }
-      disconnect: { bacentas: { where: { id: $bacentaId } } }
+      where: { node: { id: $centreId } }
+      disconnect: { bacentas: { where: { node: { id: $bacentaId } } } }
     ) {
       centres {
         id
@@ -716,8 +716,8 @@ export const REMOVE_CENTRE_BACENTAS = gql`
 export const REMOVE_BACENTA_CENTRE = gql`
   mutation RemoveBacentaFromCentre($centreId: ID!, $bacentaIds: [ID!]) {
     updateBacentas(
-      where: { id_IN: $bacentaIds }
-      disconnect: { centre: { where: { id: $centreId } } }
+      where: { node: { id_IN: $bacentaIds } }
+      disconnect: { centre: { where: { node: { id: $centreId } } } }
     ) {
       bacentas {
         id
@@ -728,7 +728,7 @@ export const REMOVE_BACENTA_CENTRE = gql`
         }
       }
     }
-    updateCentres(where: { id: $centreId }) {
+    updateCentres(where: { node: { id: $centreId } }) {
       centres {
         id
         name
@@ -740,8 +740,8 @@ export const REMOVE_BACENTA_CENTRE = gql`
 export const ADD_BACENTA_CENTRE = gql`
   mutation AddBacentaCentre($centreId: ID!, $bacentaId: ID!) {
     updateBacentas(
-      where: { id: $bacentaId }
-      connect: { centre: { where: { id: $centreId } } }
+      where: { node: { id: $bacentaId } }
+      connect: { centre: { where: { node: { id: $centreId } } } }
     ) {
       bacentas {
         centre {
@@ -757,8 +757,8 @@ export const ADD_BACENTA_CENTRE = gql`
 export const ADD_TOWN_BISHOP = gql`
   mutation AddTownBishop($townId: ID!, $bishopId: ID!) {
     updateTowns(
-      where: { id: $townId }
-      connect: { bishop: { where: { id: $bishopId } } }
+      where: { node: { id: $townId } }
+      connect: { bishop: { where: { node: { id: $bishopId } } } }
     ) {
       towns {
         id
@@ -777,8 +777,8 @@ export const ADD_TOWN_BISHOP = gql`
 export const REMOVE_TOWN_BISHOP = gql`
   mutation RemoveTownBishop($townId: ID!, $bishopId: ID!) {
     updateTowns(
-      where: { id: $townId }
-      disconnect: { bishop: { where: { id: $bishopId } } }
+      where: { node: { id: $townId } }
+      disconnect: { bishop: { where: { node: { id: $bishopId } } } }
     ) {
       towns {
         id
@@ -791,8 +791,8 @@ export const REMOVE_TOWN_BISHOP = gql`
 export const ADD_CAMPUS_BISHOP = gql`
   mutation AddCampusBishop($campusId: ID!, $bishopId: ID!) {
     updateCampuses(
-      where: { id: $campusId }
-      connect: { bishop: { where: { id: $bishopId } } }
+      where: { node: { id: $campusId } }
+      connect: { bishop: { where: { node: { id: $bishopId } } } }
     ) {
       campuses {
         id
@@ -810,8 +810,8 @@ export const ADD_CAMPUS_BISHOP = gql`
 export const REMOVE_CAMPUS_BISHOP = gql`
   mutation RemoveCampusBishop($campusId: ID!, $bishopId: ID!) {
     updateCampuses(
-      where: { id: $campusId }
-      disconnect: { bishop: { where: { id: $bishopId } } }
+      where: { node: { id: $campusId } }
+      disconnect: { bishop: { where: { node: { id: $bishopId } } } }
     ) {
       campuses {
         id
@@ -824,8 +824,8 @@ export const REMOVE_CAMPUS_BISHOP = gql`
 export const ADD_CAMPUS_CENTRES = gql`
   mutation AddCampusCentres($campusId: ID!, $centreId: ID!) {
     updateCampuses(
-      where: { id: $campusId }
-      connect: { centres: { where: { id: $centreId } } }
+      where: { node: { id: $campusId } }
+      connect: { centres: { where: { node: { id: $centreId } } } }
     ) {
       campuses {
         id
@@ -838,8 +838,8 @@ export const ADD_CAMPUS_CENTRES = gql`
 export const ADD_TOWN_CENTRES = gql`
   mutation AddTownCentres($townId: ID!, $centreId: ID!) {
     updateTowns(
-      where: { id: $townId }
-      connect: { centres: { where: { id: $centreId } } }
+      where: { node: { id: $townId } }
+      connect: { centres: { where: { node: { id: $centreId } } } }
     ) {
       towns {
         id

@@ -76,8 +76,13 @@ export const DISPLAY_MEMBER = gql`
       occupation {
         occupation
       }
-      title {
-        title
+      titleConnection {
+        edges {
+          dateAppointed
+          node {
+            title
+          }
+        }
       }
       history(options: { limit: 3 }) {
         id

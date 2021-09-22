@@ -13,7 +13,8 @@ type Member {
   maritalStatus: MaritalStatus
     @relationship(type: "HAS_MARITAL_STATUS", direction: OUT)
   dob: TimeGraph @relationship(type: "WAS_BORN_ON", direction: OUT)
-  title: [Title] @relationship(type: "HAS_TITLE", direction: OUT)
+  title: [Title]
+    @relationship(type: "HAS_TITLE", properties: "HasTitle", direction: OUT)
   ministry: Ministry @relationship(type: "BELONGS_TO", direction: OUT)
   occupation: Occupation @relationship(type: "HAS_OCCUPATION", direction: OUT)
   # Church Details
@@ -121,42 +122,13 @@ type Occupation @auth(rules: [{ isAuthenticated: true }]) {
 
 type Title @auth(rules: [{ isAuthenticated: true }]) {
   title: String! #Pastor, Reverend, Apostle, Bishop (Mother)
-  members: [Member] @relationship(type: "HAS_TITLE", direction: IN)
+  members: [Member]
+    @relationship(type: "HAS_TITLE", properties: "HasTitle", direction: IN)
 }
 
-# type HasTitle @relationship(type: "HAS_TITLE") {
-#   from: Member
-#   to: Title
-#   yearAppointed: Date
-#   status: Boolean #active or inactive
-#   numberofTimesRemoved: Int
-# }
-
-# type HasBacentaHistory @relationship(type: "HAS_HISTORY") {
-#   from: Bacenta
-#   to: HistoryLog
-#   current: Boolean
-# }
-# type HasCentreHistory @relationship(type: "HAS_HISTORY") {
-#   from: Centre
-#   to: HistoryLog
-#   current: Boolean
-# }
-# type HasSontaHistory @relationship(type: "HAS_HISTORY") {
-#   from: Sonta
-#   to: HistoryLog
-#   current: Boolean
-# }
-# type HasCampusHistory @relationship(type: "HAS_HISTORY") {
-#   from: Campus
-#   to: HistoryLog
-#   current: Boolean
-# }
-# type HasTownHistory @relationship(type: "HAS_HISTORY") {
-#   from: Town
-#   to: HistoryLog
-#   current: Boolean
-# }
+interface HasTitle @relationshipProperties {
+  dateAppointed: Date
+}
 
 type TimeGraph @auth(rules: [{ isAuthenticated: true }]) {
   date: Date

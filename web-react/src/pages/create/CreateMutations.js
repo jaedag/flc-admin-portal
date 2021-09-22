@@ -60,16 +60,13 @@ export const ADD_MEMBER_TITLE_MUTATION = gql`
   mutation AddMemberTitle(
     $memberId: ID!
     $title: [String] # $status: Boolean # $date: String
-    $date: [String]
+    $date: [Date]
   ) {
     updateMembers(
       where: { id: $memberId }
       connect: {
         title: {
-          where: {
-            node: { title_IN: $title }
-            edge: { dateAppointed_IN: $date }
-          }
+          where: { node: { title_IN: $title }, edge: { dateAppointed: $date } }
         }
       }
     ) {

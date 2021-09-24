@@ -80,9 +80,10 @@ const noEmptyArgsValidation = (args) => {
   if (!args.length) {
     throwErrorMsg('args must be passed in array')
   }
-  args.map((argument) => {
+
+  args.map((argument, index) => {
     if (!argument) {
-      throwErrorMsg('Argument Cannot Be Empty', argument)
+      throwErrorMsg(`${args[index - 1]} Argument Cannot Be Empty`)
     }
   })
 }
@@ -307,7 +308,12 @@ const MakeServant = async (
   const churchLower = churchType.toLowerCase()
   const servantLower = servantType.toLowerCase()
   isAuth(permittedRoles, context.auth.roles)
-  noEmptyArgsValidation([args[`${churchLower}Id`], args[`${servantLower}Id`]])
+  noEmptyArgsValidation([
+    `${churchLower}Id`,
+    args[`${churchLower}Id`],
+    `${servantLower}Id`,
+    args[`${servantLower}Id`],
+  ])
   let verb
   if (servantType === 'Leader') {
     verb = `leads${churchType}`
@@ -503,7 +509,12 @@ const RemoveServant = async (
   const churchLower = churchType.toLowerCase()
   const servantLower = servantType.toLowerCase()
   isAuth(permittedRoles, context.auth.roles)
-  noEmptyArgsValidation([args[`${churchLower}Id`], args[`${servantLower}Id`]])
+  noEmptyArgsValidation([
+    `${churchLower}Id`,
+    args[`${churchLower}Id`],
+    `${servantLower}Id`,
+    args[`${servantLower}Id`],
+  ])
 
   let verb
   if (servantType === 'Leader') {

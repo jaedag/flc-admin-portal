@@ -1065,7 +1065,7 @@ type Mutation {
         SET
         log.id =  apoc.create.uuid(),
         log.timeStamp = datetime(),
-        log.historyRecord = $firstName +' ' +$lastName+' was registered on '+toString(date())
+        log.historyRecord = $firstName +' ' +$lastName+' was registered on '+apoc.date.convertFormat(toString(date()), "date", "dd MMMM yyy")
 
 
 

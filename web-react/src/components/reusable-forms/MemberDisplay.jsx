@@ -13,11 +13,16 @@ import {
 } from '../../global-utils'
 import BaseComponent from 'components/base-component/BaseComponent'
 import { DISPLAY_MEMBER } from 'pages/display/ReadQueries'
+import { useLocation } from 'react-router'
+import AuthButton from 'components/buttons/AuthButton'
 
 const MemberDisplay = ({ memberId }) => {
   const { data, loading, error } = useQuery(DISPLAY_MEMBER, {
     variables: { id: memberId },
   })
+
+  const location = useLocation()
+  const atProfile = location.pathname === '/user-profile'
 
   const member = data?.members[0]
   const memberBirthday = getMemberDob(member)
@@ -293,6 +298,13 @@ const MemberDisplay = ({ memberId }) => {
               </div>
             </div>
           </div>
+          {atProfile && (
+            <div className="row justify-content-center my-2 mb-4">
+              <div className="col-auto ">
+                <AuthButton mobileFullSize="true" />
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </BaseComponent>

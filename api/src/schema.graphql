@@ -143,17 +143,6 @@ type TimeGraph @auth(rules: [{ isAuthenticated: true }]) {
     @relationship(type: "SERVICE_HELD_ON", direction: IN)
 }
 
-# type LeaderHistory {
-#   created_at: DateTime
-#   historyRecord: String
-#   historyDate: TimeGraph
-#     @relationship(type: "LEADER_STARTED_ON", direction: OUT)
-#   historyEndDate: TimeGraph @relationship(type: "LEADER_ENDED_ON", direction: OUT)
-#   leaders: Member @relationship(type: "HAS_LEADERSHIP_HISTORY", direction: IN)
-#   bacentaerviceRecords: [ServiceRecord]
-#     @relationship(type: "HAS_RECORD", direction: OUT)
-# }
-
 type ServiceRecord @auth(rules: [{ isAuthenticated: true }]) {
   id: ID!
   created_at: Date
@@ -166,7 +155,7 @@ type ServiceRecord @auth(rules: [{ isAuthenticated: true }]) {
       RETURN date(date.date).week
       """
     )
-  attendance: Int!
+  attendance: Int
   income: Float
   foreignCurrency: String
   servicePicture: String

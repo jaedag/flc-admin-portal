@@ -7,16 +7,12 @@ const BaseComponent = (props) => {
 
   if (loadingState) {
     return <LoadingScreen />
-  }
-
-  if (errorState) {
+  } else if (data) {
+    return <>{props.children}</>
+  } else if (errorState) {
     // eslint-disable-next-line no-console
     console.error(errorState)
     return <ErrorScreen />
-  }
-
-  if (data) {
-    return <>{props.children}</>
   }
 
   return <LoadingScreen />

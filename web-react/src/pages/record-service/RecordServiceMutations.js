@@ -28,6 +28,22 @@ export const RECORD_SERVICE = gql`
   }
 `
 
+export const RECORD_CANCELLED_SERVICE = gql`
+  mutation RecordCancelledService(
+    $id: ID!
+    $serviceDate: String!
+    $noServiceReason: String!
+  ) {
+    RecordCancelledService(
+      id: $id
+      serviceDate: $serviceDate
+      noServiceReason: $noServiceReason
+    ) {
+      id
+    }
+  }
+`
+
 export const RECORD_SERVICE_NO_OFFERING = gql`
   mutation RecordServiceNoOffering(
     $id: ID!
@@ -60,6 +76,7 @@ export const DISPLAY_BACENTA_SERVICE = gql`
       serviceDate {
         date
       }
+      noServiceReason
       attendance
       income
       foreignCurrency

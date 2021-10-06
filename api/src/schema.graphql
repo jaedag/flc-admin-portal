@@ -162,6 +162,23 @@ type ServiceRecord @auth(rules: [{ isAuthenticated: true }]) {
   treasurerSelfie: String
   treasurers: [Member]! @relationship(type: "WAS_TREASURER_FOR", direction: IN)
   historyLog: HistoryLog @relationship(type: "HAS_RECORD", direction: IN)
+  noServiceReason: String
+}
+
+type NoService @auth(rules: [{ isAuthenticated: true }]) {
+  id: ID!
+  created_at: Date
+  created_by: Member @relationship(type: "LOGGED_BY", direction: OUT)
+  serviceDate: TimeGraph @relationship(type: "SERVICE_HELD_ON", direction: OUT)
+  week: Int
+    @cypher(
+      statement: """
+      MATCH (this)-[:SERVICE_HELD_ON]->(date:TimeGraph)
+      RETURN date(date.date).week
+      """
+    )
+  historyLog: HistoryLog @relationship(type: "HAS_RECORD", direction: IN)
+  noServiceReason: String
 }
 
 type ServiceLog @auth(rules: [{ isAuthenticated: true }]) {
@@ -1778,6 +1795,31 @@ type Mutation {
       UNWIND $treasurers AS treasurerId WITH treasurerId, serviceRecord
       MATCH (treasurer:Member {id: treasurerId})
       MERGE (treasurer)-[:WAS_TREASURER_FOR]->(serviceRecord)
+
+      RETURN serviceRecord
+      """
+    )
+
+  RecordCancelledService(
+    id: ID!
+    serviceDate: String!
+    noServiceReason: String!
+  ): NoService
+    @cypher(
+      statement: """
+      CREATE (serviceRecord:ServiceRecord:NoService {created_at:datetime()})
+        SET serviceRecord.id = apoc.create.uuid(),
+        serviceRecord.noServiceReason = $noServiceReason
+
+      WITH serviceRecord
+      MATCH (church {id:$id}) WHERE church:Bacenta OR church:Centre OR church:Campus OR church:Town
+      MATCH (church)-[has_history:HAS_HISTORY]->(log:HistoryLog) WHERE has_history.current = true
+      MATCH (leader:Member {auth_id: $auth.jwt.sub})
+
+      MERGE (serviceRecord)-[:LOGGED_BY]->(leader)
+      MERGE (serviceDate:TimeGraph {date:date($serviceDate)})
+      MERGE (serviceRecord)-[:SERVICE_HELD_ON]->(serviceDate)
+      MERGE (log)-[:HAS_RECORD]->(serviceRecord)
 
       RETURN serviceRecord
       """

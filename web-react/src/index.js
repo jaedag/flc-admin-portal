@@ -66,6 +66,7 @@ import SontaService from 'pages/record-service/SontaService'
 import UpdateSonta from 'pages/update/UpdateSonta'
 import TownReport from 'pages/reports/TownReport'
 import SontaServiceDetails from 'pages/record-service/SontaServiceDetails'
+import BacentaServiceCancelled from 'pages/record-service/BacentaServiceCancelled'
 
 const AppWithApollo = () => {
   const [accessToken, setAccessToken] = useState()
@@ -863,6 +864,17 @@ const PastorsAdmin = () => {
                   ]}
                   path="/bacenta/service-details"
                   component={BacentaServiceDetails}
+                />
+                <ProtectedRoute
+                  roles={[
+                    'adminFederal',
+                    'adminBishop',
+                    'adminCampus',
+                    'adminTown',
+                    'leaderBacenta',
+                  ]}
+                  path="/bacenta/cancel-service"
+                  component={BacentaServiceCancelled}
                 />
                 <ProtectedRoute
                   roles={[

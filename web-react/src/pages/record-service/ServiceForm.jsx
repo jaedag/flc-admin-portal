@@ -89,13 +89,23 @@ const ServiceForm = ({
       {(formik) => (
         <div className="py-4 container mt-2">
           <div className="container infobar">Record Your Service Details</div>
+
           <Form className="form-group">
             <div className="row row-cols-1 row-cols-md-2">
               {/* <!-- Service Form--> */}
               <div className="col mb-2">
                 <div className="form-row d-flex justify-content-center">
                   <h5>{`${church.name} ${church.__typename}`}</h5>
+
                   <div className="col-11">
+                    <div
+                      className="btn btn-primary"
+                      onClick={() => {
+                        history.push(`/${churchType}/cancel-service`)
+                      }}
+                    >
+                      {`I Didn't Have My Service This Week`}
+                    </div>
                     <small htmlFor="dateofservice" className="form-text label">
                       Date of Service*
                       <i className="text-secondary">(Day/Month/Year)</i>

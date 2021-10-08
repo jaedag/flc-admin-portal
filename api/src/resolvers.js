@@ -355,7 +355,9 @@ const MakeServant = async (
                     notifyMember(
                       servant,
                       'Your account has been created on the FL Admin Portal',
-                      `Hi ${servant.firstName}\nYour account has just been created on the First Love Church Administrative Portal. Please set up your password by clicking ${res.data.ticket}. If you feel this is a mistake please contact your bishops admin.\n\nAfterwards, you can login by clicking https://flcadmin.netlify.app/\n\nRegards\nThe Administrator\nFirst Love Center\nAccra`,
+                      `Hi ${servant.firstName} ${servant.lastName},\nYour account has just been created on the First Love Church Administrative Portal. Please set up your password by clicking ${res.data.ticket}. If you feel this is a mistake please contact your bishops admin.
+          
+                  Afterwards, you can login by clicking https://flcadmin.netlify.app/\n\nRegards\nThe Administrator\nFirst Love Center\nAccra`,
                       'servant_account_created',
                       [servant.firstName, res?.data?.ticket]
                     )
@@ -430,7 +432,7 @@ const MakeServant = async (
                 notifyMember(
                   servant,
                   'Servanthood Status Update',
-                  `Hi ${servant.firstName}\nCongratulations! You have just been made a ${churchType} ${servantType} for ${churchInEmail}.\n\nIf you feel this is a mistake, please contact your bishop's admin\n\nRegards,\nThe Administrator,\nFirst Love Centre,\nAccra.`,
+                  `Hi ${servant.firstName} ${servant.lastName},\nCongratulations! You have just been made a ${churchType} ${servantType} for ${churchInEmail}.If you feel this is a mistake, please contact your bishop's admin\n\nRegards,\nThe Administrator,\nFirst Love Centre,\nAccra.`,
                   'servant_status_update',
                   [
                     servant.firstName,
@@ -569,7 +571,7 @@ const RemoveServant = async (
                 notifyMember(
                   servant,
                   'Your Servant Account Has Been Deleted',
-                  `Hi ${servant.firstName}\nYour account has been deleted from our portal. You will no longer have access to any data.\nThis is due to the fact that you have been removed as a ${churchType} ${servantType} for ${church.name} ${church.type[0]}.\n\nIf you feel that this is a mistake, please contact your bishops admin.\nThank you\nRegards\nThe Administrator\nFirst Love Center\nAccra`,
+                  `Hi ${servant.firstName} ${servant.lastName},\nYour account has been deleted from our portal. You will no longer have access to any data.\nThis is due to the fact that you have been removed as a ${churchType} ${servantType} for ${church.name} ${church.type[0]}.\nIf you feel that this is a mistake, please contact your bishops admin.\nThank you\nRegards\nThe Administrator\nFirst Love Center\nAccra`,
                   'servant_account_deleted',
                   [
                     servant.firstName,
@@ -604,7 +606,7 @@ const RemoveServant = async (
             notifyMember(
               servant,
               'ServantHood Status Update',
-              `Hi ${servant.firstName}\nUnfortunately You have just been removed as a ${churchType} ${servantType} for ${church.name} ${church.type[0]}.\n\nRegards,\nThe Administrator,\nFirst Love Centre,\nAccra.`
+              `Hi ${servant.firstName} ${servant.lastName},\nUnfortunately You have just been removed as a ${churchType} ${servantType} for ${church.name} ${church.type[0]}.\nRegards,\nThe Administrator,\nFirst Love Centre,\nAccra.`
             )
           }
         })

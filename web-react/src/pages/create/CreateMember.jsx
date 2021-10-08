@@ -90,16 +90,29 @@ const CreateMember = () => {
         ministry: values.ministry,
       },
     }).then((res) => {
-      AddMemberTitle({
-        variables: {
-          memberId: res.data.CreateMember.id,
-          title: pastoralAppointment.map((title) => title.title),
-          status: true,
-          date: pastoralAppointment.map((title) => title.date),
-        },
-      }).catch((error) =>
-        throwErrorMsg(`There was a problem creating member`, error)
-      )
+      pastoralAppointment.forEach((title) => {
+        AddMemberTitle({
+          variables: {
+            memberId: res.data.CreateMember.id,
+            title: title.title,
+            status: true,
+            date: title.date,
+          },
+        }).catch((error) =>
+          throwErrorMsg(`There was a problem adding member title`, error)
+        )
+      })
+
+      // AddMemberTitle({
+      //   variables: {
+      //     memberId: res.data.CreateMember.id,
+      //     title: pastoralAppointment.map((title) => title.title),
+      //     status: true,
+      //     date: pastoralAppointment.map((title) => title.date),
+      //   },
+      // }).catch((error) =>
+      //   throwErrorMsg(`There was a problem creating member`, error)
+      // )
 
       setSubmitting(false)
       resetForm()

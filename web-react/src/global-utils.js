@@ -173,9 +173,9 @@ export const getNameWithTitle = (member) => {
     title: '',
   }
 
-  if (member.title?.length) {
+  if (member.titleConnection.edges?.length) {
     if (member.gender.gender === 'Female') {
-      switch (member.title[0].title) {
+      switch (member.titleConnection.edges[0].node.title) {
         case 'Pastor':
           displayName.title = 'Lady Pastor'
           break
@@ -189,7 +189,7 @@ export const getNameWithTitle = (member) => {
           break
       }
     } else {
-      displayName.title = member.title[0].title
+      displayName.title = member.titleConnection.edges[0].node.title
     }
 
     return `${displayName.title} ${displayName.name}`

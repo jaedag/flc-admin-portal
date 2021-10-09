@@ -55,12 +55,7 @@ const DisplayCampusTownDetails = () => {
             buttons={townData?.towns[0].centres}
             buttonsSecondRow={townData?.towns[0].sontas}
             editlink="/town/edittown"
-            editPermitted={[
-              'leaderTown',
-              'adminTown',
-              'adminBishop',
-              'adminFederal',
-            ]}
+            editPermitted={['adminBishop', 'adminFederal']}
             history={
               townData?.towns[0]?.history.length !== 0 &&
               townData?.towns[0]?.history
@@ -93,12 +88,7 @@ const DisplayCampusTownDetails = () => {
             buttons={campusData?.campuses[0].centres}
             buttonsSecondRow={campusData?.campuses[0].sontas}
             editlink="/campus/editcampus"
-            editPermitted={[
-              'leaderCampus',
-              'adminCampus',
-              'adminBishop',
-              'adminFederal',
-            ]}
+            editPermitted={['adminBishop', 'adminFederal']}
             history={
               campusData?.campuses[0]?.history.length !== 0 &&
               campusData?.campuses[0]?.history

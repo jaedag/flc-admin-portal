@@ -97,16 +97,19 @@ function FormikSearchbox(props) {
       federalSearch({
         variables: { searchKey: capitalise(searchString.trim()) },
       })
-    }
-    if (isAuthorised(['adminBishop'], currentUser.roles)) {
+    } else if (isAuthorised(['adminBishop', 'bishop'], currentUser.roles)) {
       bishopSearch({
         variables: {
           bishopId: currentUser.bishop,
           searchKey: capitalise(searchString.trim()),
         },
       })
-    }
-    if (isAuthorised(['adminCampus', 'adminTown'], currentUser.roles)) {
+    } else if (
+      isAuthorised(
+        ['adminCampus', 'adminTown', 'leaderCampus', 'leaderTown'],
+        currentUser.roles
+      )
+    ) {
       constituencySearch({
         variables: {
           constituencyId: currentUser.constituency,

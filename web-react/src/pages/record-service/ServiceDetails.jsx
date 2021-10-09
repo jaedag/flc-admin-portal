@@ -2,6 +2,7 @@ import React from 'react'
 import './ServiceDetails.css'
 
 const ServiceDetails = ({ service, church }) => {
+  console.log(service)
   return (
     <div className="py-4 container mt-2">
       <div className="container infobar">{`${church.__typename} Service Details`}</div>

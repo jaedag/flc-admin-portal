@@ -771,6 +771,9 @@ type Query {
     )
     @auth(rules: [{ isAuthenticated: true }])
 
+  member(id: ID): Member
+    @cypher(statement: "MATCH (member:Member {id:$id}) RETURN member LIMIT 1")
+
   #Fuzzy Search
   memberGridList(
     gender: String

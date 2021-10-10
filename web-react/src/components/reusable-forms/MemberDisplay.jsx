@@ -24,7 +24,7 @@ const MemberDisplay = ({ memberId }) => {
   const location = useLocation()
   const atProfile = location.pathname === '/user-profile'
 
-  const member = data?.members[0]
+  const member = data?.member
   const memberBirthday = getMemberDob(member)
   const nameAndTitle = getNameWithTitle(member)
 

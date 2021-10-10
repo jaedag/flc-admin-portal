@@ -23,7 +23,7 @@ const UpdateMember = () => {
     variables: { id: memberId },
   })
 
-  const member = memberData?.members[0]
+  const member = memberData?.member
 
   const initialValues = {
     firstName: member?.firstName ?? '',

@@ -869,7 +869,7 @@ type Query {
       statement: """
       MATCH (bishop:Member {id: $bishopId})-[:HAS_TOWN|:HAS_CAMPUS]->(campusTown)
       MATCH (campusTown)-[:HAS_CENTRE]->(centre)
-      MATCH (centre)-[:HAS_BACENTA]->(bacenta)
+      MATCH (centre)-[:HAS_BACENTA]->(bacenta:Bacenta)
 
       WHERE toLower(bacenta.name) STARTS WITH toLower($searchKey)
       OR toLower(bacenta.name) CONTAINS toLower($searchKey)

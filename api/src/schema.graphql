@@ -1927,7 +1927,7 @@ type Mutation {
       MERGE (centre)-[:HAS_HISTORY]->(log)
       MERGE (campusTown)-[:HAS_HISTORY]->(log)
 
-      SET centre:ClosedCentre, bacenta:ClosedBacenta
+      SET centre:ClosedCentre, bacentas:ClosedBacenta
       REMOVE centre:Centre,  bacentas:Bacenta
 
 

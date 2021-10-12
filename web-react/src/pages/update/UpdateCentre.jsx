@@ -301,7 +301,7 @@ const UpdateCentre = () => {
       })
     }
 
-    if (removeBacentas.length) {
+    if (addBacentas.length) {
       addBacentas.forEach((bacenta) => {
         if (bacenta.centre) {
           RemoveBacentaFromCentre({

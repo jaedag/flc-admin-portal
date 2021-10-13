@@ -121,7 +121,12 @@ const CampusTownForm = ({
                     </div>
                     <div className="row d-flex align-items-center">
                       <RoleView
-                        roles={['adminFederal', 'adminCampus', 'adminTown']}
+                        roles={[
+                          'adminFederal',
+                          'adminBishop',
+                          'adminCampus',
+                          'adminTown',
+                        ]}
                       >
                         <div className="col">
                           <FormikControl

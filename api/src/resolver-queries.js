@@ -195,14 +195,11 @@ CREATE (log:HistoryLog:ServiceLog)
    log.id = apoc.create.uuid(),
    log.timeStamp = datetime(),
    log.historyRecord = leader.firstName + ' ' +leader.lastName + ' started ' + bacenta.name+' Bacenta under '+ centre.name + ' Centre'
-
 WITH leader,bacenta, log
 OPTIONAL MATCH (bacenta)<-[oldLeads:LEADS]-(oldLeader:Member)
 OPTIONAL MATCH (bacenta)-[oldHistory:HAS_HISTORY]->()-[oldLeaderHistory:HAS_HISTORY]-(oldLeader)
-
 SET oldHistory.current = false, oldLeaderHistory.current = false //nullify old history relationship
    DELETE oldLeads //Delete old relationship
-
 WITH log,bacenta,oldLeader,leader
        CALL{
          WITH log,bacenta,oldLeader, leader
@@ -225,7 +222,6 @@ WITH log,bacenta,oldLeader,leader
    MERGE (bacenta)-[r2:HAS_HISTORY]->(log)
    SET r1.current = true,
    r2.current = true
-
    RETURN leader.id AS id, leader.auth_id AS auth_id, leader.firstName AS firstName, leader.lastName AS lastName
 `
 
@@ -234,20 +230,16 @@ MATCH (leader:Member {id:$leaderId})
 MATCH (centre:Centre {id:$centreId})
 OPTIONAL MATCH (centre)<-[:HAS_CENTRE]-(campusTown) 
 UNWIND labels(campusTown) AS stream
-
 CREATE (log:HistoryLog:ServiceLog)
   SET leader.auth_id = $auth_id,
    log.id = apoc.create.uuid(),
    log.timeStamp = datetime(),
    log.historyRecord = leader.firstName + ' ' +leader.lastName + ' started ' + centre.name +' Centre under '+ campusTown.name + ' ' + stream
-
 WITH leader,centre, log
 OPTIONAL MATCH (centre)<-[oldLeads:LEADS]-(oldLeader:Member)
 OPTIONAL MATCH (centre)-[oldHistory:HAS_HISTORY]->()-[oldLeaderHistory:HAS_HISTORY]-(oldLeader)
-
 SET oldHistory.current = false, oldLeaderHistory.current = false //nullify old history relationship
    DELETE oldLeads //Delete old relationship
-
 WITH log,centre,oldLeader,leader
        CALL{
          WITH log,centre,oldLeader, leader
@@ -261,7 +253,6 @@ WITH log,centre,oldLeader,leader
        }
   
    MATCH (currentUser:Member {auth_id:$auth.jwt.sub})
-
    WITH currentUser, leader, centre, log
    MERGE (leader)-[:LEADS]->(centre)
    MERGE (log)-[:LOGGED_BY]->(currentUser)
@@ -271,7 +262,6 @@ WITH log,centre,oldLeader,leader
    MERGE (centre)-[r2:HAS_HISTORY]->(log)
    SET r1.current = true,
    r2.current = true
-
    RETURN leader.id AS id, leader.auth_id AS auth_id, leader.firstName AS firstName, leader.lastName AS lastName
 `
 
@@ -285,14 +275,11 @@ CREATE (log:HistoryLog:ServiceLog)
    log.id = apoc.create.uuid(),
    log.timeStamp = datetime(),
    log.historyRecord = leader.firstName + ' ' +leader.lastName + ' started ' + sonta.name +' Sonta under '+ campusTown.name + ' ' + stream
-
 WITH leader,sonta, log
 OPTIONAL MATCH (sonta)<-[oldLeads:LEADS]-(oldLeader:Member)
 OPTIONAL MATCH (sonta)-[oldHistory:HAS_HISTORY]->()-[oldLeaderHistory:HAS_HISTORY]-(oldLeader)
-
 SET oldHistory.current = false, oldLeaderHistory.current = false //nullify old history relationship
    DELETE oldLeads //Delete old relationship
-
 WITH log,sonta,oldLeader,leader 
        CALL{
          WITH log,sonta,oldLeader, leader
@@ -315,7 +302,6 @@ WITH log,sonta,oldLeader,leader
    MERGE (sonta)-[r2:HAS_HISTORY]->(log)
    SET r1.current = true,
    r2.current = true
-
    RETURN leader.id AS id, leader.auth_id AS auth_id, leader.firstName AS firstName, leader.lastName AS lastName
 `
 
@@ -328,14 +314,11 @@ CREATE (log:HistoryLog:ServiceLog)
    log.id = apoc.create.uuid(),
    log.timeStamp = datetime(),
    log.historyRecord = leader.firstName + ' ' +leader.lastName + ' started ' + campus.name+ ' Campus under Bishop '+ bishop.firstName+' '+bishop.lastName
-
 WITH leader,campus, log
 OPTIONAL MATCH (campus)<-[oldLeads:LEADS]-(oldLeader:Member)
 OPTIONAL MATCH (campus)-[oldHistory:HAS_HISTORY]->()-[oldLeaderHistory:HAS_HISTORY]-(oldLeader)
-
 SET oldHistory.current = false, oldLeaderHistory.current = false //nullify old history relationship
    DELETE oldLeads //Delete old relationship
-
 WITH log,campus,oldLeader,leader
        CALL{
          WITH log,campus,oldLeader, leader
@@ -358,7 +341,6 @@ WITH log,campus,oldLeader,leader
    MERGE (campus)-[r2:HAS_HISTORY]->(log)
    SET r1.current = true,
    r2.current = true
-
    RETURN leader.id AS id, leader.auth_id AS auth_id, leader.firstName AS firstName, leader.lastName AS lastName
 `
 
@@ -371,14 +353,11 @@ CREATE (log:HistoryLog:ServiceLog)
    log.id = apoc.create.uuid(),
    log.timeStamp = datetime(),
    log.historyRecord = leader.firstName + ' ' +leader.lastName + ' started ' + town.name+ ' Town under Bishop '+ bishop.firstName+' '+bishop.lastName
-
 WITH leader,town, log
 OPTIONAL MATCH (town)<-[oldLeads:LEADS]-(oldLeader:Member)
 OPTIONAL MATCH (town)-[oldHistory:HAS_HISTORY]->()-[oldLeaderHistory:HAS_HISTORY]-(oldLeader)
-
 SET oldHistory.current = false, oldLeaderHistory.current = false //nullify old history relationship
    DELETE oldLeads //Delete old relationship
-
 WITH log,town,oldLeader,leader
        CALL{
          WITH log,town,oldLeader, leader
@@ -401,9 +380,9 @@ WITH log,town,oldLeader,leader
    MERGE (town)-[r2:HAS_HISTORY]->(log)
    SET r1.current = true,
    r2.current = true
-
    RETURN leader.id AS id, leader.auth_id AS auth_id, leader.firstName AS firstName, leader.lastName AS lastName
 `
+
 export const getCentreBacentaServiceAggregates = `
   MATCH (centre:Centre {id:$id})
   

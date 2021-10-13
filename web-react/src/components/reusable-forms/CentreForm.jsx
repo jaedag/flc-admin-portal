@@ -122,6 +122,7 @@ const CentreForm = ({
                       <RoleView
                         roles={[
                           'adminFederal',
+                          'adminBishop',
                           'adminCampus',
                           'adminTown',
                           'leaderCampus',

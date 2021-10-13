@@ -173,6 +173,7 @@ const BacentaForm = ({
                       <RoleView
                         roles={[
                           'adminFederal',
+                          'adminBishop',
                           'adminCampus',
                           'adminTown',
                           'leaderCampus',

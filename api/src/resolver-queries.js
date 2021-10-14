@@ -156,7 +156,7 @@ CREATE (log:HistoryLog)
   SET admin.auth_id = $auth_id,
    log.id = apoc.create.uuid(),
    log.timeStamp = datetime(),
-   log.historyRecord = admin.firstName + " " +admin.lastName + "became the admin for " + campus.name+ " Campus"
+   log.historyRecord = admin.firstName + " " +admin.lastName + " became the admin for " + campus.name+ " Campus"
 
 WITH admin,campus, log
 OPTIONAL MATCH (campus)<-[oldLeads:IS_ADMIN_FOR]-(oldAdmin:Member)

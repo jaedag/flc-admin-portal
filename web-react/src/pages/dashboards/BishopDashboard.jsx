@@ -1,11 +1,7 @@
 import React, { useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useMutation, useQuery } from '@apollo/client'
-import {
-  BISH_DASHBOARD_COUNTS,
-  MAKE_BISHOP_ADMIN,
-  REMOVE_BISHOP_ADMIN,
-} from './DashboardQueries'
+import { BISH_DASHBOARD_COUNTS, MAKE_BISHOP_ADMIN } from './DashboardQueries'
 import NavBar from '../../components/nav/NavBar'
 import DashboardCard from '../../components/card/DashboardCard'
 import DashboardButton from '../../components/buttons/DashboardButton'
@@ -46,13 +42,12 @@ const BishopDashboard = () => {
   //Change Admin Initialised
 
   const [MakeBishopAdmin] = useMutation(MAKE_BISHOP_ADMIN)
-  const [RemoveBishopAdmin] = useMutation(REMOVE_BISHOP_ADMIN)
 
   const initialValues = {
-    adminName: bishop?.hasAdmin
-      ? `${bishop?.hasAdmin?.firstName} ${bishop?.hasAdmin?.lastName}`
+    adminName: bishop?.admin
+      ? `${bishop?.admin?.firstName} ${bishop?.admin?.lastName}`
       : '',
-    adminSelect: bishop?.hasAdmin?.id ?? '',
+    adminSelect: bishop?.admin?.id ?? '',
   }
 
   const validationSchema = Yup.object({
@@ -61,18 +56,11 @@ const BishopDashboard = () => {
     ),
   })
   const onSubmit = (values, onSubmitProps) => {
-    RemoveBishopAdmin({
-      variables: {
-        bishopId: bishopId,
-        adminId: initialValues.adminSelect,
-      },
-    }).catch((err) =>
-      throwErrorMsg('THere was a problem removing bishops admin', err)
-    )
     MakeBishopAdmin({
       variables: {
         bishopId: bishopId,
-        adminId: values.adminSelect,
+        newAdminId: values.adminSelect,
+        oldAdminId: initialValues.adminSelect,
       },
     }).catch((err) =>
       throwErrorMsg('There was a problem adding bishop admin', err)
@@ -131,7 +119,7 @@ const BishopDashboard = () => {
     sontaMemberCount = loadingText
   } else if (data) {
     bishopName = `${bishop?.firstName} ${bishop?.lastName}`
-    adminName = `Admin: ${bishop?.hasAdmin?.firstName} ${bishop?.hasAdmin?.lastName}`
+    adminName = `Admin: ${bishop?.admin?.firstName} ${bishop?.admin?.lastName}`
     memberCount = `${data.bishopMemberCount} Members`
     pastorCount = `${data.bishopPastorCount} Pastors`
     churchesCount = `${data.bishopCampusTownCount} ${capitalise(
@@ -159,12 +147,12 @@ const BishopDashboard = () => {
             <h5>{`${bishopName}'s`} Church</h5>
             <p
               onClick={() => {
-                clickCard(bishop?.hasAdmin)
+                clickCard(bishop?.admin)
                 setBishopId(bishop?.id)
                 history.push('/member/displaydetails')
               }}
             >
-              {bishop?.hasAdmin ? adminName : null}
+              {bishop?.admin ? adminName : null}
             </p>
             <RoleView roles={['adminFederal']}>
               <input

@@ -69,7 +69,7 @@ type Member {
   isAdminForBishop: [Member] @relationship(type: "IS_ADMIN_FOR", direction: OUT) #@neo4j_ignore
   isAdminForCampus: [Campus] @relationship(type: "IS_ADMIN_FOR", direction: OUT)
   isAdminForTown: [Town] @relationship(type: "IS_ADMIN_FOR", direction: OUT)
-  hasAdmin: Member @relationship(type: "IS_ADMIN_FOR", direction: IN)
+  admin: Member @relationship(type: "IS_ADMIN_FOR", direction: IN)
 
   #Members
   members(nameSearch: String): [Member]

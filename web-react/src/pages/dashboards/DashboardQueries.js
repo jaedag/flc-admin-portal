@@ -7,7 +7,7 @@ export const BISH_DASHBOARD_COUNTS = gql`
       firstName
       lastName
       pictureUrl
-      hasAdmin {
+      admin {
         id
         firstName
         lastName
@@ -41,17 +41,24 @@ export const BISH_DASHBOARD_COUNTS = gql`
   }
 `
 export const MAKE_BISHOP_ADMIN = gql`
-  mutation MakeBishopAdmin($bishopId: ID!, $adminId: ID!) {
-    MakeBishopAdmin(bishopId: $bishopId, adminId: $adminId) {
+  mutation MakeBishopAdmin($bishopId: ID!, $newAdminId: ID!, $oldAdminId: ID!) {
+    RemoveBishopAdmin(bishopId: $bishopId, adminId: $oldAdminId) {
       id
+      firstName
+      lastName
     }
-  }
-`
-
-export const REMOVE_BISHOP_ADMIN = gql`
-  mutation RemoveBishopAdmin($bishopId: ID!, $adminId: ID!) {
-    RemoveBishopAdmin(adminId: $adminId, bishopId: $bishopId) {
+    MakeBishopAdmin(bishopId: $bishopId, adminId: $newAdminId) {
       id
+      firstName
+      lastName
+      isAdminForBishop {
+        id
+        admin {
+          id
+          firstName
+          lastName
+        }
+      }
     }
   }
 `

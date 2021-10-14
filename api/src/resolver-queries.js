@@ -53,124 +53,104 @@ RETURN member.id`
 
 export const makeBishopAdmin = `
 MATCH (admin:Member {id:$adminId})
-SET admin.auth_id = $auth_id
-
-WITH admin
 MATCH (bishop:Member {id:$bishopId})
-MATCH (currentUser:Member {auth_id:$auth.jwt.sub})
-MERGE (admin)-[:IS_ADMIN_FOR]->(bishop)
-
-CREATE (log:HistoryLog)
-  SET
+CREATE (log:HistoryLog:ServiceLog)
+  SET admin.auth_id = $auth_id,
    log.id = apoc.create.uuid(),
    log.timeStamp = datetime(),
-   log.historyRecord = admin.firstName + ' ' +admin.lastName + ' became the admin for ' + bishop.firstName + ' ' + bishop.lastName
-         
-  MERGE (log)-[:LOGGED_BY]->(currentUser)
-  MERGE (date:TimeGraph {date: date()})
-  MERGE (log)-[:RECORDED_ON]->(date)
-  MERGE (admin)-[:HAS_HISTORY]->(log)
-  MERGE (bishop)-[:HAS_HISTORY]->(log)
-
-RETURN admin.auth_id
-`
-
-export const removeBishopAdmin = `
-MATCH (admin:Member {id:$adminId})
-
-WITH admin
-MATCH (bishop:Member {id:$bishopId})
-MATCH (currentUser:Member {auth_id:$auth.jwt.sub})
-MATCH (admin)-[r:IS_ADMIN_FOR]->(bishop)
-DELETE r
-
-CREATE (log:HistoryLog)
-  SET
-   log.id = apoc.create.uuid(),
-   log.timeStamp = datetime(),
-   log.historyRecord = admin.firstName + ' ' +admin.lastName + ' was removed as the admin for ' + bishop.firstName + ' ' + bishop.lastName
-         
-  MERGE (log)-[:LOGGED_BY]->(currentUser)
-  MERGE (date:TimeGraph {date: date()})
-  MERGE (log)-[:RECORDED_ON]->(date)
-  MERGE (admin)-[:HAS_HISTORY]->(log)
-  MERGE (bishop)-[:HAS_HISTORY]->(log)
-
-RETURN admin.auth_id
+   log.historyRecord = admin.firstName + ' ' +admin.lastName + ' became admin for Bishop ' + bishop.firstName  + ' ' + bishop.lastName
+WITH admin,bishop, log
+OPTIONAL MATCH (bishop)<-[oldAdmins:IS_ADMIN_FOR]-(oldAdmin:Member)
+OPTIONAL MATCH (bishop)-[oldHistory:HAS_HISTORY]->()-[oldAdminHistory:HAS_HISTORY]-(oldAdmin)
+SET oldHistory.current = false, oldAdminHistory.current = false //nullify old history relationship
+   DELETE oldAdmins //Delete old relationship
+WITH log,bishop,oldAdmin,admin
+       CALL{
+         WITH log,bishop,oldAdmin, admin
+         WITH log,bishop,oldAdmin, admin 
+         WHERE EXISTS (oldAdmin.firstName) AND oldAdmin.id <> $adminId
+        
+       MERGE (oldAdmin)-[hasHistory:HAS_HISTORY]->(log)
+       SET hasHistory.neverAdmin = true,
+       log.historyRecord = admin.firstName + ' ' +admin.lastName + ' became the admin of Bishop ' + bishop.firstName + ' ' + bishop.lastName + ' bishop replacing ' + oldAdmin.firstName +' '+oldAdmin.lastName
+       RETURN COUNT(log)
+       }
+  
+   MATCH (currentUser:Member {auth_id:$auth.jwt.sub}) 
+   WITH currentUser, admin, bishop, log
+   MERGE (admin)-[:IS_ADMIN_FOR]->(bishop)
+   MERGE (log)-[:LOGGED_BY]->(currentUser)
+   MERGE (date:TimeGraph {date: date()})
+   MERGE (log)-[:RECORDED_ON]->(date)
+   MERGE (admin)-[r1:HAS_HISTORY]->(log)
+   MERGE (bishop)-[r2:HAS_HISTORY]->(log)
+   SET r1.current = true,
+   r2.current = true
+   RETURN admin.id AS id, admin.auth_id AS auth_id, admin.firstName AS firstName, admin.lastName AS lastName
 `
 
 export const makeTownAdmin = `
 MATCH (admin:Member {id:$adminId})
-SET admin.auth_id = $auth_id
-
-WITH admin
 MATCH (town:Town {id:$townId})
-MATCH (currentUser:Member {auth_id:$auth.jwt.sub})
-MERGE (admin)-[:IS_ADMIN_FOR]->(town)
-
-CREATE (log:HistoryLog)
-  SET
+OPTIONAL MATCH (town)<-[:HAS_TOWN]-(bishop:Member)
+CREATE (log:HistoryLog:ServiceLog)
+  SET admin.auth_id = $auth_id,
    log.id = apoc.create.uuid(),
    log.timeStamp = datetime(),
-   log.name=admin.lastName,
-   log.historyRecord = admin.firstName + ' ' + admin.lastName+ ' became the admin for ' + town.name
-         
-  MERGE (log)-[:LOGGED_BY]->(currentUser)
-  MERGE (date:TimeGraph {date: date()})
-  MERGE (log)-[:RECORDED_ON]->(date)
-  MERGE (admin)-[:HAS_HISTORY]->(log)
-  MERGE (town)-[:HAS_HISTORY]->(log)
-
-RETURN admin.auth_id
-`
-
-export const removeTownAdmin = `
-MATCH (admin:Member {id:$adminId})
-
-WITH admin
-MATCH (town:Town {id:$townId})
-MATCH (currentUser:Member {auth_id:$auth.jwt.sub})
-MATCH (admin)-[r:IS_ADMIN_FOR]->(town)
-DELETE r
-
-CREATE (log:HistoryLog)
-  SET
-   log.id = apoc.create.uuid(),
-   log.timeStamp = datetime(),
-   log.name=admin.lastName,
-   log.historyRecord = admin.firstName + ' ' + admin.lastName+ ' was removed as the admin for ' + town.name
-         
-  MERGE (log)-[:LOGGED_BY]->(currentUser)
-  MERGE (date:TimeGraph {date: date()})
-  MERGE (log)-[:RECORDED_ON]->(date)
-  MERGE (admin)-[:HAS_HISTORY]->(log)
-  MERGE (town)-[:HAS_HISTORY]->(log)
-
-RETURN admin
+   log.historyRecord = admin.firstName + ' ' +admin.lastName + ' became admin for ' + town.name
+WITH admin,town, log
+OPTIONAL MATCH (town)<-[oldAdmins:IS_ADMIN_FOR]-(oldAdmin:Member)
+OPTIONAL MATCH (town)-[oldHistory:HAS_HISTORY]->()-[oldAdminHistory:HAS_HISTORY]-(oldAdmin)
+SET oldHistory.current = false, oldAdminHistory.current = false //nullify old history relationship
+   DELETE oldAdmins //Delete old relationship
+WITH log,town,oldAdmin,admin
+       CALL{
+         WITH log,town,oldAdmin, admin
+         WITH log,town,oldAdmin, admin 
+         WHERE EXISTS (oldAdmin.firstName) AND oldAdmin.id <> $adminId
+        
+       MERGE (oldAdmin)-[hasHistory:HAS_HISTORY]->(log)
+       SET hasHistory.neverAdmin = true,
+       log.historyRecord = admin.firstName + ' ' +admin.lastName + ' became the admin of ' + town.name + " Town replacing " + oldAdmin.firstName +" "+oldAdmin.lastName
+       RETURN COUNT(log)
+       }
+  
+   MATCH (currentUser:Member {auth_id:$auth.jwt.sub}) 
+   WITH currentUser, admin, town, log
+   MERGE (admin)-[:IS_ADMIN_FOR]->(town)
+   MERGE (log)-[:LOGGED_BY]->(currentUser)
+   MERGE (date:TimeGraph {date: date()})
+   MERGE (log)-[:RECORDED_ON]->(date)
+   MERGE (admin)-[r1:HAS_HISTORY]->(log)
+   MERGE (town)-[r2:HAS_HISTORY]->(log)
+   SET r1.current = true,
+   r2.current = true
+   RETURN admin.id AS id, admin.auth_id AS auth_id, admin.firstName AS firstName, admin.lastName AS lastName
 `
 
 export const makeCampusAdmin = `
 MATCH (admin:Member {id:$adminId})
 MATCH (campus:Campus {id:$campusId})
-CREATE (log:HistoryLog)
+OPTIONAL MATCH (campus)<-[:HAS_CAMPUS]-(bishop:Member)
+CREATE (log:HistoryLog:ServiceLog)
   SET admin.auth_id = $auth_id,
    log.id = apoc.create.uuid(),
    log.timeStamp = datetime(),
-   log.historyRecord = admin.firstName + " " +admin.lastName + " became the admin for " + campus.name+ " Campus"
-
+   log.historyRecord = admin.firstName + ' ' +admin.lastName + ' became admin for ' + campus.name
 WITH admin,campus, log
-OPTIONAL MATCH (campus)<-[oldLeads:IS_ADMIN_FOR]-(oldAdmin:Member)
+OPTIONAL MATCH (campus)<-[oldAdmins:IS_ADMIN_FOR]-(oldAdmin:Member)
 OPTIONAL MATCH (campus)-[oldHistory:HAS_HISTORY]->()-[oldAdminHistory:HAS_HISTORY]-(oldAdmin)
-  DELETE oldLeads //Delete old relationship
-
+SET oldHistory.current = false, oldAdminHistory.current = false //nullify old history relationship
+   DELETE oldAdmins //Delete old relationship
 WITH log,campus,oldAdmin,admin
        CALL{
          WITH log,campus,oldAdmin, admin
-         WITH log,campus,oldAdmin, admin
-         WHERE EXISTS (oldAdmin.firstName)
+         WITH log,campus,oldAdmin, admin 
+         WHERE EXISTS (oldAdmin.firstName) AND oldAdmin.id <> $adminId
         
        MERGE (oldAdmin)-[hasHistory:HAS_HISTORY]->(log)
-      SET log.historyRecord = admin.firstName + " " +admin.lastName + " became the admin of " + campus.name + " Campus replacing " + oldAdmin.firstName +" "+oldAdmin.lastName
+       SET hasHistory.neverAdmin = true,
+       log.historyRecord = admin.firstName + ' ' +admin.lastName + ' became the admin of ' + campus.name + " Campus replacing " + oldAdmin.firstName +" "+oldAdmin.lastName
        RETURN COUNT(log)
        }
   
@@ -180,9 +160,10 @@ WITH log,campus,oldAdmin,admin
    MERGE (log)-[:LOGGED_BY]->(currentUser)
    MERGE (date:TimeGraph {date: date()})
    MERGE (log)-[:RECORDED_ON]->(date)
-   MERGE (admin)-[:HAS_HISTORY]->(log)
-   MERGE (campus)-[:HAS_HISTORY]->(log)
-
+   MERGE (admin)-[r1:HAS_HISTORY]->(log)
+   MERGE (campus)-[r2:HAS_HISTORY]->(log)
+   SET r1.current = true,
+   r2.current = true
    RETURN admin.id AS id, admin.auth_id AS auth_id, admin.firstName AS firstName, admin.lastName AS lastName
 `
 

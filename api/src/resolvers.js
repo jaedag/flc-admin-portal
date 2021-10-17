@@ -554,7 +554,7 @@ const RemoveServant = async (
         notifyMember(
           servant,
           'You Have Been Removed!',
-          `Hi ${servant.firstName} ${servant.lastName},\nYou have lost your position as a ${churchType} ${servantType} for ${churchInEmail}.\nIf you feel that this is a mistake, please contact your bishops admin.\nThank you\nRegards\nThe Administrator\nFirst Love Center\nAccra`,
+          `Hi ${servant.firstName} ${servant.lastName},\nYou have lost your position as a ${churchType} ${servantType} for ${churchInEmail}.\nIf you feel that this is a mistake, please contact your bishops admin.\nThank you\n\nRegards\nThe Administrator\nFirst Love Center\nAccra`,
           'servant_account_deleted',
           [
             servant.firstName,
@@ -592,7 +592,7 @@ const RemoveServant = async (
                 notifyMember(
                   servant,
                   'Your Servant Account Has Been Deleted',
-                  `Hi ${servant.firstName} ${servant.lastName},\nYour account has been deleted from our portal. You will no longer have access to any data.\nThis is due to the fact that you have been removed as a ${churchType} ${servantType} for ${churchInEmail}.\nIf you feel that this is a mistake, please contact your bishops admin.\nThank you\nRegards\nThe Administrator\nFirst Love Center\nAccra`,
+                  `Hi ${servant.firstName} ${servant.lastName},\nYour account has been deleted from our portal. You will no longer have access to any data.\nThis is due to the fact that you have been removed as a ${churchType} ${servantType} for ${churchInEmail}.\nIf you feel that this is a mistake, please contact your bishops admin.\nThank you\n\nRegards\nThe Administrator\nFirst Love Center\nAccra`,
                   'servant_account_deleted',
                   [
                     servant.firstName,
@@ -630,7 +630,7 @@ const RemoveServant = async (
             notifyMember(
               servant,
               'ServantHood Status Update',
-              `Hi ${servant.firstName} ${servant.lastName},\nUnfortunately You have just been removed as a ${churchType} ${servantType} for ${churchInEmail}.\nRegards,\nThe Administrator,\nFirst Love Centre,\nAccra.`
+              `Hi ${servant.firstName} ${servant.lastName},\nUnfortunately You have just been removed as a ${churchType} ${servantType} for ${churchInEmail}.\n\nRegards,\nThe Administrator,\nFirst Love Centre,\nAccra.`
             )
           }
         })

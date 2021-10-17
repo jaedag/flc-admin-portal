@@ -12,7 +12,7 @@ import { DISPLAY_BACENTA } from '../display/ReadQueries'
 import { LOG_BACENTA_HISTORY } from './LogMutations'
 import { MAKE_BACENTA_LEADER } from './ChangeLeaderMutations'
 import BacentaForm from 'components/reusable-forms/BacentaForm'
-import { throwErrorMsg } from 'global-utils'
+import { repackDecimals, throwErrorMsg } from 'global-utils'
 
 const UpdateBacenta = () => {
   const { centreId, setCentreId, bacentaId } = useContext(ChurchContext)
@@ -36,8 +36,8 @@ const UpdateBacenta = () => {
     townCampusSelect: bacenta?.centre?.town?.id ?? bacenta?.centre?.campus?.id,
     centreSelect: bacenta?.centre?.id,
     meetingDay: bacenta?.meetingDay?.day,
-    venueLatitude: parseFloat(bacenta?.location?.latitude) ?? '',
-    venueLongitude: parseFloat(bacenta?.location?.longitude) ?? '',
+    venueLatitude: repackDecimals(bacenta?.location?.latitude),
+    venueLongitude: repackDecimals(bacenta?.location?.longitude),
   }
 
   const [LogBacentaHistory] = useMutation(LOG_BACENTA_HISTORY, {
@@ -87,6 +87,8 @@ const UpdateBacenta = () => {
   //onSubmit receives the form state as argument
   const onSubmit = (values, onSubmitProps) => {
     setCentreId(values.centreSelect)
+    values.venueLongitude = parseFloat(values.venueLongitude)
+    values.venueLatitude = parseFloat(values.venueLatitude)
 
     //Log if the Leader Changes
     if (values.leaderId !== initialValues.leaderId) {
@@ -143,8 +145,8 @@ const UpdateBacenta = () => {
 
     //Log if the Venue Changes
     if (
-      values.venueLongitude !== initialValues.venueLongitude ||
-      values.venueLatitude !== initialValues.venueLatitude
+      repackDecimals(values.venueLongitude) !== initialValues.venueLongitude ||
+      repackDecimals(values.venueLatitude) !== initialValues.venueLatitude
     ) {
       LogBacentaHistory({
         variables: {
@@ -165,8 +167,8 @@ const UpdateBacenta = () => {
         name: values.bacentaName,
         leaderId: values.leaderId,
         meetingDay: values.meetingDay,
-        venueLongitude: parseFloat(values.venueLongitude),
-        venueLatitude: parseFloat(values.venueLatitude),
+        venueLongitude: values.venueLongitude,
+        venueLatitude: values.venueLatitude,
       },
     })
       .then(() => history.push(`/bacenta/displaydetails`))

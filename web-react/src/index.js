@@ -698,13 +698,25 @@ const PastorsAdmin = () => {
                 exact
               />
               <ProtectedRoute
-                roles={['all']}
+                roles={[
+                  'adminFederal',
+                  'adminBishop',
+                  'adminTown',
+                  'bishop',
+                  'leaderTown',
+                ]}
                 path="/town/displaydetails"
                 component={DisplayCampusTownDetails}
                 exact
               />
               <ProtectedRoute
-                roles={['all']}
+                roles={[
+                  'adminFederal',
+                  'adminBishop',
+                  'adminCampus',
+                  'bishop',
+                  'leaderCampus',
+                ]}
                 path="/campus/displaydetails"
                 component={DisplayCampusTownDetails}
                 exact

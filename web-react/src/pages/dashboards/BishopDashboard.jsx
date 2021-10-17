@@ -62,9 +62,11 @@ const BishopDashboard = () => {
         newAdminId: values.adminSelect,
         oldAdminId: initialValues.adminSelect,
       },
-    }).catch((err) =>
-      throwErrorMsg('There was a problem adding bishop admin', err)
-    )
+    })
+      .then(() => alert('Admin Was Changed Successfully!'))
+      .catch((err) =>
+        throwErrorMsg('There was a problem adding bishop admin', err)
+      )
 
     onSubmitProps.setSubmitting(false)
     onSubmitProps.resetForm()

@@ -106,6 +106,12 @@ export const parsePhoneNum = (phoneNumber) => {
     .replace(')', '')
 }
 
+export const repackDecimals = (decimal) => {
+  if (decimal === 0) {
+    return '0.0'
+  } else return parseFloat(decimal)
+}
+
 export const makeSelectOptions = (data) => {
   if (!data) {
     return null

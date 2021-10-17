@@ -326,7 +326,7 @@ const MemberRoleList = ({ member }) => {
         View Records
       </DashboardButton>
 
-      <button className="btn btn-primary" onClick={createAccount}>
+      <button className="btn btn-primary d-none" onClick={createAccount}>
         Click To Create Account
       </button>
 

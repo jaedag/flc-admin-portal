@@ -22,7 +22,7 @@ const UserProfileEditPage = () => {
     variables: { id: currentUser.id },
   })
   const member = memberData?.member
-  console.log(member)
+
   const initialValues = {
     firstName: member?.firstName ? member?.firstName : '',
     middleName: member?.middleName ? member?.middleName : '',

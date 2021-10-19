@@ -1542,7 +1542,7 @@ type Mutation {
                      	WITH bacenta
                       WITH bacenta WHERE $meetingDay IS NOT NULL
                       MATCH (meetingDay:ServiceDay {day: $meetingDay})
-                      OPTIONAL MATCH (bacenta)<-[r:MEETS_ON]-()
+                      OPTIONAL MATCH (bacenta)-[r:MEETS_ON]->()
                       DELETE r
                       MERGE (bacenta)-[:MEETS_ON]->(meetingDay)
                      	RETURN count(bacenta)

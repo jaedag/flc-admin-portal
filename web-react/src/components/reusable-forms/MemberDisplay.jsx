@@ -47,7 +47,9 @@ const MemberDisplay = ({ memberId }) => {
               <div className="row">
                 <div className="col">
                   <MemberDetailsCard
-                    editlink="/member/editmember"
+                    editlink={
+                      atProfile ? '/user-profile/edit' : '/member/editmember'
+                    }
                     title={nameAndTitle}
                   >
                     <div className="row row-cols-1 my-2">
@@ -79,7 +81,12 @@ const MemberDisplay = ({ memberId }) => {
               <div className="row">
                 <div className="col">
                   {/* Bio Information */}
-                  <MemberDetailsCard title="Bio" editlink="/member/editmember">
+                  <MemberDetailsCard
+                    title="Bio"
+                    editlink={
+                      atProfile ? '/user-profile/edit' : '/member/editmember'
+                    }
+                  >
                     <div className="container p-2">
                       <div className="row py-2">
                         <div className="col ">
@@ -228,7 +235,9 @@ const MemberDisplay = ({ memberId }) => {
                 <div className="col">
                   <MemberDetailsCard
                     title="Current Church Groups"
-                    editlink="/member/editmember"
+                    editlink={
+                      atProfile ? '/user-profile/edit' : '/member/editmember'
+                    }
                   >
                     <div className="container p-2">
                       <div className="row mb-2">

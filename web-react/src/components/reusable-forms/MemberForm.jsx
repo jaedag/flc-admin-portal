@@ -78,7 +78,7 @@ function MemberForm({ initialValues, onSubmit, title }) {
                     name="pictureUrl"
                     initialValue={initialValues.pictureUrl}
                     uploadPreset={process.env.REACT_APP_CLOUDINARY_MEMBERS}
-                    placeholder="Upload an Image"
+                    placeholder="Upload an Image *"
                     setFieldValue={formik.setFieldValue}
                     aria-describedby="ImageUpload"
                   />

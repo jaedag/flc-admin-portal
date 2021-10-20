@@ -1131,7 +1131,12 @@ type Mutation {
       """
     )
 
-  CreateTown(townName: String!, leaderId: ID!, bishopId: ID!): Town
+  CreateTown(
+    townName: String!
+    leaderId: ID!
+    bishopId: ID!
+    centres: [ID]
+  ): Town
     @auth(rules: [{ roles: ["adminFederal", "adminBishop"] }])
     @cypher(
       statement: """

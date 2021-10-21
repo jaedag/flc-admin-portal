@@ -179,6 +179,7 @@ const UpdateBacenta = () => {
     onSubmitProps.resetForm()
     history.push(`/bacenta/displaydetails`)
   }
+
   return (
     <BacentaForm
       title="Update Bacenta"

@@ -12,10 +12,10 @@ import { DISPLAY_BACENTA } from '../display/ReadQueries'
 import { LOG_BACENTA_HISTORY } from './LogMutations'
 import { MAKE_BACENTA_LEADER } from './ChangeLeaderMutations'
 import BacentaForm from 'components/reusable-forms/BacentaForm'
-import { repackDecimals, throwErrorMsg } from 'global-utils'
+import { alertMsg, repackDecimals, throwErrorMsg } from 'global-utils'
 
 const UpdateBacenta = () => {
-  const { centreId, setCentreId, bacentaId } = useContext(ChurchContext)
+  const { setCentreId, bacentaId } = useContext(ChurchContext)
 
   const {
     data: bacentaData,
@@ -48,7 +48,6 @@ const UpdateBacenta = () => {
   })
   const [UpdateBacenta] = useMutation(UPDATE_BACENTA, {
     refetchQueries: [
-      { query: GET_CENTRE_BACENTAS, variables: { id: centreId } },
       {
         query: GET_CENTRE_BACENTAS,
         variables: { id: initialValues.centreSelect },
@@ -90,18 +89,18 @@ const UpdateBacenta = () => {
     values.venueLongitude = parseFloat(values.venueLongitude)
     values.venueLatitude = parseFloat(values.venueLatitude)
 
-    //Log if the Leader Changes
-    if (values.leaderId !== initialValues.leaderId) {
-      MakeBacentaLeader({
-        variables: {
-          oldLeaderId: initialValues.leaderId,
-          newLeaderId: values.leaderId,
-          bacentaId: bacentaId,
-        },
-      }).catch((err) =>
-        throwErrorMsg('There was a problem changing bacenta leader', err)
-      )
-    }
+    UpdateBacenta({
+      variables: {
+        id: bacentaId,
+        name: values.bacentaName,
+        leaderId: values.leaderId,
+        meetingDay: values.meetingDay,
+        venueLongitude: values.venueLongitude,
+        venueLatitude: values.venueLatitude,
+      },
+    }).catch((error) =>
+      throwErrorMsg('There was an error updating this bacenta', error)
+    )
 
     //Log If The Centre Changes
     if (values.centreSelect !== initialValues.centreSelect) {
@@ -161,23 +160,24 @@ const UpdateBacenta = () => {
       })
     }
 
-    UpdateBacenta({
-      variables: {
-        id: bacentaId,
-        name: values.bacentaName,
-        leaderId: values.leaderId,
-        meetingDay: values.meetingDay,
-        venueLongitude: values.venueLongitude,
-        venueLatitude: values.venueLatitude,
-      },
-    })
-      .then(() => history.push(`/bacenta/displaydetails`))
-      .catch((error) =>
-        throwErrorMsg('There was an error updating this bacenta', error)
-      )
+    //Log if the Leader Changes
+    if (values.leaderId !== initialValues.leaderId) {
+      MakeBacentaLeader({
+        variables: {
+          oldLeaderId: initialValues.leaderId,
+          newLeaderId: values.leaderId,
+          bacentaId: bacentaId,
+        },
+      })
+        .then(() => alertMsg('Leader Changed Successfully'))
+        .catch((err) =>
+          throwErrorMsg('There was a problem changing bacenta leader', err)
+        )
+    }
 
     onSubmitProps.setSubmitting(false)
     onSubmitProps.resetForm()
+    history.push(`/bacenta/displaydetails`)
   }
   return (
     <BacentaForm

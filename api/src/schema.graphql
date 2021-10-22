@@ -1061,7 +1061,7 @@ type Mutation {
     )
     @cypher(
       statement: """
-      MERGE (member:Member {whatsappNumber:$whatsappNumber})
+      CREATE (member:Member {whatsappNumber:$whatsappNumber})
       SET
       	member.id = apoc.create.uuid(),
       	member.firstName = $firstName,

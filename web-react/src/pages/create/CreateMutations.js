@@ -242,7 +242,7 @@ export const CREATE_CAMPUS_MUTATION = gql`
       name
       bishop {
         id
-        isBishopForTown {
+        isBishopForCampus {
           id
           name
         }

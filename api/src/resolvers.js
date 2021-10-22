@@ -544,7 +544,6 @@ const RemoveServant = async (
         : `Bishop ${church.firstName} ${church.lastName}`
 
       if (servant[`${verb}`].length > 1) {
-        console.log('More than one of this role')
         //If he leads more than one Church don't touch his Auth0 roles
         console.log(
           `${servant.firstName} ${servant.lastName} leads more than one ${churchType}`

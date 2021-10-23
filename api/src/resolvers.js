@@ -628,7 +628,7 @@ const RemoveServant = async (
             //Send Email Using Mailgun
             notifyMember(
               servant,
-              'ServantHood Status Update',
+              'You Have Been Removed!',
               `Hi ${servant.firstName} ${servant.lastName},\nUnfortunately You have just been removed as a ${churchType} ${servantType} for ${churchInEmail}.\n\nRegards,\nThe Administrator,\nFirst Love Centre,\nAccra.`
             )
           }

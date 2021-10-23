@@ -18,12 +18,6 @@ export const LOG_BACENTA_HISTORY = gql`
       newCentreId: $newCentreId
     ) {
       id
-      name
-      leader {
-        id
-        firstName
-        lastName
-      }
       history(options: { limit: 10 }) {
         id
         timeStamp

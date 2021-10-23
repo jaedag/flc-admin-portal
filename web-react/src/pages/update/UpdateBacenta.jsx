@@ -40,12 +40,8 @@ const UpdateBacenta = () => {
     venueLongitude: repackDecimals(bacenta?.location?.longitude),
   }
 
-  const [LogBacentaHistory] = useMutation(LOG_BACENTA_HISTORY, {
-    refetchQueries: [{ query: DISPLAY_BACENTA, variables: { id: bacentaId } }],
-  })
-  const [MakeBacentaLeader] = useMutation(MAKE_BACENTA_LEADER, {
-    refetchQueries: [{ query: DISPLAY_BACENTA, variables: { id: bacentaId } }],
-  })
+  const [LogBacentaHistory] = useMutation(LOG_BACENTA_HISTORY)
+  const [MakeBacentaLeader] = useMutation(MAKE_BACENTA_LEADER)
   const [UpdateBacenta] = useMutation(UPDATE_BACENTA, {
     refetchQueries: [
       {

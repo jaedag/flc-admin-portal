@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/client'
 
-import { parsePhoneNum } from '../../global-utils'
+import { parsePhoneNum, throwErrorMsg } from '../../global-utils'
 import { UPDATE_MEMBER_MUTATION } from './UpdateMutations'
 import { DISPLAY_MEMBER } from '../display/ReadQueries'
 import NavBar from '../../components/nav/NavBar'
@@ -68,6 +68,7 @@ const UpdateMember = () => {
   const [AddMemberTitle] = useMutation(ADD_MEMBER_TITLE_MUTATION)
 
   const onSubmit = async (values, onSubmitProps) => {
+    const { setSubmitting, resetForm } = onSubmitProps
     //Variables that are not controlled by formik
 
     const pastoralAppointment = filterPastoralTitles(values.pastoralAppointment)
@@ -81,7 +82,7 @@ const UpdateMember = () => {
         gender: values.gender,
         phoneNumber: parsePhoneNum(values.phoneNumber),
         whatsappNumber: parsePhoneNum(values.whatsappNumber),
-        email: values.email.trim(),
+        email: values.email.trim().toLowerCase(),
         dob: values.dob,
         maritalStatus: values.maritalStatus,
         occupation: values.occupation,
@@ -90,19 +91,31 @@ const UpdateMember = () => {
         bacenta: values.bacenta,
         ministry: values.ministry,
       },
-    }).then((res) => {
-      AddMemberTitle({
-        variables: {
-          memberId: res.data.UpdateMemberDetails.id,
-          title: pastoralAppointment.map((title) => title.title),
-          status: true,
-          date: pastoralAppointment.map((title) => title.date),
-        },
-      })
-
-      onSubmitProps.setSubmitting(false)
-      onSubmitProps.resetForm()
     })
+      .then((res) => {
+        pastoralAppointment.forEach((title) => {
+          if (!title.date) {
+            return
+          }
+
+          AddMemberTitle({
+            variables: {
+              memberId: res.data.UpdateMemberDetails.id,
+              title: title.title,
+              status: true,
+              date: title.date,
+            },
+          }).catch((error) =>
+            throwErrorMsg(`There was a problem adding member title`, error)
+          )
+        })
+
+        setSubmitting(false)
+        resetForm()
+      })
+      .catch((err) =>
+        throwErrorMsg('There was an error creating the member profile\n', err)
+      )
     history.push('/member/displaydetails')
   }
 

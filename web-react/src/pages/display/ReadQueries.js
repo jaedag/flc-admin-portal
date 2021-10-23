@@ -249,6 +249,12 @@ export const DISPLAY_BACENTA = gql`
           title
         }
       }
+      services {
+        id
+        serviceRecords(options: { limit: 1 }) {
+          week
+        }
+      }
       history(options: { limit: 10 }) {
         id
         timeStamp

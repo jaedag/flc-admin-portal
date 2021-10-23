@@ -339,6 +339,9 @@ const MakeServant = async (
       // Rearrange  member object
       servant = rearrangeMemberObject(servant, response)
       // errorHandling(servant)
+      const churchInEmail = church.name
+        ? `${church.name} ${church.type[0]}`
+        : `Bishop ${church.firstName} ${church.lastName}`
 
       //Check for AuthID of servant
       axios(getAuthIdConfig(servant))
@@ -355,7 +358,7 @@ const MakeServant = async (
                     notifyMember(
                       servant,
                       'Your account has been created on the FL Admin Portal',
-                      `Hi ${servant.firstName} ${servant.lastName},\nYour account has just been created on the First Love Church Administrative Portal. Please set up your password by clicking ${res.data.ticket}. If you feel this is a mistake please contact your bishops admin.\n\nAfterwards, you can login by clicking https://flcadmin.netlify.app/\n\nRegards\nThe Administrator\nFirst Love Center\nAccra`,
+                      `Hi ${servant.firstName} ${servant.lastName},\n\nCongratulations on being made a ${churchType} ${servantType} for ${churchInEmail}. Your account has just been created on the First Love Church Administrative Portal. Please set up your password by clicking ${res.data.ticket}. If you feel this is a mistake please contact your bishops admin.\n\nAfterwards, you can login by clicking https://flcadmin.netlify.app/\n\nRegards\nThe Administrator\nFirst Love Center\nAccra`,
                       'servant_account_created',
                       [servant.firstName, res?.data?.ticket]
                     )
@@ -422,15 +425,11 @@ const MakeServant = async (
                   authRoles[`${servantLower}${churchType}`].id,
                 ])
 
-                const churchInEmail = church.name
-                  ? `${church.name} ${church.type[0]}`
-                  : `Bishop ${church.firstName} ${church.lastName}`
-
                 //Send Email Using Mailgun
                 notifyMember(
                   servant,
                   'Servanthood Status Update',
-                  `Hi ${servant.firstName} ${servant.lastName},\nCongratulations! You have just been made a ${churchType} ${servantType} for ${churchInEmail}.If you feel this is a mistake, please contact your bishop's admin\n\nRegards,\nThe Administrator,\nFirst Love Centre,\nAccra.`,
+                  `Hi ${servant.firstName} ${servant.lastName},\nCongratulations! You have just been made a ${churchType} ${servantType} for ${churchInEmail}. If you feel this is a mistake, please contact your bishop's admin\n\nRegards,\nThe Administrator,\nFirst Love Centre,\nAccra.`,
                   'servant_status_update',
                   [
                     servant.firstName,
@@ -540,11 +539,31 @@ const RemoveServant = async (
       // Rearrange member object
       servant = rearrangeMemberObject(servant, response)
 
+      const churchInEmail = church.name
+        ? `${church.name} ${church.type[0]}`
+        : `Bishop ${church.firstName} ${church.lastName}`
+
       if (servant[`${verb}`].length > 1) {
         //If he leads more than one Church don't touch his Auth0 roles
         console.log(
           `${servant.firstName} ${servant.lastName} leads more than one ${churchType}`
         )
+
+        //Send a Mail to That Effect
+        notifyMember(
+          servant,
+          'You Have Been Removed!',
+          `Hi ${servant.firstName} ${servant.lastName},\nYou have lost your position as a ${churchType} ${servantType} for ${churchInEmail}.\nIf you feel that this is a mistake, please contact your bishops admin.\nThank you\n\nRegards\nThe Administrator\nFirst Love Center\nAccra`,
+          'servant_account_deleted',
+          [
+            servant.firstName,
+            churchType,
+            servantType,
+            church.name,
+            church.type[0],
+          ]
+        )
+
         return
       }
 
@@ -558,7 +577,10 @@ const RemoveServant = async (
           const roles = res.data.map((role) => role.name)
 
           //If the person is only a constituency Admin, delete auth0 profile
-          if (roles.includes(`leader${churchType}`) && roles.length === 1) {
+          if (
+            roles.includes(`${servantLower}${churchType}`) &&
+            roles.length === 1
+          ) {
             axios(deleteAuthUserConfig(servant.auth_id))
               .then(async () => {
                 console.log(
@@ -569,7 +591,7 @@ const RemoveServant = async (
                 notifyMember(
                   servant,
                   'Your Servant Account Has Been Deleted',
-                  `Hi ${servant.firstName} ${servant.lastName},\nYour account has been deleted from our portal. You will no longer have access to any data.\nThis is due to the fact that you have been removed as a ${churchType} ${servantType} for ${church.name} ${church.type[0]}.\nIf you feel that this is a mistake, please contact your bishops admin.\nThank you\nRegards\nThe Administrator\nFirst Love Center\nAccra`,
+                  `Hi ${servant.firstName} ${servant.lastName},\nYour account has been deleted from our portal. You will no longer have access to any data.\nThis is due to the fact that you have been removed as a ${churchType} ${servantType} for ${churchInEmail}.\nIf you feel that this is a mistake, please contact your bishops admin.\nThank you\n\nRegards\nThe Administrator\nFirst Love Center\nAccra`,
                   'servant_account_deleted',
                   [
                     servant.firstName,
@@ -593,7 +615,10 @@ const RemoveServant = async (
           }
 
           //If the person is a centre leader as well as any other position, remove role centre leader
-          if (roles.includes(`leader${churchType}`) && roles.length > 1) {
+          if (
+            roles.includes(`${servantLower}${churchType}`) &&
+            roles.length > 1
+          ) {
             removeRoles(
               servant.auth_id,
               roles,
@@ -603,8 +628,8 @@ const RemoveServant = async (
             //Send Email Using Mailgun
             notifyMember(
               servant,
-              'ServantHood Status Update',
-              `Hi ${servant.firstName} ${servant.lastName},\nUnfortunately You have just been removed as a ${churchType} ${servantType} for ${church.name} ${church.type[0]}.\nRegards,\nThe Administrator,\nFirst Love Centre,\nAccra.`
+              'You Have Been Removed!',
+              `Hi ${servant.firstName} ${servant.lastName},\nUnfortunately You have just been removed as a ${churchType} ${servantType} for ${churchInEmail}.\n\nRegards,\nThe Administrator,\nFirst Love Centre,\nAccra.`
             )
           }
         })

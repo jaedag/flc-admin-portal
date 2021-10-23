@@ -99,6 +99,7 @@ const DisplayChurchDetails = (props) => {
     togglePopup()
   }
   //End of Admin Change
+
   return (
     <>
       <div className=" py-2 top-heading title-bar mt-4">
@@ -210,11 +211,13 @@ const DisplayChurchDetails = (props) => {
             <DashboardButton btnLink={`/${churchType.toLowerCase()}/reports`}>
               View Records
             </DashboardButton>
-            <DashboardButton
-              btnLink={`/${churchType.toLowerCase()}/record-service`}
-            >
-              Fill Service Form
-            </DashboardButton>
+            {!props.alreadyFilled && (
+              <DashboardButton
+                btnLink={`/${churchType.toLowerCase()}/record-service`}
+              >
+                Fill Service Form
+              </DashboardButton>
+            )}
           </div>
         </div>
       </div>

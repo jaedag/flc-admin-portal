@@ -223,7 +223,7 @@ export const GET_BISHOP_CAMPUSES = gql`
           id
           firstName
           lastName
-          hasAdmin {
+          admin {
             id
             firstName
             lastName
@@ -278,7 +278,7 @@ export const GET_BISHOP_TOWNS = gql`
           id
           firstName
           lastName
-          hasAdmin {
+          admin {
             id
             firstName
             lastName

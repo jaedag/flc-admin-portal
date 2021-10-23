@@ -547,6 +547,9 @@ export const UPDATE_BACENTA = gql`
       centre {
         id
         name
+        bacentas {
+          id
+        }
         town {
           id
           name
@@ -570,7 +573,6 @@ export const UPDATE_BACENTA = gql`
         id
         firstName
         lastName
-        whatsappNumber
         title {
           title
         }

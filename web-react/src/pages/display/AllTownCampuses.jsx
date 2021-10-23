@@ -58,15 +58,15 @@ const DisplayAllTownCampuses = () => {
                 >
                   <h4>{`${towns[0].bishop.firstName} ${towns[0].bishop.lastName}'s Towns`}</h4>
                 </Link>
-                {towns[0].bishop?.hasAdmin ? (
+                {towns[0].bishop?.admin ? (
                   <Link
                     className="pb-4"
                     to="/member/displaydetails"
                     onClick={() => {
-                      clickCard(towns[0].bishop?.hasAdmin)
+                      clickCard(towns[0].bishop?.admin)
                     }}
                   >
-                    {`Admin: ${towns[0].bishop?.hasAdmin?.firstName} ${towns[0].bishop?.hasAdmin?.lastName}`}
+                    {`Admin: ${towns[0].bishop?.admin?.firstName} ${towns[0].bishop?.admin?.lastName}`}
                   </Link>
                 ) : null}
               </div>
@@ -112,15 +112,15 @@ const DisplayAllTownCampuses = () => {
                 >
                   <h4>{`${campus[0].bishop.firstName} ${campus[0].bishop.lastName}'s Campuses`}</h4>
                 </Link>
-                {campus[0].bishop?.hasAdmin ? (
+                {campus[0].bishop?.admin ? (
                   <Link
                     className="pb-4"
                     to="/member/displaydetails"
                     onClick={() => {
-                      clickCard(campus[0].bishop?.hasAdmin)
+                      clickCard(campus[0].bishop?.admin)
                     }}
                   >
-                    {`Admin: ${campus[0].bishop?.hasAdmin?.firstName} ${campus[0].bishop?.hasAdmin?.lastName}`}
+                    {`Admin: ${campus[0].bishop?.admin?.firstName} ${campus[0].bishop?.admin?.lastName}`}
                   </Link>
                 ) : null}
               </div>

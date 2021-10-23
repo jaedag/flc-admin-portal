@@ -24,6 +24,18 @@ export const RECORD_SERVICE = gql`
       servicePicture: $servicePicture
     ) {
       id
+      historyLog {
+        id
+        bacenta {
+          id
+          services {
+            id
+            serviceRecords {
+              id
+            }
+          }
+        }
+      }
     }
   }
 `
@@ -40,6 +52,18 @@ export const RECORD_CANCELLED_SERVICE = gql`
       noServiceReason: $noServiceReason
     ) {
       id
+      historyLog {
+        id
+        bacenta {
+          id
+          services {
+            id
+            serviceRecords {
+              id
+            }
+          }
+        }
+      }
     }
   }
 `

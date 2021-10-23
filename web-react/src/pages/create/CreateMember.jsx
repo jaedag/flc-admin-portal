@@ -80,7 +80,7 @@ const CreateMember = () => {
         gender: values.gender,
         phoneNumber: parsePhoneNum(values.phoneNumber),
         whatsappNumber: parsePhoneNum(values.whatsappNumber),
-        email: values.email.trim(),
+        email: values.email.trim().toLowerCase(),
         dob: values.dob,
         maritalStatus: values.maritalStatus,
         occupation: values.occupation,
@@ -89,34 +89,31 @@ const CreateMember = () => {
         bacenta: values.bacenta,
         ministry: values.ministry,
       },
-    }).then((res) => {
-      pastoralAppointment.forEach((title) => {
-        AddMemberTitle({
-          variables: {
-            memberId: res.data.CreateMember.id,
-            title: title.title,
-            status: true,
-            date: title.date,
-          },
-        }).catch((error) =>
-          throwErrorMsg(`There was a problem adding member title`, error)
-        )
-      })
-
-      // AddMemberTitle({
-      //   variables: {
-      //     memberId: res.data.CreateMember.id,
-      //     title: pastoralAppointment.map((title) => title.title),
-      //     status: true,
-      //     date: pastoralAppointment.map((title) => title.date),
-      //   },
-      // }).catch((error) =>
-      //   throwErrorMsg(`There was a problem creating member`, error)
-      // )
-
-      setSubmitting(false)
-      resetForm()
     })
+      .then((res) => {
+        pastoralAppointment.forEach((title) => {
+          if (!title.date) {
+            return
+          }
+
+          AddMemberTitle({
+            variables: {
+              memberId: res.data.CreateMember.id,
+              title: title.title,
+              status: true,
+              date: title.date,
+            },
+          }).catch((error) =>
+            throwErrorMsg(`There was a problem adding member title`, error)
+          )
+        })
+
+        setSubmitting(false)
+        resetForm()
+      })
+      .catch((err) =>
+        throwErrorMsg('There was an error creating the member profile\n', err)
+      )
     history.push('/member/displaydetails')
   }
 

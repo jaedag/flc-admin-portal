@@ -55,11 +55,11 @@ const CreateTownCampus = () => {
         },
       })
         .then((res) => {
-          clickCard(res.data.CreateTown.isBishopForTown[0])
+          clickCard(res.data.CreateTown.bishop.isBishopForTown[0])
           NewTownLeader({
             variables: {
               leaderId: values.leaderId,
-              townId: res.data.CreateTown.isBishopForTown[0].id,
+              townId: res.data.CreateTown.bishop.isBishopForTown[0].id,
             },
           }).catch((error) => {
             throwErrorMsg('There was an error adding leader', error)
@@ -78,11 +78,11 @@ const CreateTownCampus = () => {
         },
       })
         .then((res) => {
-          clickCard(res.data.CreateCampus.isBishopForCampus[0])
+          clickCard(res.data.CreateCampus.bishop.isBishopForCampus[0])
           NewCampusLeader({
             variables: {
               leaderId: values.leaderId,
-              campusId: res.data.CreateCampus.isBishopForCampus[0].id,
+              campusId: res.data.CreateCampus.bishop.isBishopForCampus[0].id,
             },
           }).catch((error) => {
             throwErrorMsg('There was an error adding leader', error)

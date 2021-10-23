@@ -69,7 +69,7 @@ type Member {
   isAdminForBishop: [Member] @relationship(type: "IS_ADMIN_FOR", direction: OUT) #@neo4j_ignore
   isAdminForCampus: [Campus] @relationship(type: "IS_ADMIN_FOR", direction: OUT)
   isAdminForTown: [Town] @relationship(type: "IS_ADMIN_FOR", direction: OUT)
-  hasAdmin: Member @relationship(type: "IS_ADMIN_FOR", direction: IN)
+  admin: Member @relationship(type: "IS_ADMIN_FOR", direction: IN)
 
   #Members
   members(nameSearch: String): [Member]
@@ -1061,7 +1061,7 @@ type Mutation {
     )
     @cypher(
       statement: """
-      MERGE (member:Member {whatsappNumber:$whatsappNumber})
+      CREATE (member:Member {whatsappNumber:$whatsappNumber})
       SET
       	member.id = apoc.create.uuid(),
       	member.firstName = $firstName,
@@ -1131,7 +1131,12 @@ type Mutation {
       """
     )
 
-  CreateTown(townName: String!, leaderId: ID!, bishopId: ID!): Town
+  CreateTown(
+    townName: String!
+    leaderId: ID!
+    bishopId: ID!
+    centres: [ID]
+  ): Town
     @auth(rules: [{ roles: ["adminFederal", "adminBishop"] }])
     @cypher(
       statement: """
@@ -1148,10 +1153,11 @@ type Mutation {
         log.id =  apoc.create.uuid(),
         log.timeStamp = datetime(),
         log.historyRecord = leader.firstName + ' ' +leader.lastName + ' started ' + $townName +' Town Church under Bishop '+ bishop.firstName+ ' ' + bishop.lastName
-      MERGE (date:TimeGraph {date: date(date())})
+      
       MERGE (bishop)-[:HAS_TOWN]->(town)
       MERGE (leader)-[:LEADS]->(town)
 
+      MERGE (date:TimeGraph {date: date(date())})
       MERGE (log)-[:LOGGED_BY]->(currentUser)
       MERGE (log)-[:RECORDED_ON]->(date)
       MERGE (bishop)-[:HAS_HISTORY]->(log)
@@ -1172,7 +1178,7 @@ type Mutation {
         RETURN count(town)
       }
 
-      RETURN bishop
+      RETURN town
       """
     )
   CreateCampus(
@@ -1180,7 +1186,7 @@ type Mutation {
     leaderId: ID!
     bishopId: ID!
     centres: [ID]
-  ): Member
+  ): Campus
     @auth(rules: [{ roles: ["adminFederal", "adminBishop"] }])
     @cypher(
       statement: """
@@ -1197,10 +1203,11 @@ type Mutation {
         log.id =  apoc.create.uuid(),
         log.timeStamp = datetime(),
         log.historyRecord = leader.firstName + ' ' +leader.lastName + ' started ' + $campusName +' Campus Church under Bishop '+ bishop.firstName+ ' ' + bishop.lastName
-      MERGE (date:TimeGraph {date: date(date())})
+      
       MERGE (bishop)-[:HAS_CAMPUS]->(campus)
       MERGE (leader)-[:LEADS]->(campus)
 
+      MERGE (date:TimeGraph {date: date(date())})
       MERGE (log)-[:LOGGED_BY]->(currentUser)
       MERGE (log)-[:RECORDED_ON]->(date)
       MERGE (bishop)-[:HAS_HISTORY]->(log)
@@ -1221,7 +1228,7 @@ type Mutation {
         RETURN count(campus)
       }
 
-      RETURN bishop
+      RETURN campus
       """
     )
 
@@ -1244,8 +1251,24 @@ type Mutation {
       WITH centre
        MATCH (leader:Member {id:$leaderId})
        MATCH (campusTown {id:$townCampusId}) WHERE campusTown:Town OR campusTown:Campus
+       MATCH (currentUser:Member {auth_id:$auth.jwt.sub})
+       UNWIND labels(campusTown) AS stream
+
+      CREATE (log:HistoryLog:ServiceLog)
+      SET log.id = apoc.create.uuid(),
+       log.timeStamp = datetime(),
+       log.historyRecord = leader.firstName + ' ' +leader.lastName + ' started ' + centre.name +' Centre under '+ campusTown.name + ' ' + stream
+     
        MERGE (campusTown)-[:HAS_CENTRE]->(centre)
        MERGE (leader)-[:LEADS]->(centre)
+
+       MERGE (date:TimeGraph {date: date(date())})
+       MERGE (log)-[:LOGGED_BY]->(currentUser)
+       MERGE (log)-[:RECORDED_ON]->(date)
+       MERGE (campusTown)-[:HAS_HISTORY]->(log)
+       MERGE (centre)-[:HAS_HISTORY]->(log)
+       MERGE (leader)-[r:HAS_HISTORY]->(log)
+        SET r.current = true
 
        WITH centre
       CALL {
@@ -1279,10 +1302,28 @@ type Mutation {
        MATCH (leader:Member {id: $leaderId})
        MATCH (campusTown {id:$townCampusId}) WHERE campusTown:Town OR campusTown:Campus
 
+       MATCH (currentUser:Member {auth_id:$auth.jwt.sub})
+       UNWIND labels(campusTown) AS stream
+
+       CREATE (log:HistoryLog:ServiceLog)
+        SET log.id = apoc.create.uuid(),
+         log.timeStamp = datetime(),
+         log.historyRecord = leader.firstName + ' ' +leader.lastName + ' started ' + sonta.name +' Sonta under '+ campusTown.name + ' ' + stream
+
+
        SET sonta.name = campusTown.name + ' ' + ministry.name
+       MERGE (date:TimeGraph {date: date(date())})
        MERGE (ministry)-[:HAS_SONTA]->(sonta)
        MERGE (campusTown)-[:HAS_SONTA]->(sonta)
        MERGE (leader)-[:LEADS]->(sonta)
+
+      MERGE (date:TimeGraph {date: date(date())})
+      MERGE (log)-[:LOGGED_BY]->(currentUser)
+       MERGE (log)-[:RECORDED_ON]->(date)
+       MERGE (campusTown)-[:HAS_HISTORY]->(log)
+       MERGE (sonta)-[:HAS_HISTORY]->(log)
+       MERGE (leader)-[r:HAS_HISTORY]->(log)
+        SET r.current = true
 
       RETURN campusTown
       """
@@ -1309,10 +1350,26 @@ type Mutation {
       WITH bacenta
       MATCH (centre:Centre {id: $centreId})
       MATCH (leader:Member {id:$leaderId})
+      MATCH (currentUser:Member {auth_id:$auth.jwt.sub})
       MATCH (meetingDay:ServiceDay {day: $meetingDay})
+
+      CREATE (log:HistoryLog:ServiceLog)
+      SET log.id = apoc.create.uuid(),
+       log.timeStamp = datetime(),
+       log.historyRecord = leader.firstName + ' ' +leader.lastName + ' started ' + bacenta.name+' Bacenta under '+ centre.name + ' Centre'
+
       MERGE (centre)-[:HAS_BACENTA]->(bacenta)
       MERGE (leader)-[:LEADS]->(bacenta)
       MERGE (bacenta)-[:MEETS_ON]->(meetingDay)
+
+      MERGE (date:TimeGraph {date: date(date())})
+      MERGE (log)-[:LOGGED_BY]->(currentUser)
+       MERGE (log)-[:RECORDED_ON]->(date)
+       MERGE (centre)-[:HAS_HISTORY]->(log)
+       MERGE (bacenta)-[:HAS_HISTORY]->(log)
+       MERGE (leader)-[r:HAS_HISTORY]->(log)
+        SET r.current = true
+
       RETURN bacenta
       """
     )
@@ -1542,7 +1599,7 @@ type Mutation {
                      	WITH bacenta
                       WITH bacenta WHERE $meetingDay IS NOT NULL
                       MATCH (meetingDay:ServiceDay {day: $meetingDay})
-                      OPTIONAL MATCH (bacenta)<-[r:MEETS_ON]-()
+                      OPTIONAL MATCH (bacenta)-[r:MEETS_ON]->()
                       DELETE r
                       MERGE (bacenta)-[:MEETS_ON]->(meetingDay)
                      	RETURN count(bacenta)
@@ -1927,7 +1984,7 @@ type Mutation {
       MERGE (centre)-[:HAS_HISTORY]->(log)
       MERGE (campusTown)-[:HAS_HISTORY]->(log)
 
-      SET centre:ClosedCentre, bacenta:ClosedBacenta
+      SET centre:ClosedCentre, bacentas:ClosedBacenta
       REMOVE centre:Centre,  bacentas:Bacenta
 
 

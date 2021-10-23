@@ -296,7 +296,7 @@ const UpdateTownCampus = () => {
         })
           .then(() => alertMsg('Leader Changed Successfully'))
           .catch((err) =>
-            throwErrorMsg('There was a problem changing the leader', err)
+            throwErrorMsg('There was a problem changing the CO', err)
           )
       }
 

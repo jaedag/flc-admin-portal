@@ -26,6 +26,7 @@ function MemberForm({ initialValues, onSubmit, title }) {
     GET_MINISTRIES
   )
   const validationSchema = Yup.object({
+    pictureUrl: Yup.string().required('You must upload a picture'),
     firstName: Yup.string().required('First Name is a required field'),
     lastName: Yup.string().required('Last Name is a required field'),
     gender: Yup.string().required('Gender is a required field'),
@@ -77,7 +78,7 @@ function MemberForm({ initialValues, onSubmit, title }) {
                     name="pictureUrl"
                     initialValue={initialValues.pictureUrl}
                     uploadPreset={process.env.REACT_APP_CLOUDINARY_MEMBERS}
-                    placeholder="Upload an Image"
+                    placeholder="Upload an Image *"
                     setFieldValue={formik.setFieldValue}
                     aria-describedby="ImageUpload"
                   />

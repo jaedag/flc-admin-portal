@@ -21,7 +21,8 @@ const UserProfileEditPage = () => {
   } = useQuery(DISPLAY_MEMBER, {
     variables: { id: currentUser.id },
   })
-  const member = memberData?.members[0]
+  const member = memberData?.member
+
   const initialValues = {
     firstName: member?.firstName ? member?.firstName : '',
     middleName: member?.middleName ? member?.middleName : '',
@@ -65,7 +66,7 @@ const UserProfileEditPage = () => {
         gender: values.gender,
         phoneNumber: parsePhoneNum(values.phoneNumber),
         whatsappNumber: parsePhoneNum(values.whatsappNumber),
-        email: values.email.trim(),
+        email: values.email.trim().toLowerCase(),
         dob: values.dob,
         maritalStatus: values.maritalStatus,
         occupation: values.occupation,

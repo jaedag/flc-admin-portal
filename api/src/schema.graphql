@@ -77,7 +77,7 @@ type Member {
       statement: """
       MATCH (this)-[:HAS_TOWN|:HAS_CAMPUS]->(campusTown)
       MATCH (campusTown)-[:HAS_CENTRE]->(centre)
-      MATCH (centre)-[:HAS_BACENTA]->(bacenta)
+      MATCH (centre)-[:HAS_BACENTA]->(bacenta:Bacenta)
       OPTIONAL MATCH (bacenta)<-[:BELONGS_TO*]-(member:Member)
       OPTIONAL MATCH (bacenta)<-[:LEADS]-(bacentaLeader:Member)
       OPTIONAL MATCH (centre)<-[:LEADS]-(centreLeader:Member)
@@ -513,7 +513,7 @@ type Query {
       statement: """
       MATCH (bishop:Member {id: $id})-[:HAS_TOWN|:HAS_CAMPUS]->(campusTown)
       MATCH (campusTown)-[:HAS_CENTRE]->(centre)
-      MATCH (centre)-[:HAS_BACENTA]->(bacenta)
+      MATCH (centre)-[:HAS_BACENTA]->(bacenta:Bacenta)
       OPTIONAL MATCH (bacenta)<-[:BELONGS_TO*]-(member:Member)
       OPTIONAL MATCH (bacenta)<-[:LEADS]-(bacentaLeader:Member)
       OPTIONAL MATCH (centre)<-[:LEADS]-(centreLeader:Member)
@@ -812,7 +812,7 @@ type Query {
       statement: """
       MATCH (bishop:Member {id: $bishopId})-[:HAS_TOWN|:HAS_CAMPUS]->(campusTown)
       MATCH (campusTown)-[:HAS_CENTRE]->(centre)
-      MATCH (centre)-[:HAS_BACENTA]->(bacenta)
+      MATCH (centre)-[:HAS_BACENTA]->(bacenta:Bacenta)
       OPTIONAL MATCH (bacenta)<-[:BELONGS_TO*]-(member:Member)
       OPTIONAL MATCH (bacenta)<-[:LEADS]-(bacentaLeader:Member)
       OPTIONAL MATCH (centre)<-[:LEADS]-(centreLeader:Member)
@@ -836,7 +836,7 @@ type Query {
       statement: """
       MATCH (constituency {id:$constituencyId}) WHERE constituency:Campus OR constituency:Town
       MATCH (constituency)-[:HAS_CENTRE]->(centre)
-      MATCH (centre)-[:HAS_BACENTA]->(bacenta)
+      MATCH (centre)-[:HAS_BACENTA]->(bacenta:Bacenta)
       OPTIONAL MATCH (bacenta)<-[:BELONGS_TO*]-(member:Member)
       OPTIONAL MATCH (bacenta)<-[:LEADS]-(bacentaLeader:Member)
       OPTIONAL MATCH (centre)<-[:LEADS]-(centreLeader:Member)
@@ -882,7 +882,7 @@ type Query {
       statement: """
       MATCH (constituency {id:$constituencyId}) WHERE constituency:Campus OR constituency:Town
       MATCH (constituency)-[:HAS_CENTRE]->(centre)
-      MATCH (centre)-[:HAS_BACENTA]->(bacenta)
+      MATCH (centre)-[:HAS_BACENTA]->(bacenta:Bacenta)
 
       WHERE toLower(bacenta.name) STARTS WITH toLower($searchKey)
       OR toLower(bacenta.name) CONTAINS toLower($searchKey)
@@ -1153,7 +1153,7 @@ type Mutation {
         log.id =  apoc.create.uuid(),
         log.timeStamp = datetime(),
         log.historyRecord = leader.firstName + ' ' +leader.lastName + ' started ' + $townName +' Town Church under Bishop '+ bishop.firstName+ ' ' + bishop.lastName
-      
+
       MERGE (bishop)-[:HAS_TOWN]->(town)
       MERGE (leader)-[:LEADS]->(town)
 
@@ -1203,7 +1203,7 @@ type Mutation {
         log.id =  apoc.create.uuid(),
         log.timeStamp = datetime(),
         log.historyRecord = leader.firstName + ' ' +leader.lastName + ' started ' + $campusName +' Campus Church under Bishop '+ bishop.firstName+ ' ' + bishop.lastName
-      
+
       MERGE (bishop)-[:HAS_CAMPUS]->(campus)
       MERGE (leader)-[:LEADS]->(campus)
 
@@ -1258,7 +1258,7 @@ type Mutation {
       SET log.id = apoc.create.uuid(),
        log.timeStamp = datetime(),
        log.historyRecord = leader.firstName + ' ' +leader.lastName + ' started ' + centre.name +' Centre under '+ campusTown.name + ' ' + stream
-     
+
        MERGE (campusTown)-[:HAS_CENTRE]->(centre)
        MERGE (leader)-[:LEADS]->(centre)
 

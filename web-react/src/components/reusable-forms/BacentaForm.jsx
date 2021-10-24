@@ -84,8 +84,7 @@ const BacentaForm = ({
   const campusOptions = campusListData
     ? makeSelectOptions(campusListData.members[0]?.isBishopForCampus)
     : []
-  let townCampusIdVar =
-    church.church === 'town' ? townOptions[0]?.value : campusOptions[0]?.value
+  let townCampusIdVar = initialValues.townCampusSelect
 
   return (
     <BaseComponent

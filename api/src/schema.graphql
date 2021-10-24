@@ -433,7 +433,7 @@ type Query {
     @cypher(
       statement: "MATCH (:Member {id: $id})-[:HAS_TOWN|:HAS_CAMPUS]->()-[:HAS_CENTRE]->(:Centre)-[:HAS_BACENTA]-(bacenta:Bacenta) RETURN COUNT(DISTINCT bacenta)"
     )
-  bishopBacentaDropdown(id: ID, bacentaName: String): [Bacenta]
+  bishopBacentaDropdown(id: ID!, bacentaName: String!): [Bacenta]
     @cypher(
       statement: "MATCH (bacenta:Bacenta)<-[]-(:Centre)<-[:HAS_CENTRE]-()<-[:HAS_TOWN|:HAS_CAMPUS]-(:Member {id: $id}) WHERE toLower(bacenta.name) CONTAINS toLower($bacentaName) RETURN bacenta LIMIT 5"
     )
@@ -771,8 +771,12 @@ type Query {
     )
     @auth(rules: [{ isAuthenticated: true }])
 
-  member(id: ID): Member
+  member(id: ID!): Member
     @cypher(statement: "MATCH (member:Member {id:$id}) RETURN member LIMIT 1")
+  memberByEmail(email: String!): Member
+    @cypher(
+      statement: "MATCH (member:Member {email:$email}) RETURN member LIMIT 1"
+    )
 
   #Fuzzy Search
   memberGridList(

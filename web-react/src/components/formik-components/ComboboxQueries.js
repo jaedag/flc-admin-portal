@@ -1,25 +1,20 @@
 import { gql } from '@apollo/client'
 
 export const BISHOP_BACENTA_DROPDOWN = gql`
-  query($id: ID, $bacentaName: String) {
-    members(where: { id: $id }) {
+  query($id: ID!, $bacentaName: String!) {
+    bishopBacentaDropdown(id: $id, bacentaName: $bacentaName) {
       id
-      firstName
-      lastName
-      bacentas(search: $bacentaName) {
+      name
+      centre {
         id
         name
-        centre {
+        campus {
           id
           name
-          campus {
-            id
-            name
-          }
-          town {
-            id
-            name
-          }
+        }
+        town {
+          id
+          name
         }
       }
     }

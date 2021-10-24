@@ -7,7 +7,7 @@ export const BISHOP_MEMBER_COUNT = gql`
 `
 
 export const DISPLAY_MEMBER = gql`
-  query($id: ID) {
+  query($id: ID!) {
     member(id: $id) {
       id
       firstName

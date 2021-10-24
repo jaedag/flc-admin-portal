@@ -219,6 +219,10 @@ export const GET_BISHOP_CAMPUSES = gql`
           id
           name
         }
+        centres {
+          id
+          name
+        }
         bishop {
           id
           firstName
@@ -271,6 +275,10 @@ export const GET_BISHOP_TOWNS = gql`
           lastName
         }
         sontas {
+          id
+          name
+        }
+        centres {
           id
           name
         }

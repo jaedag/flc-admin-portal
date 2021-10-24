@@ -41,7 +41,7 @@ type Member {
       statement: """
       MATCH (this)
       OPTIONAL MATCH (this)-[:HAS_CAMPUS|HAS_TOWN]->()-[:HAS_CENTRE]->(centre:Centre)
-      OPTIONAL MATCH (centre)-[:HAS_BACENTA]-(bacenta)
+      OPTIONAL MATCH (centre)-[:HAS_BACENTA]-(bacenta:Bacenta)
       WHERE toLower(bacenta.name) CONTAINS toLower($search)
       WITH bacenta WHERE bacenta IS NOT NULL
       RETURN bacenta LIMIT 8
@@ -427,11 +427,11 @@ type Query {
     )
   bishopCentreCount(id: ID): Int!
     @cypher(
-      statement: "MATCH (:Member {id: $id})-[:HAS_TOWN|:HAS_CAMPUS]->()-[:HAS_CENTRE]-(centre) RETURN COUNT(DISTINCT centre)"
+      statement: "MATCH (:Member {id: $id})-[:HAS_TOWN|:HAS_CAMPUS]->()-[:HAS_CENTRE]-(centre:Centre) RETURN COUNT(DISTINCT centre)"
     )
   bishopBacentaCount(id: ID): Int!
     @cypher(
-      statement: "MATCH (:Member {id: $id})-[:HAS_TOWN|:HAS_CAMPUS]->()-[:HAS_CENTRE]-()-[:HAS_BACENTA]-(bacenta) RETURN COUNT(DISTINCT bacenta)"
+      statement: "MATCH (:Member {id: $id})-[:HAS_TOWN|:HAS_CAMPUS]->()-[:HAS_CENTRE]->(:Centre)-[:HAS_BACENTA]-(bacenta:Bacenta) RETURN COUNT(DISTINCT bacenta)"
     )
   bishopBacentaDropdown(id: ID, bacentaName: String): [Bacenta]
     @cypher(
@@ -440,37 +440,37 @@ type Query {
   bishopsSontaMemberList(id: ID): [Member]!
     @cypher(
       statement: """
-      MATCH (:Member {id: $id})-[:HAS_TOWN|:HAS_CAMPUS]->()-[:HAS_CENTRE]->()-[:HAS_BACENTA]->()<-[:BELONGS_TO]-(member:Member)-[:BELONGS_TO]->(:Ministry)
+      MATCH (:Member {id: $id})-[:HAS_TOWN|:HAS_CAMPUS]->()-[:HAS_CENTRE]->(:Centre)-[:HAS_BACENTA]->(:Bacenta)<-[:BELONGS_TO]-(member:Member)-[:BELONGS_TO]->(:Ministry)
       RETURN member
       """
     )
   bishopSontaMemberCount(id: ID): Int!
     @cypher(
       statement: """
-      MATCH (:Member {id: $id})-[:HAS_TOWN|:HAS_CAMPUS]->()-[:HAS_CENTRE]->()-[:HAS_BACENTA]->()<-[:BELONGS_TO]-(member:Member)-[:BELONGS_TO]->(:Ministry)
+      MATCH (:Member {id: $id})-[:HAS_TOWN|:HAS_CAMPUS]->()-[:HAS_CENTRE]->(:Centre)-[:HAS_BACENTA]->(:Bacenta)<-[:BELONGS_TO]-(member:Member)-[:BELONGS_TO]->(:Ministry)
       RETURN COUNT(DISTINCT member)
       """
     )
   bishopSontaMemberCountList(bishopId: ID): [Ministry]!
     @cypher(
       statement: """
-      MATCH (:Member {id: $bishopId})-[:HAS_TOWN|:HAS_CAMPUS]->()-[:HAS_CENTRE]->()-[:HAS_BACENTA]->()<-[:BELONGS_TO]-(m:Member)-[:BELONGS_TO]->(ministry:Ministry)
+      MATCH (:Member {id: $bishopId})-[:HAS_TOWN|:HAS_CAMPUS]->()-[:HAS_CENTRE]->(:Centre)-[:HAS_BACENTA]->(:Bacenta)<-[:BELONGS_TO]-(m:Member)-[:BELONGS_TO]->(ministry:Ministry)
       RETURN ministry, COUNT(DISTINCT member)
       """
     )
   bishopPastorCount(id: ID): Int!
     @cypher(
-      statement: "MATCH (title:Title)<-[:HAS_TITLE]-(member:Member)-[:BELONGS_TO]->()<-[:HAS_BACENTA]-()-[:HAS_CENTRE]-()-[:HAS_TOWN|:HAS_CAMPUS]-(:Member {id: $id}) RETURN COUNT( DISTINCT member)"
+      statement: "MATCH (title:Title)<-[:HAS_TITLE]-(member:Member)-[:BELONGS_TO]->(:Bacenta)<-[:HAS_BACENTA]-(:Centre)-[:HAS_CENTRE]-()-[:HAS_TOWN|:HAS_CAMPUS]-(:Member {id: $id}) RETURN COUNT( DISTINCT member)"
     )
   bishopPastorList(id: ID): [Member]
     @cypher(
-      statement: "MATCH (title:Title)<-[:HAS_TITLE]-(member:Member)-[:BELONGS_TO]->()<-[:HAS_BACENTA]-()<-[:HAS_CENTRE]-()<-[:HAS_TOWN|:HAS_CAMPUS]-(:Member {id: $id}) RETURN member"
+      statement: "MATCH (title:Title)<-[:HAS_TITLE]-(member:Member)-[:BELONGS_TO]->(:Bacenta)<-[:HAS_BACENTA]-(:Centre)<-[:HAS_CENTRE]-()<-[:HAS_TOWN|:HAS_CAMPUS]-(:Member {id: $id}) RETURN member"
     )
   bishopCentreDropdown(id: ID!, nameSearch: String!): [Centre]
     @cypher(
       statement: """
       MATCH (:Member {id: $id})-[:HAS_TOWN|:HAS_CAMPUS]->(campusTown)
-      MATCH (campusTown)-[:HAS_CENTRE]->(centre)
+      MATCH (campusTown)-[:HAS_CENTRE]->(centre:Centre)
       WHERE toLower(centre.name) CONTAINS toLower($nameSearch)
       RETURN centre LIMIT 5
       """
@@ -747,7 +747,7 @@ type Query {
     @cypher(
       statement: """
       MATCH (sonta:Sonta {id: $id})
-      MATCH (sonta)<-[:HAS_SONTA]-()-[:HAS_CENTRE]->()-[:HAS_BACENTA]->()<-[:BELONGS_TO]-(member:Member)
+      MATCH (sonta)<-[:HAS_SONTA]-()-[:HAS_CENTRE]->(:Centre)-[:HAS_BACENTA]->(:Bacenta)<-[:BELONGS_TO]-(member:Member)
       MATCH (sonta)<-[:HAS_SONTA]-(ministry:Ministry)
       MATCH (member)-[:BELONGS_TO]->(ministry)
       RETURN COUNT(member)

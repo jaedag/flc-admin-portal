@@ -51,16 +51,16 @@ const UpdateBacenta = () => {
     ],
   })
 
-  const [RemoveBacentaCentre] = useMutation(REMOVE_BACENTA_CENTRE)
+  const [RemoveBacentaFromCentre] = useMutation(REMOVE_BACENTA_CENTRE)
 
   const [AddBacentaCentre] = useMutation(ADD_BACENTA_CENTRE, {
     onCompleted: (data) => {
       if (initialValues.centreSelect) {
         //Remove Link to the old Bacenta
-        RemoveBacentaCentre({
+        RemoveBacentaFromCentre({
           variables: {
             centreId: initialValues.centreSelect,
-            bacentaId: bacentaId,
+            bacentaIds: [bacentaId],
           },
         })
       }

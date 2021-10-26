@@ -733,7 +733,9 @@ export const REMOVE_BACENTA_CENTRE = gql`
     updateCentres(where: { id: $centreId }) {
       centres {
         id
-        name
+        bacentas {
+          id
+        }
       }
     }
   }

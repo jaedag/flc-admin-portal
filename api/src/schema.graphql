@@ -855,6 +855,8 @@ type Query {
       OR toLower(members.firstName) STARTS WITH toLower($searchKey)
       OR toLower(members.lastName) STARTS WITH toLower($searchKey)
       OR toLower(member.firstName + ' ' + member.middleName+ ' '+ member.lastName) CONTAINS toLower($searchKey)
+
+      WITH members WHERE members IS NOT NULL
       RETURN DISTINCT(members) LIMIT 5
       """
     )

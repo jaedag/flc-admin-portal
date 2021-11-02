@@ -393,3 +393,122 @@ export const getCampusTownServiceAggregates = `
 
   RETURN week AS week,SUM(records.attendance) AS attendance, SUM(records.income) AS income ORDER BY week DESC LIMIT 12
 `
+
+export const checkMemberEmailExists = `
+MATCH (member:Member)
+WHERE member.email = $email
+OR member.whatsappNumber = $whatsappNumber
+RETURN member.email AS email, member.whatsappNumber AS whatsappNumber
+`
+
+export const createMember = `
+CREATE (member:Member {whatsappNumber:$whatsappNumber})
+      SET
+      	member.id = apoc.create.uuid(),
+      	member.firstName = $firstName,
+      	member.middleName = $middleName,
+      	member.lastName = $lastName,
+      	member.email = $email,
+      	member.phoneNumber = $phoneNumber,
+      	member.pictureUrl = $pictureUrl
+      CREATE (log:HistoryLog)<-[:HAS_HISTORY]-(b)
+        SET
+        log.id =  apoc.create.uuid(),
+        log.timeStamp = datetime(),
+        log.historyRecord = $firstName +' ' +$lastName+' was registered on '+apoc.date.convertFormat(toString(date()), 'date', 'dd MMMM yyyy')
+
+
+
+      WITH member, log
+      MATCH (currentUser:Member {auth_id:$auth_id})
+      MERGE (date:TimeGraph {date: date()})
+      MERGE (log)-[:RECORDED_ON]->(date)
+      MERGE (log)-[:LOGGED_BY]->(currentUser)
+      MERGE (member)-[:HAS_HISTORY]->(log)
+
+      WITH member
+      MATCH (maritalStatus:MaritalStatus {status:$maritalStatus})
+      MATCH (gender:Gender {gender: $gender})
+
+      MERGE (member)-[:HAS_MARITAL_STATUS]-> (maritalStatus)
+      MERGE (member)-[:HAS_GENDER]-> (gender)
+
+      WITH member
+         CALL {
+         	WITH member
+         	WITH member WHERE $dob IS NOT NULL
+         	MERGE (date:TimeGraph {date: date($dob)})
+      	  MERGE (member)-[:WAS_BORN_ON]->(date)
+         	RETURN count(member) AS member_born
+         	}
+
+      WITH member
+         CALL {
+         	WITH member
+         	WITH member  WHERE $occupation IS NOT NULL
+         	MERGE (occupation:Occupation {occupation:$occupation})
+      	MERGE (member)-[:HAS_OCCUPATION]-> (occupation)
+         	RETURN count(member) AS member_occupation
+         	}
+      WITH member
+      CALL {
+         	WITH member
+         	WITH member  WHERE $bacenta IS NOT NULL
+         	MATCH (bacenta:Bacenta {id: $bacenta})
+      	  MERGE (member)-[:BELONGS_TO]->(bacenta)
+         	RETURN count(member) AS member_bacenta
+         	}
+
+      WITH member
+      CALL {
+         	WITH member
+         	WITH member  WHERE $ministry IS NOT NULL
+         	MATCH (ministry:Ministry {id:$ministry})
+      	MERGE (member)-[:BELONGS_TO]-> (ministry)
+         	RETURN count(member) AS member_ministry
+         	}
+
+           OPTIONAL MATCH (bacenta:Bacenta {id: $bacenta})
+           OPTIONAL MATCH (bacenta)<-[:HAS_BACENTA]-(centre:Centre)
+           OPTIONAL MATCH (centre:Centre)<-[:HAS_CENTRE]-(campus:Campus)<-[:HAS_CAMPUS]-(bishop:Member)
+           OPTIONAL MATCH (centre:Centre)<-[:HAS_CENTRE]-(town:Town)<-[:HAS_TOWN]-(bishop:Member)
+           RETURN member  {.id, .firstName,.middleName,.lastName,.email,.phoneNumber,.whatsappNumber,
+            bacenta:bacenta {.id,centre:centre{.id,campus:campus{.id},town:town{.id}}}}
+      `
+
+export const checkBacentaHasNoMembers = `
+MATCH (bacenta:Bacenta {id:$bacentaId})
+MATCH (bacenta)<-[:BELONGS_TO]-(member)
+RETURN bacenta.name AS name, COUNT(member) AS memberCount
+`
+
+export const closeDownBacenta = `
+MATCH (bacenta:Bacenta {id:$bacentaId})-[:HAS_BACENTA]-(centre)
+MATCH (centre)-[:HAS_BACENTA]->(bacentas)
+MATCH (centre)-[:HAS_HISTORY]->(history:HistoryLog)-[:RECORDED_ON]->(createdAt:TimeGraph)
+MATCH (history)-[:LOGGED_BY]->(loggedBy:Member)
+MATCH (admin:Member {auth_id: $auth.jwt.sub})
+
+CREATE (log:HistoryLog {id:apoc.create.uuid()})
+  SET log.timeStamp = datetime(),
+  log.historyRecord = bacenta.name + ' Bacenta was closed down under ' + centre.name +' Centre'
+
+
+MERGE (date:TimeGraph {date:date()})
+MERGE (log)-[:LOGGED_BY]->(admin)
+MERGE (log)-[:RECORDED_ON]->(date)
+MERGE (bacenta)-[:HAS_HISTORY]->(log)
+MERGE (centre)-[:HAS_HISTORY]->(log)
+
+SET bacenta:ClosedBacenta
+REMOVE bacenta:Bacenta
+
+RETURN centre {
+  .id, .name, 
+  bacentas:[bacentas {.id}], 
+  history:[history {.id,.timeStamp, .historyRecord,
+      created_at:createdAt {.date},
+      loggedBy:loggedBy {.id,.firstName,.lastName}
+      }]
+    }
+`

@@ -110,11 +110,11 @@ const CreateMember = () => {
 
         setSubmitting(false)
         resetForm()
+        history.push('/member/displaydetails')
       })
       .catch((err) =>
         throwErrorMsg('There was an error creating the member profile\n', err)
       )
-    history.push('/member/displaydetails')
   }
 
   return (

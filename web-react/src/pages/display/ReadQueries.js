@@ -84,6 +84,9 @@ export const DISPLAY_MEMBER = gql`
           }
         }
       }
+    }
+    # //History Queries
+    member(id: $id) {
       history(options: { limit: 3 }) {
         id
         timeStamp
@@ -97,6 +100,9 @@ export const DISPLAY_MEMBER = gql`
         }
         historyRecord
       }
+    }
+    # Leadership Roles
+    member(id: $id) {
       leadsBacenta {
         id
         name

@@ -15,6 +15,7 @@ export const MAKE_BACENTA_LEADER = gql`
       id
       firstName
       lastName
+      fullName
       leadsBacenta {
         id
         leader {
@@ -22,19 +23,6 @@ export const MAKE_BACENTA_LEADER = gql`
           firstName
           lastName
         }
-        # history(options: { limit: 10 }) {
-        #   id
-        #   timeStamp
-        #   created_at {
-        #     date
-        #   }
-        #   loggedBy {
-        #     id
-        #     firstName
-        #     lastName
-        #   }
-        #   historyRecord
-        # }
       }
     }
   }

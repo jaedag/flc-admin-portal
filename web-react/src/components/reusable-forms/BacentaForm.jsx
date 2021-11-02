@@ -8,6 +8,7 @@ import {
   DECIMAL_NUM_REGEX,
   makeSelectOptions,
   SERVICE_DAY_OPTIONS,
+  throwErrorMsg,
 } from 'global-utils'
 import {
   BISHOP_MEMBER_DROPDOWN,
@@ -296,7 +297,7 @@ const BacentaForm = ({
                       .catch((error) => {
                         // eslint-disable-next-line no-console
                         console.error(error)
-                        alert(
+                        throwErrorMsg(
                           'There was an error closing down this bacenta',
                           error
                         )

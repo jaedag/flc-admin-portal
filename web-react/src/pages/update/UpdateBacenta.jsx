@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/client'
 import { GET_CENTRE_BACENTAS } from '../../queries/ListQueries'
@@ -16,7 +16,7 @@ import { alertMsg, repackDecimals, throwErrorMsg } from 'global-utils'
 
 const UpdateBacenta = () => {
   const { setCentreId, bacentaId } = useContext(ChurchContext)
-
+  const [isLoading, setIsLoading] = useState(false)
   const {
     data: bacentaData,
     loading: bacentaLoading,
@@ -158,6 +158,7 @@ const UpdateBacenta = () => {
 
     //Log if the Leader Changes
     if (values.leaderId !== initialValues.leaderId) {
+      setIsLoading(true)
       MakeBacentaLeader({
         variables: {
           oldLeaderId: initialValues.leaderId,
@@ -165,15 +166,16 @@ const UpdateBacenta = () => {
           bacentaId: bacentaId,
         },
       })
-        .then(() => alertMsg('Leader Changed Successfully'))
+        .then(() => {
+          onSubmitProps.setSubmitting(false)
+          onSubmitProps.resetForm()
+          alertMsg('Leader Changed Successfully')
+          history.push(`/bacenta/displaydetails`)
+        })
         .catch((err) =>
           throwErrorMsg('There was a problem changing bacenta leader', err)
         )
     }
-
-    onSubmitProps.setSubmitting(false)
-    onSubmitProps.resetForm()
-    history.push(`/bacenta/displaydetails`)
   }
 
   return (
@@ -181,7 +183,7 @@ const UpdateBacenta = () => {
       title="Update Bacenta"
       initialValues={initialValues}
       onSubmit={onSubmit}
-      loadingState={bacentaLoading}
+      loadingState={bacentaLoading || isLoading}
     />
   )
 }

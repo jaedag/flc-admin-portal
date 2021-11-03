@@ -170,7 +170,7 @@ WITH log,campus,oldAdmin,admin
 export const makeBacentaLeader = `
 MATCH (leader:Member {id:$leaderId})
 MATCH (bacenta:Bacenta {id:$bacentaId})
-OPTIONAL MATCH (bacenta)<-[:HAS_BACENTA]-(centre:Centre)
+MATCH (bacenta)<-[:HAS_BACENTA]-(centre:Centre)
 CREATE (log:HistoryLog:ServiceLog)
   SET leader.auth_id = $auth_id,
    log.id = apoc.create.uuid(),
@@ -178,7 +178,7 @@ CREATE (log:HistoryLog:ServiceLog)
    log.historyRecord = leader.firstName + ' ' +leader.lastName + ' started ' + bacenta.name+' Bacenta under '+ centre.name + ' Centre'
 WITH leader,bacenta, log
 OPTIONAL MATCH (bacenta)<-[oldLeads:LEADS]-(oldLeader:Member)
-OPTIONAL MATCH (bacenta)-[oldHistory:HAS_HISTORY]->()-[oldLeaderHistory:HAS_HISTORY]-(oldLeader)
+OPTIONAL MATCH (bacenta)-[oldHistory:HAS_HISTORY]->(:HistoryLog)-[oldLeaderHistory:HAS_HISTORY]-(oldLeader)
 SET oldHistory.current = false, oldLeaderHistory.current = false //nullify old history relationship
    DELETE oldLeads //Delete old relationship
 WITH log,bacenta,oldLeader,leader

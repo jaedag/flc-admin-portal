@@ -81,6 +81,7 @@ const UpdateBacenta = () => {
 
   //onSubmit receives the form state as argument
   const onSubmit = (values, onSubmitProps) => {
+    setIsLoading(true)
     setCentreId(values.centreSelect)
     values.venueLongitude = parseFloat(values.venueLongitude)
     values.venueLatitude = parseFloat(values.venueLatitude)
@@ -158,8 +159,7 @@ const UpdateBacenta = () => {
 
     //Log if the Leader Changes
     if (values.leaderId !== initialValues.leaderId) {
-      setIsLoading(true)
-      MakeBacentaLeader({
+      return MakeBacentaLeader({
         variables: {
           oldLeaderId: initialValues.leaderId,
           newLeaderId: values.leaderId,
@@ -167,8 +167,6 @@ const UpdateBacenta = () => {
         },
       })
         .then(() => {
-          onSubmitProps.setSubmitting(false)
-          onSubmitProps.resetForm()
           alertMsg('Leader Changed Successfully')
           history.push(`/bacenta/displaydetails`)
         })
@@ -176,6 +174,9 @@ const UpdateBacenta = () => {
           throwErrorMsg('There was a problem changing bacenta leader', err)
         )
     }
+    onSubmitProps.setSubmitting(false)
+    onSubmitProps.resetForm()
+    history.push(`/bacenta/displaydetails`)
   }
 
   return (

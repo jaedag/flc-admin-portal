@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/client'
 import { alertMsg, capitalise, throwErrorMsg } from '../../global-utils'
@@ -21,7 +21,7 @@ import CentreForm from '../../components/reusable-forms/CentreForm'
 
 const UpdateCentre = () => {
   const { church, centreId, setTownId, setCampusId } = useContext(ChurchContext)
-
+  const [isLoading, setIsLoading] = useState(false)
   const { data: centreData, loading: centreLoading } = useQuery(
     DISPLAY_CENTRE,
     {
@@ -208,6 +208,7 @@ const UpdateCentre = () => {
 
   //onSubmit receives the form state as argument
   const onSubmit = (values, onSubmitProps) => {
+    setIsLoading(true)
     if (church.church === 'town') {
       setTownId(values.campusTownSelect)
     }
@@ -231,14 +232,17 @@ const UpdateCentre = () => {
 
     //Log if the Leader Changes
     if (values.leaderId !== initialValues.leaderId) {
-      MakeCentreLeader({
+      return MakeCentreLeader({
         variables: {
           oldLeaderId: initialValues.leaderId,
           newLeaderId: values.leaderId,
           centreId: centreId,
         },
       })
-        .then(() => alertMsg('Leader Changed Successfully'))
+        .then(() => {
+          alertMsg('Leader Changed Successfully')
+          history.push(`/centre/displaydetails`)
+        })
         .catch((error) =>
           throwErrorMsg('There was an error changing the leader', error)
         )
@@ -341,14 +345,13 @@ const UpdateCentre = () => {
         leaderId: values.leaderId,
         campusTownId: values.campusTownSelect,
       },
-    })
-      .then(() => history.push(`/${church.subChurch}/displaydetails`))
-      .catch((error) =>
-        throwErrorMsg('There was an error updating this centre', error)
-      )
+    }).catch((error) =>
+      throwErrorMsg('There was an error updating this centre', error)
+    )
 
     onSubmitProps.setSubmitting(false)
     onSubmitProps.resetForm()
+    history.push(`/centre/displaydetails`)
   }
 
   return (
@@ -356,7 +359,7 @@ const UpdateCentre = () => {
       initialValues={initialValues}
       onSubmit={onSubmit}
       title={`${capitalise(church.subChurch)} Update Form`}
-      loadingState={centreLoading}
+      loadingState={centreLoading || isLoading}
     />
   )
 }

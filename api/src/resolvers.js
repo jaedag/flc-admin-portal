@@ -63,8 +63,8 @@ const notifyMember = (
   mg.messages
     .create('mg.firstlovecenter.com', {
       from: 'FL Accra Admin <no-reply@firstlovecenter.org>',
-      to: ['admin@firstlovecenter.com'],
-      // to: [member.email, 'admin@firstlovecenter.com'],
+      // to: ['admin@firstlovecenter.com'],
+      to: [member.email, 'admin@firstlovecenter.com'],
       subject: subject,
       text: body,
       // html: '<h1>Testing some Mailgun awesomness!</h1>', //HTML Version of the Message for Better Styling
@@ -643,44 +643,37 @@ export const resolvers = {
       )
 
       const session = context.driver.session()
-      let member = {}
+      const memberResponse = await session.run(
+        cypher.checkMemberEmailExists,
+        args
+      )
+      const memberCheck = rearrangeCypherObject(memberResponse)
 
-      session
-        .run(cypher.checkMemberEmailExists, args)
-        .then((res) => {
-          member = rearrangeCypherObject(member, res)
+      if (memberCheck.email || memberCheck.whatsappNumber) {
+        throwErrorMsg(
+          'A member with this email address/whatsapp number already exists in the database',
+          ''
+        )
+      }
 
-          if (member.email || member.whatsappNumber) {
-            throwErrorMsg(
-              'A member with this email address/whatsapp number already exists in the database',
-              ''
-            )
-          }
+      const createMemberResponse = await session.run(cypher.createMember, {
+        firstName: args?.firstName ?? '',
+        middleName: args?.middleName ?? '',
+        lastName: args?.lastName ?? '',
+        email: args?.email ?? '',
+        phoneNumber: args?.phoneNumber ?? '',
+        whatsappNumber: args?.whatsappNumber ?? '',
+        dob: args?.dob ?? '',
+        maritalStatus: args?.maritalStatus ?? '',
+        gender: args?.gender ?? '',
+        occupation: args?.occupation ?? '',
+        bacenta: args?.bacenta ?? '',
+        ministry: args?.ministry ?? '',
+        pictureUrl: args?.pictureUrl ?? '',
+        auth_id: context.auth.jwt.sub ?? '',
+      })
 
-          return session.run(cypher.createMember, {
-            firstName: args?.firstName ?? '',
-            middleName: args?.middleName ?? '',
-            lastName: args?.lastName ?? '',
-            email: args?.email ?? '',
-            phoneNumber: args?.phoneNumber ?? '',
-            whatsappNumber: args?.whatsappNumber ?? '',
-            dob: args?.dob ?? '',
-            maritalStatus: args?.maritalStatus ?? '',
-            gender: args?.gender ?? '',
-            occupation: args?.occupation ?? '',
-            bacenta: args?.bacenta ?? '',
-            ministry: args?.ministry ?? '',
-            pictureUrl: args?.pictureUrl ?? '',
-            auth_id: context.auth.jwt.sub ?? '',
-          })
-        })
-        .then((res) => {
-          member = rearrangeCypherObject(member, res)
-          return member
-        })
-        .catch((err) => {
-          throwErrorMsg(err, '')
-        })
+      const member = rearrangeCypherObject(createMemberResponse)
 
       return member
     },
@@ -698,32 +691,33 @@ export const resolvers = {
         context.auth.roles
       )
 
-      let bacenta = {}
       const session = context.driver.session()
 
-      session
-        .run(cypher.checkBacentaHasNoMembers, args)
-        .then(async (res) => {
-          bacenta = rearrangeCypherObject(bacenta, res)
+      try {
+        const bacentaCheckResponse = await session.run(
+          cypher.checkBacentaHasNoMembers,
+          args
+        )
+        const bacentaCheck = rearrangeCypherObject(bacentaCheckResponse)
 
-          if (bacenta.memberCount) {
-            throwErrorMsg(
-              `${bacenta?.name} Bacenta has ${bacenta?.memberCount} members. Please transfer all members and try again.`
-            )
-          }
+        if (bacentaCheck.memberCount) {
+          throwErrorMsg(
+            `${bacentaCheck?.name} Bacenta has ${bacentaCheck?.memberCount} members. Please transfer all members and try again.`
+          )
+        }
 
-          return session.run(cypher.closeDownBacenta, {
+        const closeBacentaResponse = await session.run(
+          cypher.closeDownBacenta,
+          {
             auth: context.auth,
             bacentaId: args.bacentaId,
-          })
-        })
-        .then((res) => {
-          bacenta = rearrangeCypherObject(bacenta, res)
-          return bacenta
-        })
-        .catch((err) => throwErrorMsg(err))
-
-      return bacenta
+          }
+        )
+        const bacenta = rearrangeCypherObject(closeBacentaResponse)
+        return bacenta
+      } catch (error) {
+        throwErrorMsg(error)
+      }
     },
     MakeBishopAdmin: async (object, args, context) => {
       return MakeServant(context, args, ['adminFederal'], 'Bishop', 'Admin')

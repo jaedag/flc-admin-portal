@@ -100,14 +100,15 @@ const errorHandling = (member) => {
   }
   return
 }
-const rearrangeMemberObject = (member, response) => {
+const rearrangeCypherObject = (response) => {
+  let member = {}
   response.records[0]?.keys.forEach(
     (key, i) => (member[key] = response.records[0]._fields[i])
   )
 
   return member?.member || member
 }
-const parseForCache = (servant) => {
+const parseForCache = (servant, church, verb) => {
   //Returning the data such that it can update apollo cache
   servant[`${verb}`].push({
     id: church.id,
@@ -118,13 +119,14 @@ const parseForCache = (servant) => {
     },
   })
 
-  return servant[`${verb}`].map((church) => {
+  servant[`${verb}`].map((church) => {
     church.leader = {
       id: servant.id,
       firstName: servant.firstName,
       lastName: servant.lastName,
     }
   })
+  return servant
 }
 
 const getTokenConfig = {
@@ -281,7 +283,7 @@ const deleteUserRoles = (memberId, roles) => ({
   },
 })
 
-const assignRoles = (userId, userRoles, rolesToAssign) => {
+const assignRoles = (servant, userRoles, rolesToAssign) => {
   const userRoleIds = userRoles.map((role) => authRoles[role].id)
   const nameOfRoles = Object.entries(authRoles)
     .map((role) => {
@@ -292,27 +294,37 @@ const assignRoles = (userId, userRoles, rolesToAssign) => {
     .filter((role) => role)
 
   if (userRoleIds.includes(rolesToAssign[0])) {
-    console.log('User already has the role ', nameOfRoles[0])
+    console.log(
+      `${servant.firstName} ${servant.lastName} already has the role`,
+      nameOfRoles[0]
+    )
     return
   }
 
   //An assign roles function to simplify assigning roles with an axios request
   if (!userRoleIds.includes(rolesToAssign[0])) {
-    return axios(setUserRoles(userId, rolesToAssign))
+    return axios(setUserRoles(servant.auth_id, rolesToAssign))
       .then(() =>
-        console.log(nameOfRoles[0], ' Role successfully added to user')
+        console.log(
+          nameOfRoles[0],
+          `role successfully added to ${servant.firstName} ${servant.lastName}`
+        )
       )
       .catch((err) => throwErrorMsg('There was an error assigning role', err))
   }
   return
 }
-const removeRoles = (userId, userRoles, rolesToRemove) => {
+const removeRoles = (servant, userRoles, rolesToRemove) => {
   const userRoleIds = userRoles.map((role) => authRoles[role].id)
 
   //A remove roles function to simplify removing roles with an axios request
   if (userRoleIds.includes(rolesToRemove)) {
-    return axios(deleteUserRoles(userId, [rolesToRemove]))
-      .then(() => console.log('User Role successfully removed'))
+    return axios(deleteUserRoles(servant.auth_id, [rolesToRemove]))
+      .then(() =>
+        console.log(
+          `Role successfully removed for ${servant.firstName} ${servant.lastName}`
+        )
+      )
       .catch((err) => throwErrorMsg('There was an error removing role', err))
   }
   return
@@ -325,6 +337,7 @@ const MakeServant = async (
   churchType,
   servantType
 ) => {
+  //Set Up
   const churchLower = churchType.toLowerCase()
   const servantLower = servantType.toLowerCase()
   isAuth(permittedRoles, context.auth.roles)
@@ -341,131 +354,95 @@ const MakeServant = async (
   }
 
   const session = context.driver.session()
-  let servant = {}
-  let church = { id: args[`${churchLower}Id`] }
 
-  session
-    .run(cypher.matchChurchQuery, { id: args[`${churchLower}Id`] })
-    .then(async (response) => {
-      church = rearrangeMemberObject(church, response)
-
-      return session
-        .run(cypher.matchMemberQuery, { id: args[`${servantLower}Id`] })
-        .then(async (response) => {
-          // Rearrange  member object
-          servant = rearrangeMemberObject(servant, response)
-          errorHandling(servant)
-
-          const churchInEmail = church.name
-            ? `${church.name} ${church.type[0]}`
-            : `Bishop ${church.firstName} ${church.lastName}`
-
-          //Check for AuthID of servant
-          return axios(getAuthIdConfig(servant)).then(async (res) => {
-            servant.auth_id = res.data[0]?.user_id
-
-            if (!servant.auth_id) {
-              //If servant Does Not Have Auth0 Profile, Create One
-              return axios(createAuthUserConfig(servant)).then((res) => {
-                const auth_id = res.data.user_id
-                servant.auth_id = res.data.user_id
-
-                const roles = []
-                console.log(
-                  `Auth0 Account successfully created for ${servant.firstName} ${servant.lastName}`
-                )
-                return assignRoles(auth_id, roles, [
-                  authRoles[`${servantLower}${churchType}`].id,
-                ]).then(() => {
-                  return axios(changePasswordConfig(servant)).then((res) => {
-                    //Write Auth0 ID of Leader to Neo4j DB
-                    return session
-                      .run(cypher[`make${churchType}${servantType}`], {
-                        [`${servantLower}Id`]: servant.id,
-                        [`${churchLower}Id`]: church.id,
-                        auth_id: servant.auth_id,
-                        auth: context.auth,
-                      })
-                      .then(() => {
-                        console.log(
-                          `make${churchType}${servantType}`,
-                          'Cypher Query Executed Successfully'
-                        )
-                      })
-                  })
-                })
-              })
-            } else if (servant.auth_id) {
-              //Update a user's Auth Profile with Picture and Name Details
-              axios(updateAuthUserConfig(servant)).then(() => {
-                console.log(
-                  `${servant.firstName} ${servant.lastName} Auth Account Details Updated`
-                )
-                //Check auth0 roles and add roles 'leaderCentre'
-                return axios(getUserRoles(servant.auth_id)).then((res) => {
-                  const roles = res.data.map((role) => role.name)
-
-                  return assignRoles(servant.auth_id, roles, [
-                    authRoles[`${servantLower}${churchType}`].id,
-                  ]).then(() => {
-                    //Write Auth0 ID of Admin to Neo4j DB
-                    return session
-                      .run(cypher[`make${churchType}${servantType}`], {
-                        [`${servantLower}Id`]: servant.id,
-                        [`${churchLower}Id`]: church.id,
-                        auth_id: servant.auth_id,
-                        auth: context.auth,
-                      })
-                      .then(() => {
-                        console.log(
-                          `make${churchType}${servantType}`,
-                          'Cypher Query Executed Successfully'
-                        )
-                        //Send Email Using Mailgun
-                        notifyMember(
-                          servant,
-                          'Servanthood Status Update',
-                          `Hi ${servant.firstName} ${servant.lastName},\nCongratulations! You have just been made a ${churchType} ${servantType} for ${churchInEmail}. If you feel this is a mistake, please contact your bishop's admin\n\nRegards,\nThe Administrator,\nFirst Love Centre,\nAccra.`,
-                          'servant_status_update',
-                          [
-                            servant.firstName,
-                            churchType,
-                            servantType,
-                            church.name ?? `Bishop`,
-                            church.type[0] !== 'Member'
-                              ? church.type[0]
-                              : `${church.firstName} ${church.lastName}`,
-                          ]
-                        )
-                      })
-                  })
-                })
-              })
-            }
-          })
-        })
-    })
-    .catch((err) => throwErrorMsg('', err))
-
-  //Returning the data such that it can update apollo cache
-  servant[`${verb}`]?.push({
-    id: church.id,
-    leader: {
-      id: servant.id,
-      firstName: servant.firstName,
-      lastName: servant.lastName,
-    },
+  const churchResponse = await session.run(cypher.matchChurchQuery, {
+    id: args[`${churchLower}Id`],
   })
+  const church = rearrangeCypherObject(churchResponse)
+  const churchInEmail = church.name
+    ? `${church.name} ${church.type[0]}`
+    : `Bishop ${church.firstName} ${church.lastName}`
 
-  servant[`${verb}`].map((church) => {
-    church[`${servantLower}`] = {
-      id: servant.id,
-      firstName: servant.firstName,
-      lastName: servant.lastName,
+  const servantResponse = await session.run(cypher.matchMemberQuery, {
+    id: args[`${servantLower}Id`],
+  })
+  let servant = rearrangeCypherObject(servantResponse)
+  errorHandling(servant)
+
+  //Check for AuthID of servant
+  const authIdResponse = await axios(getAuthIdConfig(servant))
+  servant.auth_id = authIdResponse.data[0]?.user_id
+
+  if (!servant.auth_id) {
+    try {
+      //If servant Does Not Have Auth0 Profile, Create One
+      const authProfileResponse = await axios(createAuthUserConfig(servant))
+      const passwordTicketResponse = await axios(changePasswordConfig(servant))
+      // Send Mail to the Person after Password Change Ticket has been generated
+      notifyMember(
+        servant,
+        'Your account has been created on the FL Admin Portal',
+        `Hi ${servant.firstName} ${servant.lastName},\n\nCongratulations on being made a ${churchType} ${servantType} for ${churchInEmail}. Your account has just been created on the First Love Church Administrative Portal. Please set up your password by clicking ${res.data.ticket}. If you feel this is a mistake please contact your bishops admin.\n\nAfterwards, you can login by clicking https://flcadmin.netlify.app/\n\nRegards\nThe Administrator\nFirst Love Center\nAccra`,
+        'servant_account_created',
+        [servant.firstName, passwordTicketResponse?.data?.ticket]
+      )
+
+      servant.auth_id = authIdResponse.data.user_id
+      const roles = []
+
+      assignRoles(servant, auth_id, roles, [
+        authRoles[`${servantLower}${churchType}`].id,
+      ])
+      console.log(
+        `Auth0 Account successfully created for ${servant.firstName} ${servant.lastName}`
+      )
+
+      //Write Auth0 ID of Leader to Neo4j DB
+      await session.run(cypher[`make${churchType}${servantType}`], {
+        [`${servantLower}Id`]: servant.id,
+        [`${churchLower}Id`]: church.id,
+        auth_id: servant.auth_id,
+        auth: context.auth,
+      })
+    } catch (error) {
+      throwErrorMsg(error)
     }
-  })
+  } else if (servant.auth_id) {
+    //Update a user's Auth Profile with Picture and Name Details
+    await axios(updateAuthUserConfig(servant))
 
-  return servant
+    //Check auth0 roles and add roles 'leaderCentre'
+    const userRoleResponse = await axios(getUserRoles(servant.auth_id))
+    const roles = userRoleResponse.data.map((role) => role.name)
+
+    assignRoles(servant, roles, [authRoles[`${servantLower}${churchType}`].id])
+    //Write Auth0 ID of Admin to Neo4j DB
+    await session.run(cypher[`make${churchType}${servantType}`], {
+      [`${servantLower}Id`]: servant.id,
+      [`${churchLower}Id`]: church.id,
+      auth_id: servant.auth_id,
+      auth: context.auth,
+    })
+
+    //Send Email Using Mailgun
+    notifyMember(
+      servant,
+      'Servanthood Status Update',
+      `Hi ${servant.firstName} ${servant.lastName},\nCongratulations! You have just been made a ${churchType} ${servantType} for ${churchInEmail}. If you feel this is a mistake, please contact your bishop's admin\n\nRegards,\nThe Administrator,\nFirst Love Centre,\nAccra.`,
+      'servant_status_update',
+      [
+        servant.firstName,
+        churchType,
+        servantType,
+        church.name ?? `Bishop`,
+        church.type[0] !== 'Member'
+          ? church.type[0]
+          : `${church.firstName} ${church.lastName}`,
+      ]
+    )
+
+    return parseForCache(servant, church, verb)
+  }
 }
 const RemoveServant = async (
   context,
@@ -474,6 +451,7 @@ const RemoveServant = async (
   churchType,
   servantType
 ) => {
+  //Set Up
   const churchLower = churchType.toLowerCase()
   const servantLower = servantType.toLowerCase()
   isAuth(permittedRoles, context.auth.roles)
@@ -485,147 +463,90 @@ const RemoveServant = async (
   ])
 
   let verb = `leads${churchType}`
-
   if (servantType === 'Admin') {
     verb = `isAdminFor${churchType}`
   }
 
   const session = context.driver.session()
-  let servant = {}
-  let church = { id: args[`${churchLower}Id`] }
 
-  session
-    .run(cypher.matchChurchQuery, { id: args[`${churchLower}Id`] })
-    .then(async (response) => {
-      church = rearrangeMemberObject(church, response)
+  const churchResponse = await session.run(cypher.matchChurchQuery, {
+    id: args[`${churchLower}Id`],
+  })
+  const church = rearrangeCypherObject(churchResponse)
+  const churchInEmail = church.name
+    ? `${church.name} ${church.type[0]}`
+    : `Bishop ${church.firstName} ${church.lastName}`
 
-      return session
-        .run(cypher.matchMemberQuery, { id: args[`${servantLower}Id`] })
-        .then(async (response) => {
-          // Rearrange member object
-          servant = rearrangeMemberObject(servant, response)
-          errorHandling(servant)
+  const servantResponse = await session.run(cypher.matchMemberQuery, {
+    id: args[`${servantLower}Id`],
+  })
+  const servant = rearrangeCypherObject(servantResponse)
+  errorHandling(servant)
 
-          const churchInEmail = church.name
-            ? `${church.name} ${church.type[0]}`
-            : `Bishop ${church.firstName} ${church.lastName}`
+  if (!servant.auth_id) {
+    //if he has no auth_id then there is nothing to do
+    return
+  }
+  if (servant[`${verb}`].length > 1) {
+    //If he leads more than one Church don't touch his Auth0 roles
+    console.log(
+      `${servant.firstName} ${servant.lastName} leads more than one ${churchType}`
+    )
 
-          if (servant[`${verb}`].length > 1) {
-            //If he leads more than one Church don't touch his Auth0 roles
-            console.log(
-              `${servant.firstName} ${servant.lastName} leads more than one ${churchType}`
-            )
+    //Send a Mail to That Effect
+    notifyMember(
+      servant,
+      'You Have Been Removed!',
+      `Hi ${servant.firstName} ${servant.lastName},\nYou have lost your position as a ${churchType} ${servantType} for ${churchInEmail}.\nIf you feel that this is a mistake, please contact your bishops admin.\nThank you\n\nRegards\nThe Administrator\nFirst Love Center\nAccra`,
+      'servant_account_deleted',
+      [servant.firstName, churchType, servantType, church.name, church.type[0]]
+    )
 
-            //Send a Mail to That Effect
-            notifyMember(
-              servant,
-              'You Have Been Removed!',
-              `Hi ${servant.firstName} ${servant.lastName},\nYou have lost your position as a ${churchType} ${servantType} for ${churchInEmail}.\nIf you feel that this is a mistake, please contact your bishops admin.\nThank you\n\nRegards\nThe Administrator\nFirst Love Center\nAccra`,
-              'servant_account_deleted',
-              [
-                servant.firstName,
-                churchType,
-                servantType,
-                church.name,
-                church.type[0],
-              ]
-            )
+    return
+  }
 
-            return
-          }
+  //Check auth0 roles and remove roles 'leaderCentre'
+  const userRoleResponse = await axios(getUserRoles(servant.auth_id))
+  const roles = userRoleResponse.data.map((role) => role.name)
 
-          if (!servant.auth_id) {
-            return
-          }
+  //If the person is only a constituency Admin, delete auth0 profile
+  if (roles.includes(`${servantLower}${churchType}`) && roles.length === 1) {
+    await axios(deleteAuthUserConfig(servant.auth_id))
 
-          //Check auth0 roles and remove roles 'leaderCentre'
-          return axios(getUserRoles(servant.auth_id)).then((res) => {
-            const roles = res.data.map((role) => role.name)
-
-            //If the person is only a constituency Admin, delete auth0 profile
-            if (
-              roles.includes(`${servantLower}${churchType}`) &&
-              roles.length === 1
-            ) {
-              return axios(deleteAuthUserConfig(servant.auth_id))
-                .then(async () => {
-                  console.log(
-                    `Auth0 Account successfully deleted for ${servant.firstName} ${servant.lastName}`
-                  )
-
-                  //Remove Auth0 ID of Leader from Neo4j DB
-                  return session
-                    .run(cypher.removeMemberAuthId, {
-                      log: `${servant.firstName} ${servant.lastName} was removed as a ${churchType} ${servantType}`,
-                      auth_id: servant.auth_id,
-                      auth: context.auth,
-                    })
-                    .then(() => {
-                      //Send a Mail to That Effect
-                      return notifyMember(
-                        servant,
-                        'Your Servant Account Has Been Deleted',
-                        `Hi ${servant.firstName} ${servant.lastName},\nYour account has been deleted from our portal. You will no longer have access to any data.\nThis is due to the fact that you have been removed as a ${churchType} ${servantType} for ${churchInEmail}.\nIf you feel that this is a mistake, please contact your bishops admin.\nThank you\n\nRegards\nThe Administrator\nFirst Love Center\nAccra`,
-                        'servant_account_deleted',
-                        [
-                          servant.firstName,
-                          churchType,
-                          servantType,
-                          church.name,
-                          church.type[0],
-                        ]
-                      )
-                    })
-                })
-                .catch((error) => {
-                  throwErrorMsg('Cypher Query Failed To Run', error)
-                })
-            }
-
-            //If the person is a centre leader as well as any other position, remove role centre leader
-            if (
-              roles.includes(`${servantLower}${churchType}`) &&
-              roles.length > 1
-            ) {
-              return removeRoles(
-                servant.auth_id,
-                roles,
-                authRoles[`${servantLower}${churchType}`].id
-              ).then(() => {
-                //Send Email Using Mailgun
-                notifyMember(
-                  servant,
-                  'You Have Been Removed!',
-                  `Hi ${servant.firstName} ${servant.lastName},\nUnfortunately You have just been removed as a ${churchType} ${servantType} for ${churchInEmail}.\n\nRegards,\nThe Administrator,\nFirst Love Centre,\nAccra.`
-                )
-              })
-            }
-          })
-
-          //Relationship in Neo4j will be removed when the replacement leader is being added
-        })
+    console.log(
+      `Auth0 Account successfully deleted for ${servant.firstName} ${servant.lastName}`
+    )
+    //Remove Auth0 ID of Leader from Neo4j DB
+    await session.run(cypher.removeMemberAuthId, {
+      log: `${servant.firstName} ${servant.lastName} was removed as a ${churchType} ${servantType}`,
+      auth_id: servant.auth_id,
+      auth: context.auth,
     })
-    .catch((err) => throwErrorMsg('Error removing servant', err))
 
-  //Returning the data such that it can update apollo cache
-  servant[`${verb}`]?.push({
-    id: church.id,
-    leader: {
-      id: servant.id,
-      firstName: servant.firstName,
-      lastName: servant.lastName,
-    },
-  })
+    //Send a Mail to That Effect
+    notifyMember(
+      servant,
+      'Your Servant Account Has Been Deleted',
+      `Hi ${servant.firstName} ${servant.lastName},\nYour account has been deleted from our portal. You will no longer have access to any data.\nThis is due to the fact that you have been removed as a ${churchType} ${servantType} for ${churchInEmail}.\nIf you feel that this is a mistake, please contact your bishops admin.\nThank you\n\nRegards\nThe Administrator\nFirst Love Center\nAccra`,
+      'servant_account_deleted',
+      [servant.firstName, churchType, servantType, church.name, church.type[0]]
+    )
+    return
+  }
 
-  servant[`${verb}`].map((church) => {
-    church[`${servantLower}`] = {
-      id: servant.id,
-      firstName: servant.firstName,
-      lastName: servant.lastName,
-    }
-  })
+  //If the person is a centre leader as well as any other position, remove role centre leader
+  if (roles.includes(`${servantLower}${churchType}`) && roles.length > 1) {
+    removeRoles(servant, roles, authRoles[`${servantLower}${churchType}`].id)
+    //Send Email Using Mailgun
+    notifyMember(
+      servant,
+      'You Have Been Removed!',
+      `Hi ${servant.firstName} ${servant.lastName},\nUnfortunately You have just been removed as a ${churchType} ${servantType} for ${churchInEmail}.\n\nRegards,\nThe Administrator,\nFirst Love Centre,\nAccra.`
+    )
+  }
 
-  return servant
+  //Relationship in Neo4j will be removed when the replacement leader is being added
+  return parseForCache(servant, church, verb)
 }
 
 export const resolvers = {
@@ -727,7 +648,7 @@ export const resolvers = {
       session
         .run(cypher.checkMemberEmailExists, args)
         .then((res) => {
-          member = rearrangeMemberObject(member, res)
+          member = rearrangeCypherObject(member, res)
 
           if (member.email || member.whatsappNumber) {
             throwErrorMsg(
@@ -754,8 +675,7 @@ export const resolvers = {
           })
         })
         .then((res) => {
-          console.log(rearrangeMemberObject(member, res))
-          member = rearrangeMemberObject(member, res)
+          member = rearrangeCypherObject(member, res)
           return member
         })
         .catch((err) => {
@@ -784,7 +704,7 @@ export const resolvers = {
       session
         .run(cypher.checkBacentaHasNoMembers, args)
         .then(async (res) => {
-          bacenta = rearrangeMemberObject(bacenta, res)
+          bacenta = rearrangeCypherObject(bacenta, res)
 
           if (bacenta.memberCount) {
             throwErrorMsg(
@@ -798,7 +718,7 @@ export const resolvers = {
           })
         })
         .then((res) => {
-          bacenta = rearrangeMemberObject(bacenta, res)
+          bacenta = rearrangeCypherObject(bacenta, res)
           return bacenta
         })
         .catch((err) => throwErrorMsg(err))

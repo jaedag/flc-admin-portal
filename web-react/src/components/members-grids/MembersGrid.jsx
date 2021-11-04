@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import NavBar from '../nav/NavBar'
-import SideBar from '../SideBar.jsx'
+import SideBar from '../SideMenu.jsx'
 import MemberTable from '../members-grids/MemberTable'
 import { memberFilter } from './member-filter-utils'
 import { debounce } from '../../global-utils'

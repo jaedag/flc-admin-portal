@@ -1,6 +1,5 @@
 import React, { useContext } from 'react'
 import { useHistory, useLocation } from 'react-router'
-import NavBar from 'components/nav/NavBar'
 import ChurchGraph from 'components/ChurchGraph/ChurchGraph'
 import './Dashboards.css'
 import { MemberContext } from 'contexts/MemberContext'
@@ -15,6 +14,8 @@ import { ChurchContext } from 'contexts/ChurchContext'
 import StatDisplay from 'pages/reports/CompStatDisplay'
 import { authorisedLink, plural } from 'global-utils'
 import BaseComponent from 'components/base-component/BaseComponent'
+import Container from 'react-bootstrap/Container'
+import { Row } from 'react-bootstrap'
 
 const ServantsDashboard = () => {
   const { memberId, currentUser } = useContext(MemberContext)
@@ -165,8 +166,7 @@ const ServantsDashboard = () => {
 
   return (
     <BaseComponent loadingState={loading} errorState={error} data={data}>
-      <NavBar />
-      <div className="container">
+      <Container>
         <div className=" my-3">
           <p className="mb-0">{`Welcome to`}</p>
           <h5 className="font-weight-bold roboto">{`${servant?.fullName}'s Dashboard`}</h5>
@@ -198,7 +198,7 @@ const ServantsDashboard = () => {
 
         {assessmentChurchData && (
           <>
-            <div className="row mt-3">
+            <Row className="mt-3">
               <div className="col">
                 <StatDisplay
                   title="Avg Attendance"
@@ -218,7 +218,7 @@ const ServantsDashboard = () => {
                   )}
                 />
               </div>
-            </div>
+            </Row>
             <ChurchGraph
               stat1="attendance"
               stat2="income"
@@ -227,7 +227,7 @@ const ServantsDashboard = () => {
             />
           </>
         )}
-      </div>
+      </Container>
     </BaseComponent>
   )
 }

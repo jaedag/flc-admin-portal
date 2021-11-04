@@ -30,6 +30,8 @@ function UserProfileIcon() {
         id: data.memberByEmail.id,
         firstName: data.memberByEmail.firstName,
         lastName: data.memberByEmail.lastName,
+        fullName:
+          data.memberByEmail.firstName + ' ' + data.memberByEmail.lastName,
         picture: data.memberByEmail?.pictureUrl ?? null,
         bishop: data.memberByEmail?.bacenta?.centre[`${church}`]?.bishop.id,
         constituency: data.memberByEmail?.bacenta?.centre[`${church}`]?.id,

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/client'
 
@@ -22,7 +22,7 @@ const UpdateMember = () => {
   } = useQuery(DISPLAY_MEMBER, {
     variables: { id: memberId },
   })
-
+  const [isLoading, setIsLoading] = useState(false)
   const member = memberData?.member
 
   const initialValues = {
@@ -68,6 +68,7 @@ const UpdateMember = () => {
   const [AddMemberTitle] = useMutation(ADD_MEMBER_TITLE_MUTATION)
 
   const onSubmit = async (values, onSubmitProps) => {
+    setIsLoading(true)
     const { setSubmitting, resetForm } = onSubmitProps
     //Variables that are not controlled by formik
 
@@ -98,7 +99,7 @@ const UpdateMember = () => {
             return
           }
 
-          AddMemberTitle({
+          return AddMemberTitle({
             variables: {
               memberId: res.data.UpdateMemberDetails.id,
               title: title.title,
@@ -112,16 +113,16 @@ const UpdateMember = () => {
 
         setSubmitting(false)
         resetForm()
+        history.push('/member/displaydetails')
       })
       .catch((err) =>
         throwErrorMsg('There was an error creating the member profile\n', err)
       )
-    history.push('/member/displaydetails')
   }
 
   return (
     <BaseComponent
-      loadingState={memberLoading}
+      loadingState={memberLoading || isLoading}
       errorState={memberError || memberId === ''}
       data={memberData}
     >

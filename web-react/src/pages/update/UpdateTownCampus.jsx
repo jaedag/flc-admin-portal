@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/client'
 import { alertMsg, capitalise, throwErrorMsg } from '../../global-utils'
@@ -41,7 +41,7 @@ const UpdateTownCampus = () => {
   })
 
   const history = useHistory()
-
+  const [isLoading, setIsLoading] = useState(false)
   const campusTownData =
     church.church === 'campus' ? campusData?.campuses[0] : townData?.towns[0]
 
@@ -260,6 +260,7 @@ const UpdateTownCampus = () => {
 
   //onSubmit receives the form state as argument
   const onSubmit = (values, onSubmitProps) => {
+    setIsLoading(true)
     setBishopId(values.bishopSelect)
 
     if (church.church === 'campus') {
@@ -287,14 +288,17 @@ const UpdateTownCampus = () => {
 
       //Log if the Leader Changes
       if (values.leaderId !== initialValues.leaderId) {
-        MakeCampusLeader({
+        return MakeCampusLeader({
           variables: {
             oldLeaderId: initialValues.leaderId,
             newLeaderId: values.leaderId,
             campusId: campusId,
           },
         })
-          .then(() => alertMsg('Leader Changed Successfully'))
+          .then(() => {
+            alertMsg('Leader Changed Successfully')
+            history.push(`/${church.church}/displaydetails`)
+          })
           .catch((err) =>
             throwErrorMsg('There was a problem changing the CO', err)
           )
@@ -340,14 +344,17 @@ const UpdateTownCampus = () => {
 
       //Log if the Leader Changes
       if (values.leaderId !== initialValues.leaderId) {
-        MakeTownLeader({
+        return MakeTownLeader({
           variables: {
             oldLeaderId: initialValues.leaderId,
             newLeaderId: values.leaderId,
             townId: townId,
           },
         })
-          .then(() => alertMsg('Leader Changed Successfully'))
+          .then(() => {
+            alertMsg('Leader Changed Successfully')
+            history.push(`/${church.church}/displaydetails`)
+          })
           .catch((err) =>
             throwErrorMsg('There was a problem changing the leader', err)
           )
@@ -462,7 +469,7 @@ const UpdateTownCampus = () => {
       initialValues={initialValues}
       onSubmit={onSubmit}
       title={`Update ${capitalise(church.church)} Form`}
-      loadingState={townLoading || campusLoading}
+      loadingState={townLoading || campusLoading || isLoading}
       newConstituency={false}
     />
   )

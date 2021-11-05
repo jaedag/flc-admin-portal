@@ -1,15 +1,8 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useState } from 'react'
 import ReactDOM from 'react-dom'
 // import registerServiceWorker from './registerServiceWorker'
 import { Route, Switch, BrowserRouter as Router } from 'react-router-dom'
-import {
-  ApolloProvider,
-  ApolloClient,
-  createHttpLink,
-  InMemoryCache,
-} from '@apollo/client'
-import { setContext } from '@apollo/client/link/context'
-import { Auth0Provider, useAuth0 } from '@auth0/auth0-react'
+import 'bootstrap/dist/css/bootstrap.min.css'
 import './index.css'
 // import FederalAdminDashboard from './pages/dashboards/FederalAdminDashboard.jsx'
 import BishopDashboard from './pages/dashboards/BishopDashboard.jsx'
@@ -60,7 +53,6 @@ import TownServiceDetails from 'pages/record-service/TownServiceDetails'
 import CampusService from 'pages/record-service/CampusService'
 import CampusServiceDetails from 'pages/record-service/CampusServiceDetails'
 import CampusReport from 'pages/reports/CampusReport'
-import CacheBuster from 'CacheBuster'
 import SontaReport from 'pages/reports/SontaReport'
 import SontaService from 'pages/record-service/SontaService'
 import UpdateSonta from 'pages/update/UpdateSonta'
@@ -76,60 +68,9 @@ import Campaigns from 'pages/dashboards/Campaigns'
 import Reconciliation from 'pages/dashboards/Reconciliation'
 import Churches from 'pages/directory/Churches'
 import Members from 'pages/directory/Members'
+import App from 'App'
 
-const AppWithApollo = () => {
-  const [accessToken, setAccessToken] = useState()
-  const { getAccessTokenSilently } = useAuth0()
-
-  const getAccessToken = useCallback(async () => {
-    try {
-      const token = await getAccessTokenSilently({
-        audience: 'https://flcadmin.netlify.app/graphql',
-        scope: 'read:current_user',
-      })
-      // console.log('from get access token', token)
-      setAccessToken(token)
-      sessionStorage.setItem('token', token)
-    } catch (err) {
-      // eslint-disable-next-line
-      console.error(err)
-    }
-  }, [getAccessTokenSilently])
-
-  useEffect(() => {
-    getAccessToken()
-  }, [getAccessToken])
-
-  const httpLink = createHttpLink({
-    uri: process.env.REACT_APP_GRAPHQL_URI || '/graphql',
-  })
-
-  const authLink = setContext((_, { headers }) => {
-    // get the authentication token from local storage if it exists
-    const token = sessionStorage.getItem('token') || accessToken
-    // return the headers to the context so httpLink can read them
-    return {
-      headers: {
-        ...headers,
-        Authorization: token ? `Bearer ${token}` : '',
-      },
-    }
-  })
-
-  const client = new ApolloClient({
-    uri: process.env.REACT_APP_GRAPHQL_URI || '/graphql',
-    link: authLink.concat(httpLink),
-    cache: new InMemoryCache(),
-  })
-
-  return (
-    <ApolloProvider client={client}>
-      <PastorsAdmin />
-    </ApolloProvider>
-  )
-}
-
-const PastorsAdmin = () => {
+export const PastorsAdmin = () => {
   const [church, setChurch] = useState(
     sessionStorage.getItem('church')
       ? JSON.parse(sessionStorage.getItem('church'))
@@ -473,12 +414,6 @@ const PastorsAdmin = () => {
                   <Route path="/campaigns" component={Campaigns} exact />
                   <Route path="/recon" component={Reconciliation} exact />
 
-                  {/* <ProtectedRouteHome
-                    path="/"
-                    roles={['adminFederal']}
-                    component={FederalAdminDashboard}
-                    exact
-                  /> */}
                   <ProtectedRouteHome
                     path="/dashboard"
                     component={BishopDashboard}
@@ -1033,29 +968,6 @@ const PastorsAdmin = () => {
     </Router>
   )
 }
-
-const App = () => (
-  <CacheBuster>
-    {({ loading, isLatestVersion, refreshCacheAndReload }) => {
-      if (loading) return null
-      if (!loading && !isLatestVersion) {
-        refreshCacheAndReload()
-      }
-
-      return (
-        <Auth0Provider
-          domain={process.env.REACT_APP_AUTH0_DOMAIN}
-          clientId={process.env.REACT_APP_AUTH0_CLIENT_ID}
-          redirectUri={window.location.origin}
-          audience="https://flcadmin.netlify.app/graphql"
-          scope
-        >
-          <AppWithApollo />
-        </Auth0Provider>
-      )
-    }}
-  </CacheBuster>
-)
 
 ReactDOM.render(<App />, document.getElementById('root'))
 // registerServiceWorker()

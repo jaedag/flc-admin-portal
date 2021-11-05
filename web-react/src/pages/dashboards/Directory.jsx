@@ -1,19 +1,15 @@
 import { MemberContext } from 'contexts/MemberContext'
 import React, { useContext } from 'react'
-import { Col, Container, Row, Button } from 'react-bootstrap'
+import { Container, Button } from 'react-bootstrap'
 
 const Directory = () => {
   const { currentUser } = useContext(MemberContext)
 
   return (
     <Container>
-      {`${currentUser.fullName} Directory`}
-      <Row>
-        <Col>
-          <Button>Members</Button>
-          <Button>Church</Button>
-        </Col>
-      </Row>
+      {`${currentUser.fullName}'s Directory`}
+      <Button variant="primary">Members</Button>
+      <Button variant="primary">Church</Button>
     </Container>
   )
 }

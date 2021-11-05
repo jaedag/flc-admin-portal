@@ -115,12 +115,10 @@ a:active {
 }
 
 .btn-primary {
-  color: #fff;
+  color: white;
   background-color: var(--accent-color);
-  border-color: var(--border-color);
-  border-radius: 10px;
+  border-radius: 5px;
   border: 0px;
-  margin-bottom: 15px;
 }
 
 .btn-primary:hover,
@@ -204,10 +202,6 @@ select {
   width: 500px;
   border: 1px solid var(--border-color);
   border-radius: 7px;
-}
-
-.btn-medium {
-  padding: 15px 45px 15px 45px;
 }
 
 body {

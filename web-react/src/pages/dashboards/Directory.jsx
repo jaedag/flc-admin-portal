@@ -4,7 +4,7 @@ import { Container, Button } from 'react-bootstrap'
 import { useHistory } from 'react-router'
 
 const Directory = () => {
-  const { currentUser, darkMode } = useContext(MemberContext)
+  const { currentUser, theme } = useContext(MemberContext)
   let history = useHistory()
 
   return (
@@ -16,7 +16,7 @@ const Directory = () => {
           onClick={() => history.push('/directory/members')}
           variant="primary"
           size="lg"
-          className={`btn-${darkMode}`}
+          className={`btn-${theme}`}
         >
           Members
         </Button>
@@ -24,7 +24,7 @@ const Directory = () => {
           onClick={() => history.push('/directory/churches')}
           variant="secondary"
           size="lg"
-          className={`btn-${darkMode} `}
+          className={`btn-${theme} `}
         >
           Churches
         </Button>

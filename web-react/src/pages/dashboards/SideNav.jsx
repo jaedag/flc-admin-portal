@@ -17,7 +17,7 @@ import MenuItem from './MenuItem'
 import { MemberContext } from 'contexts/MemberContext'
 
 const SideNav = (props) => {
-  const { currentUser } = useContext(MemberContext)
+  const { currentUser, theme } = useContext(MemberContext)
   const [inactive, setInactive] = useState(true)
 
   const menuItems = [
@@ -43,21 +43,21 @@ const SideNav = (props) => {
   })
 
   return (
-    <div className={`side-menu ${inactive ? 'inactive' : ''}`}>
+    <div className={`side-menu ${theme} ${inactive ? 'inactive' : ''}`}>
       <div className="top-section">
         <div className="logo">
           <img src={logo} alt="flc logo" />
         </div>
         {inactive ? (
           <div
-            className="toggle-menu-btn"
+            className={`toggle-menu-btn ${theme}`}
             onClick={() => setInactive(!inactive)}
           >
             <ArrowRightSquareFill />
           </div>
         ) : (
           <div
-            className="toggle-menu-btn"
+            className={`toggle-menu-btn ${theme}`}
             onClick={() => setInactive(!inactive)}
           >
             <ArrowLeftSquareFill />
@@ -65,8 +65,8 @@ const SideNav = (props) => {
         )}
       </div>
 
-      <div className="search-controller">
-        <button className="search-btn">
+      <div className={`search-controller ${theme}`} search>
+        <button className={`search-btn ${theme}`}>
           <Search />
         </button>
         <input type="text" placeholder="search" />
@@ -90,11 +90,11 @@ const SideNav = (props) => {
           />
         ))}
 
-        <div className="side-menu-footer">
+        <div className={`side-menu-footer ${theme}`}>
           <div className="avatar">
             <UserProfileIcon />
           </div>
-          <div className="user-info">
+          <div className={`user-info ${theme}`}>
             <h5>{currentUser.fullName}</h5>
             <p>{currentUser.email}</p>
           </div>

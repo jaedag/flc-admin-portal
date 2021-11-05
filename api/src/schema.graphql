@@ -21,42 +21,6 @@ type Member {
   history: [HistoryLog] @relationship(type: "HAS_HISTORY", direction: OUT)
   loggedHistory: [HistoryLog] @relationship(type: "LOGGED_BY", direction: IN)
   bacenta: Bacenta @relationship(type: "BELONGS_TO", direction: OUT)
-  bishop: Member
-    @cypher(
-      statement: """
-      MATCH (this)
-      OPTIONAL MATCH (this)-[:BELONGS_TO]->(:Bacenta)<-[:HAS_BACENTA]-(:Centre)<-[:HAS_CENTRE]-()-[:HAS_CAMPUS|:HAS_TOWN]-(bishopFromBacenta:Member)
-      OPTIONAL MATCH (this)-[:IS_ADMIN_FOR]-(bishopFromAdmin:Member)
-      OPTIONAL MATCH (this)-[:IS_ADMIN_FOR]->()<-[:HAS_TOWN|:HAS_CAMPUS]-(bishopFromConAdmin:Member)
-      OPTIONAL MATCH (this)-[:LEADS]-()<-[:HAS_TOWN|:HAS_CAMPUS]-(bishopFromCO:Member)
-      OPTIONAL MATCH (this)-[:LEADS]-(:Centre)<-[:HAS_CENTRE]-()<-[:HAS_TOWN|:HAS_CAMPUS]-(bishopFromCentreLeader:Member)
-      OPTIONAL MATCH (this)-[:LEADS]-(:Bacenta)<-[:HAS_BACENTA]-(:Centre)<-[:HAS_CENTRE]-()<-[:HAS_TOWN|:HAS_CAMPUS]-(bishopFromBacentaLeader:Member)
-      UNWIND [bishopFromBacenta,bishopFromAdmin,bishopFromConAdmin,bishopFromCO,bishopFromCentreLeader,bishopFromBacentaLeader] as bishop
-      WITH bishop WHERE bishop IS NOT NULL
-      RETURN DISTINCT bishop
-      """
-    )
-  bacentas(search: String): [Bacenta]
-    @cypher(
-      statement: """
-      MATCH (this)
-      OPTIONAL MATCH (this)-[:HAS_CAMPUS|HAS_TOWN]->()-[:HAS_CENTRE]->(centre:Centre)
-      OPTIONAL MATCH (centre)-[:HAS_BACENTA]-(bacenta:Bacenta)
-      WHERE toLower(bacenta.name) CONTAINS toLower($search)
-      WITH bacenta WHERE bacenta IS NOT NULL
-      RETURN bacenta LIMIT 8
-      """
-    )
-  centres(search: String): [Centre]
-    @cypher(
-      statement: """
-      MATCH (this)
-      OPTIONAL MATCH (this)-[:HAS_CAMPUS|HAS_TOWN]->()-[:HAS_CENTRE]->(centre:Centre)
-      WHERE toLower(centre.name) CONTAINS toLower($search)
-      WITH centre WHERE centre IS NOT NULL
-      RETURN centre
-      """
-    )
   leadsBacenta: [Bacenta] @relationship(type: "LEADS", direction: OUT)
   leadsCentre: [Centre] @relationship(type: "LEADS", direction: OUT)
   leadsMinistry: [Ministry] @relationship(type: "LEADS", direction: OUT)
@@ -70,27 +34,6 @@ type Member {
   isAdminForCampus: [Campus] @relationship(type: "IS_ADMIN_FOR", direction: OUT)
   isAdminForTown: [Town] @relationship(type: "IS_ADMIN_FOR", direction: OUT)
   admin: Member @relationship(type: "IS_ADMIN_FOR", direction: IN)
-
-  #Members
-  members(nameSearch: String): [Member]
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS_TOWN|:HAS_CAMPUS]->(campusTown)
-      MATCH (campusTown)-[:HAS_CENTRE]->(centre)
-      MATCH (centre)-[:HAS_BACENTA]->(bacenta:Bacenta)
-      OPTIONAL MATCH (bacenta)<-[:BELONGS_TO*]-(member:Member)
-      OPTIONAL MATCH (bacenta)<-[:LEADS]-(bacentaLeader:Member)
-      OPTIONAL MATCH (centre)<-[:LEADS]-(centreLeader:Member)
-      OPTIONAL MATCH (campusTown)<-[:LEADS]-(constituencyOverseer:Member)
-      OPTIONAL MATCH (this)<-[:IS_ADMIN_FOR]-(admin:Member)
-      OPTIONAL MATCH (campusTown)<-[:IS_ADMIN_FOR]-(adminConstituency:Member)
-      UNWIND [member,bacentaLeader,centreLeader,constituencyOverseer,admin,adminConstituency] as members
-
-      WITH members WHERE members IS NOT NULL
-
-      RETURN DISTINCT members ORDER BY members.firstName
-      """
-    )
 
   #OTHER WORKS
   was_treasurer_for: [ServiceRecord]!
@@ -221,20 +164,6 @@ type HistoryLog @auth(rules: [{ isAuthenticated: true }]) {
 type Constituency {
   id: ID @id
   name: String
-  members: [Member]
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS_CENTRE]->(centre:Centre)-[:HAS_BACENTA]->(bacenta:Bacenta)
-      OPTIONAL MATCH (bacenta)<-[:BELONGS_TO*]-(member:Member)
-      OPTIONAL MATCH (bacenta)<-[:LEADS]-(bacentaLeader:Member)
-      OPTIONAL MATCH (centre)<-[:LEADS]-(centreLeader:Member)
-      OPTIONAL MATCH (this)<-[:LEADS]-(constituencyOverseer:Member)
-       OPTIONAL MATCH (this)<-[:IS_ADMIN_FOR]-(adminConstituency:Member)
-      UNWIND [member,bacentaLeader,centreLeader,constituencyOverseer,adminConstituency] as members
-      WITH members WHERE members IS NOT NULL
-      RETURN DISTINCT members ORDER BY members.firstName
-      """
-    )
   leader: Member @relationship(type: "LEADS", direction: IN)
   sontas: [Sonta] @relationship(type: "HAS_SONTA", direction: OUT)
   centres: [Centre] @relationship(type: "HAS_CENTRE", direction: OUT)
@@ -251,20 +180,6 @@ type Constituency {
 type Campus {
   id: ID @id
   name: String
-  members: [Member]
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS_CENTRE]->(centre:Centre)-[:HAS_BACENTA]->(bacenta:Bacenta)
-      OPTIONAL MATCH (bacenta)<-[:BELONGS_TO*]-(member:Member)
-      OPTIONAL MATCH (bacenta)<-[:LEADS]-(bacentaLeader:Member)
-      OPTIONAL MATCH (centre)<-[:LEADS]-(centreLeader:Member)
-      OPTIONAL MATCH (this)<-[:LEADS]-(constituencyOverseer:Member)
-       OPTIONAL MATCH (this)<-[:IS_ADMIN_FOR]-(adminConstituency:Member)
-      UNWIND [member,bacentaLeader,centreLeader,constituencyOverseer,adminConstituency] as members
-      WITH members WHERE members IS NOT NULL
-      RETURN DISTINCT members ORDER BY members.firstName
-      """
-    )
   leader: Member @relationship(type: "LEADS", direction: IN)
   sontas: [Sonta] @relationship(type: "HAS_SONTA", direction: OUT)
   centres: [Centre] @relationship(type: "HAS_CENTRE", direction: OUT)
@@ -280,20 +195,6 @@ type Campus {
 type Town {
   id: ID @id
   name: String
-  members: [Member]
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS_CENTRE]->(centre:Centre)-[:HAS_BACENTA]->(bacenta:Bacenta)
-      OPTIONAL MATCH (bacenta)<-[:BELONGS_TO*]-(member:Member)
-      OPTIONAL MATCH (bacenta)<-[:LEADS]-(bacentaLeader:Member)
-      OPTIONAL MATCH (centre)<-[:LEADS]-(centreLeader:Member)
-      OPTIONAL MATCH (this)<-[:LEADS]-(constituencyOverseer:Member)
-       OPTIONAL MATCH (this)<-[:IS_ADMIN_FOR]-(adminConstituency:Member)
-      UNWIND [member,bacentaLeader,centreLeader,constituencyOverseer,adminConstituency] as members
-      WITH members WHERE members IS NOT NULL
-      RETURN DISTINCT members ORDER BY members.firstName
-      """
-    )
   leader: Member @relationship(type: "LEADS", direction: IN)
   sontas: [Sonta] @relationship(type: "HAS_SONTA", direction: OUT)
   centres: [Centre] @relationship(type: "HAS_CENTRE", direction: OUT)
@@ -338,17 +239,7 @@ type Bacenta {
   location: Point
   centre: Centre @relationship(type: "HAS_BACENTA", direction: IN)
   leader: Member @relationship(type: "LEADS", direction: IN)
-  members: [Member]
-    @cypher(
-      statement: """
-      MATCH (this)
-      OPTIONAL MATCH (this)<-[:BELONGS_TO*]-(member:Member)
-      OPTIONAL MATCH (this)<-[:LEADS]-(bacentaLeader:Member)
-      UNWIND [member,bacentaLeader] as members
-      WITH members WHERE members IS NOT NULL
-      RETURN DISTINCT members ORDER BY members.firstName
-      """
-    )
+  members: [Member] @relationship(type: "BELONGS_TO", direction: IN)
   meetingDay: ServiceDay @relationship(type: "MEETS_ON", direction: OUT)
   history: [HistoryLog] @relationship(type: "HAS_HISTORY", direction: OUT)
   services: [ServiceLog] @relationship(type: "HAS_HISTORY", direction: OUT)
@@ -371,15 +262,6 @@ type Ministry {
 type Sonta {
   id: ID @id
   name: String
-  members: [Member]
-    @cypher(
-      statement: """
-      MATCH (this)<-[:HAS_SONTA]-()-[:HAS_CENTRE]->()-[:HAS_BACENTA]->()<-[:BELONGS_TO]-(member:Member)
-      MATCH (this)<-[:HAS_SONTA]-(ministry:Ministry)
-      MATCH (member)-[:BELONGS_TO]->(ministry)
-      RETURN member
-      """
-    )
   leader: Member @relationship(type: "LEADS", direction: IN)
   basonta: [Basonta] @relationship(type: "HAS_BASONTA", direction: OUT)
   ministry: Ministry @relationship(type: "HAS_SONTA", direction: IN)
@@ -475,23 +357,7 @@ type Query {
       RETURN centre LIMIT 5
       """
     )
-  # bishopMemberList(id: ID): [Member]!
-  #   @cypher(
-  #     statement: """
-  #     MATCH (bishop:Member {id: $id})-[:HAS_TOWN|:HAS_CAMPUS]->(campusTown)
-  #     MATCH (campusTown)-[:HAS_CENTRE]->(centre)
-  #     MATCH (centre)-[:HAS_BACENTA]->(bacenta)
-  #     OPTIONAL MATCH (bacenta)<-[:BELONGS_TO*]-(member:Member)
-  #     OPTIONAL MATCH (bacenta)<-[:LEADS]-(bacentaLeader:Member)
-  #     OPTIONAL MATCH (centre)<-[:LEADS]-(centreLeader:Member)
-  #     OPTIONAL MATCH (campusTown)<-[:LEADS]-(constituencyOverseer:Member)
-  #     OPTIONAL MATCH (bishop)<-[:IS_ADMIN_FOR]-(admin:Member)
-  #      OPTIONAL MATCH (campusTown)<-[:IS_ADMIN_FOR]-(adminConstituency:Member)
-  #     UNWIND [member,bacentaLeader,centreLeader,constituencyOverseer,admin,adminConstituency] as members
-  #     WITH members WHERE members IS NOT NULL
-  #     RETURN DISTINCT members
-  #     """
-  #   )
+
   bishopMemberDropdown(id: ID, nameSearch: String): [Member]
     @cypher(
       statement: """

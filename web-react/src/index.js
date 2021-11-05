@@ -112,7 +112,7 @@ export const PastorsAdmin = () => {
   const [memberId, setMemberId] = useState(
     sessionStorage.getItem('memberId') ? sessionStorage.getItem('memberId') : ''
   )
-  const [darkMode, setDarkMode] = useState('dark')
+  const [theme, setTheme] = useState('dark')
   const [currentUser, setCurrentUser] = useState({
     id: '',
     picture: '',
@@ -394,8 +394,8 @@ export const PastorsAdmin = () => {
             setMemberId,
             currentUser,
             setCurrentUser,
-            darkMode,
-            setDarkMode,
+            theme,
+            setTheme,
           }}
         >
           <SearchContext.Provider value={{ searchKey, setSearchKey }}>

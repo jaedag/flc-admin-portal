@@ -8,29 +8,33 @@ import CampusTownMembers from '../pages/grids/CampusTownMembers.jsx'
 import LoadingScreen from '../components/base-component/LoadingScreen'
 import { isAuthorised } from '../global-utils'
 import CentreMembers from 'pages/grids/CentreMembers'
-import DetailsBacenta from 'pages/display/DetailsBacenta'
+import Churches from 'pages/directory/Churches'
 
 const ChurchDirectoryRoute = ({ component, roles, ...args }) => {
   const { currentUser } = useContext(MemberContext)
   const { isAuthenticated } = useAuth0()
-  const { setBishopId, setTownId, setCampusId, setChurch } = useContext(
-    ChurchContext
-  )
+  const church = useContext(ChurchContext)
 
   useEffect(() => {
     if (isAuthenticated && !currentUser.roles.includes('adminFederal')) {
       //if User is not a federal admin
-      setBishopId(currentUser.bishop)
-      setChurch(currentUser.church)
+      church.setBishopId(currentUser.bishop)
+      church.setChurch(currentUser.church)
 
       if (!currentUser.roles.includes('adminBishop')) {
         //User is not a Bishops Admin the he can only be looking at his constituency membership
-        setTownId(currentUser.constituency)
-        setCampusId(currentUser.constituency)
+        church.setTownId(currentUser.constituency)
+        church.setCampusId(currentUser.constituency)
       }
     }
     // eslint-disable-next-line
-  }, [currentUser, setBishopId, setTownId, setCampusId, setChurch])
+  }, [
+    currentUser,
+    church.setBishopId,
+    church.setTownId,
+    church.setCampusId,
+    church.setChurch,
+  ])
 
   if (isAuthorised(roles, currentUser.roles)) {
     //if the user has permission to access the route
@@ -66,8 +70,9 @@ const ChurchDirectoryRoute = ({ component, roles, ...args }) => {
       />
     )
   } else if (isAuthorised(['leaderBacenta'], currentUser.roles)) {
-    //If the user does not have permission but is a Centre Leader
-    return <Route component={DetailsBacenta} />
+    //If the user does not have permission but is a Bacenta Leader
+    church.setBacentaId(currentUser.bacenta.id)
+    return <Route component={Churches} />
   } else {
     return <UnauthMsg />
   }

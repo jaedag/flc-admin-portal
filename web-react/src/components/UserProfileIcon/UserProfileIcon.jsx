@@ -15,6 +15,7 @@ function UserProfileIcon() {
   const { user, isAuthenticated } = useAuth0()
   const { setChurch } = useContext(ChurchContext)
   const { currentUser, setCurrentUser } = useContext(MemberContext)
+
   const [memberByEmail] = useLazyQuery(GET_LOGGED_IN_USER, {
     onCompleted: (data) => {
       let church
@@ -33,6 +34,7 @@ function UserProfileIcon() {
         fullName:
           data.memberByEmail.firstName + ' ' + data.memberByEmail.lastName,
         picture: data.memberByEmail?.pictureUrl ?? null,
+        bacenta: data.memberByEmail?.bacenta,
         bishop: data.memberByEmail?.bacenta?.centre[`${church}`]?.bishop.id,
         constituency: data.memberByEmail?.bacenta?.centre[`${church}`]?.id,
         church: { church: church, subChurch: 'centre' },

@@ -16,7 +16,7 @@ const Directory = () => {
           onClick={() => history.push('/directory/members')}
           variant="primary"
           size="lg"
-          className={`btn-${theme}`}
+          className={`${theme}`}
         >
           Members
         </Button>
@@ -24,7 +24,7 @@ const Directory = () => {
           onClick={() => history.push('/directory/churches')}
           variant="secondary"
           size="lg"
-          className={`btn-${theme} `}
+          className={`${theme} `}
         >
           Churches
         </Button>

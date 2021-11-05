@@ -55,6 +55,7 @@ const ServantsDashboard = () => {
     if (servantType === 'Bishop') {
       roles.push({
         name: 'Bishop',
+        church: servant[`${verb}`][0],
         number: `${churchType} Bishop`,
         clickCard: () => {
           clickCard(servant[`${verb}`][0])
@@ -71,6 +72,7 @@ const ServantsDashboard = () => {
     if (churchType === 'Bishop' && servantType === 'Admin') {
       roles.push({
         name: 'Admin',
+        church: servant[`${verb}`][0],
         number: 'Bishop Admin',
         clickCard: () => {
           clickCard(servant[`${verb}`][0])
@@ -88,6 +90,7 @@ const ServantsDashboard = () => {
       const adminsOneChurch = servant[`${verb}`].length === 1 ?? false
       roles.push({
         name: 'Admin',
+        church: servant[`${verb}`][0],
         number: `${churchType} Admin`,
         clickCard: () => {
           clickCard(servant[`${verb}`][0])
@@ -107,6 +110,7 @@ const ServantsDashboard = () => {
     const leadsOneChurch = servant[`${verb}`].length === 1 ?? false
     roles.push({
       name: leadsOneChurch ? churchType : plural(churchType),
+      church: servant[`${verb}`][0],
       number: servant[`${verb}`]?.length,
       clickCard: () => {
         clickCard(servant[`${verb}`][0])
@@ -115,6 +119,7 @@ const ServantsDashboard = () => {
         ? `/${churchType.toLowerCase()}/displaydetails`
         : `/servants/${churchType.toLowerCase()}-list`,
     })
+
     assessmentChurch = servant[`${verb}`][0]
   }
 

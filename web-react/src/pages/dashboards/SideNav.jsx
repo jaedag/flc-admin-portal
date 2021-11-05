@@ -84,7 +84,7 @@ const SideNav = (props) => {
             to={menuItem.to}
             subMenus={menuItem.subMenus || []}
             onClick={() => {
-              if (inactive) setInactive(false)
+              if (!inactive) setInactive(true)
             }}
             inactive={inactive}
           />

@@ -421,26 +421,19 @@ CREATE (member:Member {whatsappNumber:$whatsappNumber})
 
       WITH member, log
       MATCH (currentUser:Member {auth_id:$auth_id})
-      MERGE (date:TimeGraph {date: date()})
-      MERGE (log)-[:RECORDED_ON]->(date)
-      MERGE (log)-[:LOGGED_BY]->(currentUser)
-      MERGE (member)-[:HAS_HISTORY]->(log)
-
-      WITH member
       MATCH (maritalStatus:MaritalStatus {status:$maritalStatus})
       MATCH (gender:Gender {gender: $gender})
-
+      MATCH (bacenta:Bacenta {id: $bacenta})
+      MERGE (today:TimeGraph {date: date()})
+      MERGE (log)-[:RECORDED_ON]->(today)
+      MERGE (log)-[:LOGGED_BY]->(currentUser)
+      MERGE (member)-[:HAS_HISTORY]->(log)
       MERGE (member)-[:HAS_MARITAL_STATUS]-> (maritalStatus)
       MERGE (member)-[:HAS_GENDER]-> (gender)
+      MERGE (date:TimeGraph {date: date($dob)})
+      MERGE (member)-[:WAS_BORN_ON]->(date)
+      MERGE (member)-[:BELONGS_TO]->(bacenta)
 
-      WITH member
-         CALL {
-         	WITH member
-         	WITH member WHERE $dob IS NOT NULL
-         	MERGE (date:TimeGraph {date: date($dob)})
-      	  MERGE (member)-[:WAS_BORN_ON]->(date)
-         	RETURN count(member) AS member_born
-         	}
 
       WITH member
          CALL {
@@ -449,14 +442,6 @@ CREATE (member:Member {whatsappNumber:$whatsappNumber})
          	MERGE (occupation:Occupation {occupation:$occupation})
       	MERGE (member)-[:HAS_OCCUPATION]-> (occupation)
          	RETURN count(member) AS member_occupation
-         	}
-      WITH member
-      CALL {
-         	WITH member
-         	WITH member  WHERE $bacenta IS NOT NULL
-         	MATCH (bacenta:Bacenta {id: $bacenta})
-      	  MERGE (member)-[:BELONGS_TO]->(bacenta)
-         	RETURN count(member) AS member_bacenta
          	}
 
       WITH member
@@ -468,8 +453,8 @@ CREATE (member:Member {whatsappNumber:$whatsappNumber})
          	RETURN count(member) AS member_ministry
          	}
 
-           OPTIONAL MATCH (bacenta:Bacenta {id: $bacenta})
-           OPTIONAL MATCH (bacenta)<-[:HAS_BACENTA]-(centre:Centre)
+           MATCH (bacenta:Bacenta {id: $bacenta})
+           MATCH (bacenta)<-[:HAS_BACENTA]-(centre:Centre)
            OPTIONAL MATCH (centre:Centre)<-[:HAS_CENTRE]-(campus:Campus)<-[:HAS_CAMPUS]-(bishop:Member)
            OPTIONAL MATCH (centre:Centre)<-[:HAS_CENTRE]-(town:Town)<-[:HAS_TOWN]-(bishop:Member)
            RETURN member  {.id, .firstName,.middleName,.lastName,.email,.phoneNumber,.whatsappNumber,

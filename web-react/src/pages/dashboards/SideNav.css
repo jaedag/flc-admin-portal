@@ -24,9 +24,13 @@ li {
 
 .side-menu.inactive {
   width: 80px;
-  margin-left: -80px;
 }
-
+@media only screen and (max-width: 576px) {
+  .side-menu.inactive {
+    width: 80px;
+    margin-left: -80px;
+  }
+}
 .side-menu .top-section {
   position: relative;
 }

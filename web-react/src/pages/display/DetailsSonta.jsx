@@ -6,7 +6,7 @@ import { DISPLAY_SONTA } from './ReadQueries'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import BaseComponent from 'components/base-component/BaseComponent'
 
-const DisplaySontaDetails = () => {
+const DetailsSonta = () => {
   const { sontaId, church } = useContext(ChurchContext)
 
   const {
@@ -72,4 +72,4 @@ const DisplaySontaDetails = () => {
   )
 }
 
-export default DisplaySontaDetails
+export default DetailsSonta

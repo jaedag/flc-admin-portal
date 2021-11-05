@@ -16,14 +16,14 @@ import {
 export const menuItems = [
   {
     name: 'Home',
-    Component: ServantsDashboard,
+    component: ServantsDashboard,
     to: '/',
     Icon: Speedometer2,
     exact: true,
   },
   {
     name: 'Directory',
-    Component: Directory,
+    component: Directory,
     exact: true,
     to: '/directory',
     subMenus: [
@@ -34,15 +34,15 @@ export const menuItems = [
   },
   {
     name: 'Services',
-    Component: Services,
+    component: Services,
     to: '/services',
     Icon: PencilSquare,
   },
-  { name: 'Arrivals', Component: Arrivals, to: '/arrivals', Icon: Truck },
-  { name: 'Campaigns', Component: Campaigns, to: '/campaigns', Icon: FlagFill },
+  { name: 'Arrivals', component: Arrivals, to: '/arrivals', Icon: Truck },
+  { name: 'Campaigns', component: Campaigns, to: '/campaigns', Icon: FlagFill },
   {
     name: 'Reconciliation',
-    Component: Reconciliation,
+    component: Reconciliation,
     to: '/recon',
     Icon: JournalCheck,
   },

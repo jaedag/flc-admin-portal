@@ -7,7 +7,7 @@ import { DISPLAY_TOWN, DISPLAY_CAMPUS } from './ReadQueries'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import BaseComponent from 'components/base-component/BaseComponent'
 
-const DisplayCampusTownDetails = () => {
+const DetailsCampusTown = () => {
   const { church, townId, campusId } = useContext(ChurchContext)
 
   const { data: townData, loading: townLoading, error: townError } = useQuery(
@@ -104,4 +104,4 @@ const DisplayCampusTownDetails = () => {
   )
 }
 
-export default DisplayCampusTownDetails
+export default DetailsCampusTown

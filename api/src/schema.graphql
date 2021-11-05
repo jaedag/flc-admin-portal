@@ -1041,7 +1041,7 @@ type Mutation {
     lastName: String!
     email: String!
     phoneNumber: String!
-    whatsappNumber: String
+    whatsappNumber: String!
     dob: String!
     maritalStatus: String!
     gender: String!

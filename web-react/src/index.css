@@ -1,20 +1,21 @@
 /*--Global color Variables*/
 :root {
-  --body-bg-color: #181818;
-  --icon-color: #909090;
-  --card-color: #212121;
-  --icon-highlighted-color: white;
-  --text-focus-white: #bababa;
-  --accent-color: #690c13;
-  --border-color: #3d3d3dc5;
-  --infobar-color: #383838;
-  --text-box-inner: #121212;
-  --full-black: #000000;
+  --dark-body-bg-color: #181818;
+  --dark-icon-color: #909090;
+  --dark-card-color: #212121;
+  --dark-icon-highlighted-color: white;
+  --dark-text-focus: #bababa;
+  --dark-text-primary: #ffffff;
+  --dark-accent-color: #690c13;
+  --dark-border-color: #3d3d3dc5;
+  --dark-infobar-color: #383838;
+  --dark-text-box-inner: #121212;
+  --dark-full-black: #000000;
 }
 
 /*--Global colors*/
 .bg-dark {
-  background-color: var(--body-bg-color);
+  background-color: var(--dark-body-bg-color);
 }
 
 .border {
@@ -114,17 +115,17 @@ a:active {
   border: 3px solid var(--infobar-color);
 }
 
-.btn-primary {
+.btn-dark {
   color: white;
-  background-color: var(--accent-color);
+  background-color: var(--dark-accent-color);
   border-radius: 5px;
   border: 0px;
 }
 
-.btn-primary:hover,
-.btn-primary:focus,
-.btn-primary:active,
-.open > .dropdown-toggle.btn-primary {
+.btn-dark:hover,
+.btn-dark:focus,
+.btn-dark:active,
+.open > .dropdown-toggle.btn-dark {
   color: #fff;
   background-color: #921b19;
   border-color: none;
@@ -213,9 +214,9 @@ body {
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
-  color: #fff;
+  color: var(--dark-text-primary);
   text-align: left;
-  background-color: var(--body-bg-color);
+  background-color: var(--dark-body-bg-color);
 }
 
 .body-card {
@@ -244,11 +245,10 @@ body {
     width: 100vw;
     height: 100vh;
     padding: 5px;
-    text-align: center;
+    text-align: left;
   }
 
   .nav-container {
-    /* margin-left: 300px; */
     margin-top: 80px;
     position: fixed;
     transition: margin-left 0.2s ease-in;
@@ -262,4 +262,8 @@ body {
 
 .error {
   color: red;
+}
+
+.placeholder {
+  border-radius: 5px;
 }

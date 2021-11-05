@@ -19,7 +19,7 @@ import CreateBacenta from './pages/create/CreateBacenta'
 import CreateCentre from './pages/create/CreateCentre.jsx'
 import CreateTownCampus from './pages/create/CreateTownCampus'
 import UpdateTownCampus from './pages/update/UpdateTownCampus.jsx'
-import DisplayBacentaDetails from './pages/display/DetailsBacenta'
+import DetailsBacenta from './pages/display/DetailsBacenta'
 import DisplayCentreDetails from './pages/display/DetailsCentre'
 import DisplayCampusTownDetails from './pages/display/DetailsCampusTown.jsx'
 import DisplaySontaDetails from './pages/display/DetailsSonta.jsx'
@@ -34,7 +34,7 @@ import DisplaySontasByCampusTown from './pages/display/SontasByCampusTown'
 import UpdateBacenta from './pages/update/UpdateBacenta'
 import ProtectedRoute from './auth/ProtectedRoute.jsx'
 import ProtectedRouteHome from './auth/ProtectedRouteHome.jsx'
-import ProtectedMembersRoute from './auth/ProtectedMembersRoute.jsx'
+import ProtectedMembersRoute from './auth/MembersDirectoryRoute.jsx'
 import MemberFiltersMobile from './pages/mobile/MemberFilters'
 import UserProfileDisplayPage from './pages/user-profile/DisplayPage'
 import UserProfileEditPage from './pages/user-profile/EditPage'
@@ -69,6 +69,8 @@ import Reconciliation from 'pages/dashboards/Reconciliation'
 import Churches from 'pages/directory/Churches'
 import Members from 'pages/directory/Members'
 import App from 'App'
+import ChurchDirectoryRoute from 'auth/ChurchDirectoryRoute'
+import MembersDirectoryRoute from './auth/MembersDirectoryRoute.jsx'
 
 export const PastorsAdmin = () => {
   const [church, setChurch] = useState(
@@ -110,6 +112,7 @@ export const PastorsAdmin = () => {
   const [memberId, setMemberId] = useState(
     sessionStorage.getItem('memberId') ? sessionStorage.getItem('memberId') : ''
   )
+  const [darkMode, setDarkMode] = useState('dark')
   const [currentUser, setCurrentUser] = useState({
     id: '',
     picture: '',
@@ -386,7 +389,14 @@ export const PastorsAdmin = () => {
         }}
       >
         <MemberContext.Provider
-          value={{ memberId, setMemberId, currentUser, setCurrentUser }}
+          value={{
+            memberId,
+            setMemberId,
+            currentUser,
+            setCurrentUser,
+            darkMode,
+            setDarkMode,
+          }}
         >
           <SearchContext.Provider value={{ searchKey, setSearchKey }}>
             <ServiceContext.Provider
@@ -401,14 +411,19 @@ export const PastorsAdmin = () => {
               <div className={`nav-container ${inactive ? 'inactive' : ''} `}>
                 <Switch>
                   {/* Landing Pages - Dashboards for Different Roles */}
+
                   <Route path="/" component={ServantsDashboard} exact />
                   <Route path="/directory" component={Directory} exact />
-                  <Route
+                  <ChurchDirectoryRoute
                     path="/directory/churches"
                     component={Churches}
                     exact
                   />
-                  <Route path="/directory/members" component={Members} exact />
+                  <MembersDirectoryRoute
+                    path="/directory/members"
+                    component={Members}
+                    exact
+                  />
                   <Route path="/services" component={Services} exact />
                   <Route path="/arrivals" component={Arrivals} exact />
                   <Route path="/campaigns" component={Campaigns} exact />
@@ -658,7 +673,7 @@ export const PastorsAdmin = () => {
                   <ProtectedRoute
                     roles={['all']}
                     path="/bacenta/displaydetails"
-                    component={DisplayBacentaDetails}
+                    component={DetailsBacenta}
                     exact
                   />
                   <ProtectedRoute

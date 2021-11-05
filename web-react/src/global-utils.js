@@ -38,10 +38,10 @@ export const alertMsg = (message) => {
 }
 
 export const isAuthorised = (permittedRoles, userRoles) => {
-  if (permittedRoles.includes('all')) {
+  if (permittedRoles?.includes('all')) {
     return true
   }
-  return permittedRoles.some((r) => userRoles.includes(r))
+  return permittedRoles?.some((r) => userRoles.includes(r))
 }
 
 export const authorisedLink = (currentUser, permittedRoles, link) => {

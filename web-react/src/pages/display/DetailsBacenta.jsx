@@ -5,7 +5,7 @@ import { DISPLAY_BACENTA } from './ReadQueries'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import BaseComponent from 'components/base-component/BaseComponent'
 
-const DisplayBacentaDetails = () => {
+const DetailsBacenta = () => {
   const { bacentaId } = useContext(ChurchContext)
 
   const {
@@ -82,4 +82,4 @@ const DisplayBacentaDetails = () => {
   )
 }
 
-export default DisplayBacentaDetails
+export default DetailsBacenta

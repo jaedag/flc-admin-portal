@@ -11,7 +11,7 @@ import { isAuthorised } from '../global-utils'
 import BacentaMembers from 'pages/grids/BacentaMembers'
 import CentreMembers from 'pages/grids/CentreMembers'
 
-const ProtectedMembersRoute = ({ component, roles, ...args }) => {
+const MembersDirectoryRoute = ({ component, roles, ...args }) => {
   const { currentUser } = useContext(MemberContext)
   const { isAuthenticated } = useAuth0()
   const { setBishopId, setTownId, setCampusId, setChurch } = useContext(
@@ -84,18 +84,10 @@ const ProtectedMembersRoute = ({ component, roles, ...args }) => {
     )
   } else if (isAuthorised(['leaderBacenta'], currentUser.roles)) {
     //If the user does not have permission but is a Centre Leader
-    return (
-      <Route
-        component={withAuthenticationRequired(BacentaMembers, {
-          // eslint-disable-next-line react/display-name
-          onRedirecting: () => <LoadingScreen />,
-        })}
-        {...args}
-      />
-    )
+    return <Route component={BacentaMembers} />
   } else {
     return <UnauthMsg />
   }
 }
 
-export default ProtectedMembersRoute
+export default MembersDirectoryRoute

@@ -15,7 +15,8 @@ import StatDisplay from 'pages/reports/CompStatDisplay'
 import { authorisedLink, plural } from 'global-utils'
 import BaseComponent from 'components/base-component/BaseComponent'
 import Container from 'react-bootstrap/Container'
-import { Row } from 'react-bootstrap'
+import { Col, Row } from 'react-bootstrap'
+import Placeholder from '../../components/Placeholder'
 
 const ServantsDashboard = () => {
   const { memberId, currentUser } = useContext(MemberContext)
@@ -165,10 +166,12 @@ const ServantsDashboard = () => {
   assessmentChurchData = servant && getServantRoles(servant)
 
   return (
-    <BaseComponent loadingState={loading} errorState={error} data={data}>
+    <BaseComponent errorState={error} data={data}>
       <Container>
         <p className="mb-0">{`Welcome to`}</p>
-        <h5 className="font-weight-bold roboto">{`${servant?.fullName}'s Dashboard`}</h5>
+        <Placeholder loading={loading} element="h5">
+          <h5 className="font-weight-bold roboto">{`${servant?.fullName}'s Dashboard`}</h5>
+        </Placeholder>
 
         <div className="card-button-row">
           <table>
@@ -197,27 +200,30 @@ const ServantsDashboard = () => {
         {assessmentChurchData && (
           <>
             <Row className="mt-3">
-              <div className="col">
+              <Col>
                 <StatDisplay
                   title="Avg Attendance"
+                  loading={loading}
                   statistic={getMonthlyStatAverage(
                     assessmentChurchData,
                     'attendance'
                   )}
                 />
-              </div>
+              </Col>
 
-              <div className="col">
+              <Col>
                 <StatDisplay
                   title="Avg Income (in GH₵)"
+                  loading={loading}
                   statistic={getMonthlyStatAverage(
                     assessmentChurchData,
                     'income'
                   )}
                 />
-              </div>
+              </Col>
             </Row>
             <ChurchGraph
+              loading={loading}
               stat1="attendance"
               stat2="income"
               churchData={assessmentChurchData}

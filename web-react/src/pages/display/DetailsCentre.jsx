@@ -6,7 +6,7 @@ import { DISPLAY_CENTRE } from './ReadQueries'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import BaseComponent from 'components/base-component/BaseComponent'
 
-const DisplayCentreDetails = () => {
+const DetailsCentre = () => {
   const { centreId } = useContext(ChurchContext)
   const { data, loading, error } = useQuery(DISPLAY_CENTRE, {
     variables: { id: centreId },
@@ -56,4 +56,4 @@ const DisplayCentreDetails = () => {
   )
 }
 
-export default DisplayCentreDetails
+export default DetailsCentre

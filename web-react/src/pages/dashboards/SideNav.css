@@ -24,6 +24,7 @@ li {
 
 .side-menu.inactive {
   width: 80px;
+  margin-left: -80px;
 }
 
 .side-menu .top-section {

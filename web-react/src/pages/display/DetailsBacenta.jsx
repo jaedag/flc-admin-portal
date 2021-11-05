@@ -1,7 +1,6 @@
 import React, { useContext } from 'react'
 import { useQuery } from '@apollo/client'
 import DisplayChurchDetails from '../../components/DisplayChurchDetails/DisplayChurchDetails'
-import NavBar from '../../components/nav/NavBar'
 import { DISPLAY_BACENTA } from './ReadQueries'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import BaseComponent from 'components/base-component/BaseComponent'
@@ -50,7 +49,6 @@ const DisplayBacentaDetails = () => {
       errorState={bacentaError}
       data={bacentaData}
     >
-      <NavBar />
       <DisplayChurchDetails
         name={bacenta?.name}
         leaderTitle="Bacenta Leader"

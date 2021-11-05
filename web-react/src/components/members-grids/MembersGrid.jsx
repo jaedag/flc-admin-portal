@@ -1,6 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import NavBar from '../nav/NavBar'
 import SideBar from '../SideMenu.jsx'
 import MemberTable from '../members-grids/MemberTable'
 import { memberFilter } from './member-filter-utils'
@@ -40,8 +39,7 @@ const MembersGrid = (props) => {
   })
 
   return (
-    <div>
-      <NavBar />
+    <>
       <div className="row w-100 justify-content-between m-0">
         <div className="col-3 col-dimensions d-none d-md-block p-0">
           <SideBar />
@@ -107,7 +105,7 @@ const MembersGrid = (props) => {
           />
         </div>
       </div>
-    </div>
+    </>
   )
 }
 

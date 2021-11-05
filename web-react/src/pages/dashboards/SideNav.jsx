@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import './SideNav.css'
 import logo from '../../img/flc-logo-red.png'
 import {
@@ -14,8 +14,10 @@ import {
 } from 'react-bootstrap-icons'
 import UserProfileIcon from 'components/UserProfileIcon/UserProfileIcon'
 import MenuItem from './MenuItem'
+import { MemberContext } from 'contexts/MemberContext'
 
-const SideMenu = (props) => {
+const SideNav = (props) => {
+  const { currentUser } = useContext(MemberContext)
   const [inactive, setInactive] = useState(true)
 
   const menuItems = [
@@ -93,8 +95,8 @@ const SideMenu = (props) => {
             <UserProfileIcon />
           </div>
           <div className="user-info">
-            <h5>John-Dag Addy</h5>
-            <p>jaedagy@gmail.com</p>
+            <h5>{currentUser.fullName}</h5>
+            <p>{currentUser.email}</p>
           </div>
         </div>
       </div>
@@ -102,4 +104,4 @@ const SideMenu = (props) => {
   )
 }
 
-export default SideMenu
+export default SideNav

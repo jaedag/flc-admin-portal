@@ -167,10 +167,8 @@ const ServantsDashboard = () => {
   return (
     <BaseComponent loadingState={loading} errorState={error} data={data}>
       <Container>
-        <div className=" my-3">
-          <p className="mb-0">{`Welcome to`}</p>
-          <h5 className="font-weight-bold roboto">{`${servant?.fullName}'s Dashboard`}</h5>
-        </div>
+        <p className="mb-0">{`Welcome to`}</p>
+        <h5 className="font-weight-bold roboto">{`${servant?.fullName}'s Dashboard`}</h5>
 
         <div className="card-button-row">
           <table>

@@ -62,7 +62,7 @@ import BacentaServiceCancelled from 'pages/record-service/BacentaServiceCancelle
 // import SideBar from 'pages/dashboards/SideBar'
 import Directory from 'pages/dashboards/Directory'
 import Services from 'pages/dashboards/Services'
-import SideMenu from 'pages/dashboards/SideNav'
+import SideNav from 'pages/dashboards/SideNav'
 import Arrivals from 'pages/dashboards/Arrivals'
 import Campaigns from 'pages/dashboards/Campaigns'
 import Reconciliation from 'pages/dashboards/Reconciliation'
@@ -392,13 +392,13 @@ export const PastorsAdmin = () => {
             <ServiceContext.Provider
               value={{ setServiceRecordId, serviceRecordId }}
             >
-              <SideMenu
+              <SideNav
                 onCollapse={(inactive) => {
                   setInactive(inactive)
                 }}
               />
 
-              <div className={`container ${inactive ? 'inactive' : ''}`}>
+              <div className={`nav-container ${inactive ? 'inactive' : ''} `}>
                 <Switch>
                   {/* Landing Pages - Dashboards for Different Roles */}
                   <Route path="/" component={ServantsDashboard} exact />

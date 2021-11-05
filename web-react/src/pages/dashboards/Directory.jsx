@@ -1,6 +1,7 @@
 import { MemberContext } from 'contexts/MemberContext'
 import React, { useContext } from 'react'
-import { Container, Button } from 'react-bootstrap'
+import { Container, Button, Col } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
 
 const Directory = () => {
   const { currentUser } = useContext(MemberContext)
@@ -8,8 +9,14 @@ const Directory = () => {
   return (
     <Container>
       {`${currentUser.fullName}'s Directory`}
-      <Button variant="primary">Members</Button>
-      <Button variant="primary">Church</Button>
+      <Col>
+        <Link to="/bacenta/members">
+          <Button variant="primary">Members</Button>
+        </Link>
+      </Col>
+      <Col>
+        <Button variant="primary">Church</Button>
+      </Col>
     </Container>
   )
 }

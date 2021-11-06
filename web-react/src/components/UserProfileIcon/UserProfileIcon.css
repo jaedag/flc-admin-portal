@@ -1,3 +1,42 @@
-.user-navbar-img {
+.side-menu-footer .avatar {
+  width: 40px;
+  height: 40px;
+  overflow: hidden;
+  display: inline-block;
+}
+
+.side-menu-footer .avatar img {
+  max-width: 100%;
   border-radius: 100px;
+}
+
+.side-menu-footer .user-info {
+  display: inline-block;
+  margin: 0 10px;
+  position: absolute;
+  opacity: 1;
+  transition: opacity 0.2s ease-in;
+}
+
+.side-menu-footer .user-info.dark {
+  color: var(--nav-text);
+}
+.side-menu-footer .user-info.light {
+  color: var(--nav-text);
+}
+
+.side-menu.inactive .side-menu-footer .user-info {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+.side-menu-footer .user-info h5 {
+  font-size: 15px;
+  margin-bottom: 0;
+}
+
+.side-menu-footer .user-info p {
+  font-size: 14px;
 }

@@ -2,12 +2,19 @@ import React from 'react'
 import { Placeholder } from 'react-bootstrap'
 import '../pages/reports/Report.css'
 
-const PlaceholderCustom = ({ loading, children, element, ...rest }) => {
+const PlaceholderCustom = ({
+  loading,
+  children,
+  element,
+  size,
+  xs,
+  ...rest
+}) => {
   return (
     <>
       {loading ? (
         <Placeholder as={element} animation="wave" {...rest}>
-          <Placeholder xs={8} />
+          <Placeholder xs={xs ?? 8} size={size ?? 'lg'} className="h-100" />
         </Placeholder>
       ) : (
         <>{children}</>

@@ -106,7 +106,7 @@ const ChurchGraph = ({ loading, stat1, stat2, churchData, secondaryTitle }) => {
                   tickLine={false}
                   fontSize="13"
                   tickFormatter={(week) => {
-                    return 'Wk ' + week
+                    return 'Week ' + week
                   }}
                 />
 

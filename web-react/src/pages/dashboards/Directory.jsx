@@ -1,3 +1,4 @@
+import PlaceholderCustom from 'components/Placeholder'
 import { MemberContext } from 'contexts/MemberContext'
 import React, { useContext } from 'react'
 import { Container, Button } from 'react-bootstrap'
@@ -9,7 +10,9 @@ const Directory = () => {
 
   return (
     <Container className="text-center">
-      <h1>{`${currentUser.fullName}'s Directory`}</h1>
+      <PlaceholderCustom loading={!currentUser.fullName} xs={12} as="h1">
+        <h1>{`${currentUser.fullName}'s Directory`}</h1>
+      </PlaceholderCustom>
 
       <div className="d-grid gap-2">
         <Button

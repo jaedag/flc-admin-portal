@@ -26,8 +26,8 @@ const UserDashboard = () => {
           <table>
             <tbody>
               <tr>
-                {userJobs?.jobs &&
-                  userJobs.jobs.map((role, i) => {
+                {userJobs?.assessmentData ? (
+                  userJobs?.jobs.map((role, i) => {
                     return (
                       <td
                         className="col-auto pl-0"
@@ -40,46 +40,49 @@ const UserDashboard = () => {
                         <RoleCard number={role.number} role={role.name} />
                       </td>
                     )
-                  })}
+                  })
+                ) : (
+                  <td className="col-auto pl-0">
+                    <RoleCard loading={!userJobs?.assessmentData} />
+                  </td>
+                )}
               </tr>
             </tbody>
           </table>
         </div>
 
-        {userJobs?.assessmentData && (
-          <>
-            <Row className="mt-3">
-              <Col>
-                <StatDisplay
-                  title="Avg Attendance"
-                  loading={!userJobs}
-                  statistic={getMonthlyStatAverage(
-                    userJobs.assessmentData,
-                    'attendance'
-                  )}
-                />
-              </Col>
+        <>
+          <Row className="mt-3">
+            <Col>
+              <StatDisplay
+                title="Avg Attendance"
+                loading={!userJobs?.assessmentData}
+                statistic={getMonthlyStatAverage(
+                  userJobs?.assessmentData,
+                  'attendance'
+                )}
+              />
+            </Col>
 
-              <Col>
-                <StatDisplay
-                  title="Avg Income (in GH₵)"
-                  loading={!userJobs}
-                  statistic={getMonthlyStatAverage(
-                    userJobs.assessmentData,
-                    'income'
-                  )}
-                />
-              </Col>
-            </Row>
-            <ChurchGraph
-              loading={!userJobs}
-              stat1="attendance"
-              stat2="income"
-              churchData={userJobs?.assessmentData}
-              secondaryTitle={`${userJobs?.assessmentChurch.name} ${userJobs?.assessmentChurch.__typename}`}
-            />
-          </>
-        )}
+            <Col>
+              <StatDisplay
+                title="Avg Income (in GH₵)"
+                loading={!userJobs?.assessmentData}
+                statistic={getMonthlyStatAverage(
+                  userJobs?.assessmentData,
+                  'income'
+                )}
+              />
+            </Col>
+          </Row>
+          <ChurchGraph
+            loading={!userJobs?.assessmentData}
+            stat1="attendance"
+            stat2="income"
+            churchData={userJobs?.assessmentData}
+            secondaryTitle={`${userJobs?.assessmentChurch?.name} ${userJobs?.assessmentChurch?.__typename}`}
+          />
+        </>
       </Container>
     </>
   )

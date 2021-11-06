@@ -14,8 +14,7 @@ import { transformCloudinaryImg } from 'global-utils'
 function UserProfileIcon() {
   const { user, isAuthenticated } = useAuth0()
   const { setChurch } = useContext(ChurchContext)
-  const { currentUser, setCurrentUser } = useContext(MemberContext)
-
+  const { currentUser, setCurrentUser, theme } = useContext(MemberContext)
   const [memberByEmail] = useLazyQuery(GET_LOGGED_IN_USER, {
     onCompleted: (data) => {
       let church
@@ -56,20 +55,21 @@ function UserProfileIcon() {
     <>
       {isAuthenticated && currentUser.email && (
         <Link
-          className="nav-item nav-link d-flex align-items-center flex-column p-0 pb-2"
+          // className="nav-item nav-link d-flex align-items-center flex-column p-0 pb-2"
           to="/user-profile"
           onClick={() => setChurch(currentUser.church)}
         >
-          <span>
+          <div className="avatar">
             <img
               className="user-navbar-img "
               src={transformCloudinaryImg(currentUser?.picture) || userIcon}
               alt={currentUser?.firstName || null}
             />
-          </span>
-          <span className="d-none d-md-inline">
-            {currentUser ? currentUser.firstName : `Admin`}
-          </span>
+          </div>
+          <div className={`user-info ${theme}`}>
+            <h5>{currentUser.fullName}</h5>
+            <p>{currentUser.email}</p>
+          </div>
         </Link>
       )}
       {isAuthenticated && !currentUser.email && (

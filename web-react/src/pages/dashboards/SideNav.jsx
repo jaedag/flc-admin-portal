@@ -223,13 +223,7 @@ const SideNav = (props) => {
         ))}
 
         <div className={`side-menu-footer ${theme}`}>
-          <div className="avatar">
-            <UserProfileIcon />
-          </div>
-          <div className={`user-info ${theme}`}>
-            <h5>{currentUser.fullName}</h5>
-            <p>{currentUser.email}</p>
-          </div>
+          <UserProfileIcon />
         </div>
       </div>
     </div>

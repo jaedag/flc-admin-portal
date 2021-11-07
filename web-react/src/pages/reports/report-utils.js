@@ -91,5 +91,16 @@ export const getServiceGraphData = (church) => {
 
   data = data.sort(sortingFunction('week'))
 
+  if (!data.length) {
+    return [
+      {
+        date: '',
+        week: null,
+        attendance: null,
+        income: null,
+      },
+    ]
+  }
+
   return data.slice(data.length - numberOfWeeks, data.length)
 }

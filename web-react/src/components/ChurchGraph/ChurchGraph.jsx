@@ -16,7 +16,7 @@ const ChurchGraph = ({ loading, stat1, stat2, churchData, secondaryTitle }) => {
     <>
       <div className="row mt-2">
         <div className="col">
-          <PlaceholderCustom loading={loading} element="p">
+          <PlaceholderCustom loading={loading} as="p">
             <p className="chart-title font-weight-bold m-0">
               {stat2
                 ? `${capitalise(stat1)} and ${capitalise(stat2)}`
@@ -24,7 +24,7 @@ const ChurchGraph = ({ loading, stat1, stat2, churchData, secondaryTitle }) => {
             </p>
           </PlaceholderCustom>
           {secondaryTitle && (
-            <PlaceholderCustom loading={loading} element="p">
+            <PlaceholderCustom loading={loading} as="p">
               <p className="chart-title church-name">{`${secondaryTitle}`}</p>
             </PlaceholderCustom>
           )}
@@ -106,6 +106,9 @@ const ChurchGraph = ({ loading, stat1, stat2, churchData, secondaryTitle }) => {
                   tickLine={false}
                   fontSize="13"
                   tickFormatter={(week) => {
+                    if (!week) {
+                      return 'No Data Found'
+                    }
                     return 'Week ' + week
                   }}
                 />

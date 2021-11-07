@@ -127,6 +127,7 @@ const SideNav = (props) => {
 
     assessmentChurch = servant[`${verb}`][0]
   }
+
   const getServantRoles = (servant) => {
     if (servant?.leadsBacenta?.length) {
       setServantRoles(servant, 'Leader', 'Bacenta')
@@ -169,6 +170,7 @@ const SideNav = (props) => {
     if (assessmentChurch) {
       return getServiceGraphData(assessmentChurch)
     }
+
     return
   }
 

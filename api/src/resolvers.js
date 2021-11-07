@@ -1,5 +1,3 @@
-import { assertResolveFunctionsPresent } from 'graphql-tools'
-
 const dotenv = require('dotenv')
 const axios = require('axios').default
 const cypher = require('./resolver-queries')
@@ -90,7 +88,15 @@ const noEmptyArgsValidation = (args) => {
   })
 }
 const throwErrorMsg = (message, error) => {
-  const errorVar = error ? error?.response?.data ?? error : ''
+  let errorVar = ''
+
+  if (error) {
+    errorVar = error
+  }
+  if (error?.response?.data?.message) {
+    errorVar = error?.response?.data?.message
+  }
+
   console.error(message, errorVar)
   throw `${message} ${errorVar}`
 }

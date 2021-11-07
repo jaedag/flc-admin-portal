@@ -10,9 +10,9 @@ const StatDisplay = ({ title, statistic, loading }) => {
     <>
       <p className="dashboard-title text-truncate">{title}</p>
       <PlaceholderCustom
-        className="h-100 info-text"
+        className="info-text"
         loading={loading}
-        as="h1"
+        as="p"
         animation="wave"
       >
         <p className="info-text">{statistic}</p>

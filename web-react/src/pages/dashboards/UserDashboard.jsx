@@ -17,7 +17,9 @@ const UserDashboard = () => {
   return (
     <>
       <Container>
-        <p className="mb-0">{`Welcome to`}</p>
+        <Placeholder loading={!currentUser?.fullName} element="p">
+          <p className="mb-0">{`Welcome to`}</p>
+        </Placeholder>
         <Placeholder loading={!currentUser?.fullName} element="h5">
           <h5 className="font-weight-bold roboto">{`${currentUser?.fullName}'s Dashboard`}</h5>
         </Placeholder>

@@ -42,9 +42,9 @@ CREATE (log:HistoryLog)
    log.timeStamp = datetime(),
    log.historyRecord = $log
 
-  WITH admin
+  WITH member
   MATCH (currentUser:Member {auth_id:$auth.jwt.sub})
-  MERGE (admin)-[:HAS_HISTORY]->(log)
+  MERGE (member)-[:HAS_HISTORY]->(log)
   MERGE (log)-[:LOGGED_BY]->(currentUser)
   MERGE (date:TimeGraph {date: date()})
   MERGE (log)-[:RECORDED_ON]->(date)

@@ -1,38 +1,103 @@
 import PlaceholderCustom from 'components/Placeholder'
 import { MemberContext } from 'contexts/MemberContext'
 import React, { useContext } from 'react'
-import { Container, Button } from 'react-bootstrap'
+import { Container } from 'react-bootstrap'
+import './Directory.css'
+import ChurchIcon from '../../assets/church-svgrepo-com.svg'
+import MemberIcon from '../../assets/people-svgrepo-com.svg'
+import { useQuery } from '@apollo/client'
+import { SERVANT_CHURCHES_COUNT } from './DashboardQueries'
+import MenuButton from 'components/buttons/MenuButton'
 import { useHistory } from 'react-router'
 
 const Directory = () => {
-  const { currentUser, theme } = useContext(MemberContext)
-  let history = useHistory()
+  const { currentUser } = useContext(MemberContext)
+  const { data } = useQuery(SERVANT_CHURCHES_COUNT, {
+    variables: { id: currentUser.id },
+  })
+  const history = useHistory()
+  const getChurchCounts = (servant) => {
+    let churchesCount = ''
+
+    if (servant?.leadsConstituencyCount) {
+      if (churchesCount) {
+        churchesCount = churchesCount + ','
+      }
+      if (servant.leadsConstituencyCount === 1) {
+        churchesCount = servant.leadsConstituencyCount + ' Constituency'
+      } else {
+        churchesCount = servant.leadsConstituencyCount + ' Constituencies'
+      }
+    }
+
+    if (servant?.bishopConstituencyCount) {
+      if (churchesCount) {
+        churchesCount = churchesCount + ','
+      }
+      if (servant.bishopConstituencyCount === 1) {
+        churchesCount = servant.bishopConstituencyCount + ' Constituency'
+      } else {
+        churchesCount = servant.bishopConstituencyCount + ' Constituencies'
+      }
+    }
+
+    if (servant?.leadsCentreCount) {
+      if (churchesCount) {
+        churchesCount = churchesCount + ','
+      }
+      if (servant.leadsCentreCount === 1) {
+        churchesCount =
+          churchesCount + ' ' + servant.leadsCentreCount + ' Centre'
+      } else {
+        churchesCount =
+          churchesCount + ' ' + servant.leadsCentreCount + ' Centres'
+      }
+    }
+
+    if (servant?.leadsBacentaCount) {
+      if (churchesCount) {
+        churchesCount = churchesCount + ','
+      }
+      if (servant.leadsBacentaCount === 1) {
+        churchesCount =
+          churchesCount + ' ' + servant.leadsBacentaCount + ' Bacenta'
+      } else {
+        churchesCount =
+          churchesCount + ' ' + servant.leadsBacentaCount + ' Bacentas'
+      }
+    }
+
+    return churchesCount
+  }
 
   return (
-    <Container className="text-center">
-      <PlaceholderCustom loading={!currentUser.fullName} xs={12} as="h1">
-        <h1>{`${currentUser.fullName}'s Directory`}</h1>
-      </PlaceholderCustom>
+    <div className="d-flex align-items-center justify-content-center h-75 nav-margin-top-0">
+      <Container>
+        <PlaceholderCustom loading={!currentUser.fullName} xs={12} as="h1">
+          <div className="text-center">
+            <h1 className="mb-0  page-header">{`${currentUser.fullName}'s`}</h1>
+            <p className="text-secondary dark menu-caption">Directory</p>
+          </div>
+        </PlaceholderCustom>
 
-      <div className="d-grid gap-2">
-        <Button
-          onClick={() => history.push('/directory/members')}
-          variant="primary"
-          size="lg"
-          className={`${theme}`}
-        >
-          Members
-        </Button>
-        <Button
-          onClick={() => history.push('/directory/churches')}
-          variant="secondary"
-          size="lg"
-          className={`${theme} `}
-        >
-          Churches
-        </Button>
-      </div>
-    </Container>
+        <div className="d-grid gap-2 mt-5 text-left">
+          <MenuButton
+            icon={MemberIcon}
+            title="members"
+            caption="165 Members, 160 in Ministries"
+            color="members"
+            onClick={() => history.push(`/directory/members`)}
+          />
+          <MenuButton
+            icon={ChurchIcon}
+            title="churches"
+            caption={getChurchCounts(data)}
+            color="churches"
+            onClick={() => history.push(`/directory/churches`)}
+          />
+        </div>
+      </Container>
+    </div>
   )
 }
 

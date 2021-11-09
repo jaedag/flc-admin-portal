@@ -8,7 +8,7 @@ import {
 } from 'react-bootstrap-icons'
 
 export const menuItems = [
-  { name: 'Home', to: '/', Icon: Speedometer2, exact: true },
+  { name: 'Home', to: '/', Icon: Speedometer2, exact: true, roles: ['all'] },
   {
     name: 'Directory',
     exact: true,
@@ -18,8 +18,14 @@ export const menuItems = [
       { name: 'Churches', to: '/directory/churches' },
     ],
     Icon: BookFill,
+    roles: ['all'],
   },
-  { name: 'Services', to: '/services', Icon: PencilSquare },
+  {
+    name: 'Services',
+    to: '/services',
+    Icon: PencilSquare,
+    roles: ['leaderBacenta'],
+  },
   { name: 'Arrivals', to: '/arrivals', Icon: Truck },
   { name: 'Campaigns', to: '/campaigns', Icon: FlagFill },
   { name: 'Reconciliation', to: '/recon', Icon: JournalCheck },

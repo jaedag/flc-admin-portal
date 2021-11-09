@@ -644,6 +644,41 @@ type Query {
       statement: "MATCH (member:Member {email:$email}) RETURN member LIMIT 1"
     )
 
+  #DASHBOARD QUERIES
+  leadsBacentaCount(id: ID!): Int
+    @cypher(
+      statement: """
+      MATCH (member:Member {id:$id})
+      MATCH (member)-[:LEADS]-(bacentas:Bacenta)
+      RETURN COUNT(bacentas)
+      """
+    )
+  leadsCentreCount(id: ID!): Int
+    @cypher(
+      statement: """
+      MATCH (member:Member {id:$id})
+      MATCH (member)-[:LEADS]-(centres:Centre)
+      RETURN COUNT(centres)
+      """
+    )
+  leadsConstituencyCount(id: ID!): Int
+    @cypher(
+      statement: """
+      MATCH (member:Member {id:$id})
+      MATCH (member)-[:LEADS]-(constituency) WHERE constituency:Campus OR constituency:Town
+      RETURN COUNT(constituency)
+      """
+    )
+  bishopConstituencyCount(id: ID!): Int
+    @cypher(
+      statement: """
+      MATCH (member:Member {id:$id})
+      MATCH (member)-[:HAS_TOWN|:HAS_CAMPUS]-(constituency) WHERE constituency:Campus OR constituency:Town
+      RETURN COUNT(constituency)
+      """
+    )
+  
+
   #Fuzzy Search
   memberGridList(
     gender: String

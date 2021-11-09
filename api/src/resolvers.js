@@ -216,7 +216,7 @@ const updateAuthUserConfig = (member) => ({
     name: `${member.firstName} ${member.lastName}`,
     picture:
       member.pictureUrl ||
-      'https://raw.githubusercontent.com/jaedag/fl-admin-portal/deploy/web-react/src/img/user.png',
+      'https://raw.githubusercontent.com/jaedag/fl-admin-portal/deploy/web-react/src/assets/user.png',
   },
 })
 

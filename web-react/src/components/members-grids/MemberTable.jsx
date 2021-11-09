@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import Spinner from '../Spinner.jsx'
-import userIcon from '../../img/user.png'
+import userIcon from '../../assets/user.png'
 import './MemberTable.css'
 import TabletDesktopView from '../responsive-design/TabletDesktopView'
 import MobileView from '../responsive-design/MobileView'

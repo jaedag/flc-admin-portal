@@ -1,0 +1,33 @@
+.churches.dark {
+  color: var(--churches-accent);
+}
+
+.members.dark {
+  color: var(--members-accent);
+}
+
+.menu-buttons {
+  min-height: 74px;
+  font-size: 25px;
+  text-align: left;
+  padding-left: 20px;
+}
+.menu-buttons.dark {
+  background-color: #1e1c1c;
+}
+
+.menu-caption {
+  font-size: 10px;
+  display: block;
+}
+
+.btn-left-col {
+  width: 78px;
+  text-align: center;
+}
+
+.btn-right-col {
+  text-align: left;
+  padding-left: 0px;
+  padding-right: 0px;
+}

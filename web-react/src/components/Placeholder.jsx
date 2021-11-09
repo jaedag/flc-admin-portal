@@ -14,7 +14,12 @@ const PlaceholderCustom = ({
     <>
       {loading ? (
         <Placeholder as={element} animation="wave" {...rest}>
-          <Placeholder xs={xs ?? 8} size={size ?? 'lg'} className="h-100" />
+          <Placeholder
+            xs={xs ?? 8}
+            size={size ?? 'lg'}
+            className="h-100"
+            bg="dark"
+          />
         </Placeholder>
       ) : (
         <>{children}</>

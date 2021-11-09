@@ -312,3 +312,12 @@ export const SERVANTS_DASHBOARD = gql`
     }
   }
 `
+
+export const SERVANT_CHURCHES_COUNT = gql`
+  query churchesLed($id: ID!) {
+    leadsBacentaCount(id: $id)
+    leadsCentreCount(id: $id)
+    leadsConstituencyCount(id: $id)
+    bishopConstituencyCount(id: $id)
+  }
+`

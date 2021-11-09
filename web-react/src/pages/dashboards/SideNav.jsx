@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import './SideNav.css'
-import logo from '../../img/flc-logo-red.png'
+import logo from '../../assets/flc-logo-red.png'
 import {
   ArrowLeftSquareFill,
   ArrowRightSquareFill,
@@ -15,6 +15,7 @@ import { useQuery } from '@apollo/client'
 import { SERVANTS_DASHBOARD } from './DashboardQueries'
 import { authorisedLink, plural } from 'global-utils'
 import { getServiceGraphData } from 'pages/reports/report-utils'
+import RoleView from 'auth/RoleView'
 
 const SideNav = (props) => {
   const { currentUser, theme, setUserJobs } = useContext(MemberContext)
@@ -210,18 +211,19 @@ const SideNav = (props) => {
 
       <div className="main-menu">
         {menuItems.map((menuItem, index) => (
-          <MenuItem
-            key={index}
-            Icon={menuItem.Icon}
-            name={menuItem.name}
-            exact={menuItem.exact}
-            to={menuItem.to}
-            subMenus={menuItem.subMenus || []}
-            onClick={() => {
-              if (!inactive) setInactive(true)
-            }}
-            inactive={inactive}
-          />
+          <RoleView key={index} roles={menuItem.roles}>
+            <MenuItem
+              Icon={menuItem.Icon}
+              name={menuItem.name}
+              exact={menuItem.exact}
+              to={menuItem.to}
+              subMenus={menuItem.subMenus || []}
+              onClick={() => {
+                if (!inactive) setInactive(true)
+              }}
+              inactive={inactive}
+            />
+          </RoleView>
         ))}
 
         <div className={`side-menu-footer ${theme}`}>

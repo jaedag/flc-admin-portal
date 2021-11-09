@@ -1,7 +1,7 @@
 import React from 'react'
 import AuthButton from './buttons/AuthButton'
 import UserProfileIcon from './UserProfileIcon/UserProfileIcon'
-import Logo from '../img/flc-logo-small.png'
+import Logo from '../assets/flc-logo-small.png'
 import MobileView from './responsive-design/MobileView'
 import TabletDesktopView from './responsive-design/TabletDesktopView'
 

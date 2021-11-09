@@ -1,6 +1,6 @@
 /* --Global color Variables */
 :root .dark {
-  --body-bg: #181818;
+  --body-bg: #121212;
   --icon: #909090;
   --card-color: #212121;
   --icon-highlighted-color: white;
@@ -11,6 +11,8 @@
   --infobar-color: #383838;
   --text-box-inner: #121212;
   --full-black: #000000;
+  --members-accent: #68e0d7;
+  --churches-accent: #A9E631;
 }
 :root .light {
   --body-bg: #f1f0f0;
@@ -284,6 +286,10 @@ body {
     text-align: left;
   }
 
+  .nav-margin-top-0 {
+    margin-top: -80px;
+  }
+
   .nav-container {
     margin-top: 80px;
     position: fixed;
@@ -302,4 +308,9 @@ body {
 
 .placeholder {
   border-radius: 5px;
+}
+
+.page-header {
+  font-size: 30px;
+  font-weight: bold;
 }

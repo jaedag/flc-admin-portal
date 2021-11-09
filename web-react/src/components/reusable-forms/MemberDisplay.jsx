@@ -2,7 +2,7 @@ import React from 'react'
 import { useQuery } from '@apollo/client'
 import NavBar from '../../components/nav/NavBar'
 import MemberDetailsCard from '../../components/card/MemberDetailsCard'
-import userIcon from '../../img/user.png'
+import userIcon from '../../assets/user.png'
 import Timeline from '../../components/Timeline/Timeline'
 import MemberRoleList from '../../components/MemberRoleList'
 import {

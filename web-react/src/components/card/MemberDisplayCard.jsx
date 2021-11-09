@@ -1,8 +1,8 @@
 import React, { useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import { ChurchContext } from '../../contexts/ChurchContext'
-import user from '../../img/user.png'
-import bussolid from '../../img/bus-solid.svg'
+import user from '../../assets/user.png'
+import bussolid from '../../assets/bus-solid.svg'
 import { transformCloudinaryImg } from 'global-utils'
 
 const MemberDisplayCard = (props) => {

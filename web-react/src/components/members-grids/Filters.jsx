@@ -10,9 +10,12 @@ import { Formik, Form } from 'formik'
 import FormikControl from 'components/formik-components/FormikControl'
 import { GET_MINISTRIES } from 'queries/ListQueries'
 import { Col, Row, Button } from 'react-bootstrap'
+import { MemberContext } from 'contexts/MemberContext'
+import './Filters.css'
 
 const Filters = ({ ToggleAccordion }) => {
   const { setFilters, filters } = useContext(ChurchContext)
+  const { theme } = useContext(MemberContext)
   const location = useLocation()
   const atPastors = location.pathname === '/pastors'
 
@@ -67,18 +70,15 @@ const Filters = ({ ToggleAccordion }) => {
               </Col>
 
               <Col>
-                <span className=" font-weight-bold" htmlFor="ministry">
-                  Ministry
-                </span>
                 <FormikControl
                   className="form-control"
-                  control="selectWithQuery"
+                  control="checkboxWithQuery"
                   name="ministry"
                   modifier="filter"
                   optionsQuery={GET_MINISTRIES}
                   queryVariable="id"
                   dataset="ministries"
-                  defaultOption="Select a Ministry"
+                  label="Select a Ministry"
                 />
               </Col>
 
@@ -106,6 +106,7 @@ const Filters = ({ ToggleAccordion }) => {
                 variant="primary"
                 size="lg"
                 type="reset"
+                className={`btn-reset ${theme}`}
                 onClick={() => {
                   setFilters({
                     gender: [],
@@ -120,14 +121,17 @@ const Filters = ({ ToggleAccordion }) => {
                 Reset Filters
               </Button>
 
-              <Button
-                variant="primary"
-                size="lg"
-                type="submit"
-                disabled={!formik.isValid || formik.isSubmitting}
-              >
-                <ToggleAccordion>Apply Filters</ToggleAccordion>
-              </Button>
+              <ToggleAccordion>
+                <Button
+                  variant="primary"
+                  size="lg"
+                  type="submit"
+                  className={`btn-submit ${theme}`}
+                  disabled={!formik.isValid || formik.isSubmitting}
+                >
+                  Apply Filters
+                </Button>
+              </ToggleAccordion>
             </div>
           </div>
         </Form>

@@ -1,6 +1,5 @@
 import React, { useContext } from 'react'
 import { useHistory } from 'react-router-dom'
-import Spinner from '../Spinner.jsx'
 import userIcon from '../../assets/user.png'
 import TabletDesktopView from '../responsive-design/TabletDesktopView'
 import MobileView from '../responsive-design/MobileView'
@@ -24,112 +23,126 @@ const MemberTable = (props) => {
   const { theme } = useContext(MemberContext)
   const history = useHistory()
 
-  if (memberLoading || memberError) {
-    return (
-      <div className="container d-flex justify-content-center">
-        <div className="mt-5 pt-5">
-          <Spinner />
-        </div>
-      </div>
-    )
-  } else if (!memberData) {
-    return <PlaceholderCustom />
-  } else {
-    return (
-      // Web View Full Screen without filters applied
-      <>
-        <TabletDesktopView>
-          <div className="container member-grid">
-            <div className="row">
-              {memberData.map((soul, index) => {
-                if (index < offset) {
-                  return null
-                } else if (index >= offset + numberOfRecords - 1) {
-                  return null
-                }
-                return (
-                  <div className="col-auto " key={index}>
-                    <div
-                      className="card grid-card fade-in"
-                      onClick={() => {
-                        clickCard(soul)
-                        history.push('/member/displaydetails')
-                      }}
-                    >
-                      <img
-                        className="card-img-top"
-                        src={
-                          transformCloudinaryImg(soul?.pictureUrl) || userIcon
-                        }
-                        alt={soul?.firstName + ' ' + soul?.lastName}
-                      />
+  const loading = memberLoading || memberError || !memberData
 
-                      <p className="card-title text-center pt-2">
-                        {soul?.firstName + ' ' + soul?.lastName}
-                      </p>
-                    </div>
+  if (loading) {
+    return (
+      <MobileView>
+        <div className="member-grid">
+          {[0, 1, 2, 3, 4, 5].map((_, index) => {
+            return (
+              <Container key={index}>
+                <div
+                  className={`d-flex align-items-center card-border ${theme}`}
+                >
+                  {/* <div className="rounded-circle img-search-placeholder "> */}
+                  <PlaceholderCustom
+                    className="rounded-circle img-search-placeholder"
+                    as="div"
+                    xs={12}
+                    loading={loading}
+                  />
+                  {/* </div> */}
+
+                  <div className="flex-grow-1 ms-3">
+                    <PlaceholderCustom loading={loading} as="span" xs={12} />
+                    <PlaceholderCustom loading={loading} as="span" xs={12} />
                   </div>
-                )
-              })}
-            </div>
-          </div>
-        </TabletDesktopView>
+                </div>
+              </Container>
+            )
+          })}
+        </div>
+      </MobileView>
+    )
+  }
 
-        {/* Mobile View */}
-        <MobileView>
-          <div className="member-grid">
+  return (
+    // Web View Full Screen without filters applied
+    <>
+      <TabletDesktopView>
+        <div className="container member-grid">
+          <div className="row">
             {memberData.map((soul, index) => {
-              // if (index < offset) {
-              //   return null
-              // } else if (index >= offset + numberOfRecords) {
-              //   return null
-              // }
-
+              if (index < offset) {
+                return null
+              } else if (index >= offset + numberOfRecords - 1) {
+                return null
+              }
               return (
-                <Container key={index}>
+                <div className="col-auto " key={index}>
                   <div
-                    className="d-flex align-items-center card-border dark"
+                    className="card grid-card fade-in"
                     onClick={() => {
                       clickCard(soul)
                       history.push('/member/displaydetails')
                     }}
                   >
-                    <div className="flex-shrink-0">
-                      <img
-                        className="rounded-circle img-search"
-                        src={
-                          transformCloudinaryImg(soul?.pictureUrl) || userIcon
-                        }
-                        alt={`${soul?.firstName} ${soul?.lastName}`}
-                      />
-                    </div>
-                    <div className="flex-grow-1 ms-3">
-                      <p className="card-title">{`${soul?.firstName} ${soul?.lastName}`}</p>
-                      {soul?.bacenta ? (
-                        <span
-                          className={`text-secondary card-subinfo ${theme}`}
-                        >
-                          {soul?.bacenta.name}
-                          {' - '}
-                        </span>
-                      ) : null}
-                      {soul?.ministry && (
-                        <span
-                          className={`text-secondary card-subinfo ${theme}`}
-                        >
-                          {soul?.ministry.name}
-                        </span>
-                      )}
-                    </div>
+                    <img
+                      className="card-img-top"
+                      src={transformCloudinaryImg(soul?.pictureUrl) || userIcon}
+                      alt={soul?.firstName + ' ' + soul?.lastName}
+                    />
+
+                    <p className="card-title text-center pt-2">
+                      {soul?.firstName + ' ' + soul?.lastName}
+                    </p>
                   </div>
-                </Container>
+                </div>
               )
             })}
           </div>
-        </MobileView>
-      </>
-    )
-  }
+        </div>
+      </TabletDesktopView>
+
+      {/* Mobile View */}
+      <MobileView>
+        <div className="member-grid">
+          {memberData.map((soul, index) => {
+            // if (index < offset) {
+            //   return null
+            // } else if (index >= offset + numberOfRecords) {
+            //   return null
+            // }
+
+            return (
+              <Container key={index}>
+                <div
+                  className={`d-flex align-items-center card-border ${theme}`}
+                  onClick={() => {
+                    clickCard(soul)
+                    history.push('/member/displaydetails')
+                  }}
+                >
+                  <div className="flex-shrink-0">
+                    <img
+                      className="rounded-circle img-search"
+                      src={transformCloudinaryImg(soul?.pictureUrl) || userIcon}
+                      alt={`${soul?.firstName} ${soul?.lastName}`}
+                    />
+                  </div>
+                  <div className="flex-grow-1 ms-3">
+                    <p className="card-title">{`${soul?.firstName} ${soul?.lastName}`}</p>
+                    {soul?.bacenta ? (
+                      <span className={`text-secondary card-subinfo ${theme}`}>
+                        {soul?.bacenta.name}
+                        {' - '}
+                      </span>
+                    ) : null}
+                    {soul?.ministry && (
+                      <span className={`text-secondary card-subinfo ${theme}`}>
+                        {soul?.ministry.name}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </Container>
+            )
+          })}
+        </div>
+      </MobileView>
+    </>
+  )
 }
 
 export default MemberTable

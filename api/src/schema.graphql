@@ -677,7 +677,23 @@ type Query {
       RETURN COUNT(constituency)
       """
     )
-  
+  bacentaMembershipCount(id: ID!): Int
+    @cypher(
+      statement: """
+      MATCH (servant:Member {id:$id})
+      MATCH (servant)-[:LEADS|HAS_TOWN|HAS_CAMPUS|HAS_CENTRE|HAS_BACENTA*1..4]->(b:Bacenta)-[:BELONGS_TO]-(member)
+      RETURN COUNT(member)
+      """
+    )
+  basontaMembershipCount(id: ID!): Int
+    @cypher(
+      statement: """
+      MATCH (servant:Member {id:$id})
+      MATCH (servant)-[:LEADS|HAS_TOWN|HAS_CAMPUS|HAS_CENTRE|HAS_BACENTA*1..4]->(b:Bacenta)-[:BELONGS_TO]-(member)
+      MATCH (member)-[:BELONGS_TO]->(:Ministry)
+      RETURN COUNT(member)
+      """
+    )
 
   #Fuzzy Search
   memberGridList(

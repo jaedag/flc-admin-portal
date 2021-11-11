@@ -16,6 +16,16 @@ const Directory = () => {
     variables: { id: currentUser.id },
   })
   const history = useHistory()
+
+  const getMemberCount = (servant) => {
+    return (
+      servant?.bacentaMembershipCount +
+      ' Members, ' +
+      servant?.basontaMembershipCount +
+      ' in Ministries'
+    )
+  }
+
   const getChurchCounts = (servant) => {
     let churchesCount = ''
 
@@ -84,7 +94,7 @@ const Directory = () => {
           <MenuButton
             icon={MemberIcon}
             title="members"
-            caption="165 Members, 160 in Ministries"
+            caption={getMemberCount(data)}
             color="members"
             onClick={() => history.push(`/directory/members`)}
           />

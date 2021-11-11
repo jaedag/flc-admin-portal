@@ -1,0 +1,8 @@
+.btn-submit.dark {
+  background-color: var(--btn-submit);
+  width: 100%;
+}
+.btn-reset.dark {
+  background-color: var(--card-color);
+ 
+}

@@ -55,78 +55,20 @@ export const memberFilter = (memberData, filters) => {
   }
 
   //Filter for Ministry
-  switch (filters.ministry) {
-    case 'Greater Love Choir':
-      filteredData = filterFor(
-        filteredData,
-        'ministry',
-        'name',
-        'Greater Love Choir'
-      )
 
-      break
-    case 'Dancing Stars':
-      filteredData = filterFor(
-        filteredData,
-        'ministry',
-        'name',
-        'Dancing Stars'
-      )
-      break
+  if (filters.ministry.length > 0) {
+    let filteredByMinistry = []
 
-    case 'Film Stars':
-      filteredData = filterFor(filteredData, 'ministry', 'name', 'Film Stars')
-      break
-    case 'Ushers':
-      filteredData = filterFor(filteredData, 'ministry', 'name', 'Ushers')
-      break
-    case 'Culinary Stars':
-      filteredData = filterFor(
-        filteredData,
-        'ministry',
-        'name',
-        'Culinary Stars'
-      )
-      break
-    case 'Arrivals':
-      filteredData = filterFor(filteredData, 'ministry', 'name', 'Arrivals')
-      break
-    case 'Fragrance':
-      filteredData = filterFor(filteredData, 'ministry', 'name', 'Fragrance')
-      break
-    case 'Telepastors':
-      filteredData = filterFor(filteredData, 'ministry', 'name', 'Telepastors')
-      break
-    case 'Seeing and Hearing':
-      filteredData = filterFor(
-        filteredData,
-        'ministry',
-        'name',
-        'Seeing and Hearing'
-      )
-      break
-    case 'Understanding Campaign':
-      filteredData = filterFor(
-        filteredData,
-        'ministry',
-        'name',
-        'Understanding Campaign'
-      )
-      break
-    case 'BENMP':
-      filteredData = filterFor(filteredData, 'ministry', 'name', 'BENMP')
-      break
-    case 'Still Photography':
-      filteredData = filterFor(
-        filteredData,
-        'ministry',
-        'name',
-        'Still Photography'
-      )
-      break
-    default:
-      //do nothing
-      break
+    filters.ministry.map((ministryToFilter) => {
+      filteredByMinistry = [
+        ...new Set([
+          ...filteredByMinistry,
+          ...filterFor(filteredData, 'ministry', 'name', ministryToFilter),
+        ]),
+      ]
+    })
+
+    filteredData = filteredByMinistry
   }
 
   //Filter for Leadership Rank

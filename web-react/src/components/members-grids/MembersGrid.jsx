@@ -51,9 +51,7 @@ const MembersGrid = (props) => {
   })
 
   function CustomToggle({ children, eventKey, ...rest }) {
-    const decoratedOnClick = useAccordionButton(eventKey, () =>
-      console.log('totally custom!')
-    )
+    const decoratedOnClick = useAccordionButton(eventKey)
 
     return (
       <span {...rest} onClick={decoratedOnClick}>

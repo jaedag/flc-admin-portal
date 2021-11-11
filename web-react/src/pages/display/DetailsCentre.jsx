@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { useQuery } from '@apollo/client'
 import DisplayChurchDetails from '../../components/DisplayChurchDetails/DisplayChurchDetails'
-import NavBar from '../../components/nav/NavBar'
+
 import { DISPLAY_CENTRE } from './ReadQueries'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import BaseComponent from 'components/base-component/BaseComponent'
@@ -23,7 +23,6 @@ const DetailsCentre = () => {
   ]
   return (
     <BaseComponent loadingState={loading} errorState={error} data={data}>
-      <NavBar />
       <DisplayChurchDetails
         name={displayCentre?.name}
         leaderTitle="Centre Leader"

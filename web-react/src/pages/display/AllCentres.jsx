@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { useQuery } from '@apollo/client'
 import { capitalise } from '../../global-utils'
 import DisplayChurchList from '../../components/DisplayChurchList'
-import NavBar from '../../components/nav/NavBar'
+
 import ErrorScreen from '../../components/base-component/ErrorScreen'
 import LoadingScreen from '../../components/base-component/LoadingScreen'
 import { GET_CAMPUS_CENTRES, GET_TOWN_CENTRES } from '../../queries/ListQueries'
@@ -40,7 +40,6 @@ const DisplayAllCentres = () => {
     const campus = campusCentreData.centres[0].campus
     return (
       <>
-        <NavBar />
         <div className="body-container container">
           <div className="mb-4 border-bottom">
             <div className="row justify-content-between">
@@ -109,7 +108,6 @@ const DisplayAllCentres = () => {
     const town = townCentreData.centres[0].town
     return (
       <>
-        <NavBar />
         <div className="body-container container">
           <div className="mb-4 border-bottom">
             <div className="row justify-content-between">

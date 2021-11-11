@@ -1,6 +1,5 @@
 import React from 'react'
 import { useQuery } from '@apollo/client'
-import NavBar from '../../components/nav/NavBar'
 import MemberDetailsCard from '../../components/card/MemberDetailsCard'
 import userIcon from '../../assets/user.png'
 import Timeline from '../../components/Timeline/Timeline'
@@ -31,7 +30,6 @@ const MemberDisplay = ({ memberId }) => {
   return (
     <BaseComponent loadingState={loading} errorState={error} data={data}>
       <div className="container pt-5">
-        <NavBar />
         <div className="container pt-2">
           <div className="row mb-4">
             <div className="col">

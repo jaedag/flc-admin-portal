@@ -48,9 +48,9 @@ const Filters = ({ ToggleAccordion }) => {
       {(formik) => (
         <Form>
           <div className="form-group ">
-            <Row xs={1} md={2} className="mb-5">
+            <Row xs={1} md={2}>
               {/* <!-- Basic Info Div --> */}
-              <Col className="pb-2">
+              <Col>
                 <FormikControl
                   label="Gender"
                   className="form-control"
@@ -59,7 +59,7 @@ const Filters = ({ ToggleAccordion }) => {
                   options={GENDER_OPTIONS}
                 />
               </Col>
-              <Col className="col pb-2">
+              <Col>
                 <FormikControl
                   label="Marital Status"
                   className="form-control"
@@ -82,7 +82,7 @@ const Filters = ({ ToggleAccordion }) => {
                 />
               </Col>
 
-              <Col className="pb-2">
+              <Col>
                 <FormikControl
                   label="Leader Rank"
                   className="form-control"
@@ -91,7 +91,7 @@ const Filters = ({ ToggleAccordion }) => {
                   options={LEADER_OPTIONS}
                 />
               </Col>
-              <Col className="pb-2">
+              <Col>
                 <FormikControl
                   label="Leader Title"
                   className="form-control"

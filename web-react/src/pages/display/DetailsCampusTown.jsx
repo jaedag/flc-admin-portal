@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 import { useQuery } from '@apollo/client'
 import { capitalise } from '../../global-utils'
 import DisplayChurchDetails from '../../components/DisplayChurchDetails/DisplayChurchDetails'
-import NavBar from '../../components/nav/NavBar'
+
 import { DISPLAY_TOWN, DISPLAY_CAMPUS } from './ReadQueries'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import BaseComponent from 'components/base-component/BaseComponent'
@@ -33,7 +33,6 @@ const DetailsCampusTown = () => {
     >
       {church.church === 'town' && (
         <>
-          <NavBar />
           <DisplayChurchDetails
             name={townData?.towns[0].name}
             leaderTitle={'Town CO'}
@@ -66,7 +65,6 @@ const DetailsCampusTown = () => {
       )}
       {church.church === 'campus' && (
         <>
-          <NavBar />
           <DisplayChurchDetails
             name={campusData?.campuses[0].name}
             leaderTitle={'Campus CO'}

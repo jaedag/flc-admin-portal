@@ -3,7 +3,6 @@ import { useQuery } from '@apollo/client'
 import { useHistory } from 'react-router-dom'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import { GET_BISHOPS } from '../../queries/ListQueries'
-import NavBar from '../../components/nav/NavBar'
 import Spinner from '../../components/Spinner.jsx'
 import Logo from '../../assets/flc-logo-small.png'
 import { MemberContext } from '../../contexts/MemberContext'
@@ -22,7 +21,6 @@ const FederalAdminDashboard = () => {
   if (loading) {
     return (
       <>
-        <NavBar />
         <TabletDesktopView>
           <div className="container text-center my-5">
             <img
@@ -74,8 +72,6 @@ const FederalAdminDashboard = () => {
   } else if (data) {
     return (
       <>
-        <NavBar />
-
         <div className="container text-center my-3">
           <img
             src={Logo}

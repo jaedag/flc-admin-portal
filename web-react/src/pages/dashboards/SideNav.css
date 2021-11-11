@@ -1,4 +1,7 @@
 .dark {
+  --sidenav-bg: #1c1c1c;
+  --menu-item-bg: #242424;
+  --menu-item-active: #313131;
   --nav-bg: #000000;
   --nav-icon: #333;
   --nav-icon-light: #666;
@@ -97,7 +100,7 @@ li {
 
 .search-btn {
   width: 40px;
-  height: 80px;
+  height: 40px;
   position: absolute;
   background: transparent;
   border: 0;
@@ -151,7 +154,7 @@ li {
 }
 
 .side-menu-footer.dark {
-  background: var(--nav-icon);
+  background: var(--sidenav-bg);
 }
 .side-menu-footer.light {
   background: var(--nav-icon);

@@ -2,7 +2,6 @@ import React, { useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useMutation, useQuery } from '@apollo/client'
 import { BISH_DASHBOARD_COUNTS, MAKE_BISHOP_ADMIN } from './DashboardQueries'
-import NavBar from '../../components/nav/NavBar'
 import DashboardCard from '../../components/card/DashboardCard'
 import DashboardButton from '../../components/buttons/DashboardButton'
 import DropdownButton from '../../components/buttons/DropdownButton'
@@ -140,7 +139,6 @@ const BishopDashboard = () => {
 
   return (
     <>
-      <NavBar />
       <div className="container px-4">
         <div className="row justify-content-between py-3">
           <div className="col-auto p-0"></div>

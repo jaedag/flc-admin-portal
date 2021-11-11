@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from '@apollo/client'
 import BaseComponent from 'components/base-component/BaseComponent'
-import NavBar from 'components/nav/NavBar'
+
 import { FieldArray, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import { capitalise, makeSelectOptions } from 'global-utils'
@@ -77,7 +77,6 @@ const CampusTownForm = ({
       errorState={bishopsError}
       data={bishopsData}
     >
-      <NavBar />
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}

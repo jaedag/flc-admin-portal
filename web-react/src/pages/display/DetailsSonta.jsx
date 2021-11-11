@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { useQuery } from '@apollo/client'
 import DisplayChurchDetails from '../../components/DisplayChurchDetails/DisplayChurchDetails'
-import NavBar from '../../components/nav/NavBar'
+
 import { DISPLAY_SONTA } from './ReadQueries'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import BaseComponent from 'components/base-component/BaseComponent'
@@ -39,7 +39,6 @@ const DetailsSonta = () => {
       errorState={sontaError}
       data={sontaData}
     >
-      <NavBar />
       <DisplayChurchDetails
         name={sontaData?.sontas[0]?.name}
         leaderTitle="Sonta Leader"

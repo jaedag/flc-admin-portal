@@ -35,6 +35,18 @@
 
 .btn-right-col {
   text-align: left;
-  padding-left: 0px;
-  padding-right: 0px;
+  padding: 0px;
+}
+
+.rounded-circle.gradient-bg {
+  background-image: linear-gradient(#161f04, #242d0e);
+  padding: 5px;
+  margin: 0px;
+  height: 50px;
+  width: 54px;
+}
+
+.rounded-circle .square-img {
+  height: 25px;
+  width: 25px;
 }

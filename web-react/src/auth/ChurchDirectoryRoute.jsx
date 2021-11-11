@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from 'react'
 import { Route } from 'react-router-dom'
 import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react'
-import { UnauthMsg } from './UnauthMsg'
+
 import { MemberContext } from '../contexts/MemberContext'
 import { ChurchContext } from '../contexts/ChurchContext'
 import CampusTownMembers from '../pages/grids/CampusTownMembers.jsx'
@@ -74,7 +74,7 @@ const ChurchDirectoryRoute = ({ component, roles, ...args }) => {
     church.setBacentaId(currentUser.bacenta.id)
     return <Route component={Churches} />
   } else {
-    return <UnauthMsg />
+    return <Route component={Churches} />
   }
 }
 

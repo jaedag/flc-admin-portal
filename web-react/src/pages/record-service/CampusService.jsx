@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import { ChurchContext } from '../../contexts/ChurchContext'
-import NavBar from '../../components/nav/NavBar'
+
 import { useMutation, useQuery } from '@apollo/client'
 import { RECORD_SERVICE } from './RecordServiceMutations'
 import { DISPLAY_CAMPUS } from '../display/ReadQueries'
@@ -16,7 +16,6 @@ const CampusService = () => {
 
   return (
     <BaseComponent loadingState={loading} errorState={error} data={data}>
-      <NavBar />
       <ServiceForm
         RecordServiceMutation={RecordService}
         church={data?.campuses[0]}

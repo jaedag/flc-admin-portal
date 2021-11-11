@@ -1,5 +1,4 @@
 import BaseComponent from 'components/base-component/BaseComponent'
-import NavBar from 'components/nav/NavBar'
 import { Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import { capitalise, makeSelectOptions } from 'global-utils'
@@ -95,7 +94,6 @@ const SontaForm = ({
       errorState={townsError || campusesError}
       data={townsData && campusesData && ministryListData}
     >
-      <NavBar />
       <Formik
         initialValues={initialValuesForNewSonta || initialValues}
         validationSchema={validationSchema}

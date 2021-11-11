@@ -5,23 +5,29 @@
   font-weight: 600;
   cursor: pointer;
   margin: 5px 0;
+  padding: 5px;
+  border-radius: 5px;
+  padding-left: 10px;
 }
 
 .side-menu .main-menu .menu-item.dark {
-  color: var(--nav-icon);
+  background-color: var(--menu-item-bg);
+  color: var(--nav-text);
 }
 .side-menu .main-menu .menu-item.light {
-  color: var(--nav-icon);
+  color: var(--menu-item-bg);
 }
 
 .side-menu .main-menu .menu-item.active {
   border-radius: 5px;
-  padding: 3px;
-  padding-left: 3px;
+  padding: 5px;
+  padding: 5px;
+  border-radius: 5px;
+  padding-left: 10px;
 }
 
 .side-menu .main-menu .menu-item.active.dark {
-  background-color: var(--nav-icon);
+  background-color: var(--menu-item-active);
   color: var(--nav-text);
 }
 .side-menu .main-menu .menu-item.active.light {

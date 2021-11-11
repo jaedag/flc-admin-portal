@@ -5,7 +5,7 @@ import { useQuery, useMutation } from '@apollo/client'
 import { parsePhoneNum, throwErrorMsg } from '../../global-utils'
 import { UPDATE_MEMBER_MUTATION } from './UpdateMutations'
 import { DISPLAY_MEMBER } from '../display/ReadQueries'
-import NavBar from '../../components/nav/NavBar'
+
 import { MemberContext } from '../../contexts/MemberContext'
 import MemberForm from '../../components/reusable-forms/MemberForm'
 import { ADD_MEMBER_TITLE_MUTATION } from 'pages/create/CreateMutations'
@@ -126,7 +126,6 @@ const UpdateMember = () => {
       errorState={memberError || memberId === ''}
       data={memberData}
     >
-      <NavBar />
       <MemberForm
         title="Edit Member Details"
         initialValues={initialValues}

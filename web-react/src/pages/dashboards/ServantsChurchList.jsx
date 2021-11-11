@@ -10,7 +10,6 @@ import {
   getMonthlyStatAverage,
   getServiceGraphData,
 } from 'pages/reports/report-utils'
-import NavBar from 'components/nav/NavBar'
 import { transformCloudinaryImg } from 'global-utils'
 
 const ServantsChurchList = () => {
@@ -88,7 +87,6 @@ const ServantsChurchList = () => {
     getServantChurches(servant)
     return (
       <>
-        <NavBar />
         <div className="container mt-4">
           <h3>Bacentas</h3>
           <table>

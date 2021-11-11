@@ -13,26 +13,37 @@ const Churches = () => {
   return (
     <div className="d-flex align-items-center justify-content-center h-75 nav-margin-top-0">
       <Container>
-        <PlaceholderCustom loading={!currentUser.fullName} xs={12} as="h1">
-          <div className="text-center">
+        <div className="text-center">
+          <PlaceholderCustom loading={!currentUser.fullName} xs={12} as="h1">
+            {' '}
             <h1 className="mb-0  page-header">{`${currentUser.fullName}'s`}</h1>
+          </PlaceholderCustom>
+          <PlaceholderCustom loading={!currentUser.fullName} as="p">
             <p className="text-secondary dark menu-caption">Churches</p>
-          </div>
-        </PlaceholderCustom>
+          </PlaceholderCustom>
+        </div>
 
         <div className="d-grid gap-2 mt-5 text-left">
-          {userJobs.jobs.map((job, index) => (
-            <MenuButton
-              key={index}
-              title={job.church.name}
-              icon={MemberIcon}
-              onClick={() => {
-                job.clickCard()
-                history.push(job.link)
-              }}
-              color="churches"
-            />
-          ))}
+          {userJobs?.jobs[0] ? (
+            userJobs.jobs.map((job, index) => (
+              <MenuButton
+                key={index}
+                title={job.church.name}
+                icon={MemberIcon}
+                iconBg={true}
+                onClick={() => {
+                  job.clickCard()
+                  history.push(job.link)
+                }}
+                color="churches"
+              />
+            ))
+          ) : (
+            <>
+              <MenuButton color="churches" />
+              <MenuButton color="churches" />
+            </>
+          )}
         </div>
       </Container>
     </div>

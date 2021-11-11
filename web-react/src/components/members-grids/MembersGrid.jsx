@@ -79,7 +79,9 @@ const MembersGrid = (props) => {
           </PlaceholderCustom>
         </div>
         <div className="align-middle">
-          <button className={`search-btn ${theme} my-auto`}>
+          <button
+            className={`search-btn search-btn-member-grid ${theme} my-auto`}
+          >
             <Search />
           </button>
           <input

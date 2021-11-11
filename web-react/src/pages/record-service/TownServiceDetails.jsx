@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import { ChurchContext } from '../../contexts/ChurchContext'
-import NavBar from '../../components/nav/NavBar'
+
 import { useQuery } from '@apollo/client'
 import { DISPLAY_TOWN_SERVICE } from './RecordServiceMutations'
 import { ServiceContext } from 'contexts/ServiceContext'
@@ -17,7 +17,6 @@ const TownServiceDetails = () => {
 
   return (
     <BaseComponent loadingState={loading} errorState={error} data={data}>
-      <NavBar />
       <ServiceDetails
         service={data?.serviceRecords[0]}
         church={data?.towns[0]}

@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { useQuery } from '@apollo/client'
 import DisplayChurchList from '../../components/DisplayChurchList'
-import NavBar from '../../components/nav/NavBar'
+
 import ErrorScreen from '../../components/base-component/ErrorScreen'
 import LoadingScreen from '../../components/base-component/LoadingScreen'
 import { GET_SONTAS_BY_CAMPUSTOWN } from '../../queries/ListQueries'
@@ -29,7 +29,6 @@ const DisplaySontasByCampusTown = () => {
 
     return (
       <>
-        <NavBar />
         <div className="body-container container">
           <div className="mb-4 border-bottom">
             <div className="row justify-content-between">
@@ -92,7 +91,6 @@ const DisplaySontasByCampusTown = () => {
     const towns = sontaData.towns
     return (
       <>
-        <NavBar />
         <div className="body-container container">
           <div className="mb-4 border-bottom">
             <div className="row justify-content-between">

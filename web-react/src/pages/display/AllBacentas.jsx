@@ -2,7 +2,6 @@ import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { useQuery } from '@apollo/client'
 import DisplayChurchList from '../../components/DisplayChurchList'
-import NavBar from '../../components/nav/NavBar'
 import { GET_CENTRE_BACENTAS } from '../../queries/ListQueries'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import { MemberContext } from '../../contexts/MemberContext'
@@ -20,7 +19,6 @@ const DisplayAllBacentas = () => {
   const bacentas = data?.centres[0]?.bacentas
   return (
     <BaseComponent loadingState={loading} errorState={error} data={data}>
-      <NavBar />
       <div className="body-container container">
         <div className="mb-4 border-bottom">
           <div className="row justify-content-between">

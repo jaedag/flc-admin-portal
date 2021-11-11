@@ -1,7 +1,6 @@
 import React, { useContext, useEffect } from 'react'
 import { Route } from 'react-router-dom'
 import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react'
-import { UnauthMsg } from './UnauthMsg'
 import { MemberContext } from '../contexts/MemberContext'
 import { ChurchContext } from '../contexts/ChurchContext'
 import BishopMembers from '../pages/grids/BishopMembers.jsx'
@@ -14,9 +13,13 @@ import CentreMembers from 'pages/grids/CentreMembers'
 const MembersDirectoryRoute = ({ component, roles, ...args }) => {
   const { currentUser } = useContext(MemberContext)
   const { isAuthenticated } = useAuth0()
-  const { setBishopId, setTownId, setCampusId, setChurch } = useContext(
-    ChurchContext
-  )
+  const {
+    setBishopId,
+    setTownId,
+    setCampusId,
+    setChurch,
+    setBacentaId,
+  } = useContext(ChurchContext)
 
   useEffect(() => {
     if (isAuthenticated && !currentUser.roles.includes('adminFederal')) {
@@ -28,6 +31,11 @@ const MembersDirectoryRoute = ({ component, roles, ...args }) => {
         //User is not a Bishops Admin the he can only be looking at his constituency membership
         setTownId(currentUser.constituency)
         setCampusId(currentUser.constituency)
+      }
+
+      if (currentUser.roles.includes('leaderBacenta')) {
+        //User is not a Bishops Admin the he can only be looking at his constituency membership
+        setBacentaId(currentUser.bacenta.id)
       }
     }
     // eslint-disable-next-line
@@ -86,7 +94,7 @@ const MembersDirectoryRoute = ({ component, roles, ...args }) => {
     //If the user does not have permission but is a Centre Leader
     return <Route component={BacentaMembers} />
   } else {
-    return <UnauthMsg />
+    return <BacentaMembers />
   }
 }
 

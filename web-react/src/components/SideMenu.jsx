@@ -86,21 +86,7 @@ const SideBar = () => {
                       options={MARITAL_STATUS_OPTIONS}
                     />
                   </div>
-                  {/* <div className="col pb-2">
-                    <FormikControl
-                      control="combobox"
-                      name="occupation"
-                      label="Occupation"
-                      placeholder="Occupation"
-                      setFieldValue={formik.setFieldValue}
-                      optionsQuery={OCCUPATION_LIST}
-                      queryVariable="searchKey"
-                      suggestionText="occupation"
-                      suggestionID="occupation"
-                      dataset="occupationList"
-                      aria-describedby="Occupation Options"
-                    />
-                  </div> */}
+
                   <div className="col">
                     <span className=" font-weight-bold" htmlFor="ministry">
                       Ministry

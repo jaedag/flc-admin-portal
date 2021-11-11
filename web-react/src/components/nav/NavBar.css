@@ -1,6 +1,6 @@
 .navbar {
   background-color: var(----body-bg-color);
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border);
   height: 70px;
 }
 

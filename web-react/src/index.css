@@ -7,12 +7,12 @@
   --text-focus: #bababa;
   --text-primary: #f5f5f5;
   --accent-color: #690c13;
-  --border-color: #3d3d3dc5;
   --infobar-color: #383838;
   --text-box-inner: #121212;
   --full-black: #000000;
   --members-accent: #68e0d7;
-  --churches-accent: #A9E631;
+  --churches-accent: #a9e631;
+  --border: #1d1d1d;
 }
 :root .light {
   --body-bg: #f1f0f0;
@@ -23,10 +23,11 @@
   --text-primary: black;
   --accent-color: #690c13;
   --light-accent-color: #690c13;
-  --border-color: #3d3d3dc5;
+  --border: #3d3d3dc5;
   --infobar-color: #383838;
   --text-box-inner: #121212;
   --full-black: #000000;
+  --border: #1d1d1d;
 }
 
 /*--Global colors*/
@@ -43,7 +44,7 @@
 }
 
 .border {
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border);
 }
 
 .icon-color {
@@ -90,7 +91,7 @@ a:active {
 
 .infobar {
   background-color: var(--card-color);
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border);
   padding: 10px;
   border-radius: 7px;
   margin-bottom: 10px;
@@ -98,16 +99,12 @@ a:active {
 
 .card {
   background-color: var(--card-color);
-  border: 1px solid var(--border-color);
-}
-
-.mobile-search-card {
-  border-radius: 20px;
+  border: 1px solid var(--border);
 }
 
 .member-info-card {
   background-color: var(--card-color);
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border);
   border-radius: 7px;
 }
 
@@ -178,13 +175,13 @@ a:hover {
 .btn-primary:disabled {
   background-color: var(--infobar-color);
   color: var(--text-primary);
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border);
 }
 
 .form-control {
   background-color: var(--text-box-inner);
   color: var(--text-focus-white);
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border);
   border-radius: 5px;
   margin: 5px 5px 5px 0px;
 }
@@ -192,7 +189,7 @@ a:hover {
 .form-control:focus {
   background-color: var(--text-box-inner);
   color: var(--text-focus-white);
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border);
   border-radius: 7px;
   box-shadow: 0 0 7px var(--accent-color);
   margin: 5px 5px 5px 0px;
@@ -202,7 +199,7 @@ a:hover {
   background-color: var(--text-box-inner);
   color: var(--text-focus-white);
   height: 38px;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border);
   width: 30vw;
   padding-left: 10px;
   border-radius: 5px;
@@ -212,7 +209,7 @@ a:hover {
 .nav-search-box:focus {
   background-color: var(--text-box-inner);
   color: var(--text-focus-white);
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border);
   border-radius: 7px;
 
   box-shadow: 0 0 7px var(--accent-color);
@@ -220,7 +217,7 @@ a:hover {
 }
 .nav-search-button {
   border-radius: 0px 7px 7px 0px;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border);
 }
 
 input:-webkit-autofill,
@@ -241,7 +238,7 @@ select {
 .login-page-lg {
   background-color: #212121;
   width: 500px;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border);
   border-radius: 7px;
 }
 
@@ -259,7 +256,7 @@ body {
 
 .body-card {
   background-color: var(--body-bg-color);
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border);
   border-radius: 7px;
   padding: 15px;
   box-shadow: 2px #ffffff;
@@ -279,19 +276,21 @@ body {
 @media only screen and (max-width: 576px) {
   .nav-container.inactive {
     margin-left: 0px;
-    margin-top: 80px;
     width: 100vw;
     height: 100vh;
     padding: 5px;
+    padding-top: 80px;
     text-align: left;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
 
   .nav-margin-top-0 {
-    margin-top: -80px;
+    padding-top: -80px;
   }
 
   .nav-container {
-    margin-top: 80px;
+    padding-top: 80px;
     position: fixed;
     transition: margin-left 0.2s ease-in;
   }
@@ -311,6 +310,13 @@ body {
 }
 
 .page-header {
-  font-size: 30px;
+  font-size: 20px;
   font-weight: bold;
+  text-align: center;
+}
+
+.just-text-btn {
+  color: var(--churches-accent);
+  text-decoration: none;
+  font-size: 14px;
 }

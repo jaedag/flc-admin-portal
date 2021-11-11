@@ -124,12 +124,12 @@ const PastorsAdmin = () => {
 
   const [searchKey, setSearchKey] = useState('')
   const [filters, setFilters] = useState({
-    gender: '',
-    maritalStatus: '',
+    gender: [],
+    maritalStatus: [],
     occupation: '',
     leaderTitle: [],
     leaderRank: [],
-    ministry: '',
+    ministry: [],
   })
 
   //Setting Up for Popup

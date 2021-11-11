@@ -1,0 +1,21 @@
+.filter-chips {
+  background: transparent;
+  border: 1px solid var(--icon);
+  color: var(--text-primary);
+  padding: 8px 12px;
+  border-radius: 25px;
+  margin: 2px;
+}
+
+.filter-chips.active.dark {
+  background: #da0218;
+  color: var(--text-primary);
+  padding: 8px 12px;
+  border-radius: 25px;
+  border: none;
+}
+
+.checkbox-label {
+  font-size: 20px;
+  font-weight: bold;
+}

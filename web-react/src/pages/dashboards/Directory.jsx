@@ -76,7 +76,7 @@ const Directory = () => {
         <PlaceholderCustom loading={!currentUser.fullName} xs={12} as="h1">
           <div className="text-center">
             <h1 className="mb-0  page-header">{`${currentUser.fullName}'s`}</h1>
-            <p className="text-secondary dark menu-caption">Directory</p>
+            <p className="dark menu-subheading">Directory</p>
           </div>
         </PlaceholderCustom>
 

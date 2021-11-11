@@ -25,40 +25,33 @@ export const memberFilter = (memberData, filters) => {
   }
 
   //Filter for Gender
-  switch (filters.gender) {
-    case 'Male':
+  if (filters.gender.length > 0 && filters.gender.length !== 2) {
+    if (filters.gender.includes('Male')) {
       filteredData = filterFor(filteredData, 'gender', 'gender', 'Male')
-      break
-    case 'Female':
+    }
+    if (filters.gender.includes('Female')) {
       filteredData = filterFor(filteredData, 'gender', 'gender', 'Female')
-      break
-    default:
-      //do nothing
-      break
+    }
   }
 
   //Filter for Marital Status
-  switch (filters.maritalStatus) {
-    case 'Single':
+  if (filters.maritalStatus.length > 0 && filters.maritalStatus.length !== 2) {
+    if (filters.maritalStatus.includes('Single')) {
       filteredData = filterFor(
         filteredData,
         'maritalStatus',
         'status',
         'Single'
       )
-
-      break
-    case 'Married':
+    }
+    if (filters.maritalStatus.includes('Married')) {
       filteredData = filterFor(
         filteredData,
         'maritalStatus',
         'status',
         'Married'
       )
-      break
-    default:
-      //do nothing
-      break
+    }
   }
 
   //Filter for Ministry

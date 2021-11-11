@@ -2,11 +2,14 @@ import React, { useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import Spinner from '../Spinner.jsx'
 import userIcon from '../../assets/user.png'
-import './MemberTable.css'
 import TabletDesktopView from '../responsive-design/TabletDesktopView'
 import MobileView from '../responsive-design/MobileView'
 import { ChurchContext } from 'contexts/ChurchContext.js'
 import { transformCloudinaryImg } from 'global-utils.js'
+import PlaceholderCustom from 'components/Placeholder.jsx'
+import './MemberTable.css'
+import { MemberContext } from 'contexts/MemberContext.js'
+import { Container } from 'react-bootstrap'
 
 const MemberTable = (props) => {
   const {
@@ -18,6 +21,7 @@ const MemberTable = (props) => {
   } = props
 
   const { clickCard } = useContext(ChurchContext)
+  const { theme } = useContext(MemberContext)
   const history = useHistory()
 
   if (memberLoading || memberError) {
@@ -29,11 +33,7 @@ const MemberTable = (props) => {
       </div>
     )
   } else if (!memberData) {
-    return (
-      <div className="container d-flex justify-content-center">
-        <div>There does not seem to be any data to display for you</div>
-      </div>
-    )
+    return <PlaceholderCustom />
   } else {
     return (
       // Web View Full Screen without filters applied
@@ -77,47 +77,52 @@ const MemberTable = (props) => {
 
         {/* Mobile View */}
         <MobileView>
-          <div className="member-grid container">
+          <div className="member-grid">
             {memberData.map((soul, index) => {
-              if (index < offset) {
-                return null
-              } else if (index >= offset + numberOfRecords) {
-                return null
-              }
+              // if (index < offset) {
+              //   return null
+              // } else if (index >= offset + numberOfRecords) {
+              //   return null
+              // }
 
               return (
-                <div
-                  key={index}
-                  className="card mobile-search-card p-2 py-3 my-4"
-                  onClick={() => {
-                    clickCard(soul)
-                    history.push('/member/displaydetails')
-                  }}
-                >
-                  <div className="media">
-                    <img
-                      className="mr-3 rounded-circle img-search"
-                      src={transformCloudinaryImg(soul?.pictureUrl) || userIcon}
-                      alt={`${soul?.firstName} ${soul?.lastName}`}
-                    />
-                    {/* )} */}
-                    <div className="media-body">
-                      <h5 className="mt-0">{`${soul?.firstName} ${soul?.lastName}`}</h5>
+                <Container key={index}>
+                  <div
+                    className="d-flex align-items-center card-border dark"
+                    onClick={() => {
+                      clickCard(soul)
+                      history.push('/member/displaydetails')
+                    }}
+                  >
+                    <div className="flex-shrink-0">
+                      <img
+                        className="rounded-circle img-search"
+                        src={
+                          transformCloudinaryImg(soul?.pictureUrl) || userIcon
+                        }
+                        alt={`${soul?.firstName} ${soul?.lastName}`}
+                      />
+                    </div>
+                    <div className="flex-grow-1 ms-3">
+                      <p className="card-title">{`${soul?.firstName} ${soul?.lastName}`}</p>
                       {soul?.bacenta ? (
-                        <div>
-                          <span className="font-weight-bold">Bacenta:</span>{' '}
-                          {soul?.bacenta.name}{' '}
-                        </div>
+                        <span
+                          className={`text-secondary card-subinfo ${theme}`}
+                        >
+                          {soul?.bacenta.name}
+                          {' - '}
+                        </span>
                       ) : null}
                       {soul?.ministry && (
-                        <div>
-                          <span className="font-weight-bold">Ministry:</span>{' '}
-                          {soul?.ministry.name}{' '}
-                        </div>
+                        <span
+                          className={`text-secondary card-subinfo ${theme}`}
+                        >
+                          {soul?.ministry.name}
+                        </span>
                       )}
                     </div>
                   </div>
-                </div>
+                </Container>
               )
             })}
           </div>

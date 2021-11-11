@@ -20,6 +20,13 @@
   font-size: 10px;
   display: block;
 }
+.menu-subheading {
+  font-size: 20px;
+}
+
+.menu-subheading.dark {
+  color: var(--churches-accent);
+}
 
 .btn-left-col {
   width: 78px;

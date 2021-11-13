@@ -97,7 +97,7 @@ const MemberTable = (props) => {
 
       {/* Mobile View */}
       <MobileView>
-        <div className="member-grid nav-margin-bottom-0">
+        <div className="member-grid scroll-bottom ">
           {memberData.map((soul, index) => {
             // if (index < offset) {
             //   return null

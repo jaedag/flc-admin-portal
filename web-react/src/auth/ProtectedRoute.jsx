@@ -1,10 +1,9 @@
 import React, { useContext, useEffect } from 'react'
 import { Route } from 'react-router-dom'
-import { withAuthenticationRequired, useAuth0 } from '@auth0/auth0-react'
+import { useAuth0 } from '@auth0/auth0-react'
 import { UnauthMsg } from './UnauthMsg'
 import { MemberContext } from '../contexts/MemberContext'
 import { ChurchContext } from '../contexts/ChurchContext'
-import LoadingScreen from '../components/base-component/LoadingScreen'
 import { isAuthorised } from '../global-utils'
 
 const ProtectedRoute = ({ component, roles, ...args }) => {
@@ -31,17 +30,7 @@ const ProtectedRoute = ({ component, roles, ...args }) => {
 
   if (isAuthorised(roles, currentUser.roles)) {
     //if the user has permission to access the route
-    return (
-      <Route
-        component={withAuthenticationRequired(component, {
-          // eslint-disable-next-line react/display-name
-          onRedirecting: () => {
-            return <LoadingScreen />
-          },
-        })}
-        {...args}
-      />
-    )
+    return <Route component={component} {...args} />
   } else {
     return <UnauthMsg />
   }

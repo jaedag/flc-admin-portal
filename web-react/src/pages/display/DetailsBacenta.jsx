@@ -3,7 +3,7 @@ import { useQuery } from '@apollo/client'
 import DisplayChurchDetails from '../../components/DisplayChurchDetails/DisplayChurchDetails'
 import { DISPLAY_BACENTA } from './ReadQueries'
 import { ChurchContext } from '../../contexts/ChurchContext'
-import BaseComponent from 'components/base-component/BaseComponent'
+import { throwErrorMsg } from 'global-utils'
 
 const DetailsBacenta = () => {
   const { bacentaId } = useContext(ChurchContext)
@@ -15,6 +15,7 @@ const DetailsBacenta = () => {
   } = useQuery(DISPLAY_BACENTA, {
     variables: { id: bacentaId },
   })
+  throwErrorMsg(bacentaError)
   const bacenta = bacentaData?.bacentas[0]
 
   let breadcrumb = [
@@ -40,45 +41,50 @@ const DetailsBacenta = () => {
     return result
   }
 
-  const latestServiceWeek =
-    bacentaData?.bacentas[0]?.services[0]?.serviceRecords[0]?.week
+  const last3Weeks = [getWeekNumber(), getWeekNumber() - 1, getWeekNumber() - 2]
+  const lastFilledServices = bacentaData?.bacentas[0]?.services[0]?.serviceRecords.map(
+    (service) => service.week
+  )
+
+  const check = last3Weeks?.map((week) => {
+    if (lastFilledServices?.includes(week)) {
+      return { number: week, filled: true }
+    } else {
+      return {
+        number: week,
+        filled: false,
+      }
+    }
+  })
 
   return (
-    <BaseComponent
-      loadingState={bacentaLoading}
-      errorState={bacentaError}
-      data={bacentaData}
-    >
-      <DisplayChurchDetails
-        name={bacenta?.name}
-        leaderTitle="Bacenta Leader"
-        leaderName={
-          bacenta?.leader
-            ? `${bacenta.leader.firstName} ${bacenta.leader.lastName}`
-            : '-'
-        }
-        leaderId={bacenta?.leader?.id}
-        membership={bacentaData?.bacentaMemberCount}
-        churchHeading="Meeting Day"
-        churchCount={bacenta?.meetingDay?.day}
-        churchType="Bacenta"
-        buttons={['']}
-        editlink="/bacenta/editbacenta"
-        editPermitted={[
-          'leaderBacenta',
-          'leaderCentre',
-          'leaderCampus',
-          'leaderTown',
-          'adminCampus',
-          'adminTown',
-          'adminBishop',
-          'adminFederal',
-        ]}
-        alreadyFilled={latestServiceWeek === getWeekNumber()}
-        history={bacenta?.history.length !== 0 && bacenta?.history}
-        breadcrumb={breadcrumb && breadcrumb}
-      />
-    </BaseComponent>
+    <DisplayChurchDetails
+      loading={bacentaLoading}
+      name={bacenta?.name}
+      leaderTitle="Bacenta Leader"
+      leader={bacenta?.leader}
+      location={bacenta?.location}
+      membership={bacentaData?.bacentaMemberCount}
+      churchHeading="Meeting Day"
+      churchCount={bacenta?.meetingDay?.day}
+      churchType="Bacenta"
+      buttons={['']}
+      editlink="/bacenta/editbacentaπ"
+      editPermitted={[
+        'leaderBacenta',
+        'leaderCentre',
+        'leaderCampus',
+        'leaderTown',
+        'adminCampus',
+        'adminTown',
+        'adminBishop',
+        'adminFederal',
+      ]}
+      weekNumber={getWeekNumber()}
+      last3Weeks={check}
+      history={bacenta?.history.length !== 0 && bacenta?.history}
+      breadcrumb={breadcrumb && breadcrumb}
+    />
   )
 }
 

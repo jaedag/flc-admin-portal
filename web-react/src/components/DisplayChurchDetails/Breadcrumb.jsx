@@ -31,7 +31,7 @@ const Breadcrumb = ({ breadcrumb }) => {
                       ? `/dashboard`
                       : `/${bread?.__typename.toLowerCase()}/displaydetails`
                   }
-                  className="pl-0 label text-secondary"
+                  className="label text-secondary"
                 >
                   {bread?.name
                     ? `${breadname} ${bread?.__typename}`

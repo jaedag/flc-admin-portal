@@ -2,7 +2,7 @@
 :root .dark {
   --body-bg: #121212;
   --icon: #909090;
-  --card-color: #1E1C1C;
+  --card-color: #1e1c1c;
   --icon-highlighted-color: white;
   --text-focus: #bababa;
   --text-primary: #f5f5f5;
@@ -14,6 +14,8 @@
   --churches-accent: #a9e631;
   --btn-submit: #136e02;
   --border: #1d1d1d;
+  --good: #4de531;
+  --bad: #da0218;
 }
 :root .light {
   --body-bg: #f1f0f0;
@@ -29,6 +31,8 @@
   --text-box-inner: #121212;
   --full-black: #000000;
   --border: #1d1d1d;
+  --good: #4de531;
+  --bad: #da0218;
 }
 
 /*--Global colors*/
@@ -61,6 +65,9 @@ a:hover,
 a:active {
   color: white;
 } */
+.font-primary {
+  color: var(--text-primary);
+}
 
 .spinner-border-center {
   margin-left: auto;
@@ -124,7 +131,8 @@ a:active {
 
 .label {
   font-size: small;
-  padding-left: 10px;
+  padding-right: 10px;
+  text-decoration: none;
 }
 
 .profile-img {
@@ -138,8 +146,10 @@ a:active {
 }
 
 .img-search-placeholder {
+  border-radius: 100px;
   width: 70px;
   height: 70px;
+  margin-right: 10px;
 }
 
 .btn.dark {
@@ -272,6 +282,7 @@ body {
 .nav-container {
   margin-left: 300px;
   transition: margin-left 0.2s ease-in;
+  padding-bottom: 80px;
 }
 
 .nav-container.inactive {
@@ -301,8 +312,8 @@ body {
     margin-top: -80px;
   }
 
-  .nav-margin-bottom-0 {
-    margin-bottom: 80px;
+  .scroll-bottom {
+    padding-bottom: 160px;
   }
 }
 
@@ -329,4 +340,8 @@ body {
   color: var(--churches-accent);
   text-decoration: none;
   font-size: 14px;
+}
+
+a {
+  text-decoration: none;
 }

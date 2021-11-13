@@ -9,7 +9,6 @@ export const BISHOP_MEMBER_COUNT = gql`
 export const DISPLAY_MEMBER = gql`
   query($id: ID!) {
     member(id: $id) {
-      id
       firstName
       middleName
       lastName
@@ -17,21 +16,38 @@ export const DISPLAY_MEMBER = gql`
       email
       phoneNumber
       whatsappNumber
-      pictureUrl
+      dob {
+        date
+      }
       gender {
         gender
       }
       maritalStatus {
         status
       }
-      dob {
-        date
+      occupation {
+        occupation
       }
-      bishop {
+
+      #church info
+      ministry {
         id
-        firstName
-        lastName
-        fullName
+        name
+        leader {
+          firstName
+          lastName
+        }
+      }
+      occupation {
+        occupation
+      }
+      titleConnection {
+        edges {
+          dateAppointed
+          node {
+            title
+          }
+        }
       }
       bacenta {
         id
@@ -65,28 +81,7 @@ export const DISPLAY_MEMBER = gql`
           }
         }
       }
-      ministry {
-        id
-        name
-        leader {
-          firstName
-          lastName
-        }
-      }
-      occupation {
-        occupation
-      }
-      titleConnection {
-        edges {
-          dateAppointed
-          node {
-            title
-          }
-        }
-      }
-    }
-    # //History Queries
-    member(id: $id) {
+      #Personal history
       history(options: { limit: 3 }) {
         id
         timeStamp
@@ -100,9 +95,7 @@ export const DISPLAY_MEMBER = gql`
         }
         historyRecord
       }
-    }
-    # Leadership Roles
-    member(id: $id) {
+      #Leadership Information
       leadsBacenta {
         id
         name
@@ -250,10 +243,8 @@ export const DISPLAY_BACENTA = gql`
         firstName
         lastName
         fullName
+        pictureUrl
         whatsappNumber
-        title {
-          title
-        }
       }
       services {
         id

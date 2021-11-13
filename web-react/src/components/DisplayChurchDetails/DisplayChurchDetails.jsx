@@ -209,13 +209,13 @@ const DisplayChurchDetails = (props) => {
         </Row>
         <Row>
           <Col>
-            <DetailsCard heading="Status" detail="Active" />
+            <DetailsCard heading="Status" detail={props.active} />
           </Col>
           <Col className="col-auto">
-            <DetailsCard heading="Type" detail="Bacenta" />
+            <DetailsCard heading="Type" detail={props.bacentaType} />
           </Col>
           <Col>
-            <DetailsCard heading="Code" detail="0202" />
+            <DetailsCard heading="Code" detail={props.bankingCode} />
           </Col>
         </Row>
 

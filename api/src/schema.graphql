@@ -235,6 +235,7 @@ type Centre {
 # Shared Units: Bacenta, Bacenta, Sonta
 type Bacenta {
   id: ID @id
+  bankingCode: Int
   name: String
   location: Point
   centre: Centre @relationship(type: "HAS_BACENTA", direction: IN)
@@ -243,6 +244,13 @@ type Bacenta {
   meetingDay: ServiceDay @relationship(type: "MEETS_ON", direction: OUT)
   history: [HistoryLog] @relationship(type: "HAS_HISTORY", direction: OUT)
   services: [ServiceLog] @relationship(type: "HAS_HISTORY", direction: OUT)
+  labels: [String]
+    @cypher(
+      statement: """
+      MATCH (this)
+      RETURN labels(this)
+      """
+    )
 }
 
 type ServiceDay @auth(rules: [{ isAuthenticated: true }]) {

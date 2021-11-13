@@ -4,8 +4,9 @@ import React, { useContext } from 'react'
 import './DetailsCard.css'
 
 const DetailsCard = (props) => {
-  const { theme } = useContext(MemberContext)
-  const loading = !props.heading || !props.detail || props.loading
+  const { theme, currentUser } = useContext(MemberContext)
+  const loading =
+    !props.heading || !props.detail || props.loading || !currentUser.id
   return (
     <div
       className={`d-flex align-items-center detail-card ${

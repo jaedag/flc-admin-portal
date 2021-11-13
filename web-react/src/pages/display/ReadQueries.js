@@ -208,6 +208,8 @@ export const DISPLAY_BACENTA = gql`
   query($id: ID) {
     bacentas(where: { id: $id }, options: { limit: 1 }) {
       id
+      labels
+      bankingCode
       name
       location {
         longitude

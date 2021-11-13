@@ -42,7 +42,7 @@ const DetailsBacenta = () => {
   }
 
   const last3Weeks = [getWeekNumber(), getWeekNumber() - 1, getWeekNumber() - 2]
-  const lastFilledServices = bacentaData?.bacentas[0]?.services[0]?.serviceRecords.map(
+  const lastFilledServices = bacenta?.services[0]?.serviceRecords.map(
     (service) => service.week
   )
 
@@ -57,10 +57,24 @@ const DetailsBacenta = () => {
     }
   })
 
+  let bacentaType, vacation
+  if (bacenta.labels.includes('ActiveBacenta')) {
+    bacentaType = 'Bacenta'
+  }
+  if (bacenta.labels.includes('ChurchPlanter')) {
+    bacentaType = 'IC'
+  }
+  if (bacenta.labels.includes('ActiveBacenta')) {
+    vacation = true
+  }
+
   return (
     <DisplayChurchDetails
       loading={bacentaLoading}
       name={bacenta?.name}
+      bankingCode={bacenta?.bankingCode}
+      bacentaType={bacentaType}
+      active={vacation ? 'Vacation' : 'Active'}
       leaderTitle="Bacenta Leader"
       leader={bacenta?.leader}
       location={bacenta?.location}
@@ -69,17 +83,8 @@ const DetailsBacenta = () => {
       churchCount={bacenta?.meetingDay?.day}
       churchType="Bacenta"
       buttons={['']}
-      editlink="/bacenta/editbacentaπ"
-      editPermitted={[
-        'leaderBacenta',
-        'leaderCentre',
-        'leaderCampus',
-        'leaderTown',
-        'adminCampus',
-        'adminTown',
-        'adminBishop',
-        'adminFederal',
-      ]}
+      editlink="/bacenta/editbacenta"
+      editPermitted={['leaderBacenta', 'adminFederal']}
       weekNumber={getWeekNumber()}
       last3Weeks={check}
       history={bacenta?.history.length !== 0 && bacenta?.history}

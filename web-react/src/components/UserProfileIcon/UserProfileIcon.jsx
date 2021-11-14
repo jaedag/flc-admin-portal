@@ -7,9 +7,9 @@ import './UserProfileIcon.css'
 import { GET_LOGGED_IN_USER } from './UserQueries'
 import { MemberContext } from '../../contexts/MemberContext.js'
 import userIcon from '../../assets/user.png'
-import Spinner from '../Spinner'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import { transformCloudinaryImg } from 'global-utils'
+import { Spinner } from 'react-bootstrap'
 
 function UserProfileIcon() {
   const { user, isAuthenticated } = useAuth0()
@@ -74,7 +74,7 @@ function UserProfileIcon() {
       )}
       {isAuthenticated && !currentUser.email && (
         <div className="text-secondary text-center">
-          <Spinner />
+          <Spinner animation="grow" />
         </div>
       )}
       {!isAuthenticated && (

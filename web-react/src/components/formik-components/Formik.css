@@ -1,0 +1,5 @@
+.label {
+  padding-right: 10px;
+  text-decoration: none;
+  color: var(--icon);
+}

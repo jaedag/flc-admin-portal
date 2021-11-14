@@ -1,5 +1,5 @@
 import React from 'react'
-import Spinner from './Spinner'
+import { Spinner } from 'react-bootstrap'
 
 function SpinnerPage() {
   return (
@@ -7,7 +7,7 @@ function SpinnerPage() {
       <div className="row">
         <div className="col my-auto">
           <div className="spinner-border-center full-center">
-            <Spinner />
+            <Spinner animation="border" />
           </div>
         </div>
       </div>

@@ -7,7 +7,6 @@
   --text-focus: #bababa;
   --text-primary: #f5f5f5;
   --accent-color: #690c13;
-  --infobar-color: #383838;
   --text-box-inner: #121212;
   --full-black: #000000;
   --members-accent: #68e0d7;
@@ -27,7 +26,6 @@
   --accent-color: #690c13;
   --light-accent-color: #690c13;
   --border: #3d3d3dc5;
-  --infobar-color: #383838;
   --text-box-inner: #121212;
   --full-black: #000000;
   --border: #1d1d1d;
@@ -97,14 +95,6 @@ a:active {
   overflow: scroll;
 }
 
-.infobar {
-  background-color: var(--card-color);
-  border: 1px solid var(--border);
-  padding: 10px;
-  border-radius: 7px;
-  margin-bottom: 10px;
-}
-
 .card {
   background-color: var(--card-color);
   border: 1px solid var(--border);
@@ -127,12 +117,6 @@ a:active {
 
 .card-text {
   font-size: small;
-}
-
-.label {
-  font-size: small;
-  padding-right: 10px;
-  text-decoration: none;
 }
 
 .profile-img {
@@ -186,12 +170,6 @@ a:active {
 
 a:hover {
   text-decoration: none;
-}
-
-.btn-primary:disabled {
-  background-color: var(--infobar-color);
-  color: var(--text-primary);
-  border: 1px solid var(--border);
 }
 
 .form-control {
@@ -335,6 +313,9 @@ body {
   font-weight: bold;
   text-align: center;
 }
+.page-header.left {
+  text-align: left;
+}
 
 .just-text-btn {
   color: var(--churches-accent);
@@ -344,4 +325,13 @@ body {
 
 a {
   text-decoration: none;
+}
+
+.btn-main.dark {
+  background-color: var(--btn-submit);
+  width: 100%;
+}
+.btn-secondary.dark {
+  background-color: var(--card-color);
+  width: 100%;
 }

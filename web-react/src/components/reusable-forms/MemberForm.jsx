@@ -18,7 +18,7 @@ import ErrorScreen from '../base-component/ErrorScreen'
 import { BISHOP_BACENTA_DROPDOWN } from '../formik-components/ComboboxQueries'
 import FormikControl from '../formik-components/FormikControl'
 import { HeadingBar } from '../HeadingBar/HeadingBar'
-import Spinner from '../Spinner'
+import { Spinner } from 'react-bootstrap'
 
 function MemberForm({ initialValues, onSubmit, title }) {
   const { bishopId } = useContext(ChurchContext)
@@ -52,7 +52,7 @@ function MemberForm({ initialValues, onSubmit, title }) {
   if (ministriesLoading) {
     return (
       <div className="text-center p-5 m-5">
-        <Spinner />
+        <Spinner animation="grow" />
       </div>
     )
   } else if (ministriesData) {

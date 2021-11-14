@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { ErrorMessage } from 'formik'
-import Spinner from '../Spinner'
 import TextError from './TextError'
+import { Spinner } from 'react-bootstrap'
 
 function ImageUpload(props) {
   const {
@@ -48,7 +48,7 @@ function ImageUpload(props) {
       ) : null}
       {loading ? (
         <div className="container my-3">
-          <Spinner />
+          <Spinner animation="grow" />
         </div>
       ) : (
         <div>

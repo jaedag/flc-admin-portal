@@ -19,11 +19,13 @@ import {
 import React, { useContext, useState } from 'react'
 import { ChurchContext } from 'contexts/ChurchContext'
 import FormikControl from 'components/formik-components/FormikControl'
-import Spinner from 'components/Spinner'
 import { MAKE_BACENTA_INACTIVE } from 'pages/update/CloseChurchMutations'
 import { useHistory } from 'react-router'
 import Popup from 'components/Popup/Popup'
 import RoleView from 'auth/RoleView'
+import { Container, Row, Col, Button, Spinner } from 'react-bootstrap'
+import { MemberContext } from 'contexts/MemberContext'
+import './Forms.css'
 
 const BacentaForm = ({
   initialValues,
@@ -40,6 +42,7 @@ const BacentaForm = ({
     bacentaId,
     bishopId,
   } = useContext(ChurchContext)
+  const { theme } = useContext(MemberContext)
   const history = useHistory()
 
   const {
@@ -92,21 +95,23 @@ const BacentaForm = ({
       errorState={townListError || campusListError}
       data={campusListData && townListData}
     >
+      <Container>
+        <div className="page-header left">{title}</div>
+      </Container>
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={onSubmit}
       >
         {(formik) => (
-          <div className="body-card py-4 container mt-5">
-            <div className="container infobar">{title}</div>
+          <Container className="py-4">
             <Form>
               <div className="form-group">
-                <div className="row row-cols-1 row-cols-md-2">
+                <Row className="row-cols-1 row-cols-md-2">
                   {/* <!-- Basic Info Div --> */}
-                  <div className="col mb-2">
-                    <div className="form-row row-cols-2">
-                      <div className="col-8">
+                  <Col className="mb-2">
+                    <Row className="form-row">
+                      <Col>
                         <FormikControl
                           className="form-control"
                           control="select"
@@ -145,11 +150,11 @@ const BacentaForm = ({
                           }
                           defaultOption="Select a Centre"
                         />
-                      </div>
-                    </div>
+                      </Col>
+                    </Row>
 
-                    <div className="form-row row-cols-3">
-                      <div className="col-9">
+                    <Row className="form-row">
+                      <Col sm={12}>
                         <FormikControl
                           className="form-control"
                           control="input"
@@ -157,8 +162,8 @@ const BacentaForm = ({
                           label="Name of Bacenta"
                           placeholder="Name of Bacenta"
                         />
-                      </div>
-                      <div className="col-9">
+                      </Col>
+                      <Col sm={12}>
                         <FormikControl
                           className="form-control"
                           control="select"
@@ -167,7 +172,7 @@ const BacentaForm = ({
                           options={SERVICE_DAY_OPTIONS}
                           defaultOption="Pick a Service Day"
                         />
-                      </div>
+                      </Col>
                       <RoleView
                         roles={[
                           'adminFederal',
@@ -179,7 +184,7 @@ const BacentaForm = ({
                           'leaderCentre',
                         ]}
                       >
-                        <div className="col-9">
+                        <Col sm={12}>
                           <FormikControl
                             control="combobox2"
                             name="leaderId"
@@ -198,34 +203,35 @@ const BacentaForm = ({
                             className="form-control"
                             error={formik.errors.leaderId}
                           />
-                        </div>
+                        </Col>
                       </RoleView>
-                    </div>
+                    </Row>
                     <small className="text-muted">
                       Enter The Coordinates for the Service Venue
                     </small>
 
-                    <div className="row row-cols-2 d-flex align-items-center">
-                      <div className="col">
+                    <Row className="row-cols-2 d-flex align-items-center">
+                      <Col>
                         <FormikControl
                           className="form-control"
                           control="input"
                           name="venueLatitude"
                           placeholder="Latitude"
                         />
-                      </div>
-                      <div className="col">
+                      </Col>
+                      <Col>
                         <FormikControl
                           className="form-control"
                           control="input"
                           name="venueLongitude"
                           placeholder="Longitude"
                         />
-                      </div>
-                      <div className="col-auto mt-2">
-                        <button
-                          type="button"
-                          className="btn btn-primary"
+                      </Col>
+                      <Col className="my-2">
+                        <Button
+                          variant="primary"
+                          className="btn-loading"
+                          disabled={positionLoading}
                           onClick={() => {
                             setPositionLoading(true)
 
@@ -249,38 +255,42 @@ const BacentaForm = ({
                             )
                           }}
                         >
-                          Locate Me Now
-                        </button>
-
-                        {positionLoading ? (
-                          <span className="mx-3">
-                            <Spinner />
-                          </span>
-                        ) : null}
-                      </div>
-                    </div>
+                          {positionLoading ? (
+                            <>
+                              <Spinner animation="grow" size="sm" />
+                              <span> Loading</span>
+                            </>
+                          ) : (
+                            'Locate Me Now'
+                          )}
+                        </Button>
+                      </Col>
+                    </Row>
                     <small className="text-muted">
                       Click this button if you are currently at your bacenta
                       service venue
                     </small>
-                  </div>
-                </div>
+                  </Col>
+                </Row>
               </div>
-              <div className="d-flex justify-content-center">
-                <button
-                  type="submit"
-                  disabled={!formik.isValid || formik.isSubmitting}
-                  className="btn btn-primary px-5 py-3"
-                >
-                  Submit
-                </button>
-              </div>
+
+              <Button
+                variant="primary"
+                size="lg"
+                type="submit"
+                className={`btn-main ${theme}`}
+                disabled={!formik.isValid || formik.isSubmitting}
+              >
+                Submit
+              </Button>
             </Form>
             {isOpen && (
               <Popup handleClose={togglePopup}>
                 Are you sure you want to close down this bacenta?
-                <div
-                  className="btn btn-primary"
+                <Button
+                  variant="primary"
+                  type="submit"
+                  className={`btn-main ${theme}`}
                   onClick={() => {
                     CloseDownBacenta({
                       variables: {
@@ -303,19 +313,28 @@ const BacentaForm = ({
                   }}
                 >
                   {`Yes, I'm sure`}
-                </div>
-                <div className="btn btn-primary" onClick={togglePopup}>
+                </Button>
+                <Button
+                  variant="primary"
+                  className={`btn-secondary mt-2 ${theme}`}
+                  onClick={togglePopup}
+                >
                   No, take me back
-                </div>
+                </Button>
               </Popup>
             )}
 
             {!newBacenta && (
-              <div className="btn btn-primary" onClick={togglePopup}>
+              <Button
+                variant="primary"
+                size="lg"
+                className={`btn-secondary ${theme} mt-3`}
+                onClick={togglePopup}
+              >
                 Close Down Bacenta
-              </div>
+              </Button>
             )}
-          </div>
+          </Container>
         )}
       </Formik>
     </BaseComponent>

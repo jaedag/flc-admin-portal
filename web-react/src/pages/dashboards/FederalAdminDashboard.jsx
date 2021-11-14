@@ -3,12 +3,12 @@ import { useQuery } from '@apollo/client'
 import { useHistory } from 'react-router-dom'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import { GET_BISHOPS } from '../../queries/ListQueries'
-import Spinner from '../../components/Spinner.jsx'
 import Logo from '../../assets/flc-logo-small.png'
 import { MemberContext } from '../../contexts/MemberContext'
 import TabletDesktopView from 'components/responsive-design/TabletDesktopView'
 import MobileView from 'components/responsive-design/MobileView'
 import LeaderPictureIcon from 'components/LeaderPictureIcon/LeaderPictureIcon'
+import { Spinner } from 'react-bootstrap'
 
 const FederalAdminDashboard = () => {
   const { determineStream } = useContext(ChurchContext)
@@ -32,7 +32,7 @@ const FederalAdminDashboard = () => {
             <h3>FLC Admin Dashboard </h3>
             <h5 className="text-secondary">Loading...</h5>
             <div className="spinner-border-center full-center" role="status">
-              <Spinner />
+              <Spinner animation="grow" />
               <div className="sr-only">Loading...</div>
             </div>
           </div>

@@ -7,9 +7,9 @@ import {
   FEDERAL_SEARCH,
 } from './SearchQuery'
 import { MemberContext, SearchContext } from '../../contexts/MemberContext'
-import Spinner from '../../components/Spinner.jsx'
 import MemberDisplayCard from '../../components/card/MemberDisplayCard'
 import { capitalise, isAuthorised } from 'global-utils.js'
+import { Spinner } from 'react-bootstrap'
 
 const SearchPageMobile = () => {
   const { searchKey } = useContext(SearchContext)
@@ -102,7 +102,7 @@ const SearchPageMobile = () => {
         <MobileSearchNav />
         <div className="container body-container text-center">
           <div className="mt-5">
-            <Spinner />
+            <Spinner animation="grow" />
           </div>
         </div>
       </>

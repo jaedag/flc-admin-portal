@@ -5,3 +5,21 @@
 .bg-dark {
   background: #000;
 }
+
+.bg-nav.dark {
+  background-color: var(--card);
+  color: var(--text-primary);
+}
+
+.nav-btn {
+  background-color: #302f2f;
+  padding: 20px 0px;
+  margin: 5px 0px;
+  padding-left: 30px;
+  text-align: center;
+}
+
+.footer {
+  padding: 10px;
+  background-color: #3b3b3b;
+}

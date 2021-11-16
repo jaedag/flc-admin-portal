@@ -6,7 +6,7 @@ import './ServiceDetails.css'
 
 const ServiceDetails = ({ service, church }) => {
   return (
-    <Container className="scroll-bottom">
+    <Container>
       <HeadingPrimary>{`${church.__typename} Service Details`}</HeadingPrimary>
       <HeadingSecondary>{`${church.name} ${church.__typename}`}</HeadingSecondary>
       <Row>

@@ -91,7 +91,7 @@ const ServiceForm = ({
       onSubmit={onSubmit}
     >
       {(formik) => (
-        <Container className="scroll-bottom">
+        <Container>
           <HeadingPrimary>Record Your Service Details</HeadingPrimary>
           <h5 className="text-secondary">{`${church?.name} ${church?.__typename}`}</h5>
 

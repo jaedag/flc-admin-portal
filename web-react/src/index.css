@@ -2,7 +2,7 @@
 :root .dark {
   --body-bg: #121212;
   --icon: #909090;
-  --card-color: #1e1c1c;
+  --card: #1e1c1c;
   --icon-highlighted-color: white;
   --text-focus: #bababa;
   --text-primary: #f5f5f5;
@@ -19,7 +19,7 @@
 :root .light {
   --body-bg: #f1f0f0;
   --icon: #909090;
-  --card-color: #212121;
+  --card: #212121;
   --icon-highlighted-color: white;
   --text-focus: #bababa;
   --text-primary: black;
@@ -60,11 +60,6 @@
   background-color: var(--text-box-inner);
 }
 
-/* a,
-a:hover,
-a:active {
-  color: white;
-} */
 .font-primary {
   color: var(--text-primary);
 }
@@ -95,12 +90,12 @@ a:active {
 /* Component Styling */
 
 .card {
-  background-color: var(--card-color);
+  background-color: var(--card);
   border: 1px solid var(--border);
 }
 
 .member-info-card {
-  background-color: var(--card-color);
+  background-color: var(--card);
   border: 1px solid var(--border);
   border-radius: 7px;
 }
@@ -169,10 +164,6 @@ a:active {
   color: var(--text-primary);
   background-color: #921b19;
   border-color: none;
-}
-
-a:hover {
-  text-decoration: none;
 }
 
 .form-control {
@@ -289,6 +280,6 @@ a {
   width: 100%;
 }
 .btn-secondary.dark {
-  background-color: var(--card-color);
+  background-color: var(--card);
   width: 100%;
 }

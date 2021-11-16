@@ -179,32 +179,39 @@ const Navigator = () => {
   assessmentChurchData = servant && getServantRoles(servant)
 
   return (
-    <>
-      <Navbar
-        collapseOnSelect
-        bg={theme}
-        variant={theme}
-        expand="lg"
-        sticky="top"
-        defaultActiveKey="0"
-      >
-        <Container>
-          {/* <Navbar.Brand as={Link} to="/">
-          <img
-            src={logo}
-            width="30"
-            height="30"
-            className="d-inline-block align-top"
-            alt="FLC Admin Logo"
-          />{' '}
-          FLC Admin
-        </Navbar.Brand> */}
-          <Navbar.Toggle
-            aria-controls="basic-navbar-nav"
-            className="nav-toggler"
-          />
-          <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="me-auto">
+    <Navbar
+      collapseOnSelect
+      bg={theme}
+      variant={theme}
+      expand="md"
+      sticky="top"
+      defaultActiveKey="0"
+    >
+      <Container fluid>
+        <Navbar.Toggle
+          aria-controls="offcanvasNavbar"
+          className="nav-toggler"
+        />
+
+        <Navbar.Offcanvas
+          id="offcanvasNavbar"
+          aria-labelledby="offcanvasNavbarLabel"
+          placement="start"
+          className={`bg-nav ${theme}`}
+        >
+          <Offcanvas.Header closeButton>
+            <Offcanvas.Title id="offcanvasNavbarLabel">
+              <img
+                src={logo}
+                width="50"
+                height="50"
+                className="d-inline-block align-top"
+                alt="FLC Admin Logo"
+              />
+            </Offcanvas.Title>
+          </Offcanvas.Header>
+          <Offcanvas.Body>
+            <Nav className="justify-content-start flex-grow-1 pe-3">
               {menuItems.map((menuItem, index) => (
                 <RoleView key={index} roles={menuItem.roles}>
                   <Nav.Link
@@ -213,83 +220,29 @@ const Navigator = () => {
                     Icon={menuItem.Icon}
                     exact={menuItem.exact}
                     to={menuItem.to}
+                    className="font-primary nav-btn"
                   >
                     {menuItem.name}
                   </Nav.Link>
                 </RoleView>
               ))}
             </Nav>
-          </Navbar.Collapse>
-          <Navbar.Collapse className="justify-content-end">
+            <Form className="d-flex">
+              <FormControl
+                type="search"
+                placeholder="Search"
+                className="me-2"
+                aria-label="Search"
+              />
+              <Button variant="outline-success">Search</Button>
+            </Form>
+          </Offcanvas.Body>
+          <Container className="footer">
             <UserProfileIcon />
-          </Navbar.Collapse>
-        </Container>
-      </Navbar>
-
-      <Navbar
-        collapseOnSelect
-        bg={theme}
-        variant={theme}
-        expand="md"
-        sticky="top"
-        defaultActiveKey="0"
-      >
-        <Container fluid>
-          <Navbar.Toggle
-            aria-controls="offcanvasNavbar"
-            className="nav-toggler"
-          />
-
-          <Navbar.Offcanvas
-            id="offcanvasNavbar"
-            aria-labelledby="offcanvasNavbarLabel"
-            placement="start"
-          >
-            <Offcanvas.Header closeButton>
-              <Offcanvas.Title id="offcanvasNavbarLabel">
-                <img
-                  src={logo}
-                  width="30"
-                  height="30"
-                  className="d-inline-block align-top"
-                  alt="FLC Admin Logo"
-                />{' '}
-                flc admin
-              </Offcanvas.Title>
-            </Offcanvas.Header>
-            <Offcanvas.Body>
-              <Nav className="justify-content-start flex-grow-1 pe-3">
-                {menuItems.map((menuItem, index) => (
-                  <RoleView key={index} roles={menuItem.roles}>
-                    <Nav.Link
-                      as={Link}
-                      eventKey={index}
-                      Icon={menuItem.Icon}
-                      exact={menuItem.exact}
-                      to={menuItem.to}
-                    >
-                      {menuItem.name}
-                    </Nav.Link>
-                  </RoleView>
-                ))}
-              </Nav>
-              <Form className="d-flex">
-                <FormControl
-                  type="search"
-                  placeholder="Search"
-                  className="me-2"
-                  aria-label="Search"
-                />
-                <Button variant="outline-success">Search</Button>
-              </Form>
-            </Offcanvas.Body>
-            <Container>
-              <UserProfileIcon />
-            </Container>
-          </Navbar.Offcanvas>
-        </Container>
-      </Navbar>
-    </>
+          </Container>
+        </Navbar.Offcanvas>
+      </Container>
+    </Navbar>
   )
 }
 

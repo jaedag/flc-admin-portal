@@ -12,15 +12,13 @@ import {
   Row,
   useAccordionButton,
 } from 'react-bootstrap'
-import { CaretDownFill, Search } from 'react-bootstrap-icons'
-import { MemberContext } from 'contexts/MemberContext'
+import { CaretDownFill } from 'react-bootstrap-icons'
 import './MembersGrid.css'
 import Filters from './Filters'
 
 const MembersGrid = (props) => {
   const { memberData, memberError, memberLoading, title } = props
   const { filters } = useContext(ChurchContext)
-  const { theme } = useContext(MemberContext)
   const [dimensions, setDimensions] = useState({
     height: window.innerHeight,
     width: window.innerWidth,
@@ -78,11 +76,6 @@ const MembersGrid = (props) => {
           </PlaceholderCustom>
         </div>
         <div className="align-middle">
-          <button
-            className={`search-btn search-btn-member-grid ${theme} my-auto`}
-          >
-            <Search />
-          </button>
           <input
             className="form-control member-search"
             placeholder="Search Members"

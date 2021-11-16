@@ -57,7 +57,7 @@ const MemberDisplay = ({ memberId }) => {
           </PlaceholderCustom>
         </Col>
         <Col>
-          <PlaceholderCustom as="h3">
+          <PlaceholderCustom as="h3" loading={!member?.pictureUrl || loading}>
             <h3>{nameAndTitle}</h3>
           </PlaceholderCustom>
           <MemberRoleList member={member} />

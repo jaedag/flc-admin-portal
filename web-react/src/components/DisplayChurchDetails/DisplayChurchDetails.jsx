@@ -91,7 +91,7 @@ const DisplayChurchDetails = (props) => {
   //End of Admin Change
 
   return (
-    <div className="scroll-bottom">
+    <>
       <div className="py-2 top-heading title-bar">
         <Container>
           <Breadcrumb breadcrumb={props.breadcrumb} />
@@ -392,7 +392,7 @@ const DisplayChurchDetails = (props) => {
           <Timeline record={props.history} modifier="church" limit={5} />
         </Container>
       )}
-    </div>
+    </>
   )
 }
 

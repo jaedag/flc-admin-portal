@@ -63,7 +63,7 @@ function MemberForm({ initialValues, onSubmit, title, loadingState }) {
         onSubmit={onSubmit}
       >
         {(formik) => (
-          <Container className="scroll-bottom">
+          <Container>
             <h3 className="my-3 text-center">{title}</h3>
             <Form className="form-group">
               <Row className="row-cols-1">

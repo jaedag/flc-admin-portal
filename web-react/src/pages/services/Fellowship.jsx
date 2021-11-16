@@ -3,7 +3,7 @@ import PlaceholderCustom from 'components/Placeholder'
 import { MemberContext } from 'contexts/MemberContext'
 import React, { useContext } from 'react'
 import { Container } from 'react-bootstrap'
-import { XCircleFill } from 'react-bootstrap-icons'
+import { PencilSquare, XCircleFill } from 'react-bootstrap-icons'
 import { useHistory } from 'react-router'
 
 const Fellowship = () => {
@@ -21,6 +21,7 @@ const Fellowship = () => {
 
         <div className="d-grid gap-2 mt-5 text-left">
           <MenuButton
+            iconComponent={PencilSquare}
             title="Fill Service Form"
             color="members"
             onClick={() => history.push(`/services/fellowship/form`)}

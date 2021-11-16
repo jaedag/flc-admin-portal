@@ -33,29 +33,46 @@ export const UPDATE_MEMBER_MUTATION = gql`
       ministry: $ministry
       pictureUrl: $pictureUrl
     ) {
-      id
       firstName
       middleName
       lastName
       fullName
       email
       phoneNumber
-      whatsappNumber
       pictureUrl
+      whatsappNumber
+      dob {
+        date
+      }
       gender {
         gender
       }
       maritalStatus {
         status
       }
-      dob {
-        date
+      occupation {
+        occupation
       }
-      bishop {
+
+      #church info
+      ministry {
         id
-        firstName
-        lastName
-        fullName
+        name
+        leader {
+          firstName
+          lastName
+        }
+      }
+      occupation {
+        occupation
+      }
+      titleConnection {
+        edges {
+          dateAppointed
+          node {
+            title
+          }
+        }
       }
       bacenta {
         id
@@ -89,20 +106,7 @@ export const UPDATE_MEMBER_MUTATION = gql`
           }
         }
       }
-      ministry {
-        id
-        name
-        leader {
-          firstName
-          lastName
-        }
-      }
-      occupation {
-        occupation
-      }
-      title {
-        title
-      }
+      #Personal history
       history(options: { limit: 3 }) {
         id
         timeStamp
@@ -116,6 +120,7 @@ export const UPDATE_MEMBER_MUTATION = gql`
         }
         historyRecord
       }
+      #Leadership Information
       leadsBacenta {
         id
         name

@@ -1,15 +1,18 @@
+import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
+import HeadingSecondary from 'components/HeadingSecondary'
 import React from 'react'
+import { Col, Container, Row } from 'react-bootstrap'
 import './ServiceDetails.css'
 
 const ServiceDetails = ({ service, church }) => {
   return (
-    <div className="py-4 container mt-2">
-      <div className="container infobar">{`${church.__typename} Service Details`}</div>
-
-      <div className="row">
-        <div className="col mb-2">
+    <Container>
+      <HeadingPrimary>{`${church.__typename} Service Details`}</HeadingPrimary>
+      <HeadingSecondary>{`${church.name} ${church.__typename}`}</HeadingSecondary>
+      <Row>
+        <Col>
           {service?.attendance ? (
-            <div className="row d-flex justify-content-center">
+            <Row className="d-flex justify-content-center">
               <h5>{`${church.name} ${church.__typename}`}</h5>
 
               <table className="table table-dark table-striped">
@@ -53,7 +56,7 @@ const ServiceDetails = ({ service, church }) => {
                   />
                 </div>
               </div>
-            </div>
+            </Row>
           ) : (
             <>
               <div>{`No Service was held on ${new Date(
@@ -62,9 +65,9 @@ const ServiceDetails = ({ service, church }) => {
               <div>{`Reason: ${service.noServiceReason}`}</div>
             </>
           )}
-        </div>
-      </div>
-    </div>
+        </Col>
+      </Row>
+    </Container>
   )
 }
 

@@ -8,6 +8,8 @@ import { BISHOP_MEMBER_DROPDOWN } from 'queries/ListQueries'
 import React, { useContext } from 'react'
 import { useHistory } from 'react-router'
 import { ServiceContext } from 'contexts/ServiceContext'
+import { Col, Container, Row } from 'react-bootstrap'
+import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 
 const ServiceForm = ({
   church,
@@ -87,25 +89,16 @@ const ServiceForm = ({
       onSubmit={onSubmit}
     >
       {(formik) => (
-        <div className="py-4 container mt-2">
-          <div className="container infobar">Record Your Service Details</div>
+        <Container>
+          <HeadingPrimary>Record Your Service Details</HeadingPrimary>
+          <h5 className="text-secondary">{`${church.name} ${church.__typename}`}</h5>
 
           <Form className="form-group">
-            <div className="row row-cols-1 row-cols-md-2">
+            <Row className="row-cols-1 row-cols-md-2">
               {/* <!-- Service Form--> */}
-              <div className="col mb-2">
+              <Col className="mb-2">
                 <div className="form-row d-flex justify-content-center">
-                  <h5>{`${church.name} ${church.__typename}`}</h5>
-
-                  <div className="col-11">
-                    <div
-                      className="btn btn-primary"
-                      onClick={() => {
-                        history.push(`/${churchType}/cancel-service`)
-                      }}
-                    >
-                      {`I Didn't Have My Service This Week`}
-                    </div>
+                  <Col>
                     <small htmlFor="dateofservice" className="form-text label">
                       Date of Service*
                       <i className="text-secondary">(Day/Month/Year)</i>
@@ -214,12 +207,12 @@ const ServiceForm = ({
                         Submit
                       </button>
                     </div>
-                  </div>
+                  </Col>
                 </div>
-              </div>
-            </div>
+              </Col>
+            </Row>
           </Form>
-        </div>
+        </Container>
       )}
     </Formik>
   )

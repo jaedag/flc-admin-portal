@@ -4,36 +4,46 @@ import { capitalise } from 'global-utils'
 import React, { useContext } from 'react'
 import { Button, Col, Row } from 'react-bootstrap'
 
-const MenuButton = ({ icon, title, color, caption, onClick, iconBg }) => {
+const MenuButton = (props) => {
   const { theme, currentUser } = useContext(MemberContext)
 
   return (
     <Button
-      onClick={onClick}
+      onClick={props.onClick}
       variant="primary"
       size="lg"
-      className={`${theme} ${color} menu-buttons`}
+      className={`${theme} ${props.color} menu-buttons`}
     >
       <Row>
-        <Col xs="auto" className="btn-left-col my-auto">
-          <PlaceholderCustom
-            loading={!currentUser.fullName}
-            className="rounded-circle"
-            as="div"
-          >
-            <div className={iconBg && `rounded-circle gradient-bg`}>
-              <img src={icon} className="square-img" />
-            </div>
-          </PlaceholderCustom>
-        </Col>
+        {props.icon ||
+          (props.iconComponent && (
+            <Col xs="auto" className="btn-left-col my-auto">
+              <PlaceholderCustom
+                loading={!currentUser.fullName}
+                className="rounded-circle"
+                as="div"
+              >
+                <div
+                  className={
+                    props.iconBg && `rounded-circle gradient-bg ${props.color}`
+                  }
+                >
+                  {props.icon && (
+                    <img src={props.icon} className="square-img" />
+                  )}
+                  {props.iconComponent && <props.iconComponent />}
+                </div>
+              </PlaceholderCustom>
+            </Col>
+          ))}
 
         <Col className="btn-right-col">
           <PlaceholderCustom loading={!currentUser.fullName} as="div" xs={10}>
-            <span className> {capitalise(title)}</span>
+            <span> {capitalise(props.title)}</span>
           </PlaceholderCustom>
           <PlaceholderCustom loading={!currentUser.fullName} as="div" xs={10}>
             <small className="text-secondary dark menu-caption">
-              {caption}
+              {props.caption}
             </small>
           </PlaceholderCustom>
         </Col>

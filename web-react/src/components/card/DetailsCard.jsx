@@ -5,8 +5,12 @@ import './DetailsCard.css'
 
 const DetailsCard = (props) => {
   const { theme, currentUser } = useContext(MemberContext)
-  const loading =
-    !props.heading || !props.detail || props.loading || !currentUser.id
+  const loading = !props.heading || props.loading || !currentUser.id
+
+  if (!props.detail) {
+    return null
+  }
+
   return (
     <div
       className={`d-flex align-items-center detail-card ${

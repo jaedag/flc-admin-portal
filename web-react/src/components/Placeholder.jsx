@@ -9,7 +9,7 @@ const PlaceholderCustom = ({ loading, children, as, size, xs, ...rest }) => {
   return (
     <>
       {loading || !isAuthenticated ? (
-        <Placeholder as={as} animation="wave" {...rest}>
+        <Placeholder as={as ?? 'div'} animation="wave" {...rest}>
           <Placeholder
             xs={xs ?? 8}
             size={size ?? 'lg'}

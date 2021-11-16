@@ -11,7 +11,7 @@ import MenuButton from 'components/buttons/MenuButton'
 import { useHistory } from 'react-router'
 
 const Directory = () => {
-  const { currentUser } = useContext(MemberContext)
+  const { currentUser, theme } = useContext(MemberContext)
   const { data } = useQuery(SERVANT_CHURCHES_COUNT, {
     variables: { id: currentUser.id },
   })
@@ -86,7 +86,7 @@ const Directory = () => {
         <PlaceholderCustom loading={!currentUser.fullName} xs={12} as="h1">
           <div className="text-center">
             <h1 className="mb-0  page-header">{`${currentUser.fullName}'s`}</h1>
-            <p className="dark menu-subheading">Directory</p>
+            <p className={`${theme} menu-subheading`}>Directory</p>
           </div>
         </PlaceholderCustom>
 

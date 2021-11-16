@@ -7,7 +7,7 @@
   --text-focus: #bababa;
   --text-primary: #f5f5f5;
   --accent-color: #690c13;
-  --text-box-inner: #121212;
+  --text-box-inner: #242424;
   --full-black: #000000;
   --members-accent: #68e0d7;
   --churches-accent: #a9e631;
@@ -120,8 +120,12 @@ a:active {
 }
 
 .profile-img {
-  width: 200px;
+  width: 150px;
+  border-radius: 100px;
   height: intrinsic;
+}
+.profile-img.placeholder-wave {
+  height: 150px;
 }
 
 .img-search {
@@ -175,9 +179,10 @@ a:hover {
 .form-control {
   background-color: var(--text-box-inner);
   color: var(--text-focus-white);
-  border: 1px solid var(--border);
-  border-radius: 5px;
+  border: none;
+  border-radius: 10px;
   margin: 5px 5px 5px 0px;
+  height: 50px;
 }
 
 .form-control:focus {

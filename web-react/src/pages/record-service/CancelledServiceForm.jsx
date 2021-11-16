@@ -6,8 +6,13 @@ import { useHistory } from 'react-router'
 import { ServiceContext } from 'contexts/ServiceContext'
 import { RECORD_CANCELLED_SERVICE } from './RecordServiceMutations'
 import { useMutation } from '@apollo/client'
+import { Button, Col, Container, Row } from 'react-bootstrap'
+import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
+import HeadingSecondary from 'components/HeadingSecondary'
+import { MemberContext } from 'contexts/MemberContext'
 
 const CancelledServiceForm = ({ church, churchId, churchType }) => {
+  const { theme } = useContext(MemberContext)
   const { setServiceRecordId } = useContext(ServiceContext)
   const history = useHistory()
 
@@ -47,17 +52,16 @@ const CancelledServiceForm = ({ church, churchId, churchType }) => {
       onSubmit={onSubmit}
     >
       {(formik) => (
-        <div className="py-4 container mt-2">
-          <div className="container infobar">I Cancelled My Service</div>
+        <Container>
+          <HeadingPrimary>I Cancelled My Service</HeadingPrimary>
+          <HeadingSecondary>{`${church.name} ${church.__typename}`}</HeadingSecondary>
 
-          <Form className="form-group">
-            <div className="row row-cols-1 row-cols-md-2">
+          <Form className="form-group mt-5">
+            <Row className="row-cols-1 row-cols-md-2">
               {/* <!-- Service Form--> */}
-              <div className="col mb-2">
+              <Col className="mb-2">
                 <div className="form-row d-flex justify-content-center">
-                  <h5>{`${church.name} ${church.__typename}`}</h5>
-
-                  <div className="col-11">
+                  <Col>
                     <small htmlFor="dateofservice" className="form-text label">
                       Date of Service*
                       <i className="text-secondary">(Day/Month/Year)</i>
@@ -78,20 +82,22 @@ const CancelledServiceForm = ({ church, churchId, churchType }) => {
                     />
 
                     <div className="d-flex justify-content-center mt-5">
-                      <button
+                      <Button
+                        variant="primary"
+                        size="lg"
                         type="submit"
+                        className={`btn-main ${theme}`}
                         disabled={!formik.isValid || formik.isSubmitting}
-                        className="btn btn-primary px-5 py-3"
                       >
                         Submit
-                      </button>
+                      </Button>
                     </div>
-                  </div>
+                  </Col>
                 </div>
-              </div>
-            </div>
+              </Col>
+            </Row>
           </Form>
-        </div>
+        </Container>
       )}
     </Formik>
   )

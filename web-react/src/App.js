@@ -66,6 +66,7 @@ import Members from 'pages/directory/Members'
 import ChurchDirectoryRoute from 'auth/ChurchDirectoryRoute'
 import MembersDirectoryRoute from './auth/MembersDirectoryRoute.jsx'
 import UserDashboard from 'pages/dashboards/UserDashboard'
+import Fellowship from 'pages/services/Fellowship.jsx'
 
 const PastorsAdmin = () => {
   const [church, setChurch] = useState(
@@ -424,6 +425,11 @@ const PastorsAdmin = () => {
                       exact
                     />
                     <Route path="/services" component={Services} exact />
+                    <ProtectedRoute
+                      path="/services/fellowship"
+                      component={Fellowship}
+                      exact
+                    />
                     <Route path="/arrivals" component={Arrivals} exact />
                     <Route path="/campaigns" component={Campaigns} exact />
                     <Route path="/recon" component={Reconciliation} exact />
@@ -866,7 +872,7 @@ const PastorsAdmin = () => {
                         'adminTown',
                         'leaderBacenta',
                       ]}
-                      path="/bacenta/cancel-service"
+                      path="/services/fellowship/no-service"
                       component={BacentaServiceCancelled}
                     />
                     <ProtectedRoute
@@ -877,7 +883,7 @@ const PastorsAdmin = () => {
                         'adminTown',
                         'leaderBacenta',
                       ]}
-                      path="/bacenta/record-service"
+                      path="/services/fellowship/form"
                       component={BacentaService}
                     />
                     <ProtectedRoute

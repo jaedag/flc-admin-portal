@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { ErrorMessage } from 'formik'
 import TextError from './TextError'
 import { Container, Spinner, Button } from 'react-bootstrap'
+import { MemberContext } from 'contexts/MemberContext'
 
 function ImageUpload(props) {
   const {
@@ -13,6 +14,7 @@ function ImageUpload(props) {
     placeholder,
     ...rest
   } = props
+  const { theme } = useContext(MemberContext)
   const [loading, setLoading] = useState(false)
   const [image, setImage] = useState('')
 
@@ -54,7 +56,7 @@ function ImageUpload(props) {
         <>
           <img
             src={image || initialValue}
-            className="profile-img rounded my-3"
+            className="profile-img my-3"
             alt=""
           />
         </>
@@ -69,7 +71,11 @@ function ImageUpload(props) {
           onChange={uploadImage}
           {...rest}
         />
-        <Button variant="primary" size="lg">
+        <Button
+          className={`btn-secondary ${theme}`}
+          variant="primary"
+          size="lg"
+        >
           {placeholder}
         </Button>
       </label>

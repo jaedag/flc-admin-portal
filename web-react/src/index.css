@@ -29,11 +29,11 @@
   background-color: var(--text-box-inner);
 }
 
-/* a,
+a,
 a:hover,
 a:active {
   color: white;
-} */
+}
 
 .spinner-border-center {
   margin-left: auto;

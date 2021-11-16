@@ -1,6 +1,6 @@
 .report-picture {
-  max-width: 300px;
-  max-height: 170px;
+  width: 300px;
+  /* height: 170px; */
   margin: 10px;
 }
 

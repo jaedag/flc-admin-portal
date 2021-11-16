@@ -8,8 +8,9 @@ import { BISHOP_MEMBER_DROPDOWN } from 'queries/ListQueries'
 import React, { useContext } from 'react'
 import { useHistory } from 'react-router'
 import { ServiceContext } from 'contexts/ServiceContext'
-import { Col, Container, Row } from 'react-bootstrap'
+import { Button, Col, Container, Row } from 'react-bootstrap'
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
+import { MemberContext } from 'contexts/MemberContext'
 
 const ServiceForm = ({
   church,
@@ -18,6 +19,7 @@ const ServiceForm = ({
   RecordServiceMutation,
 }) => {
   const { bishopId } = useContext(ChurchContext)
+  const { theme } = useContext(MemberContext)
   const { setServiceRecordId } = useContext(ServiceContext)
   const history = useHistory()
 
@@ -89,9 +91,9 @@ const ServiceForm = ({
       onSubmit={onSubmit}
     >
       {(formik) => (
-        <Container>
+        <Container className="scroll-bottom">
           <HeadingPrimary>Record Your Service Details</HeadingPrimary>
-          <h5 className="text-secondary">{`${church.name} ${church.__typename}`}</h5>
+          <h5 className="text-secondary">{`${church?.name} ${church?.__typename}`}</h5>
 
           <Form className="form-group">
             <Row className="row-cols-1 row-cols-md-2">
@@ -147,8 +149,8 @@ const ServiceForm = ({
                         return (
                           <>
                             {treasurers.map((treasurer, index) => (
-                              <div key={index} className="form-row">
-                                <div className="col">
+                              <Row key={index} className="form-row">
+                                <Col>
                                   <FormikControl
                                     control="combobox2"
                                     name={`treasurers[${index}]`}
@@ -168,7 +170,7 @@ const ServiceForm = ({
                                       formik.errors.treasurers[index]
                                     }
                                   />
-                                </div>
+                                </Col>
 
                                 <div className="col-auto d-flex">
                                   <PlusSign onClick={() => push()} />
@@ -176,36 +178,48 @@ const ServiceForm = ({
                                     <MinusSign onClick={() => remove(index)} />
                                   )}
                                 </div>
-                              </div>
+                              </Row>
                             ))}
                           </>
                         )
                       }}
                     </FieldArray>
-                    <FormikControl
-                      control="imageUpload"
-                      name="treasurerSelfie"
-                      uploadPreset={process.env.REACT_APP_CLOUDINARY_TREASURERS}
-                      placeholder="Upload Treasurer Selfie"
-                      setFieldValue={formik.setFieldValue}
-                      aria-describedby="ImageUpload"
-                    />
-                    <FormikControl
-                      control="imageUpload"
-                      name="servicePicture"
-                      uploadPreset={process.env.REACT_APP_CLOUDINARY_SERVICES}
-                      placeholder="Upload a Picture of Your Service"
-                      setFieldValue={formik.setFieldValue}
-                      aria-describedby="UploadServicePicture"
-                    />
-                    <div className="d-flex justify-content-center">
-                      <button
+                    <Col className="my-2 mt-5">
+                      <small>Upload Treasurer Selfie</small>
+                      <FormikControl
+                        control="imageUpload"
+                        name="treasurerSelfie"
+                        uploadPreset={
+                          process.env.REACT_APP_CLOUDINARY_TREASURERS
+                        }
+                        placeholder="Choose"
+                        setFieldValue={formik.setFieldValue}
+                        aria-describedby="ImageUpload"
+                      />
+                    </Col>
+                    <Col className="my-2">
+                      <small className="mb-3">
+                        Upload a Picture of Your Service
+                      </small>
+                      <FormikControl
+                        control="imageUpload"
+                        name="servicePicture"
+                        uploadPreset={process.env.REACT_APP_CLOUDINARY_SERVICES}
+                        placeholder="Choose"
+                        setFieldValue={formik.setFieldValue}
+                        aria-describedby="UploadServicePicture"
+                      />
+                    </Col>
+                    <div className="d-flex justify-content-center mt-5">
+                      <Button
+                        variant="primary"
+                        size="lg"
                         type="submit"
+                        className={`btn-main ${theme}`}
                         disabled={!formik.isValid || formik.isSubmitting}
-                        className="btn btn-primary px-5 py-3"
                       >
                         Submit
-                      </button>
+                      </Button>
                     </div>
                   </Col>
                 </div>

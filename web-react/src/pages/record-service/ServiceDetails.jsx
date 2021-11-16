@@ -6,15 +6,13 @@ import './ServiceDetails.css'
 
 const ServiceDetails = ({ service, church }) => {
   return (
-    <Container>
+    <Container className="scroll-bottom">
       <HeadingPrimary>{`${church.__typename} Service Details`}</HeadingPrimary>
       <HeadingSecondary>{`${church.name} ${church.__typename}`}</HeadingSecondary>
       <Row>
         <Col>
           {service?.attendance ? (
             <Row className="d-flex justify-content-center">
-              <h5>{`${church.name} ${church.__typename}`}</h5>
-
               <table className="table table-dark table-striped">
                 <tbody>
                   <tr>
@@ -40,7 +38,7 @@ const ServiceDetails = ({ service, church }) => {
                 </tbody>
               </table>
               <div className="text-center">
-                <div>Treasurer Selfie</div>
+                <h6>Treasurer Selfie</h6>
                 <div>
                   <img
                     className="report-picture"
@@ -48,7 +46,7 @@ const ServiceDetails = ({ service, church }) => {
                   />
                 </div>
 
-                <div>Service Picture</div>
+                <h6>Service Picture</h6>
                 <div>
                   <img
                     className="report-picture"
@@ -62,7 +60,7 @@ const ServiceDetails = ({ service, church }) => {
               <div>{`No Service was held on ${new Date(
                 service?.serviceDate.date
               ).toDateString()}`}</div>
-              <div>{`Reason: ${service.noServiceReason}`}</div>
+              <div>{`Reason: ${service?.noServiceReason}`}</div>
             </>
           )}
         </Col>

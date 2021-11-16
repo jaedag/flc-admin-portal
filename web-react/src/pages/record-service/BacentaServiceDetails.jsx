@@ -7,6 +7,7 @@ import { ServiceContext } from 'contexts/ServiceContext'
 
 import ServiceDetails from './ServiceDetails'
 import { throwErrorMsg } from 'global-utils'
+import BaseComponent from 'components/base-component/BaseComponent'
 
 const BacentaServiceDetails = () => {
   const { bacentaId } = useContext(ChurchContext)
@@ -17,13 +18,13 @@ const BacentaServiceDetails = () => {
   throwErrorMsg(error)
 
   return (
-    // <BaseComponent loadingState={loading} errorState={error} data={data}>
-    <ServiceDetails
-      loading={loading}
-      service={data?.serviceRecords[0]}
-      church={data?.bacentas[0]}
-    />
-    // {/* </BaseComponent> */}
+    <BaseComponent loadingState={loading} errorState={error} data={data}>
+      <ServiceDetails
+        loading={loading}
+        service={data?.serviceRecords[0]}
+        church={data?.bacentas[0]}
+      />
+    </BaseComponent>
   )
 }
 

@@ -90,6 +90,7 @@ const BacentaForm = ({ initialValues, onSubmit, title, newBacenta }) => {
   if (loadingState || !initialValues.bacentaName) {
     return <LoadingScreen />
   }
+
   return (
     <>
       <Container>

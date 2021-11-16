@@ -7,6 +7,8 @@ import { Button, Col, Row } from 'react-bootstrap'
 const MenuButton = (props) => {
   const { theme, currentUser } = useContext(MemberContext)
 
+  const icon = props.icon || props.iconComponent
+
   return (
     <Button
       onClick={props.onClick}
@@ -15,27 +17,24 @@ const MenuButton = (props) => {
       className={`${theme} ${props.color} menu-buttons`}
     >
       <Row>
-        {props.icon ||
-          (props.iconComponent && (
-            <Col xs="auto" className="btn-left-col my-auto">
-              <PlaceholderCustom
-                loading={!currentUser.fullName}
-                className="rounded-circle"
-                as="div"
+        {icon && (
+          <Col xs="auto" className="btn-left-col my-auto">
+            <PlaceholderCustom
+              loading={!currentUser.fullName}
+              className="rounded-circle"
+              as="div"
+            >
+              <div
+                className={
+                  props.iconBg && `rounded-circle gradient-bg ${props.color}`
+                }
               >
-                <div
-                  className={
-                    props.iconBg && `rounded-circle gradient-bg ${props.color}`
-                  }
-                >
-                  {props.icon && (
-                    <img src={props.icon} className="square-img" />
-                  )}
-                  {props.iconComponent && <props.iconComponent />}
-                </div>
-              </PlaceholderCustom>
-            </Col>
-          ))}
+                {props.icon && <img src={props.icon} className="square-img" />}
+                {props.iconComponent && <props.iconComponent />}
+              </div>
+            </PlaceholderCustom>
+          </Col>
+        )}
 
         <Col className="btn-right-col">
           <PlaceholderCustom loading={!currentUser.fullName} as="div" xs={10}>

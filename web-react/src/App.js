@@ -67,6 +67,7 @@ import ChurchDirectoryRoute from 'auth/ChurchDirectoryRoute'
 import MembersDirectoryRoute from './auth/MembersDirectoryRoute.jsx'
 import UserDashboard from 'pages/dashboards/UserDashboard'
 import Fellowship from 'pages/services/Fellowship.jsx'
+import Nav from 'pages/dashboards/Nav.jsx'
 
 const PastorsAdmin = () => {
   const [church, setChurch] = useState(
@@ -92,7 +93,7 @@ const PastorsAdmin = () => {
   const [serviceRecordId, setServiceRecordId] = useState(
     sessionStorage.getItem('serviceRecordsId')
       ? sessionStorage.getItem('serviceRecordsId')
-      : 'fd650cf3-50ce-428c-aa22-d6af5d0d4597'
+      : '3aab41f1-ef89-4e91-8904-97a4324c6e6d'
   )
   const [centreId, setCentreId] = useState(
     sessionStorage.getItem('centreId') ? sessionStorage.getItem('centreId') : ''
@@ -413,6 +414,7 @@ const PastorsAdmin = () => {
                     {/* Landing Pages - Dashboards for Different Roles */}
 
                     <Route path="/" component={UserDashboard} exact />
+                    <Route path="/nav" component={Nav} exact />
                     <Route path="/directory" component={Directory} exact />
                     <ChurchDirectoryRoute
                       path="/directory/churches"

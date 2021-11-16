@@ -1,26 +1,29 @@
-import React, { useContext, useEffect, useState } from 'react'
-import './SideNav.css'
-import logo from '../../assets/flc-logo-red.png'
-import {
-  ArrowLeftSquareFill,
-  ArrowRightSquareFill,
-  Search,
-} from 'react-bootstrap-icons'
-import UserProfileIcon from 'components/UserProfileIcon/UserProfileIcon'
-import MenuItem from './MenuItem'
-import { MemberContext } from 'contexts/MemberContext'
-import { menuItems } from './dashboard-utils'
-import { ChurchContext } from 'contexts/ChurchContext'
 import { useQuery } from '@apollo/client'
-import { SERVANTS_DASHBOARD } from './DashboardQueries'
+import RoleView from 'auth/RoleView'
+import UserProfileIcon from 'components/UserProfileIcon/UserProfileIcon'
+import { ChurchContext } from 'contexts/ChurchContext'
+import { MemberContext } from 'contexts/MemberContext'
 import { authorisedLink, plural } from 'global-utils'
 import { getServiceGraphData } from 'pages/reports/report-utils'
-import RoleView from 'auth/RoleView'
+import React, { useContext, useEffect } from 'react'
+import {
+  Container,
+  Nav,
+  Navbar,
+  Offcanvas,
+  Button,
+  Form,
+  FormControl,
+} from 'react-bootstrap'
+import { Link } from 'react-router-dom'
+import { menuItems } from './dashboard-utils'
+import { SERVANTS_DASHBOARD } from './DashboardQueries'
+import './Navigation.css'
+import logo from 'assets/flc-logo-red.png'
 
-const SideNav = (props) => {
+const Navigator = () => {
   const { currentUser, theme, setUserJobs } = useContext(MemberContext)
   const { clickCard } = useContext(ChurchContext)
-  const [inactive, setInactive] = useState(true)
 
   const { data } = useQuery(SERVANTS_DASHBOARD, {
     variables: { id: currentUser.id },
@@ -28,14 +31,12 @@ const SideNav = (props) => {
   const servant = data?.members[0]
 
   useEffect(() => {
-    props.onCollapse(inactive)
-
     setUserJobs({
       jobs: roles,
       assessmentData: assessmentChurchData,
       assessmentChurch: assessmentChurch,
     })
-  }, [data, inactive, setUserJobs])
+  }, [data, setUserJobs])
 
   // What leadership roles does this person play?
   let roles = []
@@ -178,60 +179,118 @@ const SideNav = (props) => {
   assessmentChurchData = servant && getServantRoles(servant)
 
   return (
-    <div className={`side-menu ${theme} ${inactive ? 'inactive' : ''}`}>
-      <div className="top-section">
-        <div className="logo">
-          <img src={logo} alt="flc logo" />
-        </div>
-        {inactive ? (
-          <div
-            className={`toggle-menu-btn ${theme}`}
-            onClick={() => setInactive(!inactive)}
+    <>
+      <Navbar
+        collapseOnSelect
+        bg={theme}
+        variant={theme}
+        expand="lg"
+        sticky="top"
+        defaultActiveKey="0"
+      >
+        <Container>
+          {/* <Navbar.Brand as={Link} to="/">
+          <img
+            src={logo}
+            width="30"
+            height="30"
+            className="d-inline-block align-top"
+            alt="FLC Admin Logo"
+          />{' '}
+          FLC Admin
+        </Navbar.Brand> */}
+          <Navbar.Toggle
+            aria-controls="basic-navbar-nav"
+            className="nav-toggler"
+          />
+          <Navbar.Collapse id="basic-navbar-nav">
+            <Nav className="me-auto">
+              {menuItems.map((menuItem, index) => (
+                <RoleView key={index} roles={menuItem.roles}>
+                  <Nav.Link
+                    as={Link}
+                    eventKey={index}
+                    Icon={menuItem.Icon}
+                    exact={menuItem.exact}
+                    to={menuItem.to}
+                  >
+                    {menuItem.name}
+                  </Nav.Link>
+                </RoleView>
+              ))}
+            </Nav>
+          </Navbar.Collapse>
+          <Navbar.Collapse className="justify-content-end">
+            <UserProfileIcon />
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
+
+      <Navbar
+        collapseOnSelect
+        bg={theme}
+        variant={theme}
+        expand="md"
+        sticky="top"
+        defaultActiveKey="0"
+      >
+        <Container fluid>
+          <Navbar.Toggle
+            aria-controls="offcanvasNavbar"
+            className="nav-toggler"
+          />
+
+          <Navbar.Offcanvas
+            id="offcanvasNavbar"
+            aria-labelledby="offcanvasNavbarLabel"
+            placement="start"
           >
-            <ArrowRightSquareFill />
-          </div>
-        ) : (
-          <div
-            className={`toggle-menu-btn ${theme}`}
-            onClick={() => setInactive(!inactive)}
-          >
-            <ArrowLeftSquareFill />
-          </div>
-        )}
-      </div>
-
-      <div className={`search-controller ${theme}`} search>
-        <button className={`search-btn ${theme}`}>
-          <Search />
-        </button>
-        <input type="text" placeholder="search" />
-      </div>
-
-      <div className="divider"></div>
-
-      <div className="main-menu">
-        {menuItems.map((menuItem, index) => (
-          <RoleView key={index} roles={menuItem.roles}>
-            <MenuItem
-              Icon={menuItem.Icon}
-              name={menuItem.name}
-              exact={menuItem.exact}
-              to={menuItem.to}
-              subMenus={menuItem.subMenus || []}
-              onClick={() => {
-                if (!inactive) setInactive(true)
-              }}
-              inactive={inactive}
-            />
-          </RoleView>
-        ))}
-
-        <div className={`side-menu-footer ${theme}`}>
-          <UserProfileIcon />
-        </div>
-      </div>
-    </div>
+            <Offcanvas.Header closeButton>
+              <Offcanvas.Title id="offcanvasNavbarLabel">
+                <img
+                  src={logo}
+                  width="30"
+                  height="30"
+                  className="d-inline-block align-top"
+                  alt="FLC Admin Logo"
+                />{' '}
+                flc admin
+              </Offcanvas.Title>
+            </Offcanvas.Header>
+            <Offcanvas.Body>
+              <Nav className="justify-content-start flex-grow-1 pe-3">
+                {menuItems.map((menuItem, index) => (
+                  <RoleView key={index} roles={menuItem.roles}>
+                    <Nav.Link
+                      as={Link}
+                      eventKey={index}
+                      Icon={menuItem.Icon}
+                      exact={menuItem.exact}
+                      to={menuItem.to}
+                    >
+                      {menuItem.name}
+                    </Nav.Link>
+                  </RoleView>
+                ))}
+              </Nav>
+              <Form className="d-flex">
+                <FormControl
+                  type="search"
+                  placeholder="Search"
+                  className="me-2"
+                  aria-label="Search"
+                />
+                <Button variant="outline-success">Search</Button>
+              </Form>
+            </Offcanvas.Body>
+            <Container>
+              <UserProfileIcon />
+            </Container>
+          </Navbar.Offcanvas>
+        </Container>
+      </Navbar>
+    </>
   )
 }
 
-export default SideNav
+export default Navigator

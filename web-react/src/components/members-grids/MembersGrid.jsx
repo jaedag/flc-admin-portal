@@ -14,7 +14,6 @@ import {
 } from 'react-bootstrap'
 import { CaretDownFill, Search } from 'react-bootstrap-icons'
 import { MemberContext } from 'contexts/MemberContext'
-import '../../pages/dashboards/SideNav.css'
 import './MembersGrid.css'
 import Filters from './Filters'
 

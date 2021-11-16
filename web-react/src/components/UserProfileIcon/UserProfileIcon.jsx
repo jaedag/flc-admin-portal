@@ -14,7 +14,7 @@ import { Spinner } from 'react-bootstrap'
 function UserProfileIcon() {
   const { user, isAuthenticated } = useAuth0()
   const { setChurch } = useContext(ChurchContext)
-  const { currentUser, setCurrentUser, theme } = useContext(MemberContext)
+  const { currentUser, setCurrentUser } = useContext(MemberContext)
   const [memberByEmail] = useLazyQuery(GET_LOGGED_IN_USER, {
     onCompleted: (data) => {
       let church
@@ -59,16 +59,18 @@ function UserProfileIcon() {
           to="/user-profile"
           onClick={() => setChurch(currentUser.church)}
         >
-          <div className="avatar">
-            <img
-              className="user-navbar-img "
-              src={transformCloudinaryImg(currentUser?.picture) || userIcon}
-              alt={currentUser?.firstName || null}
-            />
-          </div>
-          <div className={`user-info ${theme}`}>
-            <h5>{currentUser.fullName}</h5>
-            <p>{currentUser.email}</p>
+          <div className="d-flex">
+            <div className="flex-shrink-0">
+              <img
+                className="user-navbar-img "
+                src={transformCloudinaryImg(currentUser?.picture) || userIcon}
+                alt={currentUser?.firstName || null}
+              />
+            </div>
+            <div className="flex-grow-1 ms-3">
+              <div className="text-secondary small">{currentUser.fullName}</div>
+              <div className="text-secondary small">{currentUser.email}</div>
+            </div>
           </div>
         </Link>
       )}

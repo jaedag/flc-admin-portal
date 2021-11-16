@@ -32,7 +32,7 @@ const MemberDisplay = ({ memberId }) => {
   const nameAndTitle = getNameWithTitle(member)
 
   return (
-    <Container className="scroll-bottom">
+    <Container>
       <RoleView roles={['all']}>
         <EditButton link="/member/editmember" />
       </RoleView>

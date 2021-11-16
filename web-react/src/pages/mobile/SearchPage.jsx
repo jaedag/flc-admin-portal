@@ -100,7 +100,7 @@ const SearchPageMobile = () => {
     return (
       <>
         <MobileSearchNav />
-        <div className="container body-container text-center">
+        <div className="container  text-center">
           <div className="mt-5">
             <Spinner animation="grow" />
           </div>

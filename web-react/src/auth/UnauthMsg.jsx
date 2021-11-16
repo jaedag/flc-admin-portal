@@ -11,7 +11,7 @@ export const UnauthMsg = () => {
     return <Login />
   } else {
     return (
-      <div className="container body-container">
+      <div className="container ">
         {/* <!--Web Logo and text--> */}
         <div className="row d-flex align-items-center justify-content-center">
           <div className="col-12 col-lg-6 justify-content-center">

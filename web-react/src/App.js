@@ -569,7 +569,6 @@ const PastorsAdmin = () => {
                         'adminBishop',
                         'adminCampus',
                         'adminTown',
-                        'leaderBacenta',
                         'leaderCentre',
                         'leaderTown',
                         'leaderCampus',
@@ -803,7 +802,6 @@ const PastorsAdmin = () => {
                     {/* Pages to Update Directory */}
                     <ProtectedRoute
                       roles={[
-                        'leaderBacenta',
                         'adminFederal',
                         'adminBishop',
                         'adminCampus',

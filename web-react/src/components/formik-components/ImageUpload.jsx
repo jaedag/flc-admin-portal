@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { ErrorMessage } from 'formik'
 import TextError from './TextError'
-import { Spinner } from 'react-bootstrap'
+import { Container, Spinner, Button } from 'react-bootstrap'
 
 function ImageUpload(props) {
   const {
@@ -40,24 +40,24 @@ function ImageUpload(props) {
   }
 
   return (
-    <div className="container text-center my-2">
+    <Container className="text-center my-2">
       {label ? (
         <label className="label" htmlFor={name}>
           {label}
         </label>
       ) : null}
       {loading ? (
-        <div className="container my-3">
-          <Spinner animation="grow" />
-        </div>
+        <Container className="my-3">
+          <Spinner animation="border" />
+        </Container>
       ) : (
-        <div>
+        <>
           <img
             src={image || initialValue}
             className="profile-img rounded my-3"
             alt=""
           />
-        </div>
+        </>
       )}
       <label>
         <input
@@ -69,11 +69,13 @@ function ImageUpload(props) {
           onChange={uploadImage}
           {...rest}
         />
-        <p className="btn btn-primary px-4">{placeholder}</p>
+        <Button variant="primary" size="lg">
+          {placeholder}
+        </Button>
       </label>
       {props.error && <TextError>{props.error}</TextError>}
       {!props.error ?? <ErrorMessage name={name} component={TextError} />}
-    </div>
+    </Container>
   )
 }
 

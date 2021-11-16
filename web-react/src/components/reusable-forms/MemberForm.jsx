@@ -4,6 +4,7 @@ import * as Yup from 'yup'
 import React, { useContext } from 'react'
 import RoleView from '../../auth/RoleView'
 import { ChurchContext } from '../../contexts/ChurchContext'
+import { MemberContext } from '../../contexts/MemberContext'
 import {
   GENDER_OPTIONS,
   makeSelectOptions,
@@ -18,10 +19,11 @@ import ErrorScreen from '../base-component/ErrorScreen'
 import { BISHOP_BACENTA_DROPDOWN } from '../formik-components/ComboboxQueries'
 import FormikControl from '../formik-components/FormikControl'
 import { HeadingBar } from '../HeadingBar/HeadingBar'
-import { Spinner } from 'react-bootstrap'
+import { Col, Container, Row, Spinner, Button } from 'react-bootstrap'
 
 function MemberForm({ initialValues, onSubmit, title }) {
   const { bishopId } = useContext(ChurchContext)
+  const { theme } = useContext(MemberContext)
   const { data: ministriesData, loading: ministriesLoading } = useQuery(
     GET_MINISTRIES
   )
@@ -64,14 +66,13 @@ function MemberForm({ initialValues, onSubmit, title }) {
         onSubmit={onSubmit}
       >
         {(formik) => (
-          <div className="body-card container body-container mt-5">
+          <Container className="scroll-bottom">
             <h3 className="my-3">{title}</h3>
             <Form className="form-group">
-              <div className="row row-cols-1">
+              <Row className="row-cols-1">
                 {/* <!-- Basic Info Div --> */}
                 {/* Photo Upload with Cloudinary */}
-                <div className="row" />
-                <div className="col my-3">
+                <Col className="col my-3">
                   <HeadingBar title="Basic Info" />
                   <FormikControl
                     control="imageUpload"
@@ -200,7 +201,7 @@ function MemberForm({ initialValues, onSubmit, title }) {
                       />
                     </div>
                   </div>
-                </div>
+                </Col>
                 {/* <!--End of Basic Info Section--> */}
 
                 {/* <!-- Beginning of Church Info Section--> */}
@@ -338,18 +339,20 @@ function MemberForm({ initialValues, onSubmit, title }) {
                 </RoleView>
                 <div className="row mt-4">
                   <div className="col d-flex justify-content-center">
-                    <button
+                    <Button
+                      variant="primary"
+                      size="lg"
                       type="submit"
+                      className={`btn-main ${theme}`}
                       disabled={!formik.isValid || formik.isSubmitting}
-                      className="btn btn-primary btn-medium my-3 text-center"
                     >
                       Submit
-                    </button>
+                    </Button>
                   </div>
                 </div>
-              </div>
+              </Row>
             </Form>
-          </div>
+          </Container>
         )}
       </Formik>
     )

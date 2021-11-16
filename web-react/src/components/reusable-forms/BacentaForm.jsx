@@ -1,5 +1,4 @@
 import { useMutation, useQuery } from '@apollo/client'
-import BaseComponent from 'components/base-component/BaseComponent'
 import { Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import {
@@ -26,18 +25,14 @@ import RoleView from 'auth/RoleView'
 import { Container, Row, Col, Button, Spinner } from 'react-bootstrap'
 import { MemberContext } from 'contexts/MemberContext'
 import './Forms.css'
+import LoadingScreen from 'components/base-component/LoadingScreen'
 
-const BacentaForm = ({
-  initialValues,
-  onSubmit,
-  title,
-  loadingState,
-  newBacenta,
-}) => {
+const BacentaForm = ({ initialValues, onSubmit, title, newBacenta }) => {
   const {
     church,
     clickCard,
     isOpen,
+    loadingState,
     togglePopup,
     bacentaId,
     bishopId,
@@ -45,21 +40,24 @@ const BacentaForm = ({
   const { theme } = useContext(MemberContext)
   const history = useHistory()
 
-  const {
-    data: townListData,
-    loading: townListLoading,
-    error: townListError,
-  } = useQuery(GET_BISHOP_TOWNS, {
-    variables: { id: bishopId },
-  })
-  const {
-    data: campusListData,
-    loading: campusListLoading,
-    error: campusListError,
-  } = useQuery(GET_BISHOP_CAMPUSES, {
-    variables: { id: bishopId },
-  })
+  const { data: townListData, error: townListError } = useQuery(
+    GET_BISHOP_TOWNS,
+    {
+      variables: { id: bishopId },
+    }
+  )
+  const { data: campusListData, error: campusListError } = useQuery(
+    GET_BISHOP_CAMPUSES,
+    {
+      variables: { id: bishopId },
+    }
+  )
   const [CloseDownBacenta] = useMutation(MAKE_BACENTA_INACTIVE)
+
+  if (townListError || campusListError) {
+    throwErrorMsg(townListError)
+    throwErrorMsg(campusListError)
+  }
 
   const validationSchema = Yup.object({
     bacentaName: Yup.string().required('Bacenta Name is a required field'),
@@ -89,14 +87,14 @@ const BacentaForm = ({
     : []
   let townCampusIdVar = initialValues.townCampusSelect
 
+  if (loadingState || !initialValues.bacentaName) {
+    return <LoadingScreen />
+  }
   return (
-    <BaseComponent
-      loadingState={townListLoading || campusListLoading || loadingState}
-      errorState={townListError || campusListError}
-      data={campusListData && townListData}
-    >
+    <>
       <Container>
         <div className="page-header left">{title}</div>
+        <p className="text-secondary">{initialValues.bacentaName}</p>
       </Container>
       <Formik
         initialValues={initialValues}
@@ -111,77 +109,79 @@ const BacentaForm = ({
                   {/* <!-- Basic Info Div --> */}
                   <Col className="mb-2">
                     <Row className="form-row">
-                      <Col>
-                        <FormikControl
-                          className="form-control"
-                          control="select"
-                          label={`${capitalise(church.church)}`}
-                          name="townCampusSelect"
-                          options={
-                            church.church === 'town'
-                              ? townOptions
-                              : campusOptions
-                          }
-                          onChange={(e) => {
-                            formik.setFieldValue(
-                              'townCampusSelect',
-                              e.target.value
-                            )
-                            townCampusIdVar = e.target.value
-                          }}
-                          defaultOption={`Select a ${capitalise(
-                            church.church
-                          )}`}
-                        />
-                        <FormikControl
-                          className="form-control"
-                          control="selectWithQuery"
-                          name="centreSelect"
-                          label="Centre"
-                          optionsQuery={
-                            church.church === 'town'
-                              ? GET_TOWN_CENTRES
-                              : GET_CAMPUS_CENTRES
-                          }
-                          queryVariable="id"
-                          dataset="centres"
-                          varValue={
-                            townCampusIdVar || initialValues.townCampusSelect
-                          }
-                          defaultOption="Select a Centre"
-                        />
-                      </Col>
+                      <RoleView roles={['adminCampus', 'adminTown']}>
+                        <Col>
+                          <FormikControl
+                            className="form-control"
+                            control="select"
+                            label={`${capitalise(church.church)}`}
+                            name="townCampusSelect"
+                            options={
+                              church.church === 'town'
+                                ? townOptions
+                                : campusOptions
+                            }
+                            onChange={(e) => {
+                              formik.setFieldValue(
+                                'townCampusSelect',
+                                e.target.value
+                              )
+                              townCampusIdVar = e.target.value
+                            }}
+                            defaultOption={`Select a ${capitalise(
+                              church.church
+                            )}`}
+                          />
+                          <FormikControl
+                            className="form-control"
+                            control="selectWithQuery"
+                            name="centreSelect"
+                            label="Centre"
+                            optionsQuery={
+                              church.church === 'town'
+                                ? GET_TOWN_CENTRES
+                                : GET_CAMPUS_CENTRES
+                            }
+                            queryVariable="id"
+                            dataset="centres"
+                            varValue={
+                              townCampusIdVar || initialValues.townCampusSelect
+                            }
+                            defaultOption="Select a Centre"
+                          />
+                        </Col>
+                      </RoleView>
                     </Row>
 
                     <Row className="form-row">
-                      <Col sm={12}>
-                        <FormikControl
-                          className="form-control"
-                          control="input"
-                          name="bacentaName"
-                          label="Name of Bacenta"
-                          placeholder="Name of Bacenta"
-                        />
-                      </Col>
-                      <Col sm={12}>
-                        <FormikControl
-                          className="form-control"
-                          control="select"
-                          label="Meeting Day"
-                          name="meetingDay"
-                          options={SERVICE_DAY_OPTIONS}
-                          defaultOption="Pick a Service Day"
-                        />
-                      </Col>
+                      <RoleView roles={['adminCampus', 'adminTown']}>
+                        <Col sm={12}>
+                          <FormikControl
+                            className="form-control"
+                            control="input"
+                            name="bacentaName"
+                            label="Name of Bacenta"
+                            placeholder="Name of Bacenta"
+                          />
+                        </Col>
+
+                        <Col sm={12}>
+                          <FormikControl
+                            className="form-control"
+                            control="select"
+                            label="Meeting Day"
+                            name="meetingDay"
+                            options={SERVICE_DAY_OPTIONS}
+                            defaultOption="Pick a Service Day"
+                          />
+                        </Col>
+                      </RoleView>
                       <RoleView
                         roles={[
                           'adminFederal',
                           'adminBishop',
                           'adminCampus',
                           'adminTown',
-                          'leaderCampus',
-                          'leaderTown',
-                          'leaderCentre',
                         ]}
                       >
                         <Col sm={12}>
@@ -337,7 +337,7 @@ const BacentaForm = ({
           </Container>
         )}
       </Formik>
-    </BaseComponent>
+    </>
   )
 }
 

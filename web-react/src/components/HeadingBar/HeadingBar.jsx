@@ -1,5 +1,5 @@
 import React from 'react'
 
 export const HeadingBar = (props) => {
-  return <div className="container infobar">{props.title}</div>
+  return <h3>{props.title}</h3>
 }

@@ -83,7 +83,7 @@ const CampusTownForm = ({
         onSubmit={onSubmit}
       >
         {(formik) => (
-          <div className="body-card py-4 container mt-5">
+          <div className="py-4 container mt-5">
             <div className="container infobar">{title}</div>
             <Form>
               <div className="form-group">

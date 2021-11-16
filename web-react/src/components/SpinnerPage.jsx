@@ -3,7 +3,7 @@ import { Spinner } from 'react-bootstrap'
 
 function SpinnerPage() {
   return (
-    <div className="body-container full-body-center">
+    <div className=" full-body-center">
       <div className="row">
         <div className="col my-auto">
           <div className="spinner-border-center full-center">

@@ -19,7 +19,7 @@ const DisplayAllBacentas = () => {
   const bacentas = data?.centres[0]?.bacentas
   return (
     <BaseComponent loadingState={loading} errorState={error} data={data}>
-      <div className="body-container container">
+      <div className=" container">
         <div className="mb-4 border-bottom">
           <div className="row justify-content-between">
             <div className="col-auto">

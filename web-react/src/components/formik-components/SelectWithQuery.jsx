@@ -3,6 +3,8 @@ import { Field, ErrorMessage } from 'formik'
 import { makeSelectOptions } from '../../global-utils'
 import TextError from './TextError'
 import { useQuery } from '@apollo/client'
+import { useAuth0 } from '@auth0/auth0-react'
+import PlaceholderCustom from 'components/Placeholder'
 
 function SelectWithQuery(props) {
   const {
@@ -22,6 +24,7 @@ function SelectWithQuery(props) {
       [`${queryVariable}`]: varValue,
     },
   })
+  const { isAuthenticated } = useAuth0()
 
   const options = data
     ? makeSelectOptions(data[dataset ? `${dataset}` : null])
@@ -30,9 +33,11 @@ function SelectWithQuery(props) {
   return (
     <div>
       {label ? (
-        <label className="label" htmlFor={name}>
-          {label}
-        </label>
+        <PlaceholderCustom loading={!isAuthenticated}>
+          <label className="label" htmlFor={name}>
+            {label}
+          </label>
+        </PlaceholderCustom>
       ) : null}
       <Field as="select" id={name} name={name} {...rest}>
         <option value="" disabled defaultValue>

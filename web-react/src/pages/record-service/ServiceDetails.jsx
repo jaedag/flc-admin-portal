@@ -1,70 +1,106 @@
-import React from 'react'
+import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
+import HeadingSecondary from 'components/HeadingSecondary'
+import PlaceholderCustom from 'components/Placeholder'
+import { MemberContext } from 'contexts/MemberContext'
+import React, { useContext } from 'react'
+import { Col, Container, Row, Table } from 'react-bootstrap'
 import './ServiceDetails.css'
 
 const ServiceDetails = ({ service, church }) => {
+  const { theme } = useContext(MemberContext)
   return (
-    <div className="py-4 container mt-2">
-      <div className="container infobar">{`${church.__typename} Service Details`}</div>
-
-      <div className="row">
-        <div className="col mb-2">
+    <Container>
+      <PlaceholderCustom as="h3">
+        <HeadingPrimary>{`${church?.__typename} Service Details`}</HeadingPrimary>
+      </PlaceholderCustom>
+      <PlaceholderCustom as="h6">
+        <HeadingSecondary>{`${church?.name} ${church?.__typename}`}</HeadingSecondary>
+      </PlaceholderCustom>
+      <Row>
+        <Col>
           {service?.attendance ? (
-            <div className="row d-flex justify-content-center">
-              <h5>{`${church.name} ${church.__typename}`}</h5>
-
-              <table className="table table-dark table-striped">
+            <Row className="d-flex justify-content-center">
+              <Table variant={theme} striperd bordered>
                 <tbody>
                   <tr>
                     <td>Date of Service</td>
-                    <td>{new Date(service.serviceDate.date).toDateString()}</td>
+                    <PlaceholderCustom
+                      as="td"
+                      xs={12}
+                      className="td-placeholder"
+                    >
+                      <td>
+                        {new Date(service.serviceDate.date).toDateString()}
+                      </td>
+                    </PlaceholderCustom>
                   </tr>
                   <tr>
                     <td>Attendance</td>
-                    <td>{service.attendance}</td>
+                    <td>
+                      <PlaceholderCustom>
+                        {service.attendance}
+                      </PlaceholderCustom>
+                    </td>
                   </tr>
                   <tr>
                     <td>Income</td>
-                    <td>{service.income}</td>
+                    <td>
+                      <PlaceholderCustom>{service.income}</PlaceholderCustom>
+                    </td>
                   </tr>
                   {service.treasurers.map((treasurer, i) => {
                     return (
                       <tr key={i}>
-                        <td>Treasurer</td>
-                        <td>{treasurer.fullName}</td>
+                        <td>{`Treasurer ${i + 1}`}</td>
+                        <td>
+                          <PlaceholderCustom>
+                            {treasurer.fullName}
+                          </PlaceholderCustom>
+                        </td>
                       </tr>
                     )
                   })}
                 </tbody>
-              </table>
+              </Table>
               <div className="text-center">
-                <div>Treasurer Selfie</div>
+                <h6>Treasurer Selfie</h6>
                 <div>
-                  <img
-                    className="report-picture"
-                    src={service.treasurerSelfie}
-                  />
+                  <PlaceholderCustom
+                    className="report-picture placeholder"
+                    xs={12}
+                  >
+                    <img
+                      className="report-picture"
+                      src={service.treasurerSelfie}
+                    />
+                  </PlaceholderCustom>
                 </div>
 
-                <div>Service Picture</div>
+                <h6>Service Picture</h6>
                 <div>
-                  <img
-                    className="report-picture"
-                    src={service.servicePicture}
-                  />
+                  <PlaceholderCustom
+                    className="report-picture placeholder"
+                    xs={12}
+                  >
+                    <img
+                      className="report-picture"
+                      src={service.servicePicture}
+                    />
+                  </PlaceholderCustom>
                 </div>
               </div>
-            </div>
+            </Row>
           ) : (
             <>
               <div>{`No Service was held on ${new Date(
                 service?.serviceDate.date
               ).toDateString()}`}</div>
-              <div>{`Reason: ${service.noServiceReason}`}</div>
+              <div>{`Reason: ${service?.noServiceReason}`}</div>
             </>
           )}
-        </div>
-      </div>
-    </div>
+        </Col>
+      </Row>
+    </Container>
   )
 }
 

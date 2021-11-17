@@ -1,11 +1,11 @@
 import React from 'react'
 import { render, cleanup } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
-import { HeadingBar } from './HeadingBar'
+import { HeadingPrimary } from './HeadingPrimary'
 
 afterEach(cleanup)
 
 it('renders', () => {
-  const { asFragment } = render(<HeadingBar>Heading</HeadingBar>)
+  const { asFragment } = render(<HeadingPrimary>Heading</HeadingPrimary>)
   expect(asFragment()).toMatchSnapshot()
 })

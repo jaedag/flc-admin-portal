@@ -16,7 +16,7 @@
   height: auto;
   max-height: 70vh;
   margin-top: calc(100vh - 85vh - 20px);
-  background: var(--card-color);
+  background: var(--card);
   border-radius: 4px;
   padding: 20px;
   border: 1px solid #999;

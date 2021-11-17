@@ -45,7 +45,7 @@ const DisplayAllTownCampuses = () => {
 
     return (
       <>
-        <div className="body-container container">
+        <div className=" container">
           <div className="mb-4 border-bottom">
             <div className="row">
               <div className="col">
@@ -98,7 +98,7 @@ const DisplayAllTownCampuses = () => {
 
     return (
       <>
-        <div className="body-container container">
+        <div className=" container">
           <div className="mb-4 border-bottom">
             <div className="row">
               <div className="col">

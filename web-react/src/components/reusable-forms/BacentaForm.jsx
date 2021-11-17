@@ -1,5 +1,4 @@
 import { useMutation, useQuery } from '@apollo/client'
-import BaseComponent from 'components/base-component/BaseComponent'
 import { Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import {
@@ -19,44 +18,46 @@ import {
 import React, { useContext, useState } from 'react'
 import { ChurchContext } from 'contexts/ChurchContext'
 import FormikControl from 'components/formik-components/FormikControl'
-import Spinner from 'components/Spinner'
 import { MAKE_BACENTA_INACTIVE } from 'pages/update/CloseChurchMutations'
 import { useHistory } from 'react-router'
 import Popup from 'components/Popup/Popup'
 import RoleView from 'auth/RoleView'
+import { Container, Row, Col, Button, Spinner } from 'react-bootstrap'
+import { MemberContext } from 'contexts/MemberContext'
+import './Forms.css'
+import LoadingScreen from 'components/base-component/LoadingScreen'
 
-const BacentaForm = ({
-  initialValues,
-  onSubmit,
-  title,
-  loadingState,
-  newBacenta,
-}) => {
+const BacentaForm = ({ initialValues, onSubmit, title, newBacenta }) => {
   const {
     church,
     clickCard,
     isOpen,
+    loadingState,
     togglePopup,
     bacentaId,
     bishopId,
   } = useContext(ChurchContext)
+  const { theme } = useContext(MemberContext)
   const history = useHistory()
 
-  const {
-    data: townListData,
-    loading: townListLoading,
-    error: townListError,
-  } = useQuery(GET_BISHOP_TOWNS, {
-    variables: { id: bishopId },
-  })
-  const {
-    data: campusListData,
-    loading: campusListLoading,
-    error: campusListError,
-  } = useQuery(GET_BISHOP_CAMPUSES, {
-    variables: { id: bishopId },
-  })
+  const { data: townListData, error: townListError } = useQuery(
+    GET_BISHOP_TOWNS,
+    {
+      variables: { id: bishopId },
+    }
+  )
+  const { data: campusListData, error: campusListError } = useQuery(
+    GET_BISHOP_CAMPUSES,
+    {
+      variables: { id: bishopId },
+    }
+  )
   const [CloseDownBacenta] = useMutation(MAKE_BACENTA_INACTIVE)
+
+  if (townListError || campusListError) {
+    throwErrorMsg(townListError)
+    throwErrorMsg(campusListError)
+  }
 
   const validationSchema = Yup.object({
     bacentaName: Yup.string().required('Bacenta Name is a required field'),
@@ -86,100 +87,105 @@ const BacentaForm = ({
     : []
   let townCampusIdVar = initialValues.townCampusSelect
 
+  if (loadingState || !initialValues.bacentaName) {
+    return <LoadingScreen />
+  }
+
   return (
-    <BaseComponent
-      loadingState={townListLoading || campusListLoading || loadingState}
-      errorState={townListError || campusListError}
-      data={campusListData && townListData}
-    >
+    <>
+      <Container>
+        <div className="page-header left">{title}</div>
+        <p className="text-secondary">{initialValues.bacentaName}</p>
+      </Container>
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={onSubmit}
       >
         {(formik) => (
-          <div className="body-card py-4 container mt-5">
-            <div className="container infobar">{title}</div>
+          <Container className="py-4">
             <Form>
               <div className="form-group">
-                <div className="row row-cols-1 row-cols-md-2">
+                <Row className="row-cols-1 row-cols-md-2">
                   {/* <!-- Basic Info Div --> */}
-                  <div className="col mb-2">
-                    <div className="form-row row-cols-2">
-                      <div className="col-8">
-                        <FormikControl
-                          className="form-control"
-                          control="select"
-                          label={`${capitalise(church.church)}`}
-                          name="townCampusSelect"
-                          options={
-                            church.church === 'town'
-                              ? townOptions
-                              : campusOptions
-                          }
-                          onChange={(e) => {
-                            formik.setFieldValue(
-                              'townCampusSelect',
-                              e.target.value
-                            )
-                            townCampusIdVar = e.target.value
-                          }}
-                          defaultOption={`Select a ${capitalise(
-                            church.church
-                          )}`}
-                        />
-                        <FormikControl
-                          className="form-control"
-                          control="selectWithQuery"
-                          name="centreSelect"
-                          label="Centre"
-                          optionsQuery={
-                            church.church === 'town'
-                              ? GET_TOWN_CENTRES
-                              : GET_CAMPUS_CENTRES
-                          }
-                          queryVariable="id"
-                          dataset="centres"
-                          varValue={
-                            townCampusIdVar || initialValues.townCampusSelect
-                          }
-                          defaultOption="Select a Centre"
-                        />
-                      </div>
-                    </div>
+                  <Col className="mb-2">
+                    <Row className="form-row">
+                      <RoleView roles={['adminCampus', 'adminTown']}>
+                        <Col>
+                          <FormikControl
+                            className="form-control"
+                            control="select"
+                            label={`${capitalise(church.church)}`}
+                            name="townCampusSelect"
+                            options={
+                              church.church === 'town'
+                                ? townOptions
+                                : campusOptions
+                            }
+                            onChange={(e) => {
+                              formik.setFieldValue(
+                                'townCampusSelect',
+                                e.target.value
+                              )
+                              townCampusIdVar = e.target.value
+                            }}
+                            defaultOption={`Select a ${capitalise(
+                              church.church
+                            )}`}
+                          />
+                          <FormikControl
+                            className="form-control"
+                            control="selectWithQuery"
+                            name="centreSelect"
+                            label="Centre"
+                            optionsQuery={
+                              church.church === 'town'
+                                ? GET_TOWN_CENTRES
+                                : GET_CAMPUS_CENTRES
+                            }
+                            queryVariable="id"
+                            dataset="centres"
+                            varValue={
+                              townCampusIdVar || initialValues.townCampusSelect
+                            }
+                            defaultOption="Select a Centre"
+                          />
+                        </Col>
+                      </RoleView>
+                    </Row>
 
-                    <div className="form-row row-cols-3">
-                      <div className="col-9">
-                        <FormikControl
-                          className="form-control"
-                          control="input"
-                          name="bacentaName"
-                          label="Name of Bacenta"
-                          placeholder="Name of Bacenta"
-                        />
-                      </div>
-                      <div className="col-9">
-                        <FormikControl
-                          className="form-control"
-                          control="select"
-                          label="Meeting Day"
-                          name="meetingDay"
-                          options={SERVICE_DAY_OPTIONS}
-                          defaultOption="Pick a Service Day"
-                        />
-                      </div>
+                    <Row className="form-row">
+                      <RoleView roles={['adminCampus', 'adminTown']}>
+                        <Col sm={12}>
+                          <FormikControl
+                            className="form-control"
+                            control="input"
+                            name="bacentaName"
+                            label="Name of Bacenta"
+                            placeholder="Name of Bacenta"
+                          />
+                        </Col>
+
+                        <Col sm={12}>
+                          <FormikControl
+                            className="form-control"
+                            control="select"
+                            label="Meeting Day"
+                            name="meetingDay"
+                            options={SERVICE_DAY_OPTIONS}
+                            defaultOption="Pick a Service Day"
+                          />
+                        </Col>
+                      </RoleView>
                       <RoleView
                         roles={[
                           'adminFederal',
                           'adminBishop',
                           'adminCampus',
                           'adminTown',
-                          'leaderCampus',
-                          'leaderTown',
-                          'leaderCentre',
                         ]}
                       >
-                        <div className="col-9">
+                        <Col sm={12}>
                           <FormikControl
                             control="combobox2"
                             name="leaderId"
@@ -198,34 +204,35 @@ const BacentaForm = ({
                             className="form-control"
                             error={formik.errors.leaderId}
                           />
-                        </div>
+                        </Col>
                       </RoleView>
-                    </div>
+                    </Row>
                     <small className="text-muted">
                       Enter The Coordinates for the Service Venue
                     </small>
 
-                    <div className="row row-cols-2 d-flex align-items-center">
-                      <div className="col">
+                    <Row className="row-cols-2 d-flex align-items-center">
+                      <Col>
                         <FormikControl
                           className="form-control"
                           control="input"
                           name="venueLatitude"
                           placeholder="Latitude"
                         />
-                      </div>
-                      <div className="col">
+                      </Col>
+                      <Col>
                         <FormikControl
                           className="form-control"
                           control="input"
                           name="venueLongitude"
                           placeholder="Longitude"
                         />
-                      </div>
-                      <div className="col-auto mt-2">
-                        <button
-                          type="button"
-                          className="btn btn-primary"
+                      </Col>
+                      <Col className="my-2">
+                        <Button
+                          variant="primary"
+                          className="btn-loading"
+                          disabled={positionLoading}
                           onClick={() => {
                             setPositionLoading(true)
 
@@ -249,38 +256,42 @@ const BacentaForm = ({
                             )
                           }}
                         >
-                          Locate Me Now
-                        </button>
-
-                        {positionLoading ? (
-                          <span className="mx-3">
-                            <Spinner />
-                          </span>
-                        ) : null}
-                      </div>
-                    </div>
+                          {positionLoading ? (
+                            <>
+                              <Spinner animation="grow" size="sm" />
+                              <span> Loading</span>
+                            </>
+                          ) : (
+                            'Locate Me Now'
+                          )}
+                        </Button>
+                      </Col>
+                    </Row>
                     <small className="text-muted">
                       Click this button if you are currently at your bacenta
                       service venue
                     </small>
-                  </div>
-                </div>
+                  </Col>
+                </Row>
               </div>
-              <div className="d-flex justify-content-center">
-                <button
-                  type="submit"
-                  disabled={!formik.isValid || formik.isSubmitting}
-                  className="btn btn-primary px-5 py-3"
-                >
-                  Submit
-                </button>
-              </div>
+
+              <Button
+                variant="primary"
+                size="lg"
+                type="submit"
+                className={`btn-main ${theme}`}
+                disabled={!formik.isValid || formik.isSubmitting}
+              >
+                Submit
+              </Button>
             </Form>
             {isOpen && (
               <Popup handleClose={togglePopup}>
                 Are you sure you want to close down this bacenta?
-                <div
-                  className="btn btn-primary"
+                <Button
+                  variant="primary"
+                  type="submit"
+                  className={`btn-main ${theme}`}
                   onClick={() => {
                     CloseDownBacenta({
                       variables: {
@@ -303,22 +314,31 @@ const BacentaForm = ({
                   }}
                 >
                   {`Yes, I'm sure`}
-                </div>
-                <div className="btn btn-primary" onClick={togglePopup}>
+                </Button>
+                <Button
+                  variant="primary"
+                  className={`btn-secondary mt-2 ${theme}`}
+                  onClick={togglePopup}
+                >
                   No, take me back
-                </div>
+                </Button>
               </Popup>
             )}
 
             {!newBacenta && (
-              <div className="btn btn-primary" onClick={togglePopup}>
+              <Button
+                variant="primary"
+                size="lg"
+                className={`btn-secondary ${theme} mt-3`}
+                onClick={togglePopup}
+              >
                 Close Down Bacenta
-              </div>
+              </Button>
             )}
-          </div>
+          </Container>
         )}
       </Formik>
-    </BaseComponent>
+    </>
   )
 }
 

@@ -9,7 +9,7 @@ const Login = () => {
   return (
     <>
       <TabletDesktopView>
-        <div className="container body-container ">
+        <div className="container  ">
           {/* <!--Web Logo and text--> */}
           <div className="row align-self-center">
             {/* <!--Sign In--> */}

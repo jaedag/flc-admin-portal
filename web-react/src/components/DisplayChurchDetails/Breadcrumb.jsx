@@ -1,6 +1,7 @@
 import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { ChurchContext } from '../../contexts/ChurchContext'
+import './Breadcrumb.css'
 
 const Breadcrumb = ({ breadcrumb }) => {
   const { clickCard } = useContext(ChurchContext)
@@ -31,7 +32,7 @@ const Breadcrumb = ({ breadcrumb }) => {
                       ? `/dashboard`
                       : `/${bread?.__typename.toLowerCase()}/displaydetails`
                   }
-                  className="label text-secondary"
+                  className="crumb label text-secondary"
                 >
                   {bread?.name
                     ? `${breadname} ${bread?.__typename}`
@@ -47,7 +48,7 @@ const Breadcrumb = ({ breadcrumb }) => {
                       ? `/dashboard`
                       : `/${bread?.__typename.toLowerCase()}/displaydetails`
                   }
-                  className="pl-0 pr-1  label text-secondary"
+                  className="pl-0 pr-1 crumb label text-secondary"
                   onClick={() => {
                     clickCard(bread)
                   }}

@@ -1,13 +1,13 @@
 import React from 'react'
-import Spinner from './Spinner'
+import { Spinner } from 'react-bootstrap'
 
 function SpinnerPage() {
   return (
-    <div className="body-container full-body-center">
+    <div className=" full-body-center">
       <div className="row">
         <div className="col my-auto">
           <div className="spinner-border-center full-center">
-            <Spinner />
+            <Spinner animation="border" />
           </div>
         </div>
       </div>

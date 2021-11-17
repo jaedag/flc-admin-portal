@@ -40,7 +40,7 @@ const DisplayAllCentres = () => {
     const campus = campusCentreData.centres[0].campus
     return (
       <>
-        <div className="body-container container">
+        <div className=" container">
           <div className="mb-4 border-bottom">
             <div className="row justify-content-between">
               <div className="col-auto">
@@ -108,7 +108,7 @@ const DisplayAllCentres = () => {
     const town = townCentreData.centres[0].town
     return (
       <>
-        <div className="body-container container">
+        <div className=" container">
           <div className="mb-4 border-bottom">
             <div className="row justify-content-between">
               <div className="col-auto">

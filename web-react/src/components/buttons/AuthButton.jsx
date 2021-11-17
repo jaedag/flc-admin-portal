@@ -2,8 +2,8 @@ import React, { useContext } from 'react'
 import { useAuth0 } from '@auth0/auth0-react'
 import Popup from '../Popup/Popup'
 import { useLocation } from 'react-router'
-import Spinner from 'components/Spinner'
 import { ChurchContext } from 'contexts/ChurchContext'
+import { Spinner } from 'react-bootstrap'
 
 const AuthButton = (props) => {
   const { loginWithRedirect, logout, isAuthenticated } = useAuth0()
@@ -37,7 +37,7 @@ const AuthButton = (props) => {
     return (
       <div className="text-secondary text-center">
         <p>Please wait while we log you in</p>
-        <Spinner />
+        <Spinner animation="grow" />
       </div>
     )
   }

@@ -7,7 +7,9 @@ import { getMemberDob, transformCloudinaryImg } from '../../global-utils'
 import Timeline from '../../components/Timeline/Timeline'
 import BaseComponent from 'components/base-component/BaseComponent'
 import { DISPLAY_MEMBER } from 'pages/display/ReadQueries'
+import PlaceholderCustom from 'components/Placeholder'
 //import { useLocation } from 'react-router'
+import './UserProfile.css'
 
 const DisplayPage = () => {
   const { currentUser } = useContext(MemberContext)
@@ -25,29 +27,40 @@ const DisplayPage = () => {
 
   return (
     <div className="scroll-bottom">
-      <BaseComponent loadingState={loading} errorState={error} data={data}>
+      <BaseComponent
+        loadingState={loading}
+        errorState={error}
+        data={data}
+        placeholder
+      >
         <div className="py-5">
           <div className="pt-5">
             <Row className="d-flex justify-content-center">
               <Col xs={6} md={6}>
-                <Image
-                  src={
-                    transformCloudinaryImg(member?.pictureUrl, 'large') ||
-                    userIcon
-                  }
-                  fluid
-                  rounded
-                  className="rounded-circle bg-secondary m-2"
-                  style={{ objectFit: 'cover' }}
-                />
+                <PlaceholderCustom xs={12} className="img bg-secondary m-2">
+                  <Image
+                    src={
+                      transformCloudinaryImg(member?.pictureUrl, 'large') ||
+                      userIcon
+                    }
+                    fluid
+                    rounded
+                    className="rounded-circle bg-secondary m-2"
+                    style={{ objectFit: 'cover' }}
+                  />
+                </PlaceholderCustom>
               </Col>
             </Row>
           </div>
           <div>
-            <h1 className="text-center">{`${member?.fullName}`}</h1>
-            <h6 className="text-center text-secondary">
-              {member?.bacenta?.name}
-            </h6>
+            <PlaceholderCustom as="h1" className="text-center">
+              <h1 className="text-center">{`${member?.fullName}`}</h1>
+            </PlaceholderCustom>
+            <PlaceholderCustom as="h6" className="text-center">
+              <h6 className="text-center text-secondary">
+                {member?.bacenta?.name}
+              </h6>
+            </PlaceholderCustom>
           </div>
           <div className="py-5">
             <Accordion flush>

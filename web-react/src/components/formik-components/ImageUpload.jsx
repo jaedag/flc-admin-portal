@@ -1,7 +1,9 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { ErrorMessage } from 'formik'
-import Spinner from '../Spinner'
 import TextError from './TextError'
+import { Container, Spinner } from 'react-bootstrap'
+import { MemberContext } from 'contexts/MemberContext'
+import './Formik.css'
 
 function ImageUpload(props) {
   const {
@@ -13,6 +15,7 @@ function ImageUpload(props) {
     placeholder,
     ...rest
   } = props
+  const { theme } = useContext(MemberContext)
   const [loading, setLoading] = useState(false)
   const [image, setImage] = useState('')
 
@@ -40,26 +43,23 @@ function ImageUpload(props) {
   }
 
   return (
-    <div className="container text-center my-2">
+    <>
       {label ? (
         <label className="label" htmlFor={name}>
           {label}
         </label>
       ) : null}
-      {loading ? (
-        <div className="container my-3">
-          <Spinner />
-        </div>
-      ) : (
-        <div>
-          <img
-            src={image || initialValue}
-            className="profile-img rounded my-3"
-            alt=""
-          />
-        </div>
+      {loading && (
+        <Container className="text-center my-3">
+          <Spinner animation="grow" />
+        </Container>
       )}
-      <label>
+      {(image || initialValue) && (
+        <>
+          <img src={image || initialValue} className="img-preview" alt="" />
+        </>
+      )}
+      <label className="w-100">
         <input
           id={name}
           name={name}
@@ -69,11 +69,12 @@ function ImageUpload(props) {
           onChange={uploadImage}
           {...rest}
         />
-        <p className="btn btn-primary px-4">{placeholder}</p>
+
+        <p className={`btn btn-primary image ${theme}`}>{placeholder}</p>
       </label>
       {props.error && <TextError>{props.error}</TextError>}
       {!props.error ?? <ErrorMessage name={name} component={TextError} />}
-    </div>
+    </>
   )
 }
 

@@ -4,6 +4,7 @@ import * as Yup from 'yup'
 import React, { useContext } from 'react'
 import RoleView from '../../auth/RoleView'
 import { ChurchContext } from '../../contexts/ChurchContext'
+import { MemberContext } from '../../contexts/MemberContext'
 import {
   GENDER_OPTIONS,
   makeSelectOptions,
@@ -17,11 +18,13 @@ import PlusSign from '../buttons/PlusSign'
 import ErrorScreen from '../base-component/ErrorScreen'
 import { BISHOP_BACENTA_DROPDOWN } from '../formik-components/ComboboxQueries'
 import FormikControl from '../formik-components/FormikControl'
-import { HeadingBar } from '../HeadingBar/HeadingBar'
-import Spinner from '../Spinner'
+import { HeadingPrimary } from '../HeadingPrimary/HeadingPrimary'
+import { Col, Container, Row, Button } from 'react-bootstrap'
+import LoadingScreen from 'components/base-component/LoadingScreen'
 
-function MemberForm({ initialValues, onSubmit, title }) {
+function MemberForm({ initialValues, onSubmit, title, loadingState }) {
   const { bishopId } = useContext(ChurchContext)
+  const { theme } = useContext(MemberContext)
   const { data: ministriesData, loading: ministriesLoading } = useQuery(
     GET_MINISTRIES
   )
@@ -49,12 +52,8 @@ function MemberForm({ initialValues, onSubmit, title }) {
     ministry: Yup.string().required('Ministry is a required field'),
   })
 
-  if (ministriesLoading) {
-    return (
-      <div className="text-center p-5 m-5">
-        <Spinner />
-      </div>
-    )
+  if (ministriesLoading || loadingState || !initialValues.firstName) {
+    return <LoadingScreen />
   } else if (ministriesData) {
     const ministryOptions = makeSelectOptions(ministriesData.ministries)
     return (
@@ -64,21 +63,19 @@ function MemberForm({ initialValues, onSubmit, title }) {
         onSubmit={onSubmit}
       >
         {(formik) => (
-          <div className="body-card container body-container mt-5">
-            <h3 className="my-3">{title}</h3>
+          <Container>
+            <h3 className="my-3 text-center">{title}</h3>
             <Form className="form-group">
-              <div className="row row-cols-1">
+              <Row className="row-cols-1">
                 {/* <!-- Basic Info Div --> */}
                 {/* Photo Upload with Cloudinary */}
-                <div className="row" />
-                <div className="col my-3">
-                  <HeadingBar title="Basic Info" />
+                <Col className="my-3">
                   <FormikControl
                     control="imageUpload"
                     name="pictureUrl"
                     initialValue={initialValues.pictureUrl}
                     uploadPreset={process.env.REACT_APP_CLOUDINARY_MEMBERS}
-                    placeholder="Upload an Image *"
+                    placeholder="Upload New Picture"
                     setFieldValue={formik.setFieldValue}
                     aria-describedby="ImageUpload"
                   />
@@ -87,8 +84,10 @@ function MemberForm({ initialValues, onSubmit, title }) {
                       Please note that * are required to submit the form
                     </small>
                   </p>
+
                   <div className="form-row row-cols-1 row-cols-md-2 justify-content-center">
-                    <div className="col-10">
+                    <HeadingPrimary className="mb-4">Basic Info</HeadingPrimary>
+                    <Col sm={10}>
                       <FormikControl
                         label="First Name*"
                         className="form-control"
@@ -97,8 +96,8 @@ function MemberForm({ initialValues, onSubmit, title }) {
                         placeholder="First Name"
                         aria-describedby="firstNameHelp"
                       />
-                    </div>
-                    <div className="col-10">
+                    </Col>
+                    <Col sm={10}>
                       <FormikControl
                         label="Middle Name"
                         className="form-control"
@@ -107,8 +106,8 @@ function MemberForm({ initialValues, onSubmit, title }) {
                         placeholder="Other Names"
                         aria-describedby="middleNameHelp"
                       />
-                    </div>
-                    <div className="col-10">
+                    </Col>
+                    <Col sm={10}>
                       <FormikControl
                         label="Last Name*"
                         className="form-control"
@@ -117,8 +116,8 @@ function MemberForm({ initialValues, onSubmit, title }) {
                         placeholder="Last Name"
                         aria-describedby="lastNameHelp"
                       />
-                    </div>
-                    <div className="col-10">
+                    </Col>
+                    <Col sm={10}>
                       <FormikControl
                         label="Gender*"
                         className="form-control"
@@ -128,8 +127,8 @@ function MemberForm({ initialValues, onSubmit, title }) {
                         options={GENDER_OPTIONS}
                         defaultOption="Gender"
                       />
-                    </div>
-                    <div className="col-10">
+                    </Col>
+                    <Col sm={10}>
                       <FormikControl
                         label="Phone Number*"
                         className="form-control"
@@ -138,8 +137,8 @@ function MemberForm({ initialValues, onSubmit, title }) {
                         id="phoneNumber"
                         name="phoneNumber"
                       />
-                    </div>
-                    <div className="col-10">
+                    </Col>
+                    <Col sm={10}>
                       <FormikControl
                         label="WhatsApp Number*"
                         className="form-control"
@@ -148,11 +147,11 @@ function MemberForm({ initialValues, onSubmit, title }) {
                         id="whatsappNumber"
                         name="whatsappNumber"
                       />
-                    </div>
+                    </Col>
                   </div>
 
                   <div className="form-row row-cols-1 row-cols-md-2 justify-content-center">
-                    <div className="col-10">
+                    <Col sm={10}>
                       <FormikControl
                         label="Marital Status*"
                         className="form-control"
@@ -162,8 +161,8 @@ function MemberForm({ initialValues, onSubmit, title }) {
                         options={MARITAL_STATUS_OPTIONS}
                         defaultOption="Marital Status"
                       />
-                    </div>
-                    <div className="col-10">
+                    </Col>
+                    <Col sm={10}>
                       <FormikControl
                         label="Occupation"
                         className="form-control"
@@ -172,10 +171,10 @@ function MemberForm({ initialValues, onSubmit, title }) {
                         placeholder="Occupation"
                         aria-describedby="occupationHelp"
                       />
-                    </div>
+                    </Col>
                   </div>
                   <div className="form-row justify-content-center">
-                    <div className="col-10">
+                    <Col sm={10}>
                       <FormikControl
                         label="Email Address*"
                         className="form-control"
@@ -184,8 +183,8 @@ function MemberForm({ initialValues, onSubmit, title }) {
                         placeholder="Enter Email Address"
                         aria-describedby="emailHelp"
                       />
-                    </div>
-                    <div className="col-10">
+                    </Col>
+                    <Col sm={10}>
                       <small htmlFor="dateofbirth" className="form-text ">
                         Date of Birth*{' '}
                         <i className="text-secondary">(Day/Month/Year)</i>
@@ -198,17 +197,17 @@ function MemberForm({ initialValues, onSubmit, title }) {
                         placeholder="dd/mm/yyyy"
                         aria-describedby="dateofbirth"
                       />
-                    </div>
+                    </Col>
                   </div>
-                </div>
+                </Col>
                 {/* <!--End of Basic Info Section--> */}
 
                 {/* <!-- Beginning of Church Info Section--> */}
                 <div className="col my-4">
-                  <HeadingBar title="Church Info" />
+                  <HeadingPrimary>Church Info</HeadingPrimary>
 
                   <div className="form-row row-cols-1 row-cols-md-2 justify-content-center">
-                    <div className="col-10">
+                    <Col sm={10}>
                       <FormikControl
                         control="combobox2"
                         name="bacenta"
@@ -227,8 +226,8 @@ function MemberForm({ initialValues, onSubmit, title }) {
                         initialValue={initialValues?.bacenta || null}
                         error={formik.errors.bacenta && formik.errors.bacenta}
                       />
-                    </div>
-                    <div className="col-10">
+                    </Col>
+                    <Col sm={10}>
                       <FormikControl
                         className="form-control"
                         label="Ministry*"
@@ -237,15 +236,17 @@ function MemberForm({ initialValues, onSubmit, title }) {
                         options={ministryOptions}
                         defaultOption="Ministry"
                       />
-                    </div>
+                    </Col>
                   </div>
                 </div>
                 {/* <!-- End of Church Info Section--> */}
 
                 {/* <!-- Beginning of Pastoral Appointments Section--> */}
                 <RoleView roles={['adminFederal', 'adminBishop']}>
-                  <div className="col my-4">
-                    <HeadingBar title="Pastoral Appointments (if any)" />
+                  <Col className="my-4">
+                    <HeadingPrimary>
+                      Pastoral Appointments (if any)
+                    </HeadingPrimary>
                     <FieldArray name="pastoralAppointment">
                       {(fieldArrayProps) => {
                         const { remove, form } = fieldArrayProps
@@ -253,11 +254,11 @@ function MemberForm({ initialValues, onSubmit, title }) {
                         const { pastoralAppointment } = values
 
                         return (
-                          <div>
+                          <>
                             {pastoralAppointment.map(
                               (pastoralAppointment, index) => (
-                                <div key={index} className="form-row">
-                                  <div className="col-auto">
+                                <Row key={index} className="form-row">
+                                  <Col className="col-auto">
                                     <FormikControl
                                       className="form-control"
                                       control="select"
@@ -265,8 +266,8 @@ function MemberForm({ initialValues, onSubmit, title }) {
                                       defaultOption="Title"
                                       name={`pastoralAppointment[${index}].title`}
                                     />
-                                  </div>
-                                  <div className="col">
+                                  </Col>
+                                  <Col>
                                     <FormikControl
                                       className="form-control"
                                       placeholder="Date"
@@ -274,27 +275,27 @@ function MemberForm({ initialValues, onSubmit, title }) {
                                       type="date"
                                       name={`pastoralAppointment[${index}].date`}
                                     />
-                                  </div>
-                                  <div className="col d-flex">
+                                  </Col>
+                                  <Col className="col d-flex">
                                     {index > 0 && (
                                       <MinusSign onClick={() => remove()} />
                                     )}
-                                  </div>
-                                </div>
+                                  </Col>
+                                </Row>
                               )
                             )}
-                          </div>
+                          </>
                         )
                       }}
                     </FieldArray>
-                  </div>
+                  </Col>
                 </RoleView>
                 {/* <!--End of Pastoral Appointments Section--> */}
 
                 {/* <!--Beginning of Pastoral History Section--> */}
                 <RoleView roles={['adminFederal', 'adminBishop']}>
-                  <div className="col my-4">
-                    <HeadingBar title="Pastoral History" />
+                  <Col className="my-4">
+                    <HeadingPrimary>Pastoral History</HeadingPrimary>
                     <FieldArray name="pastoralHistory">
                       {(fieldArrayProps) => {
                         const { push, remove, form } = fieldArrayProps
@@ -304,52 +305,53 @@ function MemberForm({ initialValues, onSubmit, title }) {
                         return (
                           <div>
                             {pastoralHistory.map((pastoralHistory, index) => (
-                              <div key={index} className="form-row row-cols">
-                                <div className="col-7">
+                              <Row key={index} className="form-row">
+                                <Col className="col-7">
                                   <FormikControl
                                     className="form-control"
                                     placeholder="History Entry"
                                     control="input"
                                     name={`pastoralHistory[${index}].historyRecord`}
                                   />
-                                </div>
-                                <div className="col">
+                                </Col>
+                                <Col>
                                   <FormikControl
                                     className="form-control"
                                     placeholder="Year"
                                     control="input"
                                     name={`pastoralHistory[${index}].historyDate`}
                                   />
-                                </div>
-                                <div className="col d-flex">
+                                </Col>
+                                <Col className="d-flex">
                                   <PlusSign onClick={() => push()} />
                                   {index > 0 && (
                                     <MinusSign onClick={() => remove(index)} />
                                   )}
-                                </div>
-                              </div>
+                                </Col>
+                              </Row>
                             ))}
                           </div>
                         )
                       }}
                     </FieldArray>
                     {/* <!--End of Pastoral History Section--> */}
-                  </div>
+                  </Col>
                 </RoleView>
-                <div className="row mt-4">
-                  <div className="col d-flex justify-content-center">
-                    <button
-                      type="submit"
-                      disabled={!formik.isValid || formik.isSubmitting}
-                      className="btn btn-primary btn-medium my-3 text-center"
-                    >
-                      Submit
-                    </button>
-                  </div>
-                </div>
-              </div>
+
+                <Col>
+                  <Button
+                    variant="primary"
+                    size="lg"
+                    type="submit"
+                    className={`btn-main ${theme}`}
+                    disabled={!formik.isValid || formik.isSubmitting}
+                  >
+                    Submit
+                  </Button>
+                </Col>
+              </Row>
             </Form>
-          </div>
+          </Container>
         )}
       </Formik>
     )

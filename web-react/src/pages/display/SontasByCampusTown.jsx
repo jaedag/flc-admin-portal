@@ -29,7 +29,7 @@ const DisplaySontasByCampusTown = () => {
 
     return (
       <>
-        <div className="body-container container">
+        <div className=" container">
           <div className="mb-4 border-bottom">
             <div className="row justify-content-between">
               <div className="col-auto">
@@ -91,7 +91,7 @@ const DisplaySontasByCampusTown = () => {
     const towns = sontaData.towns
     return (
       <>
-        <div className="body-container container">
+        <div className=" container">
           <div className="mb-4 border-bottom">
             <div className="row justify-content-between">
               <div className="col-auto">

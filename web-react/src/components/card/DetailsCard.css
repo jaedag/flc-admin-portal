@@ -5,7 +5,7 @@
 }
 
 .bg-card {
-  background-color: var(--card-color);
+  background-color: var(--card);
   padding: 10px;
   border-radius: 10px;
 }

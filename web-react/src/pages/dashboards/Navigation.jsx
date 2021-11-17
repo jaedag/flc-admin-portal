@@ -1,41 +1,81 @@
-import React, { useContext, useEffect, useState } from 'react'
-import './SideNav.css'
-import logo from '../../assets/flc-logo-red.png'
-import {
-  ArrowLeftSquareFill,
-  ArrowRightSquareFill,
-  Search,
-} from 'react-bootstrap-icons'
+import { useLazyQuery, useQuery } from '@apollo/client'
+import RoleView from 'auth/RoleView'
 import UserProfileIcon from 'components/UserProfileIcon/UserProfileIcon'
-import MenuItem from './MenuItem'
-import { MemberContext } from 'contexts/MemberContext'
-import { menuItems } from './dashboard-utils'
 import { ChurchContext } from 'contexts/ChurchContext'
-import { useQuery } from '@apollo/client'
-import { SERVANTS_DASHBOARD } from './DashboardQueries'
+import { MemberContext } from 'contexts/MemberContext'
 import { authorisedLink, plural } from 'global-utils'
 import { getServiceGraphData } from 'pages/reports/report-utils'
-import RoleView from 'auth/RoleView'
+import React, { useContext, useEffect } from 'react'
+import {
+  Container,
+  Nav,
+  Navbar,
+  Offcanvas,
+  Button,
+  Form,
+  FormControl,
+} from 'react-bootstrap'
+import { Link } from 'react-router-dom'
+import { menuItems } from './dashboard-utils'
+import { SERVANTS_DASHBOARD } from './DashboardQueries'
+import './Navigation.css'
+import logo from 'assets/flc-logo-red.png'
+import { useAuth0 } from '@auth0/auth0-react'
+import { GET_LOGGED_IN_USER } from 'components/UserProfileIcon/UserQueries'
 
-const SideNav = (props) => {
-  const { currentUser, theme, setUserJobs } = useContext(MemberContext)
+const Navigator = () => {
+  const { currentUser, theme, setUserJobs, setCurrentUser } = useContext(
+    MemberContext
+  )
   const { clickCard } = useContext(ChurchContext)
-  const [inactive, setInactive] = useState(true)
-
-  const { data } = useQuery(SERVANTS_DASHBOARD, {
+  const { user, isAuthenticated } = useAuth0()
+  const { data, loading } = useQuery(SERVANTS_DASHBOARD, {
     variables: { id: currentUser.id },
   })
+  const [memberByEmail] = useLazyQuery(GET_LOGGED_IN_USER, {
+    onCompleted: (data) => {
+      let church
+      if (data.memberByEmail.bacenta.centre?.town) {
+        church = 'town'
+      }
+      if (data.memberByEmail.bacenta.centre?.campus) {
+        church = 'campus'
+      }
+
+      setCurrentUser({
+        ...currentUser,
+        id: data.memberByEmail.id,
+        firstName: data.memberByEmail.firstName,
+        lastName: data.memberByEmail.lastName,
+        fullName:
+          data.memberByEmail.firstName + ' ' + data.memberByEmail.lastName,
+        picture: data.memberByEmail?.pictureUrl ?? null,
+        bacenta: data.memberByEmail?.bacenta,
+        bishop: data.memberByEmail?.bacenta?.centre[`${church}`]?.bishop.id,
+        constituency: data.memberByEmail?.bacenta?.centre[`${church}`]?.id,
+        church: { church: church, subChurch: 'centre' },
+        email: user?.email,
+        roles: user ? user[`https://flcadmin.netlify.app/roles`] : [],
+      })
+    },
+  })
+
+  useEffect(() => {
+    if (!currentUser?.email?.length) {
+      user && memberByEmail({ variables: { email: user.email } })
+    }
+
+    // eslint-disable-next-line
+  }, [isAuthenticated])
   const servant = data?.members[0]
 
   useEffect(() => {
-    props.onCollapse(inactive)
-
     setUserJobs({
       jobs: roles,
       assessmentData: assessmentChurchData,
       assessmentChurch: assessmentChurch,
     })
-  }, [data, inactive, setUserJobs])
+  }, [data, loading, setUserJobs])
 
   // What leadership roles does this person play?
   let roles = []
@@ -178,60 +218,71 @@ const SideNav = (props) => {
   assessmentChurchData = servant && getServantRoles(servant)
 
   return (
-    <div className={`side-menu ${theme} ${inactive ? 'inactive' : ''}`}>
-      <div className="top-section">
-        <div className="logo">
-          <img src={logo} alt="flc logo" />
-        </div>
-        {inactive ? (
-          <div
-            className={`toggle-menu-btn ${theme}`}
-            onClick={() => setInactive(!inactive)}
-          >
-            <ArrowRightSquareFill />
-          </div>
-        ) : (
-          <div
-            className={`toggle-menu-btn ${theme}`}
-            onClick={() => setInactive(!inactive)}
-          >
-            <ArrowLeftSquareFill />
-          </div>
-        )}
-      </div>
+    <Navbar
+      collapseOnSelect
+      bg={theme}
+      variant={theme}
+      expand={false}
+      sticky="top"
+      defaultActiveKey="0"
+    >
+      <Container fluid>
+        <Navbar.Toggle
+          aria-controls="offcanvasNavbar"
+          className="nav-toggler"
+        />
 
-      <div className={`search-controller ${theme}`} search>
-        <button className={`search-btn ${theme}`}>
-          <Search />
-        </button>
-        <input type="text" placeholder="search" />
-      </div>
-
-      <div className="divider"></div>
-
-      <div className="main-menu">
-        {menuItems.map((menuItem, index) => (
-          <RoleView key={index} roles={menuItem.roles}>
-            <MenuItem
-              Icon={menuItem.Icon}
-              name={menuItem.name}
-              exact={menuItem.exact}
-              to={menuItem.to}
-              subMenus={menuItem.subMenus || []}
-              onClick={() => {
-                if (!inactive) setInactive(true)
-              }}
-              inactive={inactive}
-            />
-          </RoleView>
-        ))}
-
-        <div className={`side-menu-footer ${theme}`}>
-          <UserProfileIcon />
-        </div>
-      </div>
-    </div>
+        <Navbar.Offcanvas
+          id="offcanvasNavbar"
+          aria-labelledby="offcanvasNavbarLabel"
+          placement="start"
+          className={`bg-nav ${theme}`}
+        >
+          <Offcanvas.Header className={`${theme}`} closeButton>
+            <Offcanvas.Title id="offcanvasNavbarLabel">
+              <img
+                src={logo}
+                width="50"
+                height="50"
+                className="d-inline-block align-top"
+                alt="FLC Admin Logo"
+              />
+            </Offcanvas.Title>
+          </Offcanvas.Header>
+          <Offcanvas.Body>
+            <Nav className="justify-content-start flex-grow-1">
+              {menuItems.map((menuItem, index) => (
+                <RoleView key={index} roles={menuItem.roles}>
+                  <Nav.Link
+                    as={Link}
+                    eventKey={index}
+                    Icon={menuItem.Icon}
+                    exact={menuItem.exact}
+                    to={menuItem.to}
+                    className="font-primary nav-btn"
+                  >
+                    {menuItem.name}
+                  </Nav.Link>
+                </RoleView>
+              ))}
+            </Nav>
+            <Form className="d-flex">
+              <FormControl
+                type="search"
+                placeholder="Search"
+                className="me-2"
+                aria-label="Search"
+              />
+              <Button variant="outline-success">Search</Button>
+            </Form>
+          </Offcanvas.Body>
+          <Container className="footer">
+            <UserProfileIcon />
+          </Container>
+        </Navbar.Offcanvas>
+      </Container>
+    </Navbar>
   )
 }
 
-export default SideNav
+export default Navigator

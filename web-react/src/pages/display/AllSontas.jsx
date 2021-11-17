@@ -34,7 +34,7 @@ const DisplayAllSontas = () => {
   } else if (campusCentreData && church.church === 'campus') {
     return (
       <>
-        <div className="body-container container">
+        <div className=" container">
           <div className="mb-4 border-bottom">
             <div className="row justify-content-between">
               <div className="col-auto">
@@ -101,7 +101,7 @@ const DisplayAllSontas = () => {
   } else if (townCentreData && church.church === 'town') {
     return (
       <>
-        <div className="body-container container">
+        <div className=" container">
           <div className="mb-4 border-bottom">
             <div className="row justify-content-between">
               <div className="col-auto">

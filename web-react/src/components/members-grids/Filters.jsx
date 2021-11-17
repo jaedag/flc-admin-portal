@@ -106,7 +106,7 @@ const Filters = ({ ToggleAccordion }) => {
                 variant="primary"
                 size="lg"
                 type="reset"
-                className={`btn-reset ${theme}`}
+                className={`btn-secondary ${theme}`}
                 onClick={() => {
                   setFilters({
                     gender: [],
@@ -126,7 +126,7 @@ const Filters = ({ ToggleAccordion }) => {
                   variant="primary"
                   size="lg"
                   type="submit"
-                  className={`btn-submit ${theme}`}
+                  className={`btn-main ${theme}`}
                   disabled={!formik.isValid || formik.isSubmitting}
                 >
                   Apply Filters

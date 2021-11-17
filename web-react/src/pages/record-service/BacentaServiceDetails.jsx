@@ -6,6 +6,7 @@ import { DISPLAY_BACENTA_SERVICE } from './RecordServiceMutations'
 import { ServiceContext } from 'contexts/ServiceContext'
 
 import ServiceDetails from './ServiceDetails'
+import { throwErrorMsg } from 'global-utils'
 import BaseComponent from 'components/base-component/BaseComponent'
 
 const BacentaServiceDetails = () => {
@@ -14,10 +15,17 @@ const BacentaServiceDetails = () => {
   const { data, loading, error } = useQuery(DISPLAY_BACENTA_SERVICE, {
     variables: { serviceId: serviceRecordId, bacentaId: bacentaId },
   })
+  throwErrorMsg(error)
 
   return (
-    <BaseComponent loadingState={loading} errorState={error} data={data}>
+    <BaseComponent
+      loadingState={loading}
+      errorState={error}
+      data={data}
+      placeholder
+    >
       <ServiceDetails
+        loading={loading}
         service={data?.serviceRecords[0]}
         church={data?.bacentas[0]}
       />

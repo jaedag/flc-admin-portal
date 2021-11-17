@@ -1,4 +1,4 @@
-import { useQuery } from '@apollo/client'
+import { useLazyQuery, useQuery } from '@apollo/client'
 import RoleView from 'auth/RoleView'
 import UserProfileIcon from 'components/UserProfileIcon/UserProfileIcon'
 import { ChurchContext } from 'contexts/ChurchContext'
@@ -20,14 +20,53 @@ import { menuItems } from './dashboard-utils'
 import { SERVANTS_DASHBOARD } from './DashboardQueries'
 import './Navigation.css'
 import logo from 'assets/flc-logo-red.png'
+import { useAuth0 } from '@auth0/auth0-react'
+import { GET_LOGGED_IN_USER } from 'components/UserProfileIcon/UserQueries'
 
 const Navigator = () => {
-  const { currentUser, theme, setUserJobs } = useContext(MemberContext)
+  const { currentUser, theme, setUserJobs, setCurrentUser } = useContext(
+    MemberContext
+  )
   const { clickCard } = useContext(ChurchContext)
-
-  const { data } = useQuery(SERVANTS_DASHBOARD, {
+  const { user, isAuthenticated } = useAuth0()
+  const { data, loading } = useQuery(SERVANTS_DASHBOARD, {
     variables: { id: currentUser.id },
   })
+  const [memberByEmail] = useLazyQuery(GET_LOGGED_IN_USER, {
+    onCompleted: (data) => {
+      let church
+      if (data.memberByEmail.bacenta.centre?.town) {
+        church = 'town'
+      }
+      if (data.memberByEmail.bacenta.centre?.campus) {
+        church = 'campus'
+      }
+
+      setCurrentUser({
+        ...currentUser,
+        id: data.memberByEmail.id,
+        firstName: data.memberByEmail.firstName,
+        lastName: data.memberByEmail.lastName,
+        fullName:
+          data.memberByEmail.firstName + ' ' + data.memberByEmail.lastName,
+        picture: data.memberByEmail?.pictureUrl ?? null,
+        bacenta: data.memberByEmail?.bacenta,
+        bishop: data.memberByEmail?.bacenta?.centre[`${church}`]?.bishop.id,
+        constituency: data.memberByEmail?.bacenta?.centre[`${church}`]?.id,
+        church: { church: church, subChurch: 'centre' },
+        email: user?.email,
+        roles: user ? user[`https://flcadmin.netlify.app/roles`] : [],
+      })
+    },
+  })
+
+  useEffect(() => {
+    if (!currentUser?.email?.length) {
+      user && memberByEmail({ variables: { email: user.email } })
+    }
+
+    // eslint-disable-next-line
+  }, [isAuthenticated])
   const servant = data?.members[0]
 
   useEffect(() => {
@@ -36,7 +75,7 @@ const Navigator = () => {
       assessmentData: assessmentChurchData,
       assessmentChurch: assessmentChurch,
     })
-  }, [data, setUserJobs])
+  }, [data, loading, setUserJobs])
 
   // What leadership roles does this person play?
   let roles = []
@@ -183,7 +222,7 @@ const Navigator = () => {
       collapseOnSelect
       bg={theme}
       variant={theme}
-      expand="md"
+      expand={false}
       sticky="top"
       defaultActiveKey="0"
     >
@@ -199,7 +238,7 @@ const Navigator = () => {
           placement="start"
           className={`bg-nav ${theme}`}
         >
-          <Offcanvas.Header closeButton>
+          <Offcanvas.Header className={`${theme}`} closeButton>
             <Offcanvas.Title id="offcanvasNavbarLabel">
               <img
                 src={logo}
@@ -211,7 +250,7 @@ const Navigator = () => {
             </Offcanvas.Title>
           </Offcanvas.Header>
           <Offcanvas.Body>
-            <Nav className="justify-content-start flex-grow-1 pe-3">
+            <Nav className="justify-content-start flex-grow-1">
               {menuItems.map((menuItem, index) => (
                 <RoleView key={index} roles={menuItem.roles}>
                   <Nav.Link

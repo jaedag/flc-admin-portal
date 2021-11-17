@@ -408,7 +408,7 @@ const PastorsAdmin = () => {
               <div className={`bg ${theme}`}>
                 <Switch>
                   {/* Landing Pages - Dashboards for Different Roles */}
-                  <Route path="/" component={UserDashboard} exact />
+                  <Route path="/" component={UserDashboard} placeholder exact />
                   <Route path="/directory" component={Directory} exact />
                   <ChurchDirectoryRoute
                     path="/directory/churches"
@@ -424,6 +424,13 @@ const PastorsAdmin = () => {
                   <ProtectedRoute
                     path="/services/fellowship"
                     component={Fellowship}
+                    placeholder
+                    exact
+                  />
+                  <ProtectedRoute
+                    path="/services/trends"
+                    component={BacentaReport}
+                    placeholder
                     exact
                   />
                   <Route path="/arrivals" component={Arrivals} exact />
@@ -855,10 +862,10 @@ const PastorsAdmin = () => {
                       'adminBishop',
                       'adminCampus',
                       'adminTown',
-                      'leaderBacenta',
                     ]}
                     path="/bacenta/service-details"
                     component={BacentaServiceDetails}
+                    placeholder
                   />
                   <ProtectedRoute
                     roles={[
@@ -866,10 +873,10 @@ const PastorsAdmin = () => {
                       'adminBishop',
                       'adminCampus',
                       'adminTown',
-                      'leaderBacenta',
                     ]}
                     path="/services/fellowship/no-service"
                     component={BacentaServiceCancelled}
+                    placeholder
                   />
                   <ProtectedRoute
                     roles={[

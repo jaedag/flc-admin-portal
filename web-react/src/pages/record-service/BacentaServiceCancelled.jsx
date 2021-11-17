@@ -15,7 +15,12 @@ const BacentaServiceCancelled = () => {
   const [RecordCancelledService] = useMutation(RECORD_CANCELLED_SERVICE)
 
   return (
-    <BaseComponent loadingState={loading} errorState={error} data={data}>
+    <BaseComponent
+      loadingState={loading}
+      errorState={error}
+      data={data}
+      placeholder
+    >
       <CancelledServiceForm
         RecordServiceMutation={RecordCancelledService}
         church={data?.bacentas[0]}

@@ -6,7 +6,7 @@ import { ChurchContext } from '../contexts/ChurchContext'
 import { isAuthorised } from '../global-utils'
 import LoadingScreen from 'components/base-component/LoadingScreen'
 
-const ProtectedRoute = ({ component, roles, ...args }) => {
+const ProtectedRoute = ({ component, roles, placeholder, ...args }) => {
   const { currentUser } = useContext(MemberContext)
   const { isAuthenticated } = useAuth0()
   const church = useContext(ChurchContext)
@@ -38,6 +38,9 @@ const ProtectedRoute = ({ component, roles, ...args }) => {
   } else if (isAuthorised(['leaderBacenta'], currentUser.roles)) {
     //If the user does not have permission but is a Bacenta Leader
     church.setBacentaId(currentUser.bacenta.id)
+    return <Route component={component} {...args} />
+  } else if (placeholder) {
+    //If the user does not have permission but is a Bacenta Leader
     return <Route component={component} {...args} />
   } else {
     return <LoadingScreen />

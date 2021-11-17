@@ -54,7 +54,7 @@ const CancelledServiceForm = ({ church, churchId, churchType }) => {
       {(formik) => (
         <Container>
           <HeadingPrimary>I Cancelled My Service</HeadingPrimary>
-          <HeadingSecondary>{`${church.name} ${church.__typename}`}</HeadingSecondary>
+          <HeadingSecondary>{`${church?.name} ${church?.__typename}`}</HeadingSecondary>
 
           <Form className="form-group mt-5">
             <Row className="row-cols-1 row-cols-md-2">

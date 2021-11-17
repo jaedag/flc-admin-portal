@@ -345,3 +345,11 @@ body {
 a {
   text-decoration: none;
 }
+
+.panel-body {
+  background-color: black !important;
+}
+
+.placeholder-display {
+  font-size: 13px;
+}

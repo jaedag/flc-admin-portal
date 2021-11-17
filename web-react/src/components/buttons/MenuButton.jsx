@@ -3,6 +3,7 @@ import { MemberContext } from 'contexts/MemberContext'
 import { capitalise } from 'global-utils'
 import React, { useContext } from 'react'
 import { Button, Col, Row } from 'react-bootstrap'
+import './MenuButton.css'
 
 const MenuButton = (props) => {
   const { theme, currentUser } = useContext(MemberContext)
@@ -21,12 +22,13 @@ const MenuButton = (props) => {
           <Col xs="auto" className="btn-left-col my-auto">
             <PlaceholderCustom
               loading={!currentUser.fullName}
-              className="rounded-circle"
+              className="rounded-circle menu"
               as="div"
             >
               <div
                 className={
-                  props.iconBg && `rounded-circle gradient-bg ${props.color}`
+                  props.iconBg &&
+                  `rounded-circle menu gradient-bg ${props.color}`
                 }
               >
                 {props.icon && <img src={props.icon} className="square-img" />}

@@ -16,6 +16,7 @@ export const DISPLAY_MEMBER = gql`
       email
       phoneNumber
       whatsappNumber
+      pictureUrl
       dob {
         date
       }

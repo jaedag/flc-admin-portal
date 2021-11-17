@@ -50,7 +50,7 @@ const DisplayPage = () => {
             </h6>
           </div>
           <div className="py-5">
-            <Accordion>
+            <Accordion flush>
               <Stack gap={4}>
                 <div className="px-4">
                   <Accordion.Item eventKey="0">

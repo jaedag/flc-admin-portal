@@ -282,4 +282,10 @@ a {
 .btn-secondary.dark {
   background-color: var(--card);
   width: 100%;
+.panel-body {
+  background-color: black !important;
+}
+
+.placeholder-display {
+  font-size: 13px;
 }

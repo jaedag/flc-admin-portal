@@ -22,7 +22,7 @@ export const menuItems = [
   },
   {
     name: 'Services',
-    to: '/services',
+    to: '/services/church-list',
     Icon: PencilSquare,
     roles: ['leaderBacenta', 'leaderCentre'],
   },

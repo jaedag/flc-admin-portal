@@ -56,7 +56,7 @@ import SontaServiceDetails from 'pages/record-service/SontaServiceDetails'
 import BacentaServiceCancelled from 'pages/record-service/BacentaServiceCancelled'
 // import SideBar from 'pages/dashboards/SideBar'
 import Directory from 'pages/dashboards/Directory'
-import Services from 'pages/dashboards/Services'
+import Services from 'pages/dashboards/ServicesMenu'
 import Arrivals from 'pages/dashboards/Arrivals'
 import Campaigns from 'pages/dashboards/Campaigns'
 import Reconciliation from 'pages/dashboards/Reconciliation'
@@ -67,6 +67,7 @@ import MembersDirectoryRoute from './auth/MembersDirectoryRoute.jsx'
 import UserDashboard from 'pages/dashboards/UserDashboard'
 import Fellowship from 'pages/services/Fellowship.jsx'
 import Navigation from 'pages/dashboards/Navigation.jsx'
+import ServicesChurchList from 'pages/dashboards/ServicesChurchList'
 
 const PastorsAdmin = () => {
   const [church, setChurch] = useState(
@@ -418,6 +419,11 @@ const PastorsAdmin = () => {
                   <MembersDirectoryRoute
                     path="/directory/members"
                     component={Members}
+                    exact
+                  />
+                  <Route
+                    path="/services/church-list"
+                    component={ServicesChurchList}
                     exact
                   />
                   <Route path="/services" component={Services} exact />

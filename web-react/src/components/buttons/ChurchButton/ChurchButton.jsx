@@ -1,6 +1,6 @@
+import { ChurchContext } from 'contexts/ChurchContext'
 import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
-import { ChurchContext } from '../../contexts/ChurchContext'
 import './ChurchButton.css'
 
 const ChurchButton = (props) => {

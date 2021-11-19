@@ -1,5 +1,5 @@
-import MinusSign from 'components/buttons/MinusSign'
-import PlusSign from 'components/buttons/PlusSign'
+import MinusSign from 'components/buttons/PlusMinusSign/MinusSign'
+import PlusSign from 'components/buttons/PlusMinusSign/PlusSign'
 import FormikControl from 'components/formik-components/FormikControl'
 import { ChurchContext } from 'contexts/ChurchContext'
 import { FieldArray, Form, Formik } from 'formik'

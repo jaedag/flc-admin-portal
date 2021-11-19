@@ -64,7 +64,7 @@ const DetailsBacenta = () => {
   if (bacenta?.labels.includes('ChurchPlanter')) {
     bacentaType = 'IC'
   }
-  if (bacenta?.labels.includes('ActiveBacenta')) {
+  if (bacenta?.labels.includes('Vacation')) {
     vacation = true
   }
 

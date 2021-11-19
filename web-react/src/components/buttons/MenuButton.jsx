@@ -32,6 +32,11 @@ const MenuButton = (props) => {
                 {props.icon && <img src={props.icon} className="square-img" />}
                 {props.iconComponent && <props.iconComponent />}
               </div>
+              {props.iconCaption && (
+                <small className={`${theme} icon-caption`}>
+                  {props.iconCaption}
+                </small>
+              )}
             </PlaceholderCustom>
           </Col>
         )}

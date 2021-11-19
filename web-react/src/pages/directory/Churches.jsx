@@ -1,6 +1,7 @@
 import MenuButton from 'components/buttons/MenuButton'
 import PlaceholderCustom from 'components/Placeholder'
 import { MemberContext } from 'contexts/MemberContext'
+import { parseMemberCount } from 'global-utils'
 import React, { useContext } from 'react'
 import { Container } from 'react-bootstrap'
 import { useHistory } from 'react-router'
@@ -29,8 +30,10 @@ const Churches = () => {
               <MenuButton
                 key={index}
                 title={job.church.name}
+                caption={parseMemberCount(job.church.memberCount)}
                 icon={MemberIcon}
                 iconBg={true}
+                iconCaption={job.church.__typename}
                 onClick={() => {
                   job.clickCard()
                   history.push(job.link)

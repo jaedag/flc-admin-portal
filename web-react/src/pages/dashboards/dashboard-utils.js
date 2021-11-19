@@ -24,7 +24,7 @@ export const menuItems = [
     name: 'Services',
     to: '/services',
     Icon: PencilSquare,
-    roles: ['leaderBacenta'],
+    roles: ['leaderBacenta', 'leaderCentre'],
   },
   { name: 'Arrivals', to: '/arrivals', Icon: Truck },
   { name: 'Campaigns', to: '/campaigns', Icon: FlagFill },

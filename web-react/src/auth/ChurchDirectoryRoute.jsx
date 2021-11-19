@@ -7,7 +7,6 @@ import { ChurchContext } from '../contexts/ChurchContext'
 import CampusTownMembers from '../pages/grids/CampusTownMembers.jsx'
 import LoadingScreen from '../components/base-component/LoadingScreen'
 import { isAuthorised } from '../global-utils'
-import CentreMembers from 'pages/grids/CentreMembers'
 import Churches from 'pages/directory/Churches'
 
 const ChurchDirectoryRoute = ({ component, roles, ...args }) => {
@@ -60,15 +59,8 @@ const ChurchDirectoryRoute = ({ component, roles, ...args }) => {
     )
   } else if (isAuthorised(['leaderCentre'], currentUser.roles)) {
     //If the user does not have permission but is a Centre Leader
-    return (
-      <Route
-        component={withAuthenticationRequired(CentreMembers, {
-          // eslint-disable-next-line react/display-name
-          onRedirecting: () => <LoadingScreen />,
-        })}
-        {...args}
-      />
-    )
+    church.setCentreId(currentUser.bacenta.centre.id)
+    return <Route component={Churches} />
   } else if (isAuthorised(['leaderBacenta'], currentUser.roles)) {
     //If the user does not have permission but is a Bacenta Leader
     church.setBacentaId(currentUser.bacenta.id)

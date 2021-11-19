@@ -24,6 +24,11 @@
   font-size: 10px;
   display: block;
 }
+.icon-caption {
+  font-size: 10px;
+  display: block;
+  color: var(--text-primary);
+}
 .menu-subheading {
   font-size: 20px;
 }
@@ -45,8 +50,6 @@
 .rounded-circle {
   padding: 5px;
   margin: 0px;
-  /* height: 50px; */
-  width: 54px;
 }
 .rounded-circle.gradient-bg {
   background-image: linear-gradient(#161f04, #242d0e);

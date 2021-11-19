@@ -13,8 +13,8 @@ import {
   TITLE_OPTIONS,
 } from '../../global-utils'
 import { GET_MINISTRIES } from '../../queries/ListQueries'
-import MinusSign from '../buttons/MinusSign'
-import PlusSign from '../buttons/PlusSign'
+import MinusSign from '../buttons/PlusMinusSign/MinusSign'
+import PlusSign from '../buttons/PlusMinusSign/PlusSign'
 import ErrorScreen from '../base-component/ErrorScreen'
 import { BISHOP_BACENTA_DROPDOWN } from '../formik-components/ComboboxQueries'
 import FormikControl from '../formik-components/FormikControl'

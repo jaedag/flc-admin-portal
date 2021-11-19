@@ -203,6 +203,7 @@ export const SERVANTS_DASHBOARD = gql`
             id
           }
         }
+        memberCount
         services {
           id
           historyRecord
@@ -315,8 +316,11 @@ export const SERVANTS_DASHBOARD = gql`
 
 export const SERVANT_CHURCHES_COUNT = gql`
   query churchesLed($id: ID!) {
-    bacentaMembershipCount(id: $id)
-    basontaMembershipCount(id: $id)
+    members(where: { id: $id }) {
+      id
+      membershipCount
+      basontaMembershipCount
+    }
     leadsBacentaCount(id: $id)
     leadsCentreCount(id: $id)
     leadsConstituencyCount(id: $id)

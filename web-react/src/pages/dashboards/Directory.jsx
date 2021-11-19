@@ -9,6 +9,7 @@ import { useQuery } from '@apollo/client'
 import { SERVANT_CHURCHES_COUNT } from './DashboardQueries'
 import MenuButton from 'components/buttons/MenuButton'
 import { useHistory } from 'react-router'
+import { getChurchCount, getMemberCount } from 'global-utils'
 
 const Directory = () => {
   const { currentUser, theme } = useContext(MemberContext)
@@ -16,69 +17,6 @@ const Directory = () => {
     variables: { id: currentUser.id },
   })
   const history = useHistory()
-
-  const getMemberCount = (servant) => {
-    return (
-      servant?.bacentaMembershipCount +
-      ' Members, ' +
-      servant?.basontaMembershipCount +
-      ' in Ministries'
-    )
-  }
-
-  const getChurchCounts = (servant) => {
-    let churchesCount = ''
-
-    if (servant?.leadsConstituencyCount) {
-      if (churchesCount) {
-        churchesCount = churchesCount + ','
-      }
-      if (servant.leadsConstituencyCount === 1) {
-        churchesCount = servant.leadsConstituencyCount + ' Constituency'
-      } else {
-        churchesCount = servant.leadsConstituencyCount + ' Constituencies'
-      }
-    }
-
-    if (servant?.bishopConstituencyCount) {
-      if (churchesCount) {
-        churchesCount = churchesCount + ','
-      }
-      if (servant.bishopConstituencyCount === 1) {
-        churchesCount = servant.bishopConstituencyCount + ' Constituency'
-      } else {
-        churchesCount = servant.bishopConstituencyCount + ' Constituencies'
-      }
-    }
-
-    if (servant?.leadsCentreCount) {
-      if (churchesCount) {
-        churchesCount = churchesCount + ','
-      }
-      if (servant.leadsCentreCount === 1) {
-        churchesCount =
-          churchesCount + ' ' + servant.leadsCentreCount + ' Centre'
-      } else {
-        churchesCount =
-          churchesCount + ' ' + servant.leadsCentreCount + ' Centres'
-      }
-    }
-
-    if (servant?.leadsBacentaCount) {
-      if (churchesCount) {
-        churchesCount = churchesCount + ','
-      }
-      if (servant.leadsBacentaCount === 1) {
-        churchesCount =
-          churchesCount + ' ' + servant.leadsBacentaCount + ' Bacenta'
-      } else {
-        churchesCount =
-          churchesCount + ' ' + servant.leadsBacentaCount + ' Bacentas'
-      }
-    }
-
-    return churchesCount
-  }
 
   return (
     <div className="d-flex align-items-center justify-content-center h-75 nav-margin-top-0">
@@ -94,14 +32,14 @@ const Directory = () => {
           <MenuButton
             icon={MemberIcon}
             title="members"
-            caption={getMemberCount(data)}
+            caption={getMemberCount(data?.members[0])}
             color="members"
             onClick={() => history.push(`/directory/members`)}
           />
           <MenuButton
             icon={ChurchIcon}
             title="churches"
-            caption={getChurchCounts(data)}
+            caption={getChurchCount(data)}
             color="churches"
             onClick={() => history.push(`/directory/churches`)}
           />

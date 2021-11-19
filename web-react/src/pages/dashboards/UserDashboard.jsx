@@ -52,7 +52,6 @@ const UserDashboard = () => {
             </tbody>
           </table>
         </div>
-
         <>
           <Row className="mt-3">
             <Col>

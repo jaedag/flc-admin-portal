@@ -236,3 +236,70 @@ export const average = (array) => {
   }
   return sum / len
 }
+
+export const parseMemberCount = (number) => {
+  if (number === 1) {
+    return number + ' Member'
+  }
+  return number + ' Members'
+}
+export const getMemberCount = (servant) => {
+  return (
+    parseMemberCount(servant?.membershipCount) +
+    ', ' +
+    servant?.basontaMembershipCount +
+    ' in Ministries'
+  )
+}
+export const getChurchCount = (servant) => {
+  let churchesCount = ''
+
+  if (servant?.leadsConstituencyCount) {
+    if (churchesCount) {
+      churchesCount = churchesCount + ','
+    }
+    if (servant.leadsConstituencyCount === 1) {
+      churchesCount = servant.leadsConstituencyCount + ' Constituency'
+    } else {
+      churchesCount = servant.leadsConstituencyCount + ' Constituencies'
+    }
+  }
+
+  if (servant?.bishopConstituencyCount) {
+    if (churchesCount) {
+      churchesCount = churchesCount + ','
+    }
+    if (servant.bishopConstituencyCount === 1) {
+      churchesCount = servant.bishopConstituencyCount + ' Constituency'
+    } else {
+      churchesCount = servant.bishopConstituencyCount + ' Constituencies'
+    }
+  }
+
+  if (servant?.leadsCentreCount) {
+    if (churchesCount) {
+      churchesCount = churchesCount + ','
+    }
+    if (servant.leadsCentreCount === 1) {
+      churchesCount = churchesCount + ' ' + servant.leadsCentreCount + ' Centre'
+    } else {
+      churchesCount =
+        churchesCount + ' ' + servant.leadsCentreCount + ' Centres'
+    }
+  }
+
+  if (servant?.leadsBacentaCount) {
+    if (churchesCount) {
+      churchesCount = churchesCount + ','
+    }
+    if (servant.leadsBacentaCount === 1) {
+      churchesCount =
+        churchesCount + ' ' + servant.leadsBacentaCount + ' Bacenta'
+    } else {
+      churchesCount =
+        churchesCount + ' ' + servant.leadsBacentaCount + ' Bacentas'
+    }
+  }
+
+  return churchesCount
+}

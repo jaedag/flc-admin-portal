@@ -12,7 +12,7 @@ type Member {
   gender: Gender @relationship(type: "HAS_GENDER", direction: OUT)
   maritalStatus: MaritalStatus
     @relationship(type: "HAS_MARITAL_STATUS", direction: OUT)
-  do: TimeGraph @relationship(type: "WAS_BORN_ON", direction: OUT)
+  dob: TimeGraph @relationship(type: "WAS_BORN_ON", direction: OUT)
   title: [Title]
     @relationship(type: "HAS_TITLE", properties: "HasTitle", direction: OUT)
   ministry: Ministry @relationship(type: "BELONGS_TO", direction: OUT)
@@ -210,6 +210,20 @@ type Constituency {
 type Campus {
   id: ID @id
   name: String
+   members: [Member]
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*1..4]->(bacenta:Bacenta)<-[:BELONGS_TO]-(members:Member)
+      RETURN members
+      """
+    )
+  memberCount: Int
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*1..4]->(bacenta:Bacenta)<-[:BELONGS_TO]-(members:Member)
+      RETURN COUNT(members)
+      """
+    )
   leader: Member @relationship(type: "LEADS", direction: IN)
   sontas: [Sonta] @relationship(type: "HAS_SONTA", direction: OUT)
   centres: [Centre] @relationship(type: "HAS", direction: OUT)
@@ -225,6 +239,20 @@ type Campus {
 type Town {
   id: ID @id
   name: String
+  members: [Member]
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*1..4]->(bacenta:Bacenta)<-[:BELONGS_TO]-(members:Member)
+      RETURN members
+      """
+    )
+  memberCount: Int
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*1..4]->(bacenta:Bacenta)<-[:BELONGS_TO]-(members:Member)
+      RETURN COUNT(members)
+      """
+    )
   leader: Member @relationship(type: "LEADS", direction: IN)
   sontas: [Sonta] @relationship(type: "HAS_SONTA", direction: OUT)
   centres: [Centre] @relationship(type: "HAS", direction: OUT)

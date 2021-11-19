@@ -24,9 +24,14 @@ export const menuItems = [
     name: 'Services',
     to: '/services/church-list',
     Icon: PencilSquare,
-    roles: ['leaderBacenta', 'leaderCentre'],
+    roles: ['leaderBacenta', 'leaderCentre', 'leaderTown', 'leaderCampus'],
   },
   { name: 'Arrivals', to: '/arrivals', Icon: Truck },
-  { name: 'Campaigns', to: '/campaigns', Icon: FlagFill },
+  {
+    name: 'Campaigns',
+    to: '/campaigns',
+    Icon: FlagFill,
+    roles: ['leaderTown', 'leaderCampus'],
+  },
   { name: 'Reconciliation', to: '/recon', Icon: JournalCheck },
 ]

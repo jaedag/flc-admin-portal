@@ -26,6 +26,8 @@ import { Container, Row, Col, Button, Spinner } from 'react-bootstrap'
 import { MemberContext } from 'contexts/MemberContext'
 import './Forms.css'
 import LoadingScreen from 'components/base-component/LoadingScreen'
+import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
+import HeadingSecondary from 'components/HeadingSecondary'
 
 const BacentaForm = ({ initialValues, onSubmit, title, newBacenta }) => {
   const {
@@ -94,8 +96,8 @@ const BacentaForm = ({ initialValues, onSubmit, title, newBacenta }) => {
   return (
     <>
       <Container>
-        <div className="page-header left">{title}</div>
-        <p className="text-secondary">{initialValues.bacentaName}</p>
+        <HeadingPrimary>{title}</HeadingPrimary>
+        <HeadingSecondary>{initialValues.bacentaName}</HeadingSecondary>
       </Container>
       <Formik
         initialValues={initialValues}

@@ -29,7 +29,7 @@ import DisplaySontasByCampusTown from './pages/display/SontasByCampusTown'
 import UpdateBacenta from './pages/update/UpdateBacenta'
 import ProtectedRoute from './auth/ProtectedRoute.jsx'
 import ProtectedRouteHome from './auth/ProtectedRouteHome.jsx'
-import ProtectedMembersRoute from './auth/MembersDirectoryRoute.jsx'
+import ProtectedMembersRoute from './pages/directory/MembersDirectoryRoute.jsx'
 import MemberFiltersMobile from './pages/mobile/MemberFilters'
 import UserProfileDisplayPage from './pages/user-profile/DisplayPage'
 import UserProfileEditPage from './pages/user-profile/EditPage'
@@ -63,11 +63,12 @@ import Reconciliation from 'pages/dashboards/Reconciliation'
 import Churches from 'pages/directory/Churches'
 import Members from 'pages/directory/Members'
 import ChurchDirectoryRoute from 'auth/ChurchDirectoryRoute'
-import MembersDirectoryRoute from './auth/MembersDirectoryRoute.jsx'
+import MembersDirectoryRoute from './pages/directory/MembersDirectoryRoute.jsx'
 import UserDashboard from 'pages/dashboards/UserDashboard'
 import Fellowship from 'pages/services/Fellowship.jsx'
 import Navigation from 'pages/dashboards/Navigation.jsx'
 import ServicesChurchList from 'pages/dashboards/ServicesChurchList'
+import ProtectedReports from 'pages/reports/ProtectedReports.jsx'
 
 const PastorsAdmin = () => {
   const [church, setChurch] = useState(
@@ -433,12 +434,7 @@ const PastorsAdmin = () => {
                     placeholder
                     exact
                   />
-                  <ProtectedRoute
-                    path="/services/trends"
-                    component={BacentaReport}
-                    placeholder
-                    exact
-                  />
+                  <ProtectedReports path="/services/trends" placeholder exact />
                   <Route path="/arrivals" component={Arrivals} exact />
                   <Route path="/campaigns" component={Campaigns} exact />
                   <Route path="/recon" component={Reconciliation} exact />
@@ -832,6 +828,7 @@ const PastorsAdmin = () => {
                       'adminBishop',
                       'adminCampus',
                       'adminTown',
+                      'leaderTown',
                     ]}
                     path="/centre/editcentre"
                     component={UpdateCentre}

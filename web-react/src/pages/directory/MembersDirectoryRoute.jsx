@@ -1,45 +1,45 @@
 import React, { useContext, useEffect } from 'react'
 import { Route } from 'react-router-dom'
 import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react'
-import { MemberContext } from '../contexts/MemberContext'
-import { ChurchContext } from '../contexts/ChurchContext'
-import BishopMembers from '../pages/grids/BishopMembers.jsx'
-import CampusTownMembers from '../pages/grids/CampusTownMembers.jsx'
-import LoadingScreen from '../components/base-component/LoadingScreen'
-import { isAuthorised } from '../global-utils'
+import { MemberContext } from '../../contexts/MemberContext'
+import { ChurchContext } from '../../contexts/ChurchContext'
+import BishopMembers from '../grids/BishopMembers.jsx'
+import CampusTownMembers from '../grids/CampusTownMembers.jsx'
+import LoadingScreen from '../../components/base-component/LoadingScreen'
+import { isAuthorised } from '../../global-utils'
 import BacentaMembers from 'pages/grids/BacentaMembers'
 import CentreMembers from 'pages/grids/CentreMembers'
 
 const MembersDirectoryRoute = ({ component, roles, ...args }) => {
   const { currentUser } = useContext(MemberContext)
   const { isAuthenticated } = useAuth0()
-  const {
-    setBishopId,
-    setTownId,
-    setCampusId,
-    setChurch,
-    setBacentaId,
-  } = useContext(ChurchContext)
+  const church = useContext(ChurchContext)
 
   useEffect(() => {
     if (isAuthenticated && !currentUser.roles.includes('adminFederal')) {
       //if User is not a federal admin
-      setBishopId(currentUser.bishop)
-      setChurch(currentUser.church)
+      church.setBishopId(currentUser.bishop)
+      church.setChurch(currentUser.church)
 
       if (!currentUser.roles.includes('adminBishop')) {
         //User is not a Bishops Admin the he can only be looking at his constituency membership
-        setTownId(currentUser.constituency)
-        setCampusId(currentUser.constituency)
+        church.setTownId(currentUser.constituency)
+        church.setCampusId(currentUser.constituency)
       }
 
       if (currentUser.roles.includes('leaderBacenta')) {
         //User is not a Bishops Admin the he can only be looking at his constituency membership
-        setBacentaId(currentUser.bacenta.id)
+        church.setBacentaId(currentUser.bacenta.id)
       }
     }
     // eslint-disable-next-line
-  }, [currentUser, setBishopId, setTownId, setCampusId, setChurch])
+  }, [
+    currentUser,
+    church.setBishopId,
+    church.setTownId,
+    church.setCampusId,
+    church.setChurch,
+  ])
 
   if (isAuthorised(roles, currentUser.roles)) {
     //if the user has permission to access the route
@@ -63,35 +63,21 @@ const MembersDirectoryRoute = ({ component, roles, ...args }) => {
         {...args}
       />
     )
-  } else if (
-    isAuthorised(
-      ['adminCampus', 'adminTown', 'leaderCampus', 'leaderTown'],
-      currentUser.roles
-    )
-  ) {
-    //If the user does not have permission but is a CO Admin
-    return (
-      <Route
-        component={withAuthenticationRequired(CampusTownMembers, {
-          // eslint-disable-next-line react/display-name
-          onRedirecting: () => <LoadingScreen />,
-        })}
-        {...args}
-      />
-    )
+  } else if (isAuthorised(['adminCampus', 'leaderCampus'], currentUser.roles)) {
+    //If the user does not have permission but is a CO or CO Admin
+    church.setCampusId(currentUser.bacenta.centre.campus.id)
+    return <Route component={CampusTownMembers} />
+  } else if (isAuthorised(['adminTown', 'leaderTown'], currentUser.roles)) {
+    //If the user does not have permission but is a CO or CO Admin
+    church.setTownId(currentUser.bacenta.centre.town.id)
+    return <Route component={CampusTownMembers} />
   } else if (isAuthorised(['leaderCentre'], currentUser.roles)) {
     //If the user does not have permission but is a Centre Leader
-    return (
-      <Route
-        component={withAuthenticationRequired(CentreMembers, {
-          // eslint-disable-next-line react/display-name
-          onRedirecting: () => <LoadingScreen />,
-        })}
-        {...args}
-      />
-    )
+    church.setCentreId(currentUser.bacenta.centre.id)
+    return <Route component={CentreMembers} />
   } else if (isAuthorised(['leaderBacenta'], currentUser.roles)) {
-    //If the user does not have permission but is a Centre Leader
+    //If the user does not have permission but is a Bacenta Leader
+    church.setBacentaId(currentUser.bacenta.id)
     return <Route component={BacentaMembers} />
   } else {
     return <BacentaMembers />

@@ -105,7 +105,7 @@ const MemberDisplay = ({ memberId }) => {
           <DetailsCard heading="Bacenta" detail={member?.bacenta?.name} />
         </Col>
         <Col>
-          <DetailsCard heading="Ministry" detail={member?.ministry.name} />
+          <DetailsCard heading="Ministry" detail={member?.ministry?.name} />
         </Col>
 
         <Col sm={1}>

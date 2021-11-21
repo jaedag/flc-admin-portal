@@ -34,7 +34,7 @@ export const CentreReport = () => {
             <MembershipCard
               link="/centre/members"
               title="Membership"
-              count={data?.centreMemberCount}
+              count={data?.centres[0].memberCount}
             />
           </div>
         </div>

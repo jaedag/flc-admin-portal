@@ -268,8 +268,8 @@ export const DISPLAY_BACENTA = gql`
         }
         historyRecord
       }
+      memberCount
     }
-    bacentaMemberCount(id: $id)
   }
 `
 
@@ -381,6 +381,7 @@ export const DISPLAY_CENTRE = gql`
         firstName
         lastName
         fullName
+        pictureUrl
         whatsappNumber
         title {
           title
@@ -399,8 +400,8 @@ export const DISPLAY_CENTRE = gql`
         }
         historyRecord
       }
+      memberCount
     }
-    centreMemberCount(id: $id)
   }
 `
 
@@ -467,6 +468,7 @@ export const DISPLAY_TOWN = gql`
         firstName
         lastName
         fullName
+        pictureUrl
       }
       history(options: { limit: 10 }) {
         id
@@ -481,8 +483,9 @@ export const DISPLAY_TOWN = gql`
         }
         historyRecord
       }
+      memberCount
     }
-    townMemberCount(id: $id)
+
     townBacentaCount(id: $id)
   }
 `
@@ -550,6 +553,7 @@ export const DISPLAY_CAMPUS = gql`
         firstName
         lastName
         fullName
+        pictureUrl
       }
       history(options: { limit: 10 }) {
         id
@@ -564,8 +568,8 @@ export const DISPLAY_CAMPUS = gql`
         }
         historyRecord
       }
+      memberCount
     }
-    campusMemberCount(id: $id)
     campusBacentaCount(id: $id)
   }
 `

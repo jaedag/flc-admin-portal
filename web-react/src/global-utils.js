@@ -245,7 +245,7 @@ export const parseMemberCount = (number) => {
 }
 export const getMemberCount = (servant) => {
   return (
-    parseMemberCount(servant?.membershipCount) +
+    parseMemberCount(servant?.memberCount) +
     ', ' +
     servant?.basontaMembershipCount +
     ' in Ministries'

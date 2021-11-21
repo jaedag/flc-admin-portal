@@ -1,11 +1,9 @@
 import React, { useContext, useEffect } from 'react'
 import { Route } from 'react-router-dom'
-import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react'
+import { useAuth0 } from '@auth0/auth0-react'
 
 import { MemberContext } from '../contexts/MemberContext'
 import { ChurchContext } from '../contexts/ChurchContext'
-import CampusTownMembers from '../pages/grids/CampusTownMembers.jsx'
-import LoadingScreen from '../components/base-component/LoadingScreen'
 import { isAuthorised } from '../global-utils'
 import Churches from 'pages/directory/Churches'
 
@@ -41,22 +39,14 @@ const ChurchDirectoryRoute = ({ component, roles, ...args }) => {
   } else if (isAuthorised(['adminBishop', 'bishop'], currentUser.roles)) {
     //if the user does not have permission but is a Bishop's Admin
     return <Route component={component} {...args} />
-  } else if (
-    isAuthorised(
-      ['adminCampus', 'adminTown', 'leaderCampus', 'leaderTown'],
-      currentUser.roles
-    )
-  ) {
-    //If the user does not have permission but is a CO Admin
-    return (
-      <Route
-        component={withAuthenticationRequired(CampusTownMembers, {
-          // eslint-disable-next-line react/display-name
-          onRedirecting: () => <LoadingScreen />,
-        })}
-        {...args}
-      />
-    )
+  } else if (isAuthorised(['leaderTown', 'adminTown'], currentUser.roles)) {
+    //If the user does not have permission but is a Town Leader or Admin
+    church.setCampusId(currentUser.bacenta.centre.town.id)
+    return <Route component={Churches} />
+  } else if (isAuthorised(['leaderCampus', 'adminCampus'], currentUser.roles)) {
+    //If the user does not have permission but is a Campus Leader or Admin
+    church.setCampusId(currentUser.bacenta.centre.campus.id)
+    return <Route component={Churches} />
   } else if (isAuthorised(['leaderCentre'], currentUser.roles)) {
     //If the user does not have permission but is a Centre Leader
     church.setCentreId(currentUser.bacenta.centre.id)

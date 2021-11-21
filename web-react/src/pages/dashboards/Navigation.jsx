@@ -277,7 +277,14 @@ const Navigator = () => {
             </Form>
           </Offcanvas.Body>
           <Container className="footer">
-            <UserProfileIcon />
+            <Nav.Link
+              as={Link}
+              eventKey={menuItems.length}
+              exact
+              to="/user-profile"
+            >
+              <UserProfileIcon />
+            </Nav.Link>
           </Container>
         </Navbar.Offcanvas>
       </Container>

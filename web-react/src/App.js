@@ -66,6 +66,7 @@ import ChurchDirectoryRoute from 'auth/ChurchDirectoryRoute'
 import MembersDirectoryRoute from './pages/directory/MembersDirectoryRoute.jsx'
 import UserDashboard from 'pages/dashboards/UserDashboard'
 import Fellowship from 'pages/services/Fellowship.jsx'
+import ConstituencyJoint from 'pages/services/ConstituencyJoint.jsx'
 import Navigation from 'pages/dashboards/Navigation.jsx'
 import ServicesChurchList from 'pages/dashboards/ServicesChurchList'
 import ProtectedReports from 'pages/reports/ProtectedReports.jsx'
@@ -431,6 +432,12 @@ const PastorsAdmin = () => {
                   <ProtectedRoute
                     path="/services/fellowship"
                     component={Fellowship}
+                    placeholder
+                    exact
+                  />
+                  <ProtectedRoute
+                    path="/services/constituency-joint"
+                    component={ConstituencyJoint}
                     placeholder
                     exact
                   />
@@ -891,6 +898,26 @@ const PastorsAdmin = () => {
                     ]}
                     path="/services/fellowship/form"
                     component={BacentaService}
+                  />
+                  <ProtectedRoute
+                    roles={[
+                      'adminFederal',
+                      'adminBishop',
+                      'adminTown',
+                      'leaderTown',
+                    ]}
+                    path="/services/town/constituency-joint/form"
+                    component={TownService}
+                  />
+                  <ProtectedRoute
+                    roles={[
+                      'adminFederal',
+                      'adminBishop',
+                      'adminCampus',
+                      'leaderCampus',
+                    ]}
+                    path="/services/campus/constituency-joint/form"
+                    component={CampusService}
                   />
                   <ProtectedRoute
                     roles={[

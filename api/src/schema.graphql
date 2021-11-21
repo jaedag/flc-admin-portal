@@ -22,14 +22,14 @@ type Member {
     @cypher(
       statement: """
       MATCH (this)-[:LEADS|HAS*1..4]->(:Bacenta)-[:BELONGS_TO]-(members)
-      RETURN members
+      RETURN DISTINCT members
       """
     )
-  membershipCount: Int
+  memberCount: Int
     @cypher(
       statement: """
       MATCH (this)-[:LEADS|HAS*1..4]->(:Bacenta)-[:BELONGS_TO]-(members)
-      RETURN COUNT(members)
+      RETURN COUNT(DISTINCT members)
       """
     )
   basontaMembers: [Member]
@@ -37,7 +37,7 @@ type Member {
       statement: """
       MATCH (this)-[:LEADS|HAS*1..4]->(:Bacenta)-[:BELONGS_TO]-(members)
       MATCH (members)-[:BELONGS_TO]->(:Ministry)
-      RETURN members
+      RETURN DISTINCT members
       """
     )
   basontaMembershipCount: Int
@@ -45,7 +45,7 @@ type Member {
       statement: """
       MATCH (this)-[:LEADS|HAS*1..4]->(:Bacenta)-[:BELONGS_TO]-(members)
       MATCH (members)-[:BELONGS_TO]->(:Ministry)
-      RETURN COUNT(members)
+      RETURN COUNT(DISTINCT members)
       """
     )
   history: [HistoryLog] @relationship(type: "HAS_HISTORY", direction: OUT)
@@ -210,7 +210,7 @@ type Constituency {
 type Campus {
   id: ID @id
   name: String
-   members: [Member]
+  members: [Member]
     @cypher(
       statement: """
       MATCH (this)-[:HAS*1..4]->(bacenta:Bacenta)<-[:BELONGS_TO]-(members:Member)
@@ -357,7 +357,6 @@ type Basonta {
 type Query {
   #At the Federal Level
 
-
   #At the Episcopal Level
   bishopCampusTownCount(id: ID): Int!
     @cypher(
@@ -382,14 +381,14 @@ type Query {
       RETURN member
       """
     )
-  bishopSontaMemberCount(id: ID): Int!
+  bishopSontamembershipCount(id: ID): Int!
     @cypher(
       statement: """
       MATCH (:Member {id: $id})-[:HAS]->()-[:HAS]->(:Centre)-[:HAS]->(:Bacenta)<-[:BELONGS_TO]-(member:Member)-[:BELONGS_TO]->(:Ministry)
       RETURN COUNT(DISTINCT member)
       """
     )
-  bishopSontaMemberCountList(bishopId: ID): [Ministry]!
+  bishopSontamembershipCountList(bishopId: ID): [Ministry]!
     @cypher(
       statement: """
       MATCH (:Member {id: $bishopId})-[:HAS]->()-[:HAS]->(:Centre)-[:HAS]->(:Bacenta)<-[:BELONGS_TO]-(m:Member)-[:BELONGS_TO]->(ministry:Ministry)
@@ -430,7 +429,7 @@ type Query {
       RETURN DISTINCT members LIMIT 5
       """
     )
-  bishopMemberCount(id: ID): Int!
+  bishopmembershipCount(id: ID): Int!
     @cypher(
       statement: """
       MATCH (bishop:Member {id: $id})-[:HAS]->(campusTown)
@@ -493,22 +492,7 @@ type Query {
     @cypher(
       statement: "MATCH (:Town {id:$id})-[:HAS_SONTA]->(sonta:Sonta) RETURN COUNT(sonta)"
     )
-  townMemberCount(id: ID): Int!
-    @cypher(
-      statement: """
-      MATCH (campusTown:Town {id:$id})
-      OPTIONAL MATCH (campusTown)-[:HAS]->(centre:Centre)-[:HAS]->(bacenta:Bacenta)
-      OPTIONAL MATCH (bacenta)<-[:BELONGS_TO*]-(member:Member)
-      OPTIONAL MATCH (bacenta)<-[:LEADS]-(bacentaLeader:Member)
-      OPTIONAL MATCH (centre)<-[:LEADS]-(centreLeader:Member)
-      OPTIONAL MATCH (campusTown)<-[:LEADS]-(constituencyOverseer:Member)
-       OPTIONAL MATCH (campusTown)<-[:IS_ADMIN_FOR]-(adminConstituency:Member)
-      UNWIND [member,bacentaLeader,centreLeader,constituencyOverseer,adminConstituency] as members
-      WITH members WHERE members IS NOT NULL
-      RETURN COUNT(DISTINCT members)
-      """
-    )
-  townSontaMemberCount(id: ID): Int!
+  townSontamembershipCount(id: ID): Int!
     @cypher(
       statement: "MATCH (:Town {id: $id})-[]-(:Centre)-[]->(:Bacenta)<-[:BELONGS_TO]-(member:Member) MATCH (member)-[:BELONGS_TO]->(:Ministry) RETURN COUNT(DISTINCT member)"
     )
@@ -538,22 +522,8 @@ type Query {
     @cypher(
       statement: "MATCH (:Campus {id:$id})-[:HAS_MINISTRY]->(sonta:Sonta) RETURN COUNT(sonta)"
     )
-  campusMemberCount(id: ID): Int!
-    @cypher(
-      statement: """
-      MATCH (campusTown:Campus {id:$id})
-      OPTIONAL MATCH (campusTown)-[:HAS]->(centre:Centre)-[:HAS]->(bacenta:Bacenta)
-      OPTIONAL MATCH (bacenta)<-[:BELONGS_TO*]-(member:Member)
-      OPTIONAL MATCH (bacenta)<-[:LEADS]-(bacentaLeader:Member)
-      OPTIONAL MATCH (centre)<-[:LEADS]-(centreLeader:Member)
-      OPTIONAL MATCH (campusTown)<-[:LEADS]-(constituencyOverseer:Member)
-       OPTIONAL MATCH (campusTown)<-[:IS_ADMIN_FOR]-(adminConstituency:Member)
-      UNWIND [member,bacentaLeader,centreLeader,constituencyOverseer,adminConstituency] as members
-      WITH members WHERE members IS NOT NULL
-      RETURN COUNT(DISTINCT members)
-      """
-    )
-  campusSontaMemberCount(id: ID): Int!
+
+  campusSontamembershipCount(id: ID): Int!
     @cypher(
       statement: "MATCH (:Campus {id: $id})-[]-(:Centre)-[]->(:Bacenta)<-[:BELONGS_TO]-(member:Member) MATCH (member)-[:BELONGS_TO]->(:Ministry) RETURN COUNT(DISTINCT member)"
     )
@@ -579,19 +549,7 @@ type Query {
     @cypher(
       statement: "MATCH (sonta:Sonta)<-[:HAS_MINISTRY]-(:Centre {name:$centre}) RETURN COUNT(sonta)"
     )
-  centreMemberCount(id: ID): Int!
-    @cypher(
-      statement: """
-      MATCH (centre:Centre {id:$id})
-      OPTIONAL MATCH (centre)-[:HAS]->(bacenta:Bacenta)
-      OPTIONAL MATCH (bacenta)<-[:BELONGS_TO*]-(member:Member)
-      OPTIONAL MATCH (bacenta)<-[:LEADS]-(bacentaLeader:Member)
-      OPTIONAL MATCH (centre)<-[:LEADS]-(centreLeader:Member)
-      UNWIND [member,bacentaLeader,centreLeader] as members
-      WITH members WHERE members IS NOT NULL
-      RETURN COUNT(DISTINCT members)
-      """
-    )
+
   # centreMemberList(id: ID): [Member]
   #   @cypher(
   #     statement: """
@@ -606,17 +564,7 @@ type Query {
   #   )
 
   #At the Bacenta Level
-  bacentaMemberCount(id: ID): Int
-    @cypher(
-      statement: """
-      MATCH (bacenta:Bacenta {id:$id})
-      OPTIONAL MATCH (bacenta)<-[:BELONGS_TO*]-(member:Member)
-      OPTIONAL MATCH (bacenta)<-[:LEADS]-(bacentaLeader:Member)
-      UNWIND [member,bacentaLeader] as members
-      WITH members WHERE members IS NOT NULL
-      RETURN COUNT(DISTINCT members)
-      """
-    )
+
   # bacentaMemberList(id: ID): [Member]
   #   @cypher(
   #     statement: """
@@ -665,16 +613,7 @@ type Query {
   #     RETURN member
   #     """
   #   )
-  sontaMemberCount(id: ID): Int!
-    @cypher(
-      statement: """
-      MATCH (sonta:Sonta {id: $id})
-      MATCH (sonta)<-[:HAS_SONTA]-()-[:HAS]->(:Centre)-[:HAS]->(:Bacenta)<-[:BELONGS_TO]-(member:Member)
-      MATCH (sonta)<-[:HAS_SONTA]-(ministry:Ministry)
-      MATCH (member)-[:BELONGS_TO]->(ministry)
-      RETURN COUNT(member)
-      """
-    )
+
   sontaBasontaLeaderList(id: ID): [Member]
     @cypher(
       statement: """

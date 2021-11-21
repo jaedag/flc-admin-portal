@@ -41,7 +41,7 @@ const MemberDisplay = ({ memberId }) => {
           <PlaceholderCustom
             as="div"
             className="profile-img"
-            loading={!member?.pictureUrl || loading}
+            loading={!member || loading}
             xs={12}
           >
             <div>
@@ -57,7 +57,7 @@ const MemberDisplay = ({ memberId }) => {
           </PlaceholderCustom>
         </Col>
         <Col>
-          <PlaceholderCustom as="h3" loading={!member?.pictureUrl || loading}>
+          <PlaceholderCustom as="h3" loading={!member || loading}>
             <h3>{nameAndTitle}</h3>
           </PlaceholderCustom>
           <MemberRoleList member={member} />
@@ -80,6 +80,7 @@ const MemberDisplay = ({ memberId }) => {
           <a href={`tel:${member?.phoneNumber}`}>
             <DetailsCard
               heading="Phone Number"
+              loading={!member?.phoneNumber}
               detail={'+' + member?.phoneNumber}
             />
           </a>
@@ -88,6 +89,7 @@ const MemberDisplay = ({ memberId }) => {
           <a href={`https://wa.me/${member?.whatsappNumber}`}>
             <DetailsCard
               heading="Whatsapp Number"
+              loading={!member?.whatsappNumber}
               detail={'+' + member?.whatsappNumber}
             />
           </a>

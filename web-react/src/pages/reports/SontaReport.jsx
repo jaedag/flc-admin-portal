@@ -34,7 +34,7 @@ export const SontaReport = () => {
             <MembershipCard
               link="/sonta/members"
               title="Membership"
-              count={data?.sontaMemberCount}
+              count={data?.sontas[0].memberCount}
             />
           </div>
         </div>

@@ -24,8 +24,8 @@ export const BACENTA_REPORT = gql`
           }
         }
       }
+      memberCount
     }
-    bacentaMemberCount(id: $bacentaId)
   }
 `
 
@@ -58,8 +58,8 @@ export const CENTRE_REPORT = gql`
         attendance
         income
       }
+      memberCount
     }
-    centreMemberCount(id: $centreId)
   }
 `
 
@@ -87,8 +87,8 @@ export const SONTA_REPORT = gql`
           }
         }
       }
+      memberCount
     }
-    sontaMemberCount(id: $sontaId)
   }
 `
 
@@ -121,8 +121,8 @@ export const CAMPUS_REPORT = gql`
         attendance
         income
       }
+      memberCount
     }
-    campusMemberCount(id: $campusId)
   }
 `
 
@@ -155,7 +155,7 @@ export const TOWN_REPORT = gql`
         attendance
         income
       }
+      memberCount
     }
-    townMemberCount(id: $townId)
   }
 `

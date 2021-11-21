@@ -1,5 +1,4 @@
 import React, { useContext } from 'react'
-import { Link } from 'react-router-dom'
 import { useAuth0 } from '@auth0/auth0-react'
 import AuthButton from '../buttons/AuthButton'
 import './UserProfileIcon.css'
@@ -17,11 +16,7 @@ function UserProfileIcon() {
   return (
     <>
       {isAuthenticated && currentUser.email && (
-        <Link
-          // className="nav-item nav-link d-flex align-items-center flex-column p-0 pb-2"
-          to="/user-profile"
-          onClick={() => setChurch(currentUser.church)}
-        >
+        <div onClick={() => setChurch(currentUser.church)}>
           <div className="d-flex">
             <div className="flex-shrink-0">
               <img
@@ -35,7 +30,7 @@ function UserProfileIcon() {
               <div className="text-secondary small">{currentUser.email}</div>
             </div>
           </div>
-        </Link>
+        </div>
       )}
       {isAuthenticated && !currentUser.email && (
         <div className="text-secondary text-center">

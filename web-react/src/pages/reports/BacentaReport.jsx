@@ -34,7 +34,7 @@ export const BacentaReport = () => {
             <MembershipCard
               link="/bacenta/members"
               title="Membership"
-              count={data?.bacentaMemberCount}
+              count={data?.bacentas[0].memberCount}
             />
           </div>
         </div>

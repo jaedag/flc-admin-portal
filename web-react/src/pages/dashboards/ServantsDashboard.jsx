@@ -15,7 +15,7 @@ import StatDisplay from 'pages/reports/CompStatDisplay'
 import { authorisedLink, plural } from 'global-utils'
 import BaseComponent from 'components/base-component/BaseComponent'
 import Container from 'react-bootstrap/Container'
-import { Col, Row } from 'react-bootstrap'
+import { Col, Row, Table } from 'react-bootstrap'
 import Placeholder from '../../components/Placeholder'
 
 const ServantsDashboard = () => {
@@ -181,14 +181,14 @@ const ServantsDashboard = () => {
         </Placeholder>
 
         <div className="card-button-row">
-          <table>
+          <Table>
             <tbody>
               <tr>
                 {roles &&
                   roles.map((role, i) => {
                     return (
                       <td
-                        className="col-auto pl-0"
+                        className="col-auto"
                         key={i}
                         onClick={() => {
                           role.clickCard()
@@ -201,7 +201,7 @@ const ServantsDashboard = () => {
                   })}
               </tr>
             </tbody>
-          </table>
+          </Table>
         </div>
 
         {assessmentChurchData && (

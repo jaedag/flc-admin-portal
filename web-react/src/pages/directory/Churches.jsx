@@ -12,7 +12,7 @@ const Churches = () => {
   const history = useHistory()
 
   return (
-    <div className="d-flex align-items-center justify-content-center h-75 nav-margin-top-0">
+    <div className="d-flex align-items-center justify-content-center ">
       <Container>
         <div className="text-center">
           <PlaceholderCustom loading={!currentUser.fullName} xs={12} as="h1">

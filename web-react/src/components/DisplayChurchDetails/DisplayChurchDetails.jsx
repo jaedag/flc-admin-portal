@@ -243,6 +243,7 @@ const DisplayChurchDetails = (props) => {
             </a>
           </Container>
         )}
+
         <Container className="mt-4">
           <h3>FORMS</h3>
           {props.last3Weeks &&

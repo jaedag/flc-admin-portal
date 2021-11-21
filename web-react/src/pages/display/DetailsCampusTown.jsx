@@ -36,13 +36,8 @@ const DetailsCampusTown = () => {
           <DisplayChurchDetails
             name={townData?.towns[0].name}
             leaderTitle={'Town CO'}
-            membership={townData?.townMemberCount}
-            leaderName={
-              townData?.towns[0].leader
-                ? `${townData?.towns[0].leader.firstName} ${townData?.towns[0].leader.lastName}`
-                : null
-            }
-            leaderId={townData?.towns[0].leader?.id}
+            membership={townData?.towns[0].memberCount}
+            leader={townData?.towns[0].leader}
             churchHeading="Centres"
             church2Heading="Bacentas"
             churchCount={townData?.towns[0].centres.length}
@@ -68,13 +63,8 @@ const DetailsCampusTown = () => {
           <DisplayChurchDetails
             name={campusData?.campuses[0].name}
             leaderTitle={'Campus CO'}
-            membership={campusData?.campusMemberCount}
-            leaderName={
-              campusData?.campuses[0].leader
-                ? `${campusData?.campuses[0].leader.firstName} ${campusData?.campuses[0].leader.lastName}`
-                : null
-            }
-            leaderId={campusData?.campuses[0].leader?.id}
+            membership={campusData?.campuses[0].memberCount}
+            leader={campusData?.campuses[0].leader}
             churchHeading="Centres"
             church2Heading="Bacentas"
             churchCount={campusData?.campuses[0].centres.length}

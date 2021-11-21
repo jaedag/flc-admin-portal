@@ -31,11 +31,11 @@ const DetailsCentre = () => {
             ? `${displayCentre?.leader.firstName} ${displayCentre?.leader.lastName}`
             : '-'
         }
-        leaderId={displayCentre?.leader?.id}
+        leader={displayCentre?.leader}
         churchHeading="Bacentas"
         churchType="Centre"
         subChurch="Bacenta"
-        membership={data?.centreMemberCount}
+        membership={displayCentre?.memberCount}
         churchCount={displayCentre?.bacentas.length}
         editlink="/centre/editcentre"
         editPermitted={[

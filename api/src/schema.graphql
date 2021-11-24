@@ -60,7 +60,8 @@ type Member {
   leadsCampus: [Campus] @relationship(type: "LEADS", direction: OUT)
   isBishopForTown: [Town] @relationship(type: "HAS", direction: OUT)
   isBishopForCampus: [Campus] @relationship(type: "HAS", direction: OUT)
-  isAdminForBishop: [Member] @relationship(type: "IS_ADMIN_FOR", direction: OUT) #@neo4j_ignore
+  isAdminForCouncil: [Council]
+    @relationship(type: "IS_ADMIN_FOR", direction: OUT) #@neo4j_ignore
   isAdminForCampus: [Campus] @relationship(type: "IS_ADMIN_FOR", direction: OUT)
   isAdminForTown: [Town] @relationship(type: "IS_ADMIN_FOR", direction: OUT)
   admin: Member @relationship(type: "IS_ADMIN_FOR", direction: IN)
@@ -208,6 +209,35 @@ type Constituency {
   componentServiceAggregate: [ComponentServiceAggregate] @ignore
 }
 
+type Council {
+  id: ID @id
+  name: String!
+  leader: Member @relationship(type: "LEADS", direction: IN)
+  towns: [Town] @relationship(type: "HAS", direction: OUT)
+  campuses: [Campus] @relationship(type: "HAS", direction: OUT)
+  constituencies: [Constituency] @relationship(type: "HAS", direction: OUT)
+  members: [Member]
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*1..4]->(bacenta:Bacenta)<-[:BELONGS_TO]-(members:Member)
+      RETURN DISTINCT members
+      """
+    )
+  memberCount: Int
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*1..4]->(bacenta:Bacenta)<-[:BELONGS_TO]-(members:Member)
+      RETURN COUNT(DISTINCT members)
+      """
+    )
+  admin: Member @relationship(type: "IS_ADMIN_FOR", direction: IN)
+  history: [HistoryLog] @relationship(type: "HAS_HISTORY", direction: OUT)
+  serviceRecord: [ServiceRecord]
+    @relationship(type: "HAS_RECORD", direction: OUT)
+  services: [ServiceLog] @relationship(type: "HAS_HISTORY", direction: OUT)
+  componentServiceAggregate: [ComponentServiceAggregate] @ignore
+}
+
 type Campus {
   id: ID @id
   name: String
@@ -215,20 +245,24 @@ type Campus {
     @cypher(
       statement: """
       MATCH (this)-[:HAS*1..4]->(bacenta:Bacenta)<-[:BELONGS_TO]-(members:Member)
-      RETURN members
+      RETURN DISTINCT members
       """
     )
   memberCount: Int
     @cypher(
       statement: """
       MATCH (this)-[:HAS*1..4]->(bacenta:Bacenta)<-[:BELONGS_TO]-(members:Member)
-      RETURN COUNT(members)
+      RETURN COUNT(DISTINCT members)
       """
     )
   leader: Member @relationship(type: "LEADS", direction: IN)
   sontas: [Sonta] @relationship(type: "HAS_SONTA", direction: OUT)
   centres: [Centre] @relationship(type: "HAS", direction: OUT)
-  bishop: Member @relationship(type: "HAS", direction: IN)
+  council: Council @relationship(type: "HAS", direction: IN)
+  bishop: Member
+    @cypher(
+      statement: "MATCH (this)-[:HAS]-(:Council)-[:LEADS]-(bishop:Member) RETURN bishop"
+    )
   admin: Member @relationship(type: "IS_ADMIN_FOR", direction: IN)
   history: [HistoryLog] @relationship(type: "HAS_HISTORY", direction: OUT)
   serviceRecord: [ServiceRecord]
@@ -244,20 +278,24 @@ type Town {
     @cypher(
       statement: """
       MATCH (this)-[:HAS*1..4]->(bacenta:Bacenta)<-[:BELONGS_TO]-(members:Member)
-      RETURN members
+      RETURN DISTINCT members
       """
     )
   memberCount: Int
     @cypher(
       statement: """
       MATCH (this)-[:HAS*1..4]->(bacenta:Bacenta)<-[:BELONGS_TO]-(members:Member)
-      RETURN COUNT(members)
+      RETURN COUNT(DISTINCT members)
       """
     )
   leader: Member @relationship(type: "LEADS", direction: IN)
   sontas: [Sonta] @relationship(type: "HAS_SONTA", direction: OUT)
   centres: [Centre] @relationship(type: "HAS", direction: OUT)
-  bishop: Member @relationship(type: "HAS", direction: IN)
+  council: Council @relationship(type: "HAS", direction: IN)
+  bishop: Member
+    @cypher(
+      statement: "MATCH (this)-[:HAS]-(:Council)-[:LEADS]-(bishop:Member) RETURN bishop"
+    )
   admin: Member @relationship(type: "IS_ADMIN_FOR", direction: IN)
   history: [HistoryLog] @relationship(type: "HAS_HISTORY", direction: OUT)
   serviceRecord: [ServiceRecord]
@@ -273,14 +311,14 @@ type Centre {
     @cypher(
       statement: """
       MATCH (this)-[:HAS]->(bacenta:Bacenta)<-[:BELONGS_TO]-(members:Member)
-      RETURN members
+      RETURN DISTINCT members
       """
     )
   memberCount: Int
     @cypher(
       statement: """
       MATCH (this)-[:HAS]->(bacenta:Bacenta)<-[:BELONGS_TO]-(members:Member)
-      RETURN COUNT(members)
+      RETURN COUNT(DISTINCT members)
       """
     )
   leader: Member @relationship(type: "LEADS", direction: IN)
@@ -306,7 +344,7 @@ type Bacenta {
     @cypher(
       statement: """
       MATCH (this)<-[:BELONGS_TO]-(members:Member)
-      RETURN COUNT(members)
+      RETURN COUNT(DISTINCT members)
       """
     )
   meetingDay: ServiceDay @relationship(type: "MEETS_ON", direction: OUT)
@@ -670,7 +708,7 @@ type Query {
     @cypher(
       statement: """
       MATCH (member:Member {id:$id})
-      MATCH (member)-[:HAS|IS_ADMIN_FOR]-(constituency) WHERE constituency:Campus OR constituency:Town
+      MATCH (member)-[:LEADS|HAS|IS_ADMIN_FOR*1..2]->(constituency) WHERE constituency:Campus OR constituency:Town
       RETURN COUNT(DISTINCT constituency)
       """
     )

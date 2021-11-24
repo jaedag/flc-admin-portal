@@ -188,10 +188,9 @@ export const DISPLAY_MEMBER = gql`
         id
         name
       }
-      isAdminForBishop {
+      isAdminForCouncil {
         id
-        firstName
-        lastName
+        name
       }
       isAdminForCampus {
         id
@@ -571,5 +570,80 @@ export const DISPLAY_CAMPUS = gql`
       memberCount
     }
     campusBacentaCount(id: $id)
+  }
+`
+
+export const DISPLAY_COUNCIL = gql`
+  query($id: ID) {
+    councils(where: { id: $id }, options: { limit: 1 }) {
+      id
+      name
+
+      town {
+        id
+        name
+        bishop {
+          id
+        }
+      }
+      campus {
+        id
+        name
+        bishop {
+          id
+        }
+      }
+
+      sontas {
+        id
+        name
+      }
+      admin {
+        id
+        firstName
+        lastName
+        bacenta {
+          id
+          centre {
+            id
+            town {
+              id
+              name
+              bishop {
+                id
+              }
+            }
+            campus {
+              id
+              name
+              bishop {
+                id
+              }
+            }
+          }
+        }
+      }
+      leader {
+        id
+        firstName
+        lastName
+        fullName
+        pictureUrl
+      }
+      history(options: { limit: 10 }) {
+        id
+        timeStamp
+        created_at {
+          date
+        }
+        loggedBy {
+          id
+          firstName
+          lastName
+        }
+        historyRecord
+      }
+      memberCount
+    }
   }
 `

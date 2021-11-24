@@ -51,7 +51,7 @@ export const MAKE_BISHOP_ADMIN = gql`
       id
       firstName
       lastName
-      isAdminForBishop {
+      isAdminForCouncil {
         id
         admin {
           id
@@ -156,11 +156,34 @@ export const SERVANTS_DASHBOARD = gql`
           income
         }
       }
-      isAdminForBishop {
+      isAdminForCouncil {
         id
-        firstName
-        lastName
-        fullName
+        name
+        memberCount
+        leader {
+          id
+          firstName
+          lastName
+          fullName
+        }
+        services {
+          id
+          historyRecord
+          serviceRecords {
+            created_at
+            attendance
+            income
+            week
+            serviceDate {
+              date
+            }
+          }
+        }
+        componentServiceAggregate {
+          week
+          attendance
+          income
+        }
       }
 
       isBishopForCampus {

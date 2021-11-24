@@ -52,10 +52,9 @@ export const GET_FEDERAL_MEMBERS = gql`
         id
         name
       }
-      isAdminForBishop {
+      isAdminForCouncil {
         id
-        firstName
-        lastName
+        name
       }
       isAdminForCampus {
         id
@@ -129,10 +128,9 @@ export const GET_FEDERAL_PASTORS = gql`
         id
         name
       }
-      isAdminForBishop {
+      isAdminForCouncil {
         id
-        firstName
-        lastName
+        name
       }
       isAdminForCampus {
         id
@@ -211,10 +209,9 @@ export const GET_BISHOP_MEMBERS = gql`
           id
           name
         }
-        isAdminForBishop {
+        isAdminForCouncil {
           id
-          firstName
-          lastName
+          name
         }
         isAdminForCampus {
           id
@@ -290,10 +287,9 @@ export const GET_CAMPUSTOWN_MEMBERS = gql`
           id
           name
         }
-        isAdminForBishop {
+        isAdminForCouncil {
           id
-          firstName
-          lastName
+          name
         }
         isAdminForCampus {
           id
@@ -365,10 +361,9 @@ export const GET_CAMPUSTOWN_MEMBERS = gql`
           id
           name
         }
-        isAdminForBishop {
+        isAdminForCouncil {
           id
-          firstName
-          lastName
+          name
         }
         isAdminForCampus {
           id
@@ -436,10 +431,9 @@ export const GET_CENTRE_MEMBERS = gql`
           id
           name
         }
-        isAdminForBishop {
+        isAdminForCouncil {
           id
-          firstName
-          lastName
+          name
         }
         isAdminForCampus {
           id
@@ -515,10 +509,9 @@ export const GET_BACENTA_MEMBERS = gql`
           id
           name
         }
-        isAdminForBishop {
+        isAdminForCouncil {
           id
-          firstName
-          lastName
+          name
         }
         isAdminForCampus {
           id
@@ -586,10 +579,9 @@ export const GET_SONTA_MEMBERS = gql`
           id
           name
         }
-        isAdminForBishop {
+        isAdminForCouncil {
           id
-          firstName
-          lastName
+          name
         }
         isAdminForCampus {
           id

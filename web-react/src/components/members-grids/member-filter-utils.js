@@ -86,7 +86,7 @@ export const memberFilter = (memberData, filters) => {
       if (
         member.isAdminForTown[0] ||
         member.isAdminForCampus[0] ||
-        member.isAdminForBishop[0]
+        member.isAdminForCouncil[0]
       ) {
         return member
       }

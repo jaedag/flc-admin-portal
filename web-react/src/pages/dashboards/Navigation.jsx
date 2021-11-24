@@ -65,17 +65,14 @@ const Navigator = () => {
       user && memberByEmail({ variables: { email: user.email } })
     }
 
-    // eslint-disable-next-line
-  }, [isAuthenticated])
-  const servant = data?.members[0]
-
-  useEffect(() => {
     setUserJobs({
       jobs: roles,
       assessmentData: assessmentChurchData,
       assessmentChurch: assessmentChurch,
     })
-  }, [data, loading, setUserJobs])
+    // eslint-disable-next-line
+  }, [isAuthenticated, data, loading, setUserJobs])
+  const servant = data?.members[0]
 
   // What leadership roles does this person play?
   let roles = []
@@ -149,6 +146,7 @@ const Navigator = () => {
             : `/servants/${churchType.toLowerCase()}-list`
         ),
       })
+
       assessmentChurch = servant[`${verb}`][0]
       return
     }
@@ -197,8 +195,8 @@ const Navigator = () => {
     if (servant?.isBishopForCampus?.length) {
       setServantRoles(servant, 'Bishop', 'Campus')
     }
-    if (servant?.isAdminForBishop?.length) {
-      setServantRoles(servant, 'Admin', 'Bishop')
+    if (servant?.isAdminForCouncil?.length) {
+      setServantRoles(servant, 'Admin', 'Council')
     }
     if (servant?.isAdminForCampus?.length) {
       setServantRoles(servant, 'Admin', 'Campus')
@@ -216,7 +214,7 @@ const Navigator = () => {
   }
 
   assessmentChurchData = servant && getServantRoles(servant)
-
+  console.log(roles, assessmentChurch)
   return (
     <Navbar
       collapseOnSelect

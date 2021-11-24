@@ -83,6 +83,11 @@ const PastorsAdmin = () => {
   const [bishopId, setBishopId] = useState(
     sessionStorage.getItem('bishopId') ? sessionStorage.getItem('bishopId') : ''
   )
+  const [councilId, setCouncilId] = useState(
+    sessionStorage.getItem('councilId')
+      ? sessionStorage.getItem('councilId')
+      : ''
+  )
   const [townId, setTownId] = useState(
     sessionStorage.getItem('townId') ? sessionStorage.getItem('townId') : ''
   )
@@ -377,6 +382,8 @@ const PastorsAdmin = () => {
           setFilters,
           church,
           setChurch,
+          councilId,
+          setCouncilId,
           bishopId,
           setBishopId,
           townId,

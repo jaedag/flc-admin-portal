@@ -92,7 +92,7 @@ const DisplayAllCentres = () => {
               <Link
                 to="/campus/members"
                 className="py-1 px-2 m-2 card"
-              >{`Membership: ${campusCentreData.campusMemberCount}`}</Link>
+              >{`Membership: ${campusCentreData.campus.memberCount}`}</Link>
             </div>
           </div>
 
@@ -168,7 +168,7 @@ const DisplayAllCentres = () => {
               <Link
                 to="/town/members"
                 className="py-1 px-2 m-2 card"
-              >{`Membership: ${townCentreData.townMemberCount}`}</Link>
+              >{`Membership: ${townCentreData.centres[0].town.memberCount}`}</Link>
             </div>
           </div>
 

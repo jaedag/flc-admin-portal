@@ -17,7 +17,7 @@ const Churches = () => {
         <div className="text-center">
           <PlaceholderCustom loading={!currentUser.fullName} xs={12} as="h1">
             {' '}
-            <h1 className="mb-0  page-header">{`${currentUser.fullName}'s`}</h1>
+            <h1 className="mb-0 page-header">{`${currentUser.fullName}'s`}</h1>
           </PlaceholderCustom>
           <PlaceholderCustom loading={!currentUser.fullName} as="p">
             <p className="text-secondary dark menu-caption">Churches</p>

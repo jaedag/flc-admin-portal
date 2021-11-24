@@ -7,7 +7,7 @@ import { ChurchContext } from '../contexts/ChurchContext'
 // import DisplayCampusTownDetails from '../pages/display/DetailsCampusTown.jsx'
 import LoadingScreen from '../components/base-component/LoadingScreen'
 import { isAuthorised } from '../global-utils'
-import ServantsDashboard from 'pages/dashboards/ServantsDashboard'
+import UserDashboard from 'pages/dashboards/UserDashboard'
 
 const ProtectedRoute = ({ component, roles, ...args }) => {
   const { currentUser, setMemberId } = useContext(MemberContext)
@@ -63,7 +63,7 @@ const ProtectedRoute = ({ component, roles, ...args }) => {
     //If the user does not have permission but is a CO Admin
     return (
       <Route
-        component={withAuthenticationRequired(ServantsDashboard, {
+        component={withAuthenticationRequired(UserDashboard, {
           // eslint-disable-next-line react/display-name
           onRedirecting: () => {
             return <LoadingScreen />

@@ -70,8 +70,8 @@ const ServantsChurchList = () => {
       if (servant.isBishopForCampus?.length) {
         churches.push({ name: 'Town Bishop', number: 'Bishop' })
       }
-      if (servant.isAdminForBishop?.length) {
-        churches.push({ name: 'Admin', number: 'Bishops Admin' })
+      if (servant.isAdminForCouncil?.length) {
+        churches.push({ name: 'Admin', number: 'Council Admin' })
       }
       if (servant.isAdminForCampus?.length) {
         churches.push({ name: 'Admin', number: 'Campus Admin' })

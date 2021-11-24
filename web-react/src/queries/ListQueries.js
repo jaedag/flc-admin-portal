@@ -90,6 +90,7 @@ export const GET_TOWN_CENTRES = gql`
       town {
         id
         name
+        memberCount
         leader {
           id
           firstName
@@ -113,7 +114,6 @@ export const GET_TOWN_CENTRES = gql`
         lastName
       }
     }
-    townMemberCount(id: $id)
   }
 `
 
@@ -125,6 +125,7 @@ export const GET_CAMPUS_CENTRES = gql`
       campus {
         id
         name
+        memberCount
         leader {
           id
           firstName
@@ -152,7 +153,6 @@ export const GET_CAMPUS_CENTRES = gql`
         lastName
       }
     }
-    campusMemberCount(id: $id)
   }
 `
 

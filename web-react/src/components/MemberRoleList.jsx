@@ -21,7 +21,7 @@ const MemberRoleList = ({ member }) => {
     basontaLeader: [],
     centreLeader: [],
     bacentaLeader: [],
-    adminBishop: [],
+    adminCouncil: [],
     adminCampus: [],
     adminTown: [],
   }
@@ -55,13 +55,13 @@ const MemberRoleList = ({ member }) => {
       }
     }
 
-    if (churchType === 'adminBishop') {
-      member.isAdminForBishop.map((adminFor) => {
-        rank.adminBishop.push({
+    if (churchType === 'adminCouncil') {
+      member.isAdminForCouncil.map((adminFor) => {
+        rank.adminCouncil.push({
           admin: true,
-          name: `Bishop ${adminFor.firstName} ${adminFor.lastName}`,
+          name: `${adminFor.name}`,
           id: adminFor.id,
-          __typename: 'Bishop',
+          __typename: adminFor.__typename,
         })
         return null
       })
@@ -140,8 +140,8 @@ const MemberRoleList = ({ member }) => {
   if (member.isBishopForCampus[0]) {
     updateRank(member, 'bishop')
   }
-  if (member.isAdminForBishop[0]) {
-    updateRank(member, 'adminBishop')
+  if (member.isAdminForCouncil[0]) {
+    updateRank(member, 'adminCouncil')
   }
   if (member.isAdminForCampus[0]) {
     updateRank(member, 'adminCampus')

@@ -50,15 +50,21 @@ const Services = () => {
             title="Trends"
             color="members"
             noCaption
-            onClick={() => history.push(`/services/trends`)}
+            onClick={() =>
+              history.push(
+                `${currentUser.currentChurch?.__typename.toLowerCase()}/reports`
+              )
+            }
           />
-          <MenuButton
-            iconComponent={FileEarmarkArrowUpFill}
-            title="Banking Slips"
-            color="members"
-            noCaption
-            onClick={() => history.push(`/services/banking-slips`)}
-          />
+          {currentUser.currentChurch?.__typename === 'Bacenta' && (
+            <MenuButton
+              iconComponent={FileEarmarkArrowUpFill}
+              title="Banking Slips"
+              color="members"
+              noCaption
+              onClick={() => history.push(`/services/banking-slips`)}
+            />
+          )}
         </div>
       </Container>
     </div>

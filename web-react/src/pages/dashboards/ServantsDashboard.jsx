@@ -151,8 +151,8 @@ const ServantsDashboard = () => {
     if (servant?.isBishopForCampus?.length) {
       setServantRoles(servant, 'Bishop', 'Campus')
     }
-    if (servant?.isAdminForBishop?.length) {
-      setServantRoles(servant, 'Admin', 'Bishop')
+    if (servant?.isAdminForCouncil?.length) {
+      setServantRoles(servant, 'Admin', 'Council')
     }
     if (servant?.isAdminForCampus?.length) {
       setServantRoles(servant, 'Admin', 'Campus')

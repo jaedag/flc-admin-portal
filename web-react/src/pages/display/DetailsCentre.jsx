@@ -40,7 +40,6 @@ const DetailsCentre = () => {
         churchCount={displayCentre?.bacentas.length}
         editlink="/centre/editcentre"
         editPermitted={[
-          'leaderCentre',
           'leaderCampus',
           'leaderTown',
           'adminCampus',

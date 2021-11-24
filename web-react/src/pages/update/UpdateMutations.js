@@ -212,10 +212,9 @@ export const UPDATE_MEMBER_MUTATION = gql`
         id
         name
       }
-      isAdminForBishop {
+      isAdminForCouncil {
         id
-        firstName
-        lastName
+        name
       }
       isAdminForCampus {
         id

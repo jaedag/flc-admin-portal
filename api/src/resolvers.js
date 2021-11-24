@@ -388,7 +388,7 @@ const MakeServant = async (
       notifyMember(
         servant,
         'Your account has been created on the FL Admin Portal',
-        `Hi ${servant.firstName} ${servant.lastName},\n\nCongratulations on being made a ${churchType} ${servantType} for ${churchInEmail}. Your account has just been created on the First Love Church Administrative Portal. Please set up your password by clicking ${res.data.ticket}. If you feel this is a mistake please contact your bishops admin.\n\nAfterwards, you can login by clicking https://flcadmin.netlify.app/\n\nRegards\nThe Administrator\nFirst Love Center\nAccra`,
+        `Hi ${servant.firstName} ${servant.lastName},\n\nCongratulations on being made a ${churchType} ${servantType} for ${churchInEmail}. Your account has just been created on the First Love Church Administrative Portal. Please set up your password by clicking ${passwordTicketResponse.data.ticket}. If you feel this is a mistake please contact your bishops admin.\n\nAfterwards, you can login by clicking https://flcadmin.netlify.app/\n\nRegards\nThe Administrator\nFirst Love Center\nAccra`,
         'servant_account_created',
         [servant.firstName, passwordTicketResponse?.data?.ticket]
       )
@@ -572,18 +572,21 @@ export const resolvers = {
       let serviceAggregates = []
 
       const session = context.driver.session()
-      session
-        .run(cypher.getCentreBacentaServiceAggregates, obj)
-        .then((response) =>
-          response.records.map((record) => {
-            let serviceAggregate = {}
-            record.keys.forEach(
-              (key, i) => (serviceAggregate[key] = record._fields[i])
-            )
-            serviceAggregates.push(serviceAggregate)
-          })
+
+      const serviceAggregateResponse = await session.run(
+        cypher.getCentreBacentaServiceAggregates,
+        obj
+      )
+
+      serviceAggregateResponse.records.map((record) => {
+        let serviceAggregate = {}
+
+        record.keys.forEach(
+          (key, i) => (serviceAggregate[key] = record._fields[i])
         )
-        .catch((error) => console.log(error))
+
+        serviceAggregates.push(serviceAggregate)
+      })
 
       return serviceAggregates
     },
@@ -593,19 +596,19 @@ export const resolvers = {
       let serviceAggregates = []
 
       const session = context.driver.session()
-      session
-        .run(cypher.getCampusTownServiceAggregates, obj)
-        .then((response) =>
-          response.records.map((record) => {
-            let serviceAggregate = {}
+      const serviceAggregateResponse = await session.run(
+        cypher.getCampusTownServiceAggregates,
+        obj
+      )
 
-            record.keys.forEach(
-              (key, i) => (serviceAggregate[key] = record._fields[i])
-            )
-            serviceAggregates.push(serviceAggregate)
-          })
+      serviceAggregateResponse.records.map((record) => {
+        let serviceAggregate = {}
+
+        record.keys.forEach(
+          (key, i) => (serviceAggregate[key] = record._fields[i])
         )
-        .catch((error) => console.log(error))
+        serviceAggregates.push(serviceAggregate)
+      })
 
       return serviceAggregates
     },
@@ -615,19 +618,19 @@ export const resolvers = {
       let serviceAggregates = []
 
       const session = context.driver.session()
-      session
-        .run(cypher.getCampusTownServiceAggregates, obj)
-        .then((response) =>
-          response.records.map((record) => {
-            let serviceAggregate = {}
+      const serviceAggregateResponse = await session.run(
+        cypher.getCampusTownServiceAggregates,
+        obj
+      )
 
-            record.keys.forEach(
-              (key, i) => (serviceAggregate[key] = record._fields[i])
-            )
-            serviceAggregates.push(serviceAggregate)
-          })
+      serviceAggregateResponse.records.map((record) => {
+        let serviceAggregate = {}
+
+        record.keys.forEach(
+          (key, i) => (serviceAggregate[key] = record._fields[i])
         )
-        .catch((error) => console.log(error))
+        serviceAggregates.push(serviceAggregate)
+      })
 
       return serviceAggregates
     },

@@ -70,6 +70,8 @@ import ConstituencyJoint from 'pages/services/ConstituencyJoint.jsx'
 import Navigation from 'pages/dashboards/Navigation.jsx'
 import ServicesChurchList from 'pages/dashboards/ServicesChurchList'
 import ProtectedReports from 'pages/reports/ProtectedReports.jsx'
+import BankingSlipView from 'pages/services/BankingSlipView.jsx'
+import BankingSlipSubmission from 'pages/services/BankingSlipSubmission.jsx'
 
 const PastorsAdmin = () => {
   const [church, setChurch] = useState(
@@ -95,7 +97,7 @@ const PastorsAdmin = () => {
   const [serviceRecordId, setServiceRecordId] = useState(
     sessionStorage.getItem('serviceRecordsId')
       ? sessionStorage.getItem('serviceRecordsId')
-      : '3aab41f1-ef89-4e91-8904-97a4324c6e6d'
+      : ''
   )
   const [centreId, setCentreId] = useState(
     sessionStorage.getItem('centreId') ? sessionStorage.getItem('centreId') : ''
@@ -442,10 +444,21 @@ const PastorsAdmin = () => {
                     exact
                   />
                   <ProtectedReports path="/services/trends" placeholder exact />
+                  <ProtectedRoute
+                    path="/services/banking-slips"
+                    component={BankingSlipView}
+                    placeholder
+                    exact
+                  />
+                  <ProtectedRoute
+                    path="/banking-slip/submission"
+                    component={BankingSlipSubmission}
+                    placeholder
+                    exact
+                  />
                   <Route path="/arrivals" component={Arrivals} exact />
                   <Route path="/campaigns" component={Campaigns} exact />
                   <Route path="/recon" component={Reconciliation} exact />
-
                   <ProtectedRouteHome
                     path="/dashboard"
                     component={BishopDashboard}
@@ -534,6 +547,7 @@ const PastorsAdmin = () => {
                     ]}
                     path="/campus/reports"
                     component={CampusReport}
+                    placeholder
                   />
                   <ProtectedRoute
                     roles={[
@@ -546,6 +560,7 @@ const PastorsAdmin = () => {
                     ]}
                     path="/town/reports"
                     component={TownReport}
+                    placeholder
                   />
                   {/* Member Display and Edit Pages */}
                   <ProtectedRoute
@@ -595,7 +610,6 @@ const PastorsAdmin = () => {
                     component={UpdateMember}
                     exact
                   />
-
                   {/* Search Routes */}
                   <ProtectedRoute
                     roles={['all']}
@@ -864,7 +878,6 @@ const PastorsAdmin = () => {
                     component={UpdateTownCampus}
                     exact
                   />
-
                   {/* Bacenta Leader Routes */}
                   <ProtectedRoute
                     roles={[
@@ -897,6 +910,17 @@ const PastorsAdmin = () => {
                       'leaderBacenta',
                     ]}
                     path="/services/fellowship/form"
+                    component={BacentaService}
+                  />{' '}
+                  <ProtectedRoute
+                    roles={[
+                      'adminFederal',
+                      'adminBishop',
+                      'adminCampus',
+                      'adminTown',
+                      'leaderBacenta',
+                    ]}
+                    path="/bacenta/record-service"
                     component={BacentaService}
                   />
                   <ProtectedRoute

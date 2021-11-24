@@ -229,6 +229,14 @@ const DisplayChurchDetails = (props) => {
           >
             View Trends
           </Button>
+          <Button
+            className={`btn-trends ${theme}`}
+            onClick={() => {
+              history.push(`/${props.churchType.toLowerCase()}/record-service`)
+            }}
+          >
+            Fill Service Form
+          </Button>
         </div>
 
         {location?.latitude && (

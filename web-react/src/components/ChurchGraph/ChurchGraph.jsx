@@ -11,6 +11,7 @@ import {
 } from 'recharts'
 import { capitalise } from '../../global-utils'
 import './ChurchGraph.css'
+
 const ChurchGraph = ({ loading, stat1, stat2, churchData, secondaryTitle }) => {
   return (
     <>

@@ -42,14 +42,16 @@ const MenuButton = (props) => {
         )}
 
         <Col className="btn-right-col">
-          <PlaceholderCustom loading={!currentUser.fullName} as="div" xs={10}>
+          <PlaceholderCustom loading={!props.title} as="div" xs={10}>
             <span> {capitalise(props.title)}</span>
           </PlaceholderCustom>
-          <PlaceholderCustom loading={!currentUser.fullName} as="div" xs={10}>
-            <small className="text-secondary dark menu-caption">
-              {props.caption}
-            </small>
-          </PlaceholderCustom>
+          {!props.noCaption && (
+            <PlaceholderCustom loading={!props.caption} as="div" xs={10}>
+              <small className="text-secondary dark menu-caption">
+                {props.caption}
+              </small>
+            </PlaceholderCustom>
+          )}
         </Col>
       </Row>
     </Button>

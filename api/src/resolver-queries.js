@@ -170,7 +170,7 @@ WITH log,campus,oldAdmin,admin
 export const makeBacentaLeader = `
 MATCH (leader:Member {id:$leaderId})
 MATCH (bacenta:Bacenta {id:$bacentaId})
-MATCH (bacenta)<-[:HAS_BACENTA]-(centre:Centre)
+MATCH (bacenta)<-[:HAS]-(centre:Centre)
 CREATE (log:HistoryLog:ServiceLog)
   SET leader.auth_id = $auth_id,
    log.id = apoc.create.uuid(),
@@ -193,6 +193,8 @@ WITH log,bacenta,oldLeader,leader
        RETURN COUNT(log)
        }
   
+  MATCH (bacenta)<-[:HAS]-(:Centre)-[rel:HAS_HISTORY]->(centreHistory:ServiceLog) WHERE rel.current = true
+  OPTIONAL MATCH (centreHistory)-[oldBacentaHistory:HAS]->(:ServiceLog)-[:HAS_HISTORY]-(bacenta)
    MATCH (currentUser:Member {auth_id:$auth.jwt.sub}) 
    WITH currentUser, leader, bacenta, log
    MERGE (leader)-[:LEADS]->(bacenta)
@@ -201,15 +203,18 @@ WITH log,bacenta,oldLeader,leader
    MERGE (log)-[:RECORDED_ON]->(date)
    MERGE (leader)-[r1:HAS_HISTORY]->(log)
    MERGE (bacenta)-[r2:HAS_HISTORY]->(log)
+   MERGE (centreHistory)-[r3:HAS]->(log)
    SET r1.current = true,
-   r2.current = true
+   r2.current = true,
+   r3.current=true
+   REMOVE oldBacentaHistory.current
    RETURN leader.id AS id, leader.auth_id AS auth_id, leader.firstName AS firstName, leader.lastName AS lastName
 `
 
 export const makeCentreLeader = `
 MATCH (leader:Member {id:$leaderId})
 MATCH (centre:Centre {id:$centreId})
-OPTIONAL MATCH (centre)<-[:HAS_CENTRE]-(campusTown) 
+OPTIONAL MATCH (centre)<-[:HAS]-(campusTown) 
 UNWIND labels(campusTown) AS stream
 CREATE (log:HistoryLog:ServiceLog)
   SET leader.auth_id = $auth_id,
@@ -367,10 +372,10 @@ WITH log,town,oldLeader,leader
 export const getCentreBacentaServiceAggregates = `
   MATCH (centre:Centre {id:$id})
   
- 
+
   MATCH (centre)-[:HAS_HISTORY]->(log:ServiceLog)
-  OPTIONAL MATCH (log)-[:HAS_BACENTA]->(bacentaServices:ServiceLog)-[:HAS_RECORD]->(records:ServiceRecord)
-  OPTIONAL MATCH (records)-[:SERVICE_HELD_ON]->(date:TimeGraph) 
+  MATCH (log)-[:HAS]->(bacentaServices:ServiceLog)-[:HAS_RECORD]->(records:ServiceRecord)
+  MATCH (records)-[:SERVICE_HELD_ON]->(date:TimeGraph) 
 
   WITH DISTINCT records, date(date.date).week AS week WHERE records IS NOT NULL
   RETURN week AS week,SUM(records.attendance) AS attendance, SUM(records.income) AS income ORDER BY week DESC LIMIT 12
@@ -381,12 +386,8 @@ export const getCampusTownServiceAggregates = `
   MATCH (campusTown {id:$id})  WHERE campusTown:Town OR campusTown:Campus
   
   MATCH (campusTown)-[:HAS_HISTORY]->(log:ServiceLog)
-  OPTIONAL MATCH (log)-[:HAS_CENTRE]->(centreServices:ServiceLog)
-  MATCH (centreServices)-[:HAS_BACENTA]->(bacentaServices:ServiceLog)
-  OPTIONAL MATCH (centreServices)-[:HAS_RECORD]->(centreRecords:ServiceRecord)
-  OPTIONAL MATCH (bacentaServices)-[:HAS_RECORD]->(bacentaRecords:ServiceRecord) 
-
-    UNWIND [centreRecords,bacentaRecords] AS records
+  MATCH (log)-[:HAS*1..2]->(centreServices:ServiceLog)
+  MATCH (centreServices)-[:HAS_RECORD]->(centreRecords:ServiceRecord)
    
     MATCH (records)-[:SERVICE_HELD_ON]->(date:TimeGraph)
     WITH DISTINCT records, date(date.date).week AS week
@@ -454,9 +455,9 @@ CREATE (member:Member {whatsappNumber:$whatsappNumber})
          	}
 
            MATCH (bacenta:Bacenta {id: $bacenta})
-           MATCH (bacenta)<-[:HAS_BACENTA]-(centre:Centre)
-           OPTIONAL MATCH (centre:Centre)<-[:HAS_CENTRE]-(campus:Campus)<-[:HAS_CAMPUS]-(bishop:Member)
-           OPTIONAL MATCH (centre:Centre)<-[:HAS_CENTRE]-(town:Town)<-[:HAS_TOWN]-(bishop:Member)
+           MATCH (bacenta)<-[:HAS]-(centre:Centre)
+           OPTIONAL MATCH (centre:Centre)<-[:HAS]-(campus:Campus)<-[:HAS_CAMPUS]-(bishop:Member)
+           OPTIONAL MATCH (centre:Centre)<-[:HAS]-(town:Town)<-[:HAS_TOWN]-(bishop:Member)
            RETURN member  {.id, .firstName,.middleName,.lastName,.email,.phoneNumber,.whatsappNumber,
             bacenta:bacenta {.id,centre:centre{.id,campus:campus{.id},town:town{.id}}}}
       `
@@ -468,8 +469,8 @@ RETURN bacenta.name AS name, COUNT(member) AS memberCount
 `
 
 export const closeDownBacenta = `
-MATCH (bacenta:Bacenta {id:$bacentaId})-[:HAS_BACENTA]-(centre)
-MATCH (centre)-[:HAS_BACENTA]->(bacentas)
+MATCH (bacenta:Bacenta {id:$bacentaId})-[:HAS]-(centre)
+MATCH (centre)-[:HAS]->(bacentas)
 MATCH (centre)-[:HAS_HISTORY]->(history:HistoryLog)-[:RECORDED_ON]->(createdAt:TimeGraph)
 MATCH (history)-[:LOGGED_BY]->(loggedBy:Member)
 MATCH (admin:Member {auth_id: $auth.jwt.sub})

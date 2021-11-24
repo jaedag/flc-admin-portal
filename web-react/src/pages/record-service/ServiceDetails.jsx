@@ -3,11 +3,13 @@ import HeadingSecondary from 'components/HeadingSecondary'
 import PlaceholderCustom from 'components/Placeholder'
 import { MemberContext } from 'contexts/MemberContext'
 import React, { useContext } from 'react'
-import { Col, Container, Row, Table } from 'react-bootstrap'
+import { Col, Container, Row, Table, Button } from 'react-bootstrap'
+import { useHistory } from 'react-router'
 import './ServiceDetails.css'
 
 const ServiceDetails = ({ service, church }) => {
   const { theme } = useContext(MemberContext)
+  const history = useHistory()
   return (
     <Container>
       <PlaceholderCustom as="h3">
@@ -87,6 +89,27 @@ const ServiceDetails = ({ service, church }) => {
                       src={service.servicePicture}
                     />
                   </PlaceholderCustom>
+                </div>
+                <h6>Banking Slip</h6>
+                <div>
+                  <PlaceholderCustom
+                    className="report-picture placeholder"
+                    xs={12}
+                  >
+                    <img className="report-picture" src={service.bankingSlip} />
+                  </PlaceholderCustom>
+                </div>
+                <div className="d-grid gap-2">
+                  <Button
+                    className={`btn-trends ${theme}`}
+                    onClick={() => {
+                      history.push(
+                        `/${church?.__typename.toLowerCase()}/reports`
+                      )
+                    }}
+                  >
+                    View Trends
+                  </Button>
                 </div>
               </div>
             </Row>

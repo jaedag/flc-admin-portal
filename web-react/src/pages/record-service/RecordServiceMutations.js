@@ -106,6 +106,7 @@ export const DISPLAY_BACENTA_SERVICE = gql`
       foreignCurrency
       treasurerSelfie
       servicePicture
+      bankingSlip
       treasurers {
         id
         firstName

@@ -104,6 +104,7 @@ export const SERVANTS_DASHBOARD = gql`
       isAdminForTown {
         id
         name
+        memberCount
         leader {
           id
         }
@@ -129,6 +130,7 @@ export const SERVANTS_DASHBOARD = gql`
       isAdminForCampus {
         id
         name
+        memberCount
         leader {
           id
           firstName

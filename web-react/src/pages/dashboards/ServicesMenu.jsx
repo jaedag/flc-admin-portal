@@ -3,7 +3,11 @@ import PlaceholderCustom from 'components/Placeholder'
 import { MemberContext } from 'contexts/MemberContext'
 import React, { useContext } from 'react'
 import { Container } from 'react-bootstrap'
-import { BarChartFill, Book } from 'react-bootstrap-icons'
+import {
+  BarChartFill,
+  Book,
+  FileEarmarkArrowUpFill,
+} from 'react-bootstrap-icons'
 import { useHistory } from 'react-router'
 
 const Services = () => {
@@ -27,6 +31,7 @@ const Services = () => {
               title="Fellowship Service"
               color="members"
               onClick={() => history.push(`/services/fellowship`)}
+              noCaption
             />
           )}
           {(currentUser.currentChurch?.__typename === 'Town' ||
@@ -35,6 +40,7 @@ const Services = () => {
               iconComponent={Book}
               title="Constituency Joint Service"
               color="members"
+              noCaption
               onClick={() => history.push(`/services/constituency-joint`)}
             />
           )}
@@ -43,7 +49,15 @@ const Services = () => {
             iconComponent={BarChartFill}
             title="Trends"
             color="members"
+            noCaption
             onClick={() => history.push(`/services/trends`)}
+          />
+          <MenuButton
+            iconComponent={FileEarmarkArrowUpFill}
+            title="Banking Slips"
+            color="members"
+            noCaption
+            onClick={() => history.push(`/services/banking-slips`)}
           />
         </div>
       </Container>

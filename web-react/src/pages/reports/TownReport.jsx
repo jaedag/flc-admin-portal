@@ -8,6 +8,8 @@ import { TOWN_REPORT } from './ReportQueries'
 import MembershipCard from './CompMembershipCard'
 import StatDisplay from './CompStatDisplay'
 import BaseComponent from 'components/base-component/BaseComponent'
+import { Col, Container, Row } from 'react-bootstrap'
+import PlaceholderCustom from 'components/Placeholder'
 
 export const TownReport = () => {
   const { townId } = useContext(ChurchContext)
@@ -19,46 +21,53 @@ export const TownReport = () => {
   const churchData = getServiceGraphData(data?.towns[0])
 
   return (
-    <BaseComponent loadingState={loading} errorState={error} data={data}>
-      <div className="container">
-        <div className=" my-3">
-          <h5 className="mb-0">{`${data?.towns[0].name} Town`}</h5>{' '}
-          <p>
-            <span className="text-secondary font-weight-bold">Leader: </span>
-            {`${data?.towns[0].leader.fullName}`}
-          </p>
-        </div>
+    <BaseComponent
+      loadingState={loading}
+      errorState={error}
+      data={data}
+      placeholder
+    >
+      <Container>
+        <PlaceholderCustom loading={loading} as="h5" xs={10}>
+          <h5 className="mb-0">{`${data?.towns[0].name} Town`}</h5>
+        </PlaceholderCustom>
+        <PlaceholderCustom loading={loading} as="span" xs={10}>
+          <span className="text-secondary font-weight-bold">
+            {`Leader: ${data?.towns[0].leader.fullName}`}
+          </span>
+        </PlaceholderCustom>
 
-        <div className="row">
-          <div className="col">
+        <Row className="mt-3">
+          <Col>
             <MembershipCard
               link="/town/members"
               title="Membership"
               count={data?.towns[0].memberCount}
             />
-          </div>
-        </div>
-        <div className="row mt-3">
-          <div className="col">
+          </Col>
+        </Row>
+        <Row className="mt-3">
+          <Col>
             <StatDisplay
               title="Avg Attendance"
               statistic={getMonthlyStatAverage(churchData, 'attendance')}
             />
-          </div>
+          </Col>
 
-          <div className="col">
+          <Col>
             <StatDisplay
               title="Avg Income"
               statistic={getMonthlyStatAverage(churchData, 'income')}
             />
-          </div>
-        </div>
+          </Col>
+        </Row>
         <ChurchGraph
+          loading={loading}
           stat1="attendance"
           stat2="income"
           churchData={churchData}
         />
-      </div>
+      </Container>
     </BaseComponent>
   )
 }

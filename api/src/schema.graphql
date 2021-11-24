@@ -21,21 +21,21 @@ type Member {
   members: [Member]
     @cypher(
       statement: """
-      MATCH (this)-[:LEADS|HAS*1..4]->(:Bacenta)-[:BELONGS_TO]-(members)
+      MATCH (this)-[:LEADS|HAS|IS_ADMIN_FOR*1..4]->(:Bacenta)-[:BELONGS_TO]-(members)
       RETURN DISTINCT members
       """
     )
   memberCount: Int
     @cypher(
       statement: """
-      MATCH (this)-[:LEADS|HAS*1..4]->(:Bacenta)-[:BELONGS_TO]-(members)
+      MATCH (this)-[:LEADS|HAS|IS_ADMIN_FOR*1..4]->(:Bacenta)-[:BELONGS_TO]-(members)
       RETURN COUNT(DISTINCT members)
       """
     )
   basontaMembers: [Member]
     @cypher(
       statement: """
-      MATCH (this)-[:LEADS|HAS*1..4]->(:Bacenta)-[:BELONGS_TO]-(members)
+      MATCH (this)-[:LEADS|HAS|IS_ADMIN_FOR*1..4]->(:Bacenta)-[:BELONGS_TO]-(members)
       MATCH (members)-[:BELONGS_TO]->(:Ministry)
       RETURN DISTINCT members
       """
@@ -43,7 +43,7 @@ type Member {
   basontaMembershipCount: Int
     @cypher(
       statement: """
-      MATCH (this)-[:LEADS|HAS*1..4]->(:Bacenta)-[:BELONGS_TO]-(members)
+      MATCH (this)-[:LEADS|HAS|IS_ADMIN_FOR*1..4]->(:Bacenta)-[:BELONGS_TO]-(members)
       MATCH (members)-[:BELONGS_TO]->(:Ministry)
       RETURN COUNT(DISTINCT members)
       """
@@ -133,8 +133,9 @@ type ServiceRecord @auth(rules: [{ isAuthenticated: true }]) {
   foreignCurrency: String
   servicePicture: String
   treasurerSelfie: String
+  bankingSlip: String
   treasurers: [Member]! @relationship(type: "WAS_TREASURER_FOR", direction: IN)
-  historyLog: HistoryLog @relationship(type: "HAS_RECORD", direction: IN)
+  serviceLog: ServiceLog @relationship(type: "HAS_RECORD", direction: IN)
   noServiceReason: String
 }
 
@@ -322,7 +323,7 @@ type Bacenta {
 
 type ServiceDay @auth(rules: [{ isAuthenticated: true }]) {
   day: String!
-  dayNum: Int
+  dayNumber: Int
   bacenta: Bacenta @relationship(type: "MEETS_ON", direction: IN)
 }
 
@@ -660,16 +661,17 @@ type Query {
     @cypher(
       statement: """
       MATCH (member:Member {id:$id})
-      MATCH (member)-[:LEADS]-(constituency) WHERE constituency:Campus OR constituency:Town
-      RETURN COUNT(constituency)
+      MATCH (member)-[:LEADS|IS_ADMIN_FOR]-(constituency) WHERE constituency:Campus OR constituency:Town
+      RETURN COUNT(DISTINCT constituency)
       """
     )
+
   bishopConstituencyCount(id: ID!): Int
     @cypher(
       statement: """
       MATCH (member:Member {id:$id})
-      MATCH (member)-[:HAS]-(constituency) WHERE constituency:Campus OR constituency:Town
-      RETURN COUNT(constituency)
+      MATCH (member)-[:HAS|IS_ADMIN_FOR]-(constituency) WHERE constituency:Campus OR constituency:Town
+      RETURN COUNT(DISTINCT constituency)
       """
     )
 

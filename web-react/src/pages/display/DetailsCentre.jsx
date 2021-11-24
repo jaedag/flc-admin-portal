@@ -21,6 +21,7 @@ const DetailsCentre = () => {
     displayCentre?.town ? displayCentre?.town : displayCentre?.campus,
     displayCentre,
   ]
+
   return (
     <BaseComponent loadingState={loading} errorState={error} data={data}>
       <DisplayChurchDetails

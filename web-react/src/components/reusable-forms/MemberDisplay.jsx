@@ -97,7 +97,7 @@ const MemberDisplay = ({ memberId }) => {
         <Col sm={1}>
           <DetailsCard
             heading="Occupation"
-            detail={member?.occupation.occupation}
+            detail={member?.occupation?.occupation}
           />
         </Col>
         <Col sm={1}>

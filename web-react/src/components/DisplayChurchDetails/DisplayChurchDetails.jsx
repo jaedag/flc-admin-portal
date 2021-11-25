@@ -193,6 +193,9 @@ const DisplayChurchDetails = (props) => {
         <Row>
           <Col>
             <DetailsCard
+              onClick={() =>
+                history.push(`/${props.subChurch.toLowerCase()}/displayall`)
+              }
               heading={props.churchHeading}
               detail={props.churchCount}
             />
@@ -252,24 +255,21 @@ const DisplayChurchDetails = (props) => {
           </Container>
         )}
 
-        <Container className="mt-4">
-          <h3>FORMS</h3>
-          {props.last3Weeks &&
-            props.last3Weeks.map((week, i) => (
-              <>
-                <div key={i} className="text-secondary">
-                  {`WEEK ${week.number}`}
-                </div>
-                <p>
-                  Income Form -{' '}
-                  <span
-                    className={`${week.filled ? 'filled' : 'not-filled'}`}
-                  >{`${week.filled ? 'Filled' : 'Not Filled'}`}</span>
-                </p>
-              </>
-            ))}
-        </Container>
+        {props.last3Weeks &&
+          props.last3Weeks.map((week, i) => (
+            <Container key={i} className="mt-4">
+              <h3>FORMS</h3>
+              <div className="text-secondary">{`WEEK ${week.number}`}</div>
+              <p>
+                Income Form -{' '}
+                <span
+                  className={`${week.filled ? 'filled' : 'not-filled'}`}
+                >{`${week.filled ? 'Filled' : 'Not Filled'}`}</span>
+              </p>
+            </Container>
+          ))}
       </Container>
+
       {props.subChurch && props.buttons[0] ? (
         <>
           <Container>

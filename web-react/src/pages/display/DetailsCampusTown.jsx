@@ -49,7 +49,7 @@ const DetailsCampusTown = () => {
             buttons={townData?.towns[0].centres}
             buttonsSecondRow={townData?.towns[0].sontas}
             editlink="/town/edittown"
-            editPermitted={['adminBishop', 'adminFederal', 'adminTown']}
+            editPermitted={['adminBishop', 'adminFederal']}
             history={
               townData?.towns[0]?.history.length !== 0 &&
               townData?.towns[0]?.history

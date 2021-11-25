@@ -1,4 +1,5 @@
 import React, { useContext } from 'react'
+import { Card, Col, Container, Row } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { ChurchContext } from '../contexts/ChurchContext'
 
@@ -10,36 +11,41 @@ const DisplayChurchList = (props) => {
   }
 
   return (
-    <div className="container">
+    <Container>
       <h5 className="text-muted">{`${churchType} Locations:`}</h5>
-      <div className="row">
+      <Row>
         {data.map((church, index) => {
           return (
             <Link
-              to={`/${churchType.toLowerCase()}/displaydetails`}
-              className="col-sm-8 col-md-3 card m-2"
               key={index}
-              onClick={() => {
-                clickCard(church)
-              }}
+              to={`/${churchType.toLowerCase()}/displaydetails`}
             >
-              <div className="card-body">
-                <span className="text-muted">{`${churchType}: `}</span>
-                <span className="card-title">{church.name}</span>
-                <h6 className="card-text text-muted">
-                  {church.leader
-                    ? `${church.leader.firstName} ${church.leader.lastName}`
-                    : null}
-                </h6>
-                {church.admin && (
-                  <p className="card-text text-muted">{`Admin: ${church.admin.firstName} ${church.admin.lastName}`}</p>
-                )}
-              </div>
+              <Col
+                sm={8}
+                md={3}
+                onClick={() => {
+                  clickCard(church)
+                }}
+              >
+                <Card className="mb-2">
+                  <Card.Body>
+                    <Card.Title>{church.name}</Card.Title>
+                    <Card.Text>
+                      {church.leader
+                        ? `${church.leader.firstName} ${church.leader.lastName}`
+                        : null}
+                      {church.admin && (
+                        <p className="text-muted">{`Admin: ${church.admin.firstName} ${church.admin.lastName}`}</p>
+                      )}
+                    </Card.Text>
+                  </Card.Body>
+                </Card>
+              </Col>
             </Link>
           )
         })}
-      </div>
-    </div>
+      </Row>
+    </Container>
   )
 }
 

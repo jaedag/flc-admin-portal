@@ -11,7 +11,7 @@ import {
 import {
   BISHOP_MEMBER_DROPDOWN,
   GET_BISHOP_CAMPUSES,
-  GET_BISHOP_TOWNS,
+  GET_COUNCIL_TOWNS,
   GET_CAMPUS_CENTRES,
   GET_TOWN_CENTRES,
 } from 'queries/ListQueries'
@@ -43,7 +43,7 @@ const BacentaForm = ({ initialValues, onSubmit, title, newBacenta }) => {
   const history = useHistory()
 
   const { data: townListData, error: townListError } = useQuery(
-    GET_BISHOP_TOWNS,
+    GET_COUNCIL_TOWNS,
     {
       variables: { id: bishopId },
     }

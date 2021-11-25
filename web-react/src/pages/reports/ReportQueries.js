@@ -159,3 +159,37 @@ export const TOWN_REPORT = gql`
     }
   }
 `
+
+export const COUNCIL_REPORT = gql`
+  query councilReports($councilId: ID!) {
+    councils(where: { id: $councilId }) {
+      id
+      name
+      leader {
+        id
+        firstName
+        lastName
+        fullName
+      }
+      services {
+        id
+        historyRecord
+        serviceRecords {
+          created_at
+          attendance
+          income
+          week
+          serviceDate {
+            date
+          }
+        }
+      }
+      componentServiceAggregate {
+        week
+        attendance
+        income
+      }
+      memberCount
+    }
+  }
+`

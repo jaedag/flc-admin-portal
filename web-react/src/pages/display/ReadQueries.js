@@ -1,11 +1,5 @@
 import { gql } from '@apollo/client'
 
-export const BISHOP_MEMBER_COUNT = gql`
-  query($id: ID) {
-    bishopMemberCount(id: $id)
-  }
-`
-
 export const DISPLAY_MEMBER = gql`
   query($id: ID!) {
     member(id: $id) {
@@ -578,15 +572,15 @@ export const DISPLAY_COUNCIL = gql`
     councils(where: { id: $id }, options: { limit: 1 }) {
       id
       name
-
-      town {
+      constituencyCount
+      towns(options: { limit: 5 }) {
         id
         name
         bishop {
           id
         }
       }
-      campus {
+      campuses(options: { limit: 5 }) {
         id
         name
         bishop {
@@ -594,10 +588,6 @@ export const DISPLAY_COUNCIL = gql`
         }
       }
 
-      sontas {
-        id
-        name
-      }
       admin {
         id
         firstName

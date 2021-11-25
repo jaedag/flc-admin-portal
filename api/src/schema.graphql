@@ -230,6 +230,10 @@ type Council {
       RETURN COUNT(DISTINCT members)
       """
     )
+  constituencyCount: Int
+    @cypher(
+      statement: "MATCH (this)-[:HAS]->(constituency) WHERE constituency:Campus OR constituency:Town RETURN COUNT(constituency)"
+    )
   admin: Member @relationship(type: "IS_ADMIN_FOR", direction: IN)
   history: [HistoryLog] @relationship(type: "HAS_HISTORY", direction: OUT)
   serviceRecord: [ServiceRecord]

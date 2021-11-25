@@ -72,6 +72,8 @@ import ServicesChurchList from 'pages/dashboards/ServicesChurchList'
 import ProtectedReports from 'pages/reports/ProtectedReports.jsx'
 import BankingSlipView from 'pages/services/BankingSlipView.jsx'
 import BankingSlipSubmission from 'pages/services/BankingSlipSubmission.jsx'
+import DetailsCouncil from 'pages/display/DetailsCouncil.jsx'
+import CouncilReport from 'pages/reports/CouncilReport.jsx'
 
 const PastorsAdmin = () => {
   const [church, setChurch] = useState(
@@ -569,6 +571,12 @@ const PastorsAdmin = () => {
                     component={TownReport}
                     placeholder
                   />
+                  <ProtectedRoute
+                    roles={['adminFederal', 'adminBishop']}
+                    path="/council/reports"
+                    component={CouncilReport}
+                    placeholder
+                  />
                   {/* Member Display and Edit Pages */}
                   <ProtectedRoute
                     roles={['all']}
@@ -729,6 +737,19 @@ const PastorsAdmin = () => {
                     ]}
                     path="/town/displaydetails"
                     component={DisplayCampusTownDetails}
+                    exact
+                  />
+                  <ProtectedRoute
+                    roles={[
+                      'adminFederal',
+                      'adminBishop',
+                      'adminCampus',
+                      'bishop',
+                      'leaderCampus',
+                    ]}
+                    path="/council/displaydetails"
+                    component={DetailsCouncil}
+                    placeholder
                     exact
                   />
                   <ProtectedRoute

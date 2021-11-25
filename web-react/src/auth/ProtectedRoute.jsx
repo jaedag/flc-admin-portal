@@ -16,6 +16,7 @@ const ProtectedRoute = ({ component, roles, placeholder, ...args }) => {
       //if User is not a federal admin
       church.setBishopId(currentUser.bishop)
       church.setChurch(currentUser.church)
+      church.setCouncilId(currentUser.council)
 
       if (!currentUser.roles.includes('adminBishop')) {
         //User is not a Bishops Admin the he can only be looking at his constituency membership

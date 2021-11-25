@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/client'
 import { alertMsg, capitalise, throwErrorMsg } from '../../global-utils'
 import {
-  GET_BISHOP_TOWNS,
+  GET_COUNCIL_TOWNS,
   GET_BISHOP_CAMPUSES,
 } from '../../queries/ListQueries'
 import { BISH_DASHBOARD_COUNTS } from '../dashboards/DashboardQueries'
@@ -70,7 +70,7 @@ const UpdateTownCampus = () => {
   const [UpdateTown] = useMutation(UPDATE_TOWN_MUTATION, {
     refetchQueries: [
       {
-        query: GET_BISHOP_TOWNS,
+        query: GET_COUNCIL_TOWNS,
         variables: { id: initialValues.bishopSelect },
       },
       { query: BISH_DASHBOARD_COUNTS, variables: { id: bishopId } },

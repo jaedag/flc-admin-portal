@@ -155,8 +155,8 @@ const MemberRoleList = ({ member }) => {
   }
 
   return (
-    <PlaceholderCustom className="card-text">
-      <div className="card-text">
+    <PlaceholderCustom>
+      <small>
         {/* <DashboardButton btnLink="/dashboard/servants">
         View Records
       </DashboardButton> */}
@@ -207,7 +207,7 @@ const MemberRoleList = ({ member }) => {
             })
           })
         }
-      </div>
+      </small>
     </PlaceholderCustom>
   )
 }

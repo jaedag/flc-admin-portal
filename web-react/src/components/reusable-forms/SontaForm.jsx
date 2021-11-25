@@ -5,7 +5,7 @@ import { capitalise, makeSelectOptions } from 'global-utils'
 import {
   BISHOP_MEMBER_DROPDOWN,
   GET_BISHOP_CAMPUSES,
-  GET_BISHOP_TOWNS,
+  GET_COUNCIL_TOWNS,
   GET_MINISTRIES,
 } from 'queries/ListQueries'
 import React, { useContext } from 'react'
@@ -28,7 +28,7 @@ const SontaForm = ({
     data: townsData,
     loading: townsLoading,
     error: townsError,
-  } = useQuery(GET_BISHOP_TOWNS, {
+  } = useQuery(GET_COUNCIL_TOWNS, {
     variables: { id: bishopId },
   })
   const {

@@ -27,11 +27,6 @@ const DetailsCentre = () => {
       <DisplayChurchDetails
         name={displayCentre?.name}
         leaderTitle="Centre Leader"
-        leaderName={
-          displayCentre?.leader
-            ? `${displayCentre?.leader.firstName} ${displayCentre?.leader.lastName}`
-            : '-'
-        }
         leader={displayCentre?.leader}
         churchHeading="Bacentas"
         churchType="Centre"

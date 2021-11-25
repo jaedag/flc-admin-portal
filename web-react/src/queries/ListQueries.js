@@ -200,9 +200,9 @@ export const GET_SONTAS_BY_CAMPUSTOWN = gql`
 
 export const GET_BISHOP_CAMPUSES = gql`
   query($id: ID) {
-    members(where: { id: $id }) {
+    councils(where: { id: $id }) {
       id
-      isBishopForCampus {
+      campuses {
         name
         id
         leader {
@@ -258,10 +258,48 @@ export const GET_BISHOP_CAMPUSES = gql`
   }
 `
 
-export const GET_BISHOP_TOWNS = gql`
+export const GET_COUNCIL_TOWNS = gql`
   query($id: ID) {
-    members(where: { id: $id }) {
-      isBishopForTown {
+    councils(where: { id: $id }) {
+      leader {
+        id
+        firstName
+        lastName
+        fullName
+
+        admin {
+          id
+          firstName
+          lastName
+          bacenta {
+            id
+            centre {
+              id
+              town {
+                id
+                name
+                bishop {
+                  id
+                }
+              }
+              campus {
+                id
+                name
+                bishop {
+                  id
+                }
+              }
+            }
+          }
+        }
+      }
+      memberCount
+      admin {
+        id
+        firstName
+        lastName
+      }
+      towns {
         name
         id
         leader {
@@ -281,36 +319,6 @@ export const GET_BISHOP_TOWNS = gql`
         centres {
           id
           name
-        }
-        bishop {
-          id
-          firstName
-          lastName
-          admin {
-            id
-            firstName
-            lastName
-            bacenta {
-              id
-              centre {
-                id
-                town {
-                  id
-                  name
-                  bishop {
-                    id
-                  }
-                }
-                campus {
-                  id
-                  name
-                  bishop {
-                    id
-                  }
-                }
-              }
-            }
-          }
         }
       }
     }

@@ -52,6 +52,7 @@ const Navigator = () => {
         picture: data.memberByEmail?.pictureUrl ?? null,
         bacenta: data.memberByEmail?.bacenta,
         bishop: data.memberByEmail?.bacenta?.centre[`${church}`]?.bishop.id,
+        council: data.memberByEmail?.bacenta?.centre[`${church}`]?.council.id,
         constituency: data.memberByEmail?.bacenta?.centre[`${church}`]?.id,
         church: { church: church, subChurch: 'centre' },
         email: user?.email,
@@ -214,7 +215,7 @@ const Navigator = () => {
   }
 
   assessmentChurchData = servant && getServantRoles(servant)
-  console.log(roles, assessmentChurch)
+
   return (
     <Navbar
       collapseOnSelect

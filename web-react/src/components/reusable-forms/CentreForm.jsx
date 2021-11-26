@@ -23,13 +23,7 @@ import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import HeadingSecondary from 'components/HeadingSecondary'
 import { MemberContext } from 'contexts/MemberContext'
 
-const CentreForm = ({
-  initialValues,
-  onSubmit,
-  title,
-  loadingState,
-  newCentre,
-}) => {
+const CentreForm = ({ initialValues, onSubmit, title, loading, newCentre }) => {
   const {
     church,
     togglePopup,
@@ -74,8 +68,8 @@ const CentreForm = ({
 
   return (
     <BaseComponent
-      loadingState={campusesLoading || townsLoading || loadingState}
-      errorState={townsError || campusesError}
+      loading={campusesLoading || townsLoading || loading}
+      error={townsError || campusesError}
       data={townsData && campusesData}
     >
       <Container>

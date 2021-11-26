@@ -34,11 +34,7 @@ const DisplayAllTownCampuses = () => {
     const council = townsData?.councils[0]
 
     return (
-      <BaseComponent
-        data={townsData}
-        loadingState={townsLoading}
-        errorState={townsError}
-      >
+      <BaseComponent data={townsData} loading={townsLoading} error={townsError}>
         <Container>
           <div className="mb-4 border-bottom">
             <Row className="mb-2">
@@ -93,8 +89,8 @@ const DisplayAllTownCampuses = () => {
     return (
       <BaseComponent
         data={campusesData}
-        loadingState={campusesLoading}
-        errorState={campusesError}
+        loading={campusesLoading}
+        error={campusesError}
       >
         <Container>
           <div className="mb-4 border-bottom">

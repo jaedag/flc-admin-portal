@@ -34,7 +34,7 @@ const BacentaForm = ({ initialValues, onSubmit, title, newBacenta }) => {
     church,
     clickCard,
     isOpen,
-    loadingState,
+    loading,
     togglePopup,
     bacentaId,
     bishopId,
@@ -89,7 +89,7 @@ const BacentaForm = ({ initialValues, onSubmit, title, newBacenta }) => {
     : []
   let townCampusIdVar = initialValues.townCampusSelect
 
-  if (loadingState || !initialValues.bacentaName) {
+  if (loading || !initialValues.bacentaName) {
     return <LoadingScreen />
   }
 

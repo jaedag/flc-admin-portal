@@ -184,7 +184,7 @@ const UpdateBacenta = () => {
       title="Update Bacenta"
       initialValues={initialValues}
       onSubmit={onSubmit}
-      loadingState={bacentaLoading || isLoading}
+      loading={bacentaLoading || isLoading}
     />
   )
 }

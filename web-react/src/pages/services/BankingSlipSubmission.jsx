@@ -51,11 +51,7 @@ const BankingSlipSubmission = () => {
   }
 
   return (
-    <BaseComponent
-      loadingState={loading}
-      errorState={error}
-      data={data && bacenta}
-    >
+    <BaseComponent loading={loading} error={error} data={data && bacenta}>
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}

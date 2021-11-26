@@ -15,13 +15,7 @@ import { useQuery } from '@apollo/client'
 import { DISPLAY_CAMPUS, DISPLAY_TOWN } from 'pages/display/ReadQueries'
 import RoleView from 'auth/RoleView'
 
-const SontaForm = ({
-  initialValues,
-  onSubmit,
-  title,
-  loadingState,
-  newSonta,
-}) => {
+const SontaForm = ({ initialValues, onSubmit, title, loading, newSonta }) => {
   const { church, campusId, townId, bishopId } = useContext(ChurchContext)
 
   const {
@@ -84,14 +78,14 @@ const SontaForm = ({
 
   return (
     <BaseComponent
-      loadingState={
+      loading={
         campusTownLoading ||
         ministryListLoading ||
         campusesLoading ||
         townsLoading ||
-        loadingState
+        loading
       }
-      errorState={townsError || campusesError}
+      error={townsError || campusesError}
       data={townsData && campusesData && ministryListData}
     >
       <Formik

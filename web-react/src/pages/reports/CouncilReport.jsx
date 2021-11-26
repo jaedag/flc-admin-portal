@@ -21,12 +21,7 @@ const CouncilReport = () => {
   const churchData = getServiceGraphData(data?.councils[0])
 
   return (
-    <BaseComponent
-      loadingState={loading}
-      errorState={error}
-      data={data}
-      placeholder
-    >
+    <BaseComponent loading={loading} error={error} data={data} placeholder>
       <Container>
         <PlaceholderCustom loading={loading} as="h5" xs={10}>
           <h5 className="mb-0">{`${data?.councils[0]?.name} Council`}</h5>

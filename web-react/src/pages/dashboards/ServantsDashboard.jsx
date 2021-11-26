@@ -171,7 +171,7 @@ const ServantsDashboard = () => {
   assessmentChurchData = servant && getServantRoles(servant)
 
   return (
-    <BaseComponent errorState={error} data={data}>
+    <BaseComponent error={error} data={data}>
       <Container>
         <Placeholder loading={!servant?.fullName} as="p">
           <p className="mb-0">{`Welcome to`}</p>

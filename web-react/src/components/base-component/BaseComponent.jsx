@@ -3,15 +3,15 @@ import ErrorScreen from './ErrorScreen'
 import LoadingScreen from './LoadingScreen'
 
 const BaseComponent = (props) => {
-  const { loadingState, errorState, data, placeholder } = props
+  const { loading, error, data, placeholder } = props
 
   if (data || placeholder) {
     return <>{props.children}</>
-  } else if (loadingState) {
+  } else if (loading) {
     return <LoadingScreen />
-  } else if (errorState) {
+  } else if (error) {
     // eslint-disable-next-line no-console
-    console.error(errorState)
+    console.error(error)
     return <ErrorScreen />
   }
 

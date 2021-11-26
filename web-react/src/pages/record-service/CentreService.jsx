@@ -18,8 +18,8 @@ const CentreService = () => {
 
   return (
     <BaseComponent
-      loadingState={centreLoading}
-      errorState={centreError}
+      loading={centreLoading}
+      error={centreError}
       data={centreData}
     >
       <ServiceForm

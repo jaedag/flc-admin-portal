@@ -27,8 +27,8 @@ const DetailsCampusTown = () => {
 
   return (
     <BaseComponent
-      loadingState={townLoading || campusLoading}
-      errorState={townError || campusError}
+      loading={townLoading || campusLoading}
+      error={townError || campusError}
       data={campusData && townData}
     >
       {church.church === 'town' && (

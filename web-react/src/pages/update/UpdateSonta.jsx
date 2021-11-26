@@ -108,7 +108,7 @@ const UpdateSonta = () => {
       initialValues={initialValues}
       onSubmit={onSubmit}
       title="Sonta Update Form"
-      loadingState={sontaLoading}
+      loading={sontaLoading}
     />
   )
 }

@@ -180,31 +180,6 @@
   margin: 5px 5px 5px 0px;
 }
 
-.nav-search-box {
-  background-color: var(--text-box-inner);
-  color: var(--text-focus-white);
-  height: 38px;
-  border: 1px solid var(--border);
-  width: 30vw;
-  padding-left: 10px;
-  border-radius: 5px;
-  border-radius: 7px 0px 0px 7px;
-}
-
-.nav-search-box:focus {
-  background-color: var(--text-box-inner);
-  color: var(--text-focus-white);
-  border: 1px solid var(--border);
-  border-radius: 7px;
-
-  box-shadow: 0 0 7px var(--accent-color);
-  /* margin: 5px 5px 5px 0px; */
-}
-.nav-search-button {
-  border-radius: 0px 7px 7px 0px;
-  border: 1px solid var(--border);
-}
-
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,

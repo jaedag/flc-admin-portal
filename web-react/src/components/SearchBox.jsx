@@ -1,17 +1,26 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Formik, Form } from 'formik'
 import FormikControl from './formik-components/FormikControl'
 import * as Yup from 'yup'
+import { Col, Button, Nav } from 'react-bootstrap'
+import './SearchBox.css'
+import { SearchContext } from 'contexts/MemberContext'
+import { useHistory } from 'react-router'
 
 function SearchBox() {
+  const { setSearchKey } = useContext(SearchContext)
+  const history = useHistory()
   const initialValues = {
-    searchKey: '',
+    searchKeyVal: '',
   }
   const validationSchema = Yup.object({
-    searchKey: Yup.string().required(''),
+    searchKeyVal: Yup.string().required(''),
   })
 
-  const onSubmit = (onSubmitProps) => {
+  const onSubmit = (values, onSubmitProps) => {
+    onSubmitProps.setSubmitting(true)
+    setSearchKey(values.searchKeyVal)
+    onSubmitProps.setSubmitting(false)
     onSubmitProps.resetForm()
   }
 
@@ -22,24 +31,29 @@ function SearchBox() {
       onSubmit={onSubmit}
     >
       {(formik) => (
-        <Form className=" d-none d-md-block">
-          <div className="form-row">
-            <div className="col-auto px-0 d-flex align-items-center mt-2">
-              <FormikControl
-                control="searchbox"
-                name="searchKey"
-                placeholder="Search for anything..."
-                setFieldValue={formik.setFieldValue}
-                aria-describedby="Global Search"
-              />
-              <button
-                className="btn btn-primary nav-search-button m-0"
+        <Form className="form-row">
+          <Col className="d-flex mt-2">
+            <FormikControl
+              control="input"
+              className="nav-search-box"
+              name="searchKeyVal"
+              placeholder="Search for anything..."
+              aria-describedby="Global Search"
+            />
+
+            <Nav.Link className="m-0 p-0" as="div" eventKey={10}>
+              <Button
+                className="nav-search-btn"
                 type="submit"
+                onClick={() => {
+                  setSearchKey(formik.values.searchKey)
+                  history.push('/search-results')
+                }}
               >
-                <i className="fas fa-search icon-color" />
-              </button>
-            </div>
-          </div>
+                Search
+              </Button>
+            </Nav.Link>
+          </Col>
         </Form>
       )}
     </Formik>

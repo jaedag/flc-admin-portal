@@ -16,7 +16,7 @@ const CampusServiceDetails = () => {
   })
 
   return (
-    <BaseComponent loadingState={loading} errorState={error} data={data}>
+    <BaseComponent loading={loading} error={error} data={data}>
       <ServiceDetails
         service={data?.serviceRecords[0]}
         church={data?.campuses[0]}

@@ -19,7 +19,7 @@ export const CentreReport = () => {
   const churchData = getServiceGraphData(data?.centres[0])
 
   return (
-    <BaseComponent loadingState={loading} errorState={error} data={data}>
+    <BaseComponent loading={loading} error={error} data={data}>
       <div className="container">
         <div className=" my-3">
           <h5 className="mb-0">{`${data?.centres[0].name} Centre`}</h5>{' '}

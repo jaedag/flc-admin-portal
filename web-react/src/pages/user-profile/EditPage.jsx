@@ -83,8 +83,8 @@ const UserProfileEditPage = () => {
 
   return (
     <BaseComponent
-      loadingState={memberLoading}
-      errorState={memberError || currentUser.id === ''}
+      loading={memberLoading}
+      error={memberError || currentUser.id === ''}
       data={memberData}
     >
       <MemberForm

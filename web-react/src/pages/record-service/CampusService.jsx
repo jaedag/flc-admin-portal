@@ -15,7 +15,7 @@ const CampusService = () => {
   const [RecordService] = useMutation(RECORD_SERVICE)
 
   return (
-    <BaseComponent loadingState={loading} errorState={error} data={data}>
+    <BaseComponent loading={loading} error={error} data={data}>
       <ServiceForm
         RecordServiceMutation={RecordService}
         church={data?.campuses[0]}

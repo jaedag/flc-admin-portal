@@ -6,7 +6,7 @@ import { ErrorMessage } from 'formik'
 import TextError from './TextError'
 import { useHistory } from 'react-router-dom'
 import {
-  BISHOP_SEARCH,
+  COUNCIL_SEARCH,
   CONSTITUENCY_SEARCH,
   FEDERAL_SEARCH,
 } from '../../pages/mobile/SearchQuery.js'
@@ -61,15 +61,15 @@ function FormikSearchbox(props) {
       }
     },
   })
-  const [bishopSearch] = useLazyQuery(BISHOP_SEARCH, {
+  const [councilSearch] = useLazyQuery(COUNCIL_SEARCH, {
     onCompleted: (data) => {
       const combinedData = [
-        ...data.bishopMemberSearch,
-        ...data.bishopCampusSearch,
-        ...data.bishopTownSearch,
-        ...data.bishopSontaSearch,
-        ...data.bishopCentreSearch,
-        ...data.bishopBacentaSearch,
+        ...data.councilMemberSearch,
+        ...data.councilCampusSearch,
+        ...data.councilTownSearch,
+        ...data.councilSontaSearch,
+        ...data.councilCentreSearch,
+        ...data.councilBacentaSearch,
       ]
 
       if (currentUser.roles.includes('adminBishop')) {
@@ -98,7 +98,7 @@ function FormikSearchbox(props) {
         variables: { searchKey: capitalise(searchString.trim()) },
       })
     } else if (isAuthorised(['adminBishop', 'bishop'], currentUser.roles)) {
-      bishopSearch({
+      councilSearch({
         variables: {
           bishopId: currentUser.bishop,
           searchKey: capitalise(searchString.trim()),

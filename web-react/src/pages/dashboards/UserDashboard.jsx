@@ -11,7 +11,7 @@ import { Col, Row } from 'react-bootstrap'
 import Placeholder from '../../components/Placeholder'
 
 const UserDashboard = () => {
-  const { currentUser, userJobs } = useContext(MemberContext)
+  const { currentUser, userJobs, setMemberId } = useContext(MemberContext)
   const history = useHistory()
 
   return (
@@ -35,6 +35,7 @@ const UserDashboard = () => {
                         className="col-auto pl-0"
                         key={i}
                         onClick={() => {
+                          setMemberId(currentUser.id)
                           role.clickCard()
                           history.push(role.link)
                         }}

@@ -15,12 +15,7 @@ const DetailsCouncil = () => {
   const council = data?.councils[0]
   let breadcrumb = [council?.leader, council]
   return (
-    <BaseComponent
-      loadingState={loading}
-      errorState={error}
-      data={data}
-      placeholder
-    >
+    <BaseComponent loading={loading} error={error} data={data} placeholder>
       <DisplayChurchDetails
         name={council?.name}
         leaderTitle="Bishop"

@@ -89,6 +89,7 @@ const ServiceForm = ({
       initialValues={initialValues}
       validationSchema={validationSchema}
       onSubmit={onSubmit}
+      validateOnMount
     >
       {(formik) => (
         <Container>

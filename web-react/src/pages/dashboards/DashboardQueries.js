@@ -107,6 +107,9 @@ export const SERVANTS_DASHBOARD = gql`
         memberCount
         leader {
           id
+          firstName
+          lastName
+          fullName
         }
         services {
           id

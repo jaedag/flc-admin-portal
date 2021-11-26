@@ -641,8 +641,9 @@ export const resolvers = {
       isAuth(
         [
           'adminFederal',
-          'adminBishop',
-          'adminConstituency',
+          'adminCouncil',
+          'adminCampus',
+          'adminTown',
           'leaderBacenta',
           'leaderCentre',
           'leaderTown',
@@ -690,8 +691,9 @@ export const resolvers = {
       isAuth(
         [
           'adminFederal',
-          'adminBishop',
-          'adminConstituency',
+          'adminCouncil',
+          'adminCampus',
+          'adminTown',
           'leaderBacenta',
           'leaderCentre',
           'leaderTown',
@@ -738,7 +740,7 @@ export const resolvers = {
       return MakeServant(
         context,
         args,
-        ['adminFederal', 'adminBishop'],
+        ['adminFederal', 'adminCouncil'],
         'Town',
         'Admin'
       )
@@ -747,7 +749,7 @@ export const resolvers = {
       return RemoveServant(
         context,
         args,
-        ['adminFederal', 'adminBishop'],
+        ['adminFederal', 'adminCouncil'],
         'Town',
         'Admin'
       )
@@ -756,7 +758,7 @@ export const resolvers = {
       return MakeServant(
         context,
         args,
-        ['adminFederal', 'adminBishop'],
+        ['adminFederal', 'adminCouncil'],
         'Campus',
         'Admin'
       )
@@ -765,7 +767,7 @@ export const resolvers = {
       return RemoveServant(
         context,
         args,
-        ['adminFederal', 'adminBishop'],
+        ['adminFederal', 'adminCouncil'],
         'Campus',
         'Admin'
       )
@@ -774,7 +776,7 @@ export const resolvers = {
       return MakeServant(
         context,
         args,
-        ['adminFederal', 'adminBishop', 'adminCampus', 'adminTown'],
+        ['adminFederal', 'adminCouncil', 'adminCampus', 'adminTown'],
         'Bacenta',
         'Leader'
       )
@@ -783,7 +785,7 @@ export const resolvers = {
       return RemoveServant(
         context,
         args,
-        ['adminFederal', 'adminBishop', 'adminCampus', 'adminTown'],
+        ['adminFederal', 'adminCouncil', 'adminCampus', 'adminTown'],
         'Bacenta',
         'Leader'
       )
@@ -792,7 +794,7 @@ export const resolvers = {
       return MakeServant(
         context,
         args,
-        ['adminFederal', 'adminBishop', 'adminCampus', 'adminTown'],
+        ['adminFederal', 'adminCouncil', 'adminCampus', 'adminTown'],
         'Sonta',
         'Leader'
       )
@@ -801,7 +803,7 @@ export const resolvers = {
       return RemoveServant(
         context,
         args,
-        ['adminFederal', 'adminBishop', 'adminCampus', 'adminTown'],
+        ['adminFederal', 'adminCouncil', 'adminCampus', 'adminTown'],
         'Sonta',
         'Leader'
       )
@@ -810,7 +812,7 @@ export const resolvers = {
       return MakeServant(
         context,
         args,
-        ['adminFederal', 'adminBishop', 'adminCampus', 'adminTown'],
+        ['adminFederal', 'adminCouncil', 'adminCampus', 'adminTown'],
         'Centre',
         'Leader'
       )
@@ -819,7 +821,7 @@ export const resolvers = {
       return RemoveServant(
         context,
         args,
-        ['adminFederal', 'adminBishop', 'adminCampus', 'adminTown'],
+        ['adminFederal', 'adminCouncil', 'adminCampus', 'adminTown'],
         'Centre',
         'Leader'
       )
@@ -828,7 +830,7 @@ export const resolvers = {
       return MakeServant(
         context,
         args,
-        ['adminFederal', 'adminBishop'],
+        ['adminFederal', 'adminCouncil'],
         'Campus',
         'Leader'
       )
@@ -837,7 +839,7 @@ export const resolvers = {
       return RemoveServant(
         context,
         args,
-        ['adminFederal', 'adminBishop'],
+        ['adminFederal', 'adminCouncil'],
         'Campus',
         'Leader'
       )
@@ -846,7 +848,7 @@ export const resolvers = {
       return MakeServant(
         context,
         args,
-        ['adminFederal', 'adminBishop'],
+        ['adminFederal', 'adminCouncil'],
         'Town',
         'Leader'
       )
@@ -855,7 +857,7 @@ export const resolvers = {
       return RemoveServant(
         context,
         args,
-        ['adminFederal', 'adminBishop'],
+        ['adminFederal', 'adminCouncil'],
         'Town',
         'Leader'
       )

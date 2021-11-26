@@ -359,7 +359,7 @@ const UpdateCentre = () => {
       initialValues={initialValues}
       onSubmit={onSubmit}
       title={`${capitalise(church.subChurch)} Update Form`}
-      loadingState={centreLoading || isLoading}
+      loading={centreLoading || isLoading}
     />
   )
 }

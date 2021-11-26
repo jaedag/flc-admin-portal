@@ -18,12 +18,7 @@ const BacentaServiceDetails = () => {
   throwErrorMsg(error)
 
   return (
-    <BaseComponent
-      loadingState={loading}
-      errorState={error}
-      data={data}
-      placeholder
-    >
+    <BaseComponent loading={loading} error={error} data={data} placeholder>
       <ServiceDetails
         loading={loading}
         service={data?.serviceRecords[0]}

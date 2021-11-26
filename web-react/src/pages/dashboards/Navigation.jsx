@@ -6,15 +6,7 @@ import { MemberContext } from 'contexts/MemberContext'
 import { authorisedLink, plural } from 'global-utils'
 import { getServiceGraphData } from 'pages/reports/report-utils'
 import React, { useContext, useEffect } from 'react'
-import {
-  Container,
-  Nav,
-  Navbar,
-  Offcanvas,
-  Button,
-  Form,
-  FormControl,
-} from 'react-bootstrap'
+import { Container, Nav, Navbar, Offcanvas } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { menuItems } from './dashboard-utils'
 import { SERVANTS_DASHBOARD } from './DashboardQueries'
@@ -22,6 +14,7 @@ import './Navigation.css'
 import logo from 'assets/flc-logo-red.png'
 import { useAuth0 } from '@auth0/auth0-react'
 import { GET_LOGGED_IN_USER } from 'components/UserProfileIcon/UserQueries'
+import SearchBox from 'components/SearchBox'
 
 const Navigator = () => {
   const { currentUser, theme, setUserJobs, setCurrentUser } = useContext(
@@ -144,7 +137,7 @@ const Navigator = () => {
           ['adminFederal', 'adminBishop', 'adminCampus', 'adminTown'],
           adminsOneChurch
             ? `/${churchType.toLowerCase()}/displaydetails`
-            : `/servants/${churchType.toLowerCase()}-list`
+            : `/servants/church-list`
         ),
       })
 
@@ -160,9 +153,9 @@ const Navigator = () => {
       clickCard: () => {
         clickCard(servant[`${verb}`][0])
       },
-      link: leadsOneChurch
+      link: !leadsOneChurch
         ? `/${churchType.toLowerCase()}/displaydetails`
-        : `/servants/${churchType.toLowerCase()}-list`,
+        : `/servants/church-list`,
     })
 
     assessmentChurch = servant[`${verb}`][0]
@@ -265,15 +258,8 @@ const Navigator = () => {
                 </RoleView>
               ))}
             </Nav>
-            <Form className="d-flex">
-              <FormControl
-                type="search"
-                placeholder="Search"
-                className="me-2"
-                aria-label="Search"
-              />
-              <Button variant="outline-success">Search</Button>
-            </Form>
+
+            <SearchBox />
           </Offcanvas.Body>
           <Container className="footer">
             <Nav.Link

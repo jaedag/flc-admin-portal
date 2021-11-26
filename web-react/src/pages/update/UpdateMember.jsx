@@ -128,7 +128,7 @@ const UpdateMember = () => {
       title="Edit Member Details"
       initialValues={initialValues}
       onSubmit={onSubmit}
-      loadingState={memberLoading || isLoading}
+      loading={memberLoading || isLoading}
     />
   )
 }

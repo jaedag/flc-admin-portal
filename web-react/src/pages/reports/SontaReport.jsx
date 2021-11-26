@@ -19,7 +19,7 @@ export const SontaReport = () => {
   const churchData = getServiceGraphData(data?.sontas[0])
 
   return (
-    <BaseComponent loadingState={loading} errorState={error} data={data}>
+    <BaseComponent loading={loading} error={error} data={data}>
       <div className="container">
         <div className=" my-3">
           <h5 className="mb-0">{`${data?.sontas[0].name} Sonta`}</h5>{' '}

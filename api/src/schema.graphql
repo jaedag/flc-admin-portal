@@ -482,9 +482,9 @@ type Query {
       OPTIONAL MATCH (bacenta)<-[:LEADS]-(bacentaLeader:Member)
       OPTIONAL MATCH (centre)<-[:LEADS]-(centreLeader:Member)
       OPTIONAL MATCH (campusTown)<-[:LEADS]-(constituencyOverseer:Member)
-      OPTIONAL MATCH (bishop)<-[:IS_ADMIN_FOR]-(adminBishop:Member)
+      OPTIONAL MATCH (bishop)<-[:IS_ADMIN_FOR]-(adminCouncil:Member)
       OPTIONAL MATCH (campusTown)<-[:IS_ADMIN_FOR]-(adminConstituency:Member)
-      UNWIND [member,bacentaLeader,centreLeader,constituencyOverseer,adminBishop,adminConstituency] as members
+      UNWIND [member,bacentaLeader,centreLeader,constituencyOverseer,adminCouncil,adminConstituency] as members
       WITH members WHERE members IS NOT NULL
       RETURN COUNT(DISTINCT members)
       """
@@ -749,29 +749,18 @@ type Query {
       RETURN member LIMIT 5
       """
     )
-  bishopMemberSearch(searchKey: String, bishopId: ID): [Member]
-    @auth(rules: [{ roles: ["adminBishop"] }])
+  councilMemberSearch(searchKey: String, councilId: ID): [Member]
+    @auth(rules: [{ roles: ["adminCouncil"] }])
     @cypher(
       statement: """
-      MATCH (bishop:Member {id: $bishopId})-[:HAS]->(campusTown)
-      MATCH (campusTown)-[:HAS]->(centre)
-      MATCH (centre)-[:HAS]->(bacenta:Bacenta)
-      OPTIONAL MATCH (bacenta)<-[:BELONGS_TO*]-(member:Member)
-      OPTIONAL MATCH (bacenta)<-[:LEADS]-(bacentaLeader:Member)
-      OPTIONAL MATCH (centre)<-[:LEADS]-(centreLeader:Member)
-      OPTIONAL MATCH (campusTown)<-[:LEADS]-(constituencyOverseer:Member)
-      OPTIONAL MATCH (bishop)<-[:IS_ADMIN_FOR]-(adminBishop:Member)
-      OPTIONAL MATCH (campusTown)<-[:IS_ADMIN_FOR]-(adminConstituency:Member)
-      UNWIND [member,bacentaLeader,centreLeader,constituencyOverseer,adminBishop,adminConstituency] as members
-      WITH members WHERE members IS NOT NULL
-
-      AND toLower(members.firstName) = toLower($searchKey)
-      OR toLower(members.lastName) = toLower($searchKey)
-      OR toLower(members.firstName) STARTS WITH toLower($searchKey)
-      OR toLower(members.lastName) STARTS WITH toLower($searchKey)
+      MATCH (council:Council {id: $councilId})-[:HAS]->(campusTown)-[:HAS]->(:Centre)-[:HAS]->(:Bacenta)<-[:BELONGS_TO*]-(member:Member)
+      WHERE toLower(member.firstName) = toLower($searchKey)
+      OR toLower(member.lastName) = toLower($searchKey)
+      OR toLower(member.firstName) STARTS WITH toLower($searchKey)
+      OR toLower(member.lastName) STARTS WITH toLower($searchKey)
       OR toLower(member.firstName + ' ' + member.middleName+ ' '+ member.lastName) CONTAINS toLower($searchKey)
-      WITH members WHERE members IS NOT NULL
-      RETURN DISTINCT(members) LIMIT 5
+      WITH member WHERE member IS NOT NULL
+      RETURN DISTINCT(member) LIMIT 5
       """
     )
   constituencyMemberSearch(searchKey: String, constituencyId: ID): [Member]
@@ -779,24 +768,42 @@ type Query {
     @cypher(
       statement: """
       MATCH (constituency {id:$constituencyId}) WHERE constituency:Campus OR constituency:Town
-      MATCH (constituency)-[:HAS]->(centre)
-      MATCH (centre)-[:HAS]->(bacenta:Bacenta)
-      OPTIONAL MATCH (bacenta)<-[:BELONGS_TO*]-(member:Member)
-      OPTIONAL MATCH (bacenta)<-[:LEADS]-(bacentaLeader:Member)
-      OPTIONAL MATCH (centre)<-[:LEADS]-(centreLeader:Member)
-      OPTIONAL MATCH (constituency)<-[:LEADS]-(constituencyOverseer:Member)
-      OPTIONAL MATCH (constituency)<-[:IS_ADMIN_FOR]-(adminConstituency:Member)
-      UNWIND [member,bacentaLeader,centreLeader,constituencyOverseer,adminConstituency] as members
-      WITH members WHERE members IS NOT NULL
-
-      AND toLower(members.firstName) = toLower($searchKey)
-      OR toLower(members.lastName) = toLower($searchKey)
-      OR toLower(members.firstName) STARTS WITH toLower($searchKey)
-      OR toLower(members.lastName) STARTS WITH toLower($searchKey)
+      MATCH (constituency)-[:HAS]->(:Centre)-[:HAS]->(bacenta:Bacenta)<-[:BELONGS_TO]-(member:Member)
+      WHERE toLower(member.firstName) = toLower($searchKey)
+      OR toLower(member.lastName) = toLower($searchKey)
+      OR toLower(member.firstName) STARTS WITH toLower($searchKey)
+      OR toLower(member.lastName) STARTS WITH toLower($searchKey)
       OR toLower(member.firstName + ' ' + member.middleName+ ' '+ member.lastName) CONTAINS toLower($searchKey)
 
-      WITH members WHERE members IS NOT NULL
-      RETURN DISTINCT(members) LIMIT 5
+      RETURN member LIMIT 5
+      """
+    )
+  centreMemberSearch(searchKey: String, centreId: ID): [Member]
+    @auth(rules: [{ roles: ["leaderCentre"] }])
+    @cypher(
+      statement: """
+      MATCH (centre:Centre {id: $centreId})-[:HAS]->(:Bacenta)<-[:BELONGS_TO]-(member:Member)
+      WHERE toLower(member.firstName) = toLower($searchKey)
+      OR toLower(member.lastName) = toLower($searchKey)
+      OR toLower(member.firstName) STARTS WITH toLower($searchKey)
+      OR toLower(member.lastName) STARTS WITH toLower($searchKey)
+      OR toLower(member.firstName + ' ' + member.middleName+ ' '+ member.lastName) CONTAINS toLower($searchKey)
+
+      RETURN member LIMIT 5
+      """
+    )
+  bacentaMemberSearch(searchKey: String, bacentaId: ID): [Member]
+    @auth(rules: [{ roles: ["leaderBacenta"] }])
+    @cypher(
+      statement: """
+      MATCH (bacenta:Bacenta {id: $bacentaId})<-[:BELONGS_TO]-(member:Member)
+      WHERE toLower(member.firstName) = toLower($searchKey)
+      OR toLower(member.lastName) = toLower($searchKey)
+      OR toLower(member.firstName) STARTS WITH toLower($searchKey)
+      OR toLower(member.lastName) STARTS WITH toLower($searchKey)
+      OR toLower(member.firstName + ' ' + member.middleName+ ' '+ member.lastName) CONTAINS toLower($searchKey)
+
+      RETURN member LIMIT 5
       """
     )
   federalBacentaSearch(searchKey: String): [Bacenta]
@@ -809,11 +816,11 @@ type Query {
       RETURN bacenta LIMIT 5
       """
     )
-  bishopBacentaSearch(searchKey: String, bishopId: ID): [Bacenta]
-    @auth(rules: [{ roles: ["adminBishop"] }])
+  councilBacentaSearch(searchKey: String, councilId: ID): [Bacenta]
+    @auth(rules: [{ roles: ["adminCouncil"] }])
     @cypher(
       statement: """
-      MATCH (bishop:Member {id: $bishopId})-[:HAS]->(campusTown)
+      MATCH (council:Council {id: $councilId})-[:HAS]->(campusTown)
       MATCH (campusTown)-[:HAS]->(centre)
       MATCH (centre)-[:HAS]->(bacenta:Bacenta)
 
@@ -835,6 +842,16 @@ type Query {
       RETURN bacenta LIMIT 5
       """
     )
+  centreBacentaSearch(searchKey: String, centreId: ID): [Bacenta]
+    @auth(rules: [{ roles: ["leaderCentre"] }])
+    @cypher(
+      statement: """
+      MATCH (centre:Centre {id: $centreId})-[:HAS]->(bacenta:Bacenta)
+      WHERE toLower(bacenta.name) STARTS WITH toLower($searchKey)
+      OR toLower(bacenta.name) CONTAINS toLower($searchKey)
+      RETURN bacenta LIMIT 5
+      """
+    )
   federalCentreSearch(searchKey: String): [Centre]
     @auth(rules: [{ roles: ["adminFederal"] }])
     @cypher(
@@ -845,11 +862,11 @@ type Query {
       RETURN centre LIMIT 5
       """
     )
-  bishopCentreSearch(searchKey: String, bishopId: ID): [Centre]
-    @auth(rules: [{ roles: ["adminBishop"] }])
+  councilCentreSearch(searchKey: String, councilId: ID): [Centre]
+    @auth(rules: [{ roles: ["adminCouncil"] }])
     @cypher(
       statement: """
-      MATCH (bishop:Member {id: $bishopId})-[:HAS]->(campusTown)
+      MATCH (council:Council {id: $councilId})-[:HAS]->(campusTown)
       MATCH (campusTown)-[:HAS]->(centre)
 
       WHERE toLower(centre.name) STARTS WITH toLower($searchKey)
@@ -879,11 +896,11 @@ type Query {
       RETURN campus LIMIT 5
       """
     )
-  bishopCampusSearch(searchKey: String, bishopId: ID): [Campus]
-    @auth(rules: [{ roles: ["adminBishop"] }])
+  councilCampusSearch(searchKey: String, councilId: ID): [Campus]
+    @auth(rules: [{ roles: ["adminCouncil"] }])
     @cypher(
       statement: """
-      MATCH (bishop:Member {id: $bishopId})-[:HAS]->(campus)
+      MATCH (council:Council {id: $councilId})-[:HAS]->(campus)
 
       WHERE toLower(campus.name) STARTS WITH toLower($searchKey)
       OR toLower(campus.name) CONTAINS toLower($searchKey)
@@ -900,11 +917,11 @@ type Query {
       RETURN town LIMIT 5
       """
     )
-  bishopTownSearch(searchKey: String, bishopId: ID): [Town]
-    @auth(rules: [{ roles: ["adminBishop"] }])
+  councilTownSearch(searchKey: String, councilId: ID): [Town]
+    @auth(rules: [{ roles: ["adminCouncil"] }])
     @cypher(
       statement: """
-      MATCH (bishop:Member {id: $bishopId})-[:HAS]->(town)
+      MATCH (council:Council {id: $councilId})-[:HAS]->(town)
 
       WHERE toLower(town.name) STARTS WITH toLower($searchKey)
       OR toLower(town.name) CONTAINS toLower($searchKey)
@@ -921,11 +938,11 @@ type Query {
       RETURN sonta LIMIT 5
       """
     )
-  bishopSontaSearch(searchKey: String, bishopId: ID): [Sonta]
-    @auth(rules: [{ roles: ["adminBishop"] }])
+  councilSontaSearch(searchKey: String, councilId: ID): [Sonta]
+    @auth(rules: [{ roles: ["adminCouncil"] }])
     @cypher(
       statement: """
-      MATCH (bishop:Member {id: $bishopId})-[:HAS]->(campusTown)
+      MATCH (council:Council {id: $councilId})-[:HAS]->(campusTown)
       MATCH (campusTown)-[:HAS_SONTA]->(sonta)
 
       WHERE toLower(sonta.name) STARTS WITH toLower($searchKey)
@@ -996,7 +1013,7 @@ type Mutation {
     bishopId: ID!
     centres: [ID]
   ): Town
-    @auth(rules: [{ roles: ["adminFederal", "adminBishop"] }])
+    @auth(rules: [{ roles: ["adminFederal", "adminCouncil"] }])
     @cypher(
       statement: """
        CREATE (town:Town {name:$townName})
@@ -1046,7 +1063,7 @@ type Mutation {
     bishopId: ID!
     centres: [ID]
   ): Campus
-    @auth(rules: [{ roles: ["adminFederal", "adminBishop"] }])
+    @auth(rules: [{ roles: ["adminFederal", "adminCouncil"] }])
     @cypher(
       statement: """
       CREATE (campus:Campus {name:$campusName})
@@ -1099,7 +1116,7 @@ type Mutation {
   ): Centre  #Return town and drill down to get centre info
     @auth(
       rules: [
-        { roles: ["adminFederal", "adminBishop", "adminCampus", "adminTown"] }
+        { roles: ["adminFederal", "adminCouncil", "adminCampus", "adminTown"] }
       ]
     )
     @cypher(
@@ -1148,7 +1165,7 @@ type Mutation {
   CreateSonta(ministryId: ID!, townCampusId: ID!, leaderId: ID!): Town
     @auth(
       rules: [
-        { roles: ["adminFederal", "adminBishop", "adminCampus", "adminTown"] }
+        { roles: ["adminFederal", "adminCouncil", "adminCampus", "adminTown"] }
       ]
     )
     @cypher(
@@ -1197,7 +1214,7 @@ type Mutation {
   ): Bacenta
     @auth(
       rules: [
-        { roles: ["adminFederal", "adminBishop", "adminCampus", "adminTown"] }
+        { roles: ["adminFederal", "adminCouncil", "adminCampus", "adminTown"] }
       ]
     )
     @cypher(
@@ -1243,7 +1260,7 @@ type Mutation {
         {
           roles: [
             "adminFederal"
-            "adminBishop"
+            "adminCouncil"
             "adminCampus"
             "adminTown"
             "leaderBacenta"
@@ -1331,7 +1348,7 @@ type Mutation {
     )
 
   UpdateTownDetails(townId: ID!, townName: String!, bishopId: ID!): Town
-    @auth(rules: [{ roles: ["adminFederal", "adminBishop"] }])
+    @auth(rules: [{ roles: ["adminFederal", "adminCouncil"] }])
     @cypher(
       statement: """
       MATCH (town:Town {id: $townId})
@@ -1356,7 +1373,7 @@ type Mutation {
     campusName: String!
     bishopId: ID!
   ): Campus
-    @auth(rules: [{ roles: ["adminFederal", "adminBishop"] }])
+    @auth(rules: [{ roles: ["adminFederal", "adminCouncil"] }])
     @cypher(
       statement: """
            MATCH (campus:Campus {id: $campusId})
@@ -1383,7 +1400,7 @@ type Mutation {
   ): Centre
     @auth(
       rules: [
-        { roles: ["adminFederal", "adminBishop", "adminCampus", "adminTown"] }
+        { roles: ["adminFederal", "adminCouncil", "adminCampus", "adminTown"] }
       ]
     )
     @cypher(
@@ -1409,7 +1426,7 @@ type Mutation {
   UpdateSontaDetails(sontaId: ID!, sontaName: String!): Sonta
     @auth(
       rules: [
-        { roles: ["adminFederal", "adminBishop", "adminCampus", "adminTown"] }
+        { roles: ["adminFederal", "adminCouncil", "adminCampus", "adminTown"] }
       ]
     )
     @cypher(
@@ -1432,7 +1449,7 @@ type Mutation {
   ): Bacenta
     @auth(
       rules: [
-        { roles: ["adminFederal", "adminBishop", "adminCampus", "adminTown"] }
+        { roles: ["adminFederal", "adminCouncil", "adminCampus", "adminTown"] }
       ]
     )
     @cypher(

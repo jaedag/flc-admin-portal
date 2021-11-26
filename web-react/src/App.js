@@ -430,7 +430,7 @@ const PastorsAdmin = () => {
                     exact
                   />
                   <MembersDirectoryRoute
-                    path="/directory/members"
+                    path="/directory/members/"
                     component={Members}
                     exact
                   />
@@ -490,7 +490,7 @@ const PastorsAdmin = () => {
                     exact
                   />
                   <ProtectedRouteHome
-                    path="/servants/bacenta-list"
+                    path="/servants/church-list"
                     component={ServantsChurchList}
                     roles={[
                       'adminFederal',
@@ -628,7 +628,7 @@ const PastorsAdmin = () => {
                   {/* Search Routes */}
                   <ProtectedRoute
                     roles={['all']}
-                    path="/member-search"
+                    path="/search-results"
                     component={SearchPageMobile}
                     exact
                   />

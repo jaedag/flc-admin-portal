@@ -32,7 +32,7 @@ const Churches = () => {
                 title={job.church.name}
                 caption={parseMemberCount(job.church.memberCount)}
                 icon={MemberIcon}
-                iconBg={true}
+                iconBg
                 iconCaption={job.church.__typename}
                 onClick={() => {
                   job.clickCard()

@@ -21,7 +21,7 @@ const CampusTownForm = ({
   initialValues,
   onSubmit,
   title,
-  loadingState,
+  loading,
   newConstituency,
 }) => {
   const {
@@ -73,8 +73,8 @@ const CampusTownForm = ({
 
   return (
     <BaseComponent
-      loadingState={bishopsLoading || loadingState}
-      errorState={bishopsError}
+      loading={bishopsLoading || loading}
+      error={bishopsError}
       data={bishopsData}
     >
       <Formik

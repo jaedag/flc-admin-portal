@@ -22,7 +22,7 @@ import { HeadingPrimary } from '../HeadingPrimary/HeadingPrimary'
 import { Col, Container, Row, Button } from 'react-bootstrap'
 import LoadingScreen from 'components/base-component/LoadingScreen'
 
-function MemberForm({ initialValues, onSubmit, title, loadingState }) {
+function MemberForm({ initialValues, onSubmit, title, loading }) {
   const { bishopId } = useContext(ChurchContext)
   const { theme } = useContext(MemberContext)
   const { data: ministriesData, loading: ministriesLoading } = useQuery(
@@ -52,7 +52,7 @@ function MemberForm({ initialValues, onSubmit, title, loadingState }) {
     ministry: Yup.string().required('Ministry is a required field'),
   })
 
-  if (ministriesLoading || loadingState || !initialValues.firstName) {
+  if (ministriesLoading || loading || !initialValues.firstName) {
     return <LoadingScreen />
   } else if (ministriesData) {
     const ministryOptions = makeSelectOptions(ministriesData.ministries)

@@ -17,11 +17,7 @@ const SontaService = () => {
   const [RecordServiceNoOffering] = useMutation(RECORD_SERVICE_NO_OFFERING)
 
   return (
-    <BaseComponent
-      loadingState={sontaLoading}
-      errorState={sontaError}
-      data={sontaData}
-    >
+    <BaseComponent loading={sontaLoading} error={sontaError} data={sontaData}>
       <ServiceFormNoOffering
         RecordServiceMutation={RecordServiceNoOffering}
         church={sontaData?.sontas[0]}

@@ -17,11 +17,7 @@ const TownService = () => {
   const [RecordService] = useMutation(RECORD_SERVICE)
 
   return (
-    <BaseComponent
-      loadingState={townLoading}
-      errorState={townError}
-      data={townData}
-    >
+    <BaseComponent loading={townLoading} error={townError} data={townData}>
       <ServiceForm
         RecordServiceMutation={RecordService}
         church={townData?.towns[0]}

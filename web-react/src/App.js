@@ -737,6 +737,7 @@ const PastorsAdmin = () => {
                     ]}
                     path="/town/displaydetails"
                     component={DisplayCampusTownDetails}
+                    placeholder
                     exact
                   />
                   <ProtectedRoute
@@ -762,6 +763,7 @@ const PastorsAdmin = () => {
                     ]}
                     path="/campus/displaydetails"
                     component={DisplayCampusTownDetails}
+                    placeholder
                     exact
                   />
                   <ProtectedRoute
@@ -895,13 +897,13 @@ const PastorsAdmin = () => {
                     exact
                   />
                   <ProtectedRoute
-                    roles={['adminFederal', 'adminBishop']}
+                    roles={['adminFederal', 'adminCouncil']}
                     path="/town/edittown"
                     component={UpdateTownCampus}
                     exact
                   />
                   <ProtectedRoute
-                    roles={['adminFederal', 'adminBishop']}
+                    roles={['adminFederal', 'adminCouncil']}
                     path="/campus/editcampus"
                     component={UpdateTownCampus}
                     exact

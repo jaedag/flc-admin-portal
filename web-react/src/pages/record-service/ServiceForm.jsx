@@ -4,7 +4,7 @@ import FormikControl from 'components/formik-components/FormikControl'
 import { ChurchContext } from 'contexts/ChurchContext'
 import { FieldArray, Form, Formik } from 'formik'
 import * as Yup from 'yup'
-import { BISHOP_MEMBER_DROPDOWN } from 'queries/ListQueries'
+import { COUNCIL_MEMBER_DROPDOWN } from 'queries/ListQueries'
 import React, { useContext } from 'react'
 import { useHistory } from 'react-router'
 import { ServiceContext } from 'contexts/ServiceContext'
@@ -157,13 +157,13 @@ const ServiceForm = ({
                                     name={`treasurers[${index}]`}
                                     placeholder="Start typing"
                                     setFieldValue={formik.setFieldValue}
-                                    optionsQuery={BISHOP_MEMBER_DROPDOWN}
+                                    optionsQuery={COUNCIL_MEMBER_DROPDOWN}
                                     queryVariable1="id"
                                     variable1={bishopId}
                                     queryVariable2="nameSearch"
                                     suggestionText="name"
                                     suggestionID="id"
-                                    dataset="bishopMemberDropdown"
+                                    dataset="councilMemberDropdown"
                                     aria-describedby="Bishop Member List"
                                     className="form-control"
                                     error={

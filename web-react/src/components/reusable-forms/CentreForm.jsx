@@ -4,8 +4,8 @@ import { FieldArray, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import { capitalise, makeSelectOptions } from 'global-utils'
 import {
-  BISHOP_MEMBER_DROPDOWN,
-  GET_BISHOP_CAMPUSES,
+  COUNCIL_MEMBER_DROPDOWN,
+  GET_COUNCIL_CAMPUSES,
   GET_COUNCIL_TOWNS,
 } from 'queries/ListQueries'
 import React, { useContext } from 'react'
@@ -18,19 +18,19 @@ import { useHistory } from 'react-router'
 import { MAKE_CENTRE_INACTIVE } from 'pages/update/CloseChurchMutations'
 import Popup from 'components/Popup/Popup'
 import RoleView from 'auth/RoleView'
-import { Container, Row, Col, Button } from 'react-bootstrap'
+import { Container, Row, Col, Button, Spinner } from 'react-bootstrap'
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import HeadingSecondary from 'components/HeadingSecondary'
 import { MemberContext } from 'contexts/MemberContext'
 
-const CentreForm = ({ initialValues, onSubmit, title, loading, newCentre }) => {
+const CentreForm = ({ initialValues, onSubmit, title, newCentre }) => {
   const {
     church,
     togglePopup,
     isOpen,
     clickCard,
     centreId,
-    bishopId,
+    councilId,
   } = useContext(ChurchContext)
   const { theme } = useContext(MemberContext)
   const history = useHistory()
@@ -41,20 +41,18 @@ const CentreForm = ({ initialValues, onSubmit, title, loading, newCentre }) => {
     loading: townsLoading,
     error: townsError,
   } = useQuery(GET_COUNCIL_TOWNS, {
-    variables: { id: bishopId },
+    variables: { id: councilId },
   })
   const {
     data: campusesData,
     loading: campusesLoading,
     error: campusesError,
-  } = useQuery(GET_BISHOP_CAMPUSES, {
-    variables: { id: bishopId },
+  } = useQuery(GET_COUNCIL_CAMPUSES, {
+    variables: { id: councilId },
   })
 
-  const townOptions = makeSelectOptions(townsData?.members[0].isBishopForTown)
-  const campusOptions = makeSelectOptions(
-    campusesData?.members[0].isBishopForCampus
-  )
+  const townOptions = makeSelectOptions(townsData?.councils[0]?.towns)
+  const campusOptions = makeSelectOptions(campusesData?.councils[0]?.campuses)
 
   const validationSchema = Yup.object({
     centreName: Yup.string().required('Centre Name is a required field'),
@@ -68,7 +66,7 @@ const CentreForm = ({ initialValues, onSubmit, title, loading, newCentre }) => {
 
   return (
     <BaseComponent
-      loading={campusesLoading || townsLoading || loading}
+      loading={campusesLoading || townsLoading}
       error={townsError || campusesError}
       data={townsData && campusesData}
     >
@@ -133,13 +131,13 @@ const CentreForm = ({ initialValues, onSubmit, title, loading, newCentre }) => {
                             placeholder="Start typing"
                             label="Select a Leader"
                             setFieldValue={formik.setFieldValue}
-                            optionsQuery={BISHOP_MEMBER_DROPDOWN}
+                            optionsQuery={COUNCIL_MEMBER_DROPDOWN}
                             queryVariable1="id"
-                            variable1={bishopId}
+                            variable1={councilId}
                             queryVariable2="nameSearch"
                             suggestionText="name"
                             suggestionID="id"
-                            dataset="bishopMemberDropdown"
+                            dataset="councilMemberDropdown"
                             aria-describedby="Bishop Member List"
                             className="form-control"
                             error={formik.errors.leaderId}
@@ -170,7 +168,7 @@ const CentreForm = ({ initialValues, onSubmit, title, loading, newCentre }) => {
                                     setFieldValue={formik.setFieldValue}
                                     optionsQuery={BISHOP_BACENTA_DROPDOWN}
                                     queryVariable1="id"
-                                    variable1={bishopId}
+                                    variable1={councilId}
                                     queryVariable2="bacentaName"
                                     suggestionText="name"
                                     suggestionID="id"
@@ -208,7 +206,14 @@ const CentreForm = ({ initialValues, onSubmit, title, loading, newCentre }) => {
                 className={`btn-main ${theme}`}
                 disabled={!formik.isValid || formik.isSubmitting}
               >
-                Submit
+                {formik.isSubmitting ? (
+                  <>
+                    <Spinner animation="grow" size="sm" />
+                    <span> Submitting</span>
+                  </>
+                ) : (
+                  'Submit'
+                )}
               </Button>
             </Form>
             {isOpen && (
@@ -257,6 +262,7 @@ const CentreForm = ({ initialValues, onSubmit, title, loading, newCentre }) => {
               <Button
                 variant="primary"
                 size="lg"
+                disabled={formik.isSubmitting}
                 className={`btn-secondary ${theme} mt-3`}
                 onClick={togglePopup}
               >

@@ -61,8 +61,8 @@ const notifyMember = (
   mg.messages
     .create('mg.firstlovecenter.com', {
       from: 'FL Accra Admin <no-reply@firstlovecenter.org>',
-      // to: ['admin@firstlovecenter.com'],
-      to: [member.email, 'admin@firstlovecenter.com'],
+      to: ['admin@firstlovecenter.com'],
+      // to: [member.email, 'admin@firstlovecenter.com'],
       subject: subject,
       text: body,
       // html: '<h1>Testing some Mailgun awesomness!</h1>', //HTML Version of the Message for Better Styling
@@ -393,10 +393,10 @@ const MakeServant = async (
         [servant.firstName, passwordTicketResponse?.data?.ticket]
       )
 
-      servant.auth_id = authIdResponse.data.user_id
+      servant.auth_id = authProfileResponse.data.user_id
       const roles = []
 
-      assignRoles(servant, auth_id, roles, [
+      assignRoles(servant, roles, [
         authRoles[`${servantLower}${churchType}`].id,
       ])
       console.log(
@@ -446,9 +446,9 @@ const MakeServant = async (
           : `${church.firstName} ${church.lastName}`,
       ]
     )
-
-    return parseForCache(servant, church, verb)
   }
+
+  return parseForCache(servant, church, verb)
 }
 const RemoveServant = async (
   context,

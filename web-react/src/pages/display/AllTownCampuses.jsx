@@ -4,7 +4,7 @@ import { useQuery } from '@apollo/client'
 import DisplayChurchList from '../../components/DisplayChurchList'
 import {
   GET_COUNCIL_TOWNS,
-  GET_BISHOP_CAMPUSES,
+  GET_COUNCIL_CAMPUSES,
 } from '../../queries/ListQueries'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import RoleView from '../../auth/RoleView'
@@ -25,7 +25,7 @@ const DisplayAllTownCampuses = () => {
     data: campusesData,
     loading: campusesLoading,
     error: campusesError,
-  } = useQuery(GET_BISHOP_CAMPUSES, {
+  } = useQuery(GET_COUNCIL_CAMPUSES, {
     variables: { id: councilId },
   })
 

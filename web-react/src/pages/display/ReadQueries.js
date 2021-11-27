@@ -450,6 +450,10 @@ export const DISPLAY_TOWN = gql`
           }
         }
       }
+      council {
+        id
+        name
+      }
       bishop {
         id
         firstName
@@ -477,9 +481,8 @@ export const DISPLAY_TOWN = gql`
         historyRecord
       }
       memberCount
+      bacentaCount
     }
-
-    townBacentaCount(id: $id)
   }
 `
 

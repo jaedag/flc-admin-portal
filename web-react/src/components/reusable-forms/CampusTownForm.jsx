@@ -1,27 +1,29 @@
 import { useMutation, useQuery } from '@apollo/client'
 import BaseComponent from 'components/base-component/BaseComponent'
-
 import { FieldArray, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import { capitalise, makeSelectOptions } from 'global-utils'
-import { BISHOP_MEMBER_DROPDOWN, GET_BISHOPS } from 'queries/ListQueries'
+import { COUNCIL_MEMBER_DROPDOWN, GET_COUNCILS } from 'queries/ListQueries'
 import React, { useContext } from 'react'
 import { ChurchContext } from 'contexts/ChurchContext'
 import FormikControl from 'components/formik-components/FormikControl'
 import PlusSign from 'components/buttons/PlusMinusSign/PlusSign'
 import MinusSign from 'components/buttons/PlusMinusSign/MinusSign'
-import { BISHOP_CENTRE_DROPDOWN } from 'components/formik-components/ComboboxQueries'
+import { COUNCIL_CENTRE_DROPDOWN } from 'components/formik-components/ComboboxQueries'
 import { MAKE_CAMPUSTOWN_INACTIVE } from 'pages/update/CloseChurchMutations'
 import { BISH_DASHBOARD_COUNTS } from 'pages/dashboards/DashboardQueries'
 import { useHistory } from 'react-router'
 import Popup from 'components/Popup/Popup'
 import RoleView from 'auth/RoleView'
+import { Spinner, Button, Container, Row, Col } from 'react-bootstrap'
+import { MemberContext } from 'contexts/MemberContext'
+import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
+import HeadingSecondary from 'components/HeadingSecondary'
 
 const CampusTownForm = ({
   initialValues,
   onSubmit,
   title,
-  loading,
   newConstituency,
 }) => {
   const {
@@ -31,29 +33,30 @@ const CampusTownForm = ({
     clickCard,
     campusId,
     townId,
-    bishopId,
+    councilId,
   } = useContext(ChurchContext)
+  const { theme } = useContext(MemberContext)
 
   const history = useHistory()
   const {
-    data: bishopsData,
-    loading: bishopsLoading,
-    error: bishopsError,
-  } = useQuery(GET_BISHOPS)
+    data: councilData,
+    loading: councilLoading,
+    error: councilError,
+  } = useQuery(GET_COUNCILS)
   const [CloseDownCampusTown] = useMutation(MAKE_CAMPUSTOWN_INACTIVE, {
     refetchQueries: [
-      { query: BISH_DASHBOARD_COUNTS, variables: { id: bishopId } },
+      { query: BISH_DASHBOARD_COUNTS, variables: { id: councilId } },
     ],
   })
 
-  const bishopTownOptions = makeSelectOptions(
-    bishopsData?.members.filter(
-      (bishop) => bishop.isBishopForTown.length > 0 && bishop
+  const townCouncilOptions = makeSelectOptions(
+    councilData?.councils.filter(
+      (council) => council.towns.length > 0 && council
     )
   )
-  const bishopCampusOptions = makeSelectOptions(
-    bishopsData?.members.filter(
-      (bishop) => bishop.isBishopForCampus.length > 0 && bishop
+  const campusCouncilOptions = makeSelectOptions(
+    councilData?.councils.filter(
+      (council) => council.campuses.length > 0 && council
     )
   )
 
@@ -73,52 +76,54 @@ const CampusTownForm = ({
 
   return (
     <BaseComponent
-      loading={bishopsLoading || loading}
-      error={bishopsError}
-      data={bishopsData}
+      loading={councilLoading}
+      error={councilError}
+      data={councilData}
     >
+      <Container>
+        <HeadingPrimary>{title}</HeadingPrimary>
+        <HeadingSecondary>
+          {initialValues.campusTownName + ' ' + capitalise(church.church)}
+        </HeadingSecondary>
+      </Container>
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={onSubmit}
       >
         {(formik) => (
-          <div className="py-4 container mt-5">
-            <div className="container infobar">{title}</div>
+          <Container className="py-4">
             <Form>
               <div className="form-group">
-                <div className="row row-cols-1 row-cols-md-2">
+                <Row className="row-cols-1 row-cols-md-2">
                   {/* <!-- Basic Info Div --> */}
-                  <div className="col mb-2">
-                    <div className="form-row row-cols-2">
-                      <div className="col-8">
+                  <Col className="mb-2">
+                    <Row className="form-row">
+                      <Col>
                         <FormikControl
                           className="form-control"
                           control="select"
-                          name="bishopSelect"
-                          label="Select a Bishop"
+                          name="councilSelect"
+                          label="Select a Council"
                           options={
                             church.church === 'campus'
-                              ? bishopCampusOptions
-                              : bishopTownOptions
+                              ? campusCouncilOptions
+                              : townCouncilOptions
                           }
-                          defaultOption="Select a Bishop"
+                          defaultOption="Select a Council"
                         />
-                      </div>
-                    </div>
+                      </Col>
+                    </Row>
 
-                    <div className="form-row row-cols-3">
-                      <div className="col-9">
-                        <FormikControl
-                          className="form-control"
-                          control="input"
-                          name="campusTownName"
-                          label={`Name of ${capitalise(church.church)}`}
-                          placeholder={`Name of ${capitalise(church.church)}`}
-                        />
-                      </div>
-                    </div>
-                    <div className="row d-flex align-items-center">
+                    <FormikControl
+                      className="form-control"
+                      control="input"
+                      name="campusTownName"
+                      label={`Name of ${capitalise(church.church)}`}
+                      placeholder={`Name of ${capitalise(church.church)}`}
+                    />
+
+                    <Row className="d-flex align-items-center mb-3">
                       <RoleView
                         roles={[
                           'adminFederal',
@@ -127,7 +132,7 @@ const CampusTownForm = ({
                           'adminTown',
                         ]}
                       >
-                        <div className="col">
+                        <Col>
                           <FormikControl
                             control="combobox2"
                             name="leaderId"
@@ -135,27 +140,26 @@ const CampusTownForm = ({
                             placeholder="Start typing..."
                             initialValue={initialValues?.leaderName}
                             setFieldValue={formik.setFieldValue}
-                            optionsQuery={BISHOP_MEMBER_DROPDOWN}
+                            optionsQuery={COUNCIL_MEMBER_DROPDOWN}
                             queryVariable1="id"
-                            variable1={bishopId}
+                            variable1={councilId}
                             queryVariable2="nameSearch"
                             suggestionText="name"
                             suggestionID="id"
-                            dataset="bishopMemberDropdown"
-                            aria-describedby="Bishop Member List"
+                            dataset="councilMemberDropdown"
+                            aria-describedby="Council Member List"
                             className="form-control"
                             error={formik.errors.leaderId}
                           />
-                        </div>
+                        </Col>
                       </RoleView>
-                    </div>
+                    </Row>
 
                     <small className="pt-2">
-                      {`Select any ${
-                        church.church === 'town' ? 'Centres' : 'centres'
-                      } that are being moved to this ${capitalise(
-                        church.church
-                      )}`}
+                      {`Select any centres
+                       that are being moved to this ${capitalise(
+                         church.church
+                       )}`}
                     </small>
                     <FieldArray name="centres">
                       {(fieldArrayProps) => {
@@ -164,19 +168,19 @@ const CampusTownForm = ({
                         const { centres } = values
 
                         return (
-                          <div>
+                          <>
                             {centres.map((centre, index) => (
-                              <div key={index} className="form-row row-cols">
-                                <div className="col-9">
+                              <Row key={index} className="form-row">
+                                <Col>
                                   <FormikControl
                                     control="combobox2"
                                     name={`centres[${index}]`}
                                     placeholder="Centre Name"
                                     initialValue={centre?.name}
                                     setFieldValue={formik.setFieldValue}
-                                    optionsQuery={BISHOP_CENTRE_DROPDOWN}
+                                    optionsQuery={COUNCIL_CENTRE_DROPDOWN}
                                     queryVariable1="id"
-                                    variable1={bishopId}
+                                    variable1={councilId}
                                     queryVariable2="nameSearch"
                                     suggestionText="name"
                                     suggestionID="id"
@@ -190,38 +194,48 @@ const CampusTownForm = ({
                                       formik.errors.centres[index]
                                     }
                                   />
-                                </div>
-                                <div className="col d-flex">
+                                </Col>
+                                <Col className="col-auto d-flex">
                                   <PlusSign onClick={() => push()} />
                                   {index > 0 && (
                                     <MinusSign onClick={() => remove(index)} />
                                   )}
-                                </div>
-                              </div>
+                                </Col>
+                              </Row>
                             ))}
-                          </div>
+                          </>
                         )
                       }}
                     </FieldArray>
-                  </div>
-                </div>
+                  </Col>
+                </Row>
               </div>
-              <div className="d-flex justify-content-center">
-                <button
-                  type="submit"
-                  disabled={!formik.isValid || formik.isSubmitting}
-                  className="btn btn-primary px-5 py-3"
-                >
-                  Submit
-                </button>
-              </div>
+
+              <Button
+                variant="primary"
+                size="lg"
+                type="submit"
+                className={`btn-main ${theme}`}
+                disabled={!formik.isValid || formik.isSubmitting}
+              >
+                {formik.isSubmitting ? (
+                  <>
+                    <Spinner animation="grow" size="sm" />
+                    <span> Submitting</span>
+                  </>
+                ) : (
+                  'Submit'
+                )}
+              </Button>
             </Form>
 
             {isOpen && (
               <Popup handleClose={togglePopup}>
                 Are you sure you want to close down this bacenta?
-                <div
-                  className="btn btn-primary"
+                <Button
+                  variant="primary"
+                  type="submit"
+                  className={`btn-main ${theme}`}
                   onClick={() => {
                     CloseDownCampusTown({
                       variables: {
@@ -248,19 +262,29 @@ const CampusTownForm = ({
                   }}
                 >
                   {`Yes, I'm sure`}
-                </div>
-                <div className="btn btn-primary" onClick={togglePopup}>
+                </Button>
+                <Button
+                  variant="primary"
+                  className={`btn-secondary mt-2 ${theme}`}
+                  onClick={togglePopup}
+                >
                   No, take me back
-                </div>
+                </Button>
               </Popup>
             )}
 
             {!newConstituency && (
-              <div className="btn btn-primary" onClick={togglePopup}>
+              <Button
+                variant="primary"
+                size="lg"
+                disabled={formik.isSubmitting}
+                className={`btn-secondary ${theme} mt-3`}
+                onClick={togglePopup}
+              >
                 {`Close Down ${capitalise(church.church)}`}
-              </div>
+              </Button>
             )}
-          </div>
+          </Container>
         )}
       </Formik>
     </BaseComponent>

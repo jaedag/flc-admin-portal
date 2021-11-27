@@ -196,7 +196,8 @@ WITH log,bacenta,oldLeader,leader
   MATCH (bacenta)<-[:HAS]-(:Centre)-[rel:HAS_HISTORY]->(centreHistory:ServiceLog) WHERE rel.current = true
   OPTIONAL MATCH (centreHistory)-[oldBacentaHistory:HAS]->(:ServiceLog)-[:HAS_HISTORY]-(bacenta)
    MATCH (currentUser:Member {auth_id:$auth.jwt.sub}) 
-   WITH currentUser, leader, bacenta, log
+
+   WITH currentUser, leader, bacenta, log, oldBacentaHistory
    MERGE (leader)-[:LEADS]->(bacenta)
    MERGE (log)-[:LOGGED_BY]->(currentUser)
    MERGE (date:TimeGraph {date: date()})

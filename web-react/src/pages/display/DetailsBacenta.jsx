@@ -84,7 +84,12 @@ const DetailsBacenta = () => {
       churchType="Bacenta"
       buttons={['']}
       editlink="/bacenta/editbacenta"
-      editPermitted={['leaderBacenta', 'adminFederal']}
+      editPermitted={[
+        'leaderBacenta',
+        'adminFederal',
+        'adminTown',
+        'adminCampus',
+      ]}
       weekNumber={getWeekNumber()}
       last3Weeks={check}
       history={bacenta?.history.length !== 0 && bacenta?.history}

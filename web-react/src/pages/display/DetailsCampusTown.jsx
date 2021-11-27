@@ -41,7 +41,7 @@ const DetailsCampusTown = () => {
             churchHeading="Centres"
             church2Heading="Bacentas"
             churchCount={townData?.towns[0].centres.length}
-            church2Count={townData?.townBacentaCount}
+            church2Count={townData?.towns[0].bacentaCount}
             admin={townData?.towns[0].admin}
             churchType={`${capitalise(church.church)}`}
             subChurch={`${capitalise(church.subChurch)}`}
@@ -49,7 +49,7 @@ const DetailsCampusTown = () => {
             buttons={townData?.towns[0].centres}
             buttonsSecondRow={townData?.towns[0].sontas}
             editlink="/town/edittown"
-            editPermitted={['adminBishop', 'adminFederal']}
+            editPermitted={['adminCouncil', 'adminFederal']}
             history={
               townData?.towns[0]?.history.length !== 0 &&
               townData?.towns[0]?.history

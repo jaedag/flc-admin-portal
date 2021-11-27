@@ -3,8 +3,8 @@ import { Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import { capitalise, makeSelectOptions } from 'global-utils'
 import {
-  BISHOP_MEMBER_DROPDOWN,
-  GET_BISHOP_CAMPUSES,
+  COUNCIL_MEMBER_DROPDOWN,
+  GET_COUNCIL_CAMPUSES,
   GET_COUNCIL_TOWNS,
   GET_MINISTRIES,
 } from 'queries/ListQueries'
@@ -29,7 +29,7 @@ const SontaForm = ({ initialValues, onSubmit, title, loading, newSonta }) => {
     data: campusesData,
     loading: campusesLoading,
     error: campusesError,
-  } = useQuery(GET_BISHOP_CAMPUSES, {
+  } = useQuery(GET_COUNCIL_CAMPUSES, {
     variables: { id: bishopId },
   })
   const { data: townData, loading: townLoading } = useQuery(DISPLAY_TOWN, {
@@ -155,13 +155,13 @@ const SontaForm = ({ initialValues, onSubmit, title, loading, newSonta }) => {
                           label="Select a Leader"
                           placeholder="Select a Leader"
                           setFieldValue={formik.setFieldValue}
-                          optionsQuery={BISHOP_MEMBER_DROPDOWN}
+                          optionsQuery={COUNCIL_MEMBER_DROPDOWN}
                           queryVariable1="id"
                           variable1={bishopId}
                           queryVariable2="nameSearch"
                           suggestionText="name"
                           suggestionID="id"
-                          dataset="bishopMemberDropdown"
+                          dataset="councilMemberDropdown"
                           aria-describedby="Bishop Member List"
                           className="form-control"
                           error={formik.errors.leaderId}

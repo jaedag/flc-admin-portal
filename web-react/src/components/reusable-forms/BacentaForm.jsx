@@ -9,8 +9,8 @@ import {
   throwErrorMsg,
 } from 'global-utils'
 import {
-  BISHOP_MEMBER_DROPDOWN,
-  GET_BISHOP_CAMPUSES,
+  COUNCIL_MEMBER_DROPDOWN,
+  GET_COUNCIL_CAMPUSES,
   GET_COUNCIL_TOWNS,
   GET_CAMPUS_CENTRES,
   GET_TOWN_CENTRES,
@@ -29,29 +29,28 @@ import LoadingScreen from 'components/base-component/LoadingScreen'
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import HeadingSecondary from 'components/HeadingSecondary'
 
-const BacentaForm = ({ initialValues, onSubmit, title, newBacenta }) => {
+const BacentaForm = (props) => {
   const {
     church,
     clickCard,
     isOpen,
-    loading,
     togglePopup,
     bacentaId,
-    bishopId,
+    councilId,
   } = useContext(ChurchContext)
   const { theme } = useContext(MemberContext)
   const history = useHistory()
 
-  const { data: townListData, error: townListError } = useQuery(
+  const { data: townsData, error: townListError } = useQuery(
     GET_COUNCIL_TOWNS,
     {
-      variables: { id: bishopId },
+      variables: { id: councilId },
     }
   )
-  const { data: campusListData, error: campusListError } = useQuery(
-    GET_BISHOP_CAMPUSES,
+  const { data: campusesData, error: campusListError } = useQuery(
+    GET_COUNCIL_CAMPUSES,
     {
-      variables: { id: bishopId },
+      variables: { id: councilId },
     }
   )
   const [CloseDownBacenta] = useMutation(MAKE_BACENTA_INACTIVE)
@@ -81,28 +80,28 @@ const BacentaForm = ({ initialValues, onSubmit, title, newBacenta }) => {
 
   const [positionLoading, setPositionLoading] = useState(false)
 
-  const townOptions = townListData
-    ? makeSelectOptions(townListData.members[0]?.isBishopForTown)
+  const townOptions = townsData
+    ? makeSelectOptions(townsData.councils[0]?.towns)
     : []
-  const campusOptions = campusListData
-    ? makeSelectOptions(campusListData.members[0]?.isBishopForCampus)
+  const campusOptions = campusesData
+    ? makeSelectOptions(campusesData.councils[0]?.campuses)
     : []
-  let townCampusIdVar = initialValues.townCampusSelect
+  let townCampusIdVar = props.initialValues.townCampusSelect
 
-  if (loading || !initialValues.bacentaName) {
+  if (!props.initialValues.bacentaName) {
     return <LoadingScreen />
   }
 
   return (
     <>
       <Container>
-        <HeadingPrimary>{title}</HeadingPrimary>
-        <HeadingSecondary>{initialValues.bacentaName}</HeadingSecondary>
+        <HeadingPrimary>{props.title}</HeadingPrimary>
+        <HeadingSecondary>{props.initialValues.bacentaName}</HeadingSecondary>
       </Container>
       <Formik
-        initialValues={initialValues}
+        initialValues={props.initialValues}
         validationSchema={validationSchema}
-        onSubmit={onSubmit}
+        onSubmit={props.onSubmit}
       >
         {(formik) => (
           <Container className="py-4">
@@ -148,7 +147,8 @@ const BacentaForm = ({ initialValues, onSubmit, title, newBacenta }) => {
                             queryVariable="id"
                             dataset="centres"
                             varValue={
-                              townCampusIdVar || initialValues.townCampusSelect
+                              townCampusIdVar ||
+                              props.initialValues.townCampusSelect
                             }
                             defaultOption="Select a Centre"
                           />
@@ -192,17 +192,17 @@ const BacentaForm = ({ initialValues, onSubmit, title, newBacenta }) => {
                             control="combobox2"
                             name="leaderId"
                             label="Bacenta Leader"
-                            initialValue={initialValues.leaderName}
+                            initialValue={props.initialValues.leaderName}
                             placeholder="Select a Leader"
                             setFieldValue={formik.setFieldValue}
-                            optionsQuery={BISHOP_MEMBER_DROPDOWN}
+                            optionsQuery={COUNCIL_MEMBER_DROPDOWN}
                             queryVariable1="id"
-                            variable1={bishopId}
+                            variable1={councilId}
                             queryVariable2="nameSearch"
                             suggestionText="name"
                             suggestionID="id"
-                            dataset="bishopMemberDropdown"
-                            aria-describedby="Bishop Member List"
+                            dataset="councilMemberDropdown"
+                            aria-describedby="Council Member List"
                             className="form-control"
                             error={formik.errors.leaderId}
                           />
@@ -284,7 +284,14 @@ const BacentaForm = ({ initialValues, onSubmit, title, newBacenta }) => {
                 className={`btn-main ${theme}`}
                 disabled={!formik.isValid || formik.isSubmitting}
               >
-                Submit
+                {formik.isSubmitting ? (
+                  <>
+                    <Spinner animation="grow" size="sm" />
+                    <span> Submitting</span>
+                  </>
+                ) : (
+                  'Submit'
+                )}
               </Button>
             </Form>
             {isOpen && (
@@ -327,10 +334,11 @@ const BacentaForm = ({ initialValues, onSubmit, title, newBacenta }) => {
               </Popup>
             )}
 
-            {!newBacenta && (
+            {!props.newBacenta && (
               <Button
                 variant="primary"
                 size="lg"
+                disabled={formik.isSubmitting}
                 className={`btn-secondary ${theme} mt-3`}
                 onClick={togglePopup}
               >

@@ -4,7 +4,7 @@ import { useMutation } from '@apollo/client'
 import { capitalise, throwErrorMsg } from '../../global-utils'
 import {
   GET_COUNCIL_TOWNS,
-  GET_BISHOP_CAMPUSES,
+  GET_COUNCIL_CAMPUSES,
 } from '../../queries/ListQueries'
 import { CREATE_TOWN_MUTATION, CREATE_CAMPUS_MUTATION } from './CreateMutations'
 import { ChurchContext } from '../../contexts/ChurchContext'
@@ -37,7 +37,7 @@ const CreateTownCampus = () => {
   const [NewCampusLeader] = useMutation(NEW_CAMPUS_LEADER)
   const [CreateCampus] = useMutation(CREATE_CAMPUS_MUTATION, {
     refetchQueries: [
-      { query: GET_BISHOP_CAMPUSES, variables: { id: bishopId } },
+      { query: GET_COUNCIL_CAMPUSES, variables: { id: bishopId } },
     ],
   })
 

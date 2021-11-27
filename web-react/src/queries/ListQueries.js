@@ -51,9 +51,9 @@ export const BACENTA_DROPDOWN = gql`
   }
 `
 
-export const BISHOP_MEMBER_DROPDOWN = gql`
-  query($id: ID, $nameSearch: String) {
-    bishopMemberDropdown(id: $id, nameSearch: $nameSearch) {
+export const COUNCIL_MEMBER_DROPDOWN = gql`
+  query($id: ID!, $nameSearch: String!) {
+    councilMemberDropdown(id: $id, nameSearch: $nameSearch) {
       id
       firstName
       lastName
@@ -198,7 +198,7 @@ export const GET_SONTAS_BY_CAMPUSTOWN = gql`
   }
 `
 
-export const GET_BISHOP_CAMPUSES = gql`
+export const GET_COUNCIL_CAMPUSES = gql`
   query($id: ID) {
     councils(where: { id: $id }) {
       id
@@ -325,20 +325,16 @@ export const GET_COUNCIL_TOWNS = gql`
   }
 `
 
-export const GET_BISHOPS = gql`
+export const GET_COUNCILS = gql`
   {
-    members(where: { title: { title: "Bishop" } }) {
+    councils {
       id
-      firstName
-      lastName
-      pictureUrl
-      isBishopForTown {
+      name
+      towns {
         id
-        name
       }
-      isBishopForCampus {
+      campuses {
         id
-        name
       }
     }
   }

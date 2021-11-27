@@ -12,7 +12,7 @@ import RoleView from '../../auth/RoleView'
 import { Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import Popup from '../Popup/Popup'
-import { BISHOP_MEMBER_DROPDOWN } from '../../queries/ListQueries'
+import { COUNCIL_MEMBER_DROPDOWN } from '../../queries/ListQueries'
 import { useMutation } from '@apollo/client'
 import { MAKE_TOWN_ADMIN, MAKE_CAMPUS_ADMIN } from './AdminMutations'
 import FormikControl from '../formik-components/FormikControl'
@@ -147,13 +147,13 @@ const DisplayChurchDetails = (props) => {
                           initialValue={initialValues?.adminName}
                           placeholder="Select an Admin"
                           setFieldValue={formik.setFieldValue}
-                          optionsQuery={BISHOP_MEMBER_DROPDOWN}
+                          optionsQuery={COUNCIL_MEMBER_DROPDOWN}
                           queryVariable1="id"
                           variable1={bishopId}
                           queryVariable2="nameSearch"
                           suggestionText="name"
                           suggestionID="id"
-                          dataset="bishopMemberDropdown"
+                          dataset="councilMemberDropdown"
                           aria-describedby="Bishop Member List"
                           className="form-control"
                           error={formik.errors.admin}
@@ -255,19 +255,22 @@ const DisplayChurchDetails = (props) => {
           </Container>
         )}
 
-        {props.last3Weeks &&
-          props.last3Weeks.map((week, i) => (
-            <Container key={i} className="mt-4">
-              <h3>FORMS</h3>
-              <div className="text-secondary">{`WEEK ${week.number}`}</div>
-              <p>
-                Income Form -{' '}
-                <span
-                  className={`${week.filled ? 'filled' : 'not-filled'}`}
-                >{`${week.filled ? 'Filled' : 'Not Filled'}`}</span>
-              </p>
-            </Container>
-          ))}
+        {props.last3Weeks && (
+          <>
+            <h3>FORMS</h3>
+            {props.last3Weeks.map((week, i) => (
+              <Container key={i} className="mt-4">
+                <div className="text-secondary">{`WEEK ${week.number}`}</div>
+                <p>
+                  Income Form -{' '}
+                  <span
+                    className={`${week.filled ? 'filled' : 'not-filled'}`}
+                  >{`${week.filled ? 'Filled' : 'Not Filled'}`}</span>
+                </p>
+              </Container>
+            ))}
+          </>
+        )}
       </Container>
 
       {props.subChurch && props.buttons[0] ? (

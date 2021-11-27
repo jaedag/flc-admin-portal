@@ -229,11 +229,11 @@ export const UPDATE_MEMBER_MUTATION = gql`
 `
 
 export const UPDATE_TOWN_MUTATION = gql`
-  mutation UpdateTown($townId: ID!, $townName: String!, $bishopId: ID!) {
+  mutation UpdateTown($townId: ID!, $townName: String!, $councilId: ID!) {
     UpdateTownDetails(
       townId: $townId
       townName: $townName
-      bishopId: $bishopId
+      councilId: $councilId
     ) {
       id
       name
@@ -243,12 +243,12 @@ export const UPDATE_TOWN_MUTATION = gql`
         town {
           id
           name
-          bishop {
+          council {
             id
-            isBishopForTown {
+            towns {
               id
             }
-            isBishopForCampus {
+            campuses {
               id
             }
           }

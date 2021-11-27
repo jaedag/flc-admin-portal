@@ -21,12 +21,11 @@ export const BISHOP_BACENTA_DROPDOWN = gql`
   }
 `
 
-export const BISHOP_CENTRE_DROPDOWN = gql`
+export const COUNCIL_CENTRE_DROPDOWN = gql`
   query($id: ID!, $nameSearch: String!) {
-    members(where: { id: $id }, options: { limit: 8 }) {
+    councils(where: { id: $id }, options: { limit: 8 }) {
       id
-      firstName
-      lastName
+      name
       centres(search: $nameSearch) {
         id
         name

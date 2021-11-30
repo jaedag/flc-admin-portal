@@ -379,7 +379,14 @@ type Bacenta {
     )
   meetingDay: ServiceDay @relationship(type: "MEETS_ON", direction: OUT)
   history: [HistoryLog] @relationship(type: "HAS_HISTORY", direction: OUT)
-  services: [ServiceLog] @relationship(type: "HAS_HISTORY", direction: OUT)
+  servicesLogs: [ServiceLog] @relationship(type: "HAS_HISTORY", direction: OUT)
+  services: [ServiceRecords]
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(services:ServiceRecord)
+      RETURN services
+      """
+    )
   labels: [String]
     @cypher(
       statement: """

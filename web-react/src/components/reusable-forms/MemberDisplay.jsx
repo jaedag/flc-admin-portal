@@ -67,12 +67,12 @@ const MemberDisplay = ({ memberId }) => {
       </Row>
       <Row>
         <Col>
-          <DetailsCard heading="Gender" detail={member?.gender.gender} />
+          <DetailsCard heading="Gender" detail={member?.gender?.gender} />
         </Col>
         <Col>
           <DetailsCard
             heading="Marital Status"
-            detail={member?.maritalStatus.status}
+            detail={member?.maritalStatus?.status}
           />
         </Col>
         <Col sm={1}>
@@ -115,7 +115,7 @@ const MemberDisplay = ({ memberId }) => {
         <Col sm={1}>
           <DetailsCard
             heading="Pastoral Rank"
-            detail={member?.titleConnection.edges[0]?.node.title}
+            detail={member?.titleConnection?.edges[0]?.node.title}
           />
         </Col>
         <Col className="mt-5">

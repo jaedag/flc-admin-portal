@@ -212,6 +212,14 @@ type Council {
   id: ID @id
   name: String!
   leader: Member @relationship(type: "LEADS", direction: IN)
+  stream: String
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS]->(constituency) WHERE constituency:Campus OR constituency:Town
+      UNWIND labels(constituency) AS stream
+      RETURN DISTINCT stream
+      """
+    )
   towns: [Town] @relationship(type: "HAS", direction: OUT)
   campuses: [Campus] @relationship(type: "HAS", direction: OUT)
   centres: [Centre]

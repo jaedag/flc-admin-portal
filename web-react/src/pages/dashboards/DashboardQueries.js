@@ -162,6 +162,7 @@ export const SERVANTS_DASHBOARD = gql`
       isAdminForCouncil {
         id
         name
+        stream
         memberCount
         leader {
           id

@@ -8,8 +8,9 @@ import { DISPLAY_COUNCIL } from './ReadQueries'
 
 const DetailsCouncil = () => {
   const { councilId, church } = useContext(ChurchContext)
+  console.log(councilId)
   const { data, loading, error } = useQuery(DISPLAY_COUNCIL, {
-    variable: { id: councilId },
+    variables: { id: councilId },
   })
 
   const council = data?.councils[0]

@@ -342,6 +342,10 @@ const PastorsAdmin = () => {
         setTownId(card.id)
         sessionStorage.setItem('townId', card.id)
         break
+      case 'Council':
+        setCouncilId(card.id)
+        sessionStorage.setItem('councilId', card.id)
+        break
       case 'Campus':
         setCampusId(card.id)
         sessionStorage.setItem('campusId', card.id)

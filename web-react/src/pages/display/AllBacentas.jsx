@@ -35,7 +35,7 @@ const DisplayAllBacentas = () => {
             <RoleView
               roles={[
                 'adminFederal',
-                'adminBishop',
+                'adminCouncil',
                 'adminCampus',
                 'adminTown',
               ]}

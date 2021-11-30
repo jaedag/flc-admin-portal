@@ -16,8 +16,8 @@ const DetailsCentre = () => {
 
   let breadcrumb = [
     displayCentre?.town
-      ? displayCentre?.town.bishop
-      : displayCentre?.campus.bishop,
+      ? displayCentre?.town.council
+      : displayCentre?.campus.council,
     displayCentre?.town ? displayCentre?.town : displayCentre?.campus,
     displayCentre,
   ]
@@ -39,7 +39,7 @@ const DetailsCentre = () => {
           'leaderTown',
           'adminCampus',
           'adminTown',
-          'adminBishop',
+          'adminCouncil',
           'adminFederal',
         ]}
         history={displayCentre?.history.length !== 0 && displayCentre?.history}

@@ -21,7 +21,7 @@ const MembersDirectoryRoute = ({ component, roles, ...args }) => {
       church.setBishopId(currentUser.bishop)
       church.setChurch(currentUser.church)
 
-      if (!currentUser.roles.includes('adminBishop')) {
+      if (!currentUser.roles.includes('adminCouncil')) {
         //User is not a Bishops Admin the he can only be looking at his constituency membership
         church.setTownId(currentUser.constituency)
         church.setCampusId(currentUser.constituency)
@@ -52,7 +52,7 @@ const MembersDirectoryRoute = ({ component, roles, ...args }) => {
         {...args}
       />
     )
-  } else if (isAuthorised(['adminBishop', 'bishop'], currentUser.roles)) {
+  } else if (isAuthorised(['adminCouncil', 'bishop'], currentUser.roles)) {
     //if the user does not have permission but is a Bishop's Admin
     return (
       <Route

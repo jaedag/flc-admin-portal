@@ -22,7 +22,7 @@ const ProtectedRoute = ({ component, roles, ...args }) => {
       setBishopId(currentUser.bishop)
       setChurch(currentUser.church)
 
-      if (!currentUser.roles.includes('adminBishop')) {
+      if (!currentUser.roles.includes('adminCouncil')) {
         //User is not a Bishops Admin the he can only be looking at his constituency membership
         setTownId(currentUser.constituency)
         setCampusId(currentUser.constituency)
@@ -47,7 +47,7 @@ const ProtectedRoute = ({ component, roles, ...args }) => {
   } else if (
     isAuthorised(
       [
-        'adminBishop',
+        'adminCouncil',
         'adminCampus',
         'adminTown',
         'leaderCampus',

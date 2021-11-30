@@ -14,6 +14,26 @@ const DetailsCouncil = () => {
 
   const council = data?.councils[0]
   let breadcrumb = [council?.leader, council]
+
+  const details = [
+    { title: 'Pastors', number: council?.pastorCount, link: '#' },
+    {
+      title: 'Constituencies',
+      number: council?.constituencyCount,
+      link: `/${church.church}/displayall`,
+    },
+    {
+      title: 'Centre',
+      number: council?.centreCount,
+      link: `#`,
+    },
+    {
+      title: 'Bacentas',
+      number: council?.bacentaCount,
+      link: '#',
+    },
+  ]
+
   return (
     <BaseComponent loading={loading} error={error} data={data} placeholder>
       <DisplayChurchDetails
@@ -24,7 +44,8 @@ const DetailsCouncil = () => {
         churchType={council?.__typename}
         subChurch={capitalise(church.church)}
         membership={council?.memberCount}
-        churchCount={council.constituencyCount}
+        details={details}
+        churchCount={council?.constituencyCount}
         editlink="/council/editcouncil"
         editPermitted={['adminFederal']}
         history={council?.history.length !== 0 && council?.history}

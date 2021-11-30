@@ -72,7 +72,7 @@ function FormikSearchbox(props) {
         ...data.councilBacentaSearch,
       ]
 
-      if (currentUser.roles.includes('adminBishop')) {
+      if (currentUser.roles.includes('adminCouncil')) {
         getSuggestions(combinedData)
       }
     },
@@ -97,7 +97,7 @@ function FormikSearchbox(props) {
       federalSearch({
         variables: { searchKey: capitalise(searchString.trim()) },
       })
-    } else if (isAuthorised(['adminBishop', 'bishop'], currentUser.roles)) {
+    } else if (isAuthorised(['adminCouncil', 'bishop'], currentUser.roles)) {
       councilSearch({
         variables: {
           bishopId: currentUser.bishop,

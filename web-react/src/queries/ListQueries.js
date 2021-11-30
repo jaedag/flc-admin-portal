@@ -202,6 +202,19 @@ export const GET_COUNCIL_CAMPUSES = gql`
   query($id: ID) {
     councils(where: { id: $id }) {
       id
+      name
+      leader {
+        id
+        firstName
+        lastName
+        fullName
+      }
+      memberCount
+      admin {
+        id
+        firstName
+        lastName
+      }
       campuses {
         name
         id
@@ -223,36 +236,6 @@ export const GET_COUNCIL_CAMPUSES = gql`
           id
           name
         }
-        bishop {
-          id
-          firstName
-          lastName
-          admin {
-            id
-            firstName
-            lastName
-            bacenta {
-              id
-              centre {
-                id
-                town {
-                  id
-                  name
-                  bishop {
-                    id
-                  }
-                }
-                campus {
-                  id
-                  name
-                  bishop {
-                    id
-                  }
-                }
-              }
-            }
-          }
-        }
       }
     }
   }
@@ -261,37 +244,13 @@ export const GET_COUNCIL_CAMPUSES = gql`
 export const GET_COUNCIL_TOWNS = gql`
   query($id: ID) {
     councils(where: { id: $id }) {
+      id
+      name
       leader {
         id
         firstName
         lastName
         fullName
-
-        admin {
-          id
-          firstName
-          lastName
-          bacenta {
-            id
-            centre {
-              id
-              town {
-                id
-                name
-                bishop {
-                  id
-                }
-              }
-              campus {
-                id
-                name
-                bishop {
-                  id
-                }
-              }
-            }
-          }
-        }
       }
       memberCount
       admin {

@@ -59,7 +59,7 @@ const DisplayAllTownCampuses = () => {
                   </Link>
                 ) : null}
               </Col>
-              <RoleView roles={['adminFederal', 'adminBishop']}>
+              <RoleView roles={['adminFederal', 'adminCouncil']}>
                 <Col className="col-auto">
                   <Link to="/town/addtown" className="btn btn-primary">
                     Add Town
@@ -84,7 +84,8 @@ const DisplayAllTownCampuses = () => {
       </BaseComponent>
     )
   } else if (church.church === 'campus') {
-    const campus = campusesData.councils[0].campuses
+    const campuses = campusesData?.councils[0].campuses
+    const council = campusesData?.councils[0]
 
     return (
       <BaseComponent
@@ -94,47 +95,50 @@ const DisplayAllTownCampuses = () => {
       >
         <Container>
           <div className="mb-4 border-bottom">
-            <Row className="row">
-              <div className="col">
+            <Row>
+              <Col>
                 <Link
                   to="/member/displaydetails"
                   onClick={() => {
-                    clickCard(campus[0].bishop)
+                    clickCard(campuses?.bishop)
                   }}
                 >
-                  <h4>{`${campus[0].bishop.firstName} ${campus[0].bishop.lastName}'s Campuses`}</h4>
+                  <h4>{`${council?.leader.fullName}'s Campuses`}</h4>
                 </Link>
-                {campus[0].bishop?.admin ? (
+
+                {council?.admin ? (
                   <Link
                     className="pb-4"
                     to="/member/displaydetails"
                     onClick={() => {
-                      clickCard(campus[0].bishop?.admin)
+                      clickCard(council?.admin)
                     }}
                   >
-                    {`Admin: ${campus[0].bishop?.admin?.firstName} ${campus[0].bishop?.admin?.lastName}`}
+                    {`Admin: ${council?.admin?.firstName} ${council?.admin?.lastName}`}
                   </Link>
                 ) : null}
-              </div>
-              <RoleView roles={['adminFederal', 'adminBishop']}>
-                <div className="col-auto">
+              </Col>
+              <RoleView roles={['adminFederal', 'adminCouncil']}>
+                <Col className="col-auto">
                   <Link to="/campus/addcampus" className="btn btn-primary">
                     Add Campus
                   </Link>
-                </div>
+                </Col>
               </RoleView>
             </Row>
 
-            <div className="row justify-content-between">
-              <div className="py-1 px-3 m-2 card">{`Campuses: ${campus.length}`}</div>
-
-              <Link
-                to="/bishop/members"
-                className="py-1 px-3 m-2 card"
-              >{`Membership: `}</Link>
-            </div>
+            <Row className="justify-content-between mb-2">
+              <Col>
+                <Button>{`Campuses: ${campuses?.length}`}</Button>
+              </Col>
+              <Col className="col-auto">
+                <Link to="/bishop/members">
+                  <Button>{`Membership: ${council?.memberCount}`}</Button>
+                </Link>
+              </Col>
+            </Row>
           </div>
-          <DisplayChurchList data={campus} churchType="Campus" />
+          <DisplayChurchList data={campuses} churchType="Campus" />
         </Container>
       </BaseComponent>
     )

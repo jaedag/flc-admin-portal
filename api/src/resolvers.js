@@ -114,11 +114,11 @@ const rearrangeCypherObject = (response) => {
 
   return member?.member || member
 }
-const parseForCache = (servant, church, verb) => {
+const parseForCache = (servant, church, verb, role) => {
   //Returning the data such that it can update apollo cache
   servant[`${verb}`].push({
     id: church.id,
-    leader: {
+    [`${role}`]: {
       id: servant.id,
       firstName: servant.firstName,
       lastName: servant.lastName,
@@ -126,12 +126,13 @@ const parseForCache = (servant, church, verb) => {
   })
 
   servant[`${verb}`].map((church) => {
-    church.leader = {
+    church[`${role}`] = {
       id: servant.id,
       firstName: servant.firstName,
       lastName: servant.lastName,
     }
   })
+
   return servant
 }
 
@@ -448,7 +449,7 @@ const MakeServant = async (
     )
   }
 
-  return parseForCache(servant, church, verb)
+  return parseForCache(servant, church, verb, servantLower)
 }
 const RemoveServant = async (
   context,
@@ -552,7 +553,7 @@ const RemoveServant = async (
   }
 
   //Relationship in Neo4j will be removed when the replacement leader is being added
-  return parseForCache(servant, church, verb)
+  return parseForCache(servant, church, verb, servantLower)
 }
 
 export const resolvers = {

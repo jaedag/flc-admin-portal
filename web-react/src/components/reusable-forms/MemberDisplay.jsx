@@ -33,7 +33,9 @@ const MemberDisplay = ({ memberId }) => {
 
   return (
     <Container>
-      <RoleView roles={['all']}>
+      <RoleView
+        roles={['adminCouncil', 'adminFederal', 'adminCampus', 'adminTown']}
+      >
         <EditButton link="/member/editmember" />
       </RoleView>
       <Row>

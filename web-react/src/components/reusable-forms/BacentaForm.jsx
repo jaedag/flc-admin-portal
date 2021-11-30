@@ -28,6 +28,7 @@ import './Forms.css'
 import LoadingScreen from 'components/base-component/LoadingScreen'
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import HeadingSecondary from 'components/HeadingSecondary'
+import SubmitButton from 'components/formik-components/SubmitButton'
 
 const BacentaForm = (props) => {
   const {
@@ -111,7 +112,9 @@ const BacentaForm = (props) => {
                   {/* <!-- Basic Info Div --> */}
                   <Col className="mb-2">
                     <Row className="form-row">
-                      <RoleView roles={['adminCampus', 'adminTown']}>
+                      <RoleView
+                        roles={['adminCouncil', 'adminCampus', 'adminTown']}
+                      >
                         <Col>
                           <FormikControl
                             className="form-control"
@@ -157,7 +160,9 @@ const BacentaForm = (props) => {
                     </Row>
 
                     <Row className="form-row">
-                      <RoleView roles={['adminCampus', 'adminTown']}>
+                      <RoleView
+                        roles={['adminCouncil', 'adminCampus', 'adminTown']}
+                      >
                         <Col sm={12}>
                           <FormikControl
                             className="form-control"
@@ -182,7 +187,7 @@ const BacentaForm = (props) => {
                       <RoleView
                         roles={[
                           'adminFederal',
-                          'adminBishop',
+                          'adminCouncil',
                           'adminCampus',
                           'adminTown',
                         ]}
@@ -277,22 +282,7 @@ const BacentaForm = (props) => {
                 </Row>
               </div>
 
-              <Button
-                variant="primary"
-                size="lg"
-                type="submit"
-                className={`btn-main ${theme}`}
-                disabled={!formik.isValid || formik.isSubmitting}
-              >
-                {formik.isSubmitting ? (
-                  <>
-                    <Spinner animation="grow" size="sm" />
-                    <span> Submitting</span>
-                  </>
-                ) : (
-                  'Submit'
-                )}
-              </Button>
+              <SubmitButton formik={formik} />
             </Form>
             {isOpen && (
               <Popup handleClose={togglePopup}>

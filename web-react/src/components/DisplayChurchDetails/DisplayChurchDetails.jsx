@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import DetailsCard from '../card/DetailsCard'
 import { MemberContext } from '../../contexts/MemberContext'
@@ -16,11 +16,11 @@ import { COUNCIL_MEMBER_DROPDOWN } from '../../queries/ListQueries'
 import { useMutation } from '@apollo/client'
 import { MAKE_TOWN_ADMIN, MAKE_CAMPUS_ADMIN } from './AdminMutations'
 import FormikControl from '../formik-components/FormikControl'
-import { plural } from '../../global-utils'
+import { plural, throwErrorMsg } from '../../global-utils'
 import Breadcrumb from './Breadcrumb'
-import { Button, Col, Container, Row } from 'react-bootstrap'
+import { Button, Col, Container, Row, Spinner } from 'react-bootstrap'
 import PlaceholderCustom from 'components/Placeholder'
-import { Geo } from 'react-bootstrap-icons'
+import { Geo, PencilSquare } from 'react-bootstrap-icons'
 import ViewAll from 'components/buttons/ViewAll'
 
 const DisplayChurchDetails = (props) => {
@@ -28,13 +28,14 @@ const DisplayChurchDetails = (props) => {
   const isConstituency =
     props.churchType === 'Campus' || props.churchType === 'Town'
   const { setMemberId, theme } = useContext(MemberContext)
+  const [submitting, setSubmitting] = useState(false)
   const {
     clickCard,
     togglePopup,
     isOpen,
     campusId,
     townId,
-    bishopId,
+    councilId,
   } = useContext(ChurchContext)
 
   //Change Admin Initialised
@@ -54,11 +55,8 @@ const DisplayChurchDetails = (props) => {
     ),
   })
   const onSubmit = (values, onSubmitProps) => {
-    if (
-      props.churchType === 'Town'
-      // &&
-      // initialValues.adminSelect !== values.adminSelect
-    ) {
+    setSubmitting(true)
+    if (props.churchType === 'Town') {
       MakeTownAdmin({
         variables: {
           townId: townId,
@@ -66,13 +64,13 @@ const DisplayChurchDetails = (props) => {
           oldAdminId: initialValues.adminSelect,
         },
       })
-        .then(() => alert('Town Admin has been changed successfully'))
-        .catch((e) => alert(e))
-    } else if (
-      props.churchType === 'Campus'
-      // &&
-      // initialValues.adminSelect !== values.adminSelect
-    ) {
+        .then(() => {
+          togglePopup()
+          setSubmitting(false)
+          alert('Town Admin has been changed successfully')
+        })
+        .catch((e) => throwErrorMsg(e))
+    } else if (props.churchType === 'Campus') {
       MakeCampusAdmin({
         variables: {
           campusId: campusId,
@@ -80,13 +78,15 @@ const DisplayChurchDetails = (props) => {
           oldAdminId: initialValues.adminSelect,
         },
       })
-        .then(() => alert('Campus Admin has been changed successfully'))
-        .catch((e) => alert(e))
+        .then(() => {
+          togglePopup()
+          alert('Campus Admin has been changed successfully')
+          setSubmitting(false)
+        })
+        .catch((e) => throwErrorMsg(e))
     }
 
-    onSubmitProps.setSubmitting(false)
     onSubmitProps.resetForm()
-    togglePopup()
   }
   //End of Admin Change
 
@@ -116,14 +116,16 @@ const DisplayChurchDetails = (props) => {
               {`Admin:`} {props.admin.firstName} {props.admin.lastName}
             </Link>
           )}
+
           {isConstituency && (
-            <RoleView roles={['adminFederal', 'adminBishop']}>
-              <input
-                type="button"
-                className={`btn btn-primary text-nowrap`}
+            <RoleView roles={['adminFederal', 'adminCouncil']}>
+              <span
+                className={`text-nowrap`}
                 value="Change Admin"
                 onClick={togglePopup}
-              />
+              >
+                <PencilSquare />
+              </span>
             </RoleView>
           )}
 
@@ -139,8 +141,8 @@ const DisplayChurchDetails = (props) => {
               >
                 {(formik) => (
                   <Form>
-                    <div className="form-row">
-                      <div className="col-9">
+                    <Row className="form-row">
+                      <Col>
                         <FormikControl
                           control="combobox2"
                           name="adminSelect"
@@ -149,24 +151,36 @@ const DisplayChurchDetails = (props) => {
                           setFieldValue={formik.setFieldValue}
                           optionsQuery={COUNCIL_MEMBER_DROPDOWN}
                           queryVariable1="id"
-                          variable1={bishopId}
+                          variable1={councilId}
                           queryVariable2="nameSearch"
                           suggestionText="name"
                           suggestionID="id"
                           dataset="councilMemberDropdown"
-                          aria-describedby="Bishop Member List"
+                          aria-describedby="Council Member List"
                           className="form-control"
                           error={formik.errors.admin}
                         />
-                      </div>
-                    </div>
-                    <button
+                      </Col>
+                    </Row>
+
+                    <Button
+                      variant="primary"
+                      size="lg"
                       type="submit"
-                      disabled={!formik.isValid || formik.isSubmitting}
-                      className={`btn btn-primary text-nowrap px-4`}
+                      className={`btn-main ${theme}`}
+                      disabled={
+                        !formik.isValid || formik.isSubmitting || submitting
+                      }
                     >
-                      Confirm Change
-                    </button>
+                      {formik.isSubmitting || submitting ? (
+                        <>
+                          <Spinner animation="grow" size="sm" />
+                          <span> Submitting</span>
+                        </>
+                      ) : (
+                        'Submit'
+                      )}
+                    </Button>
                   </Form>
                 )}
               </Formik>
@@ -210,6 +224,20 @@ const DisplayChurchDetails = (props) => {
             />
           </Col>
         </Row>
+
+        {props.details?.length && (
+          <Row>
+            {props.details.map((detail, i) => (
+              <Col key={i} xs={6}>
+                <DetailsCard
+                  onClick={() => history.push(detail.link)}
+                  heading={detail.title}
+                  detail={detail.number}
+                />
+              </Col>
+            ))}
+          </Row>
+        )}
         <Row>
           <Col>
             <DetailsCard heading="Status" detail={props.active} />
@@ -313,6 +341,7 @@ const DisplayChurchDetails = (props) => {
           </div>
         </>
       ) : null}
+
       {props.subChurchBasonta === 'Sonta' ? (
         <>
           <div className="container">
@@ -353,6 +382,7 @@ const DisplayChurchDetails = (props) => {
           </div>
         </>
       ) : null}
+
       {props.subChurch && props.basontaLeaders?.length ? (
         <>
           <div className="container">
@@ -390,6 +420,7 @@ const DisplayChurchDetails = (props) => {
           </div>
         </>
       ) : null}
+
       {props.history && (
         <Container className="mt-5">
           <Row>

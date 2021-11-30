@@ -54,7 +54,7 @@ const DetailsCampusTown = () => {
               townData?.towns[0]?.history.length !== 0 &&
               townData?.towns[0]?.history
             }
-            breadcrumb={[townData?.towns[0]?.bishop, townData?.towns[0]]}
+            breadcrumb={[townData?.towns[0]?.council, townData?.towns[0]]}
           />
         </>
       )}
@@ -68,7 +68,7 @@ const DetailsCampusTown = () => {
             churchHeading="Centres"
             church2Heading="Bacentas"
             churchCount={campusData?.campuses[0].centres.length}
-            church2Count={campusData?.campusBacentaCount}
+            church2Count={campusData?.campuses[0].bacentaCount}
             admin={campusData?.campuses[0].admin}
             churchType={`${capitalise(church.church)}`}
             subChurch={`${capitalise(church.subChurch)}`}
@@ -76,13 +76,13 @@ const DetailsCampusTown = () => {
             buttons={campusData?.campuses[0].centres}
             buttonsSecondRow={campusData?.campuses[0].sontas}
             editlink="/campus/editcampus"
-            editPermitted={['adminBishop', 'adminFederal']}
+            editPermitted={['adminCouncil', 'adminFederal']}
             history={
               campusData?.campuses[0]?.history.length !== 0 &&
               campusData?.campuses[0]?.history
             }
             breadcrumb={[
-              campusData?.campuses[0]?.bishop,
+              campusData?.campuses[0]?.council,
               campusData?.campuses[0],
             ]}
           />

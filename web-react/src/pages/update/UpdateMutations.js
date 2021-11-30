@@ -762,31 +762,29 @@ export const ADD_BACENTA_CENTRE = gql`
 `
 
 //Updating Campus/Town Mutations
-export const ADD_TOWN_BISHOP = gql`
-  mutation AddTownBishop($townId: ID!, $bishopId: ID!) {
+export const ADD_TOWN_COUNCIL = gql`
+  mutation AddTownCouncil($townId: ID!, $councilId: ID!) {
     updateTowns(
       where: { id: $townId }
-      connect: { bishop: { where: { node: { id: $bishopId } } } }
+      connect: { council: { where: { node: { id: $councilId } } } }
     ) {
       towns {
         id
         name
-        bishop {
+        council {
           id
-          firstName
-          lastName
-          fullName
+          name
         }
       }
     }
   }
 `
 
-export const REMOVE_TOWN_BISHOP = gql`
-  mutation RemoveTownBishop($townId: ID!, $bishopId: ID!) {
+export const REMOVE_TOWN_COUNCIL = gql`
+  mutation RemoveTownCouncil($townId: ID!, $councilId: ID!) {
     updateTowns(
       where: { id: $townId }
-      disconnect: { bishop: { where: { node: { id: $bishopId } } } }
+      disconnect: { council: { where: { node: { id: $councilId } } } }
     ) {
       towns {
         id
@@ -796,30 +794,29 @@ export const REMOVE_TOWN_BISHOP = gql`
   }
 `
 
-export const ADD_CAMPUS_BISHOP = gql`
-  mutation AddCampusBishop($campusId: ID!, $bishopId: ID!) {
+export const ADD_CAMPUS_COUNCIL = gql`
+  mutation AddCampusCouncil($campusId: ID!, $councilId: ID!) {
     updateCampuses(
       where: { id: $campusId }
-      connect: { bishop: { where: { node: { id: $bishopId } } } }
+      connect: { council: { where: { node: { id: $councilId } } } }
     ) {
       campuses {
         id
         name
-        bishop {
+        council {
           id
-          firstName
-          lastName
+          name
         }
       }
     }
   }
 `
 
-export const REMOVE_CAMPUS_BISHOP = gql`
-  mutation RemoveCampusBishop($campusId: ID!, $bishopId: ID!) {
+export const REMOVE_CAMPUS_COUNCIL = gql`
+  mutation RemoveCampusCouncil($campusId: ID!, $councilId: ID!) {
     updateCampuses(
       where: { id: $campusId }
-      disconnect: { bishop: { where: { node: { id: $bishopId } } } }
+      disconnect: { council: { where: { node: { id: $councilId } } } }
     ) {
       campuses {
         id

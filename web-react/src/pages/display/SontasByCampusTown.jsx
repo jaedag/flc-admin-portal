@@ -46,7 +46,7 @@ const DisplaySontasByCampusTown = () => {
               <RoleView
                 roles={[
                   'adminFederal',
-                  'adminBishop',
+                  'adminCouncil',
                   'adminCampus',
                   'adminTown',
                 ]}
@@ -108,7 +108,7 @@ const DisplaySontasByCampusTown = () => {
               <RoleView
                 roles={[
                   'adminFederal',
-                  'adminBishop',
+                  'adminCouncil',
                   'adminCampus',
                   'adminTown',
                 ]}

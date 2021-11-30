@@ -99,27 +99,33 @@ const Navigator = () => {
         },
         link: authorisedLink(
           currentUser,
-          ['adminFederal', 'adminBishop', 'leaderBishop'],
+          ['adminFederal', 'adminCouncil', 'leaderBishop'],
           '/dashboard'
         ),
       })
       return
     }
 
-    if (churchType === 'Bishop' && servantType === 'Admin') {
+    if (churchType === 'Council' && servantType === 'Admin') {
+      const adminsOneChurch = servant[`${verb}`].length === 1 ?? false
+
       roles.push({
         name: 'Admin',
         church: servant[`${verb}`][0],
-        number: 'Bishop Admin',
+        number: 'Council Admin',
         clickCard: () => {
           clickCard(servant[`${verb}`][0])
         },
         link: authorisedLink(
           currentUser,
-          ['adminFederal', 'adminBishop'],
-          '/dashboard'
+          ['adminFederal', 'adminCouncil'],
+          adminsOneChurch
+            ? `/${churchType.toLowerCase()}/displaydetails`
+            : `/servants/church-list`
         ),
       })
+
+      assessmentChurch = servant[`${verb}`][0]
       return
     }
 
@@ -134,7 +140,7 @@ const Navigator = () => {
         },
         link: authorisedLink(
           currentUser,
-          ['adminFederal', 'adminBishop', 'adminCampus', 'adminTown'],
+          ['adminFederal', 'adminCouncil', 'adminCampus', 'adminTown'],
           adminsOneChurch
             ? `/${churchType.toLowerCase()}/displaydetails`
             : `/servants/church-list`
@@ -153,7 +159,7 @@ const Navigator = () => {
       clickCard: () => {
         clickCard(servant[`${verb}`][0])
       },
-      link: !leadsOneChurch
+      link: leadsOneChurch
         ? `/${churchType.toLowerCase()}/displaydetails`
         : `/servants/church-list`,
     })

@@ -19,7 +19,7 @@ const DetailsBacenta = () => {
   const bacenta = bacentaData?.bacentas[0]
 
   let breadcrumb = [
-    bacenta?.centre?.town?.bishop ?? bacenta?.centre?.campus?.bishop,
+    bacenta?.centre?.town?.council ?? bacenta?.centre?.campus?.council,
     bacenta?.centre?.town ? bacenta?.centre?.town : bacenta?.centre?.campus,
     bacenta?.centre,
     bacenta,
@@ -87,6 +87,7 @@ const DetailsBacenta = () => {
       editPermitted={[
         'leaderBacenta',
         'adminFederal',
+        'adminCouncil',
         'adminTown',
         'adminCampus',
       ]}

@@ -52,7 +52,7 @@ const DetailsSonta = () => {
           'leaderTown',
           'adminCampus',
           'adminTown',
-          'adminBishop',
+          'adminCouncil',
           'adminFederal',
         ]}
         history={

@@ -18,7 +18,7 @@ const ProtectedRoute = ({ component, roles, placeholder, ...args }) => {
       church.setChurch(currentUser.church)
       church.setCouncilId(currentUser.council)
 
-      if (!currentUser.roles.includes('adminBishop')) {
+      if (!currentUser.roles.includes('adminCouncil')) {
         //User is not a Bishops Admin the he can only be looking at his constituency membership
         church.setTownId(currentUser.constituency)
         church.setCampusId(currentUser.constituency)

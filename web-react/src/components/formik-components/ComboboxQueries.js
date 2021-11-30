@@ -23,20 +23,16 @@ export const BISHOP_BACENTA_DROPDOWN = gql`
 
 export const COUNCIL_CENTRE_DROPDOWN = gql`
   query($id: ID!, $nameSearch: String!) {
-    councils(where: { id: $id }, options: { limit: 8 }) {
+    councilCentreDropdown(id: $id, nameSearch: $nameSearch) {
       id
       name
-      centres(search: $nameSearch) {
+      campus {
         id
         name
-        campus {
-          id
-          name
-        }
-        town {
-          id
-          name
-        }
+      }
+      town {
+        id
+        name
       }
     }
   }

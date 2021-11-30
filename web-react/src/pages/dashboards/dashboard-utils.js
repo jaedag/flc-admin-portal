@@ -31,7 +31,7 @@ export const menuItems = [
       'adminTown',
       'leaderCampus',
       'adminCampus',
-      'adminBishop',
+      'adminCouncil',
     ],
   },
   {
@@ -43,7 +43,7 @@ export const menuItems = [
       'adminTown',
       'leaderCampus',
       'adminCampus',
-      'adminBishop',
+      'adminCouncil',
     ],
   },
   {
@@ -55,7 +55,7 @@ export const menuItems = [
       'adminTown',
       'leaderCampus',
       'adminCampus',
-      'adminBishop',
+      'adminCouncil',
     ],
   },
   { name: 'Reconciliation', to: '/recon', Icon: JournalCheck },

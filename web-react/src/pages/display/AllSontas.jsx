@@ -54,7 +54,7 @@ const DisplayAllSontas = () => {
                 <RoleView
                   roles={[
                     'adminFederal',
-                    'adminBishop',
+                    'adminCouncil',
                     'adminCampus',
                     'adminTown',
                   ]}
@@ -122,7 +122,7 @@ const DisplayAllSontas = () => {
                 <RoleView
                   roles={[
                     'adminFederal',
-                    'adminBishop',
+                    'adminCouncil',
                     'adminCampus',
                     'adminTown',
                   ]}

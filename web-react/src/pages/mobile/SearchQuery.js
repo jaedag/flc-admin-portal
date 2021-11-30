@@ -134,18 +134,42 @@ export const COUNCIL_SEARCH = gql`
     councilTownSearch(searchKey: $searchKey, councilId: $councilId) {
       id
       name
+      leader {
+        id
+        firstName
+        lastName
+        fullName
+      }
     }
     councilCampusSearch(searchKey: $searchKey, councilId: $councilId) {
       id
       name
+      leader {
+        id
+        firstName
+        lastName
+        fullName
+      }
     }
     councilCentreSearch(searchKey: $searchKey, councilId: $councilId) {
       id
       name
+      leader {
+        id
+        firstName
+        lastName
+        fullName
+      }
     }
     councilBacentaSearch(searchKey: $searchKey, councilId: $councilId) {
       id
       name
+      leader {
+        id
+        firstName
+        lastName
+        fullName
+      }
     }
     councilMemberSearch(searchKey: $searchKey, councilId: $councilId) {
       id

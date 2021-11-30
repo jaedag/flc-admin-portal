@@ -98,22 +98,24 @@ const CampusTownForm = ({
                 <Row className="row-cols-1 row-cols-md-2">
                   {/* <!-- Basic Info Div --> */}
                   <Col className="mb-2">
-                    <Row className="form-row">
-                      <Col>
-                        <FormikControl
-                          className="form-control"
-                          control="select"
-                          name="councilSelect"
-                          label="Select a Council"
-                          options={
-                            church.church === 'campus'
-                              ? campusCouncilOptions
-                              : townCouncilOptions
-                          }
-                          defaultOption="Select a Council"
-                        />
-                      </Col>
-                    </Row>
+                    <RoleView roles={['adminFederal']}>
+                      <Row className="form-row">
+                        <Col>
+                          <FormikControl
+                            className="form-control"
+                            control="select"
+                            name="councilSelect"
+                            label="Select a Council"
+                            options={
+                              church.church === 'campus'
+                                ? campusCouncilOptions
+                                : townCouncilOptions
+                            }
+                            defaultOption="Select a Council"
+                          />
+                        </Col>
+                      </Row>
+                    </RoleView>
 
                     <FormikControl
                       className="form-control"
@@ -127,7 +129,7 @@ const CampusTownForm = ({
                       <RoleView
                         roles={[
                           'adminFederal',
-                          'adminBishop',
+                          'adminCouncil',
                           'adminCampus',
                           'adminTown',
                         ]}
@@ -184,7 +186,7 @@ const CampusTownForm = ({
                                     queryVariable2="nameSearch"
                                     suggestionText="name"
                                     suggestionID="id"
-                                    dataset="bishopCentreDropdown"
+                                    dataset="councilCentreDropdown"
                                     church="centre"
                                     returnObject={!newConstituency && true}
                                     aria-describedby="Centre Name"

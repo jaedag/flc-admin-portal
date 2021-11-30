@@ -45,7 +45,7 @@ const Breadcrumb = ({ breadcrumb }) => {
                   key={i}
                   to={
                     bread?.firstName
-                      ? `/dashboard`
+                      ? `/member/displaydetails`
                       : `/${bread?.__typename.toLowerCase()}/displaydetails`
                   }
                   className="pl-0 pr-1 crumb label text-secondary"

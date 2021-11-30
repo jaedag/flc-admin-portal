@@ -57,7 +57,7 @@ const DisplayAllCentres = () => {
               <RoleView
                 roles={[
                   'adminFederal',
-                  'adminBishop',
+                  'adminCouncil',
                   'adminCampus',
                   'adminTown',
                 ]}
@@ -125,7 +125,7 @@ const DisplayAllCentres = () => {
               <RoleView
                 roles={[
                   'adminFederal',
-                  'adminBishop',
+                  'adminCouncil',
                   'adminCampus',
                   'adminTown',
                 ]}

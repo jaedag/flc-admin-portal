@@ -242,7 +242,7 @@ function MemberForm({ initialValues, onSubmit, title, loading }) {
                 {/* <!-- End of Church Info Section--> */}
 
                 {/* <!-- Beginning of Pastoral Appointments Section--> */}
-                <RoleView roles={['adminFederal', 'adminBishop']}>
+                <RoleView roles={['adminFederal', 'adminCouncil']}>
                   <Col className="my-4">
                     <HeadingPrimary>
                       Pastoral Appointments (if any)
@@ -293,7 +293,7 @@ function MemberForm({ initialValues, onSubmit, title, loading }) {
                 {/* <!--End of Pastoral Appointments Section--> */}
 
                 {/* <!--Beginning of Pastoral History Section--> */}
-                <RoleView roles={['adminFederal', 'adminBishop']}>
+                <RoleView roles={['adminFederal', 'adminCouncil']}>
                   <Col className="my-4">
                     <HeadingPrimary>Pastoral History</HeadingPrimary>
                     <FieldArray name="pastoralHistory">

@@ -491,6 +491,10 @@ export const DISPLAY_CAMPUS = gql`
     campuses(where: { id: $id }, options: { limit: 1 }) {
       id
       name
+      council {
+        id
+        name
+      }
       centres {
         id
         name
@@ -565,8 +569,8 @@ export const DISPLAY_CAMPUS = gql`
         historyRecord
       }
       memberCount
+      bacentaCount
     }
-    campusBacentaCount(id: $id)
   }
 `
 
@@ -576,6 +580,10 @@ export const DISPLAY_COUNCIL = gql`
       id
       name
       constituencyCount
+      centreCount
+      bacentaCount
+      memberCount
+      pastorCount
       towns(options: { limit: 5 }) {
         id
         name
@@ -636,7 +644,6 @@ export const DISPLAY_COUNCIL = gql`
         }
         historyRecord
       }
-      memberCount
     }
   }
 `

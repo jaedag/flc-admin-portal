@@ -242,7 +242,7 @@ export const DISPLAY_BACENTA = gql`
         pictureUrl
         whatsappNumber
       }
-      services(options: { limit: 3 }) {
+      serviceLogs(options: { limit: 3 }) {
         id
         serviceRecords(options: { limit: 3 }) {
           week

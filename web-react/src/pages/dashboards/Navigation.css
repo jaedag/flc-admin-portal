@@ -1,0 +1,31 @@
+.nav-toggler {
+  border: none;
+}
+
+.bg-dark {
+  background: #000;
+  color: var(--text-primary);
+}
+
+.bg-nav.dark {
+  background-color: var(--card);
+  color: var(--text-primary);
+}
+
+.nav-btn {
+  background-color: #302f2f;
+  padding: 20px 0px;
+  margin: 5px 0px;
+  padding-left: 30px;
+  text-align: center;
+}
+
+.footer {
+  padding: 10px;
+  background-color: #000000;
+}
+
+.offcanvas-header.dark .btn-close {
+  -webkit-filter: invert(1);
+  filter: invert(1);
+}

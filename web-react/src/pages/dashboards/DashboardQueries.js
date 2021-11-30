@@ -51,7 +51,7 @@ export const MAKE_BISHOP_ADMIN = gql`
       id
       firstName
       lastName
-      isAdminForBishop {
+      isAdminForCouncil {
         id
         admin {
           id
@@ -74,7 +74,7 @@ export const BACENTA_LEADER_DASHBOARD = gql`
         lastName
         fullName
       }
-      services {
+      serviceLogs {
         id
         historyRecord
         serviceRecords {
@@ -99,17 +99,19 @@ export const SERVANTS_DASHBOARD = gql`
       lastName
       fullName
       pictureUrl
+
       # The person is an admin
       isAdminForTown {
         id
         name
+        memberCount
         leader {
           id
           firstName
           lastName
           fullName
         }
-        services {
+        serviceLogs {
           id
           historyRecord
           serviceRecords {
@@ -131,13 +133,14 @@ export const SERVANTS_DASHBOARD = gql`
       isAdminForCampus {
         id
         name
+        memberCount
         leader {
           id
           firstName
           lastName
           fullName
         }
-        services {
+        serviceLogs {
           id
           historyRecord
           serviceRecords {
@@ -156,11 +159,34 @@ export const SERVANTS_DASHBOARD = gql`
           income
         }
       }
-      isAdminForBishop {
+      isAdminForCouncil {
         id
-        firstName
-        lastName
-        fullName
+        name
+        memberCount
+        leader {
+          id
+          firstName
+          lastName
+          fullName
+        }
+        serviceLogs {
+          id
+          historyRecord
+          serviceRecords {
+            created_at
+            attendance
+            income
+            week
+            serviceDate {
+              date
+            }
+          }
+        }
+        componentServiceAggregate {
+          week
+          attendance
+          income
+        }
       }
 
       isBishopForCampus {
@@ -176,7 +202,8 @@ export const SERVANTS_DASHBOARD = gql`
       leadsBacenta {
         id
         name
-        services {
+        memberCount
+        serviceLogs {
           id
           historyRecord
           serviceRecords {
@@ -193,6 +220,7 @@ export const SERVANTS_DASHBOARD = gql`
       leadsCentre {
         id
         name
+        memberCount
         campus {
           id
           bishop {
@@ -205,7 +233,8 @@ export const SERVANTS_DASHBOARD = gql`
             id
           }
         }
-        services {
+        memberCount
+        serviceLogs {
           id
           historyRecord
           serviceRecords {
@@ -227,13 +256,14 @@ export const SERVANTS_DASHBOARD = gql`
       leadsTown {
         id
         name
+        memberCount
         leader {
           id
           firstName
           lastName
           fullName
         }
-        services {
+        serviceLogs {
           id
           historyRecord
           serviceRecords {
@@ -255,13 +285,14 @@ export const SERVANTS_DASHBOARD = gql`
       leadsCampus {
         id
         name
+        memberCount
         leader {
           id
           firstName
           lastName
           fullName
         }
-        services {
+        serviceLogs {
           id
           historyRecord
           serviceRecords {
@@ -295,7 +326,7 @@ export const SERVANTS_DASHBOARD = gql`
             id
           }
         }
-        services {
+        serviceLogs {
           id
           historyRecord
           serviceRecords {
@@ -312,5 +343,19 @@ export const SERVANTS_DASHBOARD = gql`
         id
       }
     }
+  }
+`
+
+export const SERVANT_CHURCHES_COUNT = gql`
+  query churchesLed($id: ID!) {
+    members(where: { id: $id }) {
+      id
+      memberCount
+      basontaMembershipCount
+    }
+    leadsBacentaCount(id: $id)
+    leadsCentreCount(id: $id)
+    leadsConstituencyCount(id: $id)
+    bishopConstituencyCount(id: $id)
   }
 `

@@ -3,8 +3,8 @@ import { useHistory } from 'react-router-dom'
 import { useMutation } from '@apollo/client'
 import { capitalise, throwErrorMsg } from '../../global-utils'
 import {
-  GET_BISHOP_TOWNS,
-  GET_BISHOP_CAMPUSES,
+  GET_COUNCIL_TOWNS,
+  GET_COUNCIL_CAMPUSES,
 } from '../../queries/ListQueries'
 import { CREATE_TOWN_MUTATION, CREATE_CAMPUS_MUTATION } from './CreateMutations'
 import { ChurchContext } from '../../contexts/ChurchContext'
@@ -27,7 +27,7 @@ const CreateTownCampus = () => {
 
   const [NewTownLeader] = useMutation(NEW_TOWN_LEADER)
   const [CreateTown] = useMutation(CREATE_TOWN_MUTATION, {
-    refetchQueries: [{ query: GET_BISHOP_TOWNS, variables: { id: bishopId } }],
+    refetchQueries: [{ query: GET_COUNCIL_TOWNS, variables: { id: bishopId } }],
     onCompleted: (newTownData) => {
       setTownId(newTownData.CreateTown.id)
       history.push(`/${church.church}/displaydetails`)
@@ -37,7 +37,7 @@ const CreateTownCampus = () => {
   const [NewCampusLeader] = useMutation(NEW_CAMPUS_LEADER)
   const [CreateCampus] = useMutation(CREATE_CAMPUS_MUTATION, {
     refetchQueries: [
-      { query: GET_BISHOP_CAMPUSES, variables: { id: bishopId } },
+      { query: GET_COUNCIL_CAMPUSES, variables: { id: bishopId } },
     ],
   })
 

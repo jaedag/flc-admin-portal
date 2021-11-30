@@ -1,6 +1,5 @@
 import React from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
-import NavBar from '../components/nav/NavBar'
 import Login from '../components/Login'
 
 export const UnauthMsg = () => {
@@ -12,28 +11,25 @@ export const UnauthMsg = () => {
     return <Login />
   } else {
     return (
-      <React.Fragment>
-        <NavBar />
-        <div className="container body-container">
-          {/* <!--Web Logo and text--> */}
-          <div className="row d-flex align-items-center justify-content-center">
-            <div className="col-12 col-lg-6 justify-content-center">
-              {`Sorry we are encountering some problems`}
-              <div>
-                {' '}
-                <button
-                  className="btn-primary"
-                  onClick={() => {
-                    history.goBack()
-                  }}
-                >
-                  Click Here To Go Back
-                </button>
-              </div>
+      <div className="container ">
+        {/* <!--Web Logo and text--> */}
+        <div className="row d-flex align-items-center justify-content-center">
+          <div className="col-12 col-lg-6 justify-content-center">
+            {`Sorry we are encountering some problems`}
+            <div>
+              {' '}
+              <button
+                className="btn-primary"
+                onClick={() => {
+                  history.goBack()
+                }}
+              >
+                Click Here To Go Back
+              </button>
             </div>
           </div>
         </div>
-      </React.Fragment>
+      </div>
     )
   }
 }

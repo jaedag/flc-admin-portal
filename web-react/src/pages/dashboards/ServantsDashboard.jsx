@@ -1,6 +1,5 @@
 import React, { useContext } from 'react'
 import { useHistory, useLocation } from 'react-router'
-import NavBar from 'components/nav/NavBar'
 import ChurchGraph from 'components/ChurchGraph/ChurchGraph'
 import './Dashboards.css'
 import { MemberContext } from 'contexts/MemberContext'
@@ -15,6 +14,9 @@ import { ChurchContext } from 'contexts/ChurchContext'
 import StatDisplay from 'pages/reports/CompStatDisplay'
 import { authorisedLink, plural } from 'global-utils'
 import BaseComponent from 'components/base-component/BaseComponent'
+import Container from 'react-bootstrap/Container'
+import { Col, Row, Table } from 'react-bootstrap'
+import Placeholder from '../../components/Placeholder'
 
 const ServantsDashboard = () => {
   const { memberId, currentUser } = useContext(MemberContext)
@@ -53,13 +55,14 @@ const ServantsDashboard = () => {
     if (servantType === 'Bishop') {
       roles.push({
         name: 'Bishop',
+        church: servant[`${verb}`][0],
         number: `${churchType} Bishop`,
         clickCard: () => {
           clickCard(servant[`${verb}`][0])
         },
         link: authorisedLink(
           currentUser,
-          ['adminFederal', 'adminBishop', 'leaderBishop'],
+          ['adminFederal', 'adminCouncil', 'leaderBishop'],
           '/dashboard'
         ),
       })
@@ -69,13 +72,14 @@ const ServantsDashboard = () => {
     if (churchType === 'Bishop' && servantType === 'Admin') {
       roles.push({
         name: 'Admin',
+        church: servant[`${verb}`][0],
         number: 'Bishop Admin',
         clickCard: () => {
           clickCard(servant[`${verb}`][0])
         },
         link: authorisedLink(
           currentUser,
-          ['adminFederal', 'adminBishop'],
+          ['adminFederal', 'adminCouncil'],
           '/dashboard'
         ),
       })
@@ -86,13 +90,14 @@ const ServantsDashboard = () => {
       const adminsOneChurch = servant[`${verb}`].length === 1 ?? false
       roles.push({
         name: 'Admin',
+        church: servant[`${verb}`][0],
         number: `${churchType} Admin`,
         clickCard: () => {
           clickCard(servant[`${verb}`][0])
         },
         link: authorisedLink(
           currentUser,
-          ['adminFederal', 'adminBishop', 'adminCampus', 'adminTown'],
+          ['adminFederal', 'adminCouncil', 'adminCampus', 'adminTown'],
           adminsOneChurch
             ? `/${churchType.toLowerCase()}/displaydetails`
             : `/servants/${churchType.toLowerCase()}-list`
@@ -105,6 +110,7 @@ const ServantsDashboard = () => {
     const leadsOneChurch = servant[`${verb}`].length === 1 ?? false
     roles.push({
       name: leadsOneChurch ? churchType : plural(churchType),
+      church: servant[`${verb}`][0],
       number: servant[`${verb}`]?.length,
       clickCard: () => {
         clickCard(servant[`${verb}`][0])
@@ -113,6 +119,7 @@ const ServantsDashboard = () => {
         ? `/${churchType.toLowerCase()}/displaydetails`
         : `/servants/${churchType.toLowerCase()}-list`,
     })
+
     assessmentChurch = servant[`${verb}`][0]
   }
 
@@ -144,8 +151,8 @@ const ServantsDashboard = () => {
     if (servant?.isBishopForCampus?.length) {
       setServantRoles(servant, 'Bishop', 'Campus')
     }
-    if (servant?.isAdminForBishop?.length) {
-      setServantRoles(servant, 'Admin', 'Bishop')
+    if (servant?.isAdminForCouncil?.length) {
+      setServantRoles(servant, 'Admin', 'Council')
     }
     if (servant?.isAdminForCampus?.length) {
       setServantRoles(servant, 'Admin', 'Campus')
@@ -164,23 +171,24 @@ const ServantsDashboard = () => {
   assessmentChurchData = servant && getServantRoles(servant)
 
   return (
-    <BaseComponent loadingState={loading} errorState={error} data={data}>
-      <NavBar />
-      <div className="container">
-        <div className=" my-3">
+    <BaseComponent error={error} data={data}>
+      <Container>
+        <Placeholder loading={!servant?.fullName} as="p">
           <p className="mb-0">{`Welcome to`}</p>
+        </Placeholder>
+        <Placeholder loading={loading} as="h5">
           <h5 className="font-weight-bold roboto">{`${servant?.fullName}'s Dashboard`}</h5>
-        </div>
+        </Placeholder>
 
         <div className="card-button-row">
-          <table>
+          <Table>
             <tbody>
               <tr>
                 {roles &&
                   roles.map((role, i) => {
                     return (
                       <td
-                        className="col-auto pl-0"
+                        className="col-auto"
                         key={i}
                         onClick={() => {
                           role.clickCard()
@@ -193,33 +201,36 @@ const ServantsDashboard = () => {
                   })}
               </tr>
             </tbody>
-          </table>
+          </Table>
         </div>
 
         {assessmentChurchData && (
           <>
-            <div className="row mt-3">
-              <div className="col">
+            <Row className="mt-3">
+              <Col>
                 <StatDisplay
                   title="Avg Attendance"
+                  loading={loading}
                   statistic={getMonthlyStatAverage(
                     assessmentChurchData,
                     'attendance'
                   )}
                 />
-              </div>
+              </Col>
 
-              <div className="col">
+              <Col>
                 <StatDisplay
                   title="Avg Income (in GH₵)"
+                  loading={loading}
                   statistic={getMonthlyStatAverage(
                     assessmentChurchData,
                     'income'
                   )}
                 />
-              </div>
-            </div>
+              </Col>
+            </Row>
             <ChurchGraph
+              loading={loading}
               stat1="attendance"
               stat2="income"
               churchData={assessmentChurchData}
@@ -227,7 +238,7 @@ const ServantsDashboard = () => {
             />
           </>
         )}
-      </div>
+      </Container>
     </BaseComponent>
   )
 }

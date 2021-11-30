@@ -32,6 +32,10 @@ export const LOG_BACENTA_HISTORY = gql`
         historyRecord
       }
     }
+    ConnectBacentaHistory(churchId: $bacentaId) {
+      id
+      historyRecord
+    }
   }
 `
 
@@ -73,6 +77,10 @@ export const LOG_CENTRE_HISTORY = gql`
         historyRecord
       }
     }
+    ConnectChurchHistory(churchId: $centreId) {
+      id
+      historyRecord
+    }
   }
 `
 
@@ -82,16 +90,16 @@ export const LOG_CAMPUSTOWN_HISTORY = gql`
     $historyRecord: String!
     $oldLeaderId: ID
     $newLeaderId: ID
-    $oldBishopId: ID
-    $newBishopId: ID
+    $oldCouncilId: ID
+    $newCouncilId: ID
   ) {
     LogCampusTownHistory(
       campusTownId: $campusTownId
       historyRecord: $historyRecord
       newLeaderId: $newLeaderId
       oldLeaderId: $oldLeaderId
-      oldBishopId: $oldBishopId
-      newBishopId: $newBishopId
+      oldCouncilId: $oldCouncilId
+      newCouncilId: $newCouncilId
     ) {
       id
       name
@@ -113,6 +121,55 @@ export const LOG_CAMPUSTOWN_HISTORY = gql`
         }
         historyRecord
       }
+    }
+    ConnectChurchHistory(churchId: $campusTownId) {
+      id
+      historyRecord
+    }
+  }
+`
+
+export const LOG_COUNCIL_HISTORY = gql`
+  mutation LogCouncilHistory(
+    $councilId: ID!
+    $historyRecord: String!
+    $oldLeaderId: ID
+    $newLeaderId: ID
+    $oldGatheringServiceId: ID
+    $newGatheringServiceId: ID
+  ) {
+    LogCouncilHistory(
+      councilId: $councilId
+      historyRecord: $historyRecord
+      newLeaderId: $newLeaderId
+      oldLeaderId: $oldLeaderId
+      oldGatheringServiceId: $oldGatheringServiceId
+      newGatheringServiceId: $newGatheringServiceId
+    ) {
+      id
+      name
+      leader {
+        id
+        firstName
+        lastName
+      }
+      history(options: { limit: 10 }) {
+        id
+        timeStamp
+        created_at {
+          date
+        }
+        loggedBy {
+          id
+          firstName
+          lastName
+        }
+        historyRecord
+      }
+    }
+    ConnectCouncilHistory(churchId: $councilId) {
+      id
+      historyRecord
     }
   }
 `
@@ -154,6 +211,10 @@ export const LOG_SONTA_HISTORY = gql`
         }
         historyRecord
       }
+    }
+    ConnectBacentaHistory(churchId: $sontaId) {
+      id
+      historyRecord
     }
   }
 `

@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import NavBar from '../../components/nav/NavBar'
+
 import { ChurchContext } from '../../contexts/ChurchContext'
 import { useQuery } from '@apollo/client'
 import { getServiceGraphData, getMonthlyStatAverage } from './report-utils'
@@ -19,8 +19,7 @@ export const CentreReport = () => {
   const churchData = getServiceGraphData(data?.centres[0])
 
   return (
-    <BaseComponent loadingState={loading} errorState={error} data={data}>
-      <NavBar />
+    <BaseComponent loading={loading} error={error} data={data}>
       <div className="container">
         <div className=" my-3">
           <h5 className="mb-0">{`${data?.centres[0].name} Centre`}</h5>{' '}
@@ -35,7 +34,7 @@ export const CentreReport = () => {
             <MembershipCard
               link="/centre/members"
               title="Membership"
-              count={data?.centreMemberCount}
+              count={data?.centres[0].memberCount}
             />
           </div>
         </div>

@@ -1,12 +1,11 @@
 import BaseComponent from 'components/base-component/BaseComponent'
-import NavBar from 'components/nav/NavBar'
 import { Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import { capitalise, makeSelectOptions } from 'global-utils'
 import {
-  BISHOP_MEMBER_DROPDOWN,
-  GET_BISHOP_CAMPUSES,
-  GET_BISHOP_TOWNS,
+  COUNCIL_MEMBER_DROPDOWN,
+  GET_COUNCIL_CAMPUSES,
+  GET_COUNCIL_TOWNS,
   GET_MINISTRIES,
 } from 'queries/ListQueries'
 import React, { useContext } from 'react'
@@ -16,27 +15,21 @@ import { useQuery } from '@apollo/client'
 import { DISPLAY_CAMPUS, DISPLAY_TOWN } from 'pages/display/ReadQueries'
 import RoleView from 'auth/RoleView'
 
-const SontaForm = ({
-  initialValues,
-  onSubmit,
-  title,
-  loadingState,
-  newSonta,
-}) => {
+const SontaForm = ({ initialValues, onSubmit, title, loading, newSonta }) => {
   const { church, campusId, townId, bishopId } = useContext(ChurchContext)
 
   const {
     data: townsData,
     loading: townsLoading,
     error: townsError,
-  } = useQuery(GET_BISHOP_TOWNS, {
+  } = useQuery(GET_COUNCIL_TOWNS, {
     variables: { id: bishopId },
   })
   const {
     data: campusesData,
     loading: campusesLoading,
     error: campusesError,
-  } = useQuery(GET_BISHOP_CAMPUSES, {
+  } = useQuery(GET_COUNCIL_CAMPUSES, {
     variables: { id: bishopId },
   })
   const { data: townData, loading: townLoading } = useQuery(DISPLAY_TOWN, {
@@ -85,24 +78,23 @@ const SontaForm = ({
 
   return (
     <BaseComponent
-      loadingState={
+      loading={
         campusTownLoading ||
         ministryListLoading ||
         campusesLoading ||
         townsLoading ||
-        loadingState
+        loading
       }
-      errorState={townsError || campusesError}
+      error={townsError || campusesError}
       data={townsData && campusesData && ministryListData}
     >
-      <NavBar />
       <Formik
         initialValues={initialValuesForNewSonta || initialValues}
         validationSchema={validationSchema}
         onSubmit={onSubmit}
       >
         {(formik) => (
-          <div className="body-card py-4 container mt-5">
+          <div className=" py-4 container mt-5">
             <div className="container infobar">{title}</div>
             <Form>
               <div className="form-group">
@@ -111,7 +103,7 @@ const SontaForm = ({
                   <div className="col mb-2">
                     <div className="form-row row-cols-2">
                       <div className="col-10">
-                        <RoleView roles={['adminFederal', 'adminBishop']}>
+                        <RoleView roles={['adminFederal', 'adminCouncil']}>
                           <FormikControl
                             className="form-control"
                             control="select"
@@ -163,13 +155,13 @@ const SontaForm = ({
                           label="Select a Leader"
                           placeholder="Select a Leader"
                           setFieldValue={formik.setFieldValue}
-                          optionsQuery={BISHOP_MEMBER_DROPDOWN}
+                          optionsQuery={COUNCIL_MEMBER_DROPDOWN}
                           queryVariable1="id"
                           variable1={bishopId}
                           queryVariable2="nameSearch"
                           suggestionText="name"
                           suggestionID="id"
-                          dataset="bishopMemberDropdown"
+                          dataset="councilMemberDropdown"
                           aria-describedby="Bishop Member List"
                           className="form-control"
                           error={formik.errors.leaderId}

@@ -1,12 +1,12 @@
 import React, { useContext } from 'react'
 import { useQuery } from '@apollo/client'
 import DisplayChurchDetails from '../../components/DisplayChurchDetails/DisplayChurchDetails'
-import NavBar from '../../components/nav/NavBar'
+
 import { DISPLAY_CENTRE } from './ReadQueries'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import BaseComponent from 'components/base-component/BaseComponent'
 
-const DisplayCentreDetails = () => {
+const DetailsCentre = () => {
   const { centreId } = useContext(ChurchContext)
   const { data, loading, error } = useQuery(DISPLAY_CENTRE, {
     variables: { id: centreId },
@@ -16,36 +16,30 @@ const DisplayCentreDetails = () => {
 
   let breadcrumb = [
     displayCentre?.town
-      ? displayCentre?.town.bishop
-      : displayCentre?.campus.bishop,
+      ? displayCentre?.town.council
+      : displayCentre?.campus.council,
     displayCentre?.town ? displayCentre?.town : displayCentre?.campus,
     displayCentre,
   ]
+
   return (
-    <BaseComponent loadingState={loading} errorState={error} data={data}>
-      <NavBar />
+    <BaseComponent loading={loading} error={error} data={data}>
       <DisplayChurchDetails
         name={displayCentre?.name}
         leaderTitle="Centre Leader"
-        leaderName={
-          displayCentre?.leader
-            ? `${displayCentre?.leader.firstName} ${displayCentre?.leader.lastName}`
-            : '-'
-        }
-        leaderId={displayCentre?.leader?.id}
+        leader={displayCentre?.leader}
         churchHeading="Bacentas"
         churchType="Centre"
         subChurch="Bacenta"
-        membership={data?.centreMemberCount}
+        membership={displayCentre?.memberCount}
         churchCount={displayCentre?.bacentas.length}
         editlink="/centre/editcentre"
         editPermitted={[
-          'leaderCentre',
           'leaderCampus',
           'leaderTown',
           'adminCampus',
           'adminTown',
-          'adminBishop',
+          'adminCouncil',
           'adminFederal',
         ]}
         history={displayCentre?.history.length !== 0 && displayCentre?.history}
@@ -56,4 +50,4 @@ const DisplayCentreDetails = () => {
   )
 }
 
-export default DisplayCentreDetails
+export default DetailsCentre

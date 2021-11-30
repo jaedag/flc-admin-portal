@@ -1,11 +1,9 @@
 import React from 'react'
-import SideBar from '../../components/SideBar.jsx'
-import NavBar from '../../components/nav/NavBar'
+import SideBar from '../../components/SideMenu.jsx'
 
 const MemberFiltersMobile = () => {
   return (
     <>
-      <NavBar />
       <SideBar />
     </>
   )

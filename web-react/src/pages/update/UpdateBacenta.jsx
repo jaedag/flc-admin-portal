@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/client'
 import { GET_CENTRE_BACENTAS } from '../../queries/ListQueries'
@@ -16,7 +16,6 @@ import { alertMsg, repackDecimals, throwErrorMsg } from 'global-utils'
 
 const UpdateBacenta = () => {
   const { setCentreId, bacentaId } = useContext(ChurchContext)
-  const [isLoading, setIsLoading] = useState(false)
   const {
     data: bacentaData,
     loading: bacentaLoading,
@@ -81,7 +80,7 @@ const UpdateBacenta = () => {
 
   //onSubmit receives the form state as argument
   const onSubmit = (values, onSubmitProps) => {
-    setIsLoading(true)
+    onSubmitProps.setSubmitting(true)
     setCentreId(values.centreSelect)
     values.venueLongitude = parseFloat(values.venueLongitude)
     values.venueLatitude = parseFloat(values.venueLatitude)
@@ -184,7 +183,7 @@ const UpdateBacenta = () => {
       title="Update Bacenta"
       initialValues={initialValues}
       onSubmit={onSubmit}
-      loadingState={bacentaLoading || isLoading}
+      loading={bacentaLoading}
     />
   )
 }

@@ -2,154 +2,146 @@ import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { useQuery } from '@apollo/client'
 import DisplayChurchList from '../../components/DisplayChurchList'
-import NavBar from '../../components/nav/NavBar'
-import ErrorScreen from '../../components/base-component/ErrorScreen'
-import LoadingScreen from '../../components/base-component/LoadingScreen'
 import {
-  GET_BISHOP_TOWNS,
-  GET_BISHOP_CAMPUSES,
+  GET_COUNCIL_TOWNS,
+  GET_COUNCIL_CAMPUSES,
 } from '../../queries/ListQueries'
-import { BISHOP_MEMBER_COUNT } from '../display/ReadQueries'
 import { ChurchContext } from '../../contexts/ChurchContext'
-
 import RoleView from '../../auth/RoleView'
+import BaseComponent from 'components/base-component/BaseComponent'
+import { Container, Row, Col, Button } from 'react-bootstrap'
 
 const DisplayAllTownCampuses = () => {
-  const { clickCard, church, bishopId } = useContext(ChurchContext)
+  const { clickCard, church, councilId } = useContext(ChurchContext)
 
-  const { data: bishopTowns, loading: townLoading } = useQuery(
-    GET_BISHOP_TOWNS,
-    {
-      variables: { id: bishopId },
-    }
-  )
   const {
-    data: bishopCampuses,
-
-    loading: campusLoading,
-  } = useQuery(GET_BISHOP_CAMPUSES, {
-    variables: { id: bishopId },
+    data: townsData,
+    loading: townsLoading,
+    error: townsError,
+  } = useQuery(GET_COUNCIL_TOWNS, {
+    variables: { id: councilId },
   })
-  const { data: bishopMemberCount, loading: bishopMemberLoading } = useQuery(
-    BISHOP_MEMBER_COUNT,
-    {
-      variables: { id: bishopId },
-    }
-  )
+  const {
+    data: campusesData,
+    loading: campusesLoading,
+    error: campusesError,
+  } = useQuery(GET_COUNCIL_CAMPUSES, {
+    variables: { id: councilId },
+  })
 
-  if (townLoading || campusLoading || bishopMemberLoading) {
-    // Spinner Icon for Loading Screens
-    return <LoadingScreen />
-  } else if (church.church === 'town') {
-    const towns = bishopTowns.members[0].isBishopForTown
+  if (church.church === 'town') {
+    const towns = townsData?.councils[0].towns
+    const council = townsData?.councils[0]
 
     return (
-      <>
-        <NavBar />
-        <div className="body-container container">
+      <BaseComponent data={townsData} loading={townsLoading} error={townsError}>
+        <Container>
           <div className="mb-4 border-bottom">
-            <div className="row">
-              <div className="col">
+            <Row className="mb-2">
+              <Col>
                 <Link
                   to="/member/displaydetails"
                   onClick={() => {
-                    clickCard(towns[0].bishop)
+                    clickCard(towns?.bishop)
                   }}
                 >
-                  <h4>{`${towns[0].bishop.firstName} ${towns[0].bishop.lastName}'s Towns`}</h4>
+                  <h4>{`${council?.leader.fullName}'s Towns`}</h4>
                 </Link>
-                {towns[0].bishop?.admin ? (
+                {council?.admin ? (
                   <Link
                     className="pb-4"
                     to="/member/displaydetails"
                     onClick={() => {
-                      clickCard(towns[0].bishop?.admin)
+                      clickCard(council?.admin)
                     }}
                   >
-                    {`Admin: ${towns[0].bishop?.admin?.firstName} ${towns[0].bishop?.admin?.lastName}`}
+                    {`Admin: ${council?.admin?.firstName} ${council?.admin?.lastName}`}
                   </Link>
                 ) : null}
-              </div>
-              <RoleView roles={['adminFederal', 'adminBishop']}>
-                <div className="col-auto">
+              </Col>
+              <RoleView roles={['adminFederal', 'adminCouncil']}>
+                <Col className="col-auto">
                   <Link to="/town/addtown" className="btn btn-primary">
                     Add Town
                   </Link>
-                </div>
+                </Col>
               </RoleView>
-            </div>
+            </Row>
 
-            <div className="row justify-content-between">
-              <div className="py-1 px-3 m-2 card">{`Towns: ${towns.length}`}</div>
-
-              <Link
-                to="/bishop/members"
-                className="py-1 px-3 m-2 card"
-              >{`Membership: ${
-                bishopMemberCount ? bishopMemberCount.bishopMemberCount : null
-              }`}</Link>
-            </div>
+            <Row className="justify-content-between mb-2">
+              <Col>
+                <Button>{`Towns: ${towns?.length}`}</Button>
+              </Col>
+              <Col className="col-auto">
+                <Link to="/bishop/members">
+                  <Button>{`Membership: ${council?.memberCount}`}</Button>
+                </Link>
+              </Col>
+            </Row>
           </div>
           <DisplayChurchList data={towns} churchType="Town" />
-        </div>
-      </>
+        </Container>
+      </BaseComponent>
     )
   } else if (church.church === 'campus') {
-    const campus = bishopCampuses.members[0].isBishopForCampus
+    const campuses = campusesData?.councils[0].campuses
+    const council = campusesData?.councils[0]
 
     return (
-      <>
-        <NavBar />
-        <div className="body-container container">
+      <BaseComponent
+        data={campusesData}
+        loading={campusesLoading}
+        error={campusesError}
+      >
+        <Container>
           <div className="mb-4 border-bottom">
-            <div className="row">
-              <div className="col">
+            <Row>
+              <Col>
                 <Link
                   to="/member/displaydetails"
                   onClick={() => {
-                    clickCard(campus[0].bishop)
+                    clickCard(campuses?.bishop)
                   }}
                 >
-                  <h4>{`${campus[0].bishop.firstName} ${campus[0].bishop.lastName}'s Campuses`}</h4>
+                  <h4>{`${council?.leader.fullName}'s Campuses`}</h4>
                 </Link>
-                {campus[0].bishop?.admin ? (
+
+                {council?.admin ? (
                   <Link
                     className="pb-4"
                     to="/member/displaydetails"
                     onClick={() => {
-                      clickCard(campus[0].bishop?.admin)
+                      clickCard(council?.admin)
                     }}
                   >
-                    {`Admin: ${campus[0].bishop?.admin?.firstName} ${campus[0].bishop?.admin?.lastName}`}
+                    {`Admin: ${council?.admin?.firstName} ${council?.admin?.lastName}`}
                   </Link>
                 ) : null}
-              </div>
-              <RoleView roles={['adminFederal', 'adminBishop']}>
-                <div className="col-auto">
+              </Col>
+              <RoleView roles={['adminFederal', 'adminCouncil']}>
+                <Col className="col-auto">
                   <Link to="/campus/addcampus" className="btn btn-primary">
                     Add Campus
                   </Link>
-                </div>
+                </Col>
               </RoleView>
-            </div>
+            </Row>
 
-            <div className="row justify-content-between">
-              <div className="py-1 px-3 m-2 card">{`Campuses: ${campus.length}`}</div>
-
-              <Link
-                to="/bishop/members"
-                className="py-1 px-3 m-2 card"
-              >{`Membership: ${
-                bishopMemberCount ? bishopMemberCount.bishopMemberCount : null
-              }`}</Link>
-            </div>
+            <Row className="justify-content-between mb-2">
+              <Col>
+                <Button>{`Campuses: ${campuses?.length}`}</Button>
+              </Col>
+              <Col className="col-auto">
+                <Link to="/bishop/members">
+                  <Button>{`Membership: ${council?.memberCount}`}</Button>
+                </Link>
+              </Col>
+            </Row>
           </div>
-          <DisplayChurchList data={campus} churchType="Campus" />
-        </div>
-      </>
+          <DisplayChurchList data={campuses} churchType="Campus" />
+        </Container>
+      </BaseComponent>
     )
-  } else {
-    return <ErrorScreen />
   }
 }
 

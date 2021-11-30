@@ -1,97 +1,94 @@
 import React, { useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import { ChurchContext } from '../../contexts/ChurchContext'
-import user from '../../img/user.png'
-import bussolid from '../../img/bus-solid.svg'
+import user from '../../assets/user.png'
+import bussolid from '../../assets/bus-solid.svg'
 import { transformCloudinaryImg } from 'global-utils'
+import { Card } from 'react-bootstrap'
+import { MemberContext } from 'contexts/MemberContext'
+import '../../components/members-grids/MemberTable.css'
+import './MemberDisplayCard.css'
 
 const MemberDisplayCard = (props) => {
   const { member, ...rest } = props
   const { clickCard } = useContext(ChurchContext)
+  const { theme } = useContext(MemberContext)
   const history = useHistory()
-  let icon
+  let icon, name, details
 
   switch (member.__typename) {
     case 'Member':
       icon = user
+      name = member.fullName
+      details = [
+        member.bacenta && member.bacenta.name + ' Bacenta',
+        member.ministry && member.ministry.name,
+      ]
       break
     case 'Bacenta':
       icon = bussolid
+      name = member.name + ' Bacenta'
+      details = [member?.leader?.fullName]
       break
     case 'Centre':
       icon = bussolid
+      name = member.name + ' Centre'
+      details = [member?.leader?.fullName]
       break
     case 'Town':
       icon = bussolid
+      name = member.name + ' Town'
+      details = [member?.leader?.fullName]
       break
     case 'Campus':
       icon = bussolid
+      name = member.name + ' Campus'
+      details = [member?.leader?.fullName]
       break
     case 'Sonta':
       icon = bussolid
+      name = member.name + ' Sonta'
+      details = [member?.leader?.fullName]
       break
     default:
       break
   }
 
   return (
-    <div
+    <Card
       {...rest}
-      className="card mobile-search-card p-2 py-3 my-4"
+      className="mobile-search-card"
       onClick={() => {
         clickCard(member)
         history.push(`/${member.__typename.toLowerCase()}/displaydetails`)
       }}
     >
-      <div className="media">
-        {member.pictureUrl ? (
+      <div className="d-flex align-items-center">
+        <div className="flex-shrink-0">
           <img
-            className="mr-3 rounded-circle img-search"
-            src={transformCloudinaryImg(member.pictureUrl)}
-            alt={`${
-              member.name
-                ? member.name
-                : member.firstName + ' ' + member.lastName
-            }`}
+            className={`${member.pictureUrl && 'rounded-circle'} img-search`}
+            src={
+              member.pictureUrl
+                ? transformCloudinaryImg(member.pictureUrl)
+                : icon
+            }
+            alt={member.fullName}
           />
-        ) : (
-          <img
-            className="mr-3 rounded-circle img-search p-2 text-secondary"
-            src={icon}
-            alt={`${
-              member.name
-                ? member.name
-                : member.firstName + ' ' + member.lastName
-            }`}
-          />
-        )}
-
-        <div className="media-body">
-          <h6 className="mt-0">{`${
-            member.name ? member.name : member.firstName + ' ' + member.lastName
-          }`}</h6>
-
-          {member.bacenta ? (
-            <div>
-              <span className="font-weight-bold text-secondary">Bacenta:</span>{' '}
-              {member.bacenta.name}
-            </div>
-          ) : member.__typename ? (
-            <div>
-              <span className="font-weight-bold text-secondary">
-                {member.__typename}
-              </span>
-            </div>
-          ) : null}
-          {member.ministry ? (
-            <div>
-              <span className="font-weight-bold text-secondary">Ministry:</span>{' '}
-              {member.ministry.name}{' '}
-            </div>
-          ) : null}
+        </div>
+        <div className="flex-grow-1 ms-3">
+          <Card.Title>{name}</Card.Title>
+          <p className={`text-secondary mb-0 ${theme}`}>
+            {details?.length &&
+              details.map((detail) => (
+                <>
+                  <span>{detail}</span>
+                  <br />
+                </>
+              ))}
+          </p>
         </div>
       </div>
-    </div>
+    </Card>
   )
 }
 

@@ -13,12 +13,18 @@ export const GET_LOGGED_IN_USER = gql`
           id
           campus {
             id
+            council {
+              id
+            }
             bishop {
               id
             }
           }
           town {
             id
+            council {
+              id
+            }
             bishop {
               id
             }

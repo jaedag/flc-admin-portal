@@ -1,5 +1,20 @@
 .detail-card {
-    padding: 15px;
-    border-radius: 0px;
-  }
-  
+  margin-top: 10px;
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+.bg-card {
+  background-color: var(--card);
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.card-heading {
+  font-size: 14px;
+}
+
+.card-detail {
+  margin-bottom: 0px;
+  font-size: 22px;
+}

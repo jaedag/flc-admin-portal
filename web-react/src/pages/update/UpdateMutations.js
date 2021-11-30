@@ -33,29 +33,46 @@ export const UPDATE_MEMBER_MUTATION = gql`
       ministry: $ministry
       pictureUrl: $pictureUrl
     ) {
-      id
       firstName
       middleName
       lastName
       fullName
       email
       phoneNumber
-      whatsappNumber
       pictureUrl
+      whatsappNumber
+      dob {
+        date
+      }
       gender {
         gender
       }
       maritalStatus {
         status
       }
-      dob {
-        date
+      occupation {
+        occupation
       }
-      bishop {
+
+      #church info
+      ministry {
         id
-        firstName
-        lastName
-        fullName
+        name
+        leader {
+          firstName
+          lastName
+        }
+      }
+      occupation {
+        occupation
+      }
+      titleConnection {
+        edges {
+          dateAppointed
+          node {
+            title
+          }
+        }
       }
       bacenta {
         id
@@ -89,20 +106,7 @@ export const UPDATE_MEMBER_MUTATION = gql`
           }
         }
       }
-      ministry {
-        id
-        name
-        leader {
-          firstName
-          lastName
-        }
-      }
-      occupation {
-        occupation
-      }
-      title {
-        title
-      }
+      #Personal history
       history(options: { limit: 3 }) {
         id
         timeStamp
@@ -116,6 +120,7 @@ export const UPDATE_MEMBER_MUTATION = gql`
         }
         historyRecord
       }
+      #Leadership Information
       leadsBacenta {
         id
         name
@@ -207,10 +212,9 @@ export const UPDATE_MEMBER_MUTATION = gql`
         id
         name
       }
-      isAdminForBishop {
+      isAdminForCouncil {
         id
-        firstName
-        lastName
+        name
       }
       isAdminForCampus {
         id
@@ -225,11 +229,11 @@ export const UPDATE_MEMBER_MUTATION = gql`
 `
 
 export const UPDATE_TOWN_MUTATION = gql`
-  mutation UpdateTown($townId: ID!, $townName: String!, $bishopId: ID!) {
+  mutation UpdateTown($townId: ID!, $townName: String!, $councilId: ID!) {
     UpdateTownDetails(
       townId: $townId
       townName: $townName
-      bishopId: $bishopId
+      councilId: $councilId
     ) {
       id
       name
@@ -239,12 +243,12 @@ export const UPDATE_TOWN_MUTATION = gql`
         town {
           id
           name
-          bishop {
+          council {
             id
-            isBishopForTown {
+            towns {
               id
             }
-            isBishopForCampus {
+            campuses {
               id
             }
           }
@@ -758,31 +762,29 @@ export const ADD_BACENTA_CENTRE = gql`
 `
 
 //Updating Campus/Town Mutations
-export const ADD_TOWN_BISHOP = gql`
-  mutation AddTownBishop($townId: ID!, $bishopId: ID!) {
+export const ADD_TOWN_COUNCIL = gql`
+  mutation AddTownCouncil($townId: ID!, $councilId: ID!) {
     updateTowns(
       where: { id: $townId }
-      connect: { bishop: { where: { node: { id: $bishopId } } } }
+      connect: { council: { where: { node: { id: $councilId } } } }
     ) {
       towns {
         id
         name
-        bishop {
+        council {
           id
-          firstName
-          lastName
-          fullName
+          name
         }
       }
     }
   }
 `
 
-export const REMOVE_TOWN_BISHOP = gql`
-  mutation RemoveTownBishop($townId: ID!, $bishopId: ID!) {
+export const REMOVE_TOWN_COUNCIL = gql`
+  mutation RemoveTownCouncil($townId: ID!, $councilId: ID!) {
     updateTowns(
       where: { id: $townId }
-      disconnect: { bishop: { where: { node: { id: $bishopId } } } }
+      disconnect: { council: { where: { node: { id: $councilId } } } }
     ) {
       towns {
         id
@@ -792,30 +794,29 @@ export const REMOVE_TOWN_BISHOP = gql`
   }
 `
 
-export const ADD_CAMPUS_BISHOP = gql`
-  mutation AddCampusBishop($campusId: ID!, $bishopId: ID!) {
+export const ADD_CAMPUS_COUNCIL = gql`
+  mutation AddCampusCouncil($campusId: ID!, $councilId: ID!) {
     updateCampuses(
       where: { id: $campusId }
-      connect: { bishop: { where: { node: { id: $bishopId } } } }
+      connect: { council: { where: { node: { id: $councilId } } } }
     ) {
       campuses {
         id
         name
-        bishop {
+        council {
           id
-          firstName
-          lastName
+          name
         }
       }
     }
   }
 `
 
-export const REMOVE_CAMPUS_BISHOP = gql`
-  mutation RemoveCampusBishop($campusId: ID!, $bishopId: ID!) {
+export const REMOVE_CAMPUS_COUNCIL = gql`
+  mutation RemoveCampusCouncil($campusId: ID!, $councilId: ID!) {
     updateCampuses(
       where: { id: $campusId }
-      disconnect: { bishop: { where: { node: { id: $bishopId } } } }
+      disconnect: { council: { where: { node: { id: $councilId } } } }
     ) {
       campuses {
         id

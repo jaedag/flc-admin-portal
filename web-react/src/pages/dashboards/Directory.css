@@ -1,0 +1,56 @@
+.churches.dark {
+  color: var(--churches-accent);
+}
+
+.members.dark {
+  color: var(--members-accent);
+}
+
+.menu-buttons {
+  min-height: 74px;
+  font-size: 25px;
+  text-align: left;
+  padding-left: 20px;
+}
+.menu-buttons.dark {
+  background-color: #1e1c1c;
+}
+
+.menu-buttons.center {
+  text-align: center;
+}
+
+.menu-caption {
+  font-size: 10px;
+  display: block;
+}
+.icon-caption {
+  font-size: 10px;
+  display: block;
+  color: var(--text-primary);
+}
+.menu-subheading {
+  font-size: 20px;
+}
+
+.menu-subheading.dark {
+  color: var(--churches-accent);
+}
+
+.btn-left-col {
+  width: 78px;
+  text-align: center;
+}
+
+.btn-right-col {
+  text-align: left;
+  padding: 0px;
+}
+
+.rounded-circle {
+  padding: 5px;
+  margin: 0px;
+}
+.rounded-circle.gradient-bg {
+  background-image: linear-gradient(#161f04, #242d0e);
+}

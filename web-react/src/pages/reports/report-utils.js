@@ -85,11 +85,22 @@ export const getServiceGraphData = (church) => {
   }
 
   //Pushing in direct service data eg. Joint Services and Bacenta Services
-  church.services.map((service) => {
+  church.serviceLogs.map((service) => {
     pushIntoData(service.serviceRecords)
   })
 
   data = data.sort(sortingFunction('week'))
+
+  if (!data.length) {
+    return [
+      {
+        date: '',
+        week: null,
+        attendance: null,
+        income: null,
+      },
+    ]
+  }
 
   return data.slice(data.length - numberOfWeeks, data.length)
 }

@@ -125,34 +125,66 @@ export const FEDERAL_SEARCH = gql`
   }
 `
 
-export const BISHOP_SEARCH = gql`
-  query bishopSearch($searchKey: String, $bishopId: ID) {
-    bishopSontaSearch(searchKey: $searchKey, bishopId: $bishopId) {
+export const COUNCIL_SEARCH = gql`
+  query councilSearch($searchKey: String, $councilId: ID) {
+    councilSontaSearch(searchKey: $searchKey, councilId: $councilId) {
       id
       name
     }
-    bishopTownSearch(searchKey: $searchKey, bishopId: $bishopId) {
+    councilTownSearch(searchKey: $searchKey, councilId: $councilId) {
       id
       name
+      leader {
+        id
+        firstName
+        lastName
+        fullName
+      }
     }
-    bishopCampusSearch(searchKey: $searchKey, bishopId: $bishopId) {
+    councilCampusSearch(searchKey: $searchKey, councilId: $councilId) {
       id
       name
+      leader {
+        id
+        firstName
+        lastName
+        fullName
+      }
     }
-    bishopCentreSearch(searchKey: $searchKey, bishopId: $bishopId) {
+    councilCentreSearch(searchKey: $searchKey, councilId: $councilId) {
       id
       name
+      leader {
+        id
+        firstName
+        lastName
+        fullName
+      }
     }
-    bishopBacentaSearch(searchKey: $searchKey, bishopId: $bishopId) {
+    councilBacentaSearch(searchKey: $searchKey, councilId: $councilId) {
       id
       name
+      leader {
+        id
+        firstName
+        lastName
+        fullName
+      }
     }
-    bishopMemberSearch(searchKey: $searchKey, bishopId: $bishopId) {
+    councilMemberSearch(searchKey: $searchKey, councilId: $councilId) {
       id
       firstName
       lastName
       fullName
       pictureUrl
+      bacenta {
+        id
+        name
+      }
+      ministry {
+        id
+        name
+      }
     }
   }
 `
@@ -189,6 +221,58 @@ export const CONSTITUENCY_SEARCH = gql`
       lastName
       fullName
       pictureUrl
+      bacenta {
+        id
+        name
+      }
+      ministry {
+        id
+        name
+      }
+    }
+  }
+`
+
+export const CENTRE_SEARCH = gql`
+  query centreSearch($searchKey: String, $centreId: ID) {
+    centreBacentaSearch(searchKey: $searchKey, centreId: $centreId) {
+      id
+      name
+    }
+    centreMemberSearch(searchKey: $searchKey, centreId: $centreId) {
+      id
+      firstName
+      lastName
+      fullName
+      pictureUrl
+      bacenta {
+        id
+        name
+      }
+      ministry {
+        id
+        name
+      }
+    }
+  }
+`
+
+export const BACENTA_SEARCH = gql`
+  query bacentaSearch($searchKey: String, $bacentaId: ID) {
+    bacentaMemberSearch(searchKey: $searchKey, bacentaId: $bacentaId) {
+      id
+      firstName
+      lastName
+      fullName
+      pictureUrl
+      bacenta {
+        id
+        name
+      }
+      ministry {
+        id
+        name
+      }
     }
   }
 `

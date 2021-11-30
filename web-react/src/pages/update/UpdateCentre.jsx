@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/client'
 import { alertMsg, capitalise, throwErrorMsg } from '../../global-utils'
@@ -21,7 +21,6 @@ import CentreForm from '../../components/reusable-forms/CentreForm'
 
 const UpdateCentre = () => {
   const { church, centreId, setTownId, setCampusId } = useContext(ChurchContext)
-  const [isLoading, setIsLoading] = useState(false)
   const { data: centreData, loading: centreLoading } = useQuery(
     DISPLAY_CENTRE,
     {
@@ -208,7 +207,7 @@ const UpdateCentre = () => {
 
   //onSubmit receives the form state as argument
   const onSubmit = (values, onSubmitProps) => {
-    setIsLoading(true)
+    onSubmitProps.setSubmitting(true)
     if (church.church === 'town') {
       setTownId(values.campusTownSelect)
     }
@@ -359,7 +358,7 @@ const UpdateCentre = () => {
       initialValues={initialValues}
       onSubmit={onSubmit}
       title={`${capitalise(church.subChurch)} Update Form`}
-      loadingState={centreLoading || isLoading}
+      loading={centreLoading}
     />
   )
 }

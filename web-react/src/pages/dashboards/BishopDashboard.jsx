@@ -2,7 +2,6 @@ import React, { useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useMutation, useQuery } from '@apollo/client'
 import { BISH_DASHBOARD_COUNTS, MAKE_BISHOP_ADMIN } from './DashboardQueries'
-import NavBar from '../../components/nav/NavBar'
 import DashboardCard from '../../components/card/DashboardCard'
 import DashboardButton from '../../components/buttons/DashboardButton'
 import DropdownButton from '../../components/buttons/DropdownButton'
@@ -16,7 +15,7 @@ import {
 import { MemberContext } from '../../contexts/MemberContext'
 import Popup from '../../components/Popup/Popup'
 import RoleView from '../../auth/RoleView'
-import { BISHOP_MEMBER_DROPDOWN } from '../../queries/ListQueries'
+import { COUNCIL_MEMBER_DROPDOWN } from '../../queries/ListQueries'
 import { Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import FormikControl from '../../components/formik-components/FormikControl'
@@ -94,22 +93,22 @@ const BishopDashboard = () => {
     {
       link: '/bacenta/addbacenta',
       buttonText: 'Start a Bacenta',
-      roles: ['adminFederal', 'adminBishop', 'adminCampus', 'adminTown'],
+      roles: ['adminFederal', 'adminCouncil', 'adminCampus', 'adminTown'],
     },
     {
       link: '/centre/addcentre',
       buttonText: 'Start a Centre',
-      roles: ['adminFederal', 'adminBishop', 'adminCampus', 'adminTown'],
+      roles: ['adminFederal', 'adminCouncil', 'adminCampus', 'adminTown'],
     },
     {
       link: '/sonta/addsonta',
       buttonText: 'Start a Sonta',
-      roles: ['adminFederal', 'adminBishop', 'adminCampus', 'adminTown'],
+      roles: ['adminFederal', 'adminCouncil', 'adminCampus', 'adminTown'],
     },
     {
       link: `/${churchStream}/add${churchStream}`,
       buttonText: `Start a ${capitalise(churchStream)}`,
-      roles: ['adminFederal', 'adminBishop'],
+      roles: ['adminFederal', 'adminCouncil'],
     },
   ]
 
@@ -140,7 +139,6 @@ const BishopDashboard = () => {
 
   return (
     <>
-      <NavBar />
       <div className="container px-4">
         <div className="row justify-content-between py-3">
           <div className="col-auto p-0"></div>
@@ -184,13 +182,13 @@ const BishopDashboard = () => {
                             initialValue={initialValues.adminName}
                             placeholder="Select an Admin"
                             setFieldValue={formik.setFieldValue}
-                            optionsQuery={BISHOP_MEMBER_DROPDOWN}
+                            optionsQuery={COUNCIL_MEMBER_DROPDOWN}
                             queryVariable1="id"
                             variable1={bishopId}
                             queryVariable2="nameSearch"
                             suggestionText="name"
                             suggestionID="id"
-                            dataset="bishopMemberDropdown"
+                            dataset="councilMemberDropdown"
                             aria-describedby="Bishop Member List"
                             className="form-control"
                             error={formik.errors.admin}

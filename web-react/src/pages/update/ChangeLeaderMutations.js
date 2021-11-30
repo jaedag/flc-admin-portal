@@ -159,7 +159,7 @@ export const MAKE_TOWN_LEADER = gql`
       id
       firstName
       lastName
-      leadsCampus {
+      leadsTown {
         id
         leader {
           id

@@ -5,7 +5,7 @@ import { parsePhoneNum } from '../../global-utils'
 
 import { UPDATE_MEMBER_MUTATION } from '../update/UpdateMutations'
 import { DISPLAY_MEMBER } from '../display/ReadQueries'
-import NavBar from '../../components/nav/NavBar'
+
 import { MemberContext } from '../../contexts/MemberContext'
 import MemberForm from '../../components/reusable-forms/MemberForm'
 import BaseComponent from 'components/base-component/BaseComponent'
@@ -83,11 +83,10 @@ const UserProfileEditPage = () => {
 
   return (
     <BaseComponent
-      loadingState={memberLoading}
-      errorState={memberError || currentUser.id === ''}
+      loading={memberLoading}
+      error={memberError || currentUser.id === ''}
       data={memberData}
     >
-      <NavBar />
       <MemberForm
         title="Edit Your Details"
         initialValues={initialValues}

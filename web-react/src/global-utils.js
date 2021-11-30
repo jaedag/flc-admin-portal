@@ -28,8 +28,11 @@ export const SERVICE_DAY_OPTIONS = [
 ]
 
 export const throwErrorMsg = (message, error) => {
+  if (!message && !error) {
+    return
+  }
   // eslint-disable-next-line no-console
-  console.error(error)
+  console.error(error || message)
   alert(message + ' ' + error)
 }
 
@@ -38,10 +41,10 @@ export const alertMsg = (message) => {
 }
 
 export const isAuthorised = (permittedRoles, userRoles) => {
-  if (permittedRoles.includes('all')) {
+  if (permittedRoles?.includes('all')) {
     return true
   }
-  return permittedRoles.some((r) => userRoles.includes(r))
+  return permittedRoles?.some((r) => userRoles.includes(r))
 }
 
 export const authorisedLink = (currentUser, permittedRoles, link) => {
@@ -232,4 +235,71 @@ export const average = (array) => {
     sum = sum + array[i++]
   }
   return sum / len
+}
+
+export const parseMemberCount = (number) => {
+  if (number === 1) {
+    return number + ' Member'
+  }
+  return number + ' Members'
+}
+export const getMemberCount = (servant) => {
+  return (
+    parseMemberCount(servant?.memberCount) +
+    ', ' +
+    servant?.basontaMembershipCount +
+    ' in Ministries'
+  )
+}
+export const getChurchCount = (servant) => {
+  let churchesCount = ''
+
+  if (servant?.leadsConstituencyCount) {
+    if (churchesCount) {
+      churchesCount = churchesCount + ','
+    }
+    if (servant.leadsConstituencyCount === 1) {
+      churchesCount = servant.leadsConstituencyCount + ' Constituency'
+    } else {
+      churchesCount = servant.leadsConstituencyCount + ' Constituencies'
+    }
+  }
+
+  if (servant?.bishopConstituencyCount) {
+    if (churchesCount) {
+      churchesCount = churchesCount + ','
+    }
+    if (servant.bishopConstituencyCount === 1) {
+      churchesCount = servant.bishopConstituencyCount + ' Constituency'
+    } else {
+      churchesCount = servant.bishopConstituencyCount + ' Constituencies'
+    }
+  }
+
+  if (servant?.leadsCentreCount) {
+    if (churchesCount) {
+      churchesCount = churchesCount + ','
+    }
+    if (servant.leadsCentreCount === 1) {
+      churchesCount = churchesCount + ' ' + servant.leadsCentreCount + ' Centre'
+    } else {
+      churchesCount =
+        churchesCount + ' ' + servant.leadsCentreCount + ' Centres'
+    }
+  }
+
+  if (servant?.leadsBacentaCount) {
+    if (churchesCount) {
+      churchesCount = churchesCount + ','
+    }
+    if (servant.leadsBacentaCount === 1) {
+      churchesCount =
+        churchesCount + ' ' + servant.leadsBacentaCount + ' Bacenta'
+    } else {
+      churchesCount =
+        churchesCount + ' ' + servant.leadsBacentaCount + ' Bacentas'
+    }
+  }
+
+  return churchesCount
 }

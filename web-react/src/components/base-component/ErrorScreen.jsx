@@ -1,5 +1,4 @@
 import React from 'react'
-import NavBar from '../nav/NavBar'
 
 const ErrorScreen = ({ error }) => {
   if (error) {
@@ -9,7 +8,6 @@ const ErrorScreen = ({ error }) => {
 
   return (
     <>
-      <NavBar />
       <div className="container full-body-center h-100">
         <p className="text-center full-center">
           There seems to be an error loading data

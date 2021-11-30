@@ -1,0 +1,25 @@
+.nav-search-box {
+  background-color: var(--text-box-inner);
+  color: var(--text-focus-white);
+  height: 60px;
+  width: 272px;
+  border: 1px solid var(--border);
+  padding-left: 10px;
+  border-radius: 5px;
+  border-radius: 7px 0px 0px 7px;
+}
+
+.nav-search-box:focus {
+  background-color: var(--text-box-inner);
+  color: var(--text-focus-white);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  box-shadow: 0 0 7px var(--accent-color);
+}
+.nav-search-btn {
+  margin: 0px;
+  border-radius: 0px 7px 7px 0px;
+  border: 1px solid var(--border);
+  height: 60px;
+  background-color: green;
+}

@@ -1,52 +1,41 @@
-import React, { useContext } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useContext, useState } from 'react'
+import { Link, useHistory } from 'react-router-dom'
 import DetailsCard from '../card/DetailsCard'
 import { MemberContext } from '../../contexts/MemberContext'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import Timeline from '../Timeline/Timeline'
 import EditButton from '../buttons/EditButton'
 import MemberDisplayCard from '../card/MemberDisplayCard'
-import ChurchButton from '../buttons/ChurchButton'
+import ChurchButton from '../buttons/ChurchButton/ChurchButton'
 import './DisplayChurchDetails.css'
 import RoleView from '../../auth/RoleView'
 import { Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import Popup from '../Popup/Popup'
-import { BISHOP_MEMBER_DROPDOWN } from '../../queries/ListQueries'
+import { COUNCIL_MEMBER_DROPDOWN } from '../../queries/ListQueries'
 import { useMutation } from '@apollo/client'
 import { MAKE_TOWN_ADMIN, MAKE_CAMPUS_ADMIN } from './AdminMutations'
 import FormikControl from '../formik-components/FormikControl'
-import { plural } from '../../global-utils'
+import { plural, throwErrorMsg } from '../../global-utils'
 import Breadcrumb from './Breadcrumb'
-import DashboardButton from '../buttons/DashboardButton'
+import { Button, Col, Container, Row, Spinner } from 'react-bootstrap'
+import PlaceholderCustom from 'components/Placeholder'
+import { Geo, PencilSquare } from 'react-bootstrap-icons'
+import ViewAll from 'components/buttons/ViewAll'
 
 const DisplayChurchDetails = (props) => {
-  const {
-    name,
-    leaderTitle,
-    leaderName,
-    leaderId,
-    admin,
-    subChurch,
-    subChurchBasonta,
-    churchType,
-    membership,
-    buttons,
-    buttonsSecondRow,
-    basontaLeaders,
-    editlink,
-    history,
-    breadcrumb,
-  } = props
-  const isConstituency = churchType === 'Campus' || churchType === 'Town'
-  const { setMemberId } = useContext(MemberContext)
+  const history = useHistory()
+  const isConstituency =
+    props.churchType === 'Campus' || props.churchType === 'Town'
+  const { setMemberId, theme } = useContext(MemberContext)
+  const [submitting, setSubmitting] = useState(false)
   const {
     clickCard,
     togglePopup,
     isOpen,
     campusId,
     townId,
-    bishopId,
+    councilId,
   } = useContext(ChurchContext)
 
   //Change Admin Initialised
@@ -55,8 +44,10 @@ const DisplayChurchDetails = (props) => {
   const [MakeCampusAdmin] = useMutation(MAKE_CAMPUS_ADMIN)
 
   const initialValues = {
-    adminName: admin ? `${admin?.firstName} ${admin.lastName}` : '',
-    adminSelect: admin?.id ?? '',
+    adminName: props.admin
+      ? `${props.admin?.firstName} ${props.admin.lastName}`
+      : '',
+    adminSelect: props.admin?.id ?? '',
   }
   const validationSchema = Yup.object({
     adminSelect: Yup.string().required(
@@ -64,11 +55,8 @@ const DisplayChurchDetails = (props) => {
     ),
   })
   const onSubmit = (values, onSubmitProps) => {
-    if (
-      churchType === 'Town'
-      // &&
-      // initialValues.adminSelect !== values.adminSelect
-    ) {
+    setSubmitting(true)
+    if (props.churchType === 'Town') {
       MakeTownAdmin({
         variables: {
           townId: townId,
@@ -76,13 +64,13 @@ const DisplayChurchDetails = (props) => {
           oldAdminId: initialValues.adminSelect,
         },
       })
-        .then(() => alert('Town Admin has been changed successfully'))
-        .catch((e) => alert(e))
-    } else if (
-      churchType === 'Campus'
-      // &&
-      // initialValues.adminSelect !== values.adminSelect
-    ) {
+        .then(() => {
+          togglePopup()
+          setSubmitting(false)
+          alert('Town Admin has been changed successfully')
+        })
+        .catch((e) => throwErrorMsg(e))
+    } else if (props.churchType === 'Campus') {
       MakeCampusAdmin({
         variables: {
           campusId: campusId,
@@ -90,52 +78,60 @@ const DisplayChurchDetails = (props) => {
           oldAdminId: initialValues.adminSelect,
         },
       })
-        .then(() => alert('Campus Admin has been changed successfully'))
-        .catch((e) => alert(e))
+        .then(() => {
+          togglePopup()
+          alert('Campus Admin has been changed successfully')
+          setSubmitting(false)
+        })
+        .catch((e) => throwErrorMsg(e))
     }
 
-    onSubmitProps.setSubmitting(false)
     onSubmitProps.resetForm()
-    togglePopup()
   }
   //End of Admin Change
 
   return (
     <>
-      <div className=" py-2 top-heading title-bar mt-4">
-        <div className="container ">
-          <Breadcrumb breadcrumb={breadcrumb} />
-          <h3 className="mx-3 mt-3 font-weight-bold">
-            {`${name} ${churchType}`}
-            <RoleView roles={props.editPermitted}>
-              <EditButton link={editlink} />
-            </RoleView>
-          </h3>
-          {admin && (
+      <div className="py-2 top-heading title-bar">
+        <Container>
+          <Breadcrumb breadcrumb={props.breadcrumb} />
+          <hr />
+          <PlaceholderCustom as="h3" loading={!props.name} xs={12}>
+            <h3 className="mx-3 mt-3 font-weight-bold">
+              {`${props.name} ${props.churchType}`}
+              <RoleView roles={props.editPermitted}>
+                <EditButton link={props.editlink} />
+              </RoleView>
+            </h3>
+          </PlaceholderCustom>
+
+          {props.admin && (
             <Link
               to="/member/displaydetails"
               onClick={() => {
-                clickCard(admin)
+                clickCard(props.admin)
               }}
               className="mx-3 mb-2 text-muted font-weight-bold"
             >
-              {`Admin:`} {admin.firstName} {admin.lastName}
+              {`Admin:`} {props.admin.firstName} {props.admin.lastName}
             </Link>
           )}
+
           {isConstituency && (
-            <RoleView roles={['adminFederal', 'adminBishop']}>
-              <input
-                type="button"
-                className={`btn btn-primary text-nowrap`}
+            <RoleView roles={['adminFederal', 'adminCouncil']}>
+              <span
+                className={`text-nowrap`}
                 value="Change Admin"
                 onClick={togglePopup}
-              />
+              >
+                <PencilSquare />
+              </span>
             </RoleView>
           )}
 
           {isOpen && (
             <Popup handleClose={togglePopup}>
-              <b>Change {`${churchType}`} Admin</b>
+              <b>Change {`${props.churchType}`} Admin</b>
               <p>Please enter the name of the new administrator</p>
 
               <Formik
@@ -145,108 +141,191 @@ const DisplayChurchDetails = (props) => {
               >
                 {(formik) => (
                   <Form>
-                    <div className="form-row">
-                      <div className="col-9">
+                    <Row className="form-row">
+                      <Col>
                         <FormikControl
                           control="combobox2"
                           name="adminSelect"
                           initialValue={initialValues?.adminName}
                           placeholder="Select an Admin"
                           setFieldValue={formik.setFieldValue}
-                          optionsQuery={BISHOP_MEMBER_DROPDOWN}
+                          optionsQuery={COUNCIL_MEMBER_DROPDOWN}
                           queryVariable1="id"
-                          variable1={bishopId}
+                          variable1={councilId}
                           queryVariable2="nameSearch"
                           suggestionText="name"
                           suggestionID="id"
-                          dataset="bishopMemberDropdown"
-                          aria-describedby="Bishop Member List"
+                          dataset="councilMemberDropdown"
+                          aria-describedby="Council Member List"
                           className="form-control"
                           error={formik.errors.admin}
                         />
-                      </div>
-                    </div>
-                    <button
+                      </Col>
+                    </Row>
+
+                    <Button
+                      variant="primary"
+                      size="lg"
                       type="submit"
-                      disabled={!formik.isValid || formik.isSubmitting}
-                      className={`btn btn-primary text-nowrap px-4`}
+                      className={`btn-main ${theme}`}
+                      disabled={
+                        !formik.isValid || formik.isSubmitting || submitting
+                      }
                     >
-                      Confirm Change
-                    </button>
+                      {formik.isSubmitting || submitting ? (
+                        <>
+                          <Spinner animation="grow" size="sm" />
+                          <span> Submitting</span>
+                        </>
+                      ) : (
+                        'Submit'
+                      )}
+                    </Button>
                   </Form>
                 )}
               </Formik>
             </Popup>
           )}
-        </div>
+        </Container>
       </div>
 
-      <div className="container">
-        <div className="row detail-top-margin ml-2 text-secondary">Details</div>
-        <div className="row row-cols-3 detail-bottom-margin">
-          <Link
-            className="col-9 col-md-6 col-lg-4"
-            to={`/${churchType.toLowerCase()}/members`}
-          >
-            <DetailsCard heading="Membership" detail={membership} />
-          </Link>
-          <Link
-            to="/member/displaydetails"
-            onClick={() => {
-              setMemberId(leaderId)
-            }}
-            className="col-9 col-md-6 col-lg-4"
-          >
-            <DetailsCard heading={leaderTitle} detail={leaderName} />
-          </Link>
-          <div className="col-9 col-md-6 col-lg-4">
+      <Container>
+        <Link
+          to="/member/displaydetails"
+          onClick={() => {
+            setMemberId(props.leader?.id)
+          }}
+        >
+          <DetailsCard
+            loading={props.loading}
+            heading={props.leaderTitle}
+            detail={props.leader?.fullName}
+            img={props.leader?.pictureUrl}
+            bgNone
+          />
+        </Link>
+        <Row>
+          <Col>
             <DetailsCard
+              onClick={() =>
+                history.push(`/${props.subChurch.toLowerCase()}/displayall`)
+              }
               heading={props.churchHeading}
               detail={props.churchCount}
-              heading2={props.church2Heading}
-              detail2={props.church2Count}
             />
-          </div>
-          <div className="col-9 col-md-6 col-lg-4 pl-3">
-            <DashboardButton btnLink={`/${churchType.toLowerCase()}/reports`}>
-              View Records
-            </DashboardButton>
-            {!props.alreadyFilled && (
-              <DashboardButton
-                btnLink={`/${churchType.toLowerCase()}/record-service`}
-              >
-                Fill Service Form
-              </DashboardButton>
-            )}
-          </div>
+          </Col>
+          <Col className="col-auto">
+            <DetailsCard
+              onClick={() =>
+                history.push(`/${props.churchType.toLowerCase()}/members`)
+              }
+              heading="Members"
+              detail={props.membership}
+            />
+          </Col>
+        </Row>
+
+        {props.details?.length && (
+          <Row>
+            {props.details.map((detail, i) => (
+              <Col key={i} xs={6}>
+                <DetailsCard
+                  onClick={() => history.push(detail.link)}
+                  heading={detail.title}
+                  detail={detail.number}
+                />
+              </Col>
+            ))}
+          </Row>
+        )}
+        <Row>
+          <Col>
+            <DetailsCard heading="Status" detail={props.active} />
+          </Col>
+          <Col className="col-auto">
+            <DetailsCard heading="Type" detail={props.bacentaType} />
+          </Col>
+          <Col>
+            <DetailsCard heading="Code" detail={props.bankingCode} />
+          </Col>
+        </Row>
+
+        <hr />
+        <div className="d-grid gap-2">
+          <Button
+            className={`btn-trends ${theme}`}
+            onClick={() => {
+              history.push(`/${props.churchType.toLowerCase()}/reports`)
+            }}
+          >
+            View Trends
+          </Button>
+          <Button
+            className={`btn-trends ${theme}`}
+            onClick={() => {
+              history.push(`/${props.churchType.toLowerCase()}/record-service`)
+            }}
+          >
+            Fill Service Form
+          </Button>
         </div>
-      </div>
 
-      {subChurch && buttons[0] ? (
+        {location?.latitude && (
+          <Container className="mt-4 text-center">
+            <h3>LOCATION</h3>
+            <p>Click here for directions</p>
+            <a
+              className="btn p-3"
+              href={`https://www.google.com/maps/search/?api=1&query=${props.location?.latitude}%2C${props.location?.longitude}`}
+            >
+              <Geo size="75" />
+            </a>
+          </Container>
+        )}
+
+        {props.last3Weeks && (
+          <>
+            <h3>FORMS</h3>
+            {props.last3Weeks.map((week, i) => (
+              <Container key={i} className="mt-4">
+                <div className="text-secondary">{`WEEK ${week.number}`}</div>
+                <p>
+                  Income Form -{' '}
+                  <span
+                    className={`${week.filled ? 'filled' : 'not-filled'}`}
+                  >{`${week.filled ? 'Filled' : 'Not Filled'}`}</span>
+                </p>
+              </Container>
+            ))}
+          </>
+        )}
+      </Container>
+
+      {props.subChurch && props.buttons[0] ? (
         <>
-          <div className="container">
+          <Container>
             <hr className="hr-line" />
 
             <div className="row justify-content-between">
               <div className="col">
-                <p className="text-secondary">{`${subChurch} Locations`}</p>
+                <p className="text-secondary">{`${props.subChurch} Locations`}</p>
               </div>
               <div className="col-auto">
                 <Link
                   className="card text-secondary px-1"
-                  to={`/${subChurch.toLowerCase()}/displayall`}
+                  to={`/${props.subChurch.toLowerCase()}/displayall`}
                 >
-                  {`View All ${plural(subChurch)}`}
+                  {`View All ${plural(props.subChurch)}`}
                 </Link>
               </div>
             </div>
-          </div>
+          </Container>
 
           <div className="container mb-4 card-button-row">
             <table>
               <tbody>
                 <tr>
-                  {buttons.map((church, index) => {
+                  {props.buttons.map((church, index) => {
                     if (index > 4) {
                       return null
                     }
@@ -263,21 +342,21 @@ const DisplayChurchDetails = (props) => {
         </>
       ) : null}
 
-      {subChurchBasonta === 'Sonta' ? (
+      {props.subChurchBasonta === 'Sonta' ? (
         <>
           <div className="container">
             <hr className="hr-line" />
 
             <div className="row justify-content-between">
               <div className="col">
-                <p className="text-secondary">{`${subChurchBasonta} Locations`}</p>
+                <p className="text-secondary">{`${props.subChurchBasonta} Locations`}</p>
               </div>
               <div className="col-auto">
                 <Link
                   className="card text-secondary px-1"
-                  to={`/${subChurchBasonta.toLowerCase()}/displayall`}
+                  to={`/${props.subChurchBasonta.toLowerCase()}/displayall`}
                 >
-                  {`View All ${plural(subChurchBasonta)}`}
+                  {`View All ${plural(props.subChurchBasonta)}`}
                 </Link>
               </div>
             </div>
@@ -287,7 +366,7 @@ const DisplayChurchDetails = (props) => {
             <table>
               <tbody>
                 <tr>
-                  {buttonsSecondRow.map((church, index) => {
+                  {props.buttonsSecondRow.map((church, index) => {
                     if (index > 4) {
                       return null
                     }
@@ -304,19 +383,19 @@ const DisplayChurchDetails = (props) => {
         </>
       ) : null}
 
-      {subChurch && basontaLeaders?.length ? (
+      {props.subChurch && props.basontaLeaders?.length ? (
         <>
           <div className="container">
             <hr className="hr-line" />
 
             <div className="row justify-content-between">
               <div className="col">
-                <p className="text-secondary">{`${subChurch}`}</p>
+                <p className="text-secondary">{`${props.subChurch}`}</p>
               </div>
               <div className="col-auto">
                 <Link
                   className="card text-secondary px-1"
-                  to={`/${subChurch.toLowerCase()}/displayall`}
+                  to={`/${props.subChurch.toLowerCase()}/displayall`}
                 >
                   View All
                 </Link>
@@ -327,8 +406,8 @@ const DisplayChurchDetails = (props) => {
             <table>
               <tbody>
                 <tr>
-                  {basontaLeaders &&
-                    basontaLeaders.map((leader, index) => {
+                  {props.basontaLeaders &&
+                    props.basontaLeaders.map((leader, index) => {
                       return (
                         <td className="col-auto" key={index}>
                           <MemberDisplayCard member={leader} />
@@ -342,11 +421,19 @@ const DisplayChurchDetails = (props) => {
         </>
       ) : null}
 
-      {history && (
-        <div className="container px-3">
-          <h5>Church History</h5>
-          <Timeline record={history} modifier="church" limit={5} />
-        </div>
+      {props.history && (
+        <Container className="mt-5">
+          <Row>
+            <Col>
+              <h3>CHURCH HISTORY</h3>
+            </Col>
+            <Col className="col-auto">
+              <ViewAll to={`/${props.churchType.toLowerCase()}/history`} />
+            </Col>
+          </Row>
+
+          <Timeline record={props.history} modifier="church" limit={5} />
+        </Container>
       )}
     </>
   )

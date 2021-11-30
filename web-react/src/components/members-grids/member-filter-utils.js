@@ -25,115 +25,50 @@ export const memberFilter = (memberData, filters) => {
   }
 
   //Filter for Gender
-  switch (filters.gender) {
-    case 'Male':
+  if (filters.gender.length > 0 && filters.gender.length !== 2) {
+    if (filters.gender.includes('Male')) {
       filteredData = filterFor(filteredData, 'gender', 'gender', 'Male')
-      break
-    case 'Female':
+    }
+    if (filters.gender.includes('Female')) {
       filteredData = filterFor(filteredData, 'gender', 'gender', 'Female')
-      break
-    default:
-      //do nothing
-      break
+    }
   }
 
   //Filter for Marital Status
-  switch (filters.maritalStatus) {
-    case 'Single':
+  if (filters.maritalStatus.length > 0 && filters.maritalStatus.length !== 2) {
+    if (filters.maritalStatus.includes('Single')) {
       filteredData = filterFor(
         filteredData,
         'maritalStatus',
         'status',
         'Single'
       )
-
-      break
-    case 'Married':
+    }
+    if (filters.maritalStatus.includes('Married')) {
       filteredData = filterFor(
         filteredData,
         'maritalStatus',
         'status',
         'Married'
       )
-      break
-    default:
-      //do nothing
-      break
+    }
   }
 
   //Filter for Ministry
-  switch (filters.ministry) {
-    case 'Greater Love Choir':
-      filteredData = filterFor(
-        filteredData,
-        'ministry',
-        'name',
-        'Greater Love Choir'
-      )
 
-      break
-    case 'Dancing Stars':
-      filteredData = filterFor(
-        filteredData,
-        'ministry',
-        'name',
-        'Dancing Stars'
-      )
-      break
+  if (filters.ministry.length > 0) {
+    let filteredByMinistry = []
 
-    case 'Film Stars':
-      filteredData = filterFor(filteredData, 'ministry', 'name', 'Film Stars')
-      break
-    case 'Ushers':
-      filteredData = filterFor(filteredData, 'ministry', 'name', 'Ushers')
-      break
-    case 'Culinary Stars':
-      filteredData = filterFor(
-        filteredData,
-        'ministry',
-        'name',
-        'Culinary Stars'
-      )
-      break
-    case 'Arrivals':
-      filteredData = filterFor(filteredData, 'ministry', 'name', 'Arrivals')
-      break
-    case 'Fragrance':
-      filteredData = filterFor(filteredData, 'ministry', 'name', 'Fragrance')
-      break
-    case 'Telepastors':
-      filteredData = filterFor(filteredData, 'ministry', 'name', 'Telepastors')
-      break
-    case 'Seeing and Hearing':
-      filteredData = filterFor(
-        filteredData,
-        'ministry',
-        'name',
-        'Seeing and Hearing'
-      )
-      break
-    case 'Understanding Campaign':
-      filteredData = filterFor(
-        filteredData,
-        'ministry',
-        'name',
-        'Understanding Campaign'
-      )
-      break
-    case 'BENMP':
-      filteredData = filterFor(filteredData, 'ministry', 'name', 'BENMP')
-      break
-    case 'Still Photography':
-      filteredData = filterFor(
-        filteredData,
-        'ministry',
-        'name',
-        'Still Photography'
-      )
-      break
-    default:
-      //do nothing
-      break
+    filters.ministry.map((ministryToFilter) => {
+      filteredByMinistry = [
+        ...new Set([
+          ...filteredByMinistry,
+          ...filterFor(filteredData, 'ministry', 'name', ministryToFilter),
+        ]),
+      ]
+    })
+
+    filteredData = filteredByMinistry
   }
 
   //Filter for Leadership Rank
@@ -151,7 +86,7 @@ export const memberFilter = (memberData, filters) => {
       if (
         member.isAdminForTown[0] ||
         member.isAdminForCampus[0] ||
-        member.isAdminForBishop[0]
+        member.isAdminForCouncil[0]
       ) {
         return member
       }

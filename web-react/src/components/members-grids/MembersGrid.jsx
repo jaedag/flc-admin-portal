@@ -1,16 +1,24 @@
 import React, { useContext, useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import NavBar from '../nav/NavBar'
-import SideBar from '../SideBar.jsx'
 import MemberTable from '../members-grids/MemberTable'
 import { memberFilter } from './member-filter-utils'
 import { debounce } from '../../global-utils'
 import { ChurchContext } from 'contexts/ChurchContext'
+import PlaceholderCustom from 'components/Placeholder.jsx'
+import {
+  Accordion,
+  Col,
+  Container,
+  Row,
+  useAccordionButton,
+} from 'react-bootstrap'
+import { CaretDownFill } from 'react-bootstrap-icons'
+import './MembersGrid.css'
+import Filters from './Filters'
 
 const MembersGrid = (props) => {
   const { memberData, memberError, memberLoading, title } = props
   const { filters } = useContext(ChurchContext)
-  const [offset, setOffset] = useState(0)
   const [dimensions, setDimensions] = useState({
     height: window.innerHeight,
     width: window.innerWidth,
@@ -39,75 +47,69 @@ const MembersGrid = (props) => {
     }
   })
 
+  function CustomToggle({ children, eventKey, ...rest }) {
+    const decoratedOnClick = useAccordionButton(eventKey)
+
+    return (
+      <span {...rest} onClick={decoratedOnClick}>
+        {children}
+      </span>
+    )
+  }
+
   return (
-    <div>
-      <NavBar />
-      <div className="row w-100 justify-content-between m-0">
-        <div className="col-3 col-dimensions d-none d-md-block p-0">
-          <SideBar />
+    <>
+      <div className="col col-md-9 p-0 text-center">
+        <PlaceholderCustom loading={!memberData || memberLoading} xs={10}>
+          <Container>
+            <h3 className="page-header">{title}</h3>
+          </Container>
+        </PlaceholderCustom>
+        <div className="justify-content-center flex-wrap flex-md-nowrap align-items-center">
+          <PlaceholderCustom
+            loading={!memberData || memberLoading}
+            element="h5"
+          >
+            <h5 className="data-number">{`${
+              memberDataLoaded?.length || 0
+            } Members`}</h5>
+          </PlaceholderCustom>
         </div>
-
-        <div className="col col-md-9 rest-of-screen p-0">
-          {title ? (
-            <h3 className="text-center font-weight-bold mt-3 mb-0">{title}</h3>
-          ) : null}
-          <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-2 border-bottom">
-            <div>
-              <h5>
-                {memberData
-                  ? `${memberDataLoaded.length} Search Results`
-                  : 'Search Results'}
-              </h5>
-            </div>
-
-            <div className="btn-toolbar mb-2 mb-md-0">
-              <div className="btn-group mr-2" />
-
-              <Link to="/member/addmember" className="btn btn-primary p-2 mx-1">
-                Add Member
-              </Link>
-              <button
-                className="btn btn-primary p-2 mx-1"
-                onClick={async () => {
-                  setOffset(offset ? offset - numberOfRecords : 0)
-                }}
-              >
-                <i className="fas fa-chevron-left" /> Back
-              </button>
-              <button
-                className="btn btn-primary p-2 mx-1"
-                onClick={async () => {
-                  setOffset(
-                    offset + numberOfRecords > memberDataLoaded.length
-                      ? offset
-                      : offset + numberOfRecords
-                  )
-                }}
-              >
-                Next <i className="fas fa-chevron-right" />
-              </button>
-            </div>
-          </div>
-          <div>
-            <small className="text-secondary">
-              {memberDataLoaded &&
-                `Page ${offset / numberOfRecords + 1} of ${
-                  memberDataLoaded &&
-                  Math.ceil(memberDataLoaded?.length / numberOfRecords)
-                }`}
-            </small>
-          </div>
-
-          <MemberTable
-            memberData={memberDataLoaded}
-            memberError={memberError}
-            memberLoading={memberLoading}
-            offset={offset}
-            numberOfRecords={numberOfRecords}
+        <div className="align-middle">
+          <input
+            className="form-control member-search"
+            placeholder="Search Members"
           />
         </div>
+
+        <Accordion>
+          <Row className="justify-content-between py-2">
+            <Col className="my-auto">
+              <Link to="/member/addmember" className="just-text-btn">
+                ADD NEW
+              </Link>
+            </Col>
+            <Col></Col>
+            <Col className="my-auto">
+              <CustomToggle className="just-text-btn" eventKey="0">
+                FILTERS <CaretDownFill />
+              </CustomToggle>
+            </Col>
+          </Row>
+          <Accordion.Item eventKey="0">
+            <Accordion.Body>
+              <Filters ToggleAccordion={CustomToggle} />
+            </Accordion.Body>
+          </Accordion.Item>
+        </Accordion>
       </div>
-    </div>
+      <MemberTable
+        memberData={memberDataLoaded}
+        memberError={memberError}
+        memberLoading={!memberData || memberLoading}
+        numberOfRecords={numberOfRecords}
+      />
+    </>
   )
 }
 

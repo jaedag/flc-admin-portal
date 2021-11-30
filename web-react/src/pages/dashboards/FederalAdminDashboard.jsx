@@ -3,13 +3,12 @@ import { useQuery } from '@apollo/client'
 import { useHistory } from 'react-router-dom'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import { GET_BISHOPS } from '../../queries/ListQueries'
-import NavBar from '../../components/nav/NavBar'
-import Spinner from '../../components/Spinner.jsx'
-import Logo from '../../img/flc-logo-small.png'
+import Logo from '../../assets/flc-logo-small.png'
 import { MemberContext } from '../../contexts/MemberContext'
 import TabletDesktopView from 'components/responsive-design/TabletDesktopView'
 import MobileView from 'components/responsive-design/MobileView'
 import LeaderPictureIcon from 'components/LeaderPictureIcon/LeaderPictureIcon'
+import { Spinner } from 'react-bootstrap'
 
 const FederalAdminDashboard = () => {
   const { determineStream } = useContext(ChurchContext)
@@ -22,7 +21,6 @@ const FederalAdminDashboard = () => {
   if (loading) {
     return (
       <>
-        <NavBar />
         <TabletDesktopView>
           <div className="container text-center my-5">
             <img
@@ -34,7 +32,7 @@ const FederalAdminDashboard = () => {
             <h3>FLC Admin Dashboard </h3>
             <h5 className="text-secondary">Loading...</h5>
             <div className="spinner-border-center full-center" role="status">
-              <Spinner />
+              <Spinner animation="grow" />
               <div className="sr-only">Loading...</div>
             </div>
           </div>
@@ -74,8 +72,6 @@ const FederalAdminDashboard = () => {
   } else if (data) {
     return (
       <>
-        <NavBar />
-
         <div className="container text-center my-3">
           <img
             src={Logo}
@@ -123,7 +119,7 @@ const FederalAdminDashboard = () => {
     )
   } else {
     return (
-      <div className="container body-container">
+      <div className="container ">
         {/* <!--Web Logo and text--> */}
         <div className="row d-flex align-items-center justify-content-center">
           <div className="col-12 col-lg-6 justify-content-center">

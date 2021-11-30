@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import { ChurchContext } from '../../contexts/ChurchContext'
-import NavBar from '../../components/nav/NavBar'
+
 import { useMutation, useQuery } from '@apollo/client'
 import { RECORD_SERVICE_NO_OFFERING } from './RecordServiceMutations'
 import { DISPLAY_SONTA } from '../display/ReadQueries'
@@ -17,12 +17,7 @@ const SontaService = () => {
   const [RecordServiceNoOffering] = useMutation(RECORD_SERVICE_NO_OFFERING)
 
   return (
-    <BaseComponent
-      loadingState={sontaLoading}
-      errorState={sontaError}
-      data={sontaData}
-    >
-      <NavBar />
+    <BaseComponent loading={sontaLoading} error={sontaError} data={sontaData}>
       <ServiceFormNoOffering
         RecordServiceMutation={RecordServiceNoOffering}
         church={sontaData?.sontas[0]}

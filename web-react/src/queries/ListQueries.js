@@ -51,9 +51,9 @@ export const BACENTA_DROPDOWN = gql`
   }
 `
 
-export const BISHOP_MEMBER_DROPDOWN = gql`
-  query($id: ID, $nameSearch: String) {
-    bishopMemberDropdown(id: $id, nameSearch: $nameSearch) {
+export const COUNCIL_MEMBER_DROPDOWN = gql`
+  query($id: ID!, $nameSearch: String!) {
+    councilMemberDropdown(id: $id, nameSearch: $nameSearch) {
       id
       firstName
       lastName
@@ -90,6 +90,7 @@ export const GET_TOWN_CENTRES = gql`
       town {
         id
         name
+        memberCount
         leader {
           id
           firstName
@@ -113,7 +114,6 @@ export const GET_TOWN_CENTRES = gql`
         lastName
       }
     }
-    townMemberCount(id: $id)
   }
 `
 
@@ -125,6 +125,7 @@ export const GET_CAMPUS_CENTRES = gql`
       campus {
         id
         name
+        memberCount
         leader {
           id
           firstName
@@ -152,7 +153,6 @@ export const GET_CAMPUS_CENTRES = gql`
         lastName
       }
     }
-    campusMemberCount(id: $id)
   }
 `
 
@@ -198,11 +198,24 @@ export const GET_SONTAS_BY_CAMPUSTOWN = gql`
   }
 `
 
-export const GET_BISHOP_CAMPUSES = gql`
+export const GET_COUNCIL_CAMPUSES = gql`
   query($id: ID) {
-    members(where: { id: $id }) {
+    councils(where: { id: $id }) {
       id
-      isBishopForCampus {
+      name
+      leader {
+        id
+        firstName
+        lastName
+        fullName
+      }
+      memberCount
+      admin {
+        id
+        firstName
+        lastName
+      }
+      campuses {
         name
         id
         leader {
@@ -223,45 +236,29 @@ export const GET_BISHOP_CAMPUSES = gql`
           id
           name
         }
-        bishop {
-          id
-          firstName
-          lastName
-          admin {
-            id
-            firstName
-            lastName
-            bacenta {
-              id
-              centre {
-                id
-                town {
-                  id
-                  name
-                  bishop {
-                    id
-                  }
-                }
-                campus {
-                  id
-                  name
-                  bishop {
-                    id
-                  }
-                }
-              }
-            }
-          }
-        }
       }
     }
   }
 `
 
-export const GET_BISHOP_TOWNS = gql`
+export const GET_COUNCIL_TOWNS = gql`
   query($id: ID) {
-    members(where: { id: $id }) {
-      isBishopForTown {
+    councils(where: { id: $id }) {
+      id
+      name
+      leader {
+        id
+        firstName
+        lastName
+        fullName
+      }
+      memberCount
+      admin {
+        id
+        firstName
+        lastName
+      }
+      towns {
         name
         id
         leader {
@@ -282,55 +279,21 @@ export const GET_BISHOP_TOWNS = gql`
           id
           name
         }
-        bishop {
-          id
-          firstName
-          lastName
-          admin {
-            id
-            firstName
-            lastName
-            bacenta {
-              id
-              centre {
-                id
-                town {
-                  id
-                  name
-                  bishop {
-                    id
-                  }
-                }
-                campus {
-                  id
-                  name
-                  bishop {
-                    id
-                  }
-                }
-              }
-            }
-          }
-        }
       }
     }
   }
 `
 
-export const GET_BISHOPS = gql`
+export const GET_COUNCILS = gql`
   {
-    members(where: { title: { title: "Bishop" } }) {
+    councils {
       id
-      firstName
-      lastName
-      pictureUrl
-      isBishopForTown {
+      name
+      towns {
         id
-        name
       }
-      isBishopForCampus {
+      campuses {
         id
-        name
       }
     }
   }

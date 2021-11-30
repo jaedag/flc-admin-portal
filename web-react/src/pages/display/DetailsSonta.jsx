@@ -1,12 +1,12 @@
 import React, { useContext } from 'react'
 import { useQuery } from '@apollo/client'
 import DisplayChurchDetails from '../../components/DisplayChurchDetails/DisplayChurchDetails'
-import NavBar from '../../components/nav/NavBar'
+
 import { DISPLAY_SONTA } from './ReadQueries'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import BaseComponent from 'components/base-component/BaseComponent'
 
-const DisplaySontaDetails = () => {
+const DetailsSonta = () => {
   const { sontaId, church } = useContext(ChurchContext)
 
   const {
@@ -34,12 +34,7 @@ const DisplaySontaDetails = () => {
   }
 
   return (
-    <BaseComponent
-      loadingState={sontaLoading}
-      errorState={sontaError}
-      data={sontaData}
-    >
-      <NavBar />
+    <BaseComponent loading={sontaLoading} error={sontaError} data={sontaData}>
       <DisplayChurchDetails
         name={sontaData?.sontas[0]?.name}
         leaderTitle="Sonta Leader"
@@ -57,7 +52,7 @@ const DisplaySontaDetails = () => {
           'leaderTown',
           'adminCampus',
           'adminTown',
-          'adminBishop',
+          'adminCouncil',
           'adminFederal',
         ]}
         history={
@@ -72,4 +67,4 @@ const DisplaySontaDetails = () => {
   )
 }
 
-export default DisplaySontaDetails
+export default DetailsSonta

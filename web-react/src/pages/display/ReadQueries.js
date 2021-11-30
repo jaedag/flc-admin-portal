@@ -1,37 +1,48 @@
 import { gql } from '@apollo/client'
 
-export const BISHOP_MEMBER_COUNT = gql`
-  query($id: ID) {
-    bishopMemberCount(id: $id)
-  }
-`
-
 export const DISPLAY_MEMBER = gql`
   query($id: ID!) {
     member(id: $id) {
-      id
       firstName
       middleName
       lastName
       fullName
       email
       phoneNumber
-      whatsappNumber
       pictureUrl
+      whatsappNumber
+      dob {
+        date
+      }
       gender {
         gender
       }
       maritalStatus {
         status
       }
-      dob {
-        date
+      occupation {
+        occupation
       }
-      bishop {
+
+      #church info
+      ministry {
         id
-        firstName
-        lastName
-        fullName
+        name
+        leader {
+          firstName
+          lastName
+        }
+      }
+      occupation {
+        occupation
+      }
+      titleConnection {
+        edges {
+          dateAppointed
+          node {
+            title
+          }
+        }
       }
       bacenta {
         id
@@ -65,28 +76,7 @@ export const DISPLAY_MEMBER = gql`
           }
         }
       }
-      ministry {
-        id
-        name
-        leader {
-          firstName
-          lastName
-        }
-      }
-      occupation {
-        occupation
-      }
-      titleConnection {
-        edges {
-          dateAppointed
-          node {
-            title
-          }
-        }
-      }
-    }
-    # //History Queries
-    member(id: $id) {
+      #Personal history
       history(options: { limit: 3 }) {
         id
         timeStamp
@@ -100,9 +90,7 @@ export const DISPLAY_MEMBER = gql`
         }
         historyRecord
       }
-    }
-    # Leadership Roles
-    member(id: $id) {
+      #Leadership Information
       leadsBacenta {
         id
         name
@@ -194,10 +182,9 @@ export const DISPLAY_MEMBER = gql`
         id
         name
       }
-      isAdminForBishop {
+      isAdminForCouncil {
         id
-        firstName
-        lastName
+        name
       }
       isAdminForCampus {
         id
@@ -215,6 +202,8 @@ export const DISPLAY_BACENTA = gql`
   query($id: ID) {
     bacentas(where: { id: $id }, options: { limit: 1 }) {
       id
+      labels
+      bankingCode
       name
       location {
         longitude
@@ -250,14 +239,12 @@ export const DISPLAY_BACENTA = gql`
         firstName
         lastName
         fullName
+        pictureUrl
         whatsappNumber
-        title {
-          title
-        }
       }
-      services {
+      services(options: { limit: 3 }) {
         id
-        serviceRecords(options: { limit: 1 }) {
+        serviceRecords(options: { limit: 3 }) {
           week
         }
       }
@@ -274,8 +261,8 @@ export const DISPLAY_BACENTA = gql`
         }
         historyRecord
       }
+      memberCount
     }
-    bacentaMemberCount(id: $id)
   }
 `
 
@@ -387,6 +374,7 @@ export const DISPLAY_CENTRE = gql`
         firstName
         lastName
         fullName
+        pictureUrl
         whatsappNumber
         title {
           title
@@ -405,8 +393,8 @@ export const DISPLAY_CENTRE = gql`
         }
         historyRecord
       }
+      memberCount
     }
-    centreMemberCount(id: $id)
   }
 `
 
@@ -462,6 +450,10 @@ export const DISPLAY_TOWN = gql`
           }
         }
       }
+      council {
+        id
+        name
+      }
       bishop {
         id
         firstName
@@ -473,6 +465,7 @@ export const DISPLAY_TOWN = gql`
         firstName
         lastName
         fullName
+        pictureUrl
       }
       history(options: { limit: 10 }) {
         id
@@ -487,9 +480,9 @@ export const DISPLAY_TOWN = gql`
         }
         historyRecord
       }
+      memberCount
+      bacentaCount
     }
-    townMemberCount(id: $id)
-    townBacentaCount(id: $id)
   }
 `
 
@@ -498,6 +491,10 @@ export const DISPLAY_CAMPUS = gql`
     campuses(where: { id: $id }, options: { limit: 1 }) {
       id
       name
+      council {
+        id
+        name
+      }
       centres {
         id
         name
@@ -556,6 +553,83 @@ export const DISPLAY_CAMPUS = gql`
         firstName
         lastName
         fullName
+        pictureUrl
+      }
+      history(options: { limit: 10 }) {
+        id
+        timeStamp
+        created_at {
+          date
+        }
+        loggedBy {
+          id
+          firstName
+          lastName
+        }
+        historyRecord
+      }
+      memberCount
+      bacentaCount
+    }
+  }
+`
+
+export const DISPLAY_COUNCIL = gql`
+  query($id: ID) {
+    councils(where: { id: $id }, options: { limit: 1 }) {
+      id
+      name
+      constituencyCount
+      centreCount
+      bacentaCount
+      memberCount
+      pastorCount
+      towns(options: { limit: 5 }) {
+        id
+        name
+        bishop {
+          id
+        }
+      }
+      campuses(options: { limit: 5 }) {
+        id
+        name
+        bishop {
+          id
+        }
+      }
+
+      admin {
+        id
+        firstName
+        lastName
+        bacenta {
+          id
+          centre {
+            id
+            town {
+              id
+              name
+              bishop {
+                id
+              }
+            }
+            campus {
+              id
+              name
+              bishop {
+                id
+              }
+            }
+          }
+        }
+      }
+      leader {
+        id
+        firstName
+        lastName
+        fullName
+        pictureUrl
       }
       history(options: { limit: 10 }) {
         id
@@ -571,7 +645,5 @@ export const DISPLAY_CAMPUS = gql`
         historyRecord
       }
     }
-    campusMemberCount(id: $id)
-    campusBacentaCount(id: $id)
   }
 `

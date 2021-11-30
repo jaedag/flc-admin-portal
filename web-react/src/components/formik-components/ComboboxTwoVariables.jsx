@@ -39,12 +39,11 @@ function ComboboxTwoVariables(props) {
         )
       } else if (props.church === 'centre') {
         setSuggestions(
-          data.members[0].centres.map((row) => {
+          data.councilCentreDropdown.map((row) => {
             return {
               id: row.id,
               name: row[`${suggestionText}`],
               //if any type of church
-              centre: row.centre,
               campus: row.campus,
               town: row.town,
             }

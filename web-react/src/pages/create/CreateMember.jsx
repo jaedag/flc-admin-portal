@@ -6,7 +6,6 @@ import {
   ADD_MEMBER_TITLE_MUTATION,
   CREATE_MEMBER_MUTATION,
 } from './CreateMutations'
-import NavBar from '../../components/nav/NavBar'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import { MemberContext } from '../../contexts/MemberContext'
 import MemberForm from '../../components/reusable-forms/MemberForm'
@@ -119,7 +118,6 @@ const CreateMember = () => {
 
   return (
     <>
-      <NavBar />
       <MemberForm
         title="Register a New Member"
         initialValues={initialValues}

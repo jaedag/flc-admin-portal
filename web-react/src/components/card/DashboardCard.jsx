@@ -29,7 +29,7 @@ const DashboardCard = (props) => {
           className={`fas fa-${icon} fa-4x d-none d-md-block pb-3 icon-color text-center`}
         />
         <h5 className="card-title text-nowrap text-white">{`${name}`}</h5>
-        <span className="card-text text-muted">{detail1}</span>
+        <span className=" text-muted">{detail1}</span>
       </Link>
       <Link
         to={cardLink}

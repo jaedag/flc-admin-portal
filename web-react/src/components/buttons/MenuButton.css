@@ -1,0 +1,9 @@
+.avatar {
+  width: 45px;
+  height: 45px;
+  border-radius: 50px;
+}
+
+.rounded-circle .square-img {
+  width: 25px;
+}

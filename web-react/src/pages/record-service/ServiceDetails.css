@@ -1,10 +1,16 @@
 .report-picture {
-  max-width: 300px;
-  max-height: 170px;
+  width: 300px;
   margin: 10px;
+}
+.report-picture.placeholder {
+  height: 170px;
 }
 
 .table-dark {
   color: #fff;
   background-color: #0000;
+}
+
+.td-placeholder {
+  min-width: 100px;
 }

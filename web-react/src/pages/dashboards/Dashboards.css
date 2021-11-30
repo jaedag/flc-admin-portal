@@ -1,6 +1,7 @@
 .role-card {
   border: none;
   border-radius: 30px;
+  margin-right: 5px;
   width: 120px;
   height: 120px;
 }
@@ -16,7 +17,9 @@
   background-image: linear-gradient(#770e0b, #4e0a09, #2b0707);
 }
 .colour-campuses,
-.colour-campus {
+.colour-campus,
+.colour-town,
+.colour-towns {
   background-image: linear-gradient(#3c096f, #2c0b53, #1b0e36);
 }
 .colour-admin {

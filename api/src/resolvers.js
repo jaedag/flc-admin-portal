@@ -1,5 +1,3 @@
-import { assertResolveFunctionsPresent } from 'graphql-tools'
-
 const dotenv = require('dotenv')
 const axios = require('axios').default
 const cypher = require('./resolver-queries')
@@ -63,8 +61,8 @@ const notifyMember = (
   mg.messages
     .create('mg.firstlovecenter.com', {
       from: 'FL Accra Admin <no-reply@firstlovecenter.org>',
-      // to: ['admin@firstlovecenter.com'],
-      to: [member.email, 'admin@firstlovecenter.com'],
+      to: ['admin@firstlovecenter.com'],
+      // to: [member.email, 'admin@firstlovecenter.com'],
       subject: subject,
       text: body,
       // html: '<h1>Testing some Mailgun awesomness!</h1>', //HTML Version of the Message for Better Styling
@@ -116,11 +114,11 @@ const rearrangeCypherObject = (response) => {
 
   return member?.member || member
 }
-const parseForCache = (servant, church, verb) => {
+const parseForCache = (servant, church, verb, role) => {
   //Returning the data such that it can update apollo cache
   servant[`${verb}`].push({
     id: church.id,
-    leader: {
+    [`${role}`]: {
       id: servant.id,
       firstName: servant.firstName,
       lastName: servant.lastName,
@@ -128,12 +126,13 @@ const parseForCache = (servant, church, verb) => {
   })
 
   servant[`${verb}`].map((church) => {
-    church.leader = {
+    church[`${role}`] = {
       id: servant.id,
       firstName: servant.firstName,
       lastName: servant.lastName,
     }
   })
+
   return servant
 }
 
@@ -218,7 +217,7 @@ const updateAuthUserConfig = (member) => ({
     name: `${member.firstName} ${member.lastName}`,
     picture:
       member.pictureUrl ||
-      'https://raw.githubusercontent.com/jaedag/fl-admin-portal/deploy/web-react/src/img/user.png',
+      'https://raw.githubusercontent.com/jaedag/fl-admin-portal/deploy/web-react/src/assets/user.png',
   },
 })
 
@@ -395,10 +394,10 @@ const MakeServant = async (
         [servant.firstName, passwordTicketResponse?.data?.ticket]
       )
 
-      servant.auth_id = authIdResponse.data.user_id
+      servant.auth_id = authProfileResponse.data.user_id
       const roles = []
 
-      assignRoles(servant, auth_id, roles, [
+      assignRoles(servant, roles, [
         authRoles[`${servantLower}${churchType}`].id,
       ])
       console.log(
@@ -448,9 +447,9 @@ const MakeServant = async (
           : `${church.firstName} ${church.lastName}`,
       ]
     )
-
-    return parseForCache(servant, church, verb)
   }
+
+  return parseForCache(servant, church, verb, servantLower)
 }
 const RemoveServant = async (
   context,
@@ -554,7 +553,7 @@ const RemoveServant = async (
   }
 
   //Relationship in Neo4j will be removed when the replacement leader is being added
-  return parseForCache(servant, church, verb)
+  return parseForCache(servant, church, verb, servantLower)
 }
 
 export const resolvers = {
@@ -574,18 +573,21 @@ export const resolvers = {
       let serviceAggregates = []
 
       const session = context.driver.session()
-      session
-        .run(cypher.getCentreBacentaServiceAggregates, obj)
-        .then((response) =>
-          response.records.map((record) => {
-            let serviceAggregate = {}
-            record.keys.forEach(
-              (key, i) => (serviceAggregate[key] = record._fields[i])
-            )
-            serviceAggregates.push(serviceAggregate)
-          })
+
+      const serviceAggregateResponse = await session.run(
+        cypher.getCentreBacentaServiceAggregates,
+        obj
+      )
+
+      serviceAggregateResponse.records.map((record) => {
+        let serviceAggregate = {}
+
+        record.keys.forEach(
+          (key, i) => (serviceAggregate[key] = record._fields[i])
         )
-        .catch((error) => console.log(error))
+
+        serviceAggregates.push(serviceAggregate)
+      })
 
       return serviceAggregates
     },
@@ -595,19 +597,19 @@ export const resolvers = {
       let serviceAggregates = []
 
       const session = context.driver.session()
-      session
-        .run(cypher.getCampusTownServiceAggregates, obj)
-        .then((response) =>
-          response.records.map((record) => {
-            let serviceAggregate = {}
+      const serviceAggregateResponse = await session.run(
+        cypher.getCampusTownServiceAggregates,
+        obj
+      )
 
-            record.keys.forEach(
-              (key, i) => (serviceAggregate[key] = record._fields[i])
-            )
-            serviceAggregates.push(serviceAggregate)
-          })
+      serviceAggregateResponse.records.map((record) => {
+        let serviceAggregate = {}
+
+        record.keys.forEach(
+          (key, i) => (serviceAggregate[key] = record._fields[i])
         )
-        .catch((error) => console.log(error))
+        serviceAggregates.push(serviceAggregate)
+      })
 
       return serviceAggregates
     },
@@ -617,19 +619,19 @@ export const resolvers = {
       let serviceAggregates = []
 
       const session = context.driver.session()
-      session
-        .run(cypher.getCampusTownServiceAggregates, obj)
-        .then((response) =>
-          response.records.map((record) => {
-            let serviceAggregate = {}
+      const serviceAggregateResponse = await session.run(
+        cypher.getCampusTownServiceAggregates,
+        obj
+      )
 
-            record.keys.forEach(
-              (key, i) => (serviceAggregate[key] = record._fields[i])
-            )
-            serviceAggregates.push(serviceAggregate)
-          })
+      serviceAggregateResponse.records.map((record) => {
+        let serviceAggregate = {}
+
+        record.keys.forEach(
+          (key, i) => (serviceAggregate[key] = record._fields[i])
         )
-        .catch((error) => console.log(error))
+        serviceAggregates.push(serviceAggregate)
+      })
 
       return serviceAggregates
     },
@@ -640,8 +642,9 @@ export const resolvers = {
       isAuth(
         [
           'adminFederal',
-          'adminBishop',
-          'adminConstituency',
+          'adminCouncil',
+          'adminCampus',
+          'adminTown',
           'leaderBacenta',
           'leaderCentre',
           'leaderTown',
@@ -689,8 +692,9 @@ export const resolvers = {
       isAuth(
         [
           'adminFederal',
-          'adminBishop',
-          'adminConstituency',
+          'adminCouncil',
+          'adminCampus',
+          'adminTown',
           'leaderBacenta',
           'leaderCentre',
           'leaderTown',
@@ -737,7 +741,7 @@ export const resolvers = {
       return MakeServant(
         context,
         args,
-        ['adminFederal', 'adminBishop'],
+        ['adminFederal', 'adminCouncil'],
         'Town',
         'Admin'
       )
@@ -746,7 +750,7 @@ export const resolvers = {
       return RemoveServant(
         context,
         args,
-        ['adminFederal', 'adminBishop'],
+        ['adminFederal', 'adminCouncil'],
         'Town',
         'Admin'
       )
@@ -755,7 +759,7 @@ export const resolvers = {
       return MakeServant(
         context,
         args,
-        ['adminFederal', 'adminBishop'],
+        ['adminFederal', 'adminCouncil'],
         'Campus',
         'Admin'
       )
@@ -764,7 +768,7 @@ export const resolvers = {
       return RemoveServant(
         context,
         args,
-        ['adminFederal', 'adminBishop'],
+        ['adminFederal', 'adminCouncil'],
         'Campus',
         'Admin'
       )
@@ -773,7 +777,7 @@ export const resolvers = {
       return MakeServant(
         context,
         args,
-        ['adminFederal', 'adminBishop', 'adminCampus', 'adminTown'],
+        ['adminFederal', 'adminCouncil', 'adminCampus', 'adminTown'],
         'Bacenta',
         'Leader'
       )
@@ -782,7 +786,7 @@ export const resolvers = {
       return RemoveServant(
         context,
         args,
-        ['adminFederal', 'adminBishop', 'adminCampus', 'adminTown'],
+        ['adminFederal', 'adminCouncil', 'adminCampus', 'adminTown'],
         'Bacenta',
         'Leader'
       )
@@ -791,7 +795,7 @@ export const resolvers = {
       return MakeServant(
         context,
         args,
-        ['adminFederal', 'adminBishop', 'adminCampus', 'adminTown'],
+        ['adminFederal', 'adminCouncil', 'adminCampus', 'adminTown'],
         'Sonta',
         'Leader'
       )
@@ -800,7 +804,7 @@ export const resolvers = {
       return RemoveServant(
         context,
         args,
-        ['adminFederal', 'adminBishop', 'adminCampus', 'adminTown'],
+        ['adminFederal', 'adminCouncil', 'adminCampus', 'adminTown'],
         'Sonta',
         'Leader'
       )
@@ -809,7 +813,7 @@ export const resolvers = {
       return MakeServant(
         context,
         args,
-        ['adminFederal', 'adminBishop', 'adminCampus', 'adminTown'],
+        ['adminFederal', 'adminCouncil', 'adminCampus', 'adminTown'],
         'Centre',
         'Leader'
       )
@@ -818,7 +822,7 @@ export const resolvers = {
       return RemoveServant(
         context,
         args,
-        ['adminFederal', 'adminBishop', 'adminCampus', 'adminTown'],
+        ['adminFederal', 'adminCouncil', 'adminCampus', 'adminTown'],
         'Centre',
         'Leader'
       )
@@ -827,7 +831,7 @@ export const resolvers = {
       return MakeServant(
         context,
         args,
-        ['adminFederal', 'adminBishop'],
+        ['adminFederal', 'adminCouncil'],
         'Campus',
         'Leader'
       )
@@ -836,7 +840,7 @@ export const resolvers = {
       return RemoveServant(
         context,
         args,
-        ['adminFederal', 'adminBishop'],
+        ['adminFederal', 'adminCouncil'],
         'Campus',
         'Leader'
       )
@@ -845,7 +849,7 @@ export const resolvers = {
       return MakeServant(
         context,
         args,
-        ['adminFederal', 'adminBishop'],
+        ['adminFederal', 'adminCouncil'],
         'Town',
         'Leader'
       )
@@ -854,7 +858,7 @@ export const resolvers = {
       return RemoveServant(
         context,
         args,
-        ['adminFederal', 'adminBishop'],
+        ['adminFederal', 'adminCouncil'],
         'Town',
         'Leader'
       )

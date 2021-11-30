@@ -29,21 +29,19 @@ const UserDashboard = () => {
             <tbody>
               <tr>
                 {userJobs?.assessmentData ? (
-                  userJobs?.jobs.map((role, i) => {
-                    return (
-                      <td
-                        className="col-auto pl-0"
-                        key={i}
-                        onClick={() => {
-                          setMemberId(currentUser.id)
-                          role.clickCard()
-                          history.push(role.link)
-                        }}
-                      >
-                        <RoleCard number={role.number} role={role.name} />
-                      </td>
-                    )
-                  })
+                  userJobs?.jobs.map((role, i) => (
+                    <td
+                      className="col-auto pl-0"
+                      key={i}
+                      onClick={() => {
+                        setMemberId(currentUser.id)
+                        role.clickCard()
+                        history.push(role.link)
+                      }}
+                    >
+                      <RoleCard number={role.number} role={role.name} />
+                    </td>
+                  ))
                 ) : (
                   <td className="col-auto pl-0">
                     <RoleCard loading={!userJobs?.assessmentData} />

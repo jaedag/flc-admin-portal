@@ -153,6 +153,9 @@ const PastorsAdmin = () => {
   const determineStream = (member) => {
     //switch case for other church types
     switch (member?.__typename) {
+      case 'Council':
+        setChurch({ church: member.stream.toLowerCase(), subChurch: 'centre' })
+        break
       case 'Town':
         setChurch({ church: 'town', subChurch: 'centre' })
         sessionStorage.setItem(
@@ -236,6 +239,7 @@ const PastorsAdmin = () => {
       if (!member.isBishopForTown) {
         return
       }
+
       if (member.isBishopForTown[0]) {
         setChurch({ church: 'town', subChurch: 'centre' })
         sessionStorage.setItem(

@@ -11,7 +11,7 @@ export const BACENTA_REPORT = gql`
         lastName
         fullName
       }
-      services {
+      serviceLogs {
         id
         historyRecord
         serviceRecords {
@@ -40,7 +40,7 @@ export const CENTRE_REPORT = gql`
         lastName
         fullName
       }
-      services {
+      serviceLogs {
         id
         historyRecord
         serviceRecords {
@@ -74,7 +74,7 @@ export const SONTA_REPORT = gql`
         lastName
         fullName
       }
-      services {
+      serviceLogs {
         id
         historyRecord
         serviceRecords {
@@ -103,7 +103,7 @@ export const CAMPUS_REPORT = gql`
         lastName
         fullName
       }
-      services {
+      serviceLogs {
         id
         historyRecord
         serviceRecords {
@@ -137,7 +137,7 @@ export const TOWN_REPORT = gql`
         lastName
         fullName
       }
-      services {
+      serviceLogs {
         id
         historyRecord
         serviceRecords {
@@ -171,7 +171,7 @@ export const COUNCIL_REPORT = gql`
         lastName
         fullName
       }
-      services {
+      serviceLogs {
         id
         historyRecord
         serviceRecords {

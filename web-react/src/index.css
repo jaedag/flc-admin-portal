@@ -73,20 +73,6 @@
   vertical-align: middle;
 }
 
-.full-body-center {
-  width: 100vw;
-  position: fixed;
-  /* height: 50vh; */
-}
-
-.full-body-center p {
-  margin: 0;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
 /* Component Styling */
 
 .card {

@@ -28,7 +28,7 @@ export const RECORD_SERVICE = gql`
         id
         bacenta {
           id
-          services {
+          serviceLogs {
             id
             serviceRecords {
               id
@@ -56,7 +56,7 @@ export const RECORD_CANCELLED_SERVICE = gql`
         id
         bacenta {
           id
-          services {
+          serviceLogs {
             id
             serviceRecords {
               id

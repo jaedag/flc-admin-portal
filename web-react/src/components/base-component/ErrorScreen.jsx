@@ -8,7 +8,7 @@ const ErrorScreen = ({ error }) => {
 
   return (
     <>
-      <div className="container full-body-center h-100">
+      <div className="container">
         <p className="text-center full-center">
           There seems to be an error loading data
         </p>

@@ -204,7 +204,7 @@ type Constituency {
   history: [HistoryLog] @relationship(type: "HAS_HISTORY", direction: OUT)
   serviceRecord: [ServiceRecord]
     @relationship(type: "HAS_RECORD", direction: OUT)
-  services: [ServiceLog] @relationship(type: "HAS_HISTORY", direction: OUT)
+  serviceLogs: [ServiceLog] @relationship(type: "HAS_HISTORY", direction: OUT)
   componentServiceAggregate: [ComponentServiceAggregate] @ignore
 }
 
@@ -256,7 +256,7 @@ type Council {
   history: [HistoryLog] @relationship(type: "HAS_HISTORY", direction: OUT)
   serviceRecord: [ServiceRecord]
     @relationship(type: "HAS_RECORD", direction: OUT)
-  services: [ServiceLog] @relationship(type: "HAS_HISTORY", direction: OUT)
+  serviceLogs: [ServiceLog] @relationship(type: "HAS_HISTORY", direction: OUT)
   componentServiceAggregate: [ComponentServiceAggregate] @ignore
 }
 
@@ -293,7 +293,7 @@ type Campus {
   history: [HistoryLog] @relationship(type: "HAS_HISTORY", direction: OUT)
   serviceRecord: [ServiceRecord]
     @relationship(type: "HAS_RECORD", direction: OUT)
-  services: [ServiceLog] @relationship(type: "HAS_HISTORY", direction: OUT)
+  serviceLogs: [ServiceLog] @relationship(type: "HAS_HISTORY", direction: OUT)
   componentServiceAggregate: [ComponentServiceAggregate] @ignore
 }
 
@@ -330,7 +330,7 @@ type Town {
   history: [HistoryLog] @relationship(type: "HAS_HISTORY", direction: OUT)
   serviceRecord: [ServiceRecord]
     @relationship(type: "HAS_RECORD", direction: OUT)
-  services: [ServiceLog] @relationship(type: "HAS_HISTORY", direction: OUT)
+  serviceLogs: [ServiceLog] @relationship(type: "HAS_HISTORY", direction: OUT)
   componentServiceAggregate: [ComponentServiceAggregate] @ignore
 }
 
@@ -357,7 +357,7 @@ type Centre {
   town: Town @relationship(type: "HAS", direction: IN)
   campus: Campus @relationship(type: "HAS", direction: IN)
   history: [HistoryLog] @relationship(type: "HAS_HISTORY", direction: OUT)
-  services: [ServiceLog] @relationship(type: "HAS_HISTORY", direction: OUT)
+  serviceLogs: [ServiceLog] @relationship(type: "HAS_HISTORY", direction: OUT)
   bacentaServiceAggregate: [ComponentServiceAggregate] @ignore
 }
 
@@ -379,8 +379,8 @@ type Bacenta {
     )
   meetingDay: ServiceDay @relationship(type: "MEETS_ON", direction: OUT)
   history: [HistoryLog] @relationship(type: "HAS_HISTORY", direction: OUT)
-  servicesLogs: [ServiceLog] @relationship(type: "HAS_HISTORY", direction: OUT)
-  services: [ServiceRecords]
+  serviceLogs: [ServiceLog] @relationship(type: "HAS_HISTORY", direction: OUT)
+  services: [ServiceRecord]
     @cypher(
       statement: """
       MATCH (this)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(services:ServiceRecord)
@@ -419,7 +419,7 @@ type Sonta {
   town: Town @relationship(type: "HAS_SONTA", direction: IN)
   history: [HistoryLog] @relationship(type: "HAS_HISTORY", direction: OUT)
   campus: Campus @relationship(type: "HAS_SONTA", direction: IN)
-  services: [ServiceLog] @relationship(type: "HAS_HISTORY", direction: OUT)
+  serviceLogs: [ServiceLog] @relationship(type: "HAS_HISTORY", direction: OUT)
 }
 type Basonta {
   id: ID @id

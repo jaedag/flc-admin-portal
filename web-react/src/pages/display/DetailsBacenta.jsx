@@ -42,7 +42,7 @@ const DetailsBacenta = () => {
   }
 
   const last3Weeks = [getWeekNumber(), getWeekNumber() - 1, getWeekNumber() - 2]
-  const lastFilledServices = bacenta?.services[0]?.serviceRecords.map(
+  const lastFilledServices = bacenta?.serviceLogs[0]?.serviceRecords.map(
     (service) => service.week
   )
 

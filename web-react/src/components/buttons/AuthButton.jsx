@@ -1,28 +1,23 @@
 import React, { useContext } from 'react'
 import { useAuth0 } from '@auth0/auth0-react'
 import Popup from '../Popup/Popup'
-import { useLocation } from 'react-router'
 import { ChurchContext } from 'contexts/ChurchContext'
-import { Spinner } from 'react-bootstrap'
+import { Button, Spinner } from 'react-bootstrap'
 
 const AuthButton = (props) => {
   const { loginWithRedirect, logout, isAuthenticated } = useAuth0()
   const { togglePopup, isOpen } = useContext(ChurchContext)
   const { mobileFullSize } = props
 
-  const location = useLocation()
-
   if (!isAuthenticated) {
     return (
       <>
-        <button
-          className={`btn btn-primary text-nowrap px-4 ${
-            !mobileFullSize && `d-none d-md-inline`
-          }`}
+        <Button
+          className={`${!mobileFullSize && `d-none d-md-inline`} px-5 p-3`}
           onClick={() => loginWithRedirect()}
         >
           Log In
-        </button>
+        </Button>
         {!mobileFullSize && (
           <i
             className="fas fa-sign-in-alt fa-2x d-md-none"
@@ -33,7 +28,7 @@ const AuthButton = (props) => {
     )
   }
 
-  if (isAuthenticated && location.pathname === '/') {
+  if (isAuthenticated) {
     return (
       <div className="text-secondary text-center">
         <p>Please wait while we log you in</p>

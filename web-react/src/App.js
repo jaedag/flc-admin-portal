@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Route, Switch, BrowserRouter as Router } from 'react-router-dom'
+import { Switch, BrowserRouter as Router } from 'react-router-dom'
 import BishopDashboard from './pages/dashboards/BishopDashboard.jsx'
 import BishopMembers from './pages/grids/BishopMembers.jsx'
 import CampusTownMembers from './pages/grids/CampusTownMembers.jsx'
@@ -421,8 +421,17 @@ const PastorsAdmin = () => {
               <div className={`bg ${theme}`}>
                 <Switch>
                   {/* Landing Pages - Dashboards for Different Roles */}
-                  <Route path="/" component={UserDashboard} placeholder exact />
-                  <Route path="/directory" component={Directory} exact />
+                  <ProtectedRoute
+                    path="/"
+                    component={UserDashboard}
+                    placeholder
+                    exact
+                  />
+                  <ProtectedRoute
+                    path="/directory"
+                    component={Directory}
+                    exact
+                  />
                   <ChurchDirectoryRoute
                     path="/directory/churches"
                     component={Churches}
@@ -433,12 +442,12 @@ const PastorsAdmin = () => {
                     component={Members}
                     exact
                   />
-                  <Route
+                  <ProtectedRoute
                     path="/services/church-list"
                     component={ServicesChurchList}
                     exact
                   />
-                  <Route path="/services" component={Services} exact />
+                  <ProtectedRoute path="/services" component={Services} exact />
                   <ProtectedRoute
                     path="/services/fellowship"
                     component={Fellowship}
@@ -464,9 +473,17 @@ const PastorsAdmin = () => {
                     placeholder
                     exact
                   />
-                  <Route path="/arrivals" component={Arrivals} exact />
-                  <Route path="/campaigns" component={Campaigns} exact />
-                  <Route path="/recon" component={Reconciliation} exact />
+                  <ProtectedRoute path="/arrivals" component={Arrivals} exact />
+                  <ProtectedRoute
+                    path="/campaigns"
+                    component={Campaigns}
+                    exact
+                  />
+                  <ProtectedRoute
+                    path="/recon"
+                    component={Reconciliation}
+                    exact
+                  />
                   <ProtectedRouteHome
                     path="/dashboard"
                     component={BishopDashboard}

@@ -1,10 +1,10 @@
 import React, { useContext, useEffect } from 'react'
 import { Route } from 'react-router-dom'
-import { useAuth0 } from '@auth0/auth0-react'
+import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react'
 import { MemberContext } from '../contexts/MemberContext'
 import { ChurchContext } from '../contexts/ChurchContext'
 import { isAuthorised } from '../global-utils'
-import LoadingScreen from 'components/base-component/LoadingScreen'
+import Login from 'components/Login'
 
 const ProtectedRoute = ({ component, roles, placeholder, ...args }) => {
   const { currentUser } = useContext(MemberContext)
@@ -42,9 +42,17 @@ const ProtectedRoute = ({ component, roles, placeholder, ...args }) => {
     return <Route component={component} {...args} />
   } else if (placeholder) {
     //If the user does not have permission but is a Bacenta Leader
-    return <Route component={component} {...args} />
+    return (
+      <Route
+        component={withAuthenticationRequired(component, {
+          // eslint-disable-next-line react/display-name
+          onRedirecting: () => component,
+        })}
+        {...args}
+      />
+    )
   } else {
-    return <LoadingScreen />
+    return <Login />
   }
 }
 

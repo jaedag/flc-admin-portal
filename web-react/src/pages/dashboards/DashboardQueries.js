@@ -74,7 +74,7 @@ export const BACENTA_LEADER_DASHBOARD = gql`
         lastName
         fullName
       }
-      services {
+      serviceLogs {
         id
         historyRecord
         serviceRecords {
@@ -111,7 +111,7 @@ export const SERVANTS_DASHBOARD = gql`
           lastName
           fullName
         }
-        services {
+        serviceLogs {
           id
           historyRecord
           serviceRecords {
@@ -140,7 +140,7 @@ export const SERVANTS_DASHBOARD = gql`
           lastName
           fullName
         }
-        services {
+        serviceLogs {
           id
           historyRecord
           serviceRecords {
@@ -169,7 +169,7 @@ export const SERVANTS_DASHBOARD = gql`
           lastName
           fullName
         }
-        services {
+        serviceLogs {
           id
           historyRecord
           serviceRecords {
@@ -203,7 +203,7 @@ export const SERVANTS_DASHBOARD = gql`
         id
         name
         memberCount
-        services {
+        serviceLogs {
           id
           historyRecord
           serviceRecords {
@@ -234,7 +234,7 @@ export const SERVANTS_DASHBOARD = gql`
           }
         }
         memberCount
-        services {
+        serviceLogs {
           id
           historyRecord
           serviceRecords {
@@ -263,7 +263,7 @@ export const SERVANTS_DASHBOARD = gql`
           lastName
           fullName
         }
-        services {
+        serviceLogs {
           id
           historyRecord
           serviceRecords {
@@ -292,7 +292,7 @@ export const SERVANTS_DASHBOARD = gql`
           lastName
           fullName
         }
-        services {
+        serviceLogs {
           id
           historyRecord
           serviceRecords {
@@ -326,7 +326,7 @@ export const SERVANTS_DASHBOARD = gql`
             id
           }
         }
-        services {
+        serviceLogs {
           id
           historyRecord
           serviceRecords {

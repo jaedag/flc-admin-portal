@@ -22,7 +22,7 @@ const BankingSlipView = () => {
     <Container>
       <HeadingPrimary>{bacenta?.name}</HeadingPrimary>
       <p>Banking Code: {bacenta?.bankingCode}</p>
-      {data?.bacentas[0].services.map((record) => {
+      {data?.bacentas[0].serviceLogs.map((record) => {
         return record.serviceRecords.map((service, index) => {
           return (
             <Card

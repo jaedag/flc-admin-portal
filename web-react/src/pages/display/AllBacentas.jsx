@@ -17,6 +17,7 @@ const DisplayAllBacentas = () => {
   })
 
   const bacentas = data?.centres[0]?.bacentas
+  console.log(data)
   return (
     <BaseComponent loading={loading} error={error} data={data}>
       <div className=" container">
@@ -74,7 +75,7 @@ const DisplayAllBacentas = () => {
             <Link
               to="/centre/members"
               className="py-1 px-2 m-2 card"
-            >{`Membership: ${data?.centreMemberCount}`}</Link>
+            >{`Membership: ${data?.centres[0].memberCount}`}</Link>
           </div>
         </div>
         <DisplayChurchList data={bacentas} churchType="Bacenta" />

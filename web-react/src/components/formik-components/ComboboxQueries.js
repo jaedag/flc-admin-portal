@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client'
 
-export const BISHOP_BACENTA_DROPDOWN = gql`
+export const COUNCIL_BACENTA_DROPDOWN = gql`
   query($id: ID!, $bacentaName: String!) {
-    bishopBacentaDropdown(id: $id, bacentaName: $bacentaName) {
+    councilBacentaDropdown(id: $id, bacentaName: $bacentaName) {
       id
       name
       centre {

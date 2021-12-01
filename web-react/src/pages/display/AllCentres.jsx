@@ -92,7 +92,7 @@ const DisplayAllCentres = () => {
               <Link
                 to="/campus/members"
                 className="py-1 px-2 m-2 card"
-              >{`Membership: ${campusCentreData.campus.memberCount}`}</Link>
+              >{`Membership: ${campus?.memberCount}`}</Link>
             </div>
           </div>
 

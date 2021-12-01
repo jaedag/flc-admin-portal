@@ -462,9 +462,9 @@ type Query {
     @cypher(
       statement: "MATCH (:Member {id: $id})-[:HAS]->()-[:HAS]->(:Centre)-[:HAS]-(bacenta:Bacenta) RETURN COUNT(DISTINCT bacenta)"
     )
-  bishopBacentaDropdown(id: ID!, bacentaName: String!): [Bacenta]
+  councilBacentaDropdown(id: ID!, bacentaName: String!): [Bacenta]
     @cypher(
-      statement: "MATCH (bacenta:Bacenta)<-[]-(:Centre)<-[:HAS]-()<-[:HAS]-(:Member {id: $id}) WHERE toLower(bacenta.name) CONTAINS toLower($bacentaName) RETURN DISTINCT bacenta LIMIT 5"
+      statement: "MATCH (council:Council {id:$id})-[:HAS*3]->(bacenta:Bacenta) WHERE toLower(bacenta.name) CONTAINS toLower($bacentaName) RETURN DISTINCT bacenta LIMIT 5"
     )
   bishopsSontaMemberList(id: ID): [Member]!
     @cypher(

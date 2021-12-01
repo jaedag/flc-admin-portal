@@ -25,7 +25,12 @@ const DisplayPage = () => {
 
   return (
     <div className="scroll-bottom">
-      <BaseComponent loadingState={loading} errorState={error} data={data}>
+      <BaseComponent
+        loadingState={loading}
+        errorState={error}
+        data={data}
+        placeholder
+      >
         <div className="py-5">
           <div className="pt-5">
             <Row className="d-flex justify-content-center">

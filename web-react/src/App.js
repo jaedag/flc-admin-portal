@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Switch, BrowserRouter as Router } from 'react-router-dom'
+import { Route, Switch, BrowserRouter as Router } from 'react-router-dom'
 import BishopDashboard from './pages/dashboards/BishopDashboard.jsx'
 import BishopMembers from './pages/grids/BishopMembers.jsx'
 import CampusTownMembers from './pages/grids/CampusTownMembers.jsx'
@@ -429,19 +429,8 @@ const PastorsAdmin = () => {
               <div className={`bg ${theme}`}>
                 <Switch>
                   {/* Landing Pages - Dashboards for Different Roles */}
-                  <ProtectedRoute
-                    path="/"
-                    component={UserDashboard}
-                    placeholder
-                    roles={['all']}
-                    exact
-                  />
-                  <ProtectedRoute
-                    path="/directory"
-                    component={Directory}
-                    roles={['all']}
-                    exact
-                  />
+                  <Route path="/" component={UserDashboard} placeholder exact />
+                  <Route path="/directory" component={Directory} exact />
                   <ChurchDirectoryRoute
                     path="/directory/churches"
                     component={Churches}
@@ -452,70 +441,40 @@ const PastorsAdmin = () => {
                     component={Members}
                     exact
                   />
-                  <ProtectedRoute
+                  <Route
                     path="/services/church-list"
                     component={ServicesChurchList}
-                    roles={['all']}
                     exact
                   />
-                  <ProtectedRoute
-                    path="/services"
-                    component={Services}
-                    roles={['all']}
-                    exact
-                  />
+                  <Route path="/services" component={Services} exact />
                   <ProtectedRoute
                     path="/services/fellowship"
                     component={Fellowship}
-                    roles={['all']}
                     placeholder
                     exact
                   />
                   <ProtectedRoute
                     path="/services/constituency-joint"
                     component={ConstituencyJoint}
-                    roles={['all']}
                     placeholder
                     exact
                   />
-                  <ProtectedReports
-                    path="/services/trends"
-                    roles={['all']}
-                    placeholder
-                    exact
-                  />
+                  <ProtectedReports path="/services/trends" placeholder exact />
                   <ProtectedRoute
                     path="/services/banking-slips"
                     component={BankingSlipView}
-                    roles={['all']}
                     placeholder
                     exact
                   />
                   <ProtectedRoute
                     path="/banking-slip/submission"
                     component={BankingSlipSubmission}
-                    roles={['all']}
                     placeholder
                     exact
                   />
-                  <ProtectedRoute
-                    path="/arrivals"
-                    component={Arrivals}
-                    roles={['all']}
-                    exact
-                  />
-                  <ProtectedRoute
-                    path="/campaigns"
-                    component={Campaigns}
-                    roles={['all']}
-                    exact
-                  />
-                  <ProtectedRoute
-                    path="/recon"
-                    component={Reconciliation}
-                    roles={['all']}
-                    exact
-                  />
+                  <Route path="/arrivals" component={Arrivals} exact />
+                  <Route path="/campaigns" component={Campaigns} exact />
+                  <Route path="/recon" component={Reconciliation} exact />
                   <ProtectedRouteHome
                     path="/dashboard"
                     component={BishopDashboard}
@@ -630,6 +589,7 @@ const PastorsAdmin = () => {
                     roles={['all']}
                     path="/user-profile"
                     component={UserProfileDisplayPage}
+                    placeholder
                     exact
                   />
                   <ProtectedRoute

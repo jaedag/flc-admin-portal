@@ -19,7 +19,7 @@ const MemberTable = (props) => {
     numberOfRecords,
   } = props
 
-  const { clickCard } = useContext(ChurchContext)
+  const { setChurch } = useContext(ChurchContext)
   const { theme } = useContext(MemberContext)
   const history = useHistory()
 
@@ -74,7 +74,7 @@ const MemberTable = (props) => {
                   <div
                     className="card grid-card fade-in"
                     onClick={() => {
-                      clickCard(soul)
+                      setChurch({ church: soul.stream, subChurch: 'centre' })
                       history.push('/member/displaydetails')
                     }}
                   >
@@ -110,7 +110,7 @@ const MemberTable = (props) => {
                 <div
                   className={`d-flex align-items-center card-border ${theme}`}
                   onClick={() => {
-                    clickCard(soul)
+                    setChurch({ church: soul.stream, subChurch: 'centre' })
                     history.push('/member/displaydetails')
                   }}
                 >

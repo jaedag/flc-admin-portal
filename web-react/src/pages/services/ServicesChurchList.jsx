@@ -11,6 +11,7 @@ const ServicesChurchList = () => {
   const { currentUser, setCurrentUser, userJobs, theme } = useContext(
     MemberContext
   )
+
   const history = useHistory()
   return (
     <div className="d-flex align-items-center justify-content-center ">

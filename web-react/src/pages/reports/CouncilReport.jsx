@@ -35,7 +35,7 @@ const CouncilReport = () => {
         <Row className="mt-3">
           <Col>
             <MembershipCard
-              link="/town/members"
+              link="/council/members"
               title="Membership"
               count={data?.councils[0]?.memberCount}
             />

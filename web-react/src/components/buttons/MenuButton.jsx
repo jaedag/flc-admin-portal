@@ -20,10 +20,11 @@ const MenuButton = (props) => {
       <Row>
         {icon && (
           <Col xs="auto" className="btn-left-col my-auto">
-            <PlaceholderCustom className="rounded-circle" as="div">
+            <PlaceholderCustom className="rounded-circle menu" as="div">
               <div
                 className={
-                  props.iconBg && `rounded-circle gradient-bg ${props.color}`
+                  props.iconBg &&
+                  `rounded-circle menu gradient-bg ${props.color}`
                 }
               >
                 {props.avatar && <img src={props.avatar} className="avatar" />}

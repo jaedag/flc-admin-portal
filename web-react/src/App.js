@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { Switch, BrowserRouter as Router } from 'react-router-dom'
+import { Route, Switch, BrowserRouter as Router } from 'react-router-dom'
 import BishopDashboard from './pages/dashboards/BishopDashboard.jsx'
-import BishopMembers from './pages/grids/BishopMembers.jsx'
+import CouncilMembers from './pages/grids/CouncilMembers.jsx'
 import CampusTownMembers from './pages/grids/CampusTownMembers.jsx'
 import CentreMembers from './pages/grids/CentreMembers.jsx'
 import BacentaMembers from './pages/grids/BacentaMembers.jsx'
@@ -435,11 +435,7 @@ const PastorsAdmin = () => {
                     placeholder
                     exact
                   />
-                  <ProtectedRoute
-                    path="/directory"
-                    component={Directory}
-                    exact
-                  />
+                  <Route path="/directory" component={Directory} exact />
                   <ChurchDirectoryRoute
                     path="/directory/churches"
                     component={Churches}
@@ -450,12 +446,12 @@ const PastorsAdmin = () => {
                     component={Members}
                     exact
                   />
-                  <ProtectedRoute
+                  <Route
                     path="/services/church-list"
                     component={ServicesChurchList}
                     exact
                   />
-                  <ProtectedRoute path="/services" component={Services} exact />
+                  <Route path="/services" component={Services} exact />
                   <ProtectedRoute
                     path="/services/fellowship"
                     component={Fellowship}
@@ -481,17 +477,9 @@ const PastorsAdmin = () => {
                     placeholder
                     exact
                   />
-                  <ProtectedRoute path="/arrivals" component={Arrivals} exact />
-                  <ProtectedRoute
-                    path="/campaigns"
-                    component={Campaigns}
-                    exact
-                  />
-                  <ProtectedRoute
-                    path="/recon"
-                    component={Reconciliation}
-                    exact
-                  />
+                  <Route path="/arrivals" component={Arrivals} exact />
+                  <Route path="/campaigns" component={Campaigns} exact />
+                  <Route path="/recon" component={Reconciliation} exact />
                   <ProtectedRouteHome
                     path="/dashboard"
                     component={BishopDashboard}
@@ -606,6 +594,7 @@ const PastorsAdmin = () => {
                     roles={['all']}
                     path="/user-profile"
                     component={UserProfileDisplayPage}
+                    placeholder
                     exact
                   />
                   <ProtectedRoute
@@ -666,13 +655,13 @@ const PastorsAdmin = () => {
                   <ProtectedMembersRoute
                     roles={['adminFederal', 'adminCouncil']}
                     path="/members"
-                    component={BishopMembers}
+                    component={CouncilMembers}
                     exact
                   />
                   <ProtectedMembersRoute
                     roles={['adminFederal', 'adminCouncil']}
-                    path="/bishop/members"
-                    component={BishopMembers}
+                    path="/council/members"
+                    component={CouncilMembers}
                     exact
                   />
                   <ProtectedMembersRoute
@@ -735,7 +724,7 @@ const PastorsAdmin = () => {
                   <ProtectedRoute
                     roles={['all']}
                     path="/pastors"
-                    component={BishopMembers}
+                    component={CouncilMembers}
                     exact
                   />
                   {/* Pages to Display Church Details  */}

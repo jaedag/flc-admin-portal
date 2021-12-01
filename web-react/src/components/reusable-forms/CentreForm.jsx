@@ -13,7 +13,7 @@ import { ChurchContext } from 'contexts/ChurchContext'
 import FormikControl from 'components/formik-components/FormikControl'
 import PlusSign from 'components/buttons/PlusMinusSign/PlusSign'
 import MinusSign from 'components/buttons/PlusMinusSign/MinusSign'
-import { BISHOP_BACENTA_DROPDOWN } from 'components/formik-components/ComboboxQueries'
+import { COUNCIL_BACENTA_DROPDOWN } from 'components/formik-components/ComboboxQueries'
 import { useHistory } from 'react-router'
 import { MAKE_CENTRE_INACTIVE } from 'pages/update/CloseChurchMutations'
 import Popup from 'components/Popup/Popup'
@@ -166,7 +166,7 @@ const CentreForm = ({ initialValues, onSubmit, title, newCentre }) => {
                                     initialValue={bacenta?.name}
                                     placeholder="Enter Bacenta Name"
                                     setFieldValue={formik.setFieldValue}
-                                    optionsQuery={BISHOP_BACENTA_DROPDOWN}
+                                    optionsQuery={COUNCIL_BACENTA_DROPDOWN}
                                     queryVariable1="id"
                                     variable1={councilId}
                                     queryVariable2="bacentaName"
@@ -174,7 +174,7 @@ const CentreForm = ({ initialValues, onSubmit, title, newCentre }) => {
                                     suggestionID="id"
                                     returnObject={!newCentre && true}
                                     church="bacenta"
-                                    dataset="bishopBacentaDropdown"
+                                    dataset="councilBacentaDropdown"
                                     aria-describedby="Bacenta Name"
                                     className="form-control"
                                     error={

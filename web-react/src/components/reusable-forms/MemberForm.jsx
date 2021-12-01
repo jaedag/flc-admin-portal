@@ -16,14 +16,14 @@ import { GET_MINISTRIES } from '../../queries/ListQueries'
 import MinusSign from '../buttons/PlusMinusSign/MinusSign'
 import PlusSign from '../buttons/PlusMinusSign/PlusSign'
 import ErrorScreen from '../base-component/ErrorScreen'
-import { BISHOP_BACENTA_DROPDOWN } from '../formik-components/ComboboxQueries'
+import { COUNCIL_BACENTA_DROPDOWN } from '../formik-components/ComboboxQueries'
 import FormikControl from '../formik-components/FormikControl'
 import { HeadingPrimary } from '../HeadingPrimary/HeadingPrimary'
 import { Col, Container, Row, Button } from 'react-bootstrap'
 import LoadingScreen from 'components/base-component/LoadingScreen'
 
 function MemberForm({ initialValues, onSubmit, title, loading }) {
-  const { bishopId } = useContext(ChurchContext)
+  const { councilId } = useContext(ChurchContext)
   const { theme } = useContext(MemberContext)
   const { data: ministriesData, loading: ministriesLoading } = useQuery(
     GET_MINISTRIES
@@ -214,9 +214,9 @@ function MemberForm({ initialValues, onSubmit, title, loading }) {
                         label="Bacenta*"
                         placeholder="Start Typing"
                         setFieldValue={formik.setFieldValue}
-                        optionsQuery={BISHOP_BACENTA_DROPDOWN}
+                        optionsQuery={COUNCIL_BACENTA_DROPDOWN}
                         queryVariable1="id"
-                        variable1={bishopId}
+                        variable1={councilId}
                         queryVariable2="bacentaName"
                         suggestionText="name"
                         suggestionID="id"

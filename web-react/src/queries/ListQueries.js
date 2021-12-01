@@ -311,6 +311,8 @@ export const GET_MINISTRIES = gql`
 export const GET_CENTRE_BACENTAS = gql`
   query($id: ID) {
     centres(where: { id: $id }) {
+      id
+      memberCount
       bacentas {
         id
         name
@@ -343,7 +345,6 @@ export const GET_CENTRE_BACENTAS = gql`
         }
       }
     }
-    centreMemberCount(id: $id)
   }
 `
 

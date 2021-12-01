@@ -11,8 +11,8 @@ import './MemberDisplayCard.css'
 
 const MemberDisplayCard = (props) => {
   const { member, ...rest } = props
-  const { clickCard } = useContext(ChurchContext)
-  const { theme } = useContext(MemberContext)
+  const { setChurch } = useContext(ChurchContext)
+  const { theme, setMemberId } = useContext(MemberContext)
   const history = useHistory()
   let icon, name, details
 
@@ -59,7 +59,8 @@ const MemberDisplayCard = (props) => {
       {...rest}
       className="mobile-search-card"
       onClick={() => {
-        clickCard(member)
+        setMemberId(member.id)
+        setChurch({ church: member?.stream, subChurch: 'centre' })
         history.push(`/${member.__typename.toLowerCase()}/displaydetails`)
       }}
     >

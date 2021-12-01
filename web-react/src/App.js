@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Route, Switch, BrowserRouter as Router } from 'react-router-dom'
 import BishopDashboard from './pages/dashboards/BishopDashboard.jsx'
-import BishopMembers from './pages/grids/BishopMembers.jsx'
+import CouncilMembers from './pages/grids/CouncilMembers.jsx'
 import CampusTownMembers from './pages/grids/CampusTownMembers.jsx'
 import CentreMembers from './pages/grids/CentreMembers.jsx'
 import BacentaMembers from './pages/grids/BacentaMembers.jsx'
@@ -429,7 +429,12 @@ const PastorsAdmin = () => {
               <div className={`bg ${theme}`}>
                 <Switch>
                   {/* Landing Pages - Dashboards for Different Roles */}
-                  <Route path="/" component={UserDashboard} placeholder exact />
+                  <ProtectedRoute
+                    path="/"
+                    component={UserDashboard}
+                    placeholder
+                    exact
+                  />
                   <Route path="/directory" component={Directory} exact />
                   <ChurchDirectoryRoute
                     path="/directory/churches"
@@ -650,13 +655,13 @@ const PastorsAdmin = () => {
                   <ProtectedMembersRoute
                     roles={['adminFederal', 'adminCouncil']}
                     path="/members"
-                    component={BishopMembers}
+                    component={CouncilMembers}
                     exact
                   />
                   <ProtectedMembersRoute
                     roles={['adminFederal', 'adminCouncil']}
-                    path="/bishop/members"
-                    component={BishopMembers}
+                    path="/council/members"
+                    component={CouncilMembers}
                     exact
                   />
                   <ProtectedMembersRoute
@@ -719,7 +724,7 @@ const PastorsAdmin = () => {
                   <ProtectedRoute
                     roles={['all']}
                     path="/pastors"
-                    component={BishopMembers}
+                    component={CouncilMembers}
                     exact
                   />
                   {/* Pages to Display Church Details  */}

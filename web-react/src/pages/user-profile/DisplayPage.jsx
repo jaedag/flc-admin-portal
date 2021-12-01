@@ -9,6 +9,7 @@ import BaseComponent from 'components/base-component/BaseComponent'
 import { DISPLAY_MEMBER } from 'pages/display/ReadQueries'
 import PlaceholderCustom from 'components/Placeholder'
 import './UserProfile.css'
+import AuthButton from 'components/buttons/AuthButton'
 
 const DisplayPage = () => {
   const { currentUser } = useContext(MemberContext)
@@ -213,6 +214,9 @@ const DisplayPage = () => {
                     </div>
                   </Stack>
                 </Accordion>
+              </Col>
+              <Col className="mt-3 text-center">
+                <AuthButton mobileFullSize />
               </Col>
             </Row>
           </div>

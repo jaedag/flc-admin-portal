@@ -71,6 +71,7 @@ export const FEDERAL_SEARCH = gql`
       firstName
       lastName
       pictureUrl
+      stream
       bacenta {
         id
         name
@@ -177,6 +178,7 @@ export const COUNCIL_SEARCH = gql`
       lastName
       fullName
       pictureUrl
+      stream
       bacenta {
         id
         name
@@ -221,6 +223,7 @@ export const CONSTITUENCY_SEARCH = gql`
       lastName
       fullName
       pictureUrl
+      stream
       bacenta {
         id
         name
@@ -245,6 +248,7 @@ export const CENTRE_SEARCH = gql`
       lastName
       fullName
       pictureUrl
+      stream
       bacenta {
         id
         name
@@ -265,6 +269,7 @@ export const BACENTA_SEARCH = gql`
       lastName
       fullName
       pictureUrl
+      stream
       bacenta {
         id
         name

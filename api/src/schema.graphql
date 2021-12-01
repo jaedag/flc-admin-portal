@@ -17,6 +17,14 @@ type Member {
     @relationship(type: "HAS_TITLE", properties: "HasTitle", direction: OUT)
   ministry: Ministry @relationship(type: "BELONGS_TO", direction: OUT)
   occupation: Occupation @relationship(type: "HAS_OCCUPATION", direction: OUT)
+  stream: String
+    @cypher(
+      statement: """
+      MATCH (this)-[:BELONGS_TO]->(:Bacenta)-[:HAS*2]-(campusTown) WHERE campusTown:Campus OR campusTown:Town
+      UNWIND labels(campusTown) as stream
+      RETURN toLower(stream)
+      """
+    )
   # Church Details
   members: [Member]
     @cypher(

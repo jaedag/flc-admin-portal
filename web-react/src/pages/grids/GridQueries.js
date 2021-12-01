@@ -144,18 +144,18 @@ export const GET_FEDERAL_PASTORS = gql`
   }
 `
 
-export const GET_BISHOP_MEMBERS = gql`
+export const GET_COUNCIL_MEMBERS = gql`
   query($id: ID) {
-    members(where: { id: $id }) {
+    councils(where: { id: $id }) {
       id
-      firstName
-      lastName
-      fullName
+      name
+
       members {
         id
         firstName
         lastName
         pictureUrl
+        stream
         bacenta {
           id
           name
@@ -458,6 +458,7 @@ export const GET_BACENTA_MEMBERS = gql`
         firstName
         lastName
         pictureUrl
+        stream
         bacenta {
           name
         }

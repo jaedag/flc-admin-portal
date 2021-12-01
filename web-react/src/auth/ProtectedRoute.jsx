@@ -40,7 +40,7 @@ const ProtectedRoute = ({ component, roles, placeholder, ...args }) => {
     //If the user does not have permission but is a Bacenta Leader
     church.setBacentaId(currentUser.bacenta.id)
     return <Route component={component} {...args} />
-  } else if (placeholder) {
+  } else if (placeholder && isAuthenticated) {
     //If the user does not have permission but is a Bacenta Leader
     return (
       <Route

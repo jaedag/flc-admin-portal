@@ -22,7 +22,7 @@ const MobileSearchNav = () => {
   return (
     <Container>
       <Formik initialValues={initialValues} onSubmit={onSubmit}>
-        {() => (
+        {(formik) => (
           <Form>
             <div className="form-row ">
               <Col className="col-auto px-0 d-flex align-items-center">
@@ -33,7 +33,13 @@ const MobileSearchNav = () => {
                   placeholder="Search for anything..."
                   aria-describedby="Global Search"
                 />
-                <Button className="nav-search-btn" type="submit">
+                <Button
+                  className="nav-search-btn"
+                  type="submit"
+                  onClick={() => {
+                    setSearchKey(formik.values.searchKey)
+                  }}
+                >
                   Search
                 </Button>
               </Col>

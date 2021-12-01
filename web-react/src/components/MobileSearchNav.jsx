@@ -30,7 +30,7 @@ const MobileSearchNav = () => {
                   className="nav-search-box"
                   control="input"
                   name="searchKeyVal"
-                  placeholder={searchKey} //"Search for anything..."
+                  placeholder="Search for anything..."
                   aria-describedby="Global Search"
                 />
                 <Button className="nav-search-btn" type="submit">

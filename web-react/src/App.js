@@ -433,11 +433,13 @@ const PastorsAdmin = () => {
                     path="/"
                     component={UserDashboard}
                     placeholder
+                    roles={['all']}
                     exact
                   />
                   <ProtectedRoute
                     path="/directory"
                     component={Directory}
+                    roles={['all']}
                     exact
                   />
                   <ChurchDirectoryRoute
@@ -453,43 +455,65 @@ const PastorsAdmin = () => {
                   <ProtectedRoute
                     path="/services/church-list"
                     component={ServicesChurchList}
+                    roles={['all']}
                     exact
                   />
-                  <ProtectedRoute path="/services" component={Services} exact />
+                  <ProtectedRoute
+                    path="/services"
+                    component={Services}
+                    roles={['all']}
+                    exact
+                  />
                   <ProtectedRoute
                     path="/services/fellowship"
                     component={Fellowship}
+                    roles={['all']}
                     placeholder
                     exact
                   />
                   <ProtectedRoute
                     path="/services/constituency-joint"
                     component={ConstituencyJoint}
+                    roles={['all']}
                     placeholder
                     exact
                   />
-                  <ProtectedReports path="/services/trends" placeholder exact />
+                  <ProtectedReports
+                    path="/services/trends"
+                    roles={['all']}
+                    placeholder
+                    exact
+                  />
                   <ProtectedRoute
                     path="/services/banking-slips"
                     component={BankingSlipView}
+                    roles={['all']}
                     placeholder
                     exact
                   />
                   <ProtectedRoute
                     path="/banking-slip/submission"
                     component={BankingSlipSubmission}
+                    roles={['all']}
                     placeholder
                     exact
                   />
-                  <ProtectedRoute path="/arrivals" component={Arrivals} exact />
+                  <ProtectedRoute
+                    path="/arrivals"
+                    component={Arrivals}
+                    roles={['all']}
+                    exact
+                  />
                   <ProtectedRoute
                     path="/campaigns"
                     component={Campaigns}
+                    roles={['all']}
                     exact
                   />
                   <ProtectedRoute
                     path="/recon"
                     component={Reconciliation}
+                    roles={['all']}
                     exact
                   />
                   <ProtectedRouteHome

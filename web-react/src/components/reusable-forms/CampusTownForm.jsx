@@ -90,6 +90,7 @@ const CampusTownForm = ({
         initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={onSubmit}
+        validateOnMount
       >
         {(formik) => (
           <Container className="py-4">

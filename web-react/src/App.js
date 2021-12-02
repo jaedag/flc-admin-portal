@@ -64,8 +64,6 @@ import Members from 'pages/directory/Members'
 import ChurchDirectoryRoute from 'auth/ChurchDirectoryRoute'
 import MembersDirectoryRoute from './pages/directory/MembersDirectoryRoute.jsx'
 import UserDashboard from 'pages/dashboards/UserDashboard'
-import Fellowship from 'pages/services/Fellowship.jsx'
-import ConstituencyJoint from 'pages/services/ConstituencyJoint.jsx'
 import Navigation from 'pages/dashboards/Navigation.jsx'
 import ServicesChurchList from 'pages/services/ServicesChurchList'
 import ProtectedReports from 'pages/reports/ProtectedReports.jsx'
@@ -453,14 +451,20 @@ const PastorsAdmin = () => {
                   />
                   <Route path="/services" component={Services} exact />
                   <ProtectedRoute
-                    path="/services/fellowship"
-                    component={Fellowship}
+                    path="/services/bacenta"
+                    component={BacentaService}
                     placeholder
                     exact
                   />
                   <ProtectedRoute
-                    path="/services/constituency-joint"
-                    component={ConstituencyJoint}
+                    path="/services/campus"
+                    component={CampusService}
+                    placeholder
+                    exact
+                  />
+                  <ProtectedRoute
+                    path="/services/town"
+                    component={TownService}
                     placeholder
                     exact
                   />
@@ -936,7 +940,7 @@ const PastorsAdmin = () => {
                       'adminCampus',
                       'adminTown',
                     ]}
-                    path="/services/fellowship/no-service"
+                    path="/services/bacenta/no-service"
                     component={BacentaServiceCancelled}
                     placeholder
                   />
@@ -948,7 +952,7 @@ const PastorsAdmin = () => {
                       'adminTown',
                       'leaderBacenta',
                     ]}
-                    path="/services/fellowship/form"
+                    path="/services/bacenta/form"
                     component={BacentaService}
                   />{' '}
                   <ProtectedRoute

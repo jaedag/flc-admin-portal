@@ -30,7 +30,7 @@ const Services = () => {
               iconComponent={Book}
               title="Fellowship Service"
               color="members"
-              onClick={() => history.push(`/services/fellowship`)}
+              onClick={() => history.push(`/services/bacenta`)}
               noCaption
             />
           )}

@@ -244,6 +244,9 @@ export const parseMemberCount = (number) => {
   return number + ' Members'
 }
 export const getMemberCount = (servant) => {
+  if (!servant?.memberCount) {
+    return
+  }
   return (
     parseMemberCount(servant?.memberCount) +
     ', ' +

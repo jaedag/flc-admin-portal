@@ -113,6 +113,7 @@ function ComboboxTwoVariables(props) {
           name: name,
           className: 'form-control',
           onChange: (_event, { newValue }) => {
+            setFieldValue(`${name}`, '')
             setSearchString(newValue)
           },
         }}

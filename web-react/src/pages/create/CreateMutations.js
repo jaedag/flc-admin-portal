@@ -203,20 +203,20 @@ export const CREATE_TOWN_MUTATION = gql`
   mutation CreateTown(
     $townName: String!
     $leaderId: ID!
-    $bishopId: ID!
+    $councilId: ID!
     $centres: [ID]
   ) {
     CreateTown(
       townName: $townName
       leaderId: $leaderId
-      bishopId: $bishopId
+      councilId: $councilId
       centres: $centres
     ) {
       id
       name
-      bishop {
+      council {
         id
-        isBishopForTown {
+        towns {
           id
           name
         }
@@ -229,20 +229,20 @@ export const CREATE_CAMPUS_MUTATION = gql`
   mutation CreateCampus(
     $campusName: String!
     $leaderId: ID!
-    $bishopId: ID!
+    $councilId: ID!
     $centres: [ID]
   ) {
     CreateCampus(
       campusName: $campusName
       leaderId: $leaderId
-      bishopId: $bishopId
+      councilId: $councilId
       centres: $centres
     ) {
       id
       name
-      bishop {
+      council {
         id
-        isBishopForCampus {
+        campuses {
           id
           name
         }

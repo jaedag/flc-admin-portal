@@ -957,7 +957,7 @@ type Mutation {
   CreateTown(
     townName: String!
     leaderId: ID!
-    bishopId: ID!
+    councilId: ID!
     centres: [ID]
   ): Town
     @auth(rules: [{ roles: ["adminFederal", "adminCouncil"] }])
@@ -969,26 +969,26 @@ type Mutation {
       WITH town
       MATCH (leader:Member {id: $leaderId})
       MATCH (currentUser:Member {auth_id:$auth.jwt.sub})
-      MATCH (bishop:Member {id: $bishopId})
+      MATCH (council:Council {id: $councilId})
 
        CREATE (log:HistoryLog)
         SET
         log.id =  apoc.create.uuid(),
         log.timeStamp = datetime(),
-        log.historyRecord = leader.firstName + ' ' +leader.lastName + ' started ' + $townName +' Town Church under Bishop '+ bishop.firstName+ ' ' + bishop.lastName
+        log.historyRecord = leader.firstName + ' ' +leader.lastName + ' started ' + $townName +' Town Church under '+ council.name+ ' Council'
 
-      MERGE (bishop)-[:HAS]->(town)
+      MERGE (council)-[:HAS]->(town)
       MERGE (leader)-[:LEADS]->(town)
 
       MERGE (date:TimeGraph {date: date(date())})
       MERGE (log)-[:LOGGED_BY]->(currentUser)
       MERGE (log)-[:RECORDED_ON]->(date)
-      MERGE (bishop)-[:HAS_HISTORY]->(log)
+      MERGE (council)-[:HAS_HISTORY]->(log)
       MERGE (town)-[:HAS_HISTORY]->(log)
       MERGE (leader)-[r:HAS_HISTORY]->(log)
         SET r.current = true
 
-      WITH town, bishop
+      WITH town, council
       CALL {
         WITH town
         WITH town WHERE $centres <> []
@@ -1007,7 +1007,7 @@ type Mutation {
   CreateCampus(
     campusName: String!
     leaderId: ID!
-    bishopId: ID!
+    councilId: ID!
     centres: [ID]
   ): Campus
     @auth(rules: [{ roles: ["adminFederal", "adminCouncil"] }])
@@ -1019,26 +1019,26 @@ type Mutation {
       WITH campus
       MATCH (leader:Member {id: $leaderId})
       MATCH (currentUser:Member {auth_id:$auth.jwt.sub})
-      MATCH (bishop:Member {id: $bishopId})
+      MATCH (council:Council {id: $councilId})
 
        CREATE (log:HistoryLog)
         SET
         log.id =  apoc.create.uuid(),
         log.timeStamp = datetime(),
-        log.historyRecord = leader.firstName + ' ' +leader.lastName + ' started ' + $campusName +' Campus Church under Bishop '+ bishop.firstName+ ' ' + bishop.lastName
+        log.historyRecord = leader.firstName + ' ' +leader.lastName + ' started ' + $campusName +' Campus Church under '+ council.name+ ' Council'
 
-      MERGE (bishop)-[:HAS]->(campus)
+      MERGE (council)-[:HAS]->(campus)
       MERGE (leader)-[:LEADS]->(campus)
 
       MERGE (date:TimeGraph {date: date(date())})
       MERGE (log)-[:LOGGED_BY]->(currentUser)
       MERGE (log)-[:RECORDED_ON]->(date)
-      MERGE (bishop)-[:HAS_HISTORY]->(log)
+      MERGE (council)-[:HAS_HISTORY]->(log)
       MERGE (campus)-[:HAS_HISTORY]->(log)
       MERGE (leader)-[r:HAS_HISTORY]->(log)
         SET r.current = true
 
-      WITH campus, bishop
+      WITH campus, council
       CALL {
         WITH campus
         WITH campus WHERE $centres <> []
@@ -1194,7 +1194,7 @@ type Mutation {
     email: String
     phoneNumber: String!
     whatsappNumber: String
-    do: String
+    dob: String
     maritalStatus: String!
     gender: String!
     occupation: String

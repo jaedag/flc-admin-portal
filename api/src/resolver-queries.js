@@ -257,7 +257,7 @@ WITH log,centre,oldLeader,leader, campusTown
    SET r1.current = true,
    r2.current = true,
    r3.currennt = true
-   REMOVE oldTownHistory.current
+   REMOVE oldCentreHistory.current
 
    RETURN leader.id AS id, leader.auth_id AS auth_id, leader.firstName AS firstName, leader.lastName AS lastName
 `

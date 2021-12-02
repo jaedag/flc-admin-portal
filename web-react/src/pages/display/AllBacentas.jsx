@@ -4,13 +4,12 @@ import { useQuery } from '@apollo/client'
 import DisplayChurchList from '../../components/DisplayChurchList'
 import { GET_CENTRE_BACENTAS } from '../../queries/ListQueries'
 import { ChurchContext } from '../../contexts/ChurchContext'
-import { MemberContext } from '../../contexts/MemberContext'
 import RoleView from '../../auth/RoleView'
 import BaseComponent from 'components/base-component/BaseComponent'
+import { Container, Row, Col, Button } from 'react-bootstrap'
 
 const DisplayAllBacentas = () => {
   const { centreId, setCentreId } = useContext(ChurchContext)
-  const { setMemberId } = useContext(MemberContext)
 
   const { data, loading, error } = useQuery(GET_CENTRE_BACENTAS, {
     variables: { id: centreId },
@@ -20,10 +19,10 @@ const DisplayAllBacentas = () => {
 
   return (
     <BaseComponent loading={loading} error={error} data={data}>
-      <div className=" container">
+      <Container>
         <div className="mb-4 border-bottom">
-          <div className="row justify-content-between">
-            <div className="col-auto">
+          <Row className="mb-2">
+            <Col>
               <Link
                 to={`/centre/displaydetails`}
                 onClick={() => {
@@ -32,7 +31,7 @@ const DisplayAllBacentas = () => {
               >
                 <h4>{`${bacentas?.[0].centre.name} Centre`}</h4>
               </Link>
-            </div>
+            </Col>
             <RoleView
               roles={[
                 'adminFederal',
@@ -41,45 +40,27 @@ const DisplayAllBacentas = () => {
                 'adminTown',
               ]}
             >
-              <div className="col-auto">
-                <Link
-                  to="/bacenta/addbacenta"
-                  className="btn btn-primary text-nowrap"
-                >
+              <Col className="col-auto">
+                <Link to="/bacenta/addbacenta" className="btn btn-primary">
                   Add Bacenta
                 </Link>
-              </div>
+              </Col>
             </RoleView>
-          </div>
+          </Row>
 
-          <div className="row">
-            <Link
-              className="col"
-              to="/member/displaydetails"
-              onClick={() => {
-                setMemberId(`${bacentas?.[0].centre.leader.id}`)
-              }}
-            >
-              <h6 className="text-muted">
-                Bacenta Leader:
-                {bacentas?.[0].centre.leader
-                  ? ` ${bacentas?.[0].centre.leader.fullName}`
-                  : null}
-              </h6>
-            </Link>
-          </div>
-
-          <div className="row justify-content-between">
-            <div className="py-1 px-2 m-2 card">{`Bacentas: ${bacentas?.length}`}</div>
-
-            <Link
-              to="/centre/members"
-              className="py-1 px-2 m-2 card"
-            >{`Membership: ${data?.centres[0].memberCount}`}</Link>
-          </div>
+          <Row className="justify-content-between mb-2">
+            <Col>
+              <Button>{`Bacentas: ${bacentas?.length}`}</Button>
+            </Col>
+            <Col className="col-auto">
+              <Link to="/centre/members">
+                <Button>{`Membership: ${data?.centres[0].memberCount}`}</Button>
+              </Link>
+            </Col>
+          </Row>
         </div>
         <DisplayChurchList data={bacentas} churchType="Bacenta" />
-      </div>
+      </Container>
     </BaseComponent>
   )
 }

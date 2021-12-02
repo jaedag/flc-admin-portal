@@ -24,6 +24,7 @@ import SubmitButton from 'components/formik-components/SubmitButton'
 
 function MemberForm({ initialValues, onSubmit, title, loading }) {
   const { councilId } = useContext(ChurchContext)
+
   const { data: ministriesData, loading: ministriesLoading } = useQuery(
     GET_MINISTRIES
   )

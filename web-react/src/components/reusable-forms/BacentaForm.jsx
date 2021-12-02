@@ -89,7 +89,7 @@ const BacentaForm = (props) => {
     : []
   let townCampusIdVar = props.initialValues.townCampusSelect
 
-  if (!props.initialValues.bacentaName) {
+  if (!props.initialValues.bacentaName && !props.newBacenta) {
     return <LoadingScreen />
   }
 

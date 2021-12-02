@@ -12,7 +12,7 @@ import { NEW_CAMPUS_LEADER, NEW_TOWN_LEADER } from './MakeLeaderMutations'
 import CampusTownForm from '../../components/reusable-forms/CampusTownForm'
 
 const CreateTownCampus = () => {
-  const { church, clickCard, bishopId, setTownId, setBishopId } = useContext(
+  const { church, clickCard, councilId, setTownId, setCouncilId } = useContext(
     ChurchContext
   )
 
@@ -21,13 +21,15 @@ const CreateTownCampus = () => {
   const initialValues = {
     campusTownName: '',
     leaderId: '',
-    bishopSelect: '',
+    councilSelect: '',
     centres: [''],
   }
 
   const [NewTownLeader] = useMutation(NEW_TOWN_LEADER)
   const [CreateTown] = useMutation(CREATE_TOWN_MUTATION, {
-    refetchQueries: [{ query: GET_COUNCIL_TOWNS, variables: { id: bishopId } }],
+    refetchQueries: [
+      { query: GET_COUNCIL_TOWNS, variables: { id: councilId } },
+    ],
     onCompleted: (newTownData) => {
       setTownId(newTownData.CreateTown.id)
       history.push(`/${church.church}/displaydetails`)
@@ -37,20 +39,20 @@ const CreateTownCampus = () => {
   const [NewCampusLeader] = useMutation(NEW_CAMPUS_LEADER)
   const [CreateCampus] = useMutation(CREATE_CAMPUS_MUTATION, {
     refetchQueries: [
-      { query: GET_COUNCIL_CAMPUSES, variables: { id: bishopId } },
+      { query: GET_COUNCIL_CAMPUSES, variables: { id: councilId } },
     ],
   })
 
   //onSubmit receives the form state as argument
   const onSubmit = (values, onSubmitProps) => {
-    setBishopId(values.bishopSelect)
+    setCouncilId(values.councilSelect)
 
     if (church.church === 'town') {
       CreateTown({
         variables: {
           townName: values.campusTownName,
           leaderId: values.leaderId,
-          bishopId: values.bishopSelect,
+          councilId: values.councilSelect,
           centres: values.centres,
         },
       })
@@ -73,7 +75,7 @@ const CreateTownCampus = () => {
         variables: {
           campusName: values.campusTownName,
           leaderId: values.leaderId,
-          bishopId: values.bishopSelect,
+          councilId: values.councilSelect,
           centres: values.centres,
         },
       })

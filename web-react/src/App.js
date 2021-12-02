@@ -71,6 +71,8 @@ import BankingSlipView from 'pages/services/BankingSlipView.jsx'
 import BankingSlipSubmission from 'pages/services/BankingSlipSubmission.jsx'
 import DetailsCouncil from 'pages/display/DetailsCouncil.jsx'
 import CouncilReport from 'pages/reports/CouncilReport.jsx'
+import Fellowship from 'pages/services/Fellowship.jsx'
+import ConstituencyJoint from 'pages/services/ConstituencyJoint.jsx'
 
 const PastorsAdmin = () => {
   const [church, setChurch] = useState(
@@ -452,19 +454,19 @@ const PastorsAdmin = () => {
                   <Route path="/services" component={Services} exact />
                   <ProtectedRoute
                     path="/services/bacenta"
-                    component={BacentaService}
+                    component={Fellowship}
                     placeholder
                     exact
                   />
                   <ProtectedRoute
                     path="/services/campus"
-                    component={CampusService}
+                    component={ConstituencyJoint}
                     placeholder
                     exact
                   />
                   <ProtectedRoute
                     path="/services/town"
-                    component={TownService}
+                    component={ConstituencyJoint}
                     placeholder
                     exact
                   />

@@ -357,6 +357,6 @@ export const SERVANT_CHURCHES_COUNT = gql`
     leadsBacentaCount(id: $id)
     leadsCentreCount(id: $id)
     leadsConstituencyCount(id: $id)
-    bishopConstituencyCount(id: $id)
+    leadsCouncilCount(id: $id)
   }
 `

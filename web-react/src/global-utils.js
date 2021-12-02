@@ -257,6 +257,17 @@ export const getMemberCount = (servant) => {
 export const getChurchCount = (servant) => {
   let churchesCount = ''
 
+  if (servant?.leadsCouncilCount) {
+    if (churchesCount) {
+      churchesCount = churchesCount + ','
+    }
+    if (servant.leadsCouncilCount === 1) {
+      churchesCount = servant.leadsCouncilCount + ' Council'
+    } else {
+      churchesCount = servant.leadsCouncilCount + ' Councils'
+    }
+  }
+
   if (servant?.leadsConstituencyCount) {
     if (churchesCount) {
       churchesCount = churchesCount + ','
@@ -265,17 +276,6 @@ export const getChurchCount = (servant) => {
       churchesCount = servant.leadsConstituencyCount + ' Constituency'
     } else {
       churchesCount = servant.leadsConstituencyCount + ' Constituencies'
-    }
-  }
-
-  if (servant?.bishopConstituencyCount) {
-    if (churchesCount) {
-      churchesCount = churchesCount + ','
-    }
-    if (servant.bishopConstituencyCount === 1) {
-      churchesCount = servant.bishopConstituencyCount + ' Constituency'
-    } else {
-      churchesCount = servant.bishopConstituencyCount + ' Constituencies'
     }
   }
 

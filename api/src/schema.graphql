@@ -660,12 +660,12 @@ type Query {
       """
     )
 
-  bishopConstituencyCount(id: ID!): Int
+  leadsCouncilCount(id: ID!): Int
     @cypher(
       statement: """
       MATCH (member:Member {id:$id})
-      MATCH (member)-[:LEADS|HAS|IS_ADMIN_FOR*1..2]->(constituency) WHERE constituency:Campus OR constituency:Town
-      RETURN COUNT(DISTINCT constituency)
+      MATCH (member)-[:LEADS|HAS|IS_ADMIN_FOR]->(council:Council)
+      RETURN COUNT(DISTINCT council)
       """
     )
 

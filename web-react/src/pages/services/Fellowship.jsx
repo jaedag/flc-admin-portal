@@ -25,12 +25,14 @@ const Fellowship = () => {
             title="Fill Service Form"
             color="members"
             onClick={() => history.push(`/services/fellowship/form`)}
+            noCaption
           />
           <MenuButton
             iconComponent={XCircleFill}
             title="No Service"
             color="members"
             onClick={() => history.push(`/services/fellowship/no-service`)}
+            noCaption
           />
         </div>
       </Container>

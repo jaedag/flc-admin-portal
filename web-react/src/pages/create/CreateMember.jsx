@@ -67,6 +67,7 @@ const CreateMember = () => {
 
   const onSubmit = async (values, onSubmitProps) => {
     const { setSubmitting, resetForm } = onSubmitProps
+    setSubmitting(true)
     // Variables that are not controlled by formik
 
     const pastoralAppointment = filterPastoralTitles(values.pastoralAppointment)

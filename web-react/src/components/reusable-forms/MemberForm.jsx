@@ -4,7 +4,6 @@ import * as Yup from 'yup'
 import React, { useContext } from 'react'
 import RoleView from '../../auth/RoleView'
 import { ChurchContext } from '../../contexts/ChurchContext'
-import { MemberContext } from '../../contexts/MemberContext'
 import {
   GENDER_OPTIONS,
   makeSelectOptions,
@@ -19,12 +18,13 @@ import ErrorScreen from '../base-component/ErrorScreen'
 import { COUNCIL_BACENTA_DROPDOWN } from '../formik-components/ComboboxQueries'
 import FormikControl from '../formik-components/FormikControl'
 import { HeadingPrimary } from '../HeadingPrimary/HeadingPrimary'
-import { Col, Container, Row, Button } from 'react-bootstrap'
+import { Col, Container, Row } from 'react-bootstrap'
 import LoadingScreen from 'components/base-component/LoadingScreen'
+import SubmitButton from 'components/formik-components/SubmitButton'
 
 function MemberForm({ initialValues, onSubmit, title, loading }) {
   const { councilId } = useContext(ChurchContext)
-  const { theme } = useContext(MemberContext)
+
   const { data: ministriesData, loading: ministriesLoading } = useQuery(
     GET_MINISTRIES
   )
@@ -339,15 +339,7 @@ function MemberForm({ initialValues, onSubmit, title, loading }) {
                 </RoleView>
 
                 <Col>
-                  <Button
-                    variant="primary"
-                    size="lg"
-                    type="submit"
-                    className={`btn-main ${theme}`}
-                    disabled={!formik.isValid || formik.isSubmitting}
-                  >
-                    Submit
-                  </Button>
+                  <SubmitButton formik={formik} />
                 </Col>
               </Row>
             </Form>

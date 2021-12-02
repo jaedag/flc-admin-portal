@@ -108,6 +108,7 @@ const errorHandling = (member) => {
 }
 const rearrangeCypherObject = (response) => {
   let member = {}
+
   response.records[0]?.keys.forEach(
     (key, i) => (member[key] = response.records[0]._fields[i])
   )
@@ -658,6 +659,7 @@ export const resolvers = {
         cypher.checkMemberEmailExists,
         args
       )
+
       const memberCheck = rearrangeCypherObject(memberResponse)
 
       if (memberCheck.email || memberCheck.whatsappNumber) {

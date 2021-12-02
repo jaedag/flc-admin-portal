@@ -945,7 +945,7 @@ type Mutation {
     email: String!
     phoneNumber: String!
     whatsappNumber: String!
-    do: String!
+    dob: String!
     maritalStatus: String!
     gender: String!
     occupation: String

@@ -17,7 +17,7 @@ const DisplayAllBacentas = () => {
   })
 
   const bacentas = data?.centres[0]?.bacentas
-  console.log(data)
+
   return (
     <BaseComponent loading={loading} error={error} data={data}>
       <div className=" container">

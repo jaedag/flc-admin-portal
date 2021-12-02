@@ -18,7 +18,7 @@ const ServiceForm = ({
   churchType,
   RecordServiceMutation,
 }) => {
-  const { bishopId } = useContext(ChurchContext)
+  const { councilId } = useContext(ChurchContext)
   const { theme } = useContext(MemberContext)
   const { setServiceRecordId } = useContext(ServiceContext)
   const history = useHistory()
@@ -159,12 +159,12 @@ const ServiceForm = ({
                                     setFieldValue={formik.setFieldValue}
                                     optionsQuery={COUNCIL_MEMBER_DROPDOWN}
                                     queryVariable1="id"
-                                    variable1={bishopId}
+                                    variable1={councilId}
                                     queryVariable2="nameSearch"
                                     suggestionText="name"
                                     suggestionID="id"
                                     dataset="councilMemberDropdown"
-                                    aria-describedby="Bishop Member List"
+                                    aria-describedby="Council Member List"
                                     className="form-control"
                                     error={
                                       formik.errors.treasurers &&

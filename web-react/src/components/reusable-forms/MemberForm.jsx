@@ -61,6 +61,7 @@ function MemberForm({ initialValues, onSubmit, title, loading }) {
         initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={onSubmit}
+        validateOnMount
       >
         {(formik) => (
           <Container>

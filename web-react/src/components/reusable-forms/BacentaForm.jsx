@@ -103,6 +103,7 @@ const BacentaForm = (props) => {
         initialValues={props.initialValues}
         validationSchema={validationSchema}
         onSubmit={props.onSubmit}
+        validateOnMount
       >
         {(formik) => (
           <Container className="py-4">

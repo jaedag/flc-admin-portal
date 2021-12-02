@@ -78,6 +78,7 @@ const CentreForm = ({ initialValues, onSubmit, title, newCentre }) => {
         initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={onSubmit}
+        validateOnMount
       >
         {(formik) => (
           <Container className="py-4">
@@ -138,7 +139,7 @@ const CentreForm = ({ initialValues, onSubmit, title, newCentre }) => {
                             suggestionText="name"
                             suggestionID="id"
                             dataset="councilMemberDropdown"
-                            aria-describedby="Bishop Member List"
+                            aria-describedby="Council Member List"
                             className="form-control"
                             error={formik.errors.leaderId}
                           />

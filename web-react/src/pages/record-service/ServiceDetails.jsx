@@ -10,6 +10,7 @@ import './ServiceDetails.css'
 const ServiceDetails = ({ service, church }) => {
   const { theme } = useContext(MemberContext)
   const history = useHistory()
+
   return (
     <Container>
       <PlaceholderCustom as="h3">
@@ -17,6 +18,7 @@ const ServiceDetails = ({ service, church }) => {
       </PlaceholderCustom>
       <PlaceholderCustom as="h6">
         <HeadingSecondary>{`${church?.name} ${church?.__typename}`}</HeadingSecondary>
+        <p>{`Recorded by ${service.created_by.fullName}`}</p>
       </PlaceholderCustom>
       <Row>
         <Col>

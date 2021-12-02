@@ -263,7 +263,7 @@ const DisplayChurchDetails = (props) => {
           <Button
             className={`btn-trends ${theme}`}
             onClick={() => {
-              history.push(`/${props.churchType.toLowerCase()}/record-service`)
+              history.push(`/services/${props.churchType.toLowerCase()}`)
             }}
           >
             Fill Service Form

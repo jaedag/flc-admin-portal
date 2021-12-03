@@ -1,6 +1,6 @@
 {
   "name": "grand-stack-starter-web-react",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "React app for GRANDstack Starter",
   "dependencies": {
     "@apollo/client": "^3.4.16",

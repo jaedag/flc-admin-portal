@@ -61,8 +61,7 @@ const notifyMember = (
   mg.messages
     .create('mg.firstlovecenter.com', {
       from: 'FL Accra Admin <no-reply@firstlovecenter.org>',
-      to: ['admin@firstlovecenter.com'],
-      // to: [member.email, 'admin@firstlovecenter.com'],
+      to: [member.email, 'admin@firstlovecenter.com'],
       subject: subject,
       text: body,
       // html: '<h1>Testing some Mailgun awesomness!</h1>', //HTML Version of the Message for Better Styling

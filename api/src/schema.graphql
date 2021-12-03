@@ -1166,9 +1166,12 @@ type Mutation {
     )
     @cypher(
       statement: """
-      CREATE (bacenta:Bacenta {name:$bacentaName,location: point({latitude:toFloat($venueLatitude), longitude:toFloat($venueLongitude), crs:'WGS-84'})})
+      MATCH (lastCode:LastBankingCode)
+      CREATE (bacenta:Bacenta:ActiveBacenta {name:$bacentaName,location: point({latitude:toFloat($venueLatitude), longitude:toFloat($venueLongitude), crs:'WGS-84'})})
          	SET
-      	bacenta.id = apoc.create.uuid()
+      	bacenta.id = apoc.create.uuid(),
+        bacenta.bankingCode = lastCode.number + 1,
+        lastCode.number = bacenta.bankingCode
 
       WITH bacenta
       MATCH (centre:Centre {id: $centreId})

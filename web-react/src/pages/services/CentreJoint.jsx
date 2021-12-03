@@ -6,7 +6,7 @@ import { Container } from 'react-bootstrap'
 import { PencilSquare } from 'react-bootstrap-icons'
 import { useHistory } from 'react-router'
 
-const ConstituencyJoint = () => {
+const CentreJoint = () => {
   const { currentUser, theme } = useContext(MemberContext)
   const history = useHistory()
 
@@ -16,7 +16,7 @@ const ConstituencyJoint = () => {
         <PlaceholderCustom xs={12} as="h1">
           <div className="text-center">
             <h1 className="mb-0  page-header">{`${currentUser.currentChurch?.name} ${currentUser.currentChurch?.__typename}`}</h1>
-            <p className={`${theme} menu-subheading`}>Constituency</p>
+            <p className={`${theme} menu-subheading`}>Centre</p>
           </div>
         </PlaceholderCustom>
 
@@ -28,7 +28,7 @@ const ConstituencyJoint = () => {
             noCaption
             onClick={() =>
               history.push(
-                `/services/${currentUser.currentChurch?.__typename.toLowerCase()}/constituency-joint/form`
+                `/services/${currentUser.currentChurch?.__typename.toLowerCase()}/centre-joint/form`
               )
             }
           />
@@ -38,4 +38,4 @@ const ConstituencyJoint = () => {
   )
 }
 
-export default ConstituencyJoint
+export default CentreJoint

@@ -18,7 +18,7 @@ const ServiceDetails = ({ service, church }) => {
       </PlaceholderCustom>
       <PlaceholderCustom as="h6">
         <HeadingSecondary>{`${church?.name} ${church?.__typename}`}</HeadingSecondary>
-        <p>{`Recorded by ${service.created_by.fullName}`}</p>
+        <p>{`Recorded by ${service?.created_by.fullName}`}</p>
       </PlaceholderCustom>
       <Row>
         <Col>

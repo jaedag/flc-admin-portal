@@ -73,6 +73,7 @@ import DetailsCouncil from 'pages/display/DetailsCouncil.jsx'
 import CouncilReport from 'pages/reports/CouncilReport.jsx'
 import Fellowship from 'pages/services/Fellowship.jsx'
 import ConstituencyJoint from 'pages/services/ConstituencyJoint.jsx'
+import CentreJoint from 'pages/services/CentreJoint.jsx'
 
 const PastorsAdmin = () => {
   const [church, setChurch] = useState(
@@ -455,6 +456,12 @@ const PastorsAdmin = () => {
                   <ProtectedRoute
                     path="/services/bacenta"
                     component={Fellowship}
+                    placeholder
+                    exact
+                  />
+                  <ProtectedRoute
+                    path="/services/centre"
+                    component={CentreJoint}
                     placeholder
                     exact
                   />

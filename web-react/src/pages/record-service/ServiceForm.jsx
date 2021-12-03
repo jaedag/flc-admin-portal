@@ -8,9 +8,9 @@ import { COUNCIL_MEMBER_DROPDOWN } from 'queries/ListQueries'
 import React, { useContext } from 'react'
 import { useHistory } from 'react-router'
 import { ServiceContext } from 'contexts/ServiceContext'
-import { Button, Col, Container, Row } from 'react-bootstrap'
+import { Col, Container, Row } from 'react-bootstrap'
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
-import { MemberContext } from 'contexts/MemberContext'
+import SubmitButton from 'components/formik-components/SubmitButton'
 
 const ServiceForm = ({
   church,
@@ -19,7 +19,6 @@ const ServiceForm = ({
   RecordServiceMutation,
 }) => {
   const { councilId } = useContext(ChurchContext)
-  const { theme } = useContext(MemberContext)
   const { setServiceRecordId } = useContext(ServiceContext)
   const history = useHistory()
 
@@ -64,6 +63,7 @@ const ServiceForm = ({
   })
 
   const onSubmit = (values, onSubmitProps) => {
+    onSubmitProps.setSubmitting(true)
     RecordServiceMutation({
       variables: {
         id: churchId,
@@ -212,15 +212,7 @@ const ServiceForm = ({
                       />
                     </Col>
                     <div className="d-flex justify-content-center mt-5">
-                      <Button
-                        variant="primary"
-                        size="lg"
-                        type="submit"
-                        className={`btn-main ${theme}`}
-                        disabled={!formik.isValid || formik.isSubmitting}
-                      >
-                        Submit
-                      </Button>
+                      <SubmitButton formik={formik} />
                     </div>
                   </Col>
                 </div>

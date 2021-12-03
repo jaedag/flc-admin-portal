@@ -34,6 +34,15 @@ const Services = () => {
               noCaption
             />
           )}
+          {currentUser.currentChurch?.__typename === 'Centre' && (
+            <MenuButton
+              iconComponent={Book}
+              title="Centre Service"
+              color="members"
+              onClick={() => history.push(`/services/centre`)}
+              noCaption
+            />
+          )}
           {(currentUser.currentChurch?.__typename === 'Town' ||
             currentUser.currentChurch?.__typename === 'Campus') && (
             <MenuButton

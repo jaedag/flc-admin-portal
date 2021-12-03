@@ -159,7 +159,7 @@ type NoService @auth(rules: [{ isAuthenticated: true }]) {
       RETURN date(date.date).week
       """
     )
-  historyLog: HistoryLog @relationship(type: "HAS_RECORD", direction: IN)
+  serviceLog: ServiceLog @relationship(type: "HAS_RECORD", direction: IN)
   noServiceReason: String
 }
 

@@ -27,7 +27,9 @@ const DisplayChurchDetails = (props) => {
   const history = useHistory()
   const isConstituency =
     props.churchType === 'Campus' || props.churchType === 'Town'
-  const { setMemberId, theme } = useContext(MemberContext)
+  const { setMemberId, theme, setCurrentUser, currentUser } = useContext(
+    MemberContext
+  )
   const [submitting, setSubmitting] = useState(false)
   const {
     clickCard,
@@ -263,10 +265,17 @@ const DisplayChurchDetails = (props) => {
           <Button
             className={`btn-trends ${theme}`}
             onClick={() => {
+              setCurrentUser({
+                ...currentUser,
+                currentChurch: {
+                  name: props.name,
+                  __typename: props.churchType,
+                },
+              })
               history.push(`/services/${props.churchType.toLowerCase()}`)
             }}
           >
-            Fill Service Form
+            Service Forms
           </Button>
         </div>
 

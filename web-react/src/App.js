@@ -456,37 +456,48 @@ const PastorsAdmin = () => {
                   <ProtectedRoute
                     path="/services/bacenta"
                     component={Fellowship}
+                    roles={['all']}
                     placeholder
                     exact
                   />
                   <ProtectedRoute
                     path="/services/centre"
                     component={CentreJoint}
+                    roles={['all']}
                     placeholder
                     exact
                   />
                   <ProtectedRoute
                     path="/services/campus"
                     component={ConstituencyJoint}
+                    roles={['all']}
                     placeholder
                     exact
                   />
                   <ProtectedRoute
                     path="/services/town"
                     component={ConstituencyJoint}
+                    roles={['all']}
                     placeholder
                     exact
                   />
-                  <ProtectedReports path="/services/trends" placeholder exact />
+                  <ProtectedReports
+                    path="/services/trends"
+                    roles={['all']}
+                    placeholder
+                    exact
+                  />
                   <ProtectedRoute
                     path="/services/banking-slips"
                     component={BankingSlipView}
+                    roles={['all']}
                     placeholder
                     exact
                   />
                   <ProtectedRoute
                     path="/banking-slip/submission"
                     component={BankingSlipSubmission}
+                    roles={['all']}
                     placeholder
                     exact
                   />

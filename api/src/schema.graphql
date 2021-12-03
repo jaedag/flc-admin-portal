@@ -380,7 +380,7 @@ type Centre {
 # Shared Units: Bacenta, Bacenta, Sonta
 type Bacenta {
   id: ID @id
-  bankingCode: String
+  bankingCode: Int
   name: String
   location: Point
   centre: Centre @relationship(type: "HAS", direction: IN)

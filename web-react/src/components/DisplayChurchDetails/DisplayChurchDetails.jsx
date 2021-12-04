@@ -268,6 +268,7 @@ const DisplayChurchDetails = (props) => {
               setCurrentUser({
                 ...currentUser,
                 currentChurch: {
+                  id: props.churchId,
                   name: props.name,
                   __typename: props.churchType,
                 },

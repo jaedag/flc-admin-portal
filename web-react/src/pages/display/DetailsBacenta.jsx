@@ -73,6 +73,7 @@ const DetailsBacenta = () => {
       loading={bacentaLoading}
       name={bacenta?.name}
       bankingCode={bacenta?.bankingCode}
+      churchId={bacentaId}
       bacentaType={bacentaType}
       active={vacation ? 'Vacation' : 'Active'}
       leaderTitle="Bacenta Leader"

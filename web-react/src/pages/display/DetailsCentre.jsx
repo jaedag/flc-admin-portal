@@ -28,6 +28,7 @@ const DetailsCentre = () => {
         name={displayCentre?.name}
         leaderTitle="Centre Leader"
         leader={displayCentre?.leader}
+        churchId={centreId}
         churchHeading="Bacentas"
         churchType="Centre"
         subChurch="Bacenta"

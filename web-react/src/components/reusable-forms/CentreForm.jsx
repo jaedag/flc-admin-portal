@@ -231,10 +231,7 @@ const CentreForm = ({ initialValues, onSubmit, title, newCentre }) => {
                       },
                     })
                       .then((res) => {
-                        clickCard(
-                          res.data.CloseDownCentre?.campus ||
-                            res.data.CloseDownCentre?.town
-                        )
+                        clickCard(res.data.CloseDownCentre)
                         togglePopup()
                         history.push(`/${church.church}/displaydetails`)
                       })

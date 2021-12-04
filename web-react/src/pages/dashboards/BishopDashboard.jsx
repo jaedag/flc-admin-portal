@@ -29,7 +29,7 @@ const BishopDashboard = () => {
     setFilters,
     clickCard,
     bishopId,
-    setBishopId,
+    setCouncilId,
   } = useContext(ChurchContext)
 
   const { currentUser } = useContext(MemberContext)
@@ -148,7 +148,7 @@ const BishopDashboard = () => {
             <p
               onClick={() => {
                 clickCard(bishop?.admin)
-                setBishopId(bishop?.id)
+                setCouncilId(bishop?.id)
                 history.push('/member/displaydetails')
               }}
             >

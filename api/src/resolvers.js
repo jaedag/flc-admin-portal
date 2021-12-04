@@ -107,11 +107,12 @@ const errorHandling = (member) => {
 }
 const rearrangeCypherObject = (response) => {
   let member = {}
+  // console.log(response)
 
   response.records[0]?.keys.forEach(
     (key, i) => (member[key] = response.records[0]._fields[i])
   )
-
+  console.log(member)
   return member?.member || member
 }
 const parseForCache = (servant, church, verb, role) => {
@@ -732,11 +733,11 @@ export const resolvers = {
         throwErrorMsg(error)
       }
     },
-    MakeBishopAdmin: async (object, args, context) => {
-      return MakeServant(context, args, ['adminFederal'], 'Bishop', 'Admin')
+    MakeCouncilAdmin: async (object, args, context) => {
+      return MakeServant(context, args, ['adminFederal'], 'Council', 'Admin')
     },
-    RemoveBishopAdmin: async (object, args, context) => {
-      return RemoveServant(context, args, ['adminFederal'], 'Bishop', 'Admin')
+    RemoveCouncilAdmin: async (object, args, context) => {
+      return RemoveServant(context, args, ['adminFederal'], 'Council', 'Admin')
     },
     MakeTownAdmin: async (object, args, context) => {
       return MakeServant(

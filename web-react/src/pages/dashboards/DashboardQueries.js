@@ -104,6 +104,7 @@ export const SERVANTS_DASHBOARD = gql`
       isAdminForTown {
         id
         name
+        stream
         memberCount
         leader {
           id
@@ -133,6 +134,7 @@ export const SERVANTS_DASHBOARD = gql`
       isAdminForCampus {
         id
         name
+        stream
         memberCount
         leader {
           id
@@ -193,16 +195,19 @@ export const SERVANTS_DASHBOARD = gql`
       isBishopForCampus {
         id
         name
+        stream
       }
       isBishopForTown {
         id
         name
+        stream
       }
 
       # The person leads in the Bacenta side
       leadsBacenta {
         id
         name
+        stream
         memberCount
         serviceLogs {
           id
@@ -221,6 +226,7 @@ export const SERVANTS_DASHBOARD = gql`
       leadsCentre {
         id
         name
+        stream
         memberCount
         campus {
           id
@@ -257,6 +263,7 @@ export const SERVANTS_DASHBOARD = gql`
       leadsTown {
         id
         name
+        stream
         memberCount
         leader {
           id
@@ -286,6 +293,7 @@ export const SERVANTS_DASHBOARD = gql`
       leadsCampus {
         id
         name
+        stream
         memberCount
         leader {
           id
@@ -315,6 +323,7 @@ export const SERVANTS_DASHBOARD = gql`
       leadsSonta {
         id
         name
+        stream
         campus {
           id
           bishop {

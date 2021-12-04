@@ -247,10 +247,7 @@ const CampusTownForm = ({
                       },
                     })
                       .then((res) => {
-                        clickCard(
-                          res.data.CloseDownCampusTown?.campusBishop ??
-                            res.data.CloseDownCampusTown?.townBishop
-                        )
+                        clickCard(res.data.CloseDownCampusTown)
                         togglePopup()
                         history.push(`/${church.church}/displayall`)
                       })

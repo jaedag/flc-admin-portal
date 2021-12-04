@@ -14,7 +14,6 @@ const ProtectedRoute = ({ component, roles, placeholder, ...args }) => {
   useEffect(() => {
     if (isAuthenticated && !currentUser.roles.includes('adminFederal')) {
       //if User is not a federal admin
-      church.setBishopId(currentUser.bishop)
       church.setChurch(currentUser.church)
       church.setCouncilId(currentUser.council)
 
@@ -27,7 +26,7 @@ const ProtectedRoute = ({ component, roles, placeholder, ...args }) => {
     // eslint-disable-next-line
   }, [
     currentUser,
-    church.setBishopId,
+    church.setCouncilId,
     church.setTownId,
     church.setCampusId,
     church.setChurch,

@@ -57,7 +57,7 @@ const CreateTownCampus = () => {
         },
       })
         .then((res) => {
-          clickCard(res.data.CreateTown.council.towns[0])
+          clickCard(res.data.CreateTown)
           NewTownLeader({
             variables: {
               leaderId: values.leaderId,
@@ -80,7 +80,7 @@ const CreateTownCampus = () => {
         },
       })
         .then((res) => {
-          clickCard(res.data.CreateCampus.council.campuses[0])
+          clickCard(res.data.CreateCampus)
           NewCampusLeader({
             variables: {
               leaderId: values.leaderId,

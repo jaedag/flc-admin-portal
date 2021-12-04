@@ -83,6 +83,7 @@ export const GET_TOWN_CENTRES = gql`
     centres(where: { town: { id: $id } }) {
       id
       name
+      stream
       leader {
         firstName
         lastName
@@ -122,6 +123,7 @@ export const GET_CAMPUS_CENTRES = gql`
     centres(where: { campus: { id: $id } }) {
       id
       name
+      stream
       campus {
         id
         name
@@ -214,6 +216,7 @@ export const GET_COUNCIL_CAMPUSES = gql`
         id
         firstName
         lastName
+        stream
       }
       campuses {
         name
@@ -222,11 +225,13 @@ export const GET_COUNCIL_CAMPUSES = gql`
           id
           firstName
           lastName
+          stream
         }
         admin {
           id
           firstName
           lastName
+          stream
         }
         sontas {
           id
@@ -257,6 +262,7 @@ export const GET_COUNCIL_TOWNS = gql`
         id
         firstName
         lastName
+        stream
       }
       towns {
         name
@@ -265,11 +271,13 @@ export const GET_COUNCIL_TOWNS = gql`
           id
           firstName
           lastName
+          stream
         }
         admin {
           id
           firstName
           lastName
+          stream
         }
         sontas {
           id

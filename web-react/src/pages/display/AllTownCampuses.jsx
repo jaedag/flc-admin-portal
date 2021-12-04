@@ -42,7 +42,7 @@ const DisplayAllTownCampuses = () => {
                 <Link
                   to="/member/displaydetails"
                   onClick={() => {
-                    clickCard(towns?.bishop)
+                    clickCard(towns?.leader)
                   }}
                 >
                   <h4>{`${council?.leader.fullName}'s Towns`}</h4>
@@ -100,7 +100,7 @@ const DisplayAllTownCampuses = () => {
                 <Link
                   to="/member/displaydetails"
                   onClick={() => {
-                    clickCard(campuses?.bishop)
+                    clickCard(campuses?.leader)
                   }}
                 >
                   <h4>{`${council?.leader.fullName}'s Campuses`}</h4>

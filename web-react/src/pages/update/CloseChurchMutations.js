@@ -7,6 +7,7 @@ export const MAKE_BACENTA_INACTIVE = gql`
       name
       centre {
         id
+        stream
         bacentas {
           id
           name
@@ -46,6 +47,7 @@ export const MAKE_CENTRE_INACTIVE = gql`
     CloseDownCentre(centreId: $centreId) {
       id
       name
+      stream
       town {
         id
         centres {
@@ -99,10 +101,13 @@ export const MAKE_CAMPUSTOWN_INACTIVE = gql`
     CloseDownCampusTown(campusTownId: $campusTownId) {
       id
       name
-      campusBishop {
+      stream
+
+      town {
         id
-        isBishopForCampus {
+        council {
           id
+          towns
         }
         history(options: { limit: 10 }) {
           id
@@ -118,10 +123,11 @@ export const MAKE_CAMPUSTOWN_INACTIVE = gql`
           historyRecord
         }
       }
-      townBishop {
+      campus {
         id
-        isBishopForTown {
+        council {
           id
+          towns
         }
         history(options: { limit: 10 }) {
           id

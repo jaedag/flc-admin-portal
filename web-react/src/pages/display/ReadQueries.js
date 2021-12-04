@@ -26,6 +26,7 @@ export const DISPLAY_MEMBER = gql`
       }
 
       #church info
+      stream
       ministry {
         id
         name
@@ -88,6 +89,7 @@ export const DISPLAY_MEMBER = gql`
           id
           firstName
           lastName
+          stream
         }
         historyRecord
       }
@@ -95,6 +97,7 @@ export const DISPLAY_MEMBER = gql`
       leadsBacenta {
         id
         name
+        stream
         leader {
           firstName
           lastName
@@ -123,6 +126,7 @@ export const DISPLAY_MEMBER = gql`
       leadsCentre {
         id
         name
+        stream
         town {
           id
           name
@@ -145,6 +149,7 @@ export const DISPLAY_MEMBER = gql`
       leadsTown {
         id
         name
+        stream
         bishop {
           id
           firstName
@@ -154,6 +159,7 @@ export const DISPLAY_MEMBER = gql`
       leadsCampus {
         id
         name
+        stream
         bishop {
           id
           firstName
@@ -186,14 +192,17 @@ export const DISPLAY_MEMBER = gql`
       isAdminForCouncil {
         id
         name
+        stream
       }
       isAdminForCampus {
         id
         name
+        stream
       }
       isAdminForTown {
         id
         name
+        stream
       }
     }
   }
@@ -204,6 +213,7 @@ export const DISPLAY_BACENTA = gql`
     bacentas(where: { id: $id }, options: { limit: 1 }) {
       id
       labels
+      stream
       bankingCode
       name
       location {
@@ -259,6 +269,7 @@ export const DISPLAY_BACENTA = gql`
           id
           firstName
           lastName
+          stream
         }
         historyRecord
       }
@@ -314,6 +325,7 @@ export const DISPLAY_SONTA = gql`
           id
           firstName
           lastName
+          stream
         }
         historyRecord
       }
@@ -332,6 +344,7 @@ export const DISPLAY_CENTRE = gql`
     centres(where: { id: $id }, options: { limit: 1 }) {
       id
       name
+      stream
       bacentas {
         id
         name
@@ -391,6 +404,7 @@ export const DISPLAY_CENTRE = gql`
           id
           firstName
           lastName
+          stream
         }
         historyRecord
       }
@@ -404,6 +418,7 @@ export const DISPLAY_TOWN = gql`
     towns(where: { id: $id }, options: { limit: 1 }) {
       id
       name
+      stream
       centres {
         id
         name
@@ -478,6 +493,7 @@ export const DISPLAY_TOWN = gql`
           id
           firstName
           lastName
+          stream
         }
         historyRecord
       }
@@ -492,6 +508,7 @@ export const DISPLAY_CAMPUS = gql`
     campuses(where: { id: $id }, options: { limit: 1 }) {
       id
       name
+      stream
       council {
         id
         name
@@ -566,6 +583,7 @@ export const DISPLAY_CAMPUS = gql`
           id
           firstName
           lastName
+          stream
         }
         historyRecord
       }
@@ -642,6 +660,7 @@ export const DISPLAY_COUNCIL = gql`
           id
           firstName
           lastName
+          stream
         }
         historyRecord
       }

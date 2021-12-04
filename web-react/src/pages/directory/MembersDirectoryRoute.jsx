@@ -18,7 +18,7 @@ const MembersDirectoryRoute = ({ component, roles, ...args }) => {
   useEffect(() => {
     if (isAuthenticated && !currentUser.roles.includes('adminFederal')) {
       //if User is not a federal admin
-      church.setBishopId(currentUser.bishop)
+      church.setCouncilId(currentUser.council)
       church.setChurch(currentUser.church)
 
       if (!currentUser.roles.includes('adminCouncil')) {
@@ -35,7 +35,7 @@ const MembersDirectoryRoute = ({ component, roles, ...args }) => {
     // eslint-disable-next-line
   }, [
     currentUser,
-    church.setBishopId,
+    church.setCouncilId,
     church.setTownId,
     church.setCampusId,
     church.setChurch,

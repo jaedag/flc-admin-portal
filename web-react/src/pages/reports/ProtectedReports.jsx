@@ -17,7 +17,7 @@ const ProtectedReports = ({ component, roles, ...args }) => {
   useEffect(() => {
     if (isAuthenticated && !currentUser.roles.includes('adminFederal')) {
       //if User is not a federal admin
-      church.setBishopId(currentUser.bishop)
+      church.setCouncilId(currentUser.bishop)
       church.setChurch(currentUser.church)
 
       if (!currentUser.roles.includes('adminCouncil')) {
@@ -29,7 +29,7 @@ const ProtectedReports = ({ component, roles, ...args }) => {
     // eslint-disable-next-line
   }, [
     currentUser,
-    church.setBishopId,
+    church.setCouncilId,
     church.setTownId,
     church.setCampusId,
     church.setChurch,

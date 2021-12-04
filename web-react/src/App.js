@@ -82,9 +82,6 @@ const PastorsAdmin = () => {
       : { church: '', subChurch: '' }
   )
 
-  const [bishopId, setBishopId] = useState(
-    sessionStorage.getItem('bishopId') ? sessionStorage.getItem('bishopId') : ''
-  )
   const [councilId, setCouncilId] = useState(
     sessionStorage.getItem('councilId')
       ? sessionStorage.getItem('councilId')
@@ -155,21 +152,21 @@ const PastorsAdmin = () => {
     //switch case for other church types
     switch (member?.__typename) {
       case 'Council':
-        setChurch({ church: member.stream.toLowerCase(), subChurch: 'centre' })
+        setChurch({ church: member.stream, subChurch: 'centre' })
         break
       case 'Town':
-        setChurch({ church: 'town', subChurch: 'centre' })
+        setChurch({ church: member.stream, subChurch: 'centre' })
         sessionStorage.setItem(
           'church',
           JSON.stringify({
-            church: 'town',
+            church: member.stream,
             subChurch: 'centre',
           })
         )
 
-        if (member.bishop?.id) {
-          setBishopId(member.bishop?.id)
-          sessionStorage.setItem('bishopId', member.bishop?.id)
+        if (member.council?.id) {
+          setCouncilId(member.council?.id)
+          sessionStorage.setItem('councilId', member.council?.id)
         }
         break
       case 'Campus':
@@ -182,9 +179,9 @@ const PastorsAdmin = () => {
           })
         )
 
-        if (member.bishop?.id) {
-          setBishopId(member.bishop?.id)
-          sessionStorage.setItem('bishopId', member.bishop?.id)
+        if (member.council?.id) {
+          setCouncilId(member.council?.id)
+          sessionStorage.setItem('councilId', member.council?.id)
         }
         break
       case 'Centre':
@@ -201,34 +198,37 @@ const PastorsAdmin = () => {
         )
 
         if (member.campus) {
-          setBishopId(member?.campus.bishop.id)
-          sessionStorage.setItem('bishopId', member?.campus.bishop.id)
+          setCouncilId(member?.campus.council.id)
+          sessionStorage.setItem('councilId', member?.campus.council.id)
         }
         if (member.town) {
-          setBishopId(member?.town.bishop.id)
-          sessionStorage.setItem('bishopId', member?.town.bishop.id)
+          setCouncilId(member?.town.council.id)
+          sessionStorage.setItem('councilId', member?.town.council.id)
         }
         break
       case 'Bacenta':
         setChurch({
-          church: member.centre?.town ? 'town' : 'campus',
+          church: member.centre?.stream,
           subChurch: 'centre',
         })
         sessionStorage.setItem(
           'church',
           JSON.stringify({
-            church: member.centre?.town ? 'town' : 'campus',
+            church: member.centre?.stream,
             subChurch: 'centre',
           })
         )
 
-        if (member.centre?.town?.bishop.id) {
-          setBishopId(member.centre?.town?.bishop.id)
-          sessionStorage.setItem('bishopId', member.centre?.town?.bishop.id)
+        if (member.centre?.town?.council.id) {
+          setCouncilId(member.centre?.town?.council.id)
+          sessionStorage.setItem('councilId', member.centre?.town?.council.id)
 
-          if (member.centre?.campus?.bishop.id) {
-            setBishopId(member.centre?.campus?.bishop.id)
-            sessionStorage.setItem('bishopId', member.centre?.campus?.bishop.id)
+          if (member.centre?.campus?.council.id) {
+            setCouncilId(member.centre?.campus?.council.id)
+            sessionStorage.setItem(
+              'councilId',
+              member.centre?.campus?.council.id
+            )
           }
         }
 
@@ -250,7 +250,7 @@ const PastorsAdmin = () => {
             subChurch: 'centre',
           })
         )
-        setBishopId(member.id)
+        setCouncilId(member.id)
         sessionStorage.setItem('bishopId', member.id)
         return
       } else if (member.isBishopForCampus[0]) {
@@ -262,7 +262,7 @@ const PastorsAdmin = () => {
             subChurch: 'centre',
           })
         )
-        setBishopId(member.id)
+        setCouncilId(member.id)
         sessionStorage.setItem('bishopId', member.id)
         return
       } else {
@@ -278,8 +278,8 @@ const PastorsAdmin = () => {
           subChurch: 'centre',
         })
       )
-      setBishopId(member.bacenta.centre.town.bishop.id)
-      sessionStorage.setItem('bishopId', member.bacenta.centre.town.bishop.id)
+      setCouncilId(member.bacenta.centre.town.council.id)
+      sessionStorage.setItem('councilId', member.bacenta.centre.town.council.id)
       return
     } else if (member.leadsTown && member.leadsTown[0]) {
       setChurch({ church: 'town', subChurch: 'centre' })
@@ -290,8 +290,8 @@ const PastorsAdmin = () => {
           subChurch: 'centre',
         })
       )
-      setBishopId(member.leadsTown[0].bishop?.id)
-      sessionStorage.setItem('bishopId', member.leadsTown[0].bishop?.id)
+      setCouncilId(member.leadsTown[0].council?.id)
+      sessionStorage.setItem('councilId', member.leadsTown[0].council?.id)
       return
     } else if (member?.bacenta?.centre?.campus) {
       setChurch({ church: 'campus', subChurch: 'centre' })
@@ -302,13 +302,13 @@ const PastorsAdmin = () => {
           subChurch: 'centre',
         })
       )
-      setBishopId(member?.bacenta?.centre?.campus?.bishop?.id)
+      setCouncilId(member?.bacenta?.centre?.campus?.council?.id)
       sessionStorage.setItem(
-        'bishopId',
-        member?.bacenta?.centre?.campus?.bishop?.id
+        'councilId',
+        member?.bacenta?.centre?.campus?.council?.id
       )
       return
-    } else if (member?.leadsCampus[0]) {
+    } else if (member?.leadsCampus && member.leadsCampus[0]) {
       setChurch({ church: 'campus', subChurch: 'centre' })
       sessionStorage.setItem(
         'church',
@@ -317,8 +317,8 @@ const PastorsAdmin = () => {
           subChurch: 'centre',
         })
       )
-      setBishopId(member.leadsCampus[0].bishop?.id)
-      sessionStorage.setItem('bishopId', member.leadsCampus[0].bishop?.id)
+      setCouncilId(member.leadsCampus[0].council?.id)
+      sessionStorage.setItem('councilId', member.leadsCampus[0].council?.id)
       return
     }
   }
@@ -367,7 +367,7 @@ const PastorsAdmin = () => {
       card.link = '/sonta/displaydetails'
     }
     if (card.__typename === 'Bishop') {
-      setBishopId(card.id)
+      setCouncilId(card.id)
       card.link = '/dashboard'
     }
     if (card.link === '' || card.constituency === true) {
@@ -394,8 +394,6 @@ const PastorsAdmin = () => {
           setChurch,
           councilId,
           setCouncilId,
-          bishopId,
-          setBishopId,
           townId,
           setTownId,
           campusId,

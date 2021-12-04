@@ -40,6 +40,7 @@ const DetailsCouncil = () => {
       <DisplayChurchDetails
         name={council?.name}
         leaderTitle="Bishop"
+        deatils={councilId}
         leader={council?.leader}
         churchHeading="Constituencies"
         churchType={council?.__typename}

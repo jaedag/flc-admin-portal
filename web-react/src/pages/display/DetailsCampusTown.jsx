@@ -38,6 +38,7 @@ const DetailsCampusTown = () => {
             leaderTitle={'Town CO'}
             membership={townData?.towns[0].memberCount}
             leader={townData?.towns[0].leader}
+            churchId={townId}
             churchHeading="Centres"
             church2Heading="Bacentas"
             churchCount={townData?.towns[0].centres.length}
@@ -64,6 +65,7 @@ const DetailsCampusTown = () => {
             name={campusData?.campuses[0].name}
             leaderTitle={'Campus CO'}
             membership={campusData?.campuses[0].memberCount}
+            churchId={campusId}
             leader={campusData?.campuses[0].leader}
             churchHeading="Centres"
             church2Heading="Bacentas"

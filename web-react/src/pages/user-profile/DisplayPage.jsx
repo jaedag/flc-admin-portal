@@ -37,7 +37,11 @@ const DisplayPage = () => {
           <div className="pt-5">
             <Row className="d-flex justify-content-center">
               <Col xs={6} md={6} lg={2}>
-                <PlaceholderCustom xs={12} className="img bg-secondary m-2">
+                <PlaceholderCustom
+                  xs={12}
+                  loading={member?.pictureUrl}
+                  className="img bg-secondary m-2"
+                >
                   <Image
                     src={
                       transformCloudinaryImg(member?.pictureUrl, 'large') ||

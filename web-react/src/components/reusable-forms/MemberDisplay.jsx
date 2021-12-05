@@ -75,10 +75,12 @@ const MemberDisplay = ({ memberId }) => {
             detail={member?.maritalStatus?.status}
           />
         </Col>
-        <Col sm={1}>
+      </Row>
+      <Row>
+        <Col sm={1} md="auto">
           <DetailsCard heading="Date of Birth" detail={memberBirthday} />
         </Col>
-        <Col sm={1}>
+        <Col sm={1} md="auto">
           <a href={`tel:${member?.phoneNumber}`}>
             <DetailsCard
               heading="Phone Number"
@@ -87,7 +89,8 @@ const MemberDisplay = ({ memberId }) => {
             />
           </a>
         </Col>
-        <Col sm={1}>
+
+        <Col sm={1} md="auto">
           <a href={`https://wa.me/${member?.whatsappNumber}`}>
             <DetailsCard
               heading="Whatsapp Number"
@@ -96,23 +99,25 @@ const MemberDisplay = ({ memberId }) => {
             />
           </a>
         </Col>
-        <Col sm={1}>
+      </Row>
+      <Row>
+        <Col sm={1} md="auto">
           <DetailsCard
             heading="Occupation"
             detail={member?.occupation?.occupation}
           />
         </Col>
-        <Col sm={1}>
+        <Col sm={1} md="auto">
           <DetailsCard heading="Email Address" detail={member?.email} />
         </Col>
-        <Col sm={1}>
+        <Col sm={1} md="auto">
           <DetailsCard heading="Bacenta" detail={member?.bacenta?.name} />
         </Col>
         <Col>
           <DetailsCard heading="Ministry" detail={member?.ministry?.name} />
         </Col>
 
-        <Col sm={1}>
+        <Col sm={1} md="auto">
           <DetailsCard
             heading="Pastoral Rank"
             detail={member?.titleConnection?.edges[0]?.node.title}

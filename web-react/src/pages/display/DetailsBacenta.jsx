@@ -68,18 +68,37 @@ const DetailsBacenta = () => {
     vacation = true
   }
 
+  const details = [
+    {
+      title: 'Status',
+      number: vacation ? 'Vacation' : 'Active',
+      link: '#',
+      width: '',
+    },
+    {
+      title: 'Type',
+      number: bacentaType,
+      link: `#`,
+      width: 'auto',
+    },
+    {
+      title: 'Code',
+      number: bacenta?.bankingCode,
+      link: `#`,
+      width: '',
+    },
+  ]
+
   return (
     <DisplayChurchDetails
+      details={details}
       loading={bacentaLoading}
       name={bacenta?.name}
-      bankingCode={bacenta?.bankingCode}
       churchId={bacentaId}
-      bacentaType={bacentaType}
-      active={vacation ? 'Vacation' : 'Active'}
       leaderTitle="Bacenta Leader"
       leader={bacenta?.leader}
       location={bacenta?.location}
-      membership={bacentaData?.bacentaMemberCount}
+      membership={bacenta?.memberCount}
       churchHeading="Meeting Day"
       churchCount={bacenta?.meetingDay?.day}
       churchType="Bacenta"

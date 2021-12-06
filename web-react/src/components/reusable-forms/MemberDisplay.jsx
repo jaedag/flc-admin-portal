@@ -10,8 +10,6 @@ import {
   throwErrorMsg,
 } from '../../global-utils'
 import { DISPLAY_MEMBER } from 'pages/display/ReadQueries'
-import { useLocation } from 'react-router'
-import AuthButton from 'components/buttons/AuthButton'
 import { Col, Container, Row } from 'react-bootstrap'
 import PlaceholderCustom from 'components/Placeholder'
 import DetailsCard from 'components/card/DetailsCard'
@@ -24,8 +22,6 @@ const MemberDisplay = ({ memberId }) => {
     variables: { id: memberId },
   })
   throwErrorMsg(error)
-  const location = useLocation()
-  const atProfile = location.pathname === '/user-profile'
 
   const member = data?.member
   const memberBirthday = getMemberDob(member)
@@ -117,34 +113,27 @@ const MemberDisplay = ({ memberId }) => {
           <DetailsCard heading="Ministry" detail={member?.ministry?.name} />
         </Col>
 
-        <Col sm={1} md="auto">
-          <DetailsCard
-            heading="Pastoral Rank"
-            detail={member?.titleConnection?.edges[0]?.node.title}
-          />
-        </Col>
-        <Col className="mt-5">
-          <Row>
-            <Col>
-              <PlaceholderCustom>
-                <h3>Church History</h3>
-              </PlaceholderCustom>
-            </Col>
-            <Col className="col-auto">
-              <ViewAll to={`/member/history`} />
-            </Col>
-          </Row>
-          <Timeline record={member?.history} limit={3} />
-        </Col>
-      </Row>
+        {member?.titleConnection?.edges[0]?.node.title && (
+          <Col sm={1} md="auto">
+            <DetailsCard
+              heading="Pastoral Rank"
+              detail={member?.titleConnection?.edges[0]?.node.title}
+            />
+          </Col>
+        )}
 
-      {atProfile && (
-        <div className="row justify-content-center my-2 mb-4">
-          <div className="col-auto ">
-            <AuthButton mobileFullSize="true" />
-          </div>
-        </div>
-      )}
+        <Row className="mt-5">
+          <Col>
+            <PlaceholderCustom>
+              <h3>Church History</h3>
+            </PlaceholderCustom>
+          </Col>
+          <Col className="col-auto">
+            <ViewAll to={`/member/history`} />
+          </Col>
+        </Row>
+        <Timeline record={member?.history} limit={3} />
+      </Row>
     </Container>
   )
 }

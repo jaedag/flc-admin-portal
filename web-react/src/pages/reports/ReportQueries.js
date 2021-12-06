@@ -11,17 +11,14 @@ export const BACENTA_REPORT = gql`
         lastName
         fullName
       }
-      serviceLogs {
+      services {
         id
-        historyRecord
-        serviceRecords {
-          created_at
-          attendance
-          income
-          week
-          serviceDate {
-            date
-          }
+        created_at
+        attendance
+        income
+        week
+        serviceDate {
+          date
         }
       }
       memberCount
@@ -40,19 +37,16 @@ export const CENTRE_REPORT = gql`
         lastName
         fullName
       }
-      serviceLogs {
-        id
-        historyRecord
-        serviceRecords {
-          created_at
-          attendance
-          income
-          week
-          serviceDate {
-            date
-          }
+      services {
+        created_at
+        attendance
+        income
+        week
+        serviceDate {
+          date
         }
       }
+
       bacentaServiceAggregate {
         week
         attendance
@@ -74,19 +68,16 @@ export const SONTA_REPORT = gql`
         lastName
         fullName
       }
-      serviceLogs {
-        id
-        historyRecord
-        serviceRecords {
-          created_at
-          attendance
-          income
-          week
-          serviceDate {
-            date
-          }
+      services {
+        created_at
+        attendance
+        income
+        week
+        serviceDate {
+          date
         }
       }
+
       memberCount
     }
   }
@@ -103,19 +94,16 @@ export const CAMPUS_REPORT = gql`
         lastName
         fullName
       }
-      serviceLogs {
-        id
-        historyRecord
-        serviceRecords {
-          created_at
-          attendance
-          income
-          week
-          serviceDate {
-            date
-          }
+      services {
+        created_at
+        attendance
+        income
+        week
+        serviceDate {
+          date
         }
       }
+
       componentServiceAggregate {
         week
         attendance
@@ -137,17 +125,13 @@ export const TOWN_REPORT = gql`
         lastName
         fullName
       }
-      serviceLogs {
-        id
-        historyRecord
-        serviceRecords {
-          created_at
-          attendance
-          income
-          week
-          serviceDate {
-            date
-          }
+      services {
+        created_at
+        attendance
+        income
+        week
+        serviceDate {
+          date
         }
       }
       componentServiceAggregate {
@@ -171,19 +155,16 @@ export const COUNCIL_REPORT = gql`
         lastName
         fullName
       }
-      serviceLogs {
-        id
-        historyRecord
-        serviceRecords {
-          created_at
-          attendance
-          income
-          week
-          serviceDate {
-            date
-          }
+      services {
+        created_at
+        attendance
+        income
+        week
+        serviceDate {
+          date
         }
       }
+
       componentServiceAggregate {
         week
         attendance

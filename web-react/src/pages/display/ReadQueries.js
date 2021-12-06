@@ -667,3 +667,71 @@ export const DISPLAY_COUNCIL = gql`
     }
   }
 `
+
+export const DISPLAY_STREAM = gql`
+  query($id: ID) {
+    streams(where: { id: $id }, options: { limit: 1 }) {
+      id
+      name
+      constituencyCount
+      centreCount
+      bacentaCount
+      memberCount
+      pastorCount
+      councils {
+        id
+        name
+        leader {
+          id
+        }
+      }
+
+      admin {
+        id
+        firstName
+        lastName
+        bacenta {
+          id
+          centre {
+            id
+            town {
+              id
+              name
+              bishop {
+                id
+              }
+            }
+            campus {
+              id
+              name
+              bishop {
+                id
+              }
+            }
+          }
+        }
+      }
+      leader {
+        id
+        firstName
+        lastName
+        fullName
+        pictureUrl
+      }
+      history(options: { limit: 10 }) {
+        id
+        timeStamp
+        created_at {
+          date
+        }
+        loggedBy {
+          id
+          firstName
+          lastName
+          stream
+        }
+        historyRecord
+      }
+    }
+  }
+`

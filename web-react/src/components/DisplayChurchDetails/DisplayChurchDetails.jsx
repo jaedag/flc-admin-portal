@@ -216,13 +216,14 @@ const DisplayChurchDetails = (props) => {
               detail={props.churchCount}
             />
           </Col>
+
           <Col className="col-auto">
             <DetailsCard
               onClick={() =>
                 history.push(`/${props.churchType.toLowerCase()}/members`)
               }
               heading="Members"
-              detail={props.membership}
+              detail={props.membership || '0'}
             />
           </Col>
         </Row>
@@ -230,7 +231,7 @@ const DisplayChurchDetails = (props) => {
         {props.details?.length && (
           <Row>
             {props.details.map((detail, i) => (
-              <Col key={i} xs={6}>
+              <Col key={i} xs={detail.width ?? 6}>
                 <DetailsCard
                   onClick={() => history.push(detail.link)}
                   heading={detail.title}
@@ -240,17 +241,6 @@ const DisplayChurchDetails = (props) => {
             ))}
           </Row>
         )}
-        <Row>
-          <Col>
-            <DetailsCard heading="Status" detail={props.active} />
-          </Col>
-          <Col className="col-auto">
-            <DetailsCard heading="Type" detail={props.bacentaType} />
-          </Col>
-          <Col>
-            <DetailsCard heading="Code" detail={props.bankingCode} />
-          </Col>
-        </Row>
 
         <hr />
         <div className="d-grid gap-2">

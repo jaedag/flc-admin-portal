@@ -92,15 +92,27 @@ const ServiceDetails = ({ service, church }) => {
                     />
                   </PlaceholderCustom>
                 </div>
-                <h6>Banking Slip</h6>
-                <div>
-                  <PlaceholderCustom
-                    className="report-picture placeholder"
-                    xs={12}
-                  >
-                    <img className="report-picture" src={service.bankingSlip} />
-                  </PlaceholderCustom>
-                </div>
+                {service?.bankingSlip ? (
+                  <>
+                    <h6>Banking Slip</h6>
+                    <div>
+                      <PlaceholderCustom
+                        className="report-picture placeholder"
+                        xs={12}
+                      >
+                        <img
+                          className="report-picture"
+                          src={service.bankingSlip}
+                        />
+                      </PlaceholderCustom>
+                    </div>
+                  </>
+                ) : (
+                  <p className="fw-bold text-danger">
+                    You Have Not Submitted Your Banking Slip!!!
+                  </p>
+                )}
+
                 <div className="d-grid gap-2">
                   <Button
                     className={`btn-trends ${theme}`}

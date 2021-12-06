@@ -39,7 +39,7 @@ const DisplayPage = () => {
               <Col xs={6} md={6} lg={2}>
                 <PlaceholderCustom
                   xs={12}
-                  loading={member?.pictureUrl}
+                  loading={!member?.pictureUrl}
                   className="img bg-secondary m-2"
                 >
                   <Image
@@ -57,7 +57,11 @@ const DisplayPage = () => {
             </Row>
           </div>
           <div>
-            <PlaceholderCustom as="h1" className="text-center">
+            <PlaceholderCustom
+              loading={!member?.fullName}
+              as="h1"
+              className="text-center"
+            >
               <h1 className="text-center">{`${member?.fullName}`}</h1>
             </PlaceholderCustom>
             <PlaceholderCustom as="h6" className="text-center">

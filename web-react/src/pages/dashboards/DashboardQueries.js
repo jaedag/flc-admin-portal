@@ -112,19 +112,16 @@ export const SERVANTS_DASHBOARD = gql`
           lastName
           fullName
         }
-        serviceLogs {
-          id
-          historyRecord
-          serviceRecords {
-            created_at
-            attendance
-            income
-            week
-            serviceDate {
-              date
-            }
+        services {
+          created_at
+          attendance
+          income
+          week
+          serviceDate {
+            date
           }
         }
+
         componentServiceAggregate {
           week
           attendance
@@ -142,19 +139,16 @@ export const SERVANTS_DASHBOARD = gql`
           lastName
           fullName
         }
-        serviceLogs {
-          id
-          historyRecord
-          serviceRecords {
-            created_at
-            attendance
-            income
-            week
-            serviceDate {
-              date
-            }
+        services {
+          created_at
+          attendance
+          income
+          week
+          serviceDate {
+            date
           }
         }
+
         componentServiceAggregate {
           week
           attendance
@@ -172,19 +166,16 @@ export const SERVANTS_DASHBOARD = gql`
           lastName
           fullName
         }
-        serviceLogs {
-          id
-          historyRecord
-          serviceRecords {
-            created_at
-            attendance
-            income
-            week
-            serviceDate {
-              date
-            }
+        services {
+          created_at
+          attendance
+          income
+          week
+          serviceDate {
+            date
           }
         }
+
         componentServiceAggregate {
           week
           attendance
@@ -209,17 +200,13 @@ export const SERVANTS_DASHBOARD = gql`
         name
         stream
         memberCount
-        serviceLogs {
-          id
-          historyRecord
-          serviceRecords {
-            created_at
-            attendance
-            income
-            week
-            serviceDate {
-              date
-            }
+        services {
+          created_at
+          attendance
+          income
+          week
+          serviceDate {
+            date
           }
         }
       }
@@ -241,19 +228,16 @@ export const SERVANTS_DASHBOARD = gql`
           }
         }
         memberCount
-        serviceLogs {
-          id
-          historyRecord
-          serviceRecords {
-            created_at
-            attendance
-            income
-            week
-            serviceDate {
-              date
-            }
+        services {
+          created_at
+          attendance
+          income
+          week
+          serviceDate {
+            date
           }
         }
+
         bacentaServiceAggregate {
           week
           attendance
@@ -271,19 +255,16 @@ export const SERVANTS_DASHBOARD = gql`
           lastName
           fullName
         }
-        serviceLogs {
-          id
-          historyRecord
-          serviceRecords {
-            created_at
-            attendance
-            income
-            week
-            serviceDate {
-              date
-            }
+        services {
+          created_at
+          attendance
+          income
+          week
+          serviceDate {
+            date
           }
         }
+
         componentServiceAggregate {
           week
           attendance
@@ -301,19 +282,16 @@ export const SERVANTS_DASHBOARD = gql`
           lastName
           fullName
         }
-        serviceLogs {
-          id
-          historyRecord
-          serviceRecords {
-            created_at
-            attendance
-            income
-            week
-            serviceDate {
-              date
-            }
+        services {
+          created_at
+          attendance
+          income
+          week
+          serviceDate {
+            date
           }
         }
+
         componentServiceAggregate {
           week
           attendance
@@ -334,18 +312,6 @@ export const SERVANTS_DASHBOARD = gql`
           id
           bishop {
             id
-          }
-        }
-        serviceLogs {
-          id
-          historyRecord
-          serviceRecords {
-            created_at
-            attendance
-            week
-            serviceDate {
-              date
-            }
           }
         }
       }

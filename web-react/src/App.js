@@ -74,6 +74,7 @@ import CouncilReport from 'pages/reports/CouncilReport.jsx'
 import Fellowship from 'pages/services/Fellowship.jsx'
 import ConstituencyJoint from 'pages/services/ConstituencyJoint.jsx'
 import CentreJoint from 'pages/services/CentreJoint.jsx'
+import DetailsStream from 'pages/display/DetailsStream.jsx'
 
 const PastorsAdmin = () => {
   const [church, setChurch] = useState(
@@ -81,7 +82,9 @@ const PastorsAdmin = () => {
       ? JSON.parse(sessionStorage.getItem('church'))
       : { church: '', subChurch: '' }
   )
-
+  const [streamId, setStreamId] = useState(
+    sessionStorage.getItem('streamId') ? sessionStorage.getItem('streamId') : ''
+  )
   const [councilId, setCouncilId] = useState(
     sessionStorage.getItem('councilId')
       ? sessionStorage.getItem('councilId')
@@ -198,8 +201,8 @@ const PastorsAdmin = () => {
         )
 
         if (member.campus) {
-          setCouncilId(member?.campus.council.id)
-          sessionStorage.setItem('councilId', member?.campus.council.id)
+          setCouncilId(member?.campus.council?.id)
+          sessionStorage.setItem('councilId', member?.campus.council?.id)
         }
         if (member.town) {
           setCouncilId(member?.town.council.id)
@@ -241,7 +244,7 @@ const PastorsAdmin = () => {
         return
       }
 
-      if (member.isBishopForTown[0]) {
+      if (member?.isBishopForTown[0]) {
         setChurch({ church: 'town', subChurch: 'centre' })
         sessionStorage.setItem(
           'church',
@@ -253,7 +256,7 @@ const PastorsAdmin = () => {
         setCouncilId(member.id)
         sessionStorage.setItem('bishopId', member.id)
         return
-      } else if (member.isBishopForCampus[0]) {
+      } else if (member?.isBishopForCampus[0]) {
         setChurch({ church: 'campus', subChurch: 'centre' })
         sessionStorage.setItem(
           'church',
@@ -290,7 +293,7 @@ const PastorsAdmin = () => {
           subChurch: 'centre',
         })
       )
-      setCouncilId(member.leadsTown[0].council?.id)
+      setCouncilId(member?.leadsTown[0].council?.id)
       sessionStorage.setItem('councilId', member.leadsTown[0].council?.id)
       return
     } else if (member?.bacenta?.centre?.campus) {
@@ -392,6 +395,8 @@ const PastorsAdmin = () => {
           setFilters,
           church,
           setChurch,
+          streamId,
+          setStreamId,
           councilId,
           setCouncilId,
           townId,
@@ -794,6 +799,13 @@ const PastorsAdmin = () => {
                     roles={['adminFederal', 'adminCouncil', 'bishop']}
                     path="/council/displaydetails"
                     component={DetailsCouncil}
+                    placeholder
+                    exact
+                  />
+                  <ProtectedRoute
+                    roles={['adminFederal', 'adminStream', 'adminCouncil']}
+                    path="/stream/displaydetails"
+                    component={DetailsStream}
                     placeholder
                     exact
                   />

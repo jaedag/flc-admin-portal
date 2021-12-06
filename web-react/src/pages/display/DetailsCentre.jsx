@@ -23,7 +23,7 @@ const DetailsCentre = () => {
   ]
 
   return (
-    <BaseComponent loading={loading} error={error} data={data}>
+    <BaseComponent loading={loading} error={error} data={data} placeholder>
       <DisplayChurchDetails
         name={displayCentre?.name}
         leaderTitle="Centre Leader"

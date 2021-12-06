@@ -57,6 +57,7 @@ export const BacentaReport = () => {
           stat1="attendance"
           stat2="income"
           churchData={serviceData}
+          church="bacenta"
         />
       </div>
     </BaseComponent>

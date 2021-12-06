@@ -1,5 +1,7 @@
 import PlaceholderCustom from 'components/Placeholder'
-import React from 'react'
+import { ServiceContext } from 'contexts/ServiceContext'
+import React, { useContext } from 'react'
+import { useHistory } from 'react-router'
 import {
   ResponsiveContainer,
   XAxis,
@@ -12,7 +14,10 @@ import {
 import { capitalise } from '../../global-utils'
 import './ChurchGraph.css'
 
-const ChurchGraph = ({ loading, stat1, stat2, churchData, secondaryTitle }) => {
+const ChurchGraph = (props) => {
+  const { loading, stat1, stat2, churchData, secondaryTitle } = props
+  const { setServiceRecordId } = useContext(ServiceContext)
+  const history = useHistory()
   return (
     <>
       <div className="row mt-2">
@@ -77,6 +82,10 @@ const ChurchGraph = ({ loading, stat1, stat2, churchData, secondaryTitle }) => {
                   barSize={30}
                   yAxisId="left"
                   fill="url(#colorPrimary)"
+                  onClick={(data) => {
+                    setServiceRecordId(data.id)
+                    history.push(`/${props.church}/service-details`)
+                  }}
                 >
                   <LabelList
                     dataKey={`${stat1}`}
@@ -92,6 +101,10 @@ const ChurchGraph = ({ loading, stat1, stat2, churchData, secondaryTitle }) => {
                     barSize={35}
                     yAxisId="right"
                     fill="url(#colorSecondary)"
+                    onClick={(data) => {
+                      setServiceRecordId(data.id)
+                      history.push(`/${props.church}/service-details`)
+                    }}
                   >
                     <LabelList
                       dataKey={`${stat2}`}

@@ -32,4 +32,5 @@ ul.timeline > li:before {
 .timeline-text {
   font-size: small;
   margin: 0px;
+  margin-left: 18px;
 }

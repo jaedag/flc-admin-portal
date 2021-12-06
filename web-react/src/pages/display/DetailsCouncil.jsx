@@ -19,11 +19,6 @@ const DetailsCouncil = () => {
   const details = [
     { title: 'Pastors', number: council?.pastorCount, link: '#' },
     {
-      title: 'Constituencies',
-      number: council?.constituencyCount,
-      link: `/${church.church}/displayall`,
-    },
-    {
       title: 'Centre',
       number: council?.centreCount,
       link: `#`,
@@ -40,7 +35,7 @@ const DetailsCouncil = () => {
       <DisplayChurchDetails
         name={council?.name}
         leaderTitle="Bishop"
-        deatils={councilId}
+        churchId={councilId}
         leader={council?.leader}
         churchHeading="Constituencies"
         churchType={council?.__typename}

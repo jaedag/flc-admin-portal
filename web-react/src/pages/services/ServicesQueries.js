@@ -36,6 +36,7 @@ export const BANKING_SLIP_SUBMISSION = gql`
     ) {
       serviceRecords {
         id
+        bankingSlip
         serviceLog {
           bacenta {
             id

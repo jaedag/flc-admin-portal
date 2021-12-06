@@ -44,6 +44,7 @@ export const getServiceGraphData = (church) => {
     if (array[0]?.__typename === 'ComponentServiceAggregate') {
       array.map((record) => {
         data.push({
+          id: record?.id,
           date: record?.serviceDate,
           week: record.week,
           attendance: record.attendance,
@@ -57,6 +58,7 @@ export const getServiceGraphData = (church) => {
     if (array[0]?.__typename === 'Sonta') {
       array.map((record) => {
         data.push({
+          id: record?.id,
           date: record?.serviceDate,
           week: record.week,
           attendance: record.attendance,
@@ -68,6 +70,7 @@ export const getServiceGraphData = (church) => {
 
     array.map((record) => {
       data.push({
+        id: record?.id,
         date: record?.serviceDate?.date || record.date,
         week: record.week,
         attendance: record.attendance,
@@ -85,9 +88,7 @@ export const getServiceGraphData = (church) => {
   }
 
   //Pushing in direct service data eg. Joint Services and Bacenta Services
-  church.serviceLogs.map((service) => {
-    pushIntoData(service.serviceRecords)
-  })
+  pushIntoData(church.services)
 
   data = data.sort(sortingFunction('week'))
 
@@ -102,5 +103,8 @@ export const getServiceGraphData = (church) => {
     ]
   }
 
+  if (data.length <= 3) {
+    return data
+  }
   return data.slice(data.length - numberOfWeeks, data.length)
 }

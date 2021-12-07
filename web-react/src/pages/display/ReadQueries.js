@@ -46,14 +46,14 @@ export const DISPLAY_MEMBER = gql`
           }
         }
       }
-      bacenta {
+      fellowship {
         id
         name
         leader {
           firstName
           lastName
         }
-        centre {
+        bacenta {
           id
           name
           town {
@@ -94,7 +94,7 @@ export const DISPLAY_MEMBER = gql`
         historyRecord
       }
       #Leadership Information
-      leadsBacenta {
+      leadsFellowship {
         id
         name
         stream
@@ -103,7 +103,7 @@ export const DISPLAY_MEMBER = gql`
           lastName
         }
       }
-      leadsCentre {
+      leadsBacenta {
         id
         name
         stream
@@ -158,9 +158,9 @@ export const DISPLAY_MEMBER = gql`
   }
 `
 
-export const DISPLAY_BACENTA = gql`
+export const DISPLAY_FELLOWSHIP = gql`
   query ($id: ID) {
-    bacentas(where: { id: $id }, options: { limit: 1 }) {
+    fellowships(where: { id: $id }, options: { limit: 1 }) {
       id
       labels
       stream
@@ -173,7 +173,7 @@ export const DISPLAY_BACENTA = gql`
       meetingDay {
         day
       }
-      centre {
+      bacenta {
         id
         name
         town {
@@ -289,16 +289,16 @@ export const DISPLAY_SONTA = gql`
   }
 `
 
-export const DISPLAY_CENTRE = gql`
+export const DISPLAY_BACENTA = gql`
   query ($id: ID) {
-    centres(where: { id: $id }, options: { limit: 1 }) {
+    bacentas(where: { id: $id }, options: { limit: 1 }) {
       id
       name
       stream
-      bacentas {
+      fellowships {
         id
         name
-        centre {
+        bacenta {
           id
           name
           town {
@@ -369,7 +369,7 @@ export const DISPLAY_TOWN = gql`
       id
       name
       stream
-      centres {
+      bacentas {
         id
         name
         town {
@@ -395,9 +395,9 @@ export const DISPLAY_TOWN = gql`
         id
         firstName
         lastName
-        bacenta {
+        fellowship {
           id
-          centre {
+          bacenta {
             id
             town {
               id
@@ -448,7 +448,7 @@ export const DISPLAY_TOWN = gql`
         historyRecord
       }
       memberCount
-      bacentaCount
+      fellowshipCount
     }
   }
 `
@@ -463,7 +463,7 @@ export const DISPLAY_CAMPUS = gql`
         id
         name
       }
-      centres {
+      bacentas {
         id
         name
         town {
@@ -489,9 +489,9 @@ export const DISPLAY_CAMPUS = gql`
         id
         firstName
         lastName
-        bacenta {
+        fellowship {
           id
-          centre {
+          bacenta {
             id
             town {
               id
@@ -538,7 +538,7 @@ export const DISPLAY_CAMPUS = gql`
         historyRecord
       }
       memberCount
-      bacentaCount
+      fellowshipCount
     }
   }
 `
@@ -549,8 +549,8 @@ export const DISPLAY_COUNCIL = gql`
       id
       name
       constituencyCount
-      centreCount
       bacentaCount
+      fellowshipCount
       memberCount
       pastorCount
       towns(options: { limit: 5 }) {
@@ -572,9 +572,9 @@ export const DISPLAY_COUNCIL = gql`
         id
         firstName
         lastName
-        bacenta {
+        fellowship {
           id
-          centre {
+          bacenta {
             id
             town {
               id
@@ -624,8 +624,8 @@ export const DISPLAY_STREAM = gql`
       id
       name
       constituencyCount
-      centreCount
       bacentaCount
+      fellowshipCount
       memberCount
       pastorCount
       councils {
@@ -640,9 +640,9 @@ export const DISPLAY_STREAM = gql`
         id
         firstName
         lastName
-        bacenta {
+        fellowship {
           id
-          centre {
+          bacenta {
             id
             town {
               id

@@ -21,7 +21,7 @@ const CreateTownCampus = () => {
     campusTownName: '',
     leaderId: '',
     councilSelect: councilId,
-    centres: [''],
+    bacentas: [''],
   }
 
   const [NewTownLeader] = useMutation(NEW_TOWN_LEADER)
@@ -52,7 +52,7 @@ const CreateTownCampus = () => {
           townName: values.campusTownName,
           leaderId: values.leaderId,
           councilId: values.councilSelect,
-          centres: values.centres,
+          bacentas: values.bacentas,
         },
       })
         .then((res) => {
@@ -75,7 +75,7 @@ const CreateTownCampus = () => {
           campusName: values.campusTownName,
           leaderId: values.leaderId,
           councilId: values.councilSelect,
-          centres: values.centres,
+          bacentas: values.bacentas,
         },
       })
         .then((res) => {

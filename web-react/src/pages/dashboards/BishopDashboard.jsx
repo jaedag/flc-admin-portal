@@ -91,13 +91,13 @@ const BishopDashboard = () => {
       roles: ['all'],
     },
     {
-      link: '/bacenta/addbacenta',
-      buttonText: 'Start a Bacenta',
+      link: '/fellowship/addfellowship',
+      buttonText: 'Start a Fellowship',
       roles: ['adminFederal', 'adminCouncil', 'adminCampus', 'adminTown'],
     },
     {
-      link: '/centre/addcentre',
-      buttonText: 'Start a Centre',
+      link: '/bacenta/addbacenta',
+      buttonText: 'Start a Bacenta',
       roles: ['adminFederal', 'adminCouncil', 'adminCampus', 'adminTown'],
     },
     {
@@ -125,9 +125,9 @@ const BishopDashboard = () => {
     pastorCount = `${data.bishopPastorCount} Pastors`
     churchesCount = `${data.bishopCampusTownCount} ${capitalise(
       plural(churchStream)
-    )} | ${data.bishopCentreCount} Centres | ${
-      data.bishopBacentaCount
-    } Bacentas`
+    )} | ${data.bishopBacentaCount} Bacentas | ${
+      data.bishopFellowshipCount
+    } Fellowships`
     sontaMemberCount = `${data.bishopSontaMemberCount} Members in Ministries`
   } else {
     bishopName = errorText

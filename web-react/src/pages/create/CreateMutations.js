@@ -12,7 +12,7 @@ export const CREATE_MEMBER_MUTATION = gql`
     $maritalStatus: String!
     $gender: String!
     $occupation: String
-    $bacenta: String!
+    $fellowship: String!
     $ministry: String
     $pictureUrl: String!
   ) {
@@ -27,7 +27,7 @@ export const CREATE_MEMBER_MUTATION = gql`
       maritalStatus: $maritalStatus
       gender: $gender
       occupation: $occupation
-      bacenta: $bacenta
+      fellowship: $fellowship
       ministry: $ministry
       pictureUrl: $pictureUrl
     ) {
@@ -35,9 +35,9 @@ export const CREATE_MEMBER_MUTATION = gql`
       firstName
       lastName
       stream
-      bacenta {
+      fellowship {
         id
-        centre {
+        bacenta {
           id
           town {
             id
@@ -104,18 +104,18 @@ export const ADD_LEADER_HISTORY_MUTATION = gql`
   }
 `
 
-export const CREATE_BACENTA_MUTATION = gql`
-  mutation CreateBacenta(
-    $bacentaName: String!
-    $centreId: ID!
+export const CREATE_FELLOWSHIP_MUTATION = gql`
+  mutation CreateFellowship(
+    $fellowshipName: String!
+    $bacentaId: ID!
     $leaderId: ID!
     $meetingDay: String!
     $venueLongitude: Float
     $venueLatitude: Float
   ) {
-    CreateBacenta(
-      bacentaName: $bacentaName
-      centreId: $centreId
+    CreateFellowship(
+      fellowshipName: $fellowshipName
+      bacentaId: $bacentaId
       leaderId: $leaderId
       meetingDay: $meetingDay
       venueLongitude: $venueLongitude
@@ -124,9 +124,9 @@ export const CREATE_BACENTA_MUTATION = gql`
       id
       name
       stream
-      centre {
+      bacenta {
         id
-        bacentas {
+        fellowships {
           id
           name
         }
@@ -135,25 +135,25 @@ export const CREATE_BACENTA_MUTATION = gql`
   }
 `
 
-export const CREATE_CENTRE_MUTATION = gql`
-  mutation CreateCentre(
-    $centreName: String!
+export const CREATE_BACENTA_MUTATION = gql`
+  mutation CreateBacenta(
+    $bacentaName: String!
     $townCampusId: ID!
     $leaderId: ID!
-    $bacentas: [ID]
+    $fellowships: [ID]
   ) {
-    CreateCentre(
-      centreName: $centreName
+    CreateBacenta(
+      bacentaName: $bacentaName
       townCampusId: $townCampusId
       leaderId: $leaderId
-      bacentas: $bacentas
+      fellowships: $fellowships
     ) {
       id
       name
       stream
       campus {
         id
-        centres {
+        bacentas {
           id
         }
         bishop {
@@ -162,7 +162,7 @@ export const CREATE_CENTRE_MUTATION = gql`
       }
       town {
         id
-        centres {
+        bacentas {
           id
         }
         bishop {
@@ -208,13 +208,13 @@ export const CREATE_TOWN_MUTATION = gql`
     $townName: String!
     $leaderId: ID!
     $councilId: ID!
-    $centres: [ID]
+    $bacentas: [ID]
   ) {
     CreateTown(
       townName: $townName
       leaderId: $leaderId
       councilId: $councilId
-      centres: $centres
+      bacentas: $bacentas
     ) {
       id
       name
@@ -235,13 +235,13 @@ export const CREATE_CAMPUS_MUTATION = gql`
     $campusName: String!
     $leaderId: ID!
     $councilId: ID!
-    $centres: [ID]
+    $bacentas: [ID]
   ) {
     CreateCampus(
       campusName: $campusName
       leaderId: $leaderId
       councilId: $councilId
-      centres: $centres
+      bacentas: $bacentas
     ) {
       id
       name

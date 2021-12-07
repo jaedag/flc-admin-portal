@@ -56,11 +56,11 @@ const ServantsChurchList = () => {
     })
   }
   const getServantChurches = (servant) => {
+    if (servant?.leadsFellowship?.length) {
+      pushIntoChurch(servant?.leadsFellowship)
+    }
     if (servant?.leadsBacenta?.length) {
       pushIntoChurch(servant?.leadsBacenta)
-    }
-    if (servant?.leadsCentre?.length) {
-      pushIntoChurch(servant?.leadsCentre)
     }
     if (servantLeader?.leadsTown?.length) {
       pushIntoChurch(servantLeader?.leadsTown)

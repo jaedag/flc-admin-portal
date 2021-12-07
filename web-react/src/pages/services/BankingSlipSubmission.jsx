@@ -19,14 +19,14 @@ import { ChurchContext } from 'contexts/ChurchContext'
 const BankingSlipSubmission = () => {
   const { serviceRecordId } = useContext(ServiceContext)
   const { theme } = useContext(MemberContext)
-  const { setBacentaId } = useContext(ChurchContext)
+  const { setFellowshipId } = useContext(ChurchContext)
   const history = useHistory()
 
   const { data, loading, error } = useQuery(DISPLAY_SERVICE_RECORDS, {
     variables: { serviceId: serviceRecordId },
   })
-  const bacenta = data?.serviceRecords[0]?.serviceLog?.bacenta[0]
-  setBacentaId(bacenta?.id)
+  const fellowship = data?.serviceRecords[0]?.serviceLog?.fellowship[0]
+  setFellowshipId(fellowship?.id)
   const initialValues = {
     bankingSlip: '',
   }
@@ -46,12 +46,12 @@ const BankingSlipSubmission = () => {
       onSubmitProps.setSubmitting(false)
       onSubmitProps.resetForm()
 
-      history.push(`/bacenta/service-details`)
+      history.push(`/fellowship/service-details`)
     })
   }
 
   return (
-    <BaseComponent loading={loading} error={error} data={data && bacenta}>
+    <BaseComponent loading={loading} error={error} data={data && fellowship}>
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
@@ -61,8 +61,8 @@ const BankingSlipSubmission = () => {
         {(formik) => (
           <Container>
             <HeadingPrimary>Banking Slip Submission</HeadingPrimary>
-            <HeadingSecondary>{bacenta?.name}</HeadingSecondary>
-            <p>Banking Code: {bacenta?.bankingCode}</p>
+            <HeadingSecondary>{fellowship?.name}</HeadingSecondary>
+            <p>Banking Code: {fellowship?.bankingCode}</p>
             <p>Expected Income: {data.serviceRecords[0].income}</p>
             <Form>
               <Row className="row-cols-1 row-cols-md-2 mt-5">

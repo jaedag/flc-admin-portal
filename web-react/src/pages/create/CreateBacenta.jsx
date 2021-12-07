@@ -4,23 +4,19 @@ import { useMutation } from '@apollo/client'
 import { CREATE_BACENTA_MUTATION } from './CreateMutations'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import { NEW_BACENTA_LEADER } from './MakeLeaderMutations'
-import BacentaForm from 'components/reusable-forms/BacentaForm'
+import BacentaForm from '../../components/reusable-forms/BacentaForm'
 import { throwErrorMsg } from 'global-utils'
 
 const CreateBacenta = () => {
   const initialValues = {
     bacentaName: '',
     leaderId: '',
-    townCampusSelect: '',
-    centreSelect: '',
-    meetingDay: '',
-    vacationStatus: '',
-    venueLatitude: '',
-    venueLongitude: '',
+    campusTownSelect: '',
+    fellowships: [''],
   }
 
-  const { clickCard, setBacentaId } = useContext(ChurchContext)
-
+  const { church, clickCard, setTownId, setCampusId } =
+    useContext(ChurchContext)
   const history = useHistory()
 
   const [NewBacentaLeader] = useMutation(NEW_BACENTA_LEADER)
@@ -28,14 +24,18 @@ const CreateBacenta = () => {
 
   //onSubmit receives the form state as argument
   const onSubmit = (values, onSubmitProps) => {
+    if (church.church === 'town') {
+      setTownId(values.campusTownSelect)
+    } else if (church.church === 'campus') {
+      setCampusId(values.campusTownSelect)
+    }
+
     CreateBacenta({
       variables: {
         bacentaName: values.bacentaName,
-        centreId: values.centreSelect,
-        meetingDay: values.meetingDay,
+        townCampusId: values.campusTownSelect,
         leaderId: values.leaderId,
-        venueLongitude: parseFloat(values.venueLongitude),
-        venueLatitude: parseFloat(values.venueLatitude),
+        fellowships: values.fellowships,
       },
     })
       .then((res) => {
@@ -45,30 +45,26 @@ const CreateBacenta = () => {
             leaderId: values.leaderId,
             bacentaId: res.data.CreateBacenta.id,
           },
-        })
-          .then(() => {
-            onSubmitProps.setSubmitting(false)
-            onSubmitProps.resetForm()
-          })
-          .catch((error) =>
-            throwErrorMsg('There was an error setting the leader', error)
-          )
+        }).catch((error) =>
+          throwErrorMsg('There was an error adding leader', error)
+        )
 
-        setBacentaId(res.data.CreateBacenta.id)
+        onSubmitProps.setSubmitting(false)
+        onSubmitProps.resetForm()
         history.push('/bacenta/displaydetails')
       })
       .catch((error) =>
         throwErrorMsg('There was an error creating bacenta', error)
       )
   }
+
   return (
     <BacentaForm
-      title="Start a New Bacenta"
       initialValues={initialValues}
       onSubmit={onSubmit}
+      title="Start a New Bacenta"
       newBacenta={true}
     />
   )
 }
-
 export default CreateBacenta

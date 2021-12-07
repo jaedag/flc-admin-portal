@@ -76,8 +76,8 @@ export const memberFilter = (memberData, filters) => {
     admins: [],
     basontaLeaders: [],
     sontaLeaders: [],
+    fellowshipLeaders: [],
     bacentaLeaders: [],
-    centreLeaders: [],
     cOs: [],
   }
 
@@ -99,11 +99,11 @@ export const memberFilter = (memberData, filters) => {
   if (filters.leaderRank.includes('Sonta Leader')) {
     leaderData.sontaLeaders = filterFor(filteredData, 'leadsSonta')
   }
+  if (filters.leaderRank.includes('Fellowship Leader')) {
+    leaderData.fellowshipLeaders = filterFor(filteredData, 'leadsFellowship')
+  }
   if (filters.leaderRank.includes('Bacenta Leader')) {
     leaderData.bacentaLeaders = filterFor(filteredData, 'leadsBacenta')
-  }
-  if (filters.leaderRank.includes('Centre Leader')) {
-    leaderData.centreLeaders = filterFor(filteredData, 'leadsCentre')
   }
   if (filters.leaderRank.includes('CO')) {
     leaderData.cOs = filteredData.filter((member) => {
@@ -121,8 +121,8 @@ export const memberFilter = (memberData, filters) => {
         ...leaderData.admins,
         ...leaderData.basontaLeaders,
         ...leaderData.sontaLeaders,
+        ...leaderData.fellowshipLeaders,
         ...leaderData.bacentaLeaders,
-        ...leaderData.centreLeaders,
         ...leaderData.cOs,
       ]),
     ]

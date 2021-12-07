@@ -3,30 +3,30 @@ import { Route, Switch, BrowserRouter as Router } from 'react-router-dom'
 import BishopDashboard from './pages/dashboards/BishopDashboard.jsx'
 import CouncilMembers from './pages/grids/CouncilMembers.jsx'
 import CampusTownMembers from './pages/grids/CampusTownMembers.jsx'
-import CentreMembers from './pages/grids/CentreMembers.jsx'
 import BacentaMembers from './pages/grids/BacentaMembers.jsx'
+import FellowshipMembers from './pages/grids/FellowshipMembers.jsx'
 import SontaMembers from './pages/grids/SontaMembers.jsx'
 import SearchPageMobile from './pages/mobile/SearchPage'
 import DisplayMemberDetails from './pages/display/DetailsMember'
 import CreateMember from './pages/create/CreateMember'
 import UpdateMember from './pages/update/UpdateMember.jsx'
-import CreateBacenta from './pages/create/CreateBacenta'
-import CreateCentre from './pages/create/CreateCentre.jsx'
+import CreateFellowship from './pages/create/CreateFellowship'
+import CreateBacenta from './pages/create/CreateBacenta.jsx'
 import CreateTownCampus from './pages/create/CreateTownCampus'
 import UpdateTownCampus from './pages/update/UpdateTownCampus.jsx'
-import DetailsBacenta from './pages/display/DetailsBacenta'
-import DisplayCentreDetails from './pages/display/DetailsCentre'
+import DetailsFellowship from './pages/display/DetailsFellowship'
+import DisplayBacentaDetails from './pages/display/DetailsBacenta'
 import DisplayCampusTownDetails from './pages/display/DetailsCampusTown.jsx'
 import DisplaySontaDetails from './pages/display/DetailsSonta.jsx'
 import { MemberContext, SearchContext } from './contexts/MemberContext'
 import { ChurchContext } from './contexts/ChurchContext'
+import DisplayAllFellowships from './pages/display/AllFellowships'
 import DisplayAllBacentas from './pages/display/AllBacentas'
-import DisplayAllCentres from './pages/display/AllCentres'
 import DisplayAllSontas from './pages/display/AllSontas'
 import DisplayAllTownCampuses from './pages/display/AllTownCampuses'
-import UpdateCentre from './pages/update/UpdateCentre'
-import DisplaySontasByCampusTown from './pages/display/SontasByCampusTown'
 import UpdateBacenta from './pages/update/UpdateBacenta'
+import DisplaySontasByCampusTown from './pages/display/SontasByCampusTown'
+import UpdateFellowship from './pages/update/UpdateFellowship'
 import ProtectedRoute from './auth/ProtectedRoute.jsx'
 import ProtectedRouteHome from './auth/ProtectedRouteHome.jsx'
 import ProtectedMembersRoute from './pages/directory/MembersDirectoryRoute.jsx'
@@ -34,15 +34,15 @@ import MemberFiltersMobile from './pages/mobile/MemberFilters'
 import UserProfileDisplayPage from './pages/user-profile/DisplayPage'
 import UserProfileEditPage from './pages/user-profile/EditPage'
 import CreateSonta from './pages/create/CreateSonta'
-import BacentaService from './pages/record-service/BacentaService'
-import BacentaReport from './pages/reports/BacentaReport'
+import FellowshipService from './pages/record-service/FellowshipService'
+import FellowshipReport from './pages/reports/FellowshipReport'
 import ServantsDashboard from 'pages/dashboards/ServantsDashboard'
-import CentreReport from 'pages/reports/CentreReport'
+import BacentaReport from 'pages/reports/BacentaReport'
 import ServantsChurchList from 'pages/dashboards/ServantsChurchList'
-import CentreService from 'pages/record-service/CentreService'
-import BacentaServiceDetails from 'pages/record-service/BacentaServiceDetails'
+import BacentaService from 'pages/record-service/BacentaService'
+import FellowshipServiceDetails from 'pages/record-service/FellowshipServiceDetails'
 import { ServiceContext } from 'contexts/ServiceContext'
-import CentreServiceDetails from 'pages/record-service/CentreServiceDetails'
+import BacentaServiceDetails from 'pages/record-service/BacentaServiceDetails'
 import TownService from 'pages/record-service/TownService'
 import TownServiceDetails from 'pages/record-service/TownServiceDetails'
 import CampusService from 'pages/record-service/CampusService'
@@ -53,7 +53,7 @@ import SontaService from 'pages/record-service/SontaService'
 import UpdateSonta from 'pages/update/UpdateSonta'
 import TownReport from 'pages/reports/TownReport'
 import SontaServiceDetails from 'pages/record-service/SontaServiceDetails'
-import BacentaServiceCancelled from 'pages/record-service/BacentaServiceCancelled'
+import FellowshipServiceCancelled from 'pages/record-service/FellowshipServiceCancelled'
 import Directory from 'pages/dashboards/Directory'
 import Services from 'pages/services/ServicesMenu'
 import Arrivals from 'pages/dashboards/Arrivals'
@@ -73,7 +73,7 @@ import DetailsCouncil from 'pages/display/DetailsCouncil.jsx'
 import CouncilReport from 'pages/reports/CouncilReport.jsx'
 import Fellowship from 'pages/services/Fellowship.jsx'
 import ConstituencyJoint from 'pages/services/ConstituencyJoint.jsx'
-import CentreJoint from 'pages/services/CentreJoint.jsx'
+import BacentaJoint from 'pages/services/BacentaJoint.jsx'
 import DetailsStream from 'pages/display/DetailsStream.jsx'
 
 const PastorsAdmin = () => {
@@ -96,9 +96,9 @@ const PastorsAdmin = () => {
   const [campusId, setCampusId] = useState(
     sessionStorage.getItem('campusId') ? sessionStorage.getItem('campusId') : ''
   )
-  const [bacentaId, setBacentaId] = useState(
-    sessionStorage.getItem('bacentaId')
-      ? sessionStorage.getItem('bacentaId')
+  const [fellowshipId, setFellowshipId] = useState(
+    sessionStorage.getItem('fellowshipId')
+      ? sessionStorage.getItem('fellowshipId')
       : ''
   )
   const [serviceRecordId, setServiceRecordId] = useState(
@@ -106,8 +106,10 @@ const PastorsAdmin = () => {
       ? sessionStorage.getItem('serviceRecordsId')
       : ''
   )
-  const [centreId, setCentreId] = useState(
-    sessionStorage.getItem('centreId') ? sessionStorage.getItem('centreId') : ''
+  const [bacentaId, setBacentaId] = useState(
+    sessionStorage.getItem('bacentaId')
+      ? sessionStorage.getItem('bacentaId')
+      : ''
   )
   const [sontaId, setSontaId] = useState(
     sessionStorage.getItem('sontaId') ? sessionStorage.getItem('sontaId') : ''
@@ -155,15 +157,15 @@ const PastorsAdmin = () => {
     //switch case for other church types
     switch (member?.__typename) {
       case 'Council':
-        setChurch({ church: member.stream, subChurch: 'centre' })
+        setChurch({ church: member.stream, subChurch: 'bacenta' })
         break
       case 'Town':
-        setChurch({ church: member.stream, subChurch: 'centre' })
+        setChurch({ church: member.stream, subChurch: 'bacenta' })
         sessionStorage.setItem(
           'church',
           JSON.stringify({
             church: member.stream,
-            subChurch: 'centre',
+            subChurch: 'bacenta',
           })
         )
 
@@ -173,12 +175,12 @@ const PastorsAdmin = () => {
         }
         break
       case 'Campus':
-        setChurch({ church: 'campus', subChurch: 'centre' })
+        setChurch({ church: 'campus', subChurch: 'bacenta' })
         sessionStorage.setItem(
           'church',
           JSON.stringify({
             church: 'campus',
-            subChurch: 'centre',
+            subChurch: 'bacenta',
           })
         )
 
@@ -187,16 +189,16 @@ const PastorsAdmin = () => {
           sessionStorage.setItem('councilId', member.council?.id)
         }
         break
-      case 'Centre':
+      case 'Bacenta':
         setChurch({
           church: member.campus ? 'campus' : 'town',
-          subChurch: 'centre',
+          subChurch: 'bacenta',
         })
         sessionStorage.setItem(
           'church',
           JSON.stringify({
             church: member.campus ? 'campus' : 'town',
-            subChurch: 'centre',
+            subChurch: 'bacenta',
           })
         )
 
@@ -209,28 +211,28 @@ const PastorsAdmin = () => {
           sessionStorage.setItem('councilId', member?.town.council.id)
         }
         break
-      case 'Bacenta':
+      case 'Fellowship':
         setChurch({
-          church: member.centre?.stream,
-          subChurch: 'centre',
+          church: member.bacenta?.stream,
+          subChurch: 'bacenta',
         })
         sessionStorage.setItem(
           'church',
           JSON.stringify({
-            church: member.centre?.stream,
-            subChurch: 'centre',
+            church: member.bacenta?.stream,
+            subChurch: 'bacenta',
           })
         )
 
-        if (member.centre?.town?.council.id) {
-          setCouncilId(member.centre?.town?.council.id)
-          sessionStorage.setItem('councilId', member.centre?.town?.council.id)
+        if (member.bacenta?.town?.council.id) {
+          setCouncilId(member.bacenta?.town?.council.id)
+          sessionStorage.setItem('councilId', member.bacenta?.town?.council.id)
 
-          if (member.centre?.campus?.council.id) {
-            setCouncilId(member.centre?.campus?.council.id)
+          if (member.bacenta?.campus?.council.id) {
+            setCouncilId(member.bacenta?.campus?.council.id)
             sessionStorage.setItem(
               'councilId',
-              member.centre?.campus?.council.id
+              member.bacenta?.campus?.council.id
             )
           }
         }
@@ -239,52 +241,55 @@ const PastorsAdmin = () => {
       default:
     }
 
-    if (member?.bacenta?.centre?.town) {
-      setChurch({ church: 'town', subChurch: 'centre' })
+    if (member?.fellowship?.bacenta?.town) {
+      setChurch({ church: 'town', subChurch: 'bacenta' })
       sessionStorage.setItem(
         'church',
         JSON.stringify({
           church: 'town',
-          subChurch: 'centre',
+          subChurch: 'bacenta',
         })
       )
-      setCouncilId(member.bacenta.centre.town.council.id)
-      sessionStorage.setItem('councilId', member.bacenta.centre.town.council.id)
+      setCouncilId(member.fellowship.bacenta.town.council.id)
+      sessionStorage.setItem(
+        'councilId',
+        member.fellowship.bacenta.town.council.id
+      )
       return
     } else if (member.leadsTown && member.leadsTown[0]) {
-      setChurch({ church: 'town', subChurch: 'centre' })
+      setChurch({ church: 'town', subChurch: 'bacenta' })
       sessionStorage.setItem(
         'church',
         JSON.stringify({
           church: 'town',
-          subChurch: 'centre',
+          subChurch: 'bacenta',
         })
       )
       setCouncilId(member?.leadsTown[0].council?.id)
       sessionStorage.setItem('councilId', member.leadsTown[0].council?.id)
       return
-    } else if (member?.bacenta?.centre?.campus) {
-      setChurch({ church: 'campus', subChurch: 'centre' })
+    } else if (member?.fellowship?.bacenta?.campus) {
+      setChurch({ church: 'campus', subChurch: 'bacenta' })
       sessionStorage.setItem(
         'church',
         JSON.stringify({
           church: 'campus',
-          subChurch: 'centre',
+          subChurch: 'bacenta',
         })
       )
-      setCouncilId(member?.bacenta?.centre?.campus?.council?.id)
+      setCouncilId(member?.fellowship?.bacenta?.campus?.council?.id)
       sessionStorage.setItem(
         'councilId',
-        member?.bacenta?.centre?.campus?.council?.id
+        member?.fellowship?.bacenta?.campus?.council?.id
       )
       return
     } else if (member?.leadsCampus && member.leadsCampus[0]) {
-      setChurch({ church: 'campus', subChurch: 'centre' })
+      setChurch({ church: 'campus', subChurch: 'bacenta' })
       sessionStorage.setItem(
         'church',
         JSON.stringify({
           church: 'campus',
-          subChurch: 'centre',
+          subChurch: 'bacenta',
         })
       )
       setCouncilId(member.leadsCampus[0].council?.id)
@@ -305,13 +310,13 @@ const PastorsAdmin = () => {
         setSontaId(card.id)
         sessionStorage.setItem('sontaId', card.id)
         break
+      case 'Fellowship':
+        setFellowshipId(card.id)
+        sessionStorage.setItem('fellowshipId', card.id)
+        break
       case 'Bacenta':
         setBacentaId(card.id)
         sessionStorage.setItem('bacentaId', card.id)
-        break
-      case 'Centre':
-        setCentreId(card.id)
-        sessionStorage.setItem('centreId', card.id)
         break
       case 'Town':
         setTownId(card.id)
@@ -370,10 +375,10 @@ const PastorsAdmin = () => {
           setTownId,
           campusId,
           setCampusId,
-          centreId,
-          setCentreId,
           bacentaId,
           setBacentaId,
+          fellowshipId,
+          setFellowshipId,
           sontaId,
           setSontaId,
           ministryId,
@@ -424,15 +429,15 @@ const PastorsAdmin = () => {
                   />
                   <Route path="/services" component={Services} exact />
                   <ProtectedRoute
-                    path="/services/bacenta"
+                    path="/services/fellowship"
                     component={Fellowship}
                     roles={['all']}
                     placeholder
                     exact
                   />
                   <ProtectedRoute
-                    path="/services/centre"
-                    component={CentreJoint}
+                    path="/services/bacenta"
+                    component={BacentaJoint}
                     roles={['all']}
                     placeholder
                     exact
@@ -488,8 +493,8 @@ const PastorsAdmin = () => {
                       'adminCouncil',
                       'adminCampus',
                       'adminTown',
+                      'leaderFellowship',
                       'leaderBacenta',
-                      'leaderCentre',
                       'leaderCampus',
                       'leaderTown',
                     ]}
@@ -503,8 +508,8 @@ const PastorsAdmin = () => {
                       'adminCouncil',
                       'adminCampus',
                       'adminTown',
+                      'leaderFellowship',
                       'leaderBacenta',
-                      'leaderCentre',
                       'leaderCampus',
                       'leaderTown',
                     ]}
@@ -516,8 +521,21 @@ const PastorsAdmin = () => {
                       'adminCouncil',
                       'adminCampus',
                       'adminTown',
+                      'leaderFellowship',
                       'leaderBacenta',
-                      'leaderCentre',
+                      'leaderCampus',
+                      'leaderTown',
+                    ]}
+                    path="/fellowship/reports"
+                    component={FellowshipReport}
+                  />
+                  <ProtectedRoute
+                    roles={[
+                      'adminFederal',
+                      'adminCouncil',
+                      'adminCampus',
+                      'adminTown',
+                      'leaderBacenta',
                       'leaderCampus',
                       'leaderTown',
                     ]}
@@ -530,20 +548,7 @@ const PastorsAdmin = () => {
                       'adminCouncil',
                       'adminCampus',
                       'adminTown',
-                      'leaderCentre',
-                      'leaderCampus',
-                      'leaderTown',
-                    ]}
-                    path="/centre/reports"
-                    component={CentreReport}
-                  />
-                  <ProtectedRoute
-                    roles={[
-                      'adminFederal',
-                      'adminCouncil',
-                      'adminCampus',
-                      'adminTown',
-                      'leaderCentre',
+                      'leaderBacenta',
                       'leaderSonta',
                       'leaderCampus',
                       'leaderTown',
@@ -611,8 +616,8 @@ const PastorsAdmin = () => {
                       'adminTown',
                       'leaderCampus',
                       'leaderTown',
-                      'leaderCentre',
                       'leaderBacenta',
+                      'leaderFellowship',
                     ]}
                     path="/member/addmember"
                     component={CreateMember}
@@ -624,7 +629,7 @@ const PastorsAdmin = () => {
                       'adminCouncil',
                       'adminCampus',
                       'adminTown',
-                      'leaderCentre',
+                      'leaderBacenta',
                       'leaderTown',
                       'leaderCampus',
                     ]}
@@ -687,8 +692,8 @@ const PastorsAdmin = () => {
                       'adminCampus',
                       'adminTown',
                     ]}
-                    path="/centre/members"
-                    component={CentreMembers}
+                    path="/bacenta/members"
+                    component={BacentaMembers}
                     exact
                   />
                   <ProtectedMembersRoute
@@ -697,10 +702,10 @@ const PastorsAdmin = () => {
                       'adminCouncil',
                       'adminCampus',
                       'adminTown',
-                      'leaderBacenta',
+                      'leaderFellowship',
                     ]}
-                    path="/bacenta/members"
-                    component={BacentaMembers}
+                    path="/fellowship/members"
+                    component={FellowshipMembers}
                     exact
                   />
                   <ProtectedMembersRoute
@@ -724,15 +729,15 @@ const PastorsAdmin = () => {
                   {/* Pages to Display Church Details  */}
                   <ProtectedRoute
                     roles={['all']}
-                    path="/bacenta/displaydetails"
-                    component={DetailsBacenta}
+                    path="/fellowship/displaydetails"
+                    component={DetailsFellowship}
                     placeholder
                     exact
                   />
                   <ProtectedRoute
                     roles={['all']}
-                    path="/centre/displaydetails"
-                    component={DisplayCentreDetails}
+                    path="/bacenta/displaydetails"
+                    component={DisplayBacentaDetails}
                     placeholder
                     exact
                   />
@@ -785,8 +790,8 @@ const PastorsAdmin = () => {
                   {/* Pages to Display Lists in the Directory */}
                   <ProtectedRoute
                     roles={['all']}
-                    path="/centre/displayall"
-                    component={DisplayAllCentres}
+                    path="/bacenta/displayall"
+                    component={DisplayAllBacentas}
                     exact
                   />
                   <ProtectedRoute
@@ -821,8 +826,8 @@ const PastorsAdmin = () => {
                   />
                   <ProtectedRoute
                     roles={['all']}
-                    path="/bacenta/displayall"
-                    component={DisplayAllBacentas}
+                    path="/fellowship/displayall"
+                    component={DisplayAllFellowships}
                     exact
                   />
                   {/* Pages to Create Directory  */}
@@ -845,8 +850,8 @@ const PastorsAdmin = () => {
                       'adminCampus',
                       'adminTown',
                     ]}
-                    path="/centre/addcentre"
-                    component={CreateCentre}
+                    path="/bacenta/addbacenta"
+                    component={CreateBacenta}
                     exact
                   />
                   <ProtectedRoute
@@ -856,8 +861,8 @@ const PastorsAdmin = () => {
                       'adminCampus',
                       'adminTown',
                     ]}
-                    path="/bacenta/addbacenta"
-                    component={CreateBacenta}
+                    path="/fellowship/addfellowship"
+                    component={CreateFellowship}
                     exact
                   />
                   <ProtectedRoute
@@ -879,8 +884,8 @@ const PastorsAdmin = () => {
                       'adminCampus',
                       'adminTown',
                     ]}
-                    path="/bacenta/editbacenta"
-                    component={UpdateBacenta}
+                    path="/fellowship/editfellowship"
+                    component={UpdateFellowship}
                     exact
                   />
                   <ProtectedRoute
@@ -891,8 +896,8 @@ const PastorsAdmin = () => {
                       'adminTown',
                       'leaderTown',
                     ]}
-                    path="/centre/editcentre"
-                    component={UpdateCentre}
+                    path="/bacenta/editbacenta"
+                    component={UpdateBacenta}
                     exact
                   />
                   <ProtectedRoute
@@ -918,7 +923,7 @@ const PastorsAdmin = () => {
                     component={UpdateTownCampus}
                     exact
                   />
-                  {/* Bacenta Leader Routes */}
+                  {/* Fellowship Leader Routes */}
                   <ProtectedRoute
                     roles={[
                       'adminFederal',
@@ -926,8 +931,8 @@ const PastorsAdmin = () => {
                       'adminCampus',
                       'adminTown',
                     ]}
-                    path="/bacenta/service-details"
-                    component={BacentaServiceDetails}
+                    path="/fellowship/service-details"
+                    component={FellowshipServiceDetails}
                     placeholder
                   />
                   <ProtectedRoute
@@ -937,8 +942,8 @@ const PastorsAdmin = () => {
                       'adminCampus',
                       'adminTown',
                     ]}
-                    path="/services/bacenta/no-service"
-                    component={BacentaServiceCancelled}
+                    path="/services/fellowship/no-service"
+                    component={FellowshipServiceCancelled}
                     placeholder
                   />
                   <ProtectedRoute
@@ -947,10 +952,10 @@ const PastorsAdmin = () => {
                       'adminCouncil',
                       'adminCampus',
                       'adminTown',
-                      'leaderBacenta',
+                      'leaderFellowship',
                     ]}
-                    path="/services/bacenta/form"
-                    component={BacentaService}
+                    path="/services/fellowship/form"
+                    component={FellowshipService}
                   />{' '}
                   <ProtectedRoute
                     roles={[
@@ -958,10 +963,10 @@ const PastorsAdmin = () => {
                       'adminCouncil',
                       'adminCampus',
                       'adminTown',
-                      'leaderBacenta',
+                      'leaderFellowship',
                     ]}
-                    path="/bacenta/record-service"
-                    component={BacentaService}
+                    path="/fellowship/record-service"
+                    component={FellowshipService}
                   />
                   <ProtectedRoute
                     roles={[
@@ -989,10 +994,10 @@ const PastorsAdmin = () => {
                       'adminCouncil',
                       'adminCampus',
                       'adminTown',
-                      'leaderCentre',
+                      'leaderBacenta',
                     ]}
-                    path="/centre/record-service"
-                    component={CentreService}
+                    path="/bacenta/record-service"
+                    component={BacentaService}
                   />
                   <ProtectedRoute
                     roles={[
@@ -1015,7 +1020,7 @@ const PastorsAdmin = () => {
                       'adminTown',
                       'leaderCampus',
                       'leaderTown',
-                      'leaderCentre',
+                      'leaderBacenta',
                     ]}
                     path="/sonta/service-details"
                     component={SontaServiceDetails}
@@ -1028,10 +1033,10 @@ const PastorsAdmin = () => {
                       'adminTown',
                       'leaderCampus',
                       'leaderTown',
-                      'leaderCentre',
+                      'leaderBacenta',
                     ]}
-                    path="/centre/service-details"
-                    component={CentreServiceDetails}
+                    path="/bacenta/service-details"
+                    component={BacentaServiceDetails}
                   />
                   <ProtectedRoute
                     roles={[

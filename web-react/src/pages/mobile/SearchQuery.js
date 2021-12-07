@@ -31,7 +31,7 @@ export const FEDERAL_SEARCH = gql`
         id
       }
     }
-    federalCentreSearch(searchKey: $searchKey) {
+    federalBacentaSearch(searchKey: $searchKey) {
       id
       name
       town {
@@ -47,10 +47,10 @@ export const FEDERAL_SEARCH = gql`
         }
       }
     }
-    federalBacentaSearch(searchKey: $searchKey) {
+    federalFellowshipSearch(searchKey: $searchKey) {
       id
       name
-      centre {
+      bacenta {
         id
         town {
           id
@@ -72,7 +72,7 @@ export const FEDERAL_SEARCH = gql`
       lastName
       pictureUrl
       stream
-      bacenta {
+      fellowship {
         id
         name
         leader {
@@ -80,7 +80,7 @@ export const FEDERAL_SEARCH = gql`
           firstName
           lastName
         }
-        centre {
+        bacenta {
           id
           town {
             id
@@ -144,7 +144,7 @@ export const COUNCIL_SEARCH = gql`
         fullName
       }
     }
-    councilCentreSearch(searchKey: $searchKey, councilId: $councilId) {
+    councilBacentaSearch(searchKey: $searchKey, councilId: $councilId) {
       id
       name
       leader {
@@ -154,7 +154,7 @@ export const COUNCIL_SEARCH = gql`
         fullName
       }
     }
-    councilBacentaSearch(searchKey: $searchKey, councilId: $councilId) {
+    councilFellowshipSearch(searchKey: $searchKey, councilId: $councilId) {
       id
       name
       leader {
@@ -171,7 +171,7 @@ export const COUNCIL_SEARCH = gql`
       fullName
       pictureUrl
       stream
-      bacenta {
+      fellowship {
         id
         name
       }
@@ -192,14 +192,14 @@ export const CONSTITUENCY_SEARCH = gql`
       id
       name
     }
-    constituencyCentreSearch(
+    constituencyBacentaSearch(
       searchKey: $searchKey
       constituencyId: $constituencyId
     ) {
       id
       name
     }
-    constituencyBacentaSearch(
+    constituencyFellowshipSearch(
       searchKey: $searchKey
       constituencyId: $constituencyId
     ) {
@@ -216,32 +216,7 @@ export const CONSTITUENCY_SEARCH = gql`
       fullName
       pictureUrl
       stream
-      bacenta {
-        id
-        name
-      }
-      ministry {
-        id
-        name
-      }
-    }
-  }
-`
-
-export const CENTRE_SEARCH = gql`
-  query centreSearch($searchKey: String, $centreId: ID) {
-    centreBacentaSearch(searchKey: $searchKey, centreId: $centreId) {
-      id
-      name
-    }
-    centreMemberSearch(searchKey: $searchKey, centreId: $centreId) {
-      id
-      firstName
-      lastName
-      fullName
-      pictureUrl
-      stream
-      bacenta {
+      fellowship {
         id
         name
       }
@@ -255,6 +230,10 @@ export const CENTRE_SEARCH = gql`
 
 export const BACENTA_SEARCH = gql`
   query bacentaSearch($searchKey: String, $bacentaId: ID) {
+    bacentaFellowshipSearch(searchKey: $searchKey, bacentaId: $bacentaId) {
+      id
+      name
+    }
     bacentaMemberSearch(searchKey: $searchKey, bacentaId: $bacentaId) {
       id
       firstName
@@ -262,7 +241,28 @@ export const BACENTA_SEARCH = gql`
       fullName
       pictureUrl
       stream
-      bacenta {
+      fellowship {
+        id
+        name
+      }
+      ministry {
+        id
+        name
+      }
+    }
+  }
+`
+
+export const FELLOWSHIP_SEARCH = gql`
+  query fellowshipSearch($searchKey: String, $fellowshipId: ID) {
+    fellowshipMemberSearch(searchKey: $searchKey, fellowshipId: $fellowshipId) {
+      id
+      firstName
+      lastName
+      fullName
+      pictureUrl
+      stream
+      fellowship {
         id
         name
       }

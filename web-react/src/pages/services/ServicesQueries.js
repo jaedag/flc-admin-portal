@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client'
 
 export const BANKING_SLIP_QUERIES = gql`
-  query bacentaServices($bacentaId: ID) {
-    bacentas(where: { id: $bacentaId }) {
+  query fellowshipServices($fellowshipId: ID) {
+    fellowships(where: { id: $fellowshipId }) {
       id
       bankingCode
       name
@@ -36,7 +36,7 @@ export const BANKING_SLIP_SUBMISSION = gql`
         id
         bankingSlip
         serviceLog {
-          bacenta {
+          fellowship {
             id
           }
         }
@@ -50,7 +50,7 @@ export const DISPLAY_SERVICE_RECORDS = gql`
     serviceRecords(where: { id: $serviceId }) {
       id
       serviceLog {
-        bacenta {
+        fellowship {
           id
           name
           bankingCode

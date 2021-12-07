@@ -36,12 +36,12 @@ const ProtectedRoute = ({ component, roles, placeholder, ...args }) => {
   if (isAuthorised(roles, currentUser.roles)) {
     //if the user has permission to access the route
     return <Route component={component} {...args} />
-  } else if (isAuthorised(['leaderBacenta'], currentUser.roles)) {
-    //If the user does not have permission but is a Bacenta Leader
-    church.setBacentaId(currentUser.bacenta.id)
+  } else if (isAuthorised(['leaderFellowship'], currentUser.roles)) {
+    //If the user does not have permission but is a Fellowship Leader
+    church.setFellowshipId(currentUser.fellowship.id)
     return <Route component={component} {...args} />
   } else if (placeholder && isAuthenticated) {
-    //If the user does not have permission but is a Bacenta Leader
+    //If the user does not have permission but is a Fellowship Leader
     return (
       <Route
         component={withAuthenticationRequired(component, {

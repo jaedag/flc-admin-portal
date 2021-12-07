@@ -79,15 +79,15 @@ export const getServiceGraphData = (church) => {
     })
   }
 
-  if (church.__typename === 'Centre') {
-    pushIntoData(church.bacentaServiceAggregate) //Push in Bacenta Service Aggregates
+  if (church.__typename === 'Bacenta') {
+    pushIntoData(church.fellowshipServiceAggregate) //Push in Fellowship Service Aggregates
   }
 
   if (church.__typename === 'Campus' || church.__typename === 'Town') {
-    pushIntoData(church.componentServiceAggregate) //Push in Bacenta Service Aggregates
+    pushIntoData(church.componentServiceAggregate) //Push in Fellowship Service Aggregates
   }
 
-  //Pushing in direct service data eg. Joint Services and Bacenta Services
+  //Pushing in direct service data eg. Joint Services and Fellowship Services
   pushIntoData(church.services)
 
   data = data.sort(sortingFunction('week'))

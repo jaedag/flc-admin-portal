@@ -10,20 +10,20 @@ import { useHistory } from 'react-router'
 import { BANKING_SLIP_QUERIES } from './ServicesQueries'
 
 const BankingSlipView = () => {
-  const { bacentaId } = useContext(ChurchContext)
+  const { fellowshipId } = useContext(ChurchContext)
   const { setServiceRecordId } = useContext(ServiceContext)
   const history = useHistory()
   const { data } = useQuery(BANKING_SLIP_QUERIES, {
-    variables: { bacentaId: bacentaId },
+    variables: { fellowshipId: fellowshipId },
   })
-  const bacenta = data?.bacentas[0]
+  const fellowship = data?.fellowships[0]
 
   return (
     <Container>
-      <HeadingPrimary>{bacenta?.name}</HeadingPrimary>
-      <p>Banking Code: {bacenta?.bankingCode}</p>
+      <HeadingPrimary>{fellowship?.name}</HeadingPrimary>
+      <p>Banking Code: {fellowship?.bankingCode}</p>
 
-      {data?.bacentas[0].services.map((service, index) => {
+      {data?.fellowships[0].services.map((service, index) => {
         if (service.noServiceReason) {
           return null
         }

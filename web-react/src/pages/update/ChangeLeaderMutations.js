@@ -1,5 +1,36 @@
 import { gql } from '@apollo/client'
 
+export const MAKE_FELLOWSHIP_LEADER = gql`
+  mutation MakeFellowshipLeader(
+    $fellowshipId: ID!
+    $newLeaderId: ID!
+    $oldLeaderId: ID!
+  ) {
+    RemoveFellowshipLeader(
+      fellowshipId: $fellowshipId
+      leaderId: $oldLeaderId
+    ) {
+      id
+      firstName
+      lastName
+    }
+    MakeFellowshipLeader(fellowshipId: $fellowshipId, leaderId: $newLeaderId) {
+      id
+      firstName
+      lastName
+      fullName
+      leadsFellowship {
+        id
+        leader {
+          id
+          firstName
+          lastName
+        }
+      }
+    }
+  }
+`
+
 export const MAKE_BACENTA_LEADER = gql`
   mutation MakeBacentaLeader(
     $bacentaId: ID!
@@ -15,35 +46,7 @@ export const MAKE_BACENTA_LEADER = gql`
       id
       firstName
       lastName
-      fullName
       leadsBacenta {
-        id
-        leader {
-          id
-          firstName
-          lastName
-        }
-      }
-    }
-  }
-`
-
-export const MAKE_CENTRE_LEADER = gql`
-  mutation MakeCentreLeader(
-    $centreId: ID!
-    $newLeaderId: ID!
-    $oldLeaderId: ID!
-  ) {
-    RemoveCentreLeader(centreId: $centreId, leaderId: $oldLeaderId) {
-      id
-      firstName
-      lastName
-    }
-    MakeCentreLeader(centreId: $centreId, leaderId: $newLeaderId) {
-      id
-      firstName
-      lastName
-      leadsCentre {
         id
         leader {
           id

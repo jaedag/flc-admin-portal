@@ -1,12 +1,12 @@
 import { gql } from '@apollo/client'
 
-export const NEW_BACENTA_LEADER = gql`
-  mutation NewBacentaLeader($bacentaId: ID!, $leaderId: ID!) {
-    MakeBacentaLeader(bacentaId: $bacentaId, leaderId: $leaderId) {
+export const NEW_FELLOWSHIP_LEADER = gql`
+  mutation NewFellowshipLeader($fellowshipId: ID!, $leaderId: ID!) {
+    MakeFellowshipLeader(fellowshipId: $fellowshipId, leaderId: $leaderId) {
       id
       firstName
       lastName
-      leadsBacenta {
+      leadsFellowship {
         id
         leader {
           id
@@ -36,13 +36,13 @@ export const NEW_SONTA_LEADER = gql`
   }
 `
 
-export const NEW_CENTRE_LEADER = gql`
-  mutation NewCentreLeader($centreId: ID!, $leaderId: ID!) {
-    MakeCentreLeader(centreId: $centreId, leaderId: $leaderId) {
+export const NEW_BACENTA_LEADER = gql`
+  mutation NewBacentaLeader($bacentaId: ID!, $leaderId: ID!) {
+    MakeBacentaLeader(bacentaId: $bacentaId, leaderId: $leaderId) {
       id
       firstName
       lastName
-      leadsCentre {
+      leadsBacenta {
         id
         leader {
           id

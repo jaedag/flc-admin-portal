@@ -31,13 +31,13 @@ function FormikSearchbox(props) {
         __typename: row.__typename,
         firstName: row.firstName,
         lastName: row.lastName,
+        fellowship: row.fellowship,
         bacenta: row.bacenta,
-        centre: row.centre,
         town: row.town,
         campus: row.campus,
         bishop: row.bishop,
+        leadsFellowship: row.leadsFellowship,
         leadsBacenta: row.leadsBacenta,
-        leadsCentre: row.leadsCentre,
         leadsCampus: row.leadsCampus,
         leadsTown: row.leadsTown,
         leadsCouncil: row.leadsCouncil,
@@ -52,8 +52,8 @@ function FormikSearchbox(props) {
         ...data.federalCampusSearch,
         ...data.federalTownSearch,
         ...data.federalSontaSearch,
-        ...data.federalCentreSearch,
         ...data.federalBacentaSearch,
+        ...data.federalFellowshipSearch,
       ]
       if (currentUser.roles.includes('adminFederal')) {
         getSuggestions(combinedData)
@@ -67,8 +67,8 @@ function FormikSearchbox(props) {
         ...data.councilCampusSearch,
         ...data.councilTownSearch,
         ...data.councilSontaSearch,
-        ...data.councilCentreSearch,
         ...data.councilBacentaSearch,
+        ...data.councilFellowshipSearch,
       ]
 
       if (currentUser.roles.includes('adminCouncil')) {
@@ -81,8 +81,8 @@ function FormikSearchbox(props) {
       const combinedData = [
         ...data.constituencyMemberSearch,
         ...data.constituencySontaSearch,
-        ...data.constituencyCentreSearch,
         ...data.constituencyBacentaSearch,
+        ...data.constituencyFellowshipSearch,
       ]
 
       if (currentUser.roles.includes('adminCampus', 'adminTown')) {

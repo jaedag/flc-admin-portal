@@ -107,7 +107,7 @@ const MemberDisplay = ({ memberId }) => {
           <DetailsCard heading="Email Address" detail={member?.email} />
         </Col>
         <Col sm={1} md="auto">
-          <DetailsCard heading="Bacenta" detail={member?.bacenta?.name} />
+          <DetailsCard heading="Fellowship" detail={member?.fellowship?.name} />
         </Col>
         <Col>
           <DetailsCard heading="Ministry" detail={member?.ministry?.name} />

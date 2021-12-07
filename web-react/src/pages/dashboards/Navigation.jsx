@@ -38,10 +38,10 @@ const Navigator = () => {
   const [memberByEmail] = useLazyQuery(GET_LOGGED_IN_USER, {
     onCompleted: (data) => {
       let church
-      if (data.memberByEmail.bacenta.centre?.town) {
+      if (data.memberByEmail.fellowship.bacenta?.town) {
         church = 'town'
       }
-      if (data.memberByEmail.bacenta.centre?.campus) {
+      if (data.memberByEmail.fellowship.bacenta?.campus) {
         church = 'campus'
       }
 
@@ -53,11 +53,12 @@ const Navigator = () => {
         fullName:
           data.memberByEmail.firstName + ' ' + data.memberByEmail.lastName,
         picture: data.memberByEmail?.pictureUrl ?? null,
-        bacenta: data.memberByEmail?.bacenta,
-        bishop: data.memberByEmail?.bacenta?.centre[`${church}`]?.bishop.id,
-        council: data.memberByEmail?.bacenta?.centre[`${church}`]?.council.id,
-        constituency: data.memberByEmail?.bacenta?.centre[`${church}`]?.id,
-        church: { church: church, subChurch: 'centre' },
+        fellowship: data.memberByEmail?.fellowship,
+        bishop: data.memberByEmail?.fellowship?.bacenta[`${church}`]?.bishop.id,
+        council:
+          data.memberByEmail?.fellowship?.bacenta[`${church}`]?.council.id,
+        constituency: data.memberByEmail?.fellowship?.bacenta[`${church}`]?.id,
+        church: { church: church, subChurch: 'bacenta' },
         email: user?.email,
         roles: user ? user[`https://flcadmin.netlify.app/roles`] : [],
       })
@@ -188,11 +189,11 @@ const Navigator = () => {
   }
 
   const getServantRoles = (servant) => {
+    if (servant?.leadsFellowship?.length) {
+      setServantRoles(servant, 'Leader', 'Fellowship')
+    }
     if (servant?.leadsBacenta?.length) {
       setServantRoles(servant, 'Leader', 'Bacenta')
-    }
-    if (servant?.leadsCentre?.length) {
-      setServantRoles(servant, 'Leader', 'Centre')
     }
     if (servantLeader?.leadsTown?.length) {
       setServantRoles(servantLeader, 'Leader', 'Town')

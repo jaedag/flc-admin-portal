@@ -1,21 +1,21 @@
 import { gql } from '@apollo/client'
 
-export const LOG_BACENTA_HISTORY = gql`
-  mutation LogBacentaHistory(
-    $bacentaId: ID!
+export const LOG_FELLOWSHIP_HISTORY = gql`
+  mutation LogFellowshipHistory(
+    $fellowshipId: ID!
     $historyRecord: String!
     $oldLeaderId: ID
     $newLeaderId: ID
-    $oldCentreId: ID
-    $newCentreId: ID
+    $oldBacentaId: ID
+    $newBacentaId: ID
   ) {
-    LogBacentaHistory(
-      bacentaId: $bacentaId
+    LogFellowshipHistory(
+      fellowshipId: $fellowshipId
       historyRecord: $historyRecord
       oldLeaderId: $oldLeaderId
       newLeaderId: $newLeaderId
-      oldCentreId: $oldCentreId
-      newCentreId: $newCentreId
+      oldBacentaId: $oldBacentaId
+      newBacentaId: $newBacentaId
     ) {
       id
       history(options: { limit: 10 }) {
@@ -32,24 +32,24 @@ export const LOG_BACENTA_HISTORY = gql`
         historyRecord
       }
     }
-    ConnectBacentaHistory(churchId: $bacentaId) {
+    ConnectFellowshipHistory(churchId: $fellowshipId) {
       id
       historyRecord
     }
   }
 `
 
-export const LOG_CENTRE_HISTORY = gql`
-  mutation LogCentreHistory(
-    $centreId: ID!
+export const LOG_BACENTA_HISTORY = gql`
+  mutation LogBacentaHistory(
+    $bacentaId: ID!
     $historyRecord: String!
     $oldLeaderId: ID
     $newLeaderId: ID
     $oldCampusTownId: ID
     $newCampusTownId: ID
   ) {
-    LogCentreHistory(
-      centreId: $centreId
+    LogBacentaHistory(
+      bacentaId: $bacentaId
       historyRecord: $historyRecord
       newLeaderId: $newLeaderId
       oldLeaderId: $oldLeaderId
@@ -77,7 +77,7 @@ export const LOG_CENTRE_HISTORY = gql`
         historyRecord
       }
     }
-    ConnectChurchHistory(churchId: $centreId) {
+    ConnectChurchHistory(churchId: $bacentaId) {
       id
       historyRecord
     }
@@ -212,7 +212,7 @@ export const LOG_SONTA_HISTORY = gql`
         historyRecord
       }
     }
-    ConnectBacentaHistory(churchId: $sontaId) {
+    ConnectFellowshipHistory(churchId: $sontaId) {
       id
       historyRecord
     }

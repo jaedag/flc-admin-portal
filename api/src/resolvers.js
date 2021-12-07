@@ -419,7 +419,7 @@ const MakeServant = async (
     //Update a user's Auth Profile with Picture and Name Details
     await axios(updateAuthUserConfig(servant))
 
-    //Check auth0 roles and add roles 'leaderCentre'
+    //Check auth0 roles and add roles 'leaderBacenta'
     const userRoleResponse = await axios(getUserRoles(servant.auth_id))
     const roles = userRoleResponse.data.map((role) => role.name)
 
@@ -436,7 +436,7 @@ const MakeServant = async (
     notifyMember(
       servant,
       'Servanthood Status Update',
-      `Hi ${servant.firstName} ${servant.lastName},\nCongratulations! You have just been made a ${churchType} ${servantType} for ${churchInEmail}. If you feel this is a mistake, please contact your bishop's admin\n\nRegards,\nThe Administrator,\nFirst Love Centre,\nAccra.`,
+      `Hi ${servant.firstName} ${servant.lastName},\nCongratulations! You have just been made a ${churchType} ${servantType} for ${churchInEmail}. If you feel this is a mistake, please contact your bishop's admin\n\nRegards,\nThe Administrator,\nFirst Love Bacenta,\nAccra.`,
       'servant_status_update',
       [
         servant.firstName,
@@ -513,7 +513,7 @@ const RemoveServant = async (
     return
   }
 
-  //Check auth0 roles and remove roles 'leaderCentre'
+  //Check auth0 roles and remove roles 'leaderBacenta'
   const userRoleResponse = await axios(getUserRoles(servant.auth_id))
   const roles = userRoleResponse.data.map((role) => role.name)
 
@@ -542,14 +542,14 @@ const RemoveServant = async (
     return
   }
 
-  //If the person is a centre leader as well as any other position, remove role centre leader
+  //If the person is a bacenta leader as well as any other position, remove role bacenta leader
   if (roles.includes(`${servantLower}${churchType}`) && roles.length > 1) {
     removeRoles(servant, roles, authRoles[`${servantLower}${churchType}`].id)
     //Send Email Using Mailgun
     notifyMember(
       servant,
       'You Have Been Removed!',
-      `Hi ${servant.firstName} ${servant.lastName},\nUnfortunately You have just been removed as a ${churchType} ${servantType} for ${churchInEmail}.\n\nRegards,\nThe Administrator,\nFirst Love Centre,\nAccra.`
+      `Hi ${servant.firstName} ${servant.lastName},\nUnfortunately You have just been removed as a ${churchType} ${servantType} for ${churchInEmail}.\n\nRegards,\nThe Administrator,\nFirst Love Bacenta,\nAccra.`
     )
   }
 
@@ -569,14 +569,14 @@ export const resolvers = {
       return `${obj.firstName} ${obj.lastName}`
     },
   },
-  Centre: {
-    bacentaServiceAggregate: async (obj, args, context) => {
+  Bacenta: {
+    fellowshipServiceAggregate: async (obj, args, context) => {
       let serviceAggregates = []
 
       const session = context.driver.session()
 
       const serviceAggregateResponse = await session.run(
-        cypher.getCentreBacentaServiceAggregates,
+        cypher.getBacentaFellowshipServiceAggregates,
         obj
       )
 
@@ -646,8 +646,8 @@ export const resolvers = {
           'adminCouncil',
           'adminCampus',
           'adminTown',
+          'leaderFellowship',
           'leaderBacenta',
-          'leaderCentre',
           'leaderTown',
           'leaderCampus',
         ],
@@ -680,7 +680,7 @@ export const resolvers = {
         maritalStatus: args?.maritalStatus ?? '',
         gender: args?.gender ?? '',
         occupation: args?.occupation ?? '',
-        bacenta: args?.bacenta ?? '',
+        fellowship: args?.fellowship ?? '',
         ministry: args?.ministry ?? '',
         pictureUrl: args?.pictureUrl ?? '',
         auth_id: context.auth.jwt.sub ?? '',
@@ -690,15 +690,15 @@ export const resolvers = {
 
       return member
     },
-    CloseDownBacenta: async (object, args, context) => {
+    CloseDownFellowship: async (object, args, context) => {
       isAuth(
         [
           'adminFederal',
           'adminCouncil',
           'adminCampus',
           'adminTown',
+          'leaderFellowship',
           'leaderBacenta',
-          'leaderCentre',
           'leaderTown',
           'leaderCampus',
         ],
@@ -708,27 +708,27 @@ export const resolvers = {
       const session = context.driver.session()
 
       try {
-        const bacentaCheckResponse = await session.run(
-          cypher.checkBacentaHasNoMembers,
+        const fellowshipCheckResponse = await session.run(
+          cypher.checkFellowshipHasNoMembers,
           args
         )
-        const bacentaCheck = rearrangeCypherObject(bacentaCheckResponse)
+        const fellowshipCheck = rearrangeCypherObject(fellowshipCheckResponse)
 
-        if (bacentaCheck.memberCount) {
+        if (fellowshipCheck.memberCount) {
           throwErrorMsg(
-            `${bacentaCheck?.name} Bacenta has ${bacentaCheck?.memberCount} members. Please transfer all members and try again.`
+            `${fellowshipCheck?.name} Fellowship has ${fellowshipCheck?.memberCount} members. Please transfer all members and try again.`
           )
         }
 
-        const closeBacentaResponse = await session.run(
-          cypher.closeDownBacenta,
+        const closeFellowshipResponse = await session.run(
+          cypher.closeDownFellowship,
           {
             auth: context.auth,
-            bacentaId: args.bacentaId,
+            fellowshipId: args.fellowshipId,
           }
         )
-        const bacenta = rearrangeCypherObject(closeBacentaResponse)
-        return bacenta
+        const fellowship = rearrangeCypherObject(closeFellowshipResponse)
+        return fellowship
       } catch (error) {
         throwErrorMsg(error)
       }
@@ -775,21 +775,21 @@ export const resolvers = {
         'Admin'
       )
     },
-    MakeBacentaLeader: async (object, args, context) => {
+    MakeFellowshipLeader: async (object, args, context) => {
       return MakeServant(
         context,
         args,
         ['adminFederal', 'adminCouncil', 'adminCampus', 'adminTown'],
-        'Bacenta',
+        'Fellowship',
         'Leader'
       )
     },
-    RemoveBacentaLeader: async (object, args, context) => {
+    RemoveFellowshipLeader: async (object, args, context) => {
       return RemoveServant(
         context,
         args,
         ['adminFederal', 'adminCouncil', 'adminCampus', 'adminTown'],
-        'Bacenta',
+        'Fellowship',
         'Leader'
       )
     },
@@ -811,21 +811,21 @@ export const resolvers = {
         'Leader'
       )
     },
-    MakeCentreLeader: async (object, args, context) => {
+    MakeBacentaLeader: async (object, args, context) => {
       return MakeServant(
         context,
         args,
         ['adminFederal', 'adminCouncil', 'adminCampus', 'adminTown'],
-        'Centre',
+        'Bacenta',
         'Leader'
       )
     },
-    RemoveCentreLeader: async (object, args, context) => {
+    RemoveBacentaLeader: async (object, args, context) => {
       return RemoveServant(
         context,
         args,
         ['adminFederal', 'adminCouncil', 'adminCampus', 'adminTown'],
-        'Centre',
+        'Bacenta',
         'Leader'
       )
     },

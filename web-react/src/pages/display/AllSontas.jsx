@@ -6,7 +6,10 @@ import DisplayChurchList from '../../components/DisplayChurchList'
 
 import ErrorScreen from '../../components/base-component/ErrorScreen'
 import LoadingScreen from '../../components/base-component/LoadingScreen'
-import { GET_CAMPUS_CENTRES, GET_TOWN_CENTRES } from '../../queries/ListQueries'
+import {
+  GET_CAMPUS_BACENTAS,
+  GET_TOWN_BACENTAS,
+} from '../../queries/ListQueries'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import RoleView from '../../auth/RoleView'
 
@@ -14,14 +17,14 @@ const DisplayAllSontas = () => {
   const { church, townId, campusId, setTownId, setCampusId } =
     useContext(ChurchContext)
 
-  const { data: townCentreData, loading: townLoading } = useQuery(
-    GET_TOWN_CENTRES,
+  const { data: townBacentaData, loading: townLoading } = useQuery(
+    GET_TOWN_BACENTAS,
     {
       variables: { id: townId },
     }
   )
-  const { data: campusCentreData, loading: campusLoading } = useQuery(
-    GET_CAMPUS_CENTRES,
+  const { data: campusBacentaData, loading: campusLoading } = useQuery(
+    GET_CAMPUS_BACENTAS,
     {
       variables: { id: campusId },
     }
@@ -30,7 +33,7 @@ const DisplayAllSontas = () => {
   if (campusLoading || townLoading) {
     // Spinner Icon for Loading Screens
     return <LoadingScreen />
-  } else if (campusCentreData && church.church === 'campus') {
+  } else if (campusBacentaData && church.church === 'campus') {
     return (
       <>
         <div className=" container">
@@ -44,12 +47,12 @@ const DisplayAllSontas = () => {
                   }}
                 >
                   {' '}
-                  <h4>{`${campusCentreData.centres[0].campus.name} ${capitalise(
-                    church.church
-                  )}`}</h4>
+                  <h4>{`${
+                    campusBacentaData.bacentas[0].campus.name
+                  } ${capitalise(church.church)}`}</h4>
                 </Link>
               </div>
-              {campusCentreData.sontas.length < 10 && (
+              {campusBacentaData.sontas.length < 10 && (
                 <RoleView
                   roles={[
                     'adminFederal',
@@ -73,8 +76,8 @@ const DisplayAllSontas = () => {
               <div className="col">
                 <h6 className="text-muted">
                   Overseer:
-                  {campusCentreData.centres[0].campus.leader
-                    ? ` ${campusCentreData.centres[0].campus.leader.firstName} ${campusCentreData.centres[0].campus.leader.lastName}`
+                  {campusBacentaData.bacentas[0].campus.leader
+                    ? ` ${campusBacentaData.bacentas[0].campus.leader.firstName} ${campusBacentaData.bacentas[0].campus.leader.lastName}`
                     : null}
                 </h6>
               </div>
@@ -83,21 +86,21 @@ const DisplayAllSontas = () => {
             <div className="row justify-content-between">
               <Link
                 className="py-1 px-2 m-2 card"
-                to="/centre/displayall"
-              >{`Centres: ${campusCentreData.centres.length}`}</Link>
-              <div className="py-1 px-2 m-2 card">{`Sontas: ${campusCentreData.sontas.length}`}</div>
-              <div className="py-1 px-2 m-2 card">{`Membership: ${campusCentreData.campusMemberCount}`}</div>
+                to="/bacenta/displayall"
+              >{`Bacentas: ${campusBacentaData.bacentas.length}`}</Link>
+              <div className="py-1 px-2 m-2 card">{`Sontas: ${campusBacentaData.sontas.length}`}</div>
+              <div className="py-1 px-2 m-2 card">{`Membership: ${campusBacentaData.campusMemberCount}`}</div>
             </div>
           </div>
 
           <DisplayChurchList
-            data={campusCentreData.sontas}
+            data={campusBacentaData.sontas}
             churchType="Sonta"
           />
         </div>
       </>
     )
-  } else if (townCentreData && church.church === 'town') {
+  } else if (townBacentaData && church.church === 'town') {
     return (
       <>
         <div className=" container">
@@ -111,13 +114,13 @@ const DisplayAllSontas = () => {
                   }}
                 >
                   {' '}
-                  <h4>{`${townCentreData.centres[0].town.name} ${capitalise(
+                  <h4>{`${townBacentaData.bacentas[0].town.name} ${capitalise(
                     church.church
                   )}`}</h4>
                 </Link>
               </div>
 
-              {townCentreData.sontas.length < 10 && (
+              {townBacentaData.sontas.length < 10 && (
                 <RoleView
                   roles={[
                     'adminFederal',
@@ -141,8 +144,8 @@ const DisplayAllSontas = () => {
               <div className="col">
                 <h6 className="text-muted">
                   Constituency Overseer:
-                  {townCentreData.centres[0].town.leader
-                    ? ` ${townCentreData.centres[0].town.leader.firstName} ${townCentreData.centres[0].town.leader.lastName}`
+                  {townBacentaData.bacentas[0].town.leader
+                    ? ` ${townBacentaData.bacentas[0].town.leader.firstName} ${townBacentaData.bacentas[0].town.leader.lastName}`
                     : null}
                 </h6>
               </div>
@@ -151,14 +154,14 @@ const DisplayAllSontas = () => {
             <div className="row justify-content-between">
               <Link
                 className="py-1 px-2 m-2 card text-white"
-                to="/centre/displayall"
-              >{`Centres: ${townCentreData.centres.length}`}</Link>
-              <div className="py-1 px-2 m-2 card">{`Sontas: ${townCentreData.sontas.length}`}</div>
-              <div className="py-1 px-2 m-2 card">{`Membership: ${townCentreData.townMemberCount}`}</div>
+                to="/bacenta/displayall"
+              >{`Bacentas: ${townBacentaData.bacentas.length}`}</Link>
+              <div className="py-1 px-2 m-2 card">{`Sontas: ${townBacentaData.sontas.length}`}</div>
+              <div className="py-1 px-2 m-2 card">{`Membership: ${townBacentaData.townMemberCount}`}</div>
             </div>
           </div>
 
-          <DisplayChurchList data={townCentreData.sontas} churchType="Sonta" />
+          <DisplayChurchList data={townBacentaData.sontas} churchType="Sonta" />
         </div>
       </>
     )

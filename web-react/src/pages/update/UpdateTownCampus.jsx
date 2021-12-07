@@ -13,14 +13,14 @@ import {
   REMOVE_TOWN_COUNCIL,
   ADD_CAMPUS_COUNCIL,
   REMOVE_CAMPUS_COUNCIL,
-  REMOVE_CENTRE_CAMPUS,
-  REMOVE_CENTRE_TOWN,
-  ADD_CAMPUS_CENTRES,
-  ADD_TOWN_CENTRES,
+  REMOVE_BACENTA_CAMPUS,
+  REMOVE_BACENTA_TOWN,
+  ADD_CAMPUS_BACENTAS,
+  ADD_TOWN_BACENTAS,
 } from './UpdateMutations'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import { DISPLAY_CAMPUS, DISPLAY_TOWN } from '../display/ReadQueries'
-import { LOG_CAMPUSTOWN_HISTORY, LOG_CENTRE_HISTORY } from './LogMutations'
+import { LOG_CAMPUSTOWN_HISTORY, LOG_BACENTA_HISTORY } from './LogMutations'
 import { MAKE_CAMPUS_LEADER, MAKE_TOWN_LEADER } from './ChangeLeaderMutations'
 import CampusTownForm from 'components/reusable-forms/CampusTownForm'
 
@@ -46,7 +46,7 @@ const UpdateTownCampus = () => {
     leaderName: campusTownData?.leader?.fullName ?? '',
     leaderId: campusTownData?.leader?.id || '',
     councilSelect: campusTownData?.council?.id ?? '',
-    centres: campusTownData?.centres?.length ? campusTownData.centres : [''],
+    bacentas: campusTownData?.bacentas?.length ? campusTownData.bacentas : [''],
   }
 
   const [LogCampusTownHistory] = useMutation(LOG_CAMPUSTOWN_HISTORY, {
@@ -55,7 +55,7 @@ const UpdateTownCampus = () => {
       { query: DISPLAY_TOWN, variables: { id: townId } },
     ],
   })
-  const [LogCentreHistory] = useMutation(LOG_CENTRE_HISTORY, {
+  const [LogBacentaHistory] = useMutation(LOG_BACENTA_HISTORY, {
     refetchQueries: [
       { query: DISPLAY_CAMPUS, variables: { id: campusId } },
       { query: DISPLAY_TOWN, variables: { id: townId } },
@@ -82,36 +82,36 @@ const UpdateTownCampus = () => {
     ],
   })
 
-  //Changes downwards. ie. Centre Changes underneath CampusTown
-  const [AddCampusCentres] = useMutation(ADD_CAMPUS_CENTRES)
-  const [AddTownCentres] = useMutation(ADD_TOWN_CENTRES)
-  const [RemoveCentreCampus] = useMutation(REMOVE_CENTRE_CAMPUS, {
+  //Changes downwards. ie. Bacenta Changes underneath CampusTown
+  const [AddCampusBacentas] = useMutation(ADD_CAMPUS_BACENTAS)
+  const [AddTownBacentas] = useMutation(ADD_TOWN_BACENTAS)
+  const [RemoveBacentaCampus] = useMutation(REMOVE_BACENTA_CAMPUS, {
     onCompleted: (data) => {
       if (church.church === 'town') {
         return
       }
       const prevCampus = data.updateCampuses.campuses[0]
-      const centre = data.updateCentres.centres[0]
+      const bacenta = data.updateBacentas.bacentas[0]
       let newCampusId = ''
       let oldCampusId = ''
       let historyRecord
 
       if (prevCampus?.id === campusId) {
-        //Centre has previous campus which is current campus and is going
+        //Bacenta has previous campus which is current campus and is going
         oldCampusId = campusId
         newCampusId = ''
-        historyRecord = `${centre.name} Centre has been closed down under ${initialValues.campusTownName} Campus`
+        historyRecord = `${bacenta.name} Bacenta has been closed down under ${initialValues.campusTownName} Campus`
       } else if (prevCampus.id !== campusId) {
-        //Centre has previous campus which is not current campus and is joining
+        //Bacenta has previous campus which is not current campus and is joining
         oldCampusId = prevCampus.id
         newCampusId = campusId
-        historyRecord = `${centre.name} Centre has been moved to ${initialValues.campusTownName} Campus from ${prevCampus.name} Campus`
+        historyRecord = `${bacenta.name} Bacenta has been moved to ${initialValues.campusTownName} Campus from ${prevCampus.name} Campus`
       }
 
-      //After removing the centre from a campus, then you log that change.
-      LogCentreHistory({
+      //After removing the bacenta from a campus, then you log that change.
+      LogBacentaHistory({
         variables: {
-          centreId: centre.id,
+          bacentaId: bacenta.id,
           newLeaderId: '',
           oldLeaderId: '',
           newCampusTownId: newCampusId,
@@ -121,33 +121,33 @@ const UpdateTownCampus = () => {
       })
     },
   })
-  const [RemoveCentreTown] = useMutation(REMOVE_CENTRE_TOWN, {
+  const [RemoveBacentaTown] = useMutation(REMOVE_BACENTA_TOWN, {
     onCompleted: (data) => {
       if (church.church === 'campus') {
         return
       }
       const prevTown = data.updateTowns.towns[0]
-      const centre = data.updateCentres.centres[0]
+      const bacenta = data.updateBacentas.bacentas[0]
       let newTownId = ''
       let oldTownId = ''
       let historyRecord
 
       if (prevTown.id === townId) {
-        //Centre has previous town which is current town and is going
+        //Bacenta has previous town which is current town and is going
         oldTownId = townId
         newTownId = ''
-        historyRecord = `${centre.name} Centre has been closed down under ${initialValues.campusTownName} Town`
+        historyRecord = `${bacenta.name} Bacenta has been closed down under ${initialValues.campusTownName} Town`
       } else if (prevTown.id !== townId) {
-        //Centre has previous town which is not current town and is joining
+        //Bacenta has previous town which is not current town and is joining
         oldTownId = prevTown.id
         newTownId = townId
-        historyRecord = `${centre.name} Centre has been moved to ${initialValues.campusTownName} Town from ${prevTown.name} Town`
+        historyRecord = `${bacenta.name} Bacenta has been moved to ${initialValues.campusTownName} Town from ${prevTown.name} Town`
       }
 
-      //After removing the centre from a town, then you log that change.
-      LogCentreHistory({
+      //After removing the bacenta from a town, then you log that change.
+      LogBacentaHistory({
         variables: {
-          centreId: centre.id,
+          bacentaId: bacenta.id,
           newLeaderId: '',
           oldLeaderId: '',
           newCampusTownId: newTownId,
@@ -370,83 +370,83 @@ const UpdateTownCampus = () => {
       }
     }
 
-    //For the Adding and Removing of Centres
-    const oldCentreList = initialValues.centres.map((centre) => {
-      return centre.id
+    //For the Adding and Removing of Bacentas
+    const oldBacentaList = initialValues.bacentas.map((bacenta) => {
+      return bacenta.id
     })
 
-    const newCentreList = values.centres.map((centre) => {
-      return centre.id ? centre.id : centre
+    const newBacentaList = values.bacentas.map((bacenta) => {
+      return bacenta.id ? bacenta.id : bacenta
     })
 
-    const removeCentres = oldCentreList.filter((value) => {
-      return !newCentreList.includes(value)
+    const removeBacentas = oldBacentaList.filter((value) => {
+      return !newBacentaList.includes(value)
     })
 
-    const addCentres = values.centres.filter((value) => {
-      return !oldCentreList.includes(value.id)
+    const addBacentas = values.bacentas.filter((value) => {
+      return !oldBacentaList.includes(value.id)
     })
 
-    removeCentres.forEach((centre) => {
-      RemoveCentreCampus({
+    removeBacentas.forEach((bacenta) => {
+      RemoveBacentaCampus({
         variables: {
           campusId: campusId,
-          centreId: centre,
+          bacentaId: bacenta,
         },
       })
-      RemoveCentreTown({
+      RemoveBacentaTown({
         variables: {
           townId: townId,
-          centreId: centre,
+          bacentaId: bacenta,
         },
       })
     })
 
-    addCentres.forEach((centre) => {
-      if (centre.campus) {
-        RemoveCentreCampus({
+    addBacentas.forEach((bacenta) => {
+      if (bacenta.campus) {
+        RemoveBacentaCampus({
           variables: {
-            campusId: centre.campus.id,
-            centreId: centre.id,
+            campusId: bacenta.campus.id,
+            bacentaId: bacenta.id,
           },
         })
-      } else if (centre.town) {
-        RemoveCentreTown({
+      } else if (bacenta.town) {
+        RemoveBacentaTown({
           variables: {
-            townId: centre.town.id,
-            centreId: centre.id,
+            townId: bacenta.town.id,
+            bacentaId: bacenta.id,
           },
         })
       } else {
-        //Centre has no previous campus and is now joining. ie. RemoveCentreCampus won't run
-        LogCentreHistory({
+        //Bacenta has no previous campus and is now joining. ie. RemoveBacentaCampus won't run
+        LogBacentaHistory({
           variables: {
-            centreId: centre.id,
+            bacentaId: bacenta.id,
             newLeaderId: '',
             oldLeaderId: '',
             newCampusTownId: church.church === 'campus' ? campusId : townId,
             oldCampusTownId: '',
             historyRecord: `${
-              centre.name
-            } Centre has been started again under ${
+              bacenta.name
+            } Bacenta has been started again under ${
               initialValues.campusTownName
             } ${capitalise(church.church)}`,
           },
         })
       }
       if (church.church === 'campus') {
-        AddCampusCentres({
+        AddCampusBacentas({
           variables: {
             campusId: campusId,
-            centreId: centre.id,
+            bacentaId: bacenta.id,
           },
         })
       }
       if (church.church === 'town') {
-        AddTownCentres({
+        AddTownBacentas({
           variables: {
             townId: townId,
-            centreId: centre.id,
+            bacentaId: bacenta.id,
           },
         })
       }

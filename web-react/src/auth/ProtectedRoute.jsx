@@ -12,7 +12,7 @@ const ProtectedRoute = ({ component, roles, placeholder, ...args }) => {
   const church = useContext(ChurchContext)
 
   useEffect(() => {
-    if (isAuthenticated && !currentUser.roles.includes('adminFederal')) {
+    if (!currentUser.roles.includes('adminFederal')) {
       //if User is not a federal admin
       church.setChurch(currentUser.church)
       church.setCouncilId(currentUser.council)

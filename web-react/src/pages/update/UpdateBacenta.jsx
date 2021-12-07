@@ -13,6 +13,7 @@ import { LOG_BACENTA_HISTORY } from './LogMutations'
 import { MAKE_BACENTA_LEADER } from './ChangeLeaderMutations'
 import BacentaForm from 'components/reusable-forms/BacentaForm'
 import { alertMsg, repackDecimals, throwErrorMsg } from 'global-utils'
+import { SET_VACATION_BACENTA } from './CloseChurchMutations'
 
 const UpdateBacenta = () => {
   const { setCentreId, bacentaId } = useContext(ChurchContext)
@@ -35,6 +36,9 @@ const UpdateBacenta = () => {
     townCampusSelect: bacenta?.centre?.town?.id ?? bacenta?.centre?.campus?.id,
     centreSelect: bacenta?.centre?.id,
     meetingDay: bacenta?.meetingDay?.day,
+    vacationStatus: bacenta?.labels.includes('Vacation')
+      ? 'Vacation'
+      : 'Active',
     venueLatitude: repackDecimals(bacenta?.location?.latitude),
     venueLongitude: repackDecimals(bacenta?.location?.longitude),
   }
@@ -49,7 +53,7 @@ const UpdateBacenta = () => {
       },
     ],
   })
-
+  const [SetBacentaOnVacation] = useMutation(SET_VACATION_BACENTA)
   const [RemoveBacentaFromCentre] = useMutation(REMOVE_BACENTA_CENTRE)
 
   const [AddBacentaCentre] = useMutation(ADD_BACENTA_CENTRE, {
@@ -134,6 +138,15 @@ const UpdateBacenta = () => {
           newCentreId: '',
 
           historyRecord: `${values.bacentaName} Bacenta has changed their meeting day from ${initialValues.meetingDay} to ${values.meetingDay}`,
+        },
+      })
+    }
+
+    // Log if the Meeting Day Changes
+    if (values.vacationStatus !== initialValues.vacationStatus) {
+      SetBacentaOnVacation({
+        variables: {
+          bacentaId: bacentaId,
         },
       })
     }

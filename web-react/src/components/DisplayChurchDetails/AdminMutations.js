@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client'
 
 export const REMOVE_TOWN_ADMIN = gql`
-  mutation($townId: ID!, $adminId: ID!) {
+  mutation ($townId: ID!, $adminId: ID!) {
     RemoveTownAdmin(adminId: $adminId, townId: $townId) {
       id
     }

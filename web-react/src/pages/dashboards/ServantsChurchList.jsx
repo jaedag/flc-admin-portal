@@ -3,7 +3,11 @@ import { useHistory } from 'react-router'
 import { useQuery } from '@apollo/client'
 import { ChurchContext } from 'contexts/ChurchContext'
 import { MemberContext } from 'contexts/MemberContext'
-import { SERVANTS_DASHBOARD } from './DashboardQueries'
+import {
+  SERVANTS_ADMIN,
+  SERVANTS_DASHBOARD,
+  SERVANTS_LEADERSHIP,
+} from './DashboardQueries'
 import {
   getMonthlyStatAverage,
   getServiceGraphData,
@@ -21,8 +25,16 @@ const ServantsChurchList = () => {
   const { data, loading, error } = useQuery(SERVANTS_DASHBOARD, {
     variables: { id: memberId },
   })
+  const { data: adminData } = useQuery(SERVANTS_ADMIN, {
+    variables: { id: memberId },
+  })
+  const { data: leaderData } = useQuery(SERVANTS_LEADERSHIP, {
+    variables: { id: memberId },
+  })
 
   const servant = data?.members[0]
+  const servantAdmin = adminData?.members[0]
+  const servantLeader = leaderData?.members[0]
   let churches = []
 
   const pushIntoChurch = (servantChurches) => {
@@ -50,35 +62,35 @@ const ServantsChurchList = () => {
     if (servant?.leadsCentre?.length) {
       pushIntoChurch(servant?.leadsCentre)
     }
-    if (servant?.leadsTown?.length) {
-      pushIntoChurch(servant?.leadsTown)
+    if (servantLeader?.leadsTown?.length) {
+      pushIntoChurch(servantLeader?.leadsTown)
     }
-    if (servant?.leadsCampus?.length) {
-      pushIntoChurch(servant?.leadsCampus)
+    if (servantLeader?.leadsCampus?.length) {
+      pushIntoChurch(servantLeader?.leadsCampus)
     }
-    if (servant?.leadsSonta?.length) {
-      pushIntoChurch(servant?.leadsSonta)
+    if (servantLeader?.leadsSonta?.length) {
+      pushIntoChurch(servantLeader?.leadsSonta)
     }
-    if (servant?.leadsBasonta?.length) {
-      pushIntoChurch(servant?.leadsBasonta)
+    if (servantLeader?.leadsBasonta?.length) {
+      pushIntoChurch(servantLeader?.leadsBasonta)
     }
-    if (servant?.leadsMinistry?.length) {
-      pushIntoChurch(servant?.leadsMinistry)
+    if (servantLeader?.leadsMinistry?.length) {
+      pushIntoChurch(servantLeader?.leadsMinistry)
     }
-    if (servant?.isBishopForTown?.length) {
+    if (servant?.leadsCouncil?.length) {
       churches.push({ name: 'Campus Bishop', number: 'Bishop' })
     }
-    if (servant?.isBishopForCampus?.length) {
+    if (servant?.leadsCouncil?.length) {
       churches.push({ name: 'Town Bishop', number: 'Bishop' })
     }
-    if (servant?.isAdminForCouncil?.length) {
-      pushIntoChurch(servant?.isAdminForCouncil)
+    if (servantAdmin?.isAdminForCouncil?.length) {
+      pushIntoChurch(servantAdmin?.isAdminForCouncil)
     }
-    if (servant?.isAdminForCampus?.length) {
-      pushIntoChurch(servant?.isAdminForCampus)
+    if (servantAdmin?.isAdminForCampus?.length) {
+      pushIntoChurch(servantAdmin?.isAdminForCampus)
     }
-    if (servant?.isAdminForTown?.length) {
-      pushIntoChurch(servant?.isAdminForTown)
+    if (servantAdmin?.isAdminForTown?.length) {
+      pushIntoChurch(servantAdmin?.isAdminForTown)
     }
 
     //run the get graph function after all checking is done to avoid multiple unnecessary runs
@@ -90,7 +102,7 @@ const ServantsChurchList = () => {
   return (
     <BaseComponent loading={loading} error={error} data={data}>
       <Container className="mt-4">
-        <HeadingPrimary>{plural(churches[0].typename)}</HeadingPrimary>
+        <HeadingPrimary>{plural(churches[0]?.typename)}</HeadingPrimary>
 
         <div className="d-grid gap-2 text-left">
           {churches.map((church, i) => {

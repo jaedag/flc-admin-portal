@@ -10,12 +10,13 @@ import BaseComponent from 'components/base-component/BaseComponent'
 const DetailsCampusTown = () => {
   const { church, townId, campusId } = useContext(ChurchContext)
 
-  const { data: townData, loading: townLoading, error: townError } = useQuery(
-    DISPLAY_TOWN,
-    {
-      variables: { id: townId },
-    }
-  )
+  const {
+    data: townData,
+    loading: townLoading,
+    error: townError,
+  } = useQuery(DISPLAY_TOWN, {
+    variables: { id: townId },
+  })
 
   const {
     data: campusData,

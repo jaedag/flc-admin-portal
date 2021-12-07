@@ -25,9 +25,8 @@ import SubmitButton from 'components/formik-components/SubmitButton'
 function MemberForm({ initialValues, onSubmit, title, loading }) {
   const { councilId } = useContext(ChurchContext)
 
-  const { data: ministriesData, loading: ministriesLoading } = useQuery(
-    GET_MINISTRIES
-  )
+  const { data: ministriesData, loading: ministriesLoading } =
+    useQuery(GET_MINISTRIES)
   const validationSchema = Yup.object({
     pictureUrl: Yup.string().required('You must upload a picture'),
     firstName: Yup.string().required('First Name is a required field'),

@@ -30,19 +30,8 @@ const MemberRoleList = ({ member }) => {
   const updateRank = (member, churchType) => {
     isServant = true
     if (churchType === 'bishop') {
-      if (member.isBishopForTown[0]) {
-        member.isBishopForTown.map((church) => {
-          rank.bishop.push({
-            name: church.name,
-            church: church,
-            id: church.id,
-            __typename: church.__typename,
-          })
-          return null
-        })
-        return
-      } else if (member.isBishopForCampus[0]) {
-        member.isBishopForCampus.map((church) => {
+      if (member.leadsCouncil[0]) {
+        member.leadsCouncil.map((church) => {
           rank.bishop.push({
             name: church.name,
             church: church,
@@ -134,12 +123,10 @@ const MemberRoleList = ({ member }) => {
   if (member.leadsMinistry[0]) {
     updateRank(member, 'ministry')
   }
-  if (member.isBishopForTown[0]) {
+  if (member.leadsCouncil[0]) {
     updateRank(member, 'bishop')
   }
-  if (member.isBishopForCampus[0]) {
-    updateRank(member, 'bishop')
-  }
+
   if (member.isAdminForCouncil[0]) {
     updateRank(member, 'adminCouncil')
   }
@@ -161,7 +148,7 @@ const MemberRoleList = ({ member }) => {
         View Records
       </DashboardButton> */}
 
-        {(member.isBishopForTown[0] || member.isBishopForCampus[0]) && (
+        {member.leadsCouncil[0] && (
           <span
             onClick={() => {
               determineStream(member)
@@ -180,7 +167,7 @@ const MemberRoleList = ({ member }) => {
                 place.__typename === 'Campus' ||
                 place.__typename === 'Town'
               ) {
-                if (member.isBishopForTown[0] || member.isBishopForCampus[0]) {
+                if (member.leadsCouncil[0]) {
                   return
                 }
                 leader = 'CO'

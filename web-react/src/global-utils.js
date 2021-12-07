@@ -1,5 +1,6 @@
 //Global Constants
-export const PHONE_NUM_REGEX_VALIDATION = /^[+][(]{0,1}[1-9]{1,4}[)]{0,1}[-\s/0-9]*$/
+export const PHONE_NUM_REGEX_VALIDATION =
+  /^[+][(]{0,1}[1-9]{1,4}[)]{0,1}[-\s/0-9]*$/
 export const DECIMAL_NUM_REGEX = /^-?\d*\.{1}\d*$/
 export const DECIMAL_NUM_REGEX_POSITIVE_ONLY = /^\d*\.{1}\d*$/
 export const DEBOUNCE_TIMER = 500
@@ -11,6 +12,10 @@ export const GENDER_OPTIONS = [
 export const MARITAL_STATUS_OPTIONS = [
   { key: 'Single', value: 'Single' },
   { key: 'Married', value: 'Married' },
+]
+export const VACATION_OPTIONS = [
+  { key: 'Active', value: 'Active' },
+  { key: 'Vacation', value: 'Vacation' },
 ]
 
 export const TITLE_OPTIONS = [

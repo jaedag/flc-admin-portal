@@ -239,39 +239,6 @@ const PastorsAdmin = () => {
       default:
     }
 
-    if (!member?.bacenta) {
-      if (!member.isBishopForTown) {
-        return
-      }
-
-      if (member?.isBishopForTown[0]) {
-        setChurch({ church: 'town', subChurch: 'centre' })
-        sessionStorage.setItem(
-          'church',
-          JSON.stringify({
-            church: 'town',
-            subChurch: 'centre',
-          })
-        )
-        setCouncilId(member.id)
-        sessionStorage.setItem('bishopId', member.id)
-        return
-      } else if (member?.isBishopForCampus[0]) {
-        setChurch({ church: 'campus', subChurch: 'centre' })
-        sessionStorage.setItem(
-          'church',
-          JSON.stringify({
-            church: 'campus',
-            subChurch: 'centre',
-          })
-        )
-        setCouncilId(member.id)
-        sessionStorage.setItem('bishopId', member.id)
-        return
-      } else {
-        return
-      }
-    }
     if (member?.bacenta?.centre?.town) {
       setChurch({ church: 'town', subChurch: 'centre' })
       sessionStorage.setItem(

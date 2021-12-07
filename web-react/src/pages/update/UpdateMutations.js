@@ -204,14 +204,7 @@ export const UPDATE_MEMBER_MUTATION = gql`
         id
         name
       }
-      isBishopForTown {
-        id
-        name
-      }
-      isBishopForCampus {
-        id
-        name
-      }
+
       isAdminForCouncil {
         id
         name
@@ -328,12 +321,6 @@ export const UPDATE_CAMPUS_MUTATION = gql`
           name
           bishop {
             id
-            isBishopForTown {
-              id
-            }
-            isBishopForCampus {
-              id
-            }
           }
         }
       }

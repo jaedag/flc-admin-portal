@@ -86,13 +86,6 @@ const FederalAdminDashboard = () => {
         </div>
         <div className="row row-cols-sm-1 row-cols-lg-4 d-flex justify-content-center px-5">
           {data.members.map((bishop, index) => {
-            let bishopStream
-            if (bishop.isBishopForTown?.length) {
-              bishopStream = 'Town'
-            } else if (bishop.isBishopForCampus?.length) {
-              bishopStream = 'Campus'
-            }
-
             return (
               <div
                 key={index}
@@ -107,7 +100,7 @@ const FederalAdminDashboard = () => {
                   <div className="media-body">
                     <h5 className="mt-0">{`${bishop.firstName} ${bishop.lastName}`}</h5>
                     <div>
-                      <span className="text-muted">{bishopStream}</span>
+                      <span className="text-muted">{bishop.stream}</span>
                     </div>
                   </div>
                 </div>

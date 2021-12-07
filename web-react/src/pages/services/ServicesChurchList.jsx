@@ -8,9 +8,8 @@ import { useHistory } from 'react-router'
 import MemberIcon from '../../assets/people-svgrepo-com-2.svg'
 
 const ServicesChurchList = () => {
-  const { currentUser, setCurrentUser, userJobs, theme } = useContext(
-    MemberContext
-  )
+  const { currentUser, setCurrentUser, userJobs, theme } =
+    useContext(MemberContext)
 
   const history = useHistory()
   return (

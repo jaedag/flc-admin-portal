@@ -9,7 +9,11 @@ import React, { useContext, useEffect } from 'react'
 import { Container, Nav, Navbar, Offcanvas } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { menuItems } from './dashboard-utils'
-import { SERVANTS_DASHBOARD } from './DashboardQueries'
+import {
+  SERVANTS_ADMIN,
+  SERVANTS_DASHBOARD,
+  SERVANTS_LEADERSHIP,
+} from './DashboardQueries'
 import './Navigation.css'
 import logo from 'assets/flc-logo-red.png'
 import { useAuth0 } from '@auth0/auth0-react'
@@ -17,14 +21,20 @@ import { GET_LOGGED_IN_USER } from 'components/UserProfileIcon/UserQueries'
 import SearchBox from 'components/SearchBox'
 
 const Navigator = () => {
-  const { currentUser, theme, setUserJobs, setCurrentUser } = useContext(
-    MemberContext
-  )
+  const { currentUser, theme, setUserJobs, setCurrentUser } =
+    useContext(MemberContext)
   const { clickCard } = useContext(ChurchContext)
   const { user, isAuthenticated } = useAuth0()
   const { data, loading } = useQuery(SERVANTS_DASHBOARD, {
     variables: { id: currentUser.id },
   })
+  const { data: adminData } = useQuery(SERVANTS_ADMIN, {
+    variables: { id: currentUser.id },
+  })
+  const { data: leaderData } = useQuery(SERVANTS_LEADERSHIP, {
+    variables: { id: currentUser.id },
+  })
+
   const [memberByEmail] = useLazyQuery(GET_LOGGED_IN_USER, {
     onCompleted: (data) => {
       let church
@@ -67,6 +77,8 @@ const Navigator = () => {
     // eslint-disable-next-line
   }, [isAuthenticated, data, loading, setUserJobs])
   const servant = data?.members[0]
+  const servantAdmin = adminData?.members[0]
+  const servantLeader = leaderData?.members[0]
 
   // What leadership roles does this person play?
   let roles = []
@@ -174,35 +186,33 @@ const Navigator = () => {
     if (servant?.leadsCentre?.length) {
       setServantRoles(servant, 'Leader', 'Centre')
     }
-    if (servant?.leadsTown?.length) {
-      setServantRoles(servant, 'Leader', 'Town')
+    if (servantLeader?.leadsTown?.length) {
+      setServantRoles(servantLeader, 'Leader', 'Town')
     }
-    if (servant?.leadsCampus?.length) {
-      setServantRoles(servant, 'Leader', 'Campus')
+    if (servantLeader?.leadsCampus?.length) {
+      setServantRoles(servantLeader, 'Leader', 'Campus')
     }
-    if (servant?.leadsSonta?.length) {
-      setServantRoles(servant, 'Leader', 'Sonta')
+    if (servantLeader?.leadsSonta?.length) {
+      setServantRoles(servantLeader, 'Leader', 'Sonta')
     }
-    if (servant?.leadsBasonta?.length) {
-      setServantRoles(servant, 'Leader', 'Basonta')
+    if (servantLeader?.leadsBasonta?.length) {
+      setServantRoles(servantLeader, 'Leader', 'Basonta')
     }
-    if (servant?.leadsMinistry?.length) {
-      setServantRoles(servant, 'Leader', 'Ministry')
+    if (servantLeader?.leadsMinistry?.length) {
+      setServantRoles(servantLeader, 'Leader', 'Ministry')
     }
-    if (servant?.isBishopForTown?.length) {
-      setServantRoles(servant, 'Bishop', 'Town')
+    if (servantLeader?.leadsCouncil?.length) {
+      setServantRoles(servantLeader, 'Bishop', 'Town')
     }
-    if (servant?.isBishopForCampus?.length) {
-      setServantRoles(servant, 'Bishop', 'Campus')
+
+    if (servantAdmin?.isAdminForCouncil?.length) {
+      setServantRoles(servantAdmin, 'Admin', 'Council')
     }
-    if (servant?.isAdminForCouncil?.length) {
-      setServantRoles(servant, 'Admin', 'Council')
+    if (servantAdmin?.isAdminForCampus?.length) {
+      setServantRoles(servantAdmin, 'Admin', 'Campus')
     }
-    if (servant?.isAdminForCampus?.length) {
-      setServantRoles(servant, 'Admin', 'Campus')
-    }
-    if (servant?.isAdminForTown?.length) {
-      setServantRoles(servant, 'Admin', 'Town')
+    if (servantAdmin?.isAdminForTown?.length) {
+      setServantRoles(servantAdmin, 'Admin', 'Town')
     }
 
     //run the get graph function after all checking is done to avoid multiple unnecessary runs

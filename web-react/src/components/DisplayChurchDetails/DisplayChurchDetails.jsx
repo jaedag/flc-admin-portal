@@ -27,18 +27,11 @@ const DisplayChurchDetails = (props) => {
   const history = useHistory()
   const isConstituency =
     props.churchType === 'Campus' || props.churchType === 'Town'
-  const { setMemberId, theme, setCurrentUser, currentUser } = useContext(
-    MemberContext
-  )
+  const { setMemberId, theme, setCurrentUser, currentUser } =
+    useContext(MemberContext)
   const [submitting, setSubmitting] = useState(false)
-  const {
-    clickCard,
-    togglePopup,
-    isOpen,
-    campusId,
-    townId,
-    councilId,
-  } = useContext(ChurchContext)
+  const { clickCard, togglePopup, isOpen, campusId, townId, councilId } =
+    useContext(ChurchContext)
 
   //Change Admin Initialised
 
@@ -283,9 +276,9 @@ const DisplayChurchDetails = (props) => {
           </Container>
         )}
 
-        {props.last3Weeks && (
+        {props.last3Weeks && props.details[0].number === 'Active' && (
           <>
-            <h3>FORMS</h3>
+            <h3 className="mt-4">FORMS</h3>
             {props.last3Weeks.map((week, i) => (
               <Container key={i} className="mt-4">
                 <div className="text-secondary">{`WEEK ${week.number}`}</div>

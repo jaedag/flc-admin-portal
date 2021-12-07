@@ -14,6 +14,7 @@ const CreateBacenta = () => {
     townCampusSelect: '',
     centreSelect: '',
     meetingDay: '',
+    vacationStatus: '',
     venueLatitude: '',
     venueLongitude: '',
   }

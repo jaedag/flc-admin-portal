@@ -31,7 +31,7 @@ export const GET_BACENTA_LEADERS = gql`
 `
 
 export const BACENTA_DROPDOWN = gql`
-  query($bacentaName: String) {
+  query ($bacentaName: String) {
     bacentaDropdown(bacentaName: $bacentaName, first: 8) {
       id
       name
@@ -52,7 +52,7 @@ export const BACENTA_DROPDOWN = gql`
 `
 
 export const COUNCIL_MEMBER_DROPDOWN = gql`
-  query($id: ID!, $nameSearch: String!) {
+  query ($id: ID!, $nameSearch: String!) {
     councilMemberDropdown(id: $id, nameSearch: $nameSearch) {
       id
       firstName
@@ -62,7 +62,7 @@ export const COUNCIL_MEMBER_DROPDOWN = gql`
 `
 
 export const CENTRE_DROPDOWN = gql`
-  query($centreName: String) {
+  query ($centreName: String) {
     centreDropdown(centreName: $centreName, first: 8) {
       id
       name
@@ -79,7 +79,7 @@ export const CENTRE_DROPDOWN = gql`
 `
 
 export const GET_TOWN_CENTRES = gql`
-  query($id: ID) {
+  query ($id: ID) {
     centres(where: { town: { id: $id } }) {
       id
       name
@@ -119,7 +119,7 @@ export const GET_TOWN_CENTRES = gql`
 `
 
 export const GET_CAMPUS_CENTRES = gql`
-  query($id: ID) {
+  query ($id: ID) {
     centres(where: { campus: { id: $id } }) {
       id
       name
@@ -159,7 +159,7 @@ export const GET_CAMPUS_CENTRES = gql`
 `
 
 export const GET_SONTAS_BY_CAMPUSTOWN = gql`
-  query($id: ID) {
+  query ($id: ID) {
     towns(where: { bishop: { id: $id } }) {
       id
       name
@@ -201,7 +201,7 @@ export const GET_SONTAS_BY_CAMPUSTOWN = gql`
 `
 
 export const GET_COUNCIL_CAMPUSES = gql`
-  query($id: ID) {
+  query ($id: ID) {
     councils(where: { id: $id }) {
       id
       name
@@ -247,7 +247,7 @@ export const GET_COUNCIL_CAMPUSES = gql`
 `
 
 export const GET_COUNCIL_TOWNS = gql`
-  query($id: ID) {
+  query ($id: ID) {
     councils(where: { id: $id }) {
       id
       name
@@ -317,7 +317,7 @@ export const GET_MINISTRIES = gql`
 `
 
 export const GET_CENTRE_BACENTAS = gql`
-  query($id: ID) {
+  query ($id: ID) {
     centres(where: { id: $id }) {
       id
       memberCount
@@ -357,7 +357,7 @@ export const GET_CENTRE_BACENTAS = gql`
 `
 
 export const OCCUPATION_LIST = gql`
-  query($searchKey: String!) {
+  query ($searchKey: String!) {
     occupationList(searchKey: $searchKey, first: 5) {
       occupation
     }

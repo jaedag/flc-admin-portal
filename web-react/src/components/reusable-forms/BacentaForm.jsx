@@ -7,6 +7,7 @@ import {
   makeSelectOptions,
   SERVICE_DAY_OPTIONS,
   throwErrorMsg,
+  VACATION_OPTIONS,
 } from 'global-utils'
 import {
   COUNCIL_MEMBER_DROPDOWN,
@@ -31,14 +32,8 @@ import HeadingSecondary from 'components/HeadingSecondary'
 import SubmitButton from 'components/formik-components/SubmitButton'
 
 const BacentaForm = (props) => {
-  const {
-    church,
-    clickCard,
-    isOpen,
-    togglePopup,
-    bacentaId,
-    councilId,
-  } = useContext(ChurchContext)
+  const { church, clickCard, isOpen, togglePopup, bacentaId, councilId } =
+    useContext(ChurchContext)
   const { theme } = useContext(MemberContext)
   const history = useHistory()
 
@@ -67,6 +62,9 @@ const BacentaForm = (props) => {
       'Please choose a leader from the drop down'
     ),
     meetingDay: Yup.string().required('Meeting Day is a required field'),
+    vacationStatus: Yup.string().required(
+      'Vacation Status is a required field'
+    ),
     venueLatitude: Yup.string()
       .required('Please fill in your location info')
       .test('is-decimal', 'Please enter valid coordinates', (value) =>
@@ -182,6 +180,16 @@ const BacentaForm = (props) => {
                             name="meetingDay"
                             options={SERVICE_DAY_OPTIONS}
                             defaultOption="Pick a Service Day"
+                          />
+                        </Col>
+                        <Col sm={12}>
+                          <FormikControl
+                            className="form-control"
+                            control="select"
+                            label="Vacation Status"
+                            name="vacationStatus"
+                            options={VACATION_OPTIONS}
+                            defaultOption="Set Bacenta Mode"
                           />
                         </Col>
                       </RoleView>

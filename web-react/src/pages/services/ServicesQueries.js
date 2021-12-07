@@ -6,23 +6,21 @@ export const BANKING_SLIP_QUERIES = gql`
       id
       bankingCode
       name
-      serviceLogs {
+      services {
         id
-        serviceRecords {
-          id
-          created_at
-          serviceDate {
-            date
-          }
-          created_by {
-            id
-            firstName
-            lastName
-            fullName
-          }
-          bankingSlip
-          income
+        noServiceReason
+        created_at
+        serviceDate {
+          date
         }
+        created_by {
+          id
+          firstName
+          lastName
+          fullName
+        }
+        bankingSlip
+        income
       }
     }
   }

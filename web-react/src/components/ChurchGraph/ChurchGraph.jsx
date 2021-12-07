@@ -84,8 +84,10 @@ const ChurchGraph = (props) => {
                   yAxisId="left"
                   fill="url(#colorPrimary)"
                   onClick={(data) => {
-                    setServiceRecordId(data.id)
-                    history.push(`/${props.church}/service-details`)
+                    if (data.id) {
+                      setServiceRecordId(data.id)
+                      history.push(`/${props.church}/service-details`)
+                    }
                   }}
                 >
                   <LabelList

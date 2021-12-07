@@ -39,7 +39,7 @@ const Directory = () => {
           <MenuButton
             icon={ChurchIcon}
             title="churches"
-            caption={getChurchCount(data)}
+            caption={getChurchCount(data?.members[0])}
             color="churches"
             onClick={() => history.push(`/directory/churches`)}
           />

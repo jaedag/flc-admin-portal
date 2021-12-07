@@ -57,6 +57,7 @@ export const CampusReport = () => {
           stat1="attendance"
           stat2="income"
           churchData={churchData}
+          church="campus"
         />
       </div>
     </BaseComponent>

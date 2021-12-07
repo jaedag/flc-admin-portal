@@ -57,6 +57,7 @@ export const CentreReport = () => {
           stat1="attendance"
           stat2="income"
           churchData={churchData}
+          church="centre"
         />
       </div>
     </BaseComponent>

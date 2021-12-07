@@ -34,6 +34,7 @@ import SubmitButton from 'components/formik-components/SubmitButton'
 const BacentaForm = (props) => {
   const { church, clickCard, isOpen, togglePopup, bacentaId, councilId } =
     useContext(ChurchContext)
+
   const { theme } = useContext(MemberContext)
   const history = useHistory()
 

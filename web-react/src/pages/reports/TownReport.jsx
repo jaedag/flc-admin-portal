@@ -61,6 +61,7 @@ export const TownReport = () => {
           stat1="attendance"
           stat2="income"
           churchData={churchData}
+          church="town"
         />
       </Container>
     </BaseComponent>

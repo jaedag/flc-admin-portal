@@ -79,6 +79,7 @@ const UserDashboard = () => {
             loading={!userJobs?.assessmentData}
             stat1="attendance"
             stat2="income"
+            church={userJobs?.assessmentChurch?.__typename.toLowerCase()}
             churchData={userJobs?.assessmentData}
             secondaryTitle={`${userJobs?.assessmentChurch?.name} ${userJobs?.assessmentChurch?.__typename}`}
           />

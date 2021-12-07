@@ -16,13 +16,15 @@ import { alertMsg, repackDecimals, throwErrorMsg } from 'global-utils'
 import { SET_VACATION_BACENTA } from './CloseChurchMutations'
 
 const UpdateBacenta = () => {
-  const { setCentreId, bacentaId } = useContext(ChurchContext)
+  const { setCentreId, bacentaId, setChurch } = useContext(ChurchContext)
   const {
     data: bacentaData,
     loading: bacentaLoading,
     // error: bacentaError,
   } = useQuery(DISPLAY_BACENTA, {
     variables: { id: bacentaId },
+    onCompleted: (res) =>
+      setChurch({ church: res.bacentas[0].stream, subChurch: 'centre' }),
   })
 
   const history = useHistory()

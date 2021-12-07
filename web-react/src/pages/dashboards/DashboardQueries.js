@@ -263,6 +263,7 @@ export const SERVANTS_ADMIN = gql`
           fullName
         }
         services {
+          id
           created_at
           attendance
           income

@@ -23,7 +23,7 @@ const MemberDisplay = ({ memberId }) => {
   })
   throwErrorMsg(error)
 
-  const member = data?.member
+  const member = data?.members[0]
   const memberBirthday = getMemberDob(member)
   const nameAndTitle = getNameWithTitle(member)
 

@@ -120,20 +120,20 @@ const MemberRoleList = ({ member }) => {
   if (member.leadsBasonta[0]) {
     updateRank(member, 'basonta')
   }
-  if (member.leadsMinistry[0]) {
+  if (member?.leadsMinistry[0]) {
     updateRank(member, 'ministry')
   }
-  if (member.leadsCouncil[0]) {
+  if (member?.leadsCouncil[0]) {
     updateRank(member, 'bishop')
   }
 
-  if (member.isAdminForCouncil[0]) {
+  if (member?.isAdminForCouncil[0]) {
     updateRank(member, 'adminCouncil')
   }
-  if (member.isAdminForCampus[0]) {
+  if (member?.isAdminForCampus[0]) {
     updateRank(member, 'adminCampus')
   }
-  if (member.isAdminForTown[0]) {
+  if (member?.isAdminForTown[0]) {
     updateRank(member, 'adminTown')
   }
 

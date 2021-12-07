@@ -18,6 +18,7 @@ const ChurchGraph = (props) => {
   const { loading, stat1, stat2, churchData, secondaryTitle } = props
   const { setServiceRecordId } = useContext(ServiceContext)
   const history = useHistory()
+
   return (
     <>
       <div className="row mt-2">
@@ -102,8 +103,10 @@ const ChurchGraph = (props) => {
                     yAxisId="right"
                     fill="url(#colorSecondary)"
                     onClick={(data) => {
-                      setServiceRecordId(data.id)
-                      history.push(`/${props.church}/service-details`)
+                      if (data.id) {
+                        setServiceRecordId(data.id)
+                        history.push(`/${props.church}/service-details`)
+                      }
                     }}
                   >
                     <LabelList

@@ -75,7 +75,15 @@ const Navigator = () => {
       assessmentChurch: assessmentChurch,
     })
     // eslint-disable-next-line
-  }, [isAuthenticated, data, loading, setUserJobs])
+  }, [
+    isAuthenticated,
+    data,
+    adminData,
+    leaderData,
+    loading,
+    roles,
+    setUserJobs,
+  ])
   const servant = data?.members[0]
   const servantAdmin = adminData?.members[0]
   const servantLeader = leaderData?.members[0]

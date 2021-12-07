@@ -2,7 +2,7 @@ import { gql } from '@apollo/client'
 
 export const DISPLAY_MEMBER = gql`
   query ($id: ID!) {
-    member(id: $id) {
+    members(where: { id: $id }) {
       firstName
       middleName
       lastName
@@ -102,69 +102,26 @@ export const DISPLAY_MEMBER = gql`
           firstName
           lastName
         }
-        centre {
-          id
-          name
-          town {
-            id
-            name
-            bishop {
-              firstName
-              lastName
-            }
-          }
-          campus {
-            id
-            name
-            bishop {
-              firstName
-              lastName
-            }
-          }
-        }
       }
       leadsCentre {
         id
         name
         stream
-        town {
-          id
-          name
-          bishop {
-            id
-            firstName
-            lastName
-          }
-        }
-        campus {
-          id
-          name
-          bishop {
-            id
-            firstName
-            lastName
-          }
-        }
       }
       leadsTown {
         id
         name
         stream
-        bishop {
-          id
-          firstName
-          lastName
-        }
       }
       leadsCampus {
         id
         name
         stream
-        bishop {
-          id
-          firstName
-          lastName
-        }
+      }
+      leadsCouncil {
+        id
+        name
+        stream
       }
       leadsSonta {
         id

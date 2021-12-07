@@ -25,8 +25,8 @@ export const menuItems = [
     to: '/services/church-list',
     Icon: PencilSquare,
     roles: [
+      'leaderFellowship',
       'leaderBacenta',
-      'leaderCentre',
       'leaderTown',
       'adminTown',
       'leaderCampus',

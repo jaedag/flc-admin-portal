@@ -26,7 +26,7 @@ export const RECORD_SERVICE = gql`
       id
       serviceLog {
         id
-        bacenta {
+        fellowship {
           id
           serviceLogs {
             id
@@ -54,7 +54,7 @@ export const RECORD_CANCELLED_SERVICE = gql`
       id
       serviceLog {
         id
-        bacenta {
+        fellowship {
           id
           serviceLogs {
             id
@@ -86,8 +86,8 @@ export const RECORD_SERVICE_NO_OFFERING = gql`
   }
 `
 
-export const DISPLAY_BACENTA_SERVICE = gql`
-  query DisplayServiceRecords($serviceId: ID!, $bacentaId: ID!) {
+export const DISPLAY_FELLOWSHIP_SERVICE = gql`
+  query DisplayServiceRecords($serviceId: ID!, $fellowshipId: ID!) {
     serviceRecords(where: { id: $serviceId }) {
       id
       created_at
@@ -114,15 +114,15 @@ export const DISPLAY_BACENTA_SERVICE = gql`
         fullName
       }
     }
-    bacentas(where: { id: $bacentaId }) {
+    fellowships(where: { id: $fellowshipId }) {
       id
       name
     }
   }
 `
 
-export const DISPLAY_CENTRE_SERVICE = gql`
-  query DisplayServiceRecords($serviceId: ID!, $centreId: ID!) {
+export const DISPLAY_BACENTA_SERVICE = gql`
+  query DisplayServiceRecords($serviceId: ID!, $bacentaId: ID!) {
     serviceRecords(where: { id: $serviceId }) {
       id
       created_at
@@ -141,7 +141,7 @@ export const DISPLAY_CENTRE_SERVICE = gql`
         fullName
       }
     }
-    centres(where: { id: $centreId }) {
+    bacentas(where: { id: $bacentaId }) {
       id
       name
     }

@@ -1,120 +1,55 @@
 import React, { useContext } from 'react'
 import { useQuery } from '@apollo/client'
 import DisplayChurchDetails from '../../components/DisplayChurchDetails/DisplayChurchDetails'
+
 import { DISPLAY_BACENTA } from './ReadQueries'
 import { ChurchContext } from '../../contexts/ChurchContext'
-import { throwErrorMsg } from 'global-utils'
+import BaseComponent from 'components/base-component/BaseComponent'
 
 const DetailsBacenta = () => {
   const { bacentaId } = useContext(ChurchContext)
-
-  const {
-    data: bacentaData,
-    loading: bacentaLoading,
-    error: bacentaError,
-  } = useQuery(DISPLAY_BACENTA, {
+  const { data, loading, error } = useQuery(DISPLAY_BACENTA, {
     variables: { id: bacentaId },
   })
-  throwErrorMsg(bacentaError)
-  const bacenta = bacentaData?.bacentas[0]
+
+  const displayBacenta = data?.bacentas[0]
 
   let breadcrumb = [
-    bacenta?.centre?.town?.council ?? bacenta?.centre?.campus?.council,
-    bacenta?.centre?.town ? bacenta?.centre?.town : bacenta?.centre?.campus,
-    bacenta?.centre,
-    bacenta,
-  ]
-  if (!bacenta?.centre) {
-    breadcrumb = [bacenta]
-  }
-  const getWeekNumber = (date) => {
-    const currentdate = date ? new Date(date) : new Date()
-    const oneJan = new Date(currentdate.getFullYear(), 0, 1)
-    const adjustedForMonday = 8 - oneJan.getDay() //Checking the number of days till Monday when the week starts
-    oneJan.setDate(oneJan.getDate() + adjustedForMonday)
-    const numberOfDays = Math.floor(
-      (currentdate - oneJan) / (24 * 60 * 60 * 1000)
-    )
-
-    const result = Math.ceil(numberOfDays / 7)
-
-    return result
-  }
-
-  const last3Weeks = [getWeekNumber(), getWeekNumber() - 1, getWeekNumber() - 2]
-  const lastFilledServices = bacenta?.serviceLogs[0]?.serviceRecords.map(
-    (service) => service.week
-  )
-
-  const check = last3Weeks?.map((week) => {
-    if (lastFilledServices?.includes(week)) {
-      return { number: week, filled: true }
-    } else {
-      return {
-        number: week,
-        filled: false,
-      }
-    }
-  })
-
-  let bacentaType = 'Bacenta',
-    vacation
-
-  if (bacenta?.labels.includes('ChurchPlanter')) {
-    bacentaType = 'IC'
-  }
-  if (bacenta?.labels.includes('Vacation')) {
-    vacation = true
-  }
-
-  const details = [
-    {
-      title: 'Status',
-      number: vacation ? 'Vacation' : 'Active',
-      link: '#',
-      width: '',
-    },
-    {
-      title: 'Type',
-      number: bacentaType,
-      link: `#`,
-      width: 'auto',
-    },
-    {
-      title: 'Code',
-      number: bacenta?.bankingCode,
-      link: `#`,
-      width: '',
-    },
+    displayBacenta?.town
+      ? displayBacenta?.town.council
+      : displayBacenta?.campus.council,
+    displayBacenta?.town ? displayBacenta?.town : displayBacenta?.campus,
+    displayBacenta,
   ]
 
   return (
-    <DisplayChurchDetails
-      details={details}
-      loading={bacentaLoading}
-      name={bacenta?.name}
-      churchId={bacentaId}
-      leaderTitle="Bacenta Leader"
-      leader={bacenta?.leader}
-      location={bacenta?.location}
-      membership={bacenta?.memberCount}
-      churchHeading="Meeting Day"
-      churchCount={bacenta?.meetingDay?.day}
-      churchType="Bacenta"
-      buttons={['']}
-      editlink="/bacenta/editbacenta"
-      editPermitted={[
-        'leaderBacenta',
-        'adminFederal',
-        'adminCouncil',
-        'adminTown',
-        'adminCampus',
-      ]}
-      weekNumber={getWeekNumber()}
-      last3Weeks={check}
-      history={bacenta?.history.length !== 0 && bacenta?.history}
-      breadcrumb={breadcrumb && breadcrumb}
-    />
+    <BaseComponent loading={loading} error={error} data={data} placeholder>
+      <DisplayChurchDetails
+        name={displayBacenta?.name}
+        leaderTitle="Bacenta Leader"
+        leader={displayBacenta?.leader}
+        churchId={bacentaId}
+        churchHeading="Fellowships"
+        churchType="Bacenta"
+        subChurch="Fellowship"
+        membership={displayBacenta?.memberCount}
+        churchCount={displayBacenta?.fellowships.length}
+        editlink="/bacenta/editbacenta"
+        editPermitted={[
+          'leaderCampus',
+          'leaderTown',
+          'adminCampus',
+          'adminTown',
+          'adminCouncil',
+          'adminFederal',
+        ]}
+        history={
+          displayBacenta?.history.length !== 0 && displayBacenta?.history
+        }
+        breadcrumb={breadcrumb && breadcrumb}
+        buttons={displayBacenta ? displayBacenta?.fellowships : []}
+      />
+    </BaseComponent>
   )
 }
 

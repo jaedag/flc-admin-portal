@@ -23,13 +23,13 @@ const DetailsStream = () => {
       link: `/${church.church}/displayall`,
     },
     {
-      title: 'Centre',
-      number: stream?.centreCount,
+      title: 'Bacenta',
+      number: stream?.bacentaCount,
       link: `#`,
     },
     {
-      title: 'Bacentas',
-      number: stream?.bacentaCount,
+      title: 'Fellowships',
+      number: stream?.fellowshipCount,
       link: '#',
     },
   ]

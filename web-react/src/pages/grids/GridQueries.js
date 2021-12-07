@@ -7,7 +7,7 @@ export const GET_FEDERAL_MEMBERS = gql`
       firstName
       lastName
       pictureUrl
-      bacenta {
+      fellowship {
         id
         name
       }
@@ -24,10 +24,10 @@ export const GET_FEDERAL_MEMBERS = gql`
       title {
         title
       }
-      leadsBacenta {
+      leadsFellowship {
         name
       }
-      leadsCentre {
+      leadsBacenta {
         name
       }
       leadsMinistry {
@@ -69,7 +69,7 @@ export const GET_FEDERAL_PASTORS = gql`
       firstName
       lastName
       pictureUrl
-      bacenta {
+      fellowship {
         id
         name
       }
@@ -86,11 +86,11 @@ export const GET_FEDERAL_PASTORS = gql`
       title {
         title
       }
-      leadsBacenta {
+      leadsFellowship {
         id
         name
       }
-      leadsCentre {
+      leadsBacenta {
         id
         name
       }
@@ -143,7 +143,7 @@ export const GET_COUNCIL_MEMBERS = gql`
         lastName
         pictureUrl
         stream
-        bacenta {
+        fellowship {
           id
           name
         }
@@ -160,11 +160,11 @@ export const GET_COUNCIL_MEMBERS = gql`
         title {
           title
         }
-        leadsBacenta {
+        leadsFellowship {
           id
           name
         }
-        leadsCentre {
+        leadsBacenta {
           id
           name
         }
@@ -216,7 +216,7 @@ export const GET_CAMPUSTOWN_MEMBERS = gql`
         firstName
         lastName
         pictureUrl
-        bacenta {
+        fellowship {
           name
         }
         ministry {
@@ -231,11 +231,11 @@ export const GET_CAMPUSTOWN_MEMBERS = gql`
         title {
           title
         }
-        leadsBacenta {
+        leadsFellowship {
           id
           name
         }
-        leadsCentre {
+        leadsBacenta {
           id
           name
         }
@@ -283,7 +283,7 @@ export const GET_CAMPUSTOWN_MEMBERS = gql`
         firstName
         lastName
         pictureUrl
-        bacenta {
+        fellowship {
           name
         }
         ministry {
@@ -298,11 +298,11 @@ export const GET_CAMPUSTOWN_MEMBERS = gql`
         title {
           title
         }
-        leadsBacenta {
+        leadsFellowship {
           id
           name
         }
-        leadsCentre {
+        leadsBacenta {
           id
           name
         }
@@ -324,70 +324,6 @@ export const GET_CAMPUSTOWN_MEMBERS = gql`
         }
         leadsCampus {
           id
-          name
-        }
-
-        isAdminForCouncil {
-          id
-          name
-        }
-        isAdminForCampus {
-          id
-          name
-        }
-        isAdminForTown {
-          id
-          name
-        }
-      }
-    }
-  }
-`
-
-export const GET_CENTRE_MEMBERS = gql`
-  query ($id: ID) {
-    centres(where: { id: $id }) {
-      id
-      name
-      members {
-        id
-        firstName
-        lastName
-        pictureUrl
-        bacenta {
-          name
-        }
-        ministry {
-          name
-        }
-        maritalStatus {
-          status
-        }
-        gender {
-          gender
-        }
-        title {
-          title
-        }
-        leadsBacenta {
-          name
-        }
-        leadsCentre {
-          name
-        }
-        leadsMinistry {
-          name
-        }
-        leadsSonta {
-          name
-        }
-        leadsBasonta {
-          name
-        }
-        leadsTown {
-          name
-        }
-        leadsCampus {
           name
         }
 
@@ -418,8 +354,7 @@ export const GET_BACENTA_MEMBERS = gql`
         firstName
         lastName
         pictureUrl
-        stream
-        bacenta {
+        fellowship {
           name
         }
         ministry {
@@ -434,11 +369,76 @@ export const GET_BACENTA_MEMBERS = gql`
         title {
           title
         }
+        leadsFellowship {
+          name
+        }
         leadsBacenta {
+          name
+        }
+        leadsMinistry {
+          name
+        }
+        leadsSonta {
+          name
+        }
+        leadsBasonta {
+          name
+        }
+        leadsTown {
+          name
+        }
+        leadsCampus {
+          name
+        }
+
+        isAdminForCouncil {
           id
           name
         }
-        leadsCentre {
+        isAdminForCampus {
+          id
+          name
+        }
+        isAdminForTown {
+          id
+          name
+        }
+      }
+    }
+  }
+`
+
+export const GET_FELLOWSHIP_MEMBERS = gql`
+  query ($id: ID) {
+    fellowships(where: { id: $id }) {
+      id
+      name
+      members {
+        id
+        firstName
+        lastName
+        pictureUrl
+        stream
+        fellowship {
+          name
+        }
+        ministry {
+          name
+        }
+        maritalStatus {
+          status
+        }
+        gender {
+          gender
+        }
+        title {
+          title
+        }
+        leadsFellowship {
+          id
+          name
+        }
+        leadsBacenta {
           id
           name
         }
@@ -490,7 +490,7 @@ export const GET_SONTA_MEMBERS = gql`
         firstName
         lastName
         pictureUrl
-        bacenta {
+        fellowship {
           name
         }
         ministry {
@@ -505,10 +505,10 @@ export const GET_SONTA_MEMBERS = gql`
         title {
           title
         }
-        leadsBacenta {
+        leadsFellowship {
           name
         }
-        leadsCentre {
+        leadsBacenta {
           name
         }
         leadsMinistry {

@@ -1,107 +1,77 @@
 import { useMutation, useQuery } from '@apollo/client'
-import { Form, Formik } from 'formik'
+import BaseComponent from 'components/base-component/BaseComponent'
+import { FieldArray, Form, Formik } from 'formik'
 import * as Yup from 'yup'
-import {
-  capitalise,
-  DECIMAL_NUM_REGEX,
-  makeSelectOptions,
-  SERVICE_DAY_OPTIONS,
-  throwErrorMsg,
-  VACATION_OPTIONS,
-} from 'global-utils'
+import { capitalise, makeSelectOptions } from 'global-utils'
 import {
   COUNCIL_MEMBER_DROPDOWN,
   GET_COUNCIL_CAMPUSES,
   GET_COUNCIL_TOWNS,
-  GET_CAMPUS_CENTRES,
-  GET_TOWN_CENTRES,
 } from 'queries/ListQueries'
-import React, { useContext, useState } from 'react'
+import React, { useContext } from 'react'
 import { ChurchContext } from 'contexts/ChurchContext'
 import FormikControl from 'components/formik-components/FormikControl'
-import { MAKE_BACENTA_INACTIVE } from 'pages/update/CloseChurchMutations'
+import PlusSign from 'components/buttons/PlusMinusSign/PlusSign'
+import MinusSign from 'components/buttons/PlusMinusSign/MinusSign'
+import { COUNCIL_FELLOWSHIP_DROPDOWN } from 'components/formik-components/ComboboxQueries'
 import { useHistory } from 'react-router'
+import { MAKE_BACENTA_INACTIVE } from 'pages/update/CloseChurchMutations'
 import Popup from 'components/Popup/Popup'
 import RoleView from 'auth/RoleView'
 import { Container, Row, Col, Button, Spinner } from 'react-bootstrap'
-import { MemberContext } from 'contexts/MemberContext'
-import './Forms.css'
-import LoadingScreen from 'components/base-component/LoadingScreen'
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import HeadingSecondary from 'components/HeadingSecondary'
-import SubmitButton from 'components/formik-components/SubmitButton'
+import { MemberContext } from 'contexts/MemberContext'
 
-const BacentaForm = (props) => {
-  const { church, clickCard, isOpen, togglePopup, bacentaId, councilId } =
+const BacentaForm = ({ initialValues, onSubmit, title, newBacenta }) => {
+  const { church, togglePopup, isOpen, clickCard, bacentaId, councilId } =
     useContext(ChurchContext)
-
   const { theme } = useContext(MemberContext)
   const history = useHistory()
 
-  const { data: townsData, error: townListError } = useQuery(
-    GET_COUNCIL_TOWNS,
-    {
-      variables: { id: councilId },
-    }
-  )
-  const { data: campusesData, error: campusListError } = useQuery(
-    GET_COUNCIL_CAMPUSES,
-    {
-      variables: { id: councilId },
-    }
-  )
   const [CloseDownBacenta] = useMutation(MAKE_BACENTA_INACTIVE)
+  const {
+    data: townsData,
+    loading: townsLoading,
+    error: townsError,
+  } = useQuery(GET_COUNCIL_TOWNS, {
+    variables: { id: councilId },
+  })
+  const {
+    data: campusesData,
+    loading: campusesLoading,
+    error: campusesError,
+  } = useQuery(GET_COUNCIL_CAMPUSES, {
+    variables: { id: councilId },
+  })
 
-  if (townListError || campusListError) {
-    throwErrorMsg(townListError)
-    throwErrorMsg(campusListError)
-  }
+  const townOptions = makeSelectOptions(townsData?.councils[0]?.towns)
+  const campusOptions = makeSelectOptions(campusesData?.councils[0]?.campuses)
 
   const validationSchema = Yup.object({
     bacentaName: Yup.string().required('Bacenta Name is a required field'),
-    leaderId: Yup.string().required(
-      'Please choose a leader from the drop down'
-    ),
-    meetingDay: Yup.string().required('Meeting Day is a required field'),
-    vacationStatus: Yup.string().required(
-      'Vacation Status is a required field'
-    ),
-    venueLatitude: Yup.string()
-      .required('Please fill in your location info')
-      .test('is-decimal', 'Please enter valid coordinates', (value) =>
-        (value + '').match(DECIMAL_NUM_REGEX)
-      ),
-    venueLongitude: Yup.string()
-      .required('Please fill in your location info')
-      .test('is-decimal', 'Please enter valid coordinates', (value) =>
-        (value + '').match(DECIMAL_NUM_REGEX)
-      ),
+    leaderId: Yup.string().required('Please choose a leader from the dropdown'),
+    fellowships: newBacenta
+      ? null
+      : Yup.array().of(
+          Yup.object().required('Please pick a fellowship from the dropdown')
+        ),
   })
 
-  const [positionLoading, setPositionLoading] = useState(false)
-
-  const townOptions = townsData
-    ? makeSelectOptions(townsData.councils[0]?.towns)
-    : []
-  const campusOptions = campusesData
-    ? makeSelectOptions(campusesData.councils[0]?.campuses)
-    : []
-  let townCampusIdVar = props.initialValues.townCampusSelect
-
-  if (!props.initialValues.bacentaName && !props.newBacenta) {
-    return <LoadingScreen />
-  }
-
   return (
-    <>
+    <BaseComponent
+      loading={campusesLoading || townsLoading}
+      error={townsError || campusesError}
+      data={townsData && campusesData}
+    >
       <Container>
-        <HeadingPrimary>{props.title}</HeadingPrimary>
-        <HeadingSecondary>{props.initialValues.bacentaName}</HeadingSecondary>
+        <HeadingPrimary>{title}</HeadingPrimary>
+        <HeadingSecondary>{initialValues.bacentaName}</HeadingSecondary>
       </Container>
       <Formik
-        initialValues={props.initialValues}
+        initialValues={initialValues}
         validationSchema={validationSchema}
-        onSubmit={props.onSubmit}
+        onSubmit={onSubmit}
         validateOnMount
       >
         {(formik) => (
@@ -112,103 +82,49 @@ const BacentaForm = (props) => {
                   {/* <!-- Basic Info Div --> */}
                   <Col className="mb-2">
                     <Row className="form-row">
-                      <RoleView
-                        roles={['adminCouncil', 'adminCampus', 'adminTown']}
-                      >
-                        <Col>
-                          <FormikControl
-                            className="form-control"
-                            control="select"
-                            label={`${capitalise(church.church)}`}
-                            name="townCampusSelect"
-                            options={
-                              church.church === 'town'
-                                ? townOptions
-                                : campusOptions
-                            }
-                            onChange={(e) => {
-                              formik.setFieldValue(
-                                'townCampusSelect',
-                                e.target.value
-                              )
-                              townCampusIdVar = e.target.value
-                            }}
-                            defaultOption={`Select a ${capitalise(
-                              church.church
-                            )}`}
-                          />
-                          <FormikControl
-                            className="form-control"
-                            control="selectWithQuery"
-                            name="centreSelect"
-                            label="Centre"
-                            optionsQuery={
-                              church.church === 'town'
-                                ? GET_TOWN_CENTRES
-                                : GET_CAMPUS_CENTRES
-                            }
-                            queryVariable="id"
-                            dataset="centres"
-                            varValue={
-                              townCampusIdVar ||
-                              props.initialValues.townCampusSelect
-                            }
-                            defaultOption="Select a Centre"
-                          />
-                        </Col>
-                      </RoleView>
+                      <Col>
+                        <FormikControl
+                          className="form-control"
+                          control="select"
+                          label={`Select a ${capitalise(church.church)}`}
+                          name="campusTownSelect"
+                          options={
+                            church.church === 'town'
+                              ? townOptions
+                              : campusOptions
+                          }
+                          defaultOption={`Select a ${capitalise(
+                            church.church
+                          )}`}
+                        />
+                        <FormikControl
+                          className="form-control"
+                          control="input"
+                          name="bacentaName"
+                          label="Name of Bacenta"
+                          placeholder="Enter Name Here"
+                        />
+                      </Col>
                     </Row>
 
-                    <Row className="form-row">
-                      <RoleView
-                        roles={['adminCouncil', 'adminCampus', 'adminTown']}
-                      >
-                        <Col sm={12}>
-                          <FormikControl
-                            className="form-control"
-                            control="input"
-                            name="bacentaName"
-                            label="Name of Bacenta"
-                            placeholder="Name of Bacenta"
-                          />
-                        </Col>
-
-                        <Col sm={12}>
-                          <FormikControl
-                            className="form-control"
-                            control="select"
-                            label="Meeting Day"
-                            name="meetingDay"
-                            options={SERVICE_DAY_OPTIONS}
-                            defaultOption="Pick a Service Day"
-                          />
-                        </Col>
-                        <Col sm={12}>
-                          <FormikControl
-                            className="form-control"
-                            control="select"
-                            label="Vacation Status"
-                            name="vacationStatus"
-                            options={VACATION_OPTIONS}
-                            defaultOption="Set Bacenta Mode"
-                          />
-                        </Col>
-                      </RoleView>
+                    <Row className="d-flex align-items-center mb-3">
                       <RoleView
                         roles={[
                           'adminFederal',
                           'adminCouncil',
                           'adminCampus',
                           'adminTown',
+                          'leaderCampus',
+                          'leaderTown',
                         ]}
                       >
-                        <Col sm={12}>
+                        <Col>
                           <FormikControl
                             control="combobox2"
                             name="leaderId"
-                            label="Bacenta Leader"
-                            initialValue={props.initialValues.leaderName}
-                            placeholder="Select a Leader"
+                            initialValue={initialValues?.leaderName}
+                            placeholder="Start typing"
+                            label="Select a Leader"
                             setFieldValue={formik.setFieldValue}
                             optionsQuery={COUNCIL_MEMBER_DROPDOWN}
                             queryVariable1="id"
@@ -224,75 +140,76 @@ const BacentaForm = (props) => {
                         </Col>
                       </RoleView>
                     </Row>
-                    <small className="text-muted">
-                      Enter The Coordinates for the Service Venue
-                    </small>
 
-                    <Row className="row-cols-2 d-flex align-items-center">
-                      <Col>
-                        <FormikControl
-                          className="form-control"
-                          control="input"
-                          name="venueLatitude"
-                          placeholder="Latitude"
-                        />
-                      </Col>
-                      <Col>
-                        <FormikControl
-                          className="form-control"
-                          control="input"
-                          name="venueLongitude"
-                          placeholder="Longitude"
-                        />
-                      </Col>
-                      <Col className="my-2">
-                        <Button
-                          variant="primary"
-                          className="btn-loading"
-                          disabled={positionLoading}
-                          onClick={() => {
-                            setPositionLoading(true)
-
-                            window.navigator.geolocation.getCurrentPosition(
-                              (position) => {
-                                formik.setFieldValue(
-                                  'venueLatitude',
-                                  position.coords.latitude
-                                )
-                                formik.setFieldValue(
-                                  'venueLongitude',
-                                  position.coords.longitude
-                                )
-                                document
-                                  .getElementById('venueLongitude')
-                                  .focus()
-                                document.getElementById('venueLatitude').focus()
-                                document.getElementById('venueLatitude').blur()
-                                setPositionLoading(false)
-                              }
-                            )
-                          }}
-                        >
-                          {positionLoading ? (
-                            <>
-                              <Spinner animation="grow" size="sm" />
-                              <span> Loading</span>
-                            </>
-                          ) : (
-                            'Locate Me Now'
-                          )}
-                        </Button>
-                      </Col>
-                    </Row>
-                    <small className="text-muted">
-                      Click this button if you are currently at your bacenta
-                      service venue
+                    <small>
+                      List any Fellowships that are being moved to this Bacenta
                     </small>
+                    <FieldArray name="fellowships">
+                      {(fieldArrayProps) => {
+                        const { push, remove, form } = fieldArrayProps
+                        const { values } = form
+                        const { fellowships } = values
+
+                        return (
+                          <>
+                            {fellowships.map((fellowship, index) => (
+                              <Row key={index} className="form-row">
+                                <Col>
+                                  <FormikControl
+                                    control="combobox2"
+                                    name={`fellowships[${index}]`}
+                                    initialValue={fellowship?.name}
+                                    placeholder="Enter Fellowship Name"
+                                    setFieldValue={formik.setFieldValue}
+                                    optionsQuery={COUNCIL_FELLOWSHIP_DROPDOWN}
+                                    queryVariable1="id"
+                                    variable1={councilId}
+                                    queryVariable2="fellowshipName"
+                                    suggestionText="name"
+                                    suggestionID="id"
+                                    returnObject={!newBacenta && true}
+                                    church="fellowship"
+                                    dataset="councilFellowshipDropdown"
+                                    aria-describedby="Fellowship Name"
+                                    className="form-control"
+                                    error={
+                                      formik.errors.fellowships &&
+                                      formik.errors.fellowships[index]
+                                    }
+                                  />
+                                </Col>
+                                <Col className="col-auto d-flex">
+                                  <PlusSign onClick={() => push()} />
+                                  {index > 0 && (
+                                    <MinusSign onClick={() => remove(index)} />
+                                  )}
+                                </Col>
+                              </Row>
+                            ))}
+                          </>
+                        )
+                      }}
+                    </FieldArray>
                   </Col>
                 </Row>
               </div>
 
-              <SubmitButton formik={formik} />
+              <Button
+                variant="primary"
+                size="lg"
+                type="submit"
+                className={`btn-main ${theme}`}
+                disabled={!formik.isValid || formik.isSubmitting}
+              >
+                {formik.isSubmitting ? (
+                  <>
+                    <Spinner animation="grow" size="sm" />
+                    <span> Submitting</span>
+                  </>
+                ) : (
+                  'Submit'
+                )}
+              </Button>
             </Form>
             {isOpen && (
               <Popup handleClose={togglePopup}>
@@ -308,14 +225,14 @@ const BacentaForm = (props) => {
                       },
                     })
                       .then((res) => {
-                        clickCard(res.data.CloseDownBacenta.centre)
+                        clickCard(res.data.CloseDownBacenta)
                         togglePopup()
-                        history.push('/centre/displaydetails')
+                        history.push(`/${church.church}/displaydetails`)
                       })
                       .catch((error) => {
                         // eslint-disable-next-line no-console
                         console.error(error)
-                        throwErrorMsg(
+                        alert(
                           'There was an error closing down this bacenta',
                           error
                         )
@@ -333,8 +250,7 @@ const BacentaForm = (props) => {
                 </Button>
               </Popup>
             )}
-
-            {!props.newBacenta && (
+            {!newBacenta && (
               <Button
                 variant="primary"
                 size="lg"
@@ -348,7 +264,7 @@ const BacentaForm = (props) => {
           </Container>
         )}
       </Formik>
-    </>
+    </BaseComponent>
   )
 }
 

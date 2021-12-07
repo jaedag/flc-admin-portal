@@ -19,8 +19,8 @@ const MemberRoleList = ({ member }) => {
     townLeader: [],
     sontaLeader: [],
     basontaLeader: [],
-    centreLeader: [],
     bacentaLeader: [],
+    fellowshipLeader: [],
     adminCouncil: [],
     adminCampus: [],
     adminTown: [],
@@ -88,7 +88,7 @@ const MemberRoleList = ({ member }) => {
 
       rank[`${ch}Leader`].push({
         name: church.name,
-        centre: church.centre,
+        bacenta: church.bacenta,
         sonta: church.sonta,
         campus: church.campus,
         town: church.town,
@@ -102,11 +102,11 @@ const MemberRoleList = ({ member }) => {
     return null
   }
 
+  if (member.leadsFellowship[0]) {
+    updateRank(member, 'fellowship')
+  }
   if (member.leadsBacenta[0]) {
     updateRank(member, 'bacenta')
-  }
-  if (member.leadsCentre[0]) {
-    updateRank(member, 'centre')
   }
   if (member.leadsTown[0]) {
     updateRank(member, 'town')
@@ -154,7 +154,7 @@ const MemberRoleList = ({ member }) => {
               determineStream(member)
               history.push('/dashboard')
             }}
-          >{`Bishop in the First Love Centre`}</span>
+          >{`Bishop in the First Love Bacenta`}</span>
         )}
 
         {

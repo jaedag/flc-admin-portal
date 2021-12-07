@@ -53,10 +53,10 @@ const DisplaySontasByCampusTown = () => {
               >
                 <div className="col-auto">
                   <Link
-                    to="/centre/addcentre"
+                    to="/bacenta/addbacenta"
                     className="btn btn-primary text-nowrap"
                   >
-                    Add Centre
+                    Add Bacenta
                   </Link>
                 </div>
               </RoleView>
@@ -115,10 +115,10 @@ const DisplaySontasByCampusTown = () => {
               >
                 <div className="col-auto">
                   <Link
-                    to="/centre/addcentre"
+                    to="/bacenta/addbacenta"
                     className="btn btn-primary text-nowrap"
                   >
-                    Add Centre
+                    Add Bacenta
                   </Link>
                   <Link
                     to="/sonta/addsonta"

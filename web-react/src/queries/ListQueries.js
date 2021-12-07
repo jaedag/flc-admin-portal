@@ -11,15 +11,15 @@ export const ALL_MEMBERS = gql`
   }
 `
 
-export const GET_BACENTA_LEADERS = gql`
+export const GET_FELLOWSHIP_LEADERS = gql`
   {
     townList(firstName: $firstName, lastName: $lastName) {
       id
-      centres {
+      bacentas {
         id
-        bacentas {
+        fellowships {
           id
-          bacentaLeader {
+          fellowshipLeader {
             id
             firstName
             lastName
@@ -30,12 +30,12 @@ export const GET_BACENTA_LEADERS = gql`
   }
 `
 
-export const BACENTA_DROPDOWN = gql`
-  query ($bacentaName: String) {
-    bacentaDropdown(bacentaName: $bacentaName, first: 8) {
+export const FELLOWSHIP_DROPDOWN = gql`
+  query ($fellowshipName: String) {
+    fellowshipDropdown(fellowshipName: $fellowshipName, first: 8) {
       id
       name
-      centre {
+      bacenta {
         id
         name
         campus {
@@ -61,9 +61,9 @@ export const COUNCIL_MEMBER_DROPDOWN = gql`
   }
 `
 
-export const CENTRE_DROPDOWN = gql`
-  query ($centreName: String) {
-    centreDropdown(centreName: $centreName, first: 8) {
+export const BACENTA_DROPDOWN = gql`
+  query ($bacentaName: String) {
+    bacentaDropdown(bacentaName: $bacentaName, first: 8) {
       id
       name
       campus {
@@ -78,9 +78,9 @@ export const CENTRE_DROPDOWN = gql`
   }
 `
 
-export const GET_TOWN_CENTRES = gql`
+export const GET_TOWN_BACENTAS = gql`
   query ($id: ID) {
-    centres(where: { town: { id: $id } }) {
+    bacentas(where: { town: { id: $id } }) {
       id
       name
       stream
@@ -118,9 +118,9 @@ export const GET_TOWN_CENTRES = gql`
   }
 `
 
-export const GET_CAMPUS_CENTRES = gql`
+export const GET_CAMPUS_BACENTAS = gql`
   query ($id: ID) {
-    centres(where: { campus: { id: $id } }) {
+    bacentas(where: { campus: { id: $id } }) {
       id
       name
       stream
@@ -237,7 +237,7 @@ export const GET_COUNCIL_CAMPUSES = gql`
           id
           name
         }
-        centres {
+        bacentas {
           id
           name
         }
@@ -283,7 +283,7 @@ export const GET_COUNCIL_TOWNS = gql`
           id
           name
         }
-        centres {
+        bacentas {
           id
           name
         }
@@ -316,12 +316,12 @@ export const GET_MINISTRIES = gql`
   }
 `
 
-export const GET_CENTRE_BACENTAS = gql`
+export const GET_BACENTA_FELLOWSHIPS = gql`
   query ($id: ID) {
-    centres(where: { id: $id }) {
+    bacentas(where: { id: $id }) {
       id
       memberCount
-      bacentas {
+      fellowships {
         id
         name
         leader {
@@ -329,7 +329,7 @@ export const GET_CENTRE_BACENTAS = gql`
           firstName
           lastName
         }
-        centre {
+        bacenta {
           id
           name
           leader {

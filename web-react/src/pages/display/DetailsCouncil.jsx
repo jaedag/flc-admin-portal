@@ -19,13 +19,13 @@ const DetailsCouncil = () => {
   const details = [
     { title: 'Pastors', number: council?.pastorCount, link: '#' },
     {
-      title: 'Centre',
-      number: council?.centreCount,
+      title: 'Bacenta',
+      number: council?.bacentaCount,
       link: `#`,
     },
     {
-      title: 'Bacentas',
-      number: council?.bacentaCount,
+      title: 'Fellowships',
+      number: council?.fellowshipCount,
       link: '#',
     },
   ]

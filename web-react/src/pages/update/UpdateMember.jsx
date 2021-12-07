@@ -36,7 +36,7 @@ const UpdateMember = () => {
     maritalStatus: member?.maritalStatus?.status ?? '',
     occupation: member?.occupation?.occupation ?? '',
     pictureUrl: member?.pictureUrl ?? '',
-    bacenta: member?.bacenta ? member?.bacenta?.name : '',
+    fellowship: member?.fellowship ? member?.fellowship?.name : '',
     ministry: member?.ministry ? member?.ministry?.id : '',
 
     pastoralHistory: [
@@ -88,7 +88,7 @@ const UpdateMember = () => {
         occupation: values.occupation,
         pictureUrl: values.pictureUrl,
 
-        bacenta: values.bacenta,
+        fellowship: values.fellowship,
         ministry: values.ministry,
       },
     })

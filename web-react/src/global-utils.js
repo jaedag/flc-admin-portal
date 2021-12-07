@@ -89,18 +89,18 @@ export const plural = (church) => {
       return 'senior high schools'
     case 'Senior High School':
       return 'Senior High Schools'
-    case 'centre':
-      return 'centres'
-    case 'Centre':
-      return 'Centres'
-    case 'sonta':
-      return 'sontas'
-    case 'Sonta':
-      return 'Sontas'
     case 'bacenta':
       return 'bacentas'
     case 'Bacenta':
       return 'Bacentas'
+    case 'sonta':
+      return 'sontas'
+    case 'Sonta':
+      return 'Sontas'
+    case 'fellowship':
+      return 'fellowships'
+    case 'Fellowship':
+      return 'Fellowships'
     default:
       return
   }
@@ -295,24 +295,6 @@ export const getChurchCount = (servant) => {
     }
   }
 
-  if (servant?.leadsCentreCount) {
-    if (churchesCount) {
-      churchesCount = churchesCount + ','
-
-      if (servant.leadsCentreCount === 1) {
-        churchesCount =
-          churchesCount + ' ' + servant.leadsCentreCount + ' Centre'
-      } else {
-        churchesCount =
-          churchesCount + ' ' + servant.leadsCentreCount + ' Centres'
-      }
-    } else if (servant.leadsCentreCount === 1) {
-      churchesCount = servant.leadsCentreCount + ' Centre'
-    } else {
-      churchesCount = servant.leadsCentreCount + ' Centres'
-    }
-  }
-
   if (servant?.leadsBacentaCount) {
     if (churchesCount) {
       churchesCount = churchesCount + ','
@@ -328,6 +310,24 @@ export const getChurchCount = (servant) => {
       churchesCount = servant.leadsBacentaCount + ' Bacenta'
     } else {
       churchesCount = servant.leadsBacentaCount + ' Bacentas'
+    }
+  }
+
+  if (servant?.leadsFellowshipCount) {
+    if (churchesCount) {
+      churchesCount = churchesCount + ','
+
+      if (servant.leadsFellowshipCount === 1) {
+        churchesCount =
+          churchesCount + ' ' + servant.leadsFellowshipCount + ' Fellowship'
+      } else {
+        churchesCount =
+          churchesCount + ' ' + servant.leadsFellowshipCount + ' Fellowships'
+      }
+    } else if (servant.leadsFellowshipCount === 1) {
+      churchesCount = servant.leadsFellowshipCount + ' Fellowship'
+    } else {
+      churchesCount = servant.leadsFellowshipCount + ' Fellowships'
     }
   }
 

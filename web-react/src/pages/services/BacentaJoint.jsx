@@ -6,7 +6,7 @@ import { Container } from 'react-bootstrap'
 import { PencilSquare } from 'react-bootstrap-icons'
 import { useHistory } from 'react-router'
 
-const CentreJoint = () => {
+const BacentaJoint = () => {
   const { currentUser, theme } = useContext(MemberContext)
   const history = useHistory()
 
@@ -16,7 +16,7 @@ const CentreJoint = () => {
         <PlaceholderCustom xs={12} as="h1">
           <div className="text-center">
             <h1 className="mb-0  page-header">{`${currentUser.currentChurch?.name} ${currentUser.currentChurch?.__typename}`}</h1>
-            <p className={`${theme} menu-subheading`}>Centre</p>
+            <p className={`${theme} menu-subheading`}>Bacenta</p>
           </div>
         </PlaceholderCustom>
 
@@ -28,7 +28,7 @@ const CentreJoint = () => {
             noCaption
             onClick={() =>
               history.push(
-                `/services/${currentUser.currentChurch?.__typename.toLowerCase()}/centre-joint/form`
+                `/services/${currentUser.currentChurch?.__typename.toLowerCase()}/bacenta-joint/form`
               )
             }
           />
@@ -38,4 +38,4 @@ const CentreJoint = () => {
   )
 }
 
-export default CentreJoint
+export default BacentaJoint

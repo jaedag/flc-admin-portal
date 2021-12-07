@@ -1,68 +1,184 @@
 import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { useQuery } from '@apollo/client'
+import { capitalise } from '../../global-utils'
 import DisplayChurchList from '../../components/DisplayChurchList'
-import { GET_CENTRE_BACENTAS } from '../../queries/ListQueries'
+
+import ErrorScreen from '../../components/base-component/ErrorScreen'
+import LoadingScreen from '../../components/base-component/LoadingScreen'
+import {
+  GET_CAMPUS_BACENTAS,
+  GET_TOWN_BACENTAS,
+} from '../../queries/ListQueries'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import RoleView from '../../auth/RoleView'
-import BaseComponent from 'components/base-component/BaseComponent'
-import { Container, Row, Col, Button } from 'react-bootstrap'
 
 const DisplayAllBacentas = () => {
-  const { centreId, setCentreId } = useContext(ChurchContext)
+  const { church, townId, campusId, setBacentaId, setTownId, setCampusId } =
+    useContext(ChurchContext)
 
-  const { data, loading, error } = useQuery(GET_CENTRE_BACENTAS, {
-    variables: { id: centreId },
-  })
-
-  const bacentas = data?.centres[0]?.bacentas
-
-  return (
-    <BaseComponent loading={loading} error={error} data={data}>
-      <Container>
-        <div className="mb-4 border-bottom">
-          <Row className="mb-2">
-            <Col>
-              <Link
-                to={`/centre/displaydetails`}
-                onClick={() => {
-                  setCentreId(centreId)
-                }}
-              >
-                <h4>{`${bacentas?.[0].centre.name} Centre`}</h4>
-              </Link>
-            </Col>
-            <RoleView
-              roles={[
-                'adminFederal',
-                'adminCouncil',
-                'adminCampus',
-                'adminTown',
-              ]}
-            >
-              <Col className="col-auto">
-                <Link to="/bacenta/addbacenta" className="btn btn-primary">
-                  Add Bacenta
-                </Link>
-              </Col>
-            </RoleView>
-          </Row>
-
-          <Row className="justify-content-between mb-2">
-            <Col>
-              <Button>{`Bacentas: ${bacentas?.length}`}</Button>
-            </Col>
-            <Col className="col-auto">
-              <Link to="/centre/members">
-                <Button>{`Membership: ${data?.centres[0].memberCount}`}</Button>
-              </Link>
-            </Col>
-          </Row>
-        </div>
-        <DisplayChurchList data={bacentas} churchType="Bacenta" />
-      </Container>
-    </BaseComponent>
+  const { data: townBacentaData, loading: townLoading } = useQuery(
+    GET_TOWN_BACENTAS,
+    {
+      variables: { id: townId },
+    }
   )
+  const { data: campusBacentaData, loading: campusLoading } = useQuery(
+    GET_CAMPUS_BACENTAS,
+    {
+      variables: { id: campusId },
+    }
+  )
+
+  if (campusLoading || townLoading) {
+    // Spinner Icon for Loading Screens
+    return <LoadingScreen />
+  } else if (campusBacentaData && church.church === 'campus') {
+    const campus = campusBacentaData.bacentas[0].campus
+    return (
+      <>
+        <div className=" container">
+          <div className="mb-4 border-bottom">
+            <div className="row justify-content-between">
+              <div className="col-auto">
+                <Link
+                  to={`/${church.church}/displaydetails`}
+                  onClick={() => {
+                    setCampusId(campusId)
+                  }}
+                >
+                  {' '}
+                  <h4>{`${campus.name} ${capitalise(church.church)}`}</h4>
+                </Link>
+              </div>
+              <RoleView
+                roles={[
+                  'adminFederal',
+                  'adminCouncil',
+                  'adminCampus',
+                  'adminTown',
+                ]}
+              >
+                <div className="col-auto">
+                  <Link
+                    to="/bacenta/addbacenta"
+                    className="btn btn-primary text-nowrap"
+                  >
+                    Add Bacenta
+                  </Link>
+                </div>
+              </RoleView>
+            </div>
+            <div className="row">
+              <div className="col">
+                <h6 className="text-muted">
+                  Overseer:
+                  {campus.leader
+                    ? ` ${campus.leader.firstName} ${campus.leader.lastName}`
+                    : null}
+                </h6>
+              </div>
+            </div>
+
+            <div className="row justify-content-between">
+              <div className="py-1 px-2 m-2 card">{`Bacentas: ${campusBacentaData.bacentas.length}`}</div>
+              <Link
+                className="py-1 px-2 m-2 card text-white"
+                to="/sonta/displayall"
+              >{`Sontas: ${campusBacentaData.sontas.length}`}</Link>
+              <Link
+                to="/campus/members"
+                className="py-1 px-2 m-2 card"
+              >{`Membership: ${campus?.memberCount}`}</Link>
+            </div>
+          </div>
+
+          <DisplayChurchList
+            data={campusBacentaData.bacentas}
+            setter={setBacentaId}
+            churchType="Bacenta"
+          />
+        </div>
+      </>
+    )
+  } else if (townBacentaData && church.church === 'town') {
+    const town = townBacentaData.bacentas[0].town
+    return (
+      <>
+        <div className=" container">
+          <div className="mb-4 border-bottom">
+            <div className="row justify-content-between">
+              <div className="col-auto">
+                <Link
+                  to={`/${church.church}/displaydetails`}
+                  onClick={() => {
+                    setTownId(townId)
+                  }}
+                >
+                  {' '}
+                  <h4>{`${town.name} ${capitalise(church.church)}`}</h4>
+                </Link>
+              </div>
+              <RoleView
+                roles={[
+                  'adminFederal',
+                  'adminCouncil',
+                  'adminCampus',
+                  'adminTown',
+                ]}
+              >
+                <div className="col-auto">
+                  <Link
+                    to="/bacenta/addbacenta"
+                    className="btn btn-primary text-nowrap"
+                  >
+                    Add Bacenta
+                  </Link>
+                </div>
+                <div className="col-auto">
+                  <Link
+                    to="/sonta/addsonta"
+                    className="btn btn-primary text-nowrap"
+                  >
+                    Add Sonta
+                  </Link>
+                </div>
+              </RoleView>
+            </div>
+            <div className="row">
+              <div className="col">
+                <h6 className="text-muted">
+                  Constituency Overseer:
+                  {town.leader
+                    ? ` ${town.leader.firstName} ${town.leader.lastName}`
+                    : null}
+                </h6>
+              </div>
+            </div>
+
+            <div className="row justify-content-between">
+              <div className="py-1 px-2 m-2 card">{`Bacentas: ${townBacentaData.bacentas.length}`}</div>
+              <Link
+                className="py-1 px-2 m-2 card text-white"
+                to="/sonta/displayall"
+              >{`Sontas: ${townBacentaData.sontas.length}`}</Link>
+              <Link
+                to="/town/members"
+                className="py-1 px-2 m-2 card"
+              >{`Membership: ${townBacentaData.bacentas[0].town.memberCount}`}</Link>
+            </div>
+          </div>
+
+          <DisplayChurchList
+            data={townBacentaData.bacentas}
+            churchType="Bacenta"
+          />
+        </div>
+      </>
+    )
+  } else {
+    return <ErrorScreen />
+  }
 }
 
 export default DisplayAllBacentas

@@ -41,19 +41,19 @@ const ChurchDirectoryRoute = ({ component, roles, ...args }) => {
     return <Route component={component} {...args} />
   } else if (isAuthorised(['leaderTown', 'adminTown'], currentUser.roles)) {
     //If the user does not have permission but is a Town Leader or Admin
-    church.setCampusId(currentUser.bacenta.centre.town.id)
+    church.setCampusId(currentUser.fellowship.bacenta.town.id)
     return <Route component={Churches} />
   } else if (isAuthorised(['leaderCampus', 'adminCampus'], currentUser.roles)) {
     //If the user does not have permission but is a Campus Leader or Admin
-    church.setCampusId(currentUser.bacenta.centre.campus.id)
-    return <Route component={Churches} />
-  } else if (isAuthorised(['leaderCentre'], currentUser.roles)) {
-    //If the user does not have permission but is a Centre Leader
-    church.setCentreId(currentUser.bacenta.centre.id)
+    church.setCampusId(currentUser.fellowship.bacenta.campus.id)
     return <Route component={Churches} />
   } else if (isAuthorised(['leaderBacenta'], currentUser.roles)) {
     //If the user does not have permission but is a Bacenta Leader
-    church.setBacentaId(currentUser.bacenta.id)
+    church.setBacentaId(currentUser.fellowship.bacenta.id)
+    return <Route component={Churches} />
+  } else if (isAuthorised(['leaderFellowship'], currentUser.roles)) {
+    //If the user does not have permission but is a Fellowship Leader
+    church.setFellowshipId(currentUser.fellowship.id)
     return <Route component={Churches} />
   } else {
     return <Route component={Churches} />

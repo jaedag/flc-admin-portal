@@ -25,21 +25,21 @@ const Services = () => {
         </PlaceholderCustom>
 
         <div className="d-grid gap-2 mt-5 text-left">
-          {currentUser.currentChurch?.__typename === 'Bacenta' && (
+          {currentUser.currentChurch?.__typename === 'Fellowship' && (
             <MenuButton
               iconComponent={Book}
               title="Fellowship Service"
               color="members"
-              onClick={() => history.push(`/services/bacenta`)}
+              onClick={() => history.push(`/services/fellowship`)}
               noCaption
             />
           )}
-          {currentUser.currentChurch?.__typename === 'Centre' && (
+          {currentUser.currentChurch?.__typename === 'Bacenta' && (
             <MenuButton
               iconComponent={Book}
-              title="Centre Service"
+              title="Bacenta Service"
               color="members"
-              onClick={() => history.push(`/services/centre`)}
+              onClick={() => history.push(`/services/bacenta`)}
               noCaption
             />
           )}
@@ -65,7 +65,7 @@ const Services = () => {
               )
             }
           />
-          {currentUser.currentChurch?.__typename === 'Bacenta' && (
+          {currentUser.currentChurch?.__typename === 'Fellowship' && (
             <MenuButton
               iconComponent={FileEarmarkArrowUpFill}
               title="Banking Slips"

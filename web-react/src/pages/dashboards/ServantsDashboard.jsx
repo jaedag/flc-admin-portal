@@ -134,11 +134,11 @@ const ServantsDashboard = () => {
   }
 
   const getServantRoles = (servant) => {
+    if (servant?.leadsFellowship?.length) {
+      setServantRoles(servant, 'Leader', 'Fellowship')
+    }
     if (servant?.leadsBacenta?.length) {
       setServantRoles(servant, 'Leader', 'Bacenta')
-    }
-    if (servant?.leadsCentre?.length) {
-      setServantRoles(servant, 'Leader', 'Centre')
     }
     if (servantLeader?.leadsTown?.length) {
       setServantRoles(servantLeader, 'Leader', 'Town')

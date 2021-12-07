@@ -1,7 +1,10 @@
 import React, { useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/client'
-import { GET_CAMPUS_CENTRES, GET_TOWN_CENTRES } from '../../queries/ListQueries'
+import {
+  GET_CAMPUS_BACENTAS,
+  GET_TOWN_BACENTAS,
+} from '../../queries/ListQueries'
 import { UPDATE_SONTA_MUTATION } from './UpdateMutations'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import { DISPLAY_SONTA } from '../display/ReadQueries'
@@ -36,14 +39,14 @@ const UpdateSonta = () => {
   const [MakeSontaLeader] = useMutation(MAKE_SONTA_LEADER)
   const [UpdateSonta] = useMutation(UPDATE_SONTA_MUTATION, {
     refetchQueries: [
-      { query: GET_TOWN_CENTRES, variables: { id: townId } },
-      { query: GET_CAMPUS_CENTRES, variables: { id: campusId } },
+      { query: GET_TOWN_BACENTAS, variables: { id: townId } },
+      { query: GET_CAMPUS_BACENTAS, variables: { id: campusId } },
       {
-        query: GET_TOWN_CENTRES,
+        query: GET_TOWN_BACENTAS,
         variables: { id: initialValues.campusTown },
       },
       {
-        query: GET_CAMPUS_CENTRES,
+        query: GET_CAMPUS_BACENTAS,
         variables: { id: initialValues.campusTown },
       },
     ],

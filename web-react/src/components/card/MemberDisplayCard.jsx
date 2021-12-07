@@ -21,18 +21,18 @@ const MemberDisplayCard = (props) => {
       icon = user
       name = member.fullName
       details = [
-        member.bacenta && member.bacenta.name + ' Bacenta',
+        member.fellowship && member.fellowship.name + ' Fellowship',
         member.ministry && member.ministry.name,
       ]
+      break
+    case 'Fellowship':
+      icon = bussolid
+      name = member.name + ' Fellowship'
+      details = [member?.leader?.fullName]
       break
     case 'Bacenta':
       icon = bussolid
       name = member.name + ' Bacenta'
-      details = [member?.leader?.fullName]
-      break
-    case 'Centre':
-      icon = bussolid
-      name = member.name + ' Centre'
       details = [member?.leader?.fullName]
       break
     case 'Town':
@@ -60,7 +60,7 @@ const MemberDisplayCard = (props) => {
       className="mobile-search-card"
       onClick={() => {
         setMemberId(member.id)
-        setChurch({ church: member?.stream, subChurch: 'centre' })
+        setChurch({ church: member?.stream, subChurch: 'bacenta' })
         history.push(`/${member.__typename.toLowerCase()}/displaydetails`)
       }}
     >

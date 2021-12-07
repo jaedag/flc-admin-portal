@@ -28,9 +28,9 @@ const SideBar = () => {
 
   const LEADER_OPTIONS = [
     { key: 'CO', value: 'CO' },
-    { key: 'Centre Leader', value: 'Centre Leader' },
-    { key: 'Sonta Leader', value: 'Sonta Leader' },
     { key: 'Bacenta Leader', value: 'Bacenta Leader' },
+    { key: 'Sonta Leader', value: 'Sonta Leader' },
+    { key: 'Fellowship Leader', value: 'Fellowship Leader' },
     { key: 'Basonta Leader', value: 'Basonta Leader' },
     { key: 'Admin', value: 'Admin' },
   ]

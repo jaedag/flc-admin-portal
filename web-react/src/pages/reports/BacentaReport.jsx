@@ -16,7 +16,7 @@ export const BacentaReport = () => {
     variables: { bacentaId: bacentaId },
   })
 
-  const serviceData = getServiceGraphData(data?.bacentas[0])
+  const churchData = getServiceGraphData(data?.bacentas[0])
 
   return (
     <BaseComponent loading={loading} error={error} data={data}>
@@ -25,7 +25,7 @@ export const BacentaReport = () => {
           <h5 className="mb-0">{`${data?.bacentas[0].name} Bacenta`}</h5>{' '}
           <p>
             <span className="text-secondary font-weight-bold">Leader: </span>
-            {`${data?.bacentas[0].leader?.fullName}`}
+            {`${data?.bacentas[0].leader.fullName}`}
           </p>
         </div>
 
@@ -42,21 +42,21 @@ export const BacentaReport = () => {
           <div className="col">
             <StatDisplay
               title="Avg Attendance"
-              statistic={getMonthlyStatAverage(serviceData, 'attendance')}
+              statistic={getMonthlyStatAverage(churchData, 'attendance')}
             />
           </div>
 
           <div className="col">
             <StatDisplay
               title="Avg Income"
-              statistic={getMonthlyStatAverage(serviceData, 'income')}
+              statistic={getMonthlyStatAverage(churchData, 'income')}
             />
           </div>
         </div>
         <ChurchGraph
           stat1="attendance"
           stat2="income"
-          churchData={serviceData}
+          churchData={churchData}
           church="bacenta"
         />
       </div>

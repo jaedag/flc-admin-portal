@@ -66,7 +66,7 @@ const DisplayPage = () => {
             </PlaceholderCustom>
             <PlaceholderCustom as="h6" className="text-center">
               <h6 className="text-center text-secondary">
-                {member?.bacenta?.name}
+                {member?.fellowship?.name}
               </h6>
             </PlaceholderCustom>
           </div>
@@ -200,10 +200,10 @@ const DisplayPage = () => {
                             </Row>
                             <Row>
                               <Col className="text-secondary placeholder-display">
-                                Bacenta
+                                Fellowship
                               </Col>
                               <Col className="placeholder-display">
-                                {member?.bacenta?.name}
+                                {member?.fellowship?.name}
                               </Col>
                             </Row>
                             <Row>

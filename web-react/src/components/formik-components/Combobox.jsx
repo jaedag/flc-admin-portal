@@ -29,7 +29,7 @@ function Combobox(props) {
         data[`${dataset}`].map((row) => ({
           name: row[`${suggestionText}`],
           id: row[`${suggestionID}`],
-          centre: row.centre,
+          bacenta: row.bacenta,
           campus: row.campus,
           town: row.town,
         }))

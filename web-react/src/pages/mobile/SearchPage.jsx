@@ -5,8 +5,8 @@ import {
   COUNCIL_SEARCH,
   CONSTITUENCY_SEARCH,
   FEDERAL_SEARCH,
-  CENTRE_SEARCH,
   BACENTA_SEARCH,
+  FELLOWSHIP_SEARCH,
 } from './SearchQuery'
 import { MemberContext, SearchContext } from '../../contexts/MemberContext'
 import MemberDisplayCard from '../../components/card/MemberDisplayCard'
@@ -26,8 +26,8 @@ const SearchPageMobile = () => {
         ...data.federalCampusSearch,
         ...data.federalTownSearch,
         ...data.federalSontaSearch,
-        ...data.federalCentreSearch,
         ...data.federalBacentaSearch,
+        ...data.federalFellowshipSearch,
       ])
       return
     },
@@ -40,8 +40,8 @@ const SearchPageMobile = () => {
         ...data.councilCampusSearch,
         ...data.councilTownSearch,
         ...data.councilSontaSearch,
-        ...data.councilCentreSearch,
         ...data.councilBacentaSearch,
+        ...data.councilFellowshipSearch,
       ])
       return
     },
@@ -51,23 +51,26 @@ const SearchPageMobile = () => {
       setCombinedData([
         ...data.constituencyMemberSearch,
         ...data.constituencySontaSearch,
-        ...data.constituencyCentreSearch,
         ...data.constituencyBacentaSearch,
+        ...data.constituencyFellowshipSearch,
       ])
-      return
-    },
-  })
-
-  const [centreSearch] = useLazyQuery(CENTRE_SEARCH, {
-    onCompleted: (data) => {
-      setCombinedData([...data.centreMemberSearch, ...data.centreBacentaSearch])
       return
     },
   })
 
   const [bacentaSearch] = useLazyQuery(BACENTA_SEARCH, {
     onCompleted: (data) => {
-      setCombinedData([...data.bacentaMemberSearch])
+      setCombinedData([
+        ...data.bacentaMemberSearch,
+        ...data.bacentaFellowshipSearch,
+      ])
+      return
+    },
+  })
+
+  const [fellowshipSearch] = useLazyQuery(FELLOWSHIP_SEARCH, {
+    onCompleted: (data) => {
+      setCombinedData([...data.fellowshipMemberSearch])
       return
     },
   })
@@ -96,17 +99,17 @@ const SearchPageMobile = () => {
           searchKey: searchString?.trim(),
         },
       })
-    } else if (isAuthorised(['leaderCentre'], currentUser.roles)) {
-      centreSearch({
-        variables: {
-          centreId: currentUser.bacenta.centre.id,
-          searchKey: searchString?.trim(),
-        },
-      })
     } else if (isAuthorised(['leaderBacenta'], currentUser.roles)) {
       bacentaSearch({
         variables: {
-          bacentaId: currentUser.bacenta.id,
+          bacentaId: currentUser.fellowship.bacenta.id,
+          searchKey: searchString?.trim(),
+        },
+      })
+    } else if (isAuthorised(['leaderFellowship'], currentUser.roles)) {
+      fellowshipSearch({
+        variables: {
+          fellowshipId: currentUser.fellowship.id,
           searchKey: searchString?.trim(),
         },
       })

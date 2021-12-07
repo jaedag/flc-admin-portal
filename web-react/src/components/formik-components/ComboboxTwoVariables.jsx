@@ -26,20 +26,20 @@ function ComboboxTwoVariables(props) {
 
   const [query] = useLazyQuery(optionsQuery, {
     onCompleted: (data) => {
-      if (props.church === 'bacenta') {
+      if (props.church === 'fellowship') {
         setSuggestions(
-          data.councilBacentaDropdown.map((row) => {
+          data.councilFellowshipDropdown.map((row) => {
             return {
               id: row.id,
               name: row[`${suggestionText}`],
               //if any type of church
-              centre: row.centre,
+              bacenta: row.bacenta,
             }
           })
         )
-      } else if (props.church === 'centre') {
+      } else if (props.church === 'bacenta') {
         setSuggestions(
-          data.councilCentreDropdown.map((row) => {
+          data.councilBacentaDropdown.map((row) => {
             return {
               id: row.id,
               name: row[`${suggestionText}`],
@@ -51,12 +51,12 @@ function ComboboxTwoVariables(props) {
         )
       } else if (props.church === 'constituency') {
         setSuggestions(
-          data.members[0].centres.map((row) => {
+          data.members[0].bacentas.map((row) => {
             return {
               id: row.id,
               name: row[`${suggestionText}`],
               //if any type of church
-              centre: row.centre,
+              bacenta: row.bacenta,
               campus: row.campus,
               town: row.town,
             }
@@ -73,7 +73,7 @@ function ComboboxTwoVariables(props) {
               firstName: row.firstName,
               lastName: row.lastName,
               //if any type of church
-              centre: row.centre,
+              bacenta: row.bacenta,
             }
           })
         )

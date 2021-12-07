@@ -11,9 +11,9 @@ export const BISH_DASHBOARD_COUNTS = gql`
         id
         firstName
         lastName
-        bacenta {
+        fellowship {
           id
-          centre {
+          bacenta {
             id
             town {
               id
@@ -35,8 +35,8 @@ export const BISH_DASHBOARD_COUNTS = gql`
     bishopMemberCount(id: $id)
     bishopPastorCount(id: $id)
     bishopCampusTownCount(id: $id)
-    bishopCentreCount(id: $id)
     bishopBacentaCount(id: $id)
+    bishopFellowshipCount(id: $id)
     bishopSontaMemberCount(id: $id)
   }
 `
@@ -63,9 +63,9 @@ export const MAKE_BISHOP_ADMIN = gql`
   }
 `
 
-export const BACENTA_LEADER_DASHBOARD = gql`
-  query bacentaLeaderDashboard($bacentaId: ID!) {
-    bacentas(where: { id: $bacentaId }) {
+export const FELLOWSHIP_LEADER_DASHBOARD = gql`
+  query fellowshipLeaderDashboard($fellowshipId: ID!) {
+    fellowships(where: { id: $fellowshipId }) {
       id
       name
       leader {
@@ -87,7 +87,7 @@ export const BACENTA_LEADER_DASHBOARD = gql`
         }
       }
     }
-    bacentaMemberCount(id: $bacentaId)
+    fellowshipMemberCount(id: $fellowshipId)
   }
 `
 
@@ -99,7 +99,7 @@ export const SERVANTS_DASHBOARD = gql`
       lastName
       fullName
       pictureUrl
-      leadsBacenta {
+      leadsFellowship {
         id
         name
         stream
@@ -115,7 +115,7 @@ export const SERVANTS_DASHBOARD = gql`
           }
         }
       }
-      leadsCentre {
+      leadsBacenta {
         id
         name
         stream
@@ -131,7 +131,7 @@ export const SERVANTS_DASHBOARD = gql`
           }
         }
 
-        bacentaServiceAggregate {
+        fellowshipServiceAggregate {
           week
           attendance
           income
@@ -150,7 +150,7 @@ export const SERVANTS_LEADERSHIP = gql`
       fullName
       pictureUrl
 
-      # The person leads in the Bacenta side
+      # The person leads in the Fellowship side
 
       leadsTown {
         id
@@ -316,8 +316,8 @@ export const SERVANT_CHURCHES_COUNT = gql`
       id
       memberCount
       basontaMembershipCount
+      leadsFellowshipCount
       leadsBacentaCount
-      leadsCentreCount
       leadsConstituencyCount
       leadsCouncilCount
     }

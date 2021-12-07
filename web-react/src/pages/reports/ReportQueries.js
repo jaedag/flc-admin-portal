@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client'
 
-export const BACENTA_REPORT = gql`
-  query bacentaReports($bacentaId: ID) {
-    bacentas(where: { id: $bacentaId }) {
+export const FELLOWSHIP_REPORT = gql`
+  query fellowshipReports($fellowshipId: ID) {
+    fellowships(where: { id: $fellowshipId }) {
       id
       name
       leader {
@@ -26,9 +26,9 @@ export const BACENTA_REPORT = gql`
   }
 `
 
-export const CENTRE_REPORT = gql`
-  query centreReports($centreId: ID!) {
-    centres(where: { id: $centreId }) {
+export const BACENTA_REPORT = gql`
+  query bacentaReports($bacentaId: ID!) {
+    bacentas(where: { id: $bacentaId }) {
       id
       name
       leader {
@@ -47,7 +47,7 @@ export const CENTRE_REPORT = gql`
         }
       }
 
-      bacentaServiceAggregate {
+      fellowshipServiceAggregate {
         week
         attendance
         income

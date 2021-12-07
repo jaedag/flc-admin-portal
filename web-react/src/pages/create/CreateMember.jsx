@@ -24,7 +24,7 @@ const CreateMember = () => {
     maritalStatus: '',
     occupation: '',
     pictureUrl: '',
-    bacenta: '',
+    fellowship: '',
     ministry: '',
 
     pastoralHistory: [
@@ -86,7 +86,7 @@ const CreateMember = () => {
         occupation: values.occupation,
         pictureUrl: values.pictureUrl,
 
-        bacenta: values.bacenta,
+        fellowship: values.fellowship,
         ministry: values.ministry,
       },
     })

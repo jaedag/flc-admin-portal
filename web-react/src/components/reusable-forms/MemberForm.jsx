@@ -15,7 +15,7 @@ import { GET_MINISTRIES } from '../../queries/ListQueries'
 import MinusSign from '../buttons/PlusMinusSign/MinusSign'
 import PlusSign from '../buttons/PlusMinusSign/PlusSign'
 import ErrorScreen from '../base-component/ErrorScreen'
-import { COUNCIL_BACENTA_DROPDOWN } from '../formik-components/ComboboxQueries'
+import { COUNCIL_FELLOWSHIP_DROPDOWN } from '../formik-components/ComboboxQueries'
 import FormikControl from '../formik-components/FormikControl'
 import { HeadingPrimary } from '../HeadingPrimary/HeadingPrimary'
 import { Col, Container, Row } from 'react-bootstrap'
@@ -47,7 +47,9 @@ function MemberForm({ initialValues, onSubmit, title, loading }) {
       PHONE_NUM_REGEX_VALIDATION,
       `Phone Number must start with + and country code (eg. '+233')`
     ),
-    bacenta: Yup.string().required('Please pick a bacenta from the dropdown'),
+    fellowship: Yup.string().required(
+      'Please pick a fellowship from the dropdown'
+    ),
     ministry: Yup.string().required('Ministry is a required field'),
   })
 
@@ -210,21 +212,23 @@ function MemberForm({ initialValues, onSubmit, title, loading }) {
                     <Col sm={10}>
                       <FormikControl
                         control="combobox2"
-                        name="bacenta"
-                        label="Bacenta*"
+                        name="fellowship"
+                        label="Fellowship*"
                         placeholder="Start Typing"
                         setFieldValue={formik.setFieldValue}
-                        optionsQuery={COUNCIL_BACENTA_DROPDOWN}
+                        optionsQuery={COUNCIL_FELLOWSHIP_DROPDOWN}
                         queryVariable1="id"
                         variable1={councilId}
-                        queryVariable2="bacentaName"
+                        queryVariable2="fellowshipName"
                         suggestionText="name"
                         suggestionID="id"
-                        church="bacenta"
-                        aria-describedby="Bacenta Name"
+                        church="fellowship"
+                        aria-describedby="Fellowship Name"
                         className="form-control"
-                        initialValue={initialValues?.bacenta || null}
-                        error={formik.errors.bacenta && formik.errors.bacenta}
+                        initialValue={initialValues?.fellowship || null}
+                        error={
+                          formik.errors.fellowship && formik.errors.fellowship
+                        }
                       />
                     </Col>
                     <Col sm={10}>

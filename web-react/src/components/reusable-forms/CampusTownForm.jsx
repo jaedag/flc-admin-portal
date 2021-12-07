@@ -9,7 +9,7 @@ import { ChurchContext } from 'contexts/ChurchContext'
 import FormikControl from 'components/formik-components/FormikControl'
 import PlusSign from 'components/buttons/PlusMinusSign/PlusSign'
 import MinusSign from 'components/buttons/PlusMinusSign/MinusSign'
-import { COUNCIL_CENTRE_DROPDOWN } from 'components/formik-components/ComboboxQueries'
+import { COUNCIL_BACENTA_DROPDOWN } from 'components/formik-components/ComboboxQueries'
 import { MAKE_CAMPUSTOWN_INACTIVE } from 'pages/update/CloseChurchMutations'
 import { BISH_DASHBOARD_COUNTS } from 'pages/dashboards/DashboardQueries'
 import { useHistory } from 'react-router'
@@ -67,10 +67,10 @@ const CampusTownForm = ({
     leaderId: Yup.string().required(
       'Please choose a leader from the drop down'
     ),
-    centres: newConstituency
+    bacentas: newConstituency
       ? null
       : Yup.array().of(
-          Yup.object().required('Please pick a centre from the dropdown')
+          Yup.object().required('Please pick a bacenta from the dropdown')
         ),
   })
 
@@ -159,42 +159,42 @@ const CampusTownForm = ({
                     </Row>
 
                     <small className="pt-2">
-                      {`Select any centres
+                      {`Select any bacentas
                        that are being moved to this ${capitalise(
                          church.church
                        )}`}
                     </small>
-                    <FieldArray name="centres">
+                    <FieldArray name="bacentas">
                       {(fieldArrayProps) => {
                         const { push, remove, form } = fieldArrayProps
                         const { values } = form
-                        const { centres } = values
+                        const { bacentas } = values
 
                         return (
                           <>
-                            {centres.map((centre, index) => (
+                            {bacentas.map((bacenta, index) => (
                               <Row key={index} className="form-row">
                                 <Col>
                                   <FormikControl
                                     control="combobox2"
-                                    name={`centres[${index}]`}
-                                    placeholder="Centre Name"
-                                    initialValue={centre?.name}
+                                    name={`bacentas[${index}]`}
+                                    placeholder="Bacenta Name"
+                                    initialValue={bacenta?.name}
                                     setFieldValue={formik.setFieldValue}
-                                    optionsQuery={COUNCIL_CENTRE_DROPDOWN}
+                                    optionsQuery={COUNCIL_BACENTA_DROPDOWN}
                                     queryVariable1="id"
                                     variable1={councilId}
                                     queryVariable2="nameSearch"
                                     suggestionText="name"
                                     suggestionID="id"
-                                    dataset="councilCentreDropdown"
-                                    church="centre"
+                                    dataset="councilBacentaDropdown"
+                                    church="bacenta"
                                     returnObject={!newConstituency && true}
-                                    aria-describedby="Centre Name"
+                                    aria-describedby="Bacenta Name"
                                     className="form-control"
                                     error={
-                                      formik.errors.centres &&
-                                      formik.errors.centres[index]
+                                      formik.errors.bacentas &&
+                                      formik.errors.bacentas[index]
                                     }
                                   />
                                 </Col>
@@ -234,7 +234,7 @@ const CampusTownForm = ({
 
             {isOpen && (
               <Popup handleClose={togglePopup}>
-                Are you sure you want to close down this bacenta?
+                Are you sure you want to close down this fellowship?
                 <Button
                   variant="primary"
                   type="submit"

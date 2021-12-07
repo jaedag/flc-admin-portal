@@ -1,14 +1,14 @@
 import { gql } from '@apollo/client'
 
-export const MAKE_BACENTA_INACTIVE = gql`
-  mutation CloseDownBacenta($bacentaId: ID!) {
-    CloseDownBacenta(bacentaId: $bacentaId) {
+export const MAKE_FELLOWSHIP_INACTIVE = gql`
+  mutation CloseDownFellowship($fellowshipId: ID!) {
+    CloseDownFellowship(fellowshipId: $fellowshipId) {
       id
       name
-      centre {
+      bacenta {
         id
         stream
-        bacentas {
+        fellowships {
           id
           name
         }
@@ -42,15 +42,15 @@ export const MAKE_BACENTA_INACTIVE = gql`
   }
 `
 
-export const MAKE_CENTRE_INACTIVE = gql`
-  mutation CloseDownCentre($centreId: ID!) {
-    CloseDownCentre(centreId: $centreId) {
+export const MAKE_BACENTA_INACTIVE = gql`
+  mutation CloseDownBacenta($bacentaId: ID!) {
+    CloseDownBacenta(bacentaId: $bacentaId) {
       id
       name
       stream
       town {
         id
-        centres {
+        bacentas {
           id
         }
         bishop {
@@ -72,7 +72,7 @@ export const MAKE_CENTRE_INACTIVE = gql`
       }
       campus {
         id
-        centres {
+        bacentas {
           id
         }
         bishop {
@@ -147,9 +147,9 @@ export const MAKE_CAMPUSTOWN_INACTIVE = gql`
   }
 `
 
-export const SET_VACATION_BACENTA = gql`
-  mutation SetVacationBacenta($bacentaId: ID!) {
-    SetVacationBacenta(bacentaId: $bacentaId) {
+export const SET_VACATION_FELLOWSHIP = gql`
+  mutation SetVacationFellowship($fellowshipId: ID!) {
+    SetVacationFellowship(fellowshipId: $fellowshipId) {
       id
       name
       labels

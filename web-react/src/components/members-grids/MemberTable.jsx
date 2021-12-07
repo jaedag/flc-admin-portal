@@ -70,7 +70,7 @@ const MemberTable = (props) => {
                     className="card grid-card fade-in"
                     onClick={() => {
                       setMemberId(soul.id)
-                      setChurch({ church: soul.stream, subChurch: 'centre' })
+                      setChurch({ church: soul.stream, subChurch: 'bacenta' })
                       history.push('/member/displaydetails')
                     }}
                   >
@@ -107,7 +107,7 @@ const MemberTable = (props) => {
                   className={`d-flex align-items-center card-border ${theme}`}
                   onClick={() => {
                     setMemberId(soul.id)
-                    setChurch({ church: soul.stream, subChurch: 'centre' })
+                    setChurch({ church: soul.stream, subChurch: 'bacenta' })
                     history.push('/member/displaydetails')
                   }}
                 >
@@ -120,9 +120,9 @@ const MemberTable = (props) => {
                   </div>
                   <div className="flex-grow-1 ms-3">
                     <p className="card-title">{`${soul?.firstName} ${soul?.lastName}`}</p>
-                    {soul?.bacenta ? (
+                    {soul?.fellowship ? (
                       <span className={`text-secondary card-subinfo ${theme}`}>
-                        {soul?.bacenta.name}
+                        {soul?.fellowship.name}
                         {' - '}
                       </span>
                     ) : null}

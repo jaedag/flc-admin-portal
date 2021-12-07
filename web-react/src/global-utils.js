@@ -266,6 +266,7 @@ export const getChurchCount = (servant) => {
     if (churchesCount) {
       churchesCount = churchesCount + ','
     }
+
     if (servant.leadsCouncilCount === 1) {
       churchesCount = servant.leadsCouncilCount + ' Council'
     } else {
@@ -276,8 +277,18 @@ export const getChurchCount = (servant) => {
   if (servant?.leadsConstituencyCount) {
     if (churchesCount) {
       churchesCount = churchesCount + ','
-    }
-    if (servant.leadsConstituencyCount === 1) {
+
+      if (servant.leadsConstituencyCount === 1) {
+        churchesCount =
+          churchesCount + ' ' + servant.leadsConstituencyCount + ' Constituency'
+      } else {
+        churchesCount =
+          churchesCount +
+          ' ' +
+          servant.leadsConstituencyCount +
+          ' Constituencies'
+      }
+    } else if (servant.leadsConstituencyCount === 1) {
       churchesCount = servant.leadsConstituencyCount + ' Constituency'
     } else {
       churchesCount = servant.leadsConstituencyCount + ' Constituencies'
@@ -287,25 +298,36 @@ export const getChurchCount = (servant) => {
   if (servant?.leadsCentreCount) {
     if (churchesCount) {
       churchesCount = churchesCount + ','
-    }
-    if (servant.leadsCentreCount === 1) {
-      churchesCount = churchesCount + ' ' + servant.leadsCentreCount + ' Centre'
+
+      if (servant.leadsCentreCount === 1) {
+        churchesCount =
+          churchesCount + ' ' + servant.leadsCentreCount + ' Centre'
+      } else {
+        churchesCount =
+          churchesCount + ' ' + servant.leadsCentreCount + ' Centres'
+      }
+    } else if (servant.leadsCentreCount === 1) {
+      churchesCount = servant.leadsCentreCount + ' Centre'
     } else {
-      churchesCount =
-        churchesCount + ' ' + servant.leadsCentreCount + ' Centres'
+      churchesCount = servant.leadsCentreCount + ' Centres'
     }
   }
 
   if (servant?.leadsBacentaCount) {
     if (churchesCount) {
       churchesCount = churchesCount + ','
-    }
-    if (servant.leadsBacentaCount === 1) {
-      churchesCount =
-        churchesCount + ' ' + servant.leadsBacentaCount + ' Bacenta'
+
+      if (servant.leadsBacentaCount === 1) {
+        churchesCount =
+          churchesCount + ' ' + servant.leadsBacentaCount + ' Bacenta'
+      } else {
+        churchesCount =
+          churchesCount + ' ' + servant.leadsBacentaCount + ' Bacentas'
+      }
+    } else if (servant.leadsBacentaCount === 1) {
+      churchesCount = servant.leadsBacentaCount + ' Bacenta'
     } else {
-      churchesCount =
-        churchesCount + ' ' + servant.leadsBacentaCount + ' Bacentas'
+      churchesCount = servant.leadsBacentaCount + ' Bacentas'
     }
   }
 

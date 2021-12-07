@@ -59,13 +59,41 @@ type Member {
   loggedHistory: [HistoryLog] @relationship(type: "LOGGED_BY", direction: IN)
   bacenta: Bacenta @relationship(type: "BELONGS_TO", direction: OUT)
   leadsBacenta: [Bacenta] @relationship(type: "LEADS", direction: OUT)
+  leadsBacentaCount: Int
+    @cypher(
+      statement: """
+      MATCH (this)-[:LEADS]->(bacentas:Bacenta)
+      RETURN COUNT(bacentas)
+      """
+    )
   leadsCentre: [Centre] @relationship(type: "LEADS", direction: OUT)
+  leadsCentreCount: Int
+    @cypher(
+      statement: """
+      MATCH (this)-[:LEADS]->(centres:Centre)
+      RETURN COUNT(centres)
+      """
+    )
   leadsMinistry: [Ministry] @relationship(type: "LEADS", direction: OUT)
   leadsSonta: [Sonta] @relationship(type: "LEADS", direction: OUT)
   leadsBasonta: [Basonta] @relationship(type: "LEADS", direction: OUT)
   leadsTown: [Town] @relationship(type: "LEADS", direction: OUT)
   leadsCampus: [Campus] @relationship(type: "LEADS", direction: OUT)
+  leadsConstituencyCount: Int
+    @cypher(
+      statement: """
+      MATCH (this)-[:LEADS|IS_ADMIN_FOR]->(constituency) WHERE constituency:Campus OR constituency:Town
+      RETURN COUNT(DISTINCT constituency)
+      """
+    )
   leadsCouncil: [Council] @relationship(type: "LEADS", direction: OUT)
+  leadsCouncilCount: Int
+    @cypher(
+      statement: """
+      MATCH (this)-[:LEADS|HAS|IS_ADMIN_FOR]->(council:Council)
+      RETURN COUNT(DISTINCT council)
+      """
+    )
   isAdminForCouncil: [Council]
     @relationship(type: "IS_ADMIN_FOR", direction: OUT) #@neo4j_ignore
   isAdminForCampus: [Campus] @relationship(type: "IS_ADMIN_FOR", direction: OUT)
@@ -787,39 +815,6 @@ type Query {
     )
 
   #DASHBOARD QUERIES
-  leadsBacentaCount(id: ID!): Int
-    @cypher(
-      statement: """
-      MATCH (member:Member {id:$id})
-      MATCH (member)-[:LEADS]->(bacentas:Bacenta)
-      RETURN COUNT(bacentas)
-      """
-    )
-  leadsCentreCount(id: ID!): Int
-    @cypher(
-      statement: """
-      MATCH (member:Member {id:$id})
-      MATCH (member)-[:LEADS]->(centres:Centre)
-      RETURN COUNT(centres)
-      """
-    )
-  leadsConstituencyCount(id: ID!): Int
-    @cypher(
-      statement: """
-      MATCH (member:Member {id:$id})
-      MATCH (member)-[:LEADS|IS_ADMIN_FOR]->(constituency) WHERE constituency:Campus OR constituency:Town
-      RETURN COUNT(DISTINCT constituency)
-      """
-    )
-
-  leadsCouncilCount(id: ID!): Int
-    @cypher(
-      statement: """
-      MATCH (member:Member {id:$id})
-      MATCH (member)-[:LEADS|HAS|IS_ADMIN_FOR]->(council:Council)
-      RETURN COUNT(DISTINCT council)
-      """
-    )
 
   #Fuzzy Search
   memberGridList(
@@ -1996,7 +1991,7 @@ type Mutation {
     @cypher(
       statement: """
       MATCH (bacenta:Bacenta {id:$bacentaId})
-     
+
       CREATE (log:HistoryLog {id:apoc.create.uuid()})
         SET log.timeStamp = datetime(),
         log.historyRecord = bacenta.name + ' Bacenta went on vacation mode'

@@ -24,14 +24,8 @@ import HeadingSecondary from 'components/HeadingSecondary'
 import { MemberContext } from 'contexts/MemberContext'
 
 const CentreForm = ({ initialValues, onSubmit, title, newCentre }) => {
-  const {
-    church,
-    togglePopup,
-    isOpen,
-    clickCard,
-    centreId,
-    councilId,
-  } = useContext(ChurchContext)
+  const { church, togglePopup, isOpen, clickCard, centreId, councilId } =
+    useContext(ChurchContext)
   const { theme } = useContext(MemberContext)
   const history = useHistory()
 

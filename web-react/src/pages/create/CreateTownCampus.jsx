@@ -12,9 +12,8 @@ import { NEW_CAMPUS_LEADER, NEW_TOWN_LEADER } from './MakeLeaderMutations'
 import CampusTownForm from '../../components/reusable-forms/CampusTownForm'
 
 const CreateTownCampus = () => {
-  const { church, clickCard, councilId, setTownId, setCouncilId } = useContext(
-    ChurchContext
-  )
+  const { church, clickCard, councilId, setTownId, setCouncilId } =
+    useContext(ChurchContext)
 
   const history = useHistory()
 

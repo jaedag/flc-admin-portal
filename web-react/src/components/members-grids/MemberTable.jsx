@@ -11,13 +11,8 @@ import { MemberContext } from 'contexts/MemberContext.js'
 import { Container } from 'react-bootstrap'
 
 const MemberTable = (props) => {
-  const {
-    memberData,
-    memberError,
-    memberLoading,
-    offset,
-    numberOfRecords,
-  } = props
+  const { memberData, memberError, memberLoading, offset, numberOfRecords } =
+    props
 
   const { setChurch } = useContext(ChurchContext)
   const { theme, setMemberId } = useContext(MemberContext)

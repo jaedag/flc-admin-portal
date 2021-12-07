@@ -11,12 +11,13 @@ import BaseComponent from 'components/base-component/BaseComponent'
 const SontaServiceDetails = () => {
   const { sontaId } = useContext(ChurchContext)
   const { serviceRecordId } = useContext(ServiceContext)
-  const { data: data, loading: loading, error: error } = useQuery(
-    DISPLAY_SONTA_SERVICE,
-    {
-      variables: { serviceId: serviceRecordId, sontaId: sontaId },
-    }
-  )
+  const {
+    data: data,
+    loading: loading,
+    error: error,
+  } = useQuery(DISPLAY_SONTA_SERVICE, {
+    variables: { serviceId: serviceRecordId, sontaId: sontaId },
+  })
 
   return (
     <BaseComponent loading={loading} error={error} data={data}>

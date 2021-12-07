@@ -93,7 +93,7 @@ export const ADD_MEMBER_TITLE_MUTATION = gql`
 `
 
 export const ADD_LEADER_HISTORY_MUTATION = gql`
-  mutation($id: ID, $pastoralHistory: [pastoralHistory]) {
+  mutation ($id: ID, $pastoralHistory: [pastoralHistory]) {
     AddLeaderHistory(id: $id, pastoralHistory: $pastoralHistory) {
       id
       historyRecord

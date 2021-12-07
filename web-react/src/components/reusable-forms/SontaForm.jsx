@@ -41,9 +41,8 @@ const SontaForm = ({ initialValues, onSubmit, title, loading, newSonta }) => {
       variables: { id: church.church === 'town' ? townId : campusId },
     }
   )
-  const { data: ministryListData, loading: ministryListLoading } = useQuery(
-    GET_MINISTRIES
-  )
+  const { data: ministryListData, loading: ministryListLoading } =
+    useQuery(GET_MINISTRIES)
 
   const isCampus = church.church === 'campus'
   const campusTownLoading = isCampus ? campusLoading : townLoading
@@ -65,10 +64,8 @@ const SontaForm = ({ initialValues, onSubmit, title, loading, newSonta }) => {
   })
 
   const ministryOptions = makeSelectOptions(ministryListData?.ministries)
-  const townOptions = makeSelectOptions(townsData?.members[0].isBishopForTown)
-  const campusOptions = makeSelectOptions(
-    campusesData?.members[0].isBishopForCampus
-  )
+  const townOptions = makeSelectOptions(townsData?.members[0].leadsCouncil)
+  const campusOptions = makeSelectOptions(campusesData?.members[0].leadsCouncil)
 
   const sontasNotInCampusTown = ministryOptions?.filter((ministry) => {
     return !campusTownData?.sontas.some(

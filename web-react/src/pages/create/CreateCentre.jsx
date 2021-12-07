@@ -15,9 +15,8 @@ const CreateCentre = () => {
     bacentas: [''],
   }
 
-  const { church, clickCard, setTownId, setCampusId } = useContext(
-    ChurchContext
-  )
+  const { church, clickCard, setTownId, setCampusId } =
+    useContext(ChurchContext)
   const history = useHistory()
 
   const [NewCentreLeader] = useMutation(NEW_CENTRE_LEADER)

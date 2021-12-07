@@ -4,7 +4,11 @@ import ChurchGraph from 'components/ChurchGraph/ChurchGraph'
 import './Dashboards.css'
 import { MemberContext } from 'contexts/MemberContext'
 import { useQuery } from '@apollo/client'
-import { SERVANTS_DASHBOARD } from './DashboardQueries'
+import {
+  SERVANTS_ADMIN,
+  SERVANTS_DASHBOARD,
+  SERVANTS_LEADERSHIP,
+} from './DashboardQueries'
 import RoleCard from './RoleCard'
 import {
   getServiceGraphData,
@@ -28,8 +32,16 @@ const ServantsDashboard = () => {
   const { data, loading, error } = useQuery(SERVANTS_DASHBOARD, {
     variables: { id: atHome ? currentUser.id : memberId },
   })
+  const { data: adminData } = useQuery(SERVANTS_ADMIN, {
+    variables: { id: atHome ? currentUser.id : memberId },
+  })
+  const { data: leaderData } = useQuery(SERVANTS_LEADERSHIP, {
+    variables: { id: atHome ? currentUser.id : memberId },
+  })
 
   const servant = data?.members[0]
+  const servantAdmin = adminData?.members[0]
+  const servantLeader = leaderData?.members[0]
 
   // What leadership roles does this person play?
   let roles = []
@@ -45,9 +57,7 @@ const ServantsDashboard = () => {
       case 'Admin':
         verb = `isAdminFor${churchType}`
         break
-      case 'Bishop':
-        verb = `isBishopFor${churchType}`
-        break
+
       default:
         break
     }
@@ -130,35 +140,33 @@ const ServantsDashboard = () => {
     if (servant?.leadsCentre?.length) {
       setServantRoles(servant, 'Leader', 'Centre')
     }
-    if (servant?.leadsTown?.length) {
-      setServantRoles(servant, 'Leader', 'Town')
+    if (servantLeader?.leadsTown?.length) {
+      setServantRoles(servantLeader, 'Leader', 'Town')
     }
-    if (servant?.leadsCampus?.length) {
-      setServantRoles(servant, 'Leader', 'Campus')
+    if (servantLeader?.leadsCampus?.length) {
+      setServantRoles(servantLeader, 'Leader', 'Campus')
     }
-    if (servant?.leadsSonta?.length) {
-      setServantRoles(servant, 'Leader', 'Sonta')
+    if (servantLeader?.leadsSonta?.length) {
+      setServantRoles(servantLeader, 'Leader', 'Sonta')
     }
     if (servant?.leadsBasonta?.length) {
       setServantRoles(servant, 'Leader', 'Basonta')
     }
-    if (servant?.leadsMinistry?.length) {
-      setServantRoles(servant, 'Leader', 'Ministry')
+    if (servantLeader?.leadsMinistry?.length) {
+      setServantRoles(servantLeader, 'Leader', 'Ministry')
     }
-    if (servant?.isBishopForTown?.length) {
-      setServantRoles(servant, 'Bishop', 'Town')
+    if (servant?.leadsCouncil?.length) {
+      setServantRoles(servant, 'Leader', 'Council')
     }
-    if (servant?.isBishopForCampus?.length) {
-      setServantRoles(servant, 'Bishop', 'Campus')
+
+    if (servantAdmin?.isAdminForCouncil?.length) {
+      setServantRoles(servantAdmin, 'Admin', 'Council')
     }
-    if (servant?.isAdminForCouncil?.length) {
-      setServantRoles(servant, 'Admin', 'Council')
+    if (servantAdmin?.isAdminForCampus?.length) {
+      setServantRoles(servantAdmin, 'Admin', 'Campus')
     }
-    if (servant?.isAdminForCampus?.length) {
-      setServantRoles(servant, 'Admin', 'Campus')
-    }
-    if (servant?.isAdminForTown?.length) {
-      setServantRoles(servant, 'Admin', 'Town')
+    if (servantAdmin?.isAdminForTown?.length) {
+      setServantRoles(servantAdmin, 'Admin', 'Town')
     }
 
     //run the get graph function after all checking is done to avoid multiple unnecessary runs

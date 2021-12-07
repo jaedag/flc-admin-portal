@@ -12,9 +12,8 @@ import UserDashboard from 'pages/dashboards/UserDashboard'
 const ProtectedRoute = ({ component, roles, ...args }) => {
   const { currentUser, setMemberId } = useContext(MemberContext)
   const { isAuthenticated } = useAuth0()
-  const { setCouncilId, setTownId, setCampusId, setChurch } = useContext(
-    ChurchContext
-  )
+  const { setCouncilId, setTownId, setCampusId, setChurch } =
+    useContext(ChurchContext)
 
   useEffect(() => {
     if (isAuthenticated && !currentUser.roles.includes('adminFederal')) {

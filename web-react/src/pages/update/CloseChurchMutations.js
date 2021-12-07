@@ -146,3 +146,17 @@ export const MAKE_CAMPUSTOWN_INACTIVE = gql`
     }
   }
 `
+
+export const SET_VACATION_BACENTA = gql`
+  mutation SetVacationBacenta($bacentaId: ID!) {
+    SetVacationBacenta(bacentaId: $bacentaId) {
+      id
+      name
+      labels
+      history {
+        id
+        historyRecord
+      }
+    }
+  }
+`

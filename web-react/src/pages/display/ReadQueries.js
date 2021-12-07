@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client'
 
 export const DISPLAY_MEMBER = gql`
-  query($id: ID!) {
+  query ($id: ID!) {
     member(id: $id) {
       firstName
       middleName
@@ -181,14 +181,7 @@ export const DISPLAY_MEMBER = gql`
         id
         name
       }
-      isBishopForTown {
-        id
-        name
-      }
-      isBishopForCampus {
-        id
-        name
-      }
+
       isAdminForCouncil {
         id
         name
@@ -209,7 +202,7 @@ export const DISPLAY_MEMBER = gql`
 `
 
 export const DISPLAY_BACENTA = gql`
-  query($id: ID) {
+  query ($id: ID) {
     bacentas(where: { id: $id }, options: { limit: 1 }) {
       id
       labels
@@ -340,7 +333,7 @@ export const DISPLAY_SONTA = gql`
 `
 
 export const DISPLAY_CENTRE = gql`
-  query($id: ID) {
+  query ($id: ID) {
     centres(where: { id: $id }, options: { limit: 1 }) {
       id
       name
@@ -414,7 +407,7 @@ export const DISPLAY_CENTRE = gql`
 `
 
 export const DISPLAY_TOWN = gql`
-  query($id: ID) {
+  query ($id: ID) {
     towns(where: { id: $id }, options: { limit: 1 }) {
       id
       name
@@ -504,7 +497,7 @@ export const DISPLAY_TOWN = gql`
 `
 
 export const DISPLAY_CAMPUS = gql`
-  query($id: ID) {
+  query ($id: ID) {
     campuses(where: { id: $id }, options: { limit: 1 }) {
       id
       name
@@ -594,7 +587,7 @@ export const DISPLAY_CAMPUS = gql`
 `
 
 export const DISPLAY_COUNCIL = gql`
-  query($id: ID) {
+  query ($id: ID) {
     councils(where: { id: $id }, options: { limit: 1 }) {
       id
       name
@@ -669,7 +662,7 @@ export const DISPLAY_COUNCIL = gql`
 `
 
 export const DISPLAY_STREAM = gql`
-  query($id: ID) {
+  query ($id: ID) {
     streams(where: { id: $id }, options: { limit: 1 }) {
       id
       name

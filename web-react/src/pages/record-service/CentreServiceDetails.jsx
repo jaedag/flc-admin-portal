@@ -11,12 +11,13 @@ import BaseComponent from 'components/base-component/BaseComponent'
 const CentreServiceDetails = () => {
   const { centreId } = useContext(ChurchContext)
   const { serviceRecordId } = useContext(ServiceContext)
-  const { data: data, loading: loading, error: error } = useQuery(
-    DISPLAY_CENTRE_SERVICE,
-    {
-      variables: { serviceId: serviceRecordId, centreId: centreId },
-    }
-  )
+  const {
+    data: data,
+    loading: loading,
+    error: error,
+  } = useQuery(DISPLAY_CENTRE_SERVICE, {
+    variables: { serviceId: serviceRecordId, centreId: centreId },
+  })
 
   return (
     <BaseComponent loading={loading} error={error} data={data}>

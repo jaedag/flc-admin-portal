@@ -99,6 +99,129 @@ export const SERVANTS_DASHBOARD = gql`
       lastName
       fullName
       pictureUrl
+      leadsBacenta {
+        id
+        name
+        stream
+        memberCount
+
+        services {
+          created_at
+          attendance
+          income
+          week
+          serviceDate {
+            date
+          }
+        }
+      }
+      leadsCentre {
+        id
+        name
+        stream
+        memberCount
+
+        services {
+          created_at
+          attendance
+          income
+          week
+          serviceDate {
+            date
+          }
+        }
+
+        bacentaServiceAggregate {
+          week
+          attendance
+          income
+        }
+      }
+    }
+  }
+`
+
+export const SERVANTS_LEADERSHIP = gql`
+  query servantIsLeader($id: ID!) {
+    members(where: { id: $id }) {
+      id
+      firstName
+      lastName
+      fullName
+      pictureUrl
+
+      # The person leads in the Bacenta side
+
+      leadsTown {
+        id
+        name
+        stream
+        memberCount
+        leader {
+          id
+          firstName
+          lastName
+          fullName
+        }
+        services {
+          created_at
+          attendance
+          income
+          week
+          serviceDate {
+            date
+          }
+        }
+
+        componentServiceAggregate {
+          week
+          attendance
+          income
+        }
+      }
+      leadsCampus {
+        id
+        name
+        stream
+        memberCount
+        leader {
+          id
+          firstName
+          lastName
+          fullName
+        }
+        services {
+          created_at
+          attendance
+          income
+          week
+          serviceDate {
+            date
+          }
+        }
+
+        componentServiceAggregate {
+          week
+          attendance
+          income
+        }
+      }
+      leadsSonta {
+        id
+        name
+        stream
+      }
+      leadsMinistry {
+        id
+      }
+    }
+  }
+`
+
+export const SERVANTS_ADMIN = gql`
+  query servantIsAdmin($id: ID!) {
+    members(where: { id: $id }) {
+      id
 
       # The person is an admin
       isAdminForTown {
@@ -181,142 +304,6 @@ export const SERVANTS_DASHBOARD = gql`
           attendance
           income
         }
-      }
-
-      isBishopForCampus {
-        id
-        name
-        stream
-      }
-      isBishopForTown {
-        id
-        name
-        stream
-      }
-
-      # The person leads in the Bacenta side
-      leadsBacenta {
-        id
-        name
-        stream
-        memberCount
-        services {
-          created_at
-          attendance
-          income
-          week
-          serviceDate {
-            date
-          }
-        }
-      }
-      leadsCentre {
-        id
-        name
-        stream
-        memberCount
-        campus {
-          id
-          bishop {
-            id
-          }
-        }
-        town {
-          id
-          bishop {
-            id
-          }
-        }
-        memberCount
-        services {
-          created_at
-          attendance
-          income
-          week
-          serviceDate {
-            date
-          }
-        }
-
-        bacentaServiceAggregate {
-          week
-          attendance
-          income
-        }
-      }
-      leadsTown {
-        id
-        name
-        stream
-        memberCount
-        leader {
-          id
-          firstName
-          lastName
-          fullName
-        }
-        services {
-          created_at
-          attendance
-          income
-          week
-          serviceDate {
-            date
-          }
-        }
-
-        componentServiceAggregate {
-          week
-          attendance
-          income
-        }
-      }
-      leadsCampus {
-        id
-        name
-        stream
-        memberCount
-        leader {
-          id
-          firstName
-          lastName
-          fullName
-        }
-        services {
-          created_at
-          attendance
-          income
-          week
-          serviceDate {
-            date
-          }
-        }
-
-        componentServiceAggregate {
-          week
-          attendance
-          income
-        }
-      }
-      leadsSonta {
-        id
-        name
-        stream
-        campus {
-          id
-          bishop {
-            id
-          }
-        }
-        town {
-          id
-          bishop {
-            id
-          }
-        }
-      }
-      leadsMinistry {
-        id
       }
     }
   }

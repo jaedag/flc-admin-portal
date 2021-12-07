@@ -45,13 +45,7 @@ export const GET_FEDERAL_MEMBERS = gql`
       leadsCampus {
         name
       }
-      isBishopForTown {
-        name
-      }
-      isBishopForCampus {
-        id
-        name
-      }
+
       isAdminForCouncil {
         id
         name
@@ -120,14 +114,7 @@ export const GET_FEDERAL_PASTORS = gql`
         id
         name
       }
-      isBishopForTown {
-        id
-        name
-      }
-      isBishopForCampus {
-        id
-        name
-      }
+
       isAdminForCouncil {
         id
         name
@@ -145,7 +132,7 @@ export const GET_FEDERAL_PASTORS = gql`
 `
 
 export const GET_COUNCIL_MEMBERS = gql`
-  query($id: ID) {
+  query ($id: ID) {
     councils(where: { id: $id }) {
       id
       name
@@ -201,14 +188,7 @@ export const GET_COUNCIL_MEMBERS = gql`
           id
           name
         }
-        isBishopForTown {
-          id
-          name
-        }
-        isBishopForCampus {
-          id
-          name
-        }
+
         isAdminForCouncil {
           id
           name
@@ -227,7 +207,7 @@ export const GET_COUNCIL_MEMBERS = gql`
 `
 
 export const GET_CAMPUSTOWN_MEMBERS = gql`
-  query($id: ID) {
+  query ($id: ID) {
     towns(where: { id: $id }) {
       id
       name
@@ -279,14 +259,7 @@ export const GET_CAMPUSTOWN_MEMBERS = gql`
           id
           name
         }
-        isBishopForTown {
-          id
-          name
-        }
-        isBishopForCampus {
-          id
-          name
-        }
+
         isAdminForCouncil {
           id
           name
@@ -353,14 +326,7 @@ export const GET_CAMPUSTOWN_MEMBERS = gql`
           id
           name
         }
-        isBishopForTown {
-          id
-          name
-        }
-        isBishopForCampus {
-          id
-          name
-        }
+
         isAdminForCouncil {
           id
           name
@@ -379,7 +345,7 @@ export const GET_CAMPUSTOWN_MEMBERS = gql`
 `
 
 export const GET_CENTRE_MEMBERS = gql`
-  query($id: ID) {
+  query ($id: ID) {
     centres(where: { id: $id }) {
       id
       name
@@ -424,13 +390,7 @@ export const GET_CENTRE_MEMBERS = gql`
         leadsCampus {
           name
         }
-        isBishopForTown {
-          name
-        }
-        isBishopForCampus {
-          id
-          name
-        }
+
         isAdminForCouncil {
           id
           name
@@ -449,7 +409,7 @@ export const GET_CENTRE_MEMBERS = gql`
 `
 
 export const GET_BACENTA_MEMBERS = gql`
-  query($id: ID) {
+  query ($id: ID) {
     bacentas(where: { id: $id }) {
       id
       name
@@ -502,14 +462,7 @@ export const GET_BACENTA_MEMBERS = gql`
           id
           name
         }
-        isBishopForTown {
-          id
-          name
-        }
-        isBishopForCampus {
-          id
-          name
-        }
+
         isAdminForCouncil {
           id
           name
@@ -528,7 +481,7 @@ export const GET_BACENTA_MEMBERS = gql`
 `
 
 export const GET_SONTA_MEMBERS = gql`
-  query($id: ID) {
+  query ($id: ID) {
     sontas(where: { id: $id }) {
       id
       name
@@ -573,13 +526,7 @@ export const GET_SONTA_MEMBERS = gql`
         leadsCampus {
           name
         }
-        isBishopForTown {
-          name
-        }
-        isBishopForCampus {
-          id
-          name
-        }
+
         isAdminForCouncil {
           id
           name

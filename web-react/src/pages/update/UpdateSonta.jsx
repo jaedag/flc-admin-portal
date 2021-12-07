@@ -11,14 +11,8 @@ import SontaForm from 'components/reusable-forms/SontaForm'
 import { throwErrorMsg } from 'global-utils'
 
 const UpdateSonta = () => {
-  const {
-    church,
-    sontaId,
-    townId,
-    setTownId,
-    setCampusId,
-    campusId,
-  } = useContext(ChurchContext)
+  const { church, sontaId, townId, setTownId, setCampusId, campusId } =
+    useContext(ChurchContext)
 
   const { data: sontaData, loading: sontaLoading } = useQuery(DISPLAY_SONTA, {
     variables: { id: sontaId },

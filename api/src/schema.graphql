@@ -65,8 +65,7 @@ type Member {
   leadsBasonta: [Basonta] @relationship(type: "LEADS", direction: OUT)
   leadsTown: [Town] @relationship(type: "LEADS", direction: OUT)
   leadsCampus: [Campus] @relationship(type: "LEADS", direction: OUT)
-  isBishopForTown: [Town] @relationship(type: "HAS", direction: OUT)
-  isBishopForCampus: [Campus] @relationship(type: "HAS", direction: OUT)
+  leadsCouncil: [Council] @relationship(type: "LEADS", direction: OUT)
   isAdminForCouncil: [Council]
     @relationship(type: "IS_ADMIN_FOR", direction: OUT) #@neo4j_ignore
   isAdminForCampus: [Campus] @relationship(type: "IS_ADMIN_FOR", direction: OUT)
@@ -782,8 +781,6 @@ type Query {
     )
     @auth(rules: [{ isAuthenticated: true }])
 
-  member(id: ID!): Member
-    @cypher(statement: "MATCH (member:Member {id:$id}) RETURN member LIMIT 1")
   memberByEmail(email: String!): Member
     @cypher(
       statement: "MATCH (member:Member {email:$email}) RETURN member LIMIT 1"
@@ -794,7 +791,7 @@ type Query {
     @cypher(
       statement: """
       MATCH (member:Member {id:$id})
-      MATCH (member)-[:LEADS]-(bacentas:Bacenta)
+      MATCH (member)-[:LEADS]->(bacentas:Bacenta)
       RETURN COUNT(bacentas)
       """
     )
@@ -802,7 +799,7 @@ type Query {
     @cypher(
       statement: """
       MATCH (member:Member {id:$id})
-      MATCH (member)-[:LEADS]-(centres:Centre)
+      MATCH (member)-[:LEADS]->(centres:Centre)
       RETURN COUNT(centres)
       """
     )
@@ -810,7 +807,7 @@ type Query {
     @cypher(
       statement: """
       MATCH (member:Member {id:$id})
-      MATCH (member)-[:LEADS|IS_ADMIN_FOR]-(constituency) WHERE constituency:Campus OR constituency:Town
+      MATCH (member)-[:LEADS|IS_ADMIN_FOR]->(constituency) WHERE constituency:Campus OR constituency:Town
       RETURN COUNT(DISTINCT constituency)
       """
     )
@@ -1995,26 +1992,25 @@ type Mutation {
     )
 
   #Set Bacenta to be 'OnVacation
-  SetBacentaOnVacation(bacentaId: ID!): Bacenta
+  SetVacationBacenta(bacentaId: ID!): Bacenta
     @cypher(
       statement: """
       MATCH (bacenta:Bacenta {id:$bacentaId})
-      OPTIONAL MATCH (bacenta)-[:HAS]-(centre)
-      MATCH (admin:Member {auth_id: $auth.jwt.sub})
-
+     
       CREATE (log:HistoryLog {id:apoc.create.uuid()})
         SET log.timeStamp = datetime(),
-        log.historyRecord = bacenta.name + ' Bacenta was closed down under ' + centre.name +' Centre'
+        log.historyRecord = bacenta.name + ' Bacenta went on vacation mode'
 
-
+      WITH log,bacenta
+      MATCH (admin:Member {auth_id: $auth.jwt.sub})
       MERGE (date:TimeGraph {date:date()})
       MERGE (log)-[:LOGGED_BY]->(admin)
       MERGE (log)-[:RECORDED_ON]->(date)
       MERGE (bacenta)-[:HAS_HISTORY]->(log)
       MERGE (centre)-[:HAS_HISTORY]->(log)
 
-      SET bacenta:ClosedBacenta
-      REMOVE bacenta:Bacenta
+      SET bacenta:Vacation
+      REMOVE bacenta:ActiveBacenta
 
       RETURN bacenta
       """

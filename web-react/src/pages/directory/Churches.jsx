@@ -36,7 +36,9 @@ const Churches = () => {
                 iconCaption={job.church.__typename}
                 onClick={() => {
                   job.clickCard()
-                  history.push(job.link)
+                  history.push(
+                    `/${job.church.__typename.toLowerCase()}/displaydetails`
+                  )
                 }}
                 color="churches"
               />

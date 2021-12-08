@@ -56,7 +56,7 @@ const DisplayChurchDetails = (props) => {
         variables: {
           townId: townId,
           newAdminId: values.adminSelect,
-          oldAdminId: initialValues.adminSelect,
+          oldAdminId: initialValues.adminSelect ?? 'no-old-admin',
         },
       })
         .then(() => {
@@ -70,7 +70,7 @@ const DisplayChurchDetails = (props) => {
         variables: {
           campusId: campusId,
           newAdminId: values.adminSelect,
-          oldAdminId: initialValues.adminSelect,
+          oldAdminId: initialValues.adminSelect ?? 'no-old-admin',
         },
       })
         .then(() => {
@@ -210,13 +210,13 @@ const DisplayChurchDetails = (props) => {
             />
           </Col>
 
-          <Col className="col-auto">
+          <Col className={!props.loading && `col-auto`}>
             <DetailsCard
               onClick={() =>
                 history.push(`/${props.churchType.toLowerCase()}/members`)
               }
               heading="Members"
-              detail={props.membership || '0'}
+              detail={!props.loading && (props.membership || '0')}
             />
           </Col>
         </Row>

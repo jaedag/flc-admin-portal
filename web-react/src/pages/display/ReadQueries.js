@@ -301,37 +301,18 @@ export const DISPLAY_BACENTA = gql`
         bacenta {
           id
           name
-          town {
-            id
-            bishop {
-              id
-            }
-          }
-          campus {
-            id
-            bishop {
-              id
-            }
-          }
+          stream
         }
       }
       town {
         id
         name
-        bishop {
-          id
-          firstName
-          lastName
-        }
+        stream
       }
       campus {
         id
         name
-        bishop {
-          id
-          firstName
-          lastName
-        }
+        stream
       }
       leader {
         id
@@ -548,6 +529,7 @@ export const DISPLAY_COUNCIL = gql`
     councils(where: { id: $id }, options: { limit: 1 }) {
       id
       name
+      stream
       constituencyCount
       bacentaCount
       fellowshipCount
@@ -556,16 +538,12 @@ export const DISPLAY_COUNCIL = gql`
       towns(options: { limit: 5 }) {
         id
         name
-        bishop {
-          id
-        }
+        stream
       }
       campuses(options: { limit: 5 }) {
         id
         name
-        bishop {
-          id
-        }
+        stream
       }
 
       admin {

@@ -38,10 +38,10 @@ const Navigator = () => {
   const [memberByEmail] = useLazyQuery(GET_LOGGED_IN_USER, {
     onCompleted: (data) => {
       let church
-      if (data.memberByEmail.fellowship.bacenta?.town) {
+      if (data.memberByEmail.fellowship.bacenta?.town?.id) {
         church = 'town'
       }
-      if (data.memberByEmail.fellowship.bacenta?.campus) {
+      if (data.memberByEmail.fellowship.bacenta?.campus?.id) {
         church = 'campus'
       }
 

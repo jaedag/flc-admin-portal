@@ -229,6 +229,13 @@ type HistoryLog @auth(rules: [{ isAuthenticated: true }]) {
 type Constituency {
   id: ID @id
   name: String
+  stream: String
+    @cypher(
+      statement: """
+      MATCH (this)<-[:HAS*2]-(stream:Stream)
+      RETURN DISTINCT toLower(stream.name)
+      """
+    )
   leader: Member @relationship(type: "LEADS", direction: IN)
   sontas: [Sonta] @relationship(type: "HAS_SONTA", direction: OUT)
   bacentas: [Bacenta] @relationship(type: "HAS", direction: OUT)

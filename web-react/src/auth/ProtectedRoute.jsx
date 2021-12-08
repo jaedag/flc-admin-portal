@@ -26,7 +26,7 @@ const ProtectedRoute = ({ component, roles, placeholder, ...args }) => {
     }
     // eslint-disable-next-line
   }, [
-    currentUser,
+    currentUser.council,
     church.setCouncilId,
     church.setTownId,
     church.setCampusId,

@@ -22,7 +22,7 @@ import { Col, Container, Row } from 'react-bootstrap'
 import LoadingScreen from 'components/base-component/LoadingScreen'
 import SubmitButton from 'components/formik-components/SubmitButton'
 
-function MemberForm({ initialValues, onSubmit, title, loading }) {
+function MemberForm({ initialValues, onSubmit, title, loading, update }) {
   const { councilId } = useContext(ChurchContext)
 
   const { data: ministriesData, loading: ministriesLoading } =
@@ -176,16 +176,19 @@ function MemberForm({ initialValues, onSubmit, title, loading }) {
                     </Col>
                   </div>
                   <div className="form-row justify-content-center">
-                    <Col sm={10}>
-                      <FormikControl
-                        label="Email Address*"
-                        className="form-control"
-                        control="input"
-                        name="email"
-                        placeholder="Enter Email Address"
-                        aria-describedby="emailHelp"
-                      />
-                    </Col>
+                    {update && (
+                      <Col sm={10}>
+                        <FormikControl
+                          label="Email Address*"
+                          className="form-control"
+                          control="input"
+                          name="email"
+                          placeholder="Enter Email Address"
+                          aria-describedby="emailHelp"
+                        />
+                      </Col>
+                    )}
+
                     <Col sm={10}>
                       <small htmlFor="dateofbirth" className="form-text ">
                         Date of Birth*{' '}

@@ -443,12 +443,6 @@ const PastorsAdmin = () => {
                     exact
                   />
                   <ProtectedRoute
-                    path="/services/centre"
-                    component={CentreJoint}
-                    placeholder
-                    exact
-                  />
-                  <ProtectedRoute
                     path="/services/campus"
                     component={ConstituencyJoint}
                     roles={['all']}

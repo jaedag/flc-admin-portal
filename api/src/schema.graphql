@@ -104,13 +104,14 @@ type Member {
     @relationship(type: "WAS_TREASURER_FOR", direction: OUT)
 }
 
-# extend type Member @auth(rules: [{ isAuthenticated: true }])
-# extend type Fellowship @auth(rules: [{ isAuthenticated: true }])
-# extend type Bacenta @auth(rules: [{ isAuthenticated: true }])
-# extend type Campus @auth(rules: [{ isAuthenticated: true }])
-# extend type Town @auth(rules: [{ isAuthenticated: true }])
-# extend type Sonta @auth(rules: [{ isAuthenticated: true }])
-# extend type Ministry @auth(rules: [{ isAuthenticated: true }])
+extend type Member @auth(rules: [{ isAuthenticated: true }])
+extend type Fellowship @auth(rules: [{ isAuthenticated: true }])
+extend type Bacenta @auth(rules: [{ isAuthenticated: true }])
+extend type Campus @auth(rules: [{ isAuthenticated: true }])
+extend type Town @auth(rules: [{ isAuthenticated: true }])
+extend type Council @auth(rules: [{ isAuthenticated: true }])
+extend type Sonta @auth(rules: [{ isAuthenticated: true }])
+extend type Ministry @auth(rules: [{ isAuthenticated: true }])
 
 type Gender @auth(rules: [{ isAuthenticated: true }]) {
   gender: String

@@ -245,22 +245,24 @@ const DisplayChurchDetails = (props) => {
           >
             View Trends
           </Button>
-          <Button
-            className={`btn-trends ${theme}`}
-            onClick={() => {
-              setCurrentUser({
-                ...currentUser,
-                currentChurch: {
-                  id: props.churchId,
-                  name: props.name,
-                  __typename: props.churchType,
-                },
-              })
-              history.push(`/services/${props.churchType.toLowerCase()}`)
-            }}
-          >
-            Service Forms
-          </Button>
+          {!props.churchType === 'Bacenta' && (
+            <Button
+              className={`btn-trends ${theme}`}
+              onClick={() => {
+                setCurrentUser({
+                  ...currentUser,
+                  currentChurch: {
+                    id: props.churchId,
+                    name: props.name,
+                    __typename: props.churchType,
+                  },
+                })
+                history.push(`/services/${props.churchType.toLowerCase()}`)
+              }}
+            >
+              Service Forms
+            </Button>
+          )}
         </div>
 
         {location?.latitude && (

@@ -176,7 +176,7 @@ function MemberForm({ initialValues, onSubmit, title, loading, update }) {
                     </Col>
                   </div>
                   <div className="form-row justify-content-center">
-                    {update && (
+                    {!update && (
                       <Col sm={10}>
                         <FormikControl
                           label="Email Address*"

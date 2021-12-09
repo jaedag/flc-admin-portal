@@ -17,9 +17,9 @@ const DetailsCouncil = () => {
   let breadcrumb = [council?.leader, council]
 
   const details = [
-    { title: 'Pastors', number: council?.pastorCount, link: '#' },
+    { title: 'Pastors', number: council?.pastorCount || 0, link: '#' },
     {
-      title: 'Bacenta',
+      title: 'Bacentas',
       number: council?.bacentaCount,
       link: `#`,
     },

@@ -154,102 +154,15 @@ const PastorsAdmin = () => {
   }
 
   const determineStream = (member) => {
-    //switch case for other church types
-    switch (member?.__typename) {
-      case 'Council':
-        setChurch({ church: member.stream, subChurch: 'bacenta' })
-        break
-      case 'Town':
-        setChurch({ church: member.stream, subChurch: 'bacenta' })
-        sessionStorage.setItem(
-          'church',
-          JSON.stringify({
-            church: member.stream,
-            subChurch: 'bacenta',
-          })
-        )
-
-        if (member.council?.id) {
-          setCouncilId(member.council?.id)
-          sessionStorage.setItem('councilId', member.council?.id)
-        }
-        break
-      case 'Campus':
-        setChurch({ church: 'campus', subChurch: 'bacenta' })
-        sessionStorage.setItem(
-          'church',
-          JSON.stringify({
-            church: 'campus',
-            subChurch: 'bacenta',
-          })
-        )
-
-        if (member.council?.id) {
-          setCouncilId(member.council?.id)
-          sessionStorage.setItem('councilId', member.council?.id)
-        }
-        break
-      case 'Bacenta':
-        setChurch({
-          church: member.campus ? 'campus' : 'town',
-          subChurch: 'bacenta',
-        })
-        sessionStorage.setItem(
-          'church',
-          JSON.stringify({
-            church: member.campus ? 'campus' : 'town',
-            subChurch: 'bacenta',
-          })
-        )
-
-        if (member.campus) {
-          setCouncilId(member?.campus.council?.id)
-          sessionStorage.setItem('councilId', member?.campus.council?.id)
-        }
-        if (member.town) {
-          setCouncilId(member?.town.council.id)
-          sessionStorage.setItem('councilId', member?.town.council.id)
-        }
-        break
-      case 'Fellowship':
-        setChurch({
-          church: member.bacenta?.stream,
-          subChurch: 'bacenta',
-        })
-        sessionStorage.setItem(
-          'church',
-          JSON.stringify({
-            church: member.bacenta?.stream,
-            subChurch: 'bacenta',
-          })
-        )
-
-        if (member.bacenta?.town?.council.id) {
-          setCouncilId(member.bacenta?.town?.council.id)
-          sessionStorage.setItem('councilId', member.bacenta?.town?.council.id)
-
-          if (member.bacenta?.campus?.council.id) {
-            setCouncilId(member.bacenta?.campus?.council.id)
-            sessionStorage.setItem(
-              'councilId',
-              member.bacenta?.campus?.council.id
-            )
-          }
-        }
-
-        break
-      default:
-    }
-
+    setChurch({ church: member.stream, subChurch: 'bacenta' })
+    sessionStorage.setItem(
+      'church',
+      JSON.stringify({
+        church: member.stream,
+        subChurch: 'bacenta',
+      })
+    )
     if (member?.fellowship?.bacenta?.town) {
-      setChurch({ church: 'town', subChurch: 'bacenta' })
-      sessionStorage.setItem(
-        'church',
-        JSON.stringify({
-          church: 'town',
-          subChurch: 'bacenta',
-        })
-      )
       setCouncilId(member.fellowship.bacenta.town.council.id)
       sessionStorage.setItem(
         'councilId',

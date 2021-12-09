@@ -22,7 +22,7 @@ const UpdateMember = () => {
     variables: { id: memberId },
   })
   const [isLoading, setIsLoading] = useState(false)
-  const member = memberData?.member
+  const member = memberData?.members[0]
 
   const initialValues = {
     firstName: member?.firstName ?? '',
@@ -129,6 +129,7 @@ const UpdateMember = () => {
       initialValues={initialValues}
       onSubmit={onSubmit}
       loading={memberLoading || isLoading}
+      update
     />
   )
 }

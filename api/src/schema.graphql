@@ -366,21 +366,21 @@ type Council {
   members: [Member]
     @cypher(
       statement: """
-      MATCH (this)-[:HAS*4]->(:Fellowship)<-[:BELONGS_TO]-(members:Member)
+      MATCH (this)-[:HAS*3]->(:Fellowship)<-[:BELONGS_TO]-(members:Member)
       RETURN DISTINCT members
       """
     )
   memberCount: Int
     @cypher(
       statement: """
-      MATCH (this)-[:HAS*4]->(:Fellowship)<-[:BELONGS_TO]-(members:Member)
+      MATCH (this)-[:HAS*3]->(:Fellowship)<-[:BELONGS_TO]-(members:Member)
       RETURN COUNT(DISTINCT members)
       """
     )
   pastorCount: Int
     @cypher(
       statement: """
-      MATCH (this)-[:HAS*4]->(:Fellowship)<-[:BELONGS_TO]-(pastors:Member)-[:HAS_TITLE]->(:Title)
+      MATCH (this)-[:HAS*3]->(:Fellowship)<-[:BELONGS_TO]-(pastors:Member)-[:HAS_TITLE]->(:Title)
       RETURN COUNT(DISTINCT pastors)
       """
     )
@@ -424,14 +424,14 @@ type Campus {
   members: [Member]
     @cypher(
       statement: """
-      MATCH (this)-[:HAS*3]->(fellowship:Fellowship)<-[:BELONGS_TO]-(members:Member)
+      MATCH (this)-[:HAS*2]->(fellowship:Fellowship)<-[:BELONGS_TO]-(members:Member)
       RETURN DISTINCT members
       """
     )
   memberCount: Int
     @cypher(
       statement: """
-      MATCH (this)-[:HAS*3]->(fellowship:Fellowship)<-[:BELONGS_TO]-(members:Member)
+      MATCH (this)-[:HAS*2]->(fellowship:Fellowship)<-[:BELONGS_TO]-(members:Member)
       RETURN COUNT(DISTINCT members)
       """
     )
@@ -475,14 +475,14 @@ type Town {
   members: [Member]
     @cypher(
       statement: """
-      MATCH (this)-[:HAS*3]->(fellowship:Fellowship)<-[:BELONGS_TO]-(members:Member)
+      MATCH (this)-[:HAS*2]->(fellowship:Fellowship)<-[:BELONGS_TO]-(members:Member)
       RETURN DISTINCT members
       """
     )
   memberCount: Int
     @cypher(
       statement: """
-      MATCH (this)-[:HAS*3]->(fellowship:Fellowship)<-[:BELONGS_TO]-(members:Member)
+      MATCH (this)-[:HAS*2]->(fellowship:Fellowship)<-[:BELONGS_TO]-(members:Member)
       RETURN COUNT(DISTINCT members)
       """
     )

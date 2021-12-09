@@ -221,6 +221,7 @@ export const GET_COUNCIL_CAMPUSES = gql`
       campuses {
         name
         id
+        stream
         leader {
           id
           firstName
@@ -267,6 +268,7 @@ export const GET_COUNCIL_TOWNS = gql`
       towns {
         name
         id
+        stream
         leader {
           id
           firstName

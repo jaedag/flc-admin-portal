@@ -176,24 +176,7 @@ export const DISPLAY_FELLOWSHIP = gql`
       bacenta {
         id
         name
-        town {
-          id
-          name
-          bishop {
-            id
-            firstName
-            lastName
-          }
-        }
-        campus {
-          id
-          name
-          bishop {
-            id
-            firstName
-            lastName
-          }
-        }
+        stream
       }
       leader {
         id

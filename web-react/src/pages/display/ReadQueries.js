@@ -166,6 +166,7 @@ export const DISPLAY_FELLOWSHIP = gql`
       stream
       bankingCode
       name
+      memberCount
       location {
         longitude
         latitude
@@ -176,7 +177,10 @@ export const DISPLAY_FELLOWSHIP = gql`
       bacenta {
         id
         name
-        stream
+        town {
+          id
+          name
+        }
       }
       leader {
         id
@@ -184,15 +188,18 @@ export const DISPLAY_FELLOWSHIP = gql`
         lastName
         fullName
         pictureUrl
-        whatsappNumber
       }
-      serviceLogs(options: { limit: 3 }) {
-        id
-        serviceRecords(options: { limit: 3 }) {
-          week
-        }
+    }
+  }
+`
+export const DISPLAY_FELLOWSHIP_HISTORY = gql`
+  query ($id: ID) {
+    fellowships(where: { id: $id }, options: { limit: 1 }) {
+      id
+      services(limit: 5) {
+        week
       }
-      history(options: { limit: 10 }) {
+      history(options: { limit: 5 }) {
         id
         timeStamp
         created_at {
@@ -206,7 +213,6 @@ export const DISPLAY_FELLOWSHIP = gql`
         }
         historyRecord
       }
-      memberCount
     }
   }
 `

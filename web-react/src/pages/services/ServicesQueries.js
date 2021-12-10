@@ -6,7 +6,7 @@ export const BANKING_SLIP_QUERIES = gql`
       id
       bankingCode
       name
-      services {
+      services(limit: 12) {
         id
         noServiceReason
         created_at

@@ -11,7 +11,7 @@ export const FELLOWSHIP_REPORT = gql`
         lastName
         fullName
       }
-      services {
+      services(limit: 4) {
         id
         created_at
         attendance
@@ -37,7 +37,7 @@ export const BACENTA_REPORT = gql`
         lastName
         fullName
       }
-      services {
+      services(limit: 4) {
         created_at
         attendance
         income
@@ -68,7 +68,7 @@ export const SONTA_REPORT = gql`
         lastName
         fullName
       }
-      services {
+      services(limit: 4) {
         created_at
         attendance
         income
@@ -94,7 +94,7 @@ export const CAMPUS_REPORT = gql`
         lastName
         fullName
       }
-      services {
+      services(limit: 4) {
         created_at
         attendance
         income
@@ -125,7 +125,7 @@ export const TOWN_REPORT = gql`
         lastName
         fullName
       }
-      services {
+      services(limit: 4) {
         created_at
         attendance
         income
@@ -155,7 +155,7 @@ export const COUNCIL_REPORT = gql`
         lastName
         fullName
       }
-      services {
+      services(limit: 4) {
         created_at
         attendance
         income

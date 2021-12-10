@@ -100,7 +100,7 @@ const ServantsChurchList = () => {
   getServantChurches(servant)
 
   return (
-    <BaseComponent loading={loading} error={error} data={data}>
+    <BaseComponent loading={loading} error={error} data={data} placeholder>
       <Container className="mt-4">
         <HeadingPrimary>{plural(churches[0]?.typename)}</HeadingPrimary>
 

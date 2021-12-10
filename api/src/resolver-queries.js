@@ -515,7 +515,7 @@ MERGE (fellowship)-[:HAS_HISTORY]->(log)
 MERGE (bacenta)-[:HAS_HISTORY]->(log)
 
 SET fellowship:ClosedFellowship
-REMOVE fellowship:Fellowship
+REMOVE fellowship:Fellowship, REMOVE fellowship:ActiveFellowship
 
 RETURN bacenta {
   .id, .name, 

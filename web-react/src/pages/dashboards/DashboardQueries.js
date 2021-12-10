@@ -105,7 +105,7 @@ export const SERVANTS_DASHBOARD = gql`
         stream
         memberCount
 
-        services {
+        services(limit: 4) {
           created_at
           attendance
           income
@@ -121,7 +121,7 @@ export const SERVANTS_DASHBOARD = gql`
         stream
         memberCount
 
-        services {
+        services(limit: 4) {
           created_at
           attendance
           income
@@ -163,7 +163,7 @@ export const SERVANTS_LEADERSHIP = gql`
           lastName
           fullName
         }
-        services {
+        services(limit: 4) {
           created_at
           attendance
           income
@@ -190,7 +190,7 @@ export const SERVANTS_LEADERSHIP = gql`
           lastName
           fullName
         }
-        services {
+        services(limit: 4) {
           created_at
           attendance
           income
@@ -235,7 +235,7 @@ export const SERVANTS_ADMIN = gql`
           lastName
           fullName
         }
-        services {
+        services(limit: 4) {
           created_at
           attendance
           income
@@ -262,7 +262,7 @@ export const SERVANTS_ADMIN = gql`
           lastName
           fullName
         }
-        services {
+        services(limit: 4) {
           id
           created_at
           attendance
@@ -290,7 +290,7 @@ export const SERVANTS_ADMIN = gql`
           lastName
           fullName
         }
-        services {
+        services(limit: 4) {
           created_at
           attendance
           income

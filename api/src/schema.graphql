@@ -319,8 +319,8 @@ type Constituency {
     @cypher(
       statement: """
       MATCH (this)-[:HAS*2]->(fellowships:Fellowship)
-      WHERE NOT EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week AND record.bankingSlip IS NOT NULL
+      WHERE EXISTS {
+        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week AND record.bankingSlip IS NULL
         }
       RETURN fellowships
       """

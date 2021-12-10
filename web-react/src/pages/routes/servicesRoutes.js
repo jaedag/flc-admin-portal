@@ -19,6 +19,7 @@ import BacentaJoint from 'pages/services/BacentaJoint'
 import BankingSlipSubmission from 'pages/services/BankingSlipSubmission'
 import BankingSlipView from 'pages/services/BankingSlipView'
 import ConstituencyJoint from 'pages/services/ConstituencyJoint'
+import BankingDefaulters from 'pages/services/defaulters/BankingDefaulters'
 import Defaulters from 'pages/services/defaulters/Defaulters'
 import FormDefaulters from 'pages/services/defaulters/FormDefaulters'
 import Fellowship from 'pages/services/Fellowship'
@@ -334,6 +335,20 @@ export const reports = [
   {
     path: '/services/form-defaulters',
     component: FormDefaulters,
+    roles: [
+      'adminFederal',
+      'adminCouncil',
+      'adminCampus',
+      'leaderCampus',
+      'adminTown',
+      'leaderTown',
+    ],
+    placeholder: true,
+    exact: true,
+  },
+  {
+    path: '/services/banking-defaulters',
+    component: BankingDefaulters,
     roles: [
       'adminFederal',
       'adminCouncil',

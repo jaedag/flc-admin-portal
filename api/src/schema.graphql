@@ -585,7 +585,7 @@ type Fellowship {
     @cypher(
       statement: """
       MATCH (this)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(services:ServiceRecord)
-      RETURN services
+      RETURN services LIMIT 8
       """
     )
   labels: [String]

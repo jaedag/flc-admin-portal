@@ -123,22 +123,22 @@ const ServiceForm = ({
                     <FormikControl
                       control="input"
                       name="cediIncome"
-                      label="Income (in Cedis)"
+                      label="Income (in Cedis)*"
                       className="form-control"
                     />
                     <FormikControl
                       control="input"
                       name="foreignCurrency"
-                      label="Foreign Currency (if any)"
+                      label="Foreign Currency (if any)*"
                       className="form-control"
                     />
                     <FormikControl
                       control="input"
                       name="numberOfTithers"
-                      label="Number of Tithers"
+                      label="Number of Tithers*"
                       className="form-control"
                     />
-                    <small className="label">Treasurers</small>
+                    <small className="label">Treasurers (minimum of 2)</small>
                     <FieldArray name="treasurers">
                       {(fieldArrayProps) => {
                         const { push, remove, form } = fieldArrayProps
@@ -186,7 +186,7 @@ const ServiceForm = ({
                       }}
                     </FieldArray>
                     <Col className="my-2 mt-5">
-                      <small>Upload Treasurer Selfie</small>
+                      <small>Upload Treasurer Selfie*</small>
                       <FormikControl
                         control="imageUpload"
                         name="treasurerSelfie"
@@ -200,7 +200,7 @@ const ServiceForm = ({
                     </Col>
                     <Col className="my-2">
                       <small className="mb-3">
-                        Upload a Picture of Your Service
+                        Upload a Picture of Your Service*
                       </small>
                       <FormikControl
                         control="imageUpload"

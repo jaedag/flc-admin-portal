@@ -48,6 +48,7 @@ const Defaulters = () => {
       title: 'Have Not Banked',
       data: constituency?.bankingDefaultersThisWeekCount,
       color: 'bad',
+      link: '/services/banking-defaulters',
     },
   ]
   return (

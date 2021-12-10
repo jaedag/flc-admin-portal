@@ -1,3 +1,4 @@
+import RoleView from 'auth/RoleView'
 import MenuButton from 'components/buttons/MenuButton'
 import PlaceholderCustom from 'components/Placeholder'
 import { MemberContext } from 'contexts/MemberContext'
@@ -50,13 +51,18 @@ const ServicesChurchList = () => {
               <MenuButton color="churches" />
             </>
           )}
-          <MenuButton
-            title="Defaulters"
-            color="danger"
-            iconComponent={EmojiFrown}
-            onClick={() => history.push('/services/defaulters')}
-            noCaption
-          />
+
+          <RoleView
+            roles={['adminTown', 'leaderTown', 'adminCampus', 'leaderCampus']}
+          >
+            <MenuButton
+              title="Defaulters"
+              color="danger"
+              iconComponent={EmojiFrown}
+              onClick={() => history.push('/services/defaulters')}
+              noCaption
+            />
+          </RoleView>
         </div>
       </Container>
     </div>

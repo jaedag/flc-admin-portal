@@ -34,9 +34,30 @@ export const CONSTITUENCY_FORM_DEFAULTERS_LIST = gql`
           day
         }
       }
-      servicesThisWeek {
+    }
+  }
+`
+
+export const CONSTITUENCY_BANKING_DEFAULTERS_LIST = gql`
+  query bankingDefaulters($id: ID) {
+    constituencies(where: { id: $id }) {
+      id
+      name
+      bankingDefaultersThisWeekCount
+      bankingDefaultersThisWeek {
         id
         name
+        leader {
+          id
+          firstName
+          lastName
+          fullName
+          phoneNumber
+          whatsappNumber
+        }
+        meetingDay {
+          day
+        }
       }
     }
   }

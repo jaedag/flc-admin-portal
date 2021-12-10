@@ -4,6 +4,7 @@ import { MemberContext } from 'contexts/MemberContext'
 import { parseMemberCount } from 'global-utils'
 import React, { useContext } from 'react'
 import { Container } from 'react-bootstrap'
+import { EmojiFrown } from 'react-bootstrap-icons'
 import { useHistory } from 'react-router'
 import MemberIcon from '../../assets/people-svgrepo-com-2.svg'
 
@@ -49,6 +50,13 @@ const ServicesChurchList = () => {
               <MenuButton color="churches" />
             </>
           )}
+          <MenuButton
+            title="Defaulters"
+            color="danger"
+            iconComponent={EmojiFrown}
+            onClick={() => history.push('/services/defaulters')}
+            noCaption
+          />
         </div>
       </Container>
     </div>

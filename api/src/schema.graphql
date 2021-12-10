@@ -104,14 +104,14 @@ type Member {
     @relationship(type: "WAS_TREASURER_FOR", direction: OUT)
 }
 
-extend type Member @auth(rules: [{ isAuthenticated: true }])
-extend type Fellowship @auth(rules: [{ isAuthenticated: true }])
-extend type Bacenta @auth(rules: [{ isAuthenticated: true }])
-extend type Campus @auth(rules: [{ isAuthenticated: true }])
-extend type Town @auth(rules: [{ isAuthenticated: true }])
-extend type Council @auth(rules: [{ isAuthenticated: true }])
-extend type Sonta @auth(rules: [{ isAuthenticated: true }])
-extend type Ministry @auth(rules: [{ isAuthenticated: true }])
+# extend type Member @auth(rules: [{ isAuthenticated: true }])
+# extend type Fellowship @auth(rules: [{ isAuthenticated: true }])
+# extend type Bacenta @auth(rules: [{ isAuthenticated: true }])
+# extend type Campus @auth(rules: [{ isAuthenticated: true }])
+# extend type Town @auth(rules: [{ isAuthenticated: true }])
+# extend type Council @auth(rules: [{ isAuthenticated: true }])
+# extend type Sonta @auth(rules: [{ isAuthenticated: true }])
+# extend type Ministry @auth(rules: [{ isAuthenticated: true }])
 
 type Gender @auth(rules: [{ isAuthenticated: true }]) {
   gender: String
@@ -270,11 +270,11 @@ type GatheringService {
       """
     )
   admin: Member @relationship(type: "IS_ADMIN_FOR", direction: IN)
-  services: [ServiceRecord]
+  services(limit: Int!): [ServiceRecord]
     @cypher(
       statement: """
       MATCH (this)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(services:ServiceRecord)
-      RETURN services
+      RETURN services LIMIT $limit
       """
     )
 }
@@ -336,11 +336,11 @@ type Stream {
   serviceRecord: [ServiceRecord]
     @relationship(type: "HAS_RECORD", direction: OUT)
   serviceLogs: [ServiceLog] @relationship(type: "HAS_HISTORY", direction: OUT)
-  services: [ServiceRecord]
+  services(limit: Int!): [ServiceRecord]
     @cypher(
       statement: """
       MATCH (this)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(services:ServiceRecord)
-      RETURN services
+      RETURN services LIMIT $limit
       """
     )
   componentServiceAggregate: [ComponentServiceAggregate] @ignore
@@ -402,11 +402,11 @@ type Council {
   serviceRecord: [ServiceRecord]
     @relationship(type: "HAS_RECORD", direction: OUT)
   serviceLogs: [ServiceLog] @relationship(type: "HAS_HISTORY", direction: OUT)
-  services: [ServiceRecord]
+  services(limit: Int!): [ServiceRecord]
     @cypher(
       statement: """
       MATCH (this)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(services:ServiceRecord)
-      RETURN services
+      RETURN services LIMIT $limit
       """
     )
   componentServiceAggregate: [ComponentServiceAggregate] @ignore
@@ -453,11 +453,11 @@ type Campus {
   serviceRecord: [ServiceRecord]
     @relationship(type: "HAS_RECORD", direction: OUT)
   serviceLogs: [ServiceLog] @relationship(type: "HAS_HISTORY", direction: OUT)
-  services: [ServiceRecord]
+  services(limit: Int!): [ServiceRecord]
     @cypher(
       statement: """
       MATCH (this)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(services:ServiceRecord)
-      RETURN services
+      RETURN services LIMIT $limit
       """
     )
   componentServiceAggregate: [ComponentServiceAggregate] @ignore
@@ -504,11 +504,11 @@ type Town {
   serviceRecord: [ServiceRecord]
     @relationship(type: "HAS_RECORD", direction: OUT)
   serviceLogs: [ServiceLog] @relationship(type: "HAS_HISTORY", direction: OUT)
-  services: [ServiceRecord]
+  services(limit: Int!): [ServiceRecord]
     @cypher(
       statement: """
       MATCH (this)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(services:ServiceRecord)
-      RETURN services
+      RETURN services LIMIT $limit
       """
     )
   componentServiceAggregate: [ComponentServiceAggregate] @ignore
@@ -545,11 +545,11 @@ type Bacenta {
   campus: Campus @relationship(type: "HAS", direction: IN)
   history: [HistoryLog] @relationship(type: "HAS_HISTORY", direction: OUT)
   serviceLogs: [ServiceLog] @relationship(type: "HAS_HISTORY", direction: OUT)
-  services: [ServiceRecord]
+  services(limit: Int!): [ServiceRecord]
     @cypher(
       statement: """
       MATCH (this)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(services:ServiceRecord)
-      RETURN services
+      RETURN services LIMIT $limit
       """
     )
   fellowshipServiceAggregate: [ComponentServiceAggregate] @ignore
@@ -581,11 +581,11 @@ type Fellowship {
   meetingDay: ServiceDay @relationship(type: "MEETS_ON", direction: OUT)
   history: [HistoryLog] @relationship(type: "HAS_HISTORY", direction: OUT)
   serviceLogs: [ServiceLog] @relationship(type: "HAS_HISTORY", direction: OUT)
-  services: [ServiceRecord]
+  services(limit: Int!): [ServiceRecord]
     @cypher(
       statement: """
       MATCH (this)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(services:ServiceRecord)
-      RETURN services LIMIT 8
+      RETURN services LIMIT $limit
       """
     )
   labels: [String]

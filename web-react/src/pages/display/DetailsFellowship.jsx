@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { useQuery } from '@apollo/client'
 import DisplayChurchDetails from '../../components/DisplayChurchDetails/DisplayChurchDetails'
-import { DISPLAY_FELLOWSHIP } from './ReadQueries'
+import { DISPLAY_FELLOWSHIP, DISPLAY_FELLOWSHIP_HISTORY } from './ReadQueries'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import { throwErrorMsg } from 'global-utils'
 
@@ -15,8 +15,12 @@ const DetailsFellowship = () => {
   } = useQuery(DISPLAY_FELLOWSHIP, {
     variables: { id: fellowshipId },
   })
+  const { data: historyData } = useQuery(DISPLAY_FELLOWSHIP_HISTORY, {
+    variables: { id: fellowshipId },
+  })
   throwErrorMsg(fellowshipError)
   const fellowship = fellowshipData?.fellowships[0]
+  const history = historyData?.fellowships[0]
 
   let breadcrumb = [
     fellowship?.bacenta?.town?.council ?? fellowship?.bacenta?.campus?.council,
@@ -44,9 +48,7 @@ const DetailsFellowship = () => {
   }
 
   const last3Weeks = [getWeekNumber(), getWeekNumber() - 1, getWeekNumber() - 2]
-  const lastFilledServices = fellowship?.serviceLogs[0]?.serviceRecords.map(
-    (service) => service.week
-  )
+  const lastFilledServices = history?.services.map((service) => service.week)
 
   const check = last3Weeks?.map((week) => {
     if (lastFilledServices?.includes(week)) {
@@ -114,7 +116,7 @@ const DetailsFellowship = () => {
       ]}
       weekNumber={getWeekNumber()}
       last3Weeks={check}
-      history={fellowship?.history.length !== 0 && fellowship?.history}
+      history={history?.history.length && history?.history}
       breadcrumb={breadcrumb && breadcrumb}
     />
   )

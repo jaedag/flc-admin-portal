@@ -279,6 +279,7 @@ const PastorsAdmin = () => {
                       key={i}
                       path={route.path}
                       component={route.component}
+                      roles={route.roles}
                       placeholder={route.placeholder}
                       exact={route.exact}
                     />

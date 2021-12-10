@@ -10,7 +10,6 @@ const ProtectedRoute = ({ component, roles, placeholder, ...args }) => {
   const { currentUser } = useContext(MemberContext)
   const { isAuthenticated } = useAuth0()
   const church = useContext(ChurchContext)
-
   useEffect(() => {
     if (!currentUser.roles.includes('adminFederal')) {
       //if User is not a federal admin
@@ -36,7 +35,7 @@ const ProtectedRoute = ({ component, roles, placeholder, ...args }) => {
   if (isAuthorised(roles, currentUser.roles)) {
     //if the user has permission to access the route
     return <Route component={component} {...args} />
-  } else if (isAuthorised(['leaderFellowship'], currentUser.roles)) {
+  } else if (currentUser.roles.includes('leaderFellowship')) {
     //If the user does not have permission but is a Fellowship Leader
     church.setFellowshipId(currentUser.fellowship.id)
     return <Route component={component} {...args} />

@@ -19,6 +19,8 @@ import BacentaJoint from 'pages/services/BacentaJoint'
 import BankingSlipSubmission from 'pages/services/BankingSlipSubmission'
 import BankingSlipView from 'pages/services/BankingSlipView'
 import ConstituencyJoint from 'pages/services/ConstituencyJoint'
+import Defaulters from 'pages/services/defaulters/Defaulters'
+import FormDefaulters from 'pages/services/defaulters/FormDefaulters'
 import Fellowship from 'pages/services/Fellowship'
 import ServicesChurchList from 'pages/services/ServicesChurchList'
 import Services from 'pages/services/ServicesMenu'
@@ -311,6 +313,36 @@ export const reports = [
     component: CampusServiceDetails,
     roles: ['adminFederal', 'adminCouncil', 'adminCampus', 'leaderCampus'],
     placeholder: false,
+    exact: true,
+  },
+
+  //Defaulters Flow
+  {
+    path: '/services/defaulters',
+    component: Defaulters,
+    roles: [
+      'adminFederal',
+      'adminCouncil',
+      'adminCampus',
+      'leaderCampus',
+      'adminTown',
+      'leaderTown',
+    ],
+    placeholder: true,
+    exact: true,
+  },
+  {
+    path: '/services/form-defaulters',
+    component: FormDefaulters,
+    roles: [
+      'adminFederal',
+      'adminCouncil',
+      'adminCampus',
+      'leaderCampus',
+      'adminTown',
+      'leaderTown',
+    ],
+    placeholder: true,
     exact: true,
   },
 ]

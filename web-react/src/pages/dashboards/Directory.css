@@ -6,6 +6,9 @@
   color: var(--members-accent);
 }
 
+.danger.dark {
+  color: var(--bad);
+}
 .menu-buttons {
   min-height: 74px;
   font-size: 25px;

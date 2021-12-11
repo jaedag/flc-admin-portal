@@ -32,11 +32,19 @@ const Defaulters = () => {
   }, [currentUser.constituency])
 
   const constituency = data?.constituencies[0]
+
   const defaulters = [
     {
       title: 'Filled Forms',
       data: constituency?.servicesThisWeekCount,
       color: 'good',
+      link: '/services/filled-services',
+    },
+    {
+      title: 'Canc. Service',
+      data: constituency?.cancelledServicesThisWeekCount,
+      color: 'bad',
+      link: '/services/cancelled-services',
     },
     {
       title: 'Not Filled Forms',

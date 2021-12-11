@@ -6,14 +6,12 @@ import { MemberContext } from 'contexts/MemberContext'
 import { getWeekNumber, isAuthorised } from 'global-utils'
 import React, { useContext, useEffect } from 'react'
 import { Col, Container, Row } from 'react-bootstrap'
-import { CONSTITUENCY_FORM_DEFAULTERS_LIST } from './DefaultersQueries'
+import { CONSTITUENCY_SERVICES_LIST } from './DefaultersQueries'
 import DefaulterCard from './DefaulterCard'
 
-const FormDefaulters = () => {
+const ServicesThisWeek = () => {
   const { currentUser } = useContext(MemberContext)
-  const [formDefaulters, { data }] = useLazyQuery(
-    CONSTITUENCY_FORM_DEFAULTERS_LIST
-  )
+  const [servicesThisWeek, { data }] = useLazyQuery(CONSTITUENCY_SERVICES_LIST)
 
   useEffect(() => {
     if (
@@ -22,7 +20,7 @@ const FormDefaulters = () => {
         currentUser.roles
       )
     ) {
-      formDefaulters({
+      servicesThisWeek({
         variables: {
           id: currentUser.constituency,
         },
@@ -37,21 +35,19 @@ const FormDefaulters = () => {
       <HeadingPrimary
         loading={!constituency}
       >{`${constituency?.name} ${constituency?.__typename}`}</HeadingPrimary>
-      <HeadingSecondary>
-        {`Fellowships That Have Not Filled The Form This Week (Week ${getWeekNumber()})`}
-      </HeadingSecondary>
+      <HeadingSecondary>{`Services This Week (Week ${getWeekNumber()})`}</HeadingSecondary>
 
       <PlaceholderCustom
         as="h6"
-        loading={!constituency?.formDefaultersThisWeek.length}
+        loading={!constituency?.servicesThisWeek.length}
       >
-        <h6>{`Number of Defaulters: ${constituency?.formDefaultersThisWeek.length}`}</h6>
+        <h6>{`Number of Services: ${constituency?.servicesThisWeek.length}`}</h6>
       </PlaceholderCustom>
 
       <Row>
-        {constituency?.formDefaultersThisWeek.map((defaulter, i) => (
+        {constituency?.servicesThisWeek.map((service, i) => (
           <Col key={i} xs={12} className="mb-3">
-            <DefaulterCard defaulter={defaulter} />
+            <DefaulterCard defaulter={service} />
           </Col>
         ))}
       </Row>
@@ -59,4 +55,4 @@ const FormDefaulters = () => {
   )
 }
 
-export default FormDefaulters
+export default ServicesThisWeek

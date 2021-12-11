@@ -333,3 +333,17 @@ export const getChurchCount = (servant) => {
 
   return churchesCount
 }
+
+export const getWeekNumber = (date) => {
+  const currentdate = date ? new Date(date) : new Date()
+  const oneJan = new Date(currentdate.getFullYear(), 0, 1)
+  const adjustedForMonday = 8 - oneJan.getDay() //Checking the number of days till Monday when the week starts
+  oneJan.setDate(oneJan.getDate() + adjustedForMonday)
+  const numberOfDays = Math.floor(
+    (currentdate - oneJan) / (24 * 60 * 60 * 1000)
+  )
+
+  const result = Math.ceil(numberOfDays / 7)
+
+  return result
+}

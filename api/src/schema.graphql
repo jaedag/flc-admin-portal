@@ -298,7 +298,7 @@ type Constituency {
   formDefaultersThisWeek: [Fellowship]
     @cypher(
       statement: """
-      MATCH (this)-[:HAS*2]->(fellowships:Fellowship)
+      MATCH (this)-[:HAS*2]->(fellowships:ActiveFellowship)
       WHERE NOT EXISTS {
         MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(services:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week
         }
@@ -308,7 +308,7 @@ type Constituency {
   formDefaultersThisWeekCount: Int
     @cypher(
       statement: """
-      MATCH (this)-[:HAS*2]->(fellowships:Fellowship)
+      MATCH (this)-[:HAS*2]->(fellowships:ActiveFellowship)
       WHERE NOT EXISTS {
         MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(services:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week
         }
@@ -318,9 +318,9 @@ type Constituency {
   bankingDefaultersThisWeek: [Fellowship]
     @cypher(
       statement: """
-      MATCH (this)-[:HAS*2]->(fellowships:Fellowship)
+      MATCH (this)-[:HAS*2]->(fellowships:ActiveFellowship)
       WHERE EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week AND record.bankingSlip IS NULL
+        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week AND record.noServiceReason IS NOT NULL AND record.bankingSlip IS NULL
         }
       RETURN fellowships
       """
@@ -328,9 +328,9 @@ type Constituency {
   bankingDefaultersThisWeekCount: Int
     @cypher(
       statement: """
-      MATCH (this)-[:HAS*2]->(fellowships:Fellowship)
+      MATCH (this)-[:HAS*2]->(fellowships:ActiveFellowship)
       WHERE EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week AND record.bankingSlip IS NULL
+        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week AND record.noServiceReason IS NOT NULL AND record.bankingSlip IS NULL
         }
       RETURN COUNT(fellowships)
       """

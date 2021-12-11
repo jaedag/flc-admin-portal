@@ -36,7 +36,7 @@ const Defaulters = () => {
   const defaulters = [
     {
       title: 'Filled Forms',
-      data: constituency?.servicesThisWeekCount ?? '0',
+      data: constituency?.servicesThisWeekCount || '0',
       color: constituency?.servicesThisWeekCount ? 'good' : 'bad',
       link: constituency?.servicesThisWeekCount
         ? '/services/filled-services'
@@ -44,7 +44,7 @@ const Defaulters = () => {
     },
     {
       title: 'Canc. Service',
-      data: constituency?.cancelledServicesThisWeekCount ?? '0',
+      data: constituency?.cancelledServicesThisWeekCount || '0',
       color: constituency?.cancelledServicesThisWeekCount ? 'bad' : 'good',
       link: constituency?.cancelledServicesThisWeekCount
         ? '/services/cancelled-services'
@@ -52,7 +52,7 @@ const Defaulters = () => {
     },
     {
       title: 'Not Filled Forms',
-      data: constituency?.formDefaultersThisWeekCount ?? '0',
+      data: constituency?.formDefaultersThisWeekCount || '0',
       color: constituency?.formDefaultersThisWeekCount ? 'bad' : 'good',
       link: constituency?.formDefaultersThisWeekCount
         ? '/services/form-defaulters'
@@ -60,7 +60,7 @@ const Defaulters = () => {
     },
     {
       title: 'Have Not Banked',
-      data: constituency?.bankingDefaultersThisWeekCount ?? '0',
+      data: constituency?.bankingDefaultersThisWeekCount || '0',
       color: constituency?.bankingDefaultersThisWeekCount ? 'bad' : 'good',
       link: constituency?.bankingDefaultersThisWeekCount
         ? '/services/banking-defaulters'

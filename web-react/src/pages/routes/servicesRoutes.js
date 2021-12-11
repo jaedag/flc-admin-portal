@@ -20,8 +20,10 @@ import BankingSlipSubmission from 'pages/services/BankingSlipSubmission'
 import BankingSlipView from 'pages/services/BankingSlipView'
 import ConstituencyJoint from 'pages/services/ConstituencyJoint'
 import BankingDefaulters from 'pages/services/defaulters/BankingDefaulters'
+import CancelledServicesThisWeek from 'pages/services/defaulters/CancelledServiceThisWeek'
 import Defaulters from 'pages/services/defaulters/Defaulters'
 import FormDefaulters from 'pages/services/defaulters/FormDefaulters'
+import ServicesThisWeek from 'pages/services/defaulters/ServicesThisWeek'
 import Fellowship from 'pages/services/Fellowship'
 import ServicesChurchList from 'pages/services/ServicesChurchList'
 import Services from 'pages/services/ServicesMenu'
@@ -349,6 +351,34 @@ export const reports = [
   {
     path: '/services/banking-defaulters',
     component: BankingDefaulters,
+    roles: [
+      'adminFederal',
+      'adminCouncil',
+      'adminCampus',
+      'leaderCampus',
+      'adminTown',
+      'leaderTown',
+    ],
+    placeholder: true,
+    exact: true,
+  },
+  {
+    path: '/services/filled-services',
+    component: ServicesThisWeek,
+    roles: [
+      'adminFederal',
+      'adminCouncil',
+      'adminCampus',
+      'leaderCampus',
+      'adminTown',
+      'leaderTown',
+    ],
+    placeholder: true,
+    exact: true,
+  },
+  {
+    path: '/services/cancelled-services',
+    component: CancelledServicesThisWeek,
     roles: [
       'adminFederal',
       'adminCouncil',

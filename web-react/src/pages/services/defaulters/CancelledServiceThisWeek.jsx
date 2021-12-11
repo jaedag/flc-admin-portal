@@ -43,7 +43,7 @@ const CancelledServicesThisWeek = () => {
         as="h6"
         loading={!constituency?.cancelledServicesThisWeek.length}
       >
-        <h6>{`Number of Services: ${constituency?.cancelledServicesThisWeek.length}`}</h6>
+        <h6>{`Number of Cancelled Services: ${constituency?.cancelledServicesThisWeek.length}`}</h6>
       </PlaceholderCustom>
 
       <Row>

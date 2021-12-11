@@ -36,27 +36,35 @@ const Defaulters = () => {
   const defaulters = [
     {
       title: 'Filled Forms',
-      data: constituency?.servicesThisWeekCount,
-      color: 'good',
-      link: '/services/filled-services',
+      data: constituency?.servicesThisWeekCount ?? '0',
+      color: constituency?.servicesThisWeekCount ? 'good' : 'bad',
+      link: constituency?.servicesThisWeekCount
+        ? '/services/filled-services'
+        : '#',
     },
     {
       title: 'Canc. Service',
-      data: constituency?.cancelledServicesThisWeekCount,
-      color: 'bad',
-      link: '/services/cancelled-services',
+      data: constituency?.cancelledServicesThisWeekCount ?? '0',
+      color: constituency?.cancelledServicesThisWeekCount ? 'bad' : 'good',
+      link: constituency?.cancelledServicesThisWeekCount
+        ? '/services/cancelled-services'
+        : '#',
     },
     {
       title: 'Not Filled Forms',
-      data: constituency?.formDefaultersThisWeekCount,
-      color: 'bad',
-      link: '/services/form-defaulters',
+      data: constituency?.formDefaultersThisWeekCount ?? '0',
+      color: constituency?.formDefaultersThisWeekCount ? 'bad' : 'good',
+      link: constituency?.formDefaultersThisWeekCount
+        ? '/services/form-defaulters'
+        : '#',
     },
     {
       title: 'Have Not Banked',
-      data: constituency?.bankingDefaultersThisWeekCount,
-      color: 'bad',
-      link: '/services/banking-defaulters',
+      data: constituency?.bankingDefaultersThisWeekCount ?? '0',
+      color: constituency?.bankingDefaultersThisWeekCount ? 'bad' : 'good',
+      link: constituency?.bankingDefaultersThisWeekCount
+        ? '/services/banking-defaulters'
+        : '#',
     },
   ]
   return (

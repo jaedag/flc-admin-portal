@@ -283,11 +283,17 @@ const DisplayChurchDetails = (props) => {
             {props.last3Weeks.map((week, i) => (
               <Container key={i} className="mt-4">
                 <div className="text-secondary">{`WEEK ${week.number}`}</div>
-                <p>
+                <p className="mb-0">
                   Income Form -{' '}
                   <span
                     className={`${week.filled ? 'filled' : 'not-filled'}`}
                   >{`${week.filled ? 'Filled' : 'Not Filled'}`}</span>
+                </p>
+                <p>
+                  Banking Slip -{' '}
+                  <span
+                    className={`${week.banked ? 'filled' : 'not-filled'}`}
+                  >{`${week.banked ? 'Submitted' : 'Not Submitted'}`}</span>
                 </p>
               </Container>
             ))}

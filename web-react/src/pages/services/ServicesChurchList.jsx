@@ -53,7 +53,13 @@ const ServicesChurchList = () => {
           )}
 
           <RoleView
-            roles={['adminTown', 'leaderTown', 'adminCampus', 'leaderCampus']}
+            roles={[
+              'adminCouncil',
+              'adminTown',
+              'leaderTown',
+              'adminCampus',
+              'leaderCampus',
+            ]}
           >
             <MenuButton
               title="Defaulters"

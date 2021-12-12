@@ -36,14 +36,24 @@ const DetailsFellowship = () => {
 
   const last3Weeks = [getWeekNumber(), getWeekNumber() - 1, getWeekNumber() - 2]
   const lastFilledServices = history?.services.map((service) => service.week)
+  const lastFilledBanking = history?.services.map(
+    (service) => service.bankingSlip
+  )
 
-  const check = last3Weeks?.map((week) => {
+  const check = last3Weeks?.map((week, i) => {
     if (lastFilledServices?.includes(week)) {
-      return { number: week, filled: true }
+      return {
+        number: week,
+        filled: true,
+        banked:
+          lastFilledBanking?.length && (lastFilledBanking[i] ? true : false),
+      }
     } else {
       return {
         number: week,
         filled: false,
+        banked:
+          lastFilledBanking?.length && (lastFilledBanking[i] ? true : false),
       }
     }
   })

@@ -30,9 +30,11 @@ const DefaulterCard = ({ defaulter, link }) => {
         >
           {`${defaulter?.name} ${defaulter?.__typename}`}
           <br />
-          <span className="text-secondary">
-            {`${defaulter?.bacenta?.constituency?.name} ${defaulter?.bacenta?.constituency?.__typename}`}
-          </span>
+          {defaulter?.bacenta?.constituency?.name && (
+            <span className="text-secondary">
+              {`${defaulter?.bacenta?.constituency?.name} ${defaulter?.bacenta?.constituency?.__typename}`}
+            </span>
+          )}
         </Card.Header>
         <Card.Body>
           <Card.Text

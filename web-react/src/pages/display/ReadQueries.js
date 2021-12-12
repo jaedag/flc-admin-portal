@@ -430,6 +430,7 @@ export const DISPLAY_CAMPUS = gql`
       id
       name
       stream
+      activeFellowshipCount
       council {
         id
         name

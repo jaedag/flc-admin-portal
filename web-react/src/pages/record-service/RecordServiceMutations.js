@@ -1,58 +1,5 @@
 import { gql } from '@apollo/client'
 
-export const FELLOWSHIP_NAME = gql`
-  query ($id: ID) {
-    fellowships(where: { id: $id }, options: { limit: 1 }) {
-      id
-      labels
-      stream
-      bankingCode
-      name
-      location {
-        longitude
-        latitude
-      }
-      meetingDay {
-        day
-      }
-      bacenta {
-        id
-        name
-        stream
-      }
-      leader {
-        id
-        firstName
-        lastName
-        fullName
-        pictureUrl
-        whatsappNumber
-      }
-      serviceLogs(options: { limit: 3 }) {
-        id
-        serviceRecords(options: { limit: 3 }) {
-          week
-        }
-      }
-      history(options: { limit: 10 }) {
-        id
-        timeStamp
-        created_at {
-          date
-        }
-        loggedBy {
-          id
-          firstName
-          lastName
-          stream
-        }
-        historyRecord
-      }
-      memberCount
-    }
-  }
-`
-
 export const RECORD_SERVICE = gql`
   mutation RecordService(
     $id: ID!
@@ -81,11 +28,8 @@ export const RECORD_SERVICE = gql`
         id
         fellowship {
           id
-          serviceLogs {
+          services {
             id
-            serviceRecords {
-              id
-            }
           }
         }
       }
@@ -109,11 +53,8 @@ export const RECORD_CANCELLED_SERVICE = gql`
         id
         fellowship {
           id
-          serviceLogs {
+          services {
             id
-            serviceRecords {
-              id
-            }
           }
         }
       }

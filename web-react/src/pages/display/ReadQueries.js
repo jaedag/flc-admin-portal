@@ -197,6 +197,7 @@ export const DISPLAY_FELLOWSHIP_HISTORY = gql`
     fellowships(where: { id: $id }, options: { limit: 1 }) {
       id
       services(limit: 5) {
+        bankingSlip
         week
       }
       history(options: { limit: 5 }) {

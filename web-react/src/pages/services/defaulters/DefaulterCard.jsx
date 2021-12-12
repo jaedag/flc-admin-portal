@@ -1,33 +1,44 @@
 import PlaceholderCustom from 'components/Placeholder'
 import { ChurchContext } from 'contexts/ChurchContext'
+import { ServiceContext } from 'contexts/ServiceContext'
 import React, { useContext } from 'react'
 import { Card, Button } from 'react-bootstrap'
 import { TelephoneFill, Whatsapp } from 'react-bootstrap-icons'
 import { useHistory } from 'react-router'
 
-const DefaulterCard = ({ defaulter }) => {
+const DefaulterCard = ({ defaulter, link }) => {
   const { setFellowshipId } = useContext(ChurchContext)
+  const { setServiceRecordId } = useContext(ServiceContext)
   const history = useHistory()
 
-  const serviceDetails = defaulter.services?.length && defaulter.services[0]
+  const serviceDetails = defaulter?.services?.length && defaulter?.services[0]
   return (
     <Card>
       <PlaceholderCustom
-        loading={!defaulter.name}
+        loading={!defaulter?.name}
         className={`fw-bold large-number pb-3`}
       >
         <Card.Header
           onClick={() => {
-            setFellowshipId(defaulter.id)
-            history.push('/fellowship/displaydetails')
+            setFellowshipId(defaulter?.id)
+
+            history.push(
+              `/${defaulter?.__typename.toLowerCase()}/displaydetails`
+            )
           }}
           className="fw-bold"
-        >
-          {defaulter.name}
-        </Card.Header>
+        >{`${defaulter?.name} ${defaulter?.__typename}`}</Card.Header>
         <Card.Body>
-          <Card.Text>
-            {defaulter.leader.fullName}
+          <Card.Text
+            onClick={() => {
+              setFellowshipId(defaulter?.id)
+              setServiceRecordId(serviceDetails?.id)
+              history.push(
+                link || `/${defaulter?.__typename.toLowerCase()}/displaydetails`
+              )
+            }}
+          >
+            {defaulter?.leader?.fullName || 'No Leader'}
             {serviceDetails?.attendance && (
               <div>
                 <span className="text-muted">Attendance: </span>
@@ -47,13 +58,13 @@ const DefaulterCard = ({ defaulter }) => {
               </div>
             )}
           </Card.Text>
-          <a href={`tel:${defaulter.leader?.phoneNumber}`}>
+          <a href={`tel:${defaulter?.leader?.phoneNumber}`}>
             <Button variant="primary">
               <TelephoneFill /> Call
             </Button>
           </a>
           <a
-            href={`https://wa.me/${defaulter.leader?.whatsappNumber}`}
+            href={`https://wa.me/${defaulter?.leader?.whatsappNumber}`}
             className="ms-3"
           >
             <Button variant="success">
@@ -61,7 +72,7 @@ const DefaulterCard = ({ defaulter }) => {
             </Button>
           </a>
         </Card.Body>
-        <Card.Footer className="text-muted">{`Meeting Day: ${defaulter.meetingDay?.day}`}</Card.Footer>
+        <Card.Footer className="text-muted">{`Meeting Day: ${defaulter?.meetingDay?.day}`}</Card.Footer>
       </PlaceholderCustom>
     </Card>
   )

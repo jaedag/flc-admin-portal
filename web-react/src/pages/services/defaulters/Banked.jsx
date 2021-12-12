@@ -8,22 +8,22 @@ import React, { useContext, useEffect, useState } from 'react'
 import { Container, Row, Col } from 'react-bootstrap'
 import DefaulterCard from './DefaulterCard'
 import {
-  CONSTITUENCY_BANKING_DEFAULTERS_LIST,
-  COUNCIL_BANKING_DEFAULTERS_LIST,
+  CONSTITUENCY_BANKED_LIST,
+  COUNCIL_BANKED_LIST,
 } from './DefaultersQueries'
 
-const BankingDefaulters = () => {
+const Banked = () => {
   const { currentUser } = useContext(MemberContext)
   const [church, setChurch] = useState(null)
-  const [constituencyBankingDefaulters, { data: constituencyData }] =
-    useLazyQuery(CONSTITUENCY_BANKING_DEFAULTERS_LIST)
-  const [councilBankingDefaulters, { data: councilData }] = useLazyQuery(
-    COUNCIL_BANKING_DEFAULTERS_LIST
+  const [constituencyBanked, { data: constituencyData }] = useLazyQuery(
+    CONSTITUENCY_BANKED_LIST
   )
+  const [councilBanked, { data: councilData }] =
+    useLazyQuery(COUNCIL_BANKED_LIST)
 
   useEffect(() => {
     if (isAuthorised(['adminCouncil', 'leaderCouncil'], currentUser.roles)) {
-      councilBankingDefaulters({
+      councilBanked({
         variables: {
           id: currentUser.council,
         },
@@ -36,7 +36,7 @@ const BankingDefaulters = () => {
         currentUser.roles
       )
     ) {
-      constituencyBankingDefaulters({
+      constituencyBanked({
         variables: {
           id: currentUser.constituency,
         },
@@ -51,20 +51,20 @@ const BankingDefaulters = () => {
         loading={!church}
       >{`${church?.name} ${church?.__typename}`}</HeadingPrimary>
       <HeadingSecondary>
-        {`Fellowships That Have Not Banked This Week Despite Having Service (Week ${getWeekNumber()})`}
+        {`Fellowships That Have Banked This Week (Week ${getWeekNumber()})`}
       </HeadingSecondary>
 
-      <PlaceholderCustom
-        as="h6"
-        loading={!church?.bankingDefaultersThisWeek.length}
-      >
-        <h6>{`Number of Defaulters: ${church?.bankingDefaultersThisWeek.length}`}</h6>
+      <PlaceholderCustom as="h6" loading={!church?.bankedThisWeek.length}>
+        <h6>{`Number Who Have Banked: ${church?.bankedThisWeek.length}`}</h6>
       </PlaceholderCustom>
 
       <Row>
-        {church?.bankingDefaultersThisWeek.map((defaulter, i) => (
+        {church?.bankedThisWeek.map((defaulter, i) => (
           <Col key={i} xs={12} className="mb-3">
-            <DefaulterCard defaulter={defaulter} />
+            <DefaulterCard
+              defaulter={defaulter}
+              link="/fellowship/service-details"
+            />
           </Col>
         ))}
       </Row>
@@ -72,4 +72,4 @@ const BankingDefaulters = () => {
   )
 }
 
-export default BankingDefaulters
+export default Banked

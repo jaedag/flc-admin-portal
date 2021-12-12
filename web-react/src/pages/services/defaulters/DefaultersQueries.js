@@ -5,7 +5,7 @@ export const CONSTITUENCY_DEFAULTERS = gql`
     constituencies(where: { id: $id }) {
       id
       name
-      fellowshipCount
+      activeFellowshipCount
       formDefaultersThisWeekCount
       bankingDefaultersThisWeekCount
       bankedThisWeekCount
@@ -165,7 +165,7 @@ export const COUNCIL_DEFAULTERS = gql`
     councils(where: { id: $id }) {
       id
       name
-      fellowshipCount
+      activeFellowshipCount
       formDefaultersThisWeekCount
       bankingDefaultersThisWeekCount
       bankedThisWeekCount
@@ -195,6 +195,13 @@ export const COUNCIL_SERVICES_LIST = gql`
         meetingDay {
           day
         }
+        bacenta {
+          id
+          constituency {
+            id
+            name
+          }
+        }
         services(limit: 1) {
           id
           noServiceReason
@@ -222,6 +229,13 @@ export const COUNCIL_CANCELLED_SERVICES_LIST = gql`
           fullName
           phoneNumber
           whatsappNumber
+        }
+        bacenta {
+          id
+          constituency {
+            id
+            name
+          }
         }
         meetingDay {
           day
@@ -284,6 +298,13 @@ export const COUNCIL_BANKING_DEFAULTERS_LIST = gql`
           phoneNumber
           whatsappNumber
         }
+        bacenta {
+          id
+          constituency {
+            id
+            name
+          }
+        }
         meetingDay {
           day
         }
@@ -313,6 +334,13 @@ export const COUNCIL_BANKED_LIST = gql`
           fullName
           phoneNumber
           whatsappNumber
+        }
+        bacenta {
+          id
+          constituency {
+            id
+            name
+          }
         }
         meetingDay {
           day

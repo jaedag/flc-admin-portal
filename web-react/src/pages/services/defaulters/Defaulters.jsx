@@ -92,8 +92,8 @@ const Defaulters = () => {
       >{`${church?.name} ${church?.__typename}`}</HeadingPrimary>
       <HeadingSecondary>Defaulters Page</HeadingSecondary>
 
-      <PlaceholderCustom as="h6" loading={!church?.fellowshipCount}>
-        <h6>{`Total Number of Fellowships: ${church?.fellowshipCount}`}</h6>
+      <PlaceholderCustom as="h6" loading={!church?.activeFellowshipCount}>
+        <h6>{`Total Number of Fellowships: ${church?.activeFellowshipCount}`}</h6>
       </PlaceholderCustom>
       <Row>
         {defaulters.map((defaulter, i) => (

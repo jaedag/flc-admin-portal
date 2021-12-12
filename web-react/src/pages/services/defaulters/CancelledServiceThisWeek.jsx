@@ -11,6 +11,7 @@ import {
   COUNCIL_CANCELLED_SERVICES_LIST,
 } from './DefaultersQueries'
 import DefaulterCard from './DefaulterCard'
+import PlaceholderDefaulter from './PlaceholderDefaulter'
 
 const CancelledServicesThisWeek = () => {
   const { currentUser } = useContext(MemberContext)
@@ -65,6 +66,7 @@ const CancelledServicesThisWeek = () => {
             <DefaulterCard defaulter={service} />
           </Col>
         ))}
+        {!church && <PlaceholderDefaulter />}
       </Row>
     </Container>
   )

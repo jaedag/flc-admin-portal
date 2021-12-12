@@ -272,7 +272,7 @@ type Constituency {
     @cypher(
       statement: """
       MATCH (this)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(records:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph)
-      RETURN records ORDER BY date.date LIMIT $limit 
+      RETURN records ORDER BY date.date LIMIT $limit
       """
     )
   servicesThisWeek: [Fellowship]
@@ -403,7 +403,7 @@ type GatheringService {
     @cypher(
       statement: """
       MATCH (this)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(services:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph)
-      RETURN services ORDER BY date.date LIMIT $limit 
+      RETURN services ORDER BY date.date LIMIT $limit
       """
     )
 }
@@ -469,7 +469,7 @@ type Stream {
     @cypher(
       statement: """
       MATCH (this)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(services:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph)
-      RETURN services ORDER BY date.date LIMIT $limit 
+      RETURN services ORDER BY date.date LIMIT $limit
       """
     )
   componentServiceAggregate: [ComponentServiceAggregate] @ignore
@@ -535,7 +535,7 @@ type Council {
     @cypher(
       statement: """
       MATCH (this)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(services:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph)
-      RETURN services ORDER BY date.date LIMIT $limit 
+      RETURN services ORDER BY date.date LIMIT $limit
       """
     )
   servicesThisWeek: [Fellowship]
@@ -687,7 +687,7 @@ type Campus {
     @cypher(
       statement: """
       MATCH (this)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(services:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph)
-      RETURN services ORDER BY date.date LIMIT $limit 
+      RETURN services ORDER BY date.date LIMIT $limit
       """
     )
   componentServiceAggregate: [ComponentServiceAggregate] @ignore
@@ -738,7 +738,7 @@ type Town {
     @cypher(
       statement: """
       MATCH (this)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(services:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph)
-      RETURN services ORDER BY date.date LIMIT $limit 
+      RETURN services ORDER BY date.date LIMIT $limit
       """
     )
   componentServiceAggregate: [ComponentServiceAggregate] @ignore
@@ -773,13 +773,14 @@ type Bacenta {
   basontas: Basonta @relationship(type: "HAS_BASONTA", direction: OUT)
   town: Town @relationship(type: "HAS", direction: IN)
   campus: Campus @relationship(type: "HAS", direction: IN)
+  constituency: Constituency @relationship(type: "HAS", direction: IN)
   history: [HistoryLog] @relationship(type: "HAS_HISTORY", direction: OUT)
   serviceLogs: [ServiceLog] @relationship(type: "HAS_HISTORY", direction: OUT)
   services(limit: Int!): [ServiceRecord]
     @cypher(
       statement: """
       MATCH (this)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(services:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph)
-      RETURN services ORDER BY date.date LIMIT $limit 
+      RETURN services ORDER BY date.date LIMIT $limit
       """
     )
   fellowshipServiceAggregate: [ComponentServiceAggregate] @ignore
@@ -815,7 +816,7 @@ type Fellowship {
     @cypher(
       statement: """
       MATCH (this)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(services:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph)
-      RETURN services ORDER BY date.date LIMIT $limit 
+      RETURN services ORDER BY date.date LIMIT $limit
       """
     )
   labels: [String]
@@ -855,7 +856,7 @@ type ClosedFellowship {
     @cypher(
       statement: """
       MATCH (this)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(services:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph)
-      RETURN services ORDER BY date.date LIMIT $limit 
+      RETURN services ORDER BY date.date LIMIT $limit
       """
     )
   labels: [String]

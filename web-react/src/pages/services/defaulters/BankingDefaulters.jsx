@@ -11,6 +11,7 @@ import {
   CONSTITUENCY_BANKING_DEFAULTERS_LIST,
   COUNCIL_BANKING_DEFAULTERS_LIST,
 } from './DefaultersQueries'
+import PlaceholderDefaulter from './PlaceholderDefaulter'
 
 const BankingDefaulters = () => {
   const { currentUser } = useContext(MemberContext)
@@ -67,6 +68,7 @@ const BankingDefaulters = () => {
             <DefaulterCard defaulter={defaulter} />
           </Col>
         ))}
+        {!church && <PlaceholderDefaulter />}
       </Row>
     </Container>
   )

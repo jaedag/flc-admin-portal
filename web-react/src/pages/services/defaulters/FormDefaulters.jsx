@@ -11,6 +11,7 @@ import {
   COUNCIL_FORM_DEFAULTERS_LIST,
 } from './DefaultersQueries'
 import DefaulterCard from './DefaulterCard'
+import PlaceholderDefaulter from './PlaceholderDefaulter'
 
 const FormDefaulters = () => {
   const { currentUser } = useContext(MemberContext)
@@ -68,6 +69,7 @@ const FormDefaulters = () => {
             <DefaulterCard defaulter={defaulter} />
           </Col>
         ))}
+        {!church && <PlaceholderDefaulter />}
       </Row>
     </Container>
   )

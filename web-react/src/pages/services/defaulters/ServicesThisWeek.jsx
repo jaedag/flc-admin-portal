@@ -11,6 +11,7 @@ import {
   COUNCIL_SERVICES_LIST,
 } from './DefaultersQueries'
 import DefaulterCard from './DefaulterCard'
+import PlaceholderDefaulter from './PlaceholderDefaulter'
 
 const ServicesThisWeek = () => {
   const { currentUser } = useContext(MemberContext)
@@ -50,10 +51,10 @@ const ServicesThisWeek = () => {
       <HeadingPrimary
         loading={!church}
       >{`${church?.name} ${church?.__typename}`}</HeadingPrimary>
-      <HeadingSecondary>{`Services This Week (Week ${getWeekNumber()})`}</HeadingSecondary>
+      <HeadingSecondary>{`Forms Filled This Week (Week ${getWeekNumber()})`}</HeadingSecondary>
 
       <PlaceholderCustom as="h6" loading={!church?.servicesThisWeek.length}>
-        <h6>{`Number of Services: ${church?.servicesThisWeek.length}`}</h6>
+        <h6>{`Forms Filled This Week: ${church?.servicesThisWeek.length}`}</h6>
       </PlaceholderCustom>
 
       <Row>
@@ -65,15 +66,7 @@ const ServicesThisWeek = () => {
             />
           </Col>
         ))}
-        {!church &&
-          [null, null, null].map((service, i) => (
-            <Col key={i} xs={12} className="mb-3">
-              <DefaulterCard
-                defaulter={service}
-                link="/fellowship/service-details"
-              />
-            </Col>
-          ))}
+        {!church && <PlaceholderDefaulter />}
       </Row>
     </Container>
   )

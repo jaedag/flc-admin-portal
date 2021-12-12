@@ -252,6 +252,13 @@ export const COUNCIL_FORM_DEFAULTERS_LIST = gql`
           phoneNumber
           whatsappNumber
         }
+        bacenta {
+          id
+          constituency {
+            id
+            name
+          }
+        }
         meetingDay {
           day
         }

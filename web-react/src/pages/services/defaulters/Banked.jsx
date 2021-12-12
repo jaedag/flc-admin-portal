@@ -11,6 +11,7 @@ import {
   CONSTITUENCY_BANKED_LIST,
   COUNCIL_BANKED_LIST,
 } from './DefaultersQueries'
+import PlaceholderDefaulter from './PlaceholderDefaulter'
 
 const Banked = () => {
   const { currentUser } = useContext(MemberContext)
@@ -67,6 +68,7 @@ const Banked = () => {
             />
           </Col>
         ))}
+        {!church && <PlaceholderDefaulter />}
       </Row>
     </Container>
   )

@@ -27,7 +27,13 @@ const DefaulterCard = ({ defaulter, link }) => {
             )
           }}
           className="fw-bold"
-        >{`${defaulter?.name} ${defaulter?.__typename}`}</Card.Header>
+        >
+          {`${defaulter?.name} ${defaulter?.__typename}`}
+          <br />
+          <span className="text-secondary">
+            {`${defaulter?.bacenta?.constituency?.name} ${defaulter?.bacenta?.constituency?.__typename}`}
+          </span>
+        </Card.Header>
         <Card.Body>
           <Card.Text
             onClick={() => {

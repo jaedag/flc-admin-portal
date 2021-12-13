@@ -14,6 +14,7 @@ This project is a starter for building a [GRANDstack](https://grandstack.io) (Gr
 <br/>
 
 The aim is to build a Church Management Portal for Managing the [First Love Church](https://www.firstlovecenter.com) in Accra.
+All Contributors welcome,make your changes in a separate branch before submitting a PR. Read the [Contributor Guide](./CONTRIBUTING.md) for guidelines.
 
 - [PHASE 1: Directory (State of the Flock Part 1) ✅](#phase-1-directory-state-of-the-flock-part-1-)
 - [PHASE 2: Attendance and Income Records (State of the Flock Part 2)](#phase-2-attendance-and-income-records-state-of-the-flock-part-2)
@@ -75,7 +76,7 @@ The aim is to build a Church Management Portal for Managing the [First Love Chur
 5. Graduate IC to Bacenta after bussing above 8 for 4 consecutive weeks.
 6. Accept IC Records of Attendance, Cost, Offering Raised, Amount Paid from the Church
 7. IC Training Attendance Tracking. Attendance to be filled by IC Trainers.
-<br/>
+   <br/>
 
 ## PHASE 6: Future Ideas
 

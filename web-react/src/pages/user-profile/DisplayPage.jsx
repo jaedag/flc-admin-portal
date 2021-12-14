@@ -6,7 +6,7 @@ import { MemberContext } from '../../contexts/MemberContext'
 import { getMemberDob, transformCloudinaryImg } from '../../global-utils'
 import Timeline from '../../components/Timeline/Timeline'
 import BaseComponent from 'components/base-component/BaseComponent'
-import { DISPLAY_MEMBER } from 'pages/display/ReadQueries'
+import { DISPLAY_MEMBER_BIO } from 'pages/display/ReadQueries'
 import PlaceholderCustom from 'components/Placeholder'
 import './UserProfile.css'
 import AuthButton from 'components/buttons/AuthButton'
@@ -14,7 +14,7 @@ import AuthButton from 'components/buttons/AuthButton'
 const DisplayPage = () => {
   const { currentUser } = useContext(MemberContext)
 
-  const { data, loading, error } = useQuery(DISPLAY_MEMBER, {
+  const { data, loading, error } = useQuery(DISPLAY_MEMBER_BIO, {
     variables: { id: currentUser.id },
   })
 

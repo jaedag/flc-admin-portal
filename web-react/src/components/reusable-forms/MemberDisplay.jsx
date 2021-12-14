@@ -9,7 +9,7 @@ import {
   transformCloudinaryImg,
   throwErrorMsg,
 } from '../../global-utils'
-import { DISPLAY_MEMBER } from 'pages/display/ReadQueries'
+import { DISPLAY_MEMBER_BIO } from 'pages/display/ReadQueries'
 import { Col, Container, Row } from 'react-bootstrap'
 import PlaceholderCustom from 'components/Placeholder'
 import DetailsCard from 'components/card/DetailsCard'
@@ -18,7 +18,7 @@ import RoleView from 'auth/RoleView'
 import ViewAll from 'components/buttons/ViewAll'
 
 const MemberDisplay = ({ memberId }) => {
-  const { data, loading, error } = useQuery(DISPLAY_MEMBER, {
+  const { data, loading, error } = useQuery(DISPLAY_MEMBER_BIO, {
     variables: { id: memberId },
   })
   throwErrorMsg(error)

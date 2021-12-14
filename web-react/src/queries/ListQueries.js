@@ -80,39 +80,39 @@ export const BACENTA_DROPDOWN = gql`
 
 export const GET_TOWN_BACENTAS = gql`
   query ($id: ID) {
-    bacentas(where: { town: { id: $id } }) {
+    towns(where: { id: $id }) {
       id
       name
       stream
+      council {
+        id
+      }
       leader {
         firstName
         lastName
       }
-      town {
+      memberCount
+      sontas {
         id
         name
-        memberCount
         leader {
           id
           firstName
           lastName
         }
-        sontas {
-          id
-          name
-        }
-        bishop {
-          id
-        }
       }
-    }
-    sontas(where: { town: { id: $id } }) {
-      id
-      name
-      leader {
+      bacentas {
         id
-        firstName
-        lastName
+        name
+        stream
+        council {
+          id
+        }
+        leader {
+          id
+          firstName
+          lastName
+        }
       }
     }
   }
@@ -120,39 +120,39 @@ export const GET_TOWN_BACENTAS = gql`
 
 export const GET_CAMPUS_BACENTAS = gql`
   query ($id: ID) {
-    bacentas(where: { campus: { id: $id } }) {
+    campuses(where: { id: $id }) {
       id
       name
       stream
-      campus {
+      council {
+        id
+      }
+      leader {
+        firstName
+        lastName
+      }
+      memberCount
+      sontas {
         id
         name
-        memberCount
         leader {
           id
           firstName
           lastName
         }
-        sontas {
-          id
-          name
-        }
-        bishop {
-          id
-        }
       }
-      leader {
-        firstName
-        lastName
-      }
-    }
-    sontas(where: { campus: { id: $id } }) {
-      id
-      name
-      leader {
+      bacentas {
         id
-        firstName
-        lastName
+        name
+        stream
+        council {
+          id
+        }
+        leader {
+          id
+          firstName
+          lastName
+        }
       }
     }
   }

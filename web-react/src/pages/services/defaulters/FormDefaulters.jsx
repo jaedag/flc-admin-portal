@@ -24,14 +24,6 @@ const FormDefaulters = () => {
   )
 
   useEffect(() => {
-    if (isAuthorised(['adminCouncil', 'leaderCouncil'], currentUser.roles)) {
-      councilFormDefaulters({
-        variables: {
-          id: currentUser.council,
-        },
-      })
-      setChurch(councilData?.councils[0])
-    }
     if (
       isAuthorised(
         ['adminTown', 'leaderTown', 'adminCampus', 'leaderCampus'],
@@ -44,6 +36,14 @@ const FormDefaulters = () => {
         },
       })
       setChurch(constituencyData?.constituencies[0])
+    }
+    if (isAuthorised(['adminCouncil', 'leaderCouncil'], currentUser.roles)) {
+      councilFormDefaulters({
+        variables: {
+          id: currentUser.council,
+        },
+      })
+      setChurch(councilData?.councils[0])
     }
   }, [currentUser.constituency, constituencyData, councilData])
 

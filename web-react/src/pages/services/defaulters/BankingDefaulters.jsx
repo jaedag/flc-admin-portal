@@ -23,14 +23,6 @@ const BankingDefaulters = () => {
   )
 
   useEffect(() => {
-    if (isAuthorised(['adminCouncil', 'leaderCouncil'], currentUser.roles)) {
-      councilBankingDefaulters({
-        variables: {
-          id: currentUser.council,
-        },
-      })
-      setChurch(councilData?.councils[0])
-    }
     if (
       isAuthorised(
         ['adminTown', 'leaderTown', 'adminCampus', 'leaderCampus'],
@@ -43,6 +35,14 @@ const BankingDefaulters = () => {
         },
       })
       setChurch(constituencyData?.constituencies[0])
+    }
+    if (isAuthorised(['adminCouncil', 'leaderCouncil'], currentUser.roles)) {
+      councilBankingDefaulters({
+        variables: {
+          id: currentUser.council,
+        },
+      })
+      setChurch(councilData?.councils[0])
     }
   }, [currentUser.constituency, constituencyData, councilData])
 

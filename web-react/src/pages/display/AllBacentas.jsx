@@ -34,7 +34,7 @@ const DisplayAllBacentas = () => {
     // Spinner Icon for Loading Screens
     return <LoadingScreen />
   } else if (campusBacentaData && church.church === 'campus') {
-    const campus = campusBacentaData.bacentas[0].campus
+    const campus = campusBacentaData.campuses[0]
     return (
       <>
         <div className=" container">
@@ -81,11 +81,11 @@ const DisplayAllBacentas = () => {
             </div>
 
             <div className="row justify-content-between">
-              <div className="py-1 px-2 m-2 card">{`Bacentas: ${campusBacentaData.bacentas.length}`}</div>
+              <div className="py-1 px-2 m-2 card">{`Bacentas: ${campus.bacentas.length}`}</div>
               <Link
                 className="py-1 px-2 m-2 card text-white"
                 to="/sonta/displayall"
-              >{`Sontas: ${campusBacentaData.sontas.length}`}</Link>
+              >{`Sontas: ${campus.sontas.length}`}</Link>
               <Link
                 to="/campus/members"
                 className="py-1 px-2 m-2 card"
@@ -94,7 +94,7 @@ const DisplayAllBacentas = () => {
           </div>
 
           <DisplayChurchList
-            data={campusBacentaData.bacentas}
+            data={campus.bacentas}
             setter={setBacentaId}
             churchType="Bacenta"
           />
@@ -102,7 +102,7 @@ const DisplayAllBacentas = () => {
       </>
     )
   } else if (townBacentaData && church.church === 'town') {
-    const town = townBacentaData.bacentas[0].town
+    const town = townBacentaData.towns[0]
     return (
       <>
         <div className=" container">
@@ -157,22 +157,19 @@ const DisplayAllBacentas = () => {
             </div>
 
             <div className="row justify-content-between">
-              <div className="py-1 px-2 m-2 card">{`Bacentas: ${townBacentaData.bacentas.length}`}</div>
+              <div className="py-1 px-2 m-2 card">{`Bacentas: ${town.bacentas.length}`}</div>
               <Link
                 className="py-1 px-2 m-2 card text-white"
                 to="/sonta/displayall"
-              >{`Sontas: ${townBacentaData.sontas.length}`}</Link>
+              >{`Sontas: ${town.sontas.length}`}</Link>
               <Link
                 to="/town/members"
                 className="py-1 px-2 m-2 card"
-              >{`Membership: ${townBacentaData.bacentas[0].town.memberCount}`}</Link>
+              >{`Membership: ${town.memberCount}`}</Link>
             </div>
           </div>
 
-          <DisplayChurchList
-            data={townBacentaData.bacentas}
-            churchType="Bacenta"
-          />
+          <DisplayChurchList data={town.bacentas} churchType="Bacenta" />
         </div>
       </>
     )

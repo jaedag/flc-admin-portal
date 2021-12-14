@@ -4,7 +4,7 @@ import { useQuery, useMutation } from '@apollo/client'
 import { parsePhoneNum } from '../../global-utils'
 
 import { UPDATE_MEMBER_MUTATION } from '../update/UpdateMutations'
-import { DISPLAY_MEMBER } from '../display/ReadQueries'
+import { DISPLAY_MEMBER_BIO } from '../display/ReadQueries'
 
 import { MemberContext } from '../../contexts/MemberContext'
 import MemberForm from '../../components/reusable-forms/MemberForm'
@@ -18,7 +18,7 @@ const UserProfileEditPage = () => {
     data: memberData,
     error: memberError,
     loading: memberLoading,
-  } = useQuery(DISPLAY_MEMBER, {
+  } = useQuery(DISPLAY_MEMBER_BIO, {
     variables: { id: currentUser.id },
   })
   const member = memberData?.member

@@ -326,6 +326,8 @@ type Constituency {
       WHERE NOT EXISTS {
         MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week
         }
+        MATCH (fellowships)-[:MEETS_ON]->(day:ServiceDay)
+        WHERE day.dayNumber <= date().dayOfWeek AND  time() > time('20:30')
       RETURN fellowships
       """
     )
@@ -336,6 +338,8 @@ type Constituency {
       WHERE NOT EXISTS {
         MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week
         }
+        MATCH (fellowships)-[:MEETS_ON]->(day:ServiceDay)
+        WHERE day.dayNumber <= date().dayOfWeek AND  time() > time('20:30')
       RETURN COUNT(fellowships)
       """
     )
@@ -593,6 +597,8 @@ type Council {
       WHERE NOT EXISTS {
         MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week
         }
+        MATCH (fellowships)-[:MEETS_ON]->(day:ServiceDay)
+        WHERE day.dayNumber <= date().dayOfWeek AND  time() > time('20:30')
       RETURN fellowships
       """
     )
@@ -603,6 +609,8 @@ type Council {
       WHERE NOT EXISTS {
         MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week
         }
+        MATCH (fellowships)-[:MEETS_ON]->(day:ServiceDay)
+        WHERE day.dayNumber <= date().dayOfWeek AND  time() > time('20:30')
       RETURN COUNT(fellowships)
       """
     )
@@ -749,6 +757,8 @@ type Campus {
       WHERE NOT EXISTS {
         MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week
         }
+        MATCH (fellowships)-[:MEETS_ON]->(day:ServiceDay)
+        WHERE day.dayNumber <= date().dayOfWeek AND  time() > time('20:30')
       RETURN fellowships
       """
     )
@@ -759,6 +769,8 @@ type Campus {
       WHERE NOT EXISTS {
         MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week
         }
+        MATCH (fellowships)-[:MEETS_ON]->(day:ServiceDay)
+        WHERE day.dayNumber <= date().dayOfWeek AND  time() > time('20:30')
       RETURN COUNT(fellowships)
       """
     )
@@ -816,6 +828,7 @@ type Town {
       RETURN DISTINCT toLower(stream.name)
       """
     )
+
   members: [Member]
     @cypher(
       statement: """
@@ -905,6 +918,8 @@ type Town {
       WHERE NOT EXISTS {
         MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week
         }
+        MATCH (fellowships)-[:MEETS_ON]->(day:ServiceDay)
+        WHERE day.dayNumber <= date().dayOfWeek AND  time() > time('20:30')
       RETURN fellowships
       """
     )
@@ -915,6 +930,8 @@ type Town {
       WHERE NOT EXISTS {
         MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week
         }
+        MATCH (fellowships)-[:MEETS_ON]->(day:ServiceDay)
+        WHERE day.dayNumber <= date().dayOfWeek AND  time() > time('20:30')
       RETURN COUNT(fellowships)
       """
     )
@@ -1001,6 +1018,13 @@ type Bacenta {
       RETURN services ORDER BY date.date LIMIT $limit
       """
     )
+  council: Council
+    @cypher(
+      statement: """
+      MATCH (this)<-[:HAS*2]-(council:Council)
+      RETURN council
+      """
+    )
   fellowshipServiceAggregate: [ComponentServiceAggregate] @ignore
 }
 
@@ -1044,6 +1068,13 @@ type Fellowship {
       RETURN labels(this)
       """
     )
+  council: Council
+    @cypher(
+      statement: """
+      MATCH (this)<-[:HAS*3]-(council:Council)
+      RETURN council
+      """
+    )
 }
 type ClosedFellowship {
   id: ID @id
@@ -1082,6 +1113,13 @@ type ClosedFellowship {
       statement: """
       MATCH (this)
       RETURN labels(this)
+      """
+    )
+  council: Council
+    @cypher(
+      statement: """
+      MATCH (this)<-[:HAS*3]-(council:Council)
+      RETURN council
       """
     )
 }

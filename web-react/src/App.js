@@ -111,53 +111,12 @@ const PastorsAdmin = () => {
         subChurch: 'bacenta',
       })
     )
-    if (member?.fellowship?.bacenta?.town) {
-      setCouncilId(member.fellowship.bacenta.town.council.id)
-      sessionStorage.setItem(
-        'councilId',
-        member.fellowship.bacenta.town.council.id
-      )
-      return
-    } else if (member.leadsTown && member.leadsTown[0]) {
-      setChurch({ church: 'town', subChurch: 'bacenta' })
-      sessionStorage.setItem(
-        'church',
-        JSON.stringify({
-          church: 'town',
-          subChurch: 'bacenta',
-        })
-      )
-      setCouncilId(member?.leadsTown[0].council?.id)
-      sessionStorage.setItem('councilId', member.leadsTown[0].council?.id)
-      return
-    } else if (member?.fellowship?.bacenta?.campus) {
-      setChurch({ church: 'campus', subChurch: 'bacenta' })
-      sessionStorage.setItem(
-        'church',
-        JSON.stringify({
-          church: 'campus',
-          subChurch: 'bacenta',
-        })
-      )
-      setCouncilId(member?.fellowship?.bacenta?.campus?.council?.id)
-      sessionStorage.setItem(
-        'councilId',
-        member?.fellowship?.bacenta?.campus?.council?.id
-      )
-      return
-    } else if (member?.leadsCampus && member.leadsCampus[0]) {
-      setChurch({ church: 'campus', subChurch: 'bacenta' })
-      sessionStorage.setItem(
-        'church',
-        JSON.stringify({
-          church: 'campus',
-          subChurch: 'bacenta',
-        })
-      )
-      setCouncilId(member.leadsCampus[0].council?.id)
-      sessionStorage.setItem('councilId', member.leadsCampus[0].council?.id)
-      return
+
+    if (member?.council?.id) {
+      setCouncilId(member?.council?.id)
+      sessionStorage.setItem('memberId', member?.council?.id)
     }
+    return
   }
 
   const clickCard = (card) => {
@@ -203,10 +162,7 @@ const PastorsAdmin = () => {
     if (card.__typename === 'Basonta') {
       card.link = '/sonta/displaydetails'
     }
-    if (card.__typename === 'Bishop') {
-      setCouncilId(card.id)
-      card.link = '/dashboard'
-    }
+
     if (card.link === '' || card.constituency === true) {
       card.link = `/${card.__typename.toLowerCase()}/displaydetails`
     }

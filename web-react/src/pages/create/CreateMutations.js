@@ -124,6 +124,9 @@ export const CREATE_FELLOWSHIP_MUTATION = gql`
       id
       name
       stream
+      council {
+        id
+      }
       bacenta {
         id
         fellowships {

@@ -23,14 +23,6 @@ const Banked = () => {
     useLazyQuery(COUNCIL_BANKED_LIST)
 
   useEffect(() => {
-    if (isAuthorised(['adminCouncil', 'leaderCouncil'], currentUser.roles)) {
-      councilBanked({
-        variables: {
-          id: currentUser.council,
-        },
-      })
-      setChurch(councilData?.councils[0])
-    }
     if (
       isAuthorised(
         ['adminTown', 'leaderTown', 'adminCampus', 'leaderCampus'],
@@ -43,6 +35,14 @@ const Banked = () => {
         },
       })
       setChurch(constituencyData?.constituencies[0])
+    }
+    if (isAuthorised(['adminCouncil', 'leaderCouncil'], currentUser.roles)) {
+      councilBanked({
+        variables: {
+          id: currentUser.council,
+        },
+      })
+      setChurch(councilData?.councils[0])
     }
   }, [currentUser.constituency, constituencyData, councilData])
 

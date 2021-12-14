@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client'
 
-export const DISPLAY_MEMBER = gql`
+export const DISPLAY_MEMBER_BIO = gql`
   query ($id: ID!) {
     members(where: { id: $id }) {
       firstName
@@ -59,6 +59,9 @@ export const DISPLAY_MEMBER = gql`
           town {
             id
             name
+            council {
+              id
+            }
             bishop {
               id
               firstName
@@ -69,6 +72,9 @@ export const DISPLAY_MEMBER = gql`
           campus {
             id
             name
+            council {
+              id
+            }
             bishop {
               id
               firstName

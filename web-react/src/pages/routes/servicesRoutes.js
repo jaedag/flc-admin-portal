@@ -22,6 +22,7 @@ import ConstituencyJoint from 'pages/services/ConstituencyJoint'
 import Banked from 'pages/services/defaulters/Banked'
 import BankingDefaulters from 'pages/services/defaulters/BankingDefaulters'
 import CancelledServicesThisWeek from 'pages/services/defaulters/CancelledServiceThisWeek'
+import CouncilByConstituency from 'pages/services/defaulters/CouncilByConstituency'
 import Defaulters from 'pages/services/defaulters/Defaulters'
 import FormDefaulters from 'pages/services/defaulters/FormDefaulters'
 import ServicesThisWeek from 'pages/services/defaulters/ServicesThisWeek'
@@ -402,6 +403,15 @@ export const reports = [
       'adminTown',
       'leaderTown',
     ],
+    placeholder: true,
+    exact: true,
+  },
+
+  //Council By Constituency
+  {
+    path: '/services/council-by-constituencies',
+    component: CouncilByConstituency,
+    roles: ['adminFederal', 'adminCouncil', 'leaderCouncil'],
     placeholder: true,
     exact: true,
   },

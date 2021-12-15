@@ -9,18 +9,19 @@ import {
 } from '../../queries/ListQueries'
 import {
   ADD_BACENTA_FELLOWSHIPS,
-  REMOVE_FELLOWSHIP_BACENTA,
   ADD_BACENTA_TOWN,
   ADD_BACENTA_CAMPUS,
   REMOVE_BACENTA_TOWN,
   REMOVE_BACENTA_CAMPUS,
   UPDATE_BACENTA_MUTATION,
+  REMOVE_FELLOWSHIP_BACENTA,
 } from './UpdateMutations'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import { DISPLAY_BACENTA } from '../display/ReadQueries'
 import { LOG_BACENTA_HISTORY, LOG_FELLOWSHIP_HISTORY } from './LogMutations'
 import { MAKE_BACENTA_LEADER } from './ChangeLeaderMutations'
 import BacentaForm from '../../components/reusable-forms/BacentaForm'
+import { MAKE_FELLOWSHIP_INACTIVE } from './CloseChurchMutations'
 
 const UpdateBacenta = () => {
   const { church, bacentaId, setTownId, setCampusId } =
@@ -66,6 +67,7 @@ const UpdateBacenta = () => {
 
   //Changes downwards.ie. Changes to the Fellowships underneath the Bacenta
   const [AddBacentaFellowships] = useMutation(ADD_BACENTA_FELLOWSHIPS)
+  const [CloseDownFellowship] = useMutation(MAKE_FELLOWSHIP_INACTIVE)
   const [RemoveFellowshipFromBacenta] = useMutation(REMOVE_FELLOWSHIP_BACENTA, {
     onCompleted: (data) => {
       let prevBacenta = data.updateBacentas.bacentas[0]
@@ -300,11 +302,12 @@ const UpdateBacenta = () => {
     })
 
     if (removeFellowships.length) {
-      RemoveFellowshipFromBacenta({
-        variables: {
-          bacentaId: bacentaId,
-          fellowshipIds: removeFellowships,
-        },
+      removeFellowships.forEach((fellowship) => {
+        CloseDownFellowship({
+          variables: {
+            fellowshipId: fellowship,
+          },
+        }).catch((error) => throwErrorMsg(error))
       })
     }
 
@@ -318,7 +321,7 @@ const UpdateBacenta = () => {
             },
           })
         } else {
-          //Fellowship has no previous bacenta and is now joining. ie. RemoveFellowshipFromBacenta won't run
+          //Fellowship has no previous bacenta and is now joining. ie. CloseDownFellowship won't run
           LogFellowshipHistory({
             variables: {
               fellowshipId: fellowship.id,

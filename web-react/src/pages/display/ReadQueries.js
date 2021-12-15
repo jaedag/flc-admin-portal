@@ -3,6 +3,7 @@ import { gql } from '@apollo/client'
 export const DISPLAY_MEMBER_BIO = gql`
   query ($id: ID!) {
     members(where: { id: $id }) {
+      id
       firstName
       middleName
       lastName
@@ -24,20 +25,6 @@ export const DISPLAY_MEMBER_BIO = gql`
       occupation {
         occupation
       }
-
-      #church info
-      stream
-      ministry {
-        id
-        name
-        leader {
-          firstName
-          lastName
-        }
-      }
-      occupation {
-        occupation
-      }
       titleConnection {
         edges {
           dateAppointed
@@ -46,59 +33,14 @@ export const DISPLAY_MEMBER_BIO = gql`
           }
         }
       }
-      fellowship {
-        id
-        name
-        leader {
-          firstName
-          lastName
-        }
-        bacenta {
-          id
-          name
-          town {
-            id
-            name
-            council {
-              id
-            }
-            bishop {
-              id
-              firstName
-              lastName
-              fullName
-            }
-          }
-          campus {
-            id
-            name
-            council {
-              id
-            }
-            bishop {
-              id
-              firstName
-              lastName
-              fullName
-            }
-          }
-        }
-      }
-      #Personal history
-      history(options: { limit: 3 }) {
-        id
-        timeStamp
-        created_at {
-          date
-        }
-        loggedBy {
-          id
-          firstName
-          lastName
-          stream
-        }
-        historyRecord
-      }
+    }
+  }
+`
+export const DISPLAY_MEMBER_LEADERSHIP = gql`
+  query ($id: ID!) {
+    members(where: { id: $id }) {
+      id
+
       #Leadership Information
       leadsFellowship {
         id
@@ -132,6 +74,7 @@ export const DISPLAY_MEMBER_BIO = gql`
       leadsSonta {
         id
         name
+        stream
       }
       leadsBasonta {
         id
@@ -159,6 +102,51 @@ export const DISPLAY_MEMBER_BIO = gql`
         id
         name
         stream
+      }
+    }
+  }
+`
+
+export const DISPLAY_MEMBER_CHURCH = gql`
+  query ($id: ID!) {
+    members(where: { id: $id }) {
+      id
+      #church info
+      stream
+      ministry {
+        id
+        name
+        leader {
+          firstName
+          lastName
+        }
+      }
+
+      fellowship {
+        id
+        name
+        leader {
+          firstName
+          lastName
+        }
+        council {
+          id
+        }
+      }
+      #Personal history
+      history(options: { limit: 3 }) {
+        id
+        timeStamp
+        created_at {
+          date
+        }
+        loggedBy {
+          id
+          firstName
+          lastName
+          stream
+        }
+        historyRecord
       }
     }
   }

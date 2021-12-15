@@ -6,7 +6,10 @@ import { MemberContext } from '../../contexts/MemberContext'
 import { getMemberDob, transformCloudinaryImg } from '../../global-utils'
 import Timeline from '../../components/Timeline/Timeline'
 import BaseComponent from 'components/base-component/BaseComponent'
-import { DISPLAY_MEMBER_BIO } from 'pages/display/ReadQueries'
+import {
+  DISPLAY_MEMBER_BIO,
+  DISPLAY_MEMBER_CHURCH,
+} from 'pages/display/ReadQueries'
 import PlaceholderCustom from 'components/Placeholder'
 import './UserProfile.css'
 import AuthButton from 'components/buttons/AuthButton'
@@ -14,14 +17,22 @@ import AuthButton from 'components/buttons/AuthButton'
 const DisplayPage = () => {
   const { currentUser } = useContext(MemberContext)
 
-  const { data, loading, error } = useQuery(DISPLAY_MEMBER_BIO, {
+  const {
+    data: bioData,
+    loading,
+    error,
+  } = useQuery(DISPLAY_MEMBER_BIO, {
+    variables: { id: currentUser.id },
+  })
+  const { data: churchData } = useQuery(DISPLAY_MEMBER_CHURCH, {
     variables: { id: currentUser.id },
   })
 
   //const location = useLocation()
   //const atProfile = location.pathname === '/user-profile'
 
-  const member = data?.members[0]
+  const member = bioData?.members[0]
+  const memberChurch = churchData?.members[0]
   const memberBirthday = getMemberDob(member)
   //const nameAndTitle = getNameWithTitle(member)
 
@@ -30,7 +41,7 @@ const DisplayPage = () => {
       <BaseComponent
         loadingState={loading}
         errorState={error}
-        data={data}
+        data={bioData}
         placeholder
       >
         <div className="py-5">
@@ -66,7 +77,7 @@ const DisplayPage = () => {
             </PlaceholderCustom>
             <PlaceholderCustom as="h6" className="text-center">
               <h6 className="text-center text-secondary">
-                {member?.fellowship?.name}
+                {memberChurch?.fellowship?.name}
               </h6>
             </PlaceholderCustom>
           </div>
@@ -178,8 +189,11 @@ const DisplayPage = () => {
                         <Accordion.Header>History</Accordion.Header>
                         <Accordion.Body>
                           <div>
-                            {member?.history?.length ? (
-                              <Timeline record={member?.history} limit={3} />
+                            {memberChurch?.history?.length ? (
+                              <Timeline
+                                record={memberChurch?.history}
+                                limit={3}
+                              />
                             ) : null}
                           </div>
                         </Accordion.Body>
@@ -195,7 +209,7 @@ const DisplayPage = () => {
                                 Bishop
                               </Col>
                               <Col className="placeholder-display">
-                                {member?.bishop?.fullName}
+                                {memberChurch?.bishop?.fullName}
                               </Col>
                             </Row>
                             <Row>
@@ -203,7 +217,7 @@ const DisplayPage = () => {
                                 Fellowship
                               </Col>
                               <Col className="placeholder-display">
-                                {member?.fellowship?.name}
+                                {memberChurch?.fellowship?.name}
                               </Col>
                             </Row>
                             <Row>
@@ -211,8 +225,8 @@ const DisplayPage = () => {
                                 Ministry
                               </Col>
                               <Col className="placeholder-display">
-                                {member?.ministry
-                                  ? `${member?.ministry.name}`
+                                {memberChurch?.ministry
+                                  ? `${memberChurch?.ministry.name}`
                                   : null}
                               </Col>
                             </Row>

@@ -12,6 +12,7 @@ import {
 import './Defaulters.css'
 import PlaceholderCustom from 'components/Placeholder'
 import DefaulterInfoCard from './DefaulterInfoCard'
+import RoleView from 'auth/RoleView'
 
 const Defaulters = () => {
   const { currentUser } = useContext(MemberContext)
@@ -85,6 +86,13 @@ const Defaulters = () => {
     },
   ]
 
+  const councilByConstituency = {
+    title: 'Constituencies',
+    data: church?.constituencyCount,
+    // color: church?.cancelledServicesThisWeekCount ? 'bad' : 'good',
+    link: '/services/council-by-constituencies',
+  }
+
   return (
     <Container>
       <HeadingPrimary
@@ -95,7 +103,13 @@ const Defaulters = () => {
       <PlaceholderCustom as="h6" loading={!church?.activeFellowshipCount}>
         <h6>{`Total Number of Fellowships: ${church?.activeFellowshipCount}`}</h6>
       </PlaceholderCustom>
+
       <Row>
+        <RoleView roles={['adminCouncil', 'leaderCouncil']}>
+          <Col xs={12} className="mb-3">
+            <DefaulterInfoCard defaulter={councilByConstituency} />
+          </Col>
+        </RoleView>
         {defaulters.map((defaulter, i) => (
           <Col key={i} xs={6} className="mb-3">
             <DefaulterInfoCard defaulter={defaulter} />

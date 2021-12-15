@@ -13,7 +13,7 @@ export const UPDATE_MEMBER_MUTATION = gql`
     $maritalStatus: String!
     $gender: String!
     $occupation: String
-    $fellowship: String
+    $fellowship: String!
     $ministry: String
     $pictureUrl: String!
   ) {
@@ -58,10 +58,6 @@ export const UPDATE_MEMBER_MUTATION = gql`
       ministry {
         id
         name
-        leader {
-          firstName
-          lastName
-        }
       }
       occupation {
         occupation
@@ -75,145 +71,6 @@ export const UPDATE_MEMBER_MUTATION = gql`
         }
       }
       fellowship {
-        id
-        name
-        leader {
-          firstName
-          lastName
-        }
-        bacenta {
-          id
-          name
-          town {
-            id
-            name
-            bishop {
-              id
-              firstName
-              lastName
-              fullName
-            }
-          }
-          campus {
-            id
-            name
-            bishop {
-              id
-              firstName
-              lastName
-              fullName
-            }
-          }
-        }
-      }
-      #Personal history
-      history(options: { limit: 3 }) {
-        id
-        timeStamp
-        created_at {
-          date
-        }
-        loggedBy {
-          id
-          firstName
-          lastName
-        }
-        historyRecord
-      }
-      #Leadership Information
-      leadsFellowship {
-        id
-        name
-        leader {
-          firstName
-          lastName
-        }
-        bacenta {
-          id
-          name
-          town {
-            id
-            name
-            bishop {
-              firstName
-              lastName
-            }
-          }
-          campus {
-            id
-            name
-            bishop {
-              firstName
-              lastName
-            }
-          }
-        }
-      }
-      leadsBacenta {
-        id
-        name
-        town {
-          id
-          name
-          bishop {
-            id
-            firstName
-            lastName
-          }
-        }
-        campus {
-          id
-          name
-          bishop {
-            id
-            firstName
-            lastName
-          }
-        }
-      }
-      leadsTown {
-        id
-        name
-        bishop {
-          id
-          firstName
-          lastName
-        }
-      }
-      leadsCampus {
-        id
-        name
-        bishop {
-          id
-          firstName
-          lastName
-        }
-      }
-      leadsSonta {
-        id
-        name
-      }
-      leadsBasonta {
-        id
-        name
-        sonta {
-          id
-        }
-      }
-      leadsMinistry {
-        id
-        name
-      }
-
-      isAdminForCouncil {
-        id
-        name
-      }
-      isAdminForCampus {
-        id
-        name
-      }
-      isAdminForTown {
         id
         name
       }

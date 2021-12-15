@@ -727,6 +727,15 @@ export const resolvers = {
             fellowshipId: args.fellowshipId,
           }
         )
+
+        //Fellowship Leader must be removed since the fellowship is being closed down
+        RemoveServant(
+          context,
+          args,
+          ['adminFederal', 'adminCouncil', 'adminCampus', 'adminTown'],
+          'Fellowship',
+          'Leader'
+        )
         const fellowship = rearrangeCypherObject(closeFellowshipResponse)
         return fellowship
       } catch (error) {

@@ -28,7 +28,7 @@ export const RECORD_SERVICE = gql`
         id
         fellowship {
           id
-          services {
+          services(limit: 3) {
             id
           }
         }
@@ -53,7 +53,7 @@ export const RECORD_CANCELLED_SERVICE = gql`
         id
         fellowship {
           id
-          services {
+          services(limit: 3) {
             id
           }
         }

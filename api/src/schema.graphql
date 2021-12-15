@@ -323,11 +323,11 @@ type Constituency {
     @cypher(
       statement: """
       MATCH (this)-[:HAS*2]->(fellowships:ActiveFellowship)
-      WHERE NOT EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week
-        }
+      WHERE EXISTS {
         MATCH (fellowships)-[:MEETS_ON]->(day:ServiceDay)
-        WHERE day.dayNumber <= date().dayOfWeek AND  time() > time('20:30')
+        WHERE day.dayNumber <= date().dayOfWeek OR  time() > time('20:30')
+         }
+         MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week <> date().week
       RETURN fellowships
       """
     )
@@ -335,11 +335,11 @@ type Constituency {
     @cypher(
       statement: """
       MATCH (this)-[:HAS*2]->(fellowships:ActiveFellowship)
-      WHERE NOT EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week
-        }
-        MATCH (fellowships)-[:MEETS_ON]->(day:ServiceDay)
-        WHERE day.dayNumber <= date().dayOfWeek AND  time() > time('20:30')
+           WHERE EXISTS {
+             MATCH (fellowships)-[:MEETS_ON]->(day:ServiceDay)
+             WHERE day.dayNumber <= date().dayOfWeek OR  time() > time('20:30')
+              }
+              MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week <> date().week
       RETURN COUNT(fellowships)
       """
     )
@@ -594,11 +594,11 @@ type Council {
     @cypher(
       statement: """
       MATCH (this)-[:HAS*3]->(fellowships:ActiveFellowship)
-      WHERE NOT EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week
-        }
-        MATCH (fellowships)-[:MEETS_ON]->(day:ServiceDay)
-        WHERE day.dayNumber <= date().dayOfWeek AND  time() > time('20:30')
+      WHERE EXISTS {
+             MATCH (fellowships)-[:MEETS_ON]->(day:ServiceDay)
+             WHERE day.dayNumber <= date().dayOfWeek OR  time() > time('20:30')
+              }
+              MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week <> date().week
       RETURN fellowships
       """
     )
@@ -606,11 +606,11 @@ type Council {
     @cypher(
       statement: """
       MATCH (this)-[:HAS*3]->(fellowships:ActiveFellowship)
-      WHERE NOT EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week
-        }
-        MATCH (fellowships)-[:MEETS_ON]->(day:ServiceDay)
-        WHERE day.dayNumber <= date().dayOfWeek AND  time() > time('20:30')
+      WHERE EXISTS {
+             MATCH (fellowships)-[:MEETS_ON]->(day:ServiceDay)
+             WHERE day.dayNumber <= date().dayOfWeek OR  time() > time('20:30')
+              }
+              MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week <> date().week
       RETURN COUNT(fellowships)
       """
     )
@@ -754,11 +754,11 @@ type Campus {
     @cypher(
       statement: """
       MATCH (this)-[:HAS*2]->(fellowships:ActiveFellowship)
-      WHERE NOT EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week
-        }
-        MATCH (fellowships)-[:MEETS_ON]->(day:ServiceDay)
-        WHERE day.dayNumber <= date().dayOfWeek AND  time() > time('20:30')
+      WHERE EXISTS {
+             MATCH (fellowships)-[:MEETS_ON]->(day:ServiceDay)
+             WHERE day.dayNumber <= date().dayOfWeek OR  time() > time('20:30')
+              }
+              MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week <> date().week
       RETURN fellowships
       """
     )
@@ -766,11 +766,11 @@ type Campus {
     @cypher(
       statement: """
       MATCH (this)-[:HAS*2]->(fellowships:ActiveFellowship)
-      WHERE NOT EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week
-        }
-        MATCH (fellowships)-[:MEETS_ON]->(day:ServiceDay)
-        WHERE day.dayNumber <= date().dayOfWeek AND  time() > time('20:30')
+      WHERE EXISTS {
+             MATCH (fellowships)-[:MEETS_ON]->(day:ServiceDay)
+             WHERE day.dayNumber <= date().dayOfWeek OR  time() > time('20:30')
+              }
+              MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week <> date().week
       RETURN COUNT(fellowships)
       """
     )
@@ -915,11 +915,11 @@ type Town {
     @cypher(
       statement: """
       MATCH (this)-[:HAS*2]->(fellowships:ActiveFellowship)
-      WHERE NOT EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week
-        }
-        MATCH (fellowships)-[:MEETS_ON]->(day:ServiceDay)
-        WHERE day.dayNumber <= date().dayOfWeek AND  time() > time('20:30')
+      WHERE EXISTS {
+             MATCH (fellowships)-[:MEETS_ON]->(day:ServiceDay)
+             WHERE day.dayNumber <= date().dayOfWeek OR  time() > time('20:30')
+              }
+              MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week <> date().week
       RETURN fellowships
       """
     )
@@ -927,11 +927,11 @@ type Town {
     @cypher(
       statement: """
       MATCH (this)-[:HAS*2]->(fellowships:ActiveFellowship)
-      WHERE NOT EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week
-        }
-        MATCH (fellowships)-[:MEETS_ON]->(day:ServiceDay)
-        WHERE day.dayNumber <= date().dayOfWeek AND  time() > time('20:30')
+      WHERE EXISTS {
+             MATCH (fellowships)-[:MEETS_ON]->(day:ServiceDay)
+             WHERE day.dayNumber <= date().dayOfWeek OR  time() > time('20:30')
+              }
+              MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week <> date().week
       RETURN COUNT(fellowships)
       """
     )

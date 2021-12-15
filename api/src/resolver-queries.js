@@ -497,7 +497,7 @@ RETURN fellowship.name AS name, COUNT(member) AS memberCount
 `
 
 export const closeDownFellowship = `
-MATCH (fellowship:Fellowship {id:$fellowshipId})-[:HAS]-(bacenta)
+MATCH (fellowship:Fellowship {id:$fellowshipId})<-[:HAS]-(bacenta)
 MATCH (bacenta)-[:HAS]->(fellowships)
 MATCH (bacenta)-[:HAS_HISTORY]->(history:HistoryLog)-[:RECORDED_ON]->(createdAt:TimeGraph)
 MATCH (history)-[:LOGGED_BY]->(loggedBy:Member)
@@ -515,7 +515,8 @@ MERGE (fellowship)-[:HAS_HISTORY]->(log)
 MERGE (bacenta)-[:HAS_HISTORY]->(log)
 
 SET fellowship:ClosedFellowship
-REMOVE fellowship:Fellowship, REMOVE fellowship:ActiveFellowship
+REMOVE fellowship:Fellowship
+REMOVE fellowship:ActiveFellowship
 
 RETURN bacenta {
   .id, .name, 

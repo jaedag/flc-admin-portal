@@ -4,7 +4,10 @@ import { useQuery, useMutation } from '@apollo/client'
 
 import { parsePhoneNum, throwErrorMsg } from '../../global-utils'
 import { UPDATE_MEMBER_MUTATION } from './UpdateMutations'
-import { DISPLAY_MEMBER_BIO } from '../display/ReadQueries'
+import {
+  DISPLAY_MEMBER_BIO,
+  DISPLAY_MEMBER_CHURCH,
+} from '../display/ReadQueries'
 
 import { MemberContext } from '../../contexts/MemberContext'
 import MemberForm from '../../components/reusable-forms/MemberForm'
@@ -21,8 +24,12 @@ const UpdateMember = () => {
   } = useQuery(DISPLAY_MEMBER_BIO, {
     variables: { id: memberId },
   })
+  const { data: churchData } = useQuery(DISPLAY_MEMBER_CHURCH, {
+    variables: { id: memberId },
+  })
   const [isLoading, setIsLoading] = useState(false)
   const member = memberData?.members[0]
+  const memberChurch = churchData?.members[0]
 
   const initialValues = {
     firstName: member?.firstName ?? '',
@@ -36,8 +43,8 @@ const UpdateMember = () => {
     maritalStatus: member?.maritalStatus?.status ?? '',
     occupation: member?.occupation?.occupation ?? '',
     pictureUrl: member?.pictureUrl ?? '',
-    fellowship: member?.fellowship ? member?.fellowship?.name : '',
-    ministry: member?.ministry ? member?.ministry?.id : '',
+    fellowship: memberChurch?.fellowship ? memberChurch?.fellowship?.name : '',
+    ministry: memberChurch?.ministry ? member?.ministry?.id : '',
 
     pastoralHistory: [
       {

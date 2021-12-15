@@ -4,7 +4,10 @@ import { useQuery, useMutation } from '@apollo/client'
 import { parsePhoneNum } from '../../global-utils'
 
 import { UPDATE_MEMBER_MUTATION } from '../update/UpdateMutations'
-import { DISPLAY_MEMBER_BIO } from '../display/ReadQueries'
+import {
+  DISPLAY_MEMBER_BIO,
+  DISPLAY_MEMBER_CHURCH,
+} from '../display/ReadQueries'
 
 import { MemberContext } from '../../contexts/MemberContext'
 import MemberForm from '../../components/reusable-forms/MemberForm'
@@ -21,7 +24,11 @@ const UserProfileEditPage = () => {
   } = useQuery(DISPLAY_MEMBER_BIO, {
     variables: { id: currentUser.id },
   })
-  const member = memberData?.member
+  const { data: churchData } = useQuery(DISPLAY_MEMBER_CHURCH, {
+    variables: { id: currentUser.id },
+  })
+  const member = memberData?.members[0]
+  const memberChurch = churchData?.members[0]
 
   const initialValues = {
     firstName: member?.firstName ? member?.firstName : '',
@@ -35,8 +42,8 @@ const UserProfileEditPage = () => {
     maritalStatus: member?.maritalStatus ? member?.maritalStatus.status : '',
     occupation: member?.occupation ? member?.occupation.occupation : '',
     pictureUrl: member?.pictureUrl ? member?.pictureUrl : '',
-    fellowship: member?.fellowship?.name ?? '',
-    ministry: member?.ministry ? member?.ministry.id : '',
+    fellowship: memberChurch?.fellowship?.name ?? '',
+    ministry: memberChurch?.ministry ? memberChurch?.ministry.id : '',
 
     pastoralHistory: [
       {

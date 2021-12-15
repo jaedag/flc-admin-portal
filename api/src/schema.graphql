@@ -325,7 +325,7 @@ type Constituency {
       MATCH (this)-[:HAS*2]->(fellowships:ActiveFellowship)
       WHERE EXISTS {
         MATCH (fellowships)-[:MEETS_ON]->(day:ServiceDay)
-        WHERE day.dayNumber <= date().dayOfWeek OR  time() > time('20:30')
+        WHERE day.dayNumber < date().dayOfWeek OR  time() > time('20:30')
          }
          MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week <> date().week
       RETURN fellowships
@@ -337,7 +337,7 @@ type Constituency {
       MATCH (this)-[:HAS*2]->(fellowships:ActiveFellowship)
            WHERE EXISTS {
              MATCH (fellowships)-[:MEETS_ON]->(day:ServiceDay)
-             WHERE day.dayNumber <= date().dayOfWeek OR  time() > time('20:30')
+             WHERE day.dayNumber < date().dayOfWeek OR  time() > time('20:30')
               }
               MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week <> date().week
       RETURN COUNT(fellowships)
@@ -596,7 +596,7 @@ type Council {
       MATCH (this)-[:HAS*3]->(fellowships:ActiveFellowship)
       WHERE EXISTS {
              MATCH (fellowships)-[:MEETS_ON]->(day:ServiceDay)
-             WHERE day.dayNumber <= date().dayOfWeek OR  time() > time('20:30')
+             WHERE day.dayNumber < date().dayOfWeek OR  time() > time('20:30')
               }
               MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week <> date().week
       RETURN fellowships
@@ -608,7 +608,7 @@ type Council {
       MATCH (this)-[:HAS*3]->(fellowships:ActiveFellowship)
       WHERE EXISTS {
              MATCH (fellowships)-[:MEETS_ON]->(day:ServiceDay)
-             WHERE day.dayNumber <= date().dayOfWeek OR  time() > time('20:30')
+             WHERE day.dayNumber < date().dayOfWeek OR  time() > time('20:30')
               }
               MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week <> date().week
       RETURN COUNT(fellowships)
@@ -756,7 +756,7 @@ type Campus {
       MATCH (this)-[:HAS*2]->(fellowships:ActiveFellowship)
       WHERE EXISTS {
              MATCH (fellowships)-[:MEETS_ON]->(day:ServiceDay)
-             WHERE day.dayNumber <= date().dayOfWeek OR  time() > time('20:30')
+             WHERE day.dayNumber < date().dayOfWeek OR  time() > time('20:30')
               }
               MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week <> date().week
       RETURN fellowships
@@ -768,7 +768,7 @@ type Campus {
       MATCH (this)-[:HAS*2]->(fellowships:ActiveFellowship)
       WHERE EXISTS {
              MATCH (fellowships)-[:MEETS_ON]->(day:ServiceDay)
-             WHERE day.dayNumber <= date().dayOfWeek OR  time() > time('20:30')
+             WHERE day.dayNumber < date().dayOfWeek OR  time() > time('20:30')
               }
               MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week <> date().week
       RETURN COUNT(fellowships)
@@ -917,7 +917,7 @@ type Town {
       MATCH (this)-[:HAS*2]->(fellowships:ActiveFellowship)
       WHERE EXISTS {
              MATCH (fellowships)-[:MEETS_ON]->(day:ServiceDay)
-             WHERE day.dayNumber <= date().dayOfWeek OR  time() > time('20:30')
+             WHERE day.dayNumber < date().dayOfWeek OR  time() > time('20:30')
               }
               MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week <> date().week
       RETURN fellowships
@@ -929,7 +929,7 @@ type Town {
       MATCH (this)-[:HAS*2]->(fellowships:ActiveFellowship)
       WHERE EXISTS {
              MATCH (fellowships)-[:MEETS_ON]->(day:ServiceDay)
-             WHERE day.dayNumber <= date().dayOfWeek OR  time() > time('20:30')
+             WHERE day.dayNumber < date().dayOfWeek OR  time() > time('20:30')
               }
               MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week <> date().week
       RETURN COUNT(fellowships)
@@ -1670,7 +1670,7 @@ type Mutation {
       MERGE (council)-[:HAS]->(town)
       MERGE (leader)-[:LEADS]->(town)
 
-      MERGE (date:TimeGraph {date: date(date())})
+      MERGE (date:TimeGraph {date: date()})
       MERGE (log)-[:LOGGED_BY]->(currentUser)
       MERGE (log)-[:RECORDED_ON]->(date)
       MERGE (council)-[:HAS_HISTORY]->(log)
@@ -1720,7 +1720,7 @@ type Mutation {
       MERGE (council)-[:HAS]->(campus)
       MERGE (leader)-[:LEADS]->(campus)
 
-      MERGE (date:TimeGraph {date: date(date())})
+      MERGE (date:TimeGraph {date: date()})
       MERGE (log)-[:LOGGED_BY]->(currentUser)
       MERGE (log)-[:RECORDED_ON]->(date)
       MERGE (council)-[:HAS_HISTORY]->(log)
@@ -1775,7 +1775,7 @@ type Mutation {
        MERGE (campusTown)-[:HAS]->(bacenta)
        MERGE (leader)-[:LEADS]->(bacenta)
 
-       MERGE (date:TimeGraph {date: date(date())})
+       MERGE (date:TimeGraph {date: date()})
        MERGE (log)-[:LOGGED_BY]->(currentUser)
        MERGE (log)-[:RECORDED_ON]->(date)
        MERGE (campusTown)-[:HAS_HISTORY]->(log)
@@ -1830,7 +1830,7 @@ type Mutation {
        MERGE (campusTown)-[:HAS_SONTA]->(sonta)
        MERGE (leader)-[:LEADS]->(sonta)
 
-      MERGE (date:TimeGraph {date: date(date())})
+      MERGE (date:TimeGraph {date: date()})
       MERGE (log)-[:LOGGED_BY]->(currentUser)
        MERGE (log)-[:RECORDED_ON]->(date)
        MERGE (campusTown)-[:HAS_HISTORY]->(log)
@@ -1891,7 +1891,7 @@ type Mutation {
     maritalStatus: String!
     gender: String!
     occupation: String
-    fellowship: String
+    fellowship: String!
     ministry: String
     pictureUrl: String!
   ): Member

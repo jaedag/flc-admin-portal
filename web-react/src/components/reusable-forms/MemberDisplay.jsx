@@ -9,7 +9,11 @@ import {
   transformCloudinaryImg,
   throwErrorMsg,
 } from '../../global-utils'
-import { DISPLAY_MEMBER_BIO } from 'pages/display/ReadQueries'
+import {
+  DISPLAY_MEMBER_BIO,
+  DISPLAY_MEMBER_CHURCH,
+  DISPLAY_MEMBER_LEADERSHIP,
+} from 'pages/display/ReadQueries'
 import { Col, Container, Row } from 'react-bootstrap'
 import PlaceholderCustom from 'components/Placeholder'
 import DetailsCard from 'components/card/DetailsCard'
@@ -18,12 +22,24 @@ import RoleView from 'auth/RoleView'
 import ViewAll from 'components/buttons/ViewAll'
 
 const MemberDisplay = ({ memberId }) => {
-  const { data, loading, error } = useQuery(DISPLAY_MEMBER_BIO, {
+  const {
+    data: bioData,
+    loading,
+    error,
+  } = useQuery(DISPLAY_MEMBER_BIO, {
+    variables: { id: memberId },
+  })
+  const { data: churchData } = useQuery(DISPLAY_MEMBER_CHURCH, {
+    variables: { id: memberId },
+  })
+  const { data: leaderData } = useQuery(DISPLAY_MEMBER_LEADERSHIP, {
     variables: { id: memberId },
   })
   throwErrorMsg(error)
 
-  const member = data?.members[0]
+  const member = bioData?.members[0]
+  const memberChurch = churchData?.members[0]
+  const memberLeader = leaderData?.members[0]
   const memberBirthday = getMemberDob(member)
   const nameAndTitle = getNameWithTitle(member)
 
@@ -58,7 +74,7 @@ const MemberDisplay = ({ memberId }) => {
           <PlaceholderCustom as="h3" loading={!member || loading}>
             <h3>{nameAndTitle}</h3>
           </PlaceholderCustom>
-          <MemberRoleList member={member} />
+          <MemberRoleList member={memberLeader} />
         </Col>
       </Row>
       <Row>
@@ -107,10 +123,16 @@ const MemberDisplay = ({ memberId }) => {
           <DetailsCard heading="Email Address" detail={member?.email} />
         </Col>
         <Col sm={1} md="auto">
-          <DetailsCard heading="Fellowship" detail={member?.fellowship?.name} />
+          <DetailsCard
+            heading="Fellowship"
+            detail={memberChurch?.fellowship?.name}
+          />
         </Col>
         <Col>
-          <DetailsCard heading="Ministry" detail={member?.ministry?.name} />
+          <DetailsCard
+            heading="Ministry"
+            detail={memberChurch?.ministry?.name}
+          />
         </Col>
 
         {member?.titleConnection?.edges[0]?.node.title && (
@@ -132,7 +154,7 @@ const MemberDisplay = ({ memberId }) => {
             <ViewAll to={`/member/history`} />
           </Col>
         </Row>
-        <Timeline record={member?.history} limit={3} />
+        <Timeline record={memberChurch?.history} limit={3} />
       </Row>
     </Container>
   )

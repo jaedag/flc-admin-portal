@@ -5,6 +5,7 @@ export const CONSTITUENCY_DEFAULTERS = gql`
     constituencies(where: { id: $id }) {
       id
       name
+
       activeFellowshipCount
       formDefaultersThisWeekCount
       bankingDefaultersThisWeekCount
@@ -165,6 +166,7 @@ export const COUNCIL_DEFAULTERS = gql`
     councils(where: { id: $id }) {
       id
       name
+      constituencyCount
       activeFellowshipCount
       formDefaultersThisWeekCount
       bankingDefaultersThisWeekCount
@@ -350,6 +352,33 @@ export const COUNCIL_BANKED_LIST = gql`
           attendance
           income
         }
+      }
+    }
+  }
+`
+
+export const COUNCIL_BY_CONSTITUENCY = gql`
+  query councilByConstituency($id: ID) {
+    councils(where: { id: $id }) {
+      id
+      name
+      constituencies {
+        id
+        name
+        admin {
+          id
+          firstName
+          lastName
+          fullName
+          phoneNumber
+          whatsappNumber
+        }
+        activeFellowshipCount
+        formDefaultersThisWeekCount
+        bankingDefaultersThisWeekCount
+        bankedThisWeekCount
+        servicesThisWeekCount
+        cancelledServicesThisWeekCount
       }
     }
   }

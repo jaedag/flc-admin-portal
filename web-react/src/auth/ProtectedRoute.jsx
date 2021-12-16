@@ -35,7 +35,7 @@ const ProtectedRoute = ({ component, roles, placeholder, ...args }) => {
 
           if (!isAuthorised(currentUser.roles, ['leaderBacenta'])) {
             //User is not a Bacenta Leader and he can only be looking at his fellowship membership
-            church.setFellowshipId(currentUser.fellowship.id)
+            church.setFellowshipId(currentUser.fellowship?.id)
           }
         }
       }

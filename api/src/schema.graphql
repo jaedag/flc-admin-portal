@@ -607,8 +607,11 @@ type Council {
       statement: """
       MATCH (this)-[:HAS*3]->(fellowships:ActiveFellowship)
       WHERE EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week
-        }
+             MATCH (fellowships)-[:MEETS_ON]->(day:ServiceDay)
+             WHERE day.dayNumber < date().dayOfWeek OR  time() > time('20:30')
+              }
+              MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week <> date().week
+
       RETURN COUNT(DISTINCT fellowships)
       """
     )

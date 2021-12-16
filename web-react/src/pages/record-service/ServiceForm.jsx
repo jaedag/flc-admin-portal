@@ -57,9 +57,9 @@ const ServiceForm = ({
     servicePicture: Yup.string().required(
       'Please submit a picture of your service'
     ),
-    treasurers: Yup.array().of(
-      Yup.string().required('Please pick a name from the dropdown')
-    ),
+    treasurers: Yup.array()
+      .min(2, 'You must have at least two treasurers')
+      .of(Yup.string().required('Please pick a name from the dropdown')),
   })
 
   const onSubmit = (values, onSubmitProps) => {
@@ -95,7 +95,7 @@ const ServiceForm = ({
         <Container>
           <HeadingPrimary>Record Your Service Details</HeadingPrimary>
           <h5 className="text-secondary">{`${church?.name} ${church?.__typename}`}</h5>
-
+          {console.log(formik.errors)}
           <Form className="form-group">
             <Row className="row-cols-1 row-cols-md-2">
               {/* <!-- Service Form--> */}
@@ -167,7 +167,7 @@ const ServiceForm = ({
                                     aria-describedby="Council Member List"
                                     className="form-control"
                                     error={
-                                      formik.errors.treasurers &&
+                                      formik.errors.treasurers ||
                                       formik.errors.treasurers[index]
                                     }
                                   />

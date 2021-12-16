@@ -95,7 +95,7 @@ const ServiceForm = ({
         <Container>
           <HeadingPrimary>Record Your Service Details</HeadingPrimary>
           <h5 className="text-secondary">{`${church?.name} ${church?.__typename}`}</h5>
-          {console.log(formik.errors)}
+
           <Form className="form-group">
             <Row className="row-cols-1 row-cols-md-2">
               {/* <!-- Service Form--> */}

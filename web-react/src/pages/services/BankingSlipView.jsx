@@ -1,8 +1,9 @@
 import { useQuery } from '@apollo/client'
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
+import PlaceholderCustom from 'components/Placeholder'
 import { ChurchContext } from 'contexts/ChurchContext'
 import { ServiceContext } from 'contexts/ServiceContext'
-import { parseDate } from 'global-utils'
+import { parseDate, throwErrorMsg } from 'global-utils'
 import React, { useContext } from 'react'
 import { Card, Col, Container, Row } from 'react-bootstrap'
 import { CheckCircleFill, XCircleFill } from 'react-bootstrap-icons'
@@ -13,15 +14,19 @@ const BankingSlipView = () => {
   const { fellowshipId } = useContext(ChurchContext)
   const { setServiceRecordId } = useContext(ServiceContext)
   const history = useHistory()
-  const { data } = useQuery(BANKING_SLIP_QUERIES, {
+  const { data, loading, error } = useQuery(BANKING_SLIP_QUERIES, {
     variables: { fellowshipId: fellowshipId },
   })
   const fellowship = data?.fellowships[0]
+  const placeholder = ['', '', '']
+  throwErrorMsg(error)
 
   return (
     <Container>
-      <HeadingPrimary>{fellowship?.name}</HeadingPrimary>
-      <p>Banking Code: {fellowship?.bankingCode}</p>
+      <HeadingPrimary loading={loading}>{fellowship?.name}</HeadingPrimary>
+      <PlaceholderCustom as="p" loading={loading}>
+        <p>Banking Code: {fellowship?.bankingCode}</p>
+      </PlaceholderCustom>
 
       {data?.fellowships[0].services.map((service, index) => {
         if (service.noServiceReason) {
@@ -61,6 +66,27 @@ const BankingSlipView = () => {
           </Card>
         )
       })}
+
+      {loading &&
+        placeholder.map((service, index) => {
+          return (
+            <Card key={index} className="mb-2">
+              <Card.Header>
+                <PlaceholderCustom as="p" loading={loading}></PlaceholderCustom>
+              </Card.Header>
+              <Card.Body>
+                <Row>
+                  <Col>
+                    <PlaceholderCustom
+                      as="span"
+                      loading={loading}
+                    ></PlaceholderCustom>
+                  </Col>
+                </Row>
+              </Card.Body>
+            </Card>
+          )
+        })}
     </Container>
   )
 }

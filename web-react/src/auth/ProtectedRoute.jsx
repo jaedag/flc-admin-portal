@@ -17,20 +17,31 @@ const ProtectedRoute = ({ component, roles, placeholder, ...args }) => {
       church.setCouncilId(currentUser.council)
       church.setStreamId(currentUser.stream)
 
-      if (!currentUser.roles.includes('adminCouncil')) {
+      if (!currentUser.roles.includes('adminCouncil', 'leaderCouncil')) {
         //User is not a Bishops Admin the he can only be looking at his constituency membership
         church.setTownId(currentUser.constituency)
         church.setCampusId(currentUser.constituency)
+
+        if (
+          !currentUser.roles.includes(
+            'adminCampus',
+            'adminTown',
+            'leaderCampus',
+            'leaderTown'
+          )
+        ) {
+          //User is not a Constituency Admin the he can only be looking at his bacenta membership
+          church.setBacentaId(currentUser.fellowship?.bacenta?.id)
+
+          if (!currentUser.roles.includes('leaderBacenta')) {
+            //User is not a Bacenta Leader and he can only be looking at his fellowship membership
+            church.setFellowshipId(currentUser.fellowship)
+          }
+        }
       }
     }
     // eslint-disable-next-line
-  }, [
-    currentUser.council,
-    church.setCouncilId,
-    church.setTownId,
-    church.setCampusId,
-    church.setChurch,
-  ])
+  }, [currentUser, church])
 
   if (isAuthorised(roles, currentUser.roles)) {
     //if the user has permission to access the route

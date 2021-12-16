@@ -168,7 +168,8 @@ const ServiceForm = ({
                                     className="form-control"
                                     error={
                                       formik.errors.treasurers ||
-                                      formik.errors.treasurers[index]
+                                      (formik.errors.treasurers &&
+                                        formik.errors.treasurers[index])
                                     }
                                   />
                                 </Col>

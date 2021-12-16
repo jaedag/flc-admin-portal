@@ -44,7 +44,7 @@ const UpdateMember = () => {
     occupation: member?.occupation?.occupation ?? '',
     pictureUrl: member?.pictureUrl ?? '',
     fellowship: memberChurch?.fellowship ? memberChurch?.fellowship?.name : '',
-    ministry: memberChurch?.ministry ? member?.ministry?.id : '',
+    ministry: memberChurch?.ministry ? memberChurch?.ministry?.id : '',
 
     pastoralHistory: [
       {

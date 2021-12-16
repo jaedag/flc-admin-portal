@@ -175,6 +175,7 @@ function MemberForm({ initialValues, onSubmit, title, loading, update }) {
                       />
                     </Col>
                   </div>
+
                   <div className="form-row justify-content-center">
                     {!update && (
                       <Col sm={10}>

@@ -2,7 +2,7 @@ import { useMutation, useQuery } from '@apollo/client'
 import BaseComponent from 'components/base-component/BaseComponent'
 import { FieldArray, Form, Formik } from 'formik'
 import * as Yup from 'yup'
-import { capitalise, makeSelectOptions } from 'global-utils'
+import { capitalise, makeSelectOptions, throwErrorMsg } from 'global-utils'
 import {
   COUNCIL_MEMBER_DROPDOWN,
   GET_COUNCIL_CAMPUSES,
@@ -225,14 +225,14 @@ const BacentaForm = ({ initialValues, onSubmit, title, newBacenta }) => {
                       },
                     })
                       .then((res) => {
-                        clickCard(res.data.CloseDownBacenta)
+                        clickCard(res.data.CloseDownBacenta[`${church.church}`])
                         togglePopup()
                         history.push(`/${church.church}/displaydetails`)
                       })
                       .catch((error) => {
                         // eslint-disable-next-line no-console
                         console.error(error)
-                        alert(
+                        throwErrorMsg(
                           'There was an error closing down this bacenta',
                           error
                         )

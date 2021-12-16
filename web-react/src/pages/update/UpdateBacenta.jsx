@@ -305,7 +305,7 @@ const UpdateBacenta = () => {
       removeFellowships.forEach((fellowship) => {
         CloseDownFellowship({
           variables: {
-            fellowshipId: fellowship,
+            fellowshipId: fellowship ?? '',
           },
         }).catch((error) => throwErrorMsg(error))
       })

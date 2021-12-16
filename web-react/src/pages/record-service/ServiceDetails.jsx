@@ -7,16 +7,16 @@ import { Col, Container, Row, Table, Button } from 'react-bootstrap'
 import { useHistory } from 'react-router'
 import './ServiceDetails.css'
 
-const ServiceDetails = ({ service, church }) => {
+const ServiceDetails = ({ service, church, loading }) => {
   const { theme } = useContext(MemberContext)
   const history = useHistory()
 
   return (
     <Container>
-      <PlaceholderCustom as="h3">
+      <PlaceholderCustom as="h3" loading={loading}>
         <HeadingPrimary>{`${church?.__typename} Service Details`}</HeadingPrimary>
       </PlaceholderCustom>
-      <PlaceholderCustom as="h6">
+      <PlaceholderCustom as="h6" loading={loading}>
         <HeadingSecondary>{`${church?.name} ${church?.__typename}`}</HeadingSecondary>
         <p>{`Recorded by ${service?.created_by.fullName}`}</p>
       </PlaceholderCustom>
@@ -31,6 +31,7 @@ const ServiceDetails = ({ service, church }) => {
                     <PlaceholderCustom
                       as="td"
                       xs={12}
+                      loading={loading}
                       className="td-placeholder"
                     >
                       <td>
@@ -41,7 +42,7 @@ const ServiceDetails = ({ service, church }) => {
                   <tr>
                     <td>Attendance</td>
                     <td>
-                      <PlaceholderCustom>
+                      <PlaceholderCustom loading={loading}>
                         {service.attendance}
                       </PlaceholderCustom>
                     </td>
@@ -49,7 +50,9 @@ const ServiceDetails = ({ service, church }) => {
                   <tr>
                     <td>Income</td>
                     <td>
-                      <PlaceholderCustom>{service.income}</PlaceholderCustom>
+                      <PlaceholderCustom loading={loading}>
+                        {service.income}
+                      </PlaceholderCustom>
                     </td>
                   </tr>
                   {service.treasurers.map((treasurer, i) => {
@@ -57,7 +60,7 @@ const ServiceDetails = ({ service, church }) => {
                       <tr key={i}>
                         <td>{`Treasurer ${i + 1}`}</td>
                         <td>
-                          <PlaceholderCustom>
+                          <PlaceholderCustom loading={loading}>
                             {treasurer.fullName}
                           </PlaceholderCustom>
                         </td>
@@ -72,6 +75,7 @@ const ServiceDetails = ({ service, church }) => {
                   <PlaceholderCustom
                     className="report-picture placeholder"
                     xs={12}
+                    loading={loading}
                   >
                     <img
                       className="report-picture"
@@ -83,6 +87,7 @@ const ServiceDetails = ({ service, church }) => {
                 <h6>Service Picture</h6>
                 <div>
                   <PlaceholderCustom
+                    loading={loading}
                     className="report-picture placeholder"
                     xs={12}
                   >
@@ -97,6 +102,7 @@ const ServiceDetails = ({ service, church }) => {
                     <h6>Banking Slip</h6>
                     <div>
                       <PlaceholderCustom
+                        loading={loading}
                         className="report-picture placeholder"
                         xs={12}
                       >

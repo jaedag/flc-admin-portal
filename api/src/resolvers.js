@@ -697,8 +697,6 @@ export const resolvers = {
           'adminCouncil',
           'adminCampus',
           'adminTown',
-          'leaderFellowship',
-          'leaderBacenta',
           'leaderTown',
           'leaderCampus',
         ],
@@ -738,6 +736,50 @@ export const resolvers = {
         )
         const fellowship = rearrangeCypherObject(closeFellowshipResponse)
         return fellowship
+      } catch (error) {
+        throwErrorMsg(error)
+      }
+    },
+
+    CloseDownBacenta: async (object, args, context) => {
+      isAuth(
+        ['adminFederal', 'adminCouncil', 'adminCampus', 'adminTown'],
+        context.auth.roles
+      )
+
+      const session = context.driver.session()
+
+      try {
+        const bacentaCheckResponse = await session.run(
+          cypher.checkBacentaHasNoMembers,
+          args
+        )
+        const bacentaCheck = rearrangeCypherObject(bacentaCheckResponse)
+
+        if (bacentaCheck.memberCount) {
+          throwErrorMsg(
+            `${bacentaCheck?.name} Bacenta has ${bacentaCheck?.fellowshipCount} active fellowships. Please close down all fellowships and try again.`
+          )
+        }
+
+        const closeBacentaResponse = await session.run(
+          cypher.closeDownBacenta,
+          {
+            auth: context.auth,
+            bacentaId: args.bacentaId,
+          }
+        )
+
+        //Bacenta Leader must be removed since the Bacenta is being closed down
+        RemoveServant(
+          context,
+          args,
+          ['adminFederal', 'adminCouncil', 'adminCampus', 'adminTown'],
+          'Bacenta',
+          'Leader'
+        )
+        const bacenta = rearrangeCypherObject(closeBacentaResponse)
+        return bacenta
       } catch (error) {
         throwErrorMsg(error)
       }

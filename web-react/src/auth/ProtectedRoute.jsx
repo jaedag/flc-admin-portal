@@ -11,32 +11,32 @@ const ProtectedRoute = ({ component, roles, placeholder, ...args }) => {
   const { isAuthenticated } = useAuth0()
   const church = useContext(ChurchContext)
   useEffect(() => {
-    if (!currentUser.roles.includes('adminFederal')) {
+    if (!isAuthorised(currentUser.roles, ['adminFederal'])) {
       //if User is not a federal admin
       church.setChurch(currentUser.church)
       church.setCouncilId(currentUser.council)
       church.setStreamId(currentUser.stream)
 
-      if (!currentUser.roles.includes('adminCouncil', 'leaderCouncil')) {
+      if (!isAuthorised(currentUser.roles, ['adminCouncil', 'leaderCouncil'])) {
         //User is not a Bishops Admin the he can only be looking at his constituency membership
         church.setTownId(currentUser.constituency)
         church.setCampusId(currentUser.constituency)
 
         if (
-          !currentUser.roles.includes(
+          !isAuthorised(currentUser.roles, [
             'adminCampus',
             'adminTown',
             'leaderCampus',
-            'leaderTown'
-          )
+            'leaderTown',
+          ])
         ) {
           //User is not a Constituency Admin the he can only be looking at his bacenta membership
           church.setBacentaId(currentUser.fellowship?.bacenta?.id)
 
-          if (!currentUser.roles.includes('leaderBacenta')) {
-            //User is not a Bacenta Leader and he can only be looking at his fellowship membership
-            church.setFellowshipId(currentUser.fellowship)
-          }
+          // if (!isAuthorised(currentUser.roles, ['leaderBacenta'])) {
+          //   //User is not a Bacenta Leader and he can only be looking at his fellowship membership
+          //   church.setFellowshipId(currentUser.fellowship?.id)
+          // }
         }
       }
     }

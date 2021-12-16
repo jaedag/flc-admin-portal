@@ -28,7 +28,7 @@ export const RECORD_SERVICE = gql`
         id
         fellowship {
           id
-          services(limit: 3) {
+          services(limit: 4) {
             id
           }
         }

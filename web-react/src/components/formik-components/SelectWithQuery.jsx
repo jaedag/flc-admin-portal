@@ -26,9 +26,14 @@ function SelectWithQuery(props) {
   })
   const { isAuthenticated } = useAuth0()
 
-  const options = data
-    ? makeSelectOptions(data[dataset ? `${dataset}` : null])
-    : []
+  let options
+  if (data?.towns?.length) {
+    options = makeSelectOptions(data.towns[0].bacentas)
+  } else if (data?.campuses?.length) {
+    options = makeSelectOptions(data.campuses[0].bacentas)
+  } else {
+    options = data ? makeSelectOptions(data[dataset ? `${dataset}` : null]) : []
+  }
 
   return (
     <div>
@@ -43,7 +48,7 @@ function SelectWithQuery(props) {
         <option value="" disabled defaultValue>
           {defaultOption}
         </option>
-        {options.map((option) => {
+        {options?.map((option) => {
           return (
             <option
               key={option.value}

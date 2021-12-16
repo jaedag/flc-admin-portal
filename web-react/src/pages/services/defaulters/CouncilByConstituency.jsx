@@ -32,7 +32,9 @@ const CouncilByConstituency = () => {
                   Services This Week {constituency.servicesThisWeekCount}
                 </div>
                 <div
-                  className={constituency.formDefaultersThisWeekCount || 'good'}
+                  className={
+                    constituency.formDefaultersThisWeekCount ? 'bad' : 'good'
+                  }
                 >
                   Form Not Filled This Week{' '}
                   {constituency.formDefaultersThisWeekCount}

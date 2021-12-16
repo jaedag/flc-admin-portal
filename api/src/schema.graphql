@@ -328,7 +328,7 @@ type Constituency {
         WHERE day.dayNumber < date().dayOfWeek OR  time() > time('20:30')
          }
          MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week <> date().week
-      RETURN fellowships
+      RETURN DISTINCT fellowships
       """
     )
   formDefaultersThisWeekCount: Int
@@ -340,7 +340,7 @@ type Constituency {
              WHERE day.dayNumber < date().dayOfWeek OR  time() > time('20:30')
               }
               MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week <> date().week
-      RETURN COUNT(fellowships)
+      RETURN COUNT(DISTINCT fellowships)
       """
     )
   bankingDefaultersThisWeek: [Fellowship]
@@ -599,7 +599,7 @@ type Council {
              WHERE day.dayNumber < date().dayOfWeek OR  time() > time('20:30')
               }
               MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week <> date().week
-      RETURN fellowships
+      RETURN DISTINCT fellowships
       """
     )
   formDefaultersThisWeekCount: Int
@@ -611,7 +611,7 @@ type Council {
              WHERE day.dayNumber < date().dayOfWeek OR  time() > time('20:30')
               }
               MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week <> date().week
-      RETURN COUNT(fellowships)
+      RETURN COUNT(DISTINCT fellowships)
       """
     )
   bankingDefaultersThisWeek: [Fellowship]
@@ -759,7 +759,7 @@ type Campus {
              WHERE day.dayNumber < date().dayOfWeek OR  time() > time('20:30')
               }
               MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week <> date().week
-      RETURN fellowships
+      RETURN DISTINCT fellowships
       """
     )
   formDefaultersThisWeekCount: Int
@@ -771,7 +771,7 @@ type Campus {
              WHERE day.dayNumber < date().dayOfWeek OR  time() > time('20:30')
               }
               MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week <> date().week
-      RETURN COUNT(fellowships)
+      RETURN COUNT(DISTINCT fellowships)
       """
     )
   bankingDefaultersThisWeek: [Fellowship]
@@ -920,7 +920,7 @@ type Town {
              WHERE day.dayNumber < date().dayOfWeek OR  time() > time('20:30')
               }
               MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week <> date().week
-      RETURN fellowships
+      RETURN DISTINCT fellowships
       """
     )
   formDefaultersThisWeekCount: Int
@@ -932,7 +932,7 @@ type Town {
              WHERE day.dayNumber < date().dayOfWeek OR  time() > time('20:30')
               }
               MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week <> date().week
-      RETURN COUNT(fellowships)
+      RETURN COUNT(DISTINCT fellowships)
       """
     )
   bankingDefaultersThisWeek: [Fellowship]

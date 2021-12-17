@@ -71,7 +71,7 @@ export const FEDERAL_SEARCH = gql`
       firstName
       lastName
       pictureUrl
-      stream
+      stream_name
       fellowship {
         id
         name
@@ -170,7 +170,7 @@ export const COUNCIL_SEARCH = gql`
       lastName
       fullName
       pictureUrl
-      stream
+      stream_name
       fellowship {
         id
         name
@@ -215,7 +215,7 @@ export const CONSTITUENCY_SEARCH = gql`
       lastName
       fullName
       pictureUrl
-      stream
+      stream_name
       fellowship {
         id
         name
@@ -240,7 +240,7 @@ export const BACENTA_SEARCH = gql`
       lastName
       fullName
       pictureUrl
-      stream
+      stream_name
       fellowship {
         id
         name
@@ -261,7 +261,7 @@ export const FELLOWSHIP_SEARCH = gql`
       lastName
       fullName
       pictureUrl
-      stream
+      stream_name
       fellowship {
         id
         name

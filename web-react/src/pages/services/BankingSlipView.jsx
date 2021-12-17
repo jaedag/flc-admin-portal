@@ -39,7 +39,8 @@ const BankingSlipView = () => {
             className="mb-2"
             onClick={() => {
               setServiceRecordId(service.id)
-              !service.bankingSlip && history.push('/banking-slip/submission')
+              !service.bankingSlip &&
+                history.push('/services/banking-slip/submission')
             }}
           >
             <Card.Header>

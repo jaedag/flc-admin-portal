@@ -83,7 +83,7 @@ export const GET_TOWN_BACENTAS = gql`
     towns(where: { id: $id }) {
       id
       name
-      stream
+      stream_name
       council {
         id
       }
@@ -104,7 +104,7 @@ export const GET_TOWN_BACENTAS = gql`
       bacentas {
         id
         name
-        stream
+        stream_name
         council {
           id
         }
@@ -123,7 +123,7 @@ export const GET_CAMPUS_BACENTAS = gql`
     campuses(where: { id: $id }) {
       id
       name
-      stream
+      stream_name
       council {
         id
       }
@@ -144,7 +144,7 @@ export const GET_CAMPUS_BACENTAS = gql`
       bacentas {
         id
         name
-        stream
+        stream_name
         council {
           id
         }
@@ -216,23 +216,23 @@ export const GET_COUNCIL_CAMPUSES = gql`
         id
         firstName
         lastName
-        stream
+        stream_name
       }
       campuses {
         name
         id
-        stream
+        stream_name
         leader {
           id
           firstName
           lastName
-          stream
+          stream_name
         }
         admin {
           id
           firstName
           lastName
-          stream
+          stream_name
         }
         sontas {
           id
@@ -263,23 +263,23 @@ export const GET_COUNCIL_TOWNS = gql`
         id
         firstName
         lastName
-        stream
+        stream_name
       }
       towns {
         name
         id
-        stream
+        stream_name
         leader {
           id
           firstName
           lastName
-          stream
+          stream_name
         }
         admin {
           id
           firstName
           lastName
-          stream
+          stream_name
         }
         sontas {
           id

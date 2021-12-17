@@ -24,7 +24,10 @@ const UpdateFellowship = () => {
   } = useQuery(DISPLAY_FELLOWSHIP, {
     variables: { id: fellowshipId },
     onCompleted: (res) =>
-      setChurch({ church: res.fellowships[0].stream, subChurch: 'bacenta' }),
+      setChurch({
+        church: res.fellowships[0].stream_name,
+        subChurch: 'bacenta',
+      }),
   })
 
   const history = useHistory()

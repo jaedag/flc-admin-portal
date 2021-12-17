@@ -102,7 +102,7 @@ export const SERVANTS_DASHBOARD = gql`
       leadsFellowship {
         id
         name
-        stream
+        stream_name
         memberCount
 
         services(limit: 4) {
@@ -118,7 +118,7 @@ export const SERVANTS_DASHBOARD = gql`
       leadsBacenta {
         id
         name
-        stream
+        stream_name
         memberCount
 
         services(limit: 4) {
@@ -155,7 +155,7 @@ export const SERVANTS_LEADERSHIP = gql`
       leadsTown {
         id
         name
-        stream
+        stream_name
         memberCount
         leader {
           id
@@ -182,7 +182,7 @@ export const SERVANTS_LEADERSHIP = gql`
       leadsCampus {
         id
         name
-        stream
+        stream_name
         memberCount
         leader {
           id
@@ -209,7 +209,7 @@ export const SERVANTS_LEADERSHIP = gql`
       leadsSonta {
         id
         name
-        stream
+        stream_name
       }
       leadsMinistry {
         id
@@ -227,7 +227,7 @@ export const SERVANTS_ADMIN = gql`
       isAdminForTown {
         id
         name
-        stream
+        stream_name
         memberCount
         leader {
           id
@@ -254,7 +254,7 @@ export const SERVANTS_ADMIN = gql`
       isAdminForCampus {
         id
         name
-        stream
+        stream_name
         memberCount
         leader {
           id
@@ -282,7 +282,7 @@ export const SERVANTS_ADMIN = gql`
       isAdminForCouncil {
         id
         name
-        stream
+        stream_name
         memberCount
         leader {
           id

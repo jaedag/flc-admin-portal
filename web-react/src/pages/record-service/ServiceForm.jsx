@@ -167,9 +167,10 @@ const ServiceForm = ({
                                     aria-describedby="Council Member List"
                                     className="form-control"
                                     error={
-                                      formik.errors.treasurers ||
-                                      (formik.errors.treasurers &&
-                                        formik.errors.treasurers[index])
+                                      !Array.isArray(formik.errors.treasurers)
+                                        ? formik.errors.treasurers
+                                        : formik.errors.treasurers &&
+                                          formik.errors.treasurers[index]
                                     }
                                   />
                                 </Col>

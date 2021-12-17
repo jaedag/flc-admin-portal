@@ -21,7 +21,6 @@ function SearchBox() {
     onSubmitProps.setSubmitting(true)
     setSearchKey(values.searchKeyVal)
     onSubmitProps.setSubmitting(false)
-    onSubmitProps.resetForm()
   }
 
   return (

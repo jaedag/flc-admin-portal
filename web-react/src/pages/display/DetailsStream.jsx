@@ -2,7 +2,7 @@ import { useQuery } from '@apollo/client'
 import BaseComponent from 'components/base-component/BaseComponent'
 import DisplayChurchDetails from 'components/DisplayChurchDetails/DisplayChurchDetails'
 import { ChurchContext } from 'contexts/ChurchContext'
-import { capitalise, plural } from 'global-utils'
+import { capitalise } from 'global-utils'
 import React, { useContext } from 'react'
 import { DISPLAY_STREAM } from './ReadQueries'
 
@@ -16,7 +16,7 @@ const DetailsStream = () => {
   const stream = data?.streams[0]
   let breadcrumb = [stream?.leader, stream]
   const details = [
-    { title: 'Pastors', number: stream?.pastorCount, link: '#' },
+    { title: 'Pastors', number: stream?.pastorCount || '0', link: '#' },
     {
       title: 'Constituencies',
       number: stream?.constituencyCount,
@@ -50,7 +50,7 @@ const DetailsStream = () => {
         editlink="/stream/editstream"
         editPermitted={['adminFederal']}
         history={stream?.history.length !== 0 && stream?.history}
-        buttons={stream ? stream[`${plural(church.church)}`] : []}
+        buttons={stream?.councils ?? []}
         breadcrumb={breadcrumb && breadcrumb}
         loading={loading}
       />

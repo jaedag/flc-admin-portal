@@ -514,11 +514,11 @@ export const DISPLAY_COUNCIL = gql`
     councils(where: { id: $id }, options: { limit: 1 }) {
       id
       name
-      stream_name {
+      stream {
         id
         name
       }
-      stream_name_name
+      stream_name
       constituencyCount
       bacentaCount
       fellowshipCount
@@ -607,26 +607,7 @@ export const DISPLAY_STREAM = gql`
         id
         firstName
         lastName
-        fellowship {
-          id
-          bacenta {
-            id
-            town {
-              id
-              name
-              bishop {
-                id
-              }
-            }
-            campus {
-              id
-              name
-              bishop {
-                id
-              }
-            }
-          }
-        }
+        stream_name
       }
       leader {
         id

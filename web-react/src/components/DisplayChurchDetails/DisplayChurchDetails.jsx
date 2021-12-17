@@ -421,7 +421,7 @@ const DisplayChurchDetails = (props) => {
         </>
       ) : null}
 
-      {props.history && (
+      {props.history?.length && (
         <Container className="mt-5">
           <Row>
             <Col>

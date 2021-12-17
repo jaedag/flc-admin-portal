@@ -15,18 +15,18 @@ export const GET_LOGGED_IN_USER = gql`
             id
             council {
               id
-            }
-            bishop {
-              id
+              stream {
+                id
+              }
             }
           }
           town {
             id
             council {
               id
-            }
-            bishop {
-              id
+              stream {
+                id
+              }
             }
           }
         }

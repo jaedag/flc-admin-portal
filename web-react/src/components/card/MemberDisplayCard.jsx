@@ -53,14 +53,14 @@ const MemberDisplayCard = (props) => {
     default:
       break
   }
-  console.log(member)
+
   return (
     <Card
       {...rest}
       className="mobile-search-card"
       onClick={() => {
         clickCard(member)
-        setChurch({ church: member?.stream, subChurch: 'bacenta' })
+        setChurch({ church: member?.stream_name, subChurch: 'bacenta' })
         history.push(`/${member.__typename.toLowerCase()}/displaydetails`)
       }}
     >

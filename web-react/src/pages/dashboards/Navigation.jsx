@@ -54,11 +54,13 @@ const Navigator = () => {
           data.memberByEmail.firstName + ' ' + data.memberByEmail.lastName,
         picture: data.memberByEmail?.pictureUrl ?? null,
         fellowship: data.memberByEmail?.fellowship,
-        bishop: data.memberByEmail?.fellowship?.bacenta[`${church}`]?.bishop.id,
         council:
           data.memberByEmail?.fellowship?.bacenta[`${church}`]?.council.id,
         constituency: data.memberByEmail?.fellowship?.bacenta[`${church}`]?.id,
         church: { church: church, subChurch: 'bacenta' },
+        stream:
+          data.memberByEmail?.fellowship?.bacenta[`${church}`]?.council.stream
+            .id,
         email: user?.email,
         roles: user ? user[`https://flcadmin.netlify.app/roles`] : [],
       })

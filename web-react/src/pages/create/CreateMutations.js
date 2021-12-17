@@ -34,7 +34,7 @@ export const CREATE_MEMBER_MUTATION = gql`
       id
       firstName
       lastName
-      stream
+      stream_name
       fellowship {
         id
         bacenta {
@@ -123,7 +123,7 @@ export const CREATE_FELLOWSHIP_MUTATION = gql`
     ) {
       id
       name
-      stream
+      stream_name
       council {
         id
       }
@@ -153,7 +153,7 @@ export const CREATE_BACENTA_MUTATION = gql`
     ) {
       id
       name
-      stream
+      stream_name
       campus {
         id
         bacentas {
@@ -194,7 +194,7 @@ export const CREATE_SONTA_MUTATION = gql`
       sontas {
         id
         name
-        stream
+        stream_name
         leader {
           id
           firstName
@@ -221,7 +221,7 @@ export const CREATE_TOWN_MUTATION = gql`
     ) {
       id
       name
-      stream
+      stream_name
       council {
         id
         towns {
@@ -248,7 +248,7 @@ export const CREATE_CAMPUS_MUTATION = gql`
     ) {
       id
       name
-      stream
+      stream_name
       council {
         id
         campuses {

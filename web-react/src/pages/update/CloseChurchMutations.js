@@ -7,7 +7,7 @@ export const MAKE_FELLOWSHIP_INACTIVE = gql`
       name
       bacenta {
         id
-        stream
+        stream_name
         fellowships {
           id
           name
@@ -47,7 +47,7 @@ export const MAKE_BACENTA_INACTIVE = gql`
     CloseDownBacenta(bacentaId: $bacentaId) {
       id
       name
-      stream
+      stream_name
       town {
         id
         bacentas {
@@ -101,7 +101,7 @@ export const MAKE_CAMPUSTOWN_INACTIVE = gql`
     CloseDownCampusTown(campusTownId: $campusTownId) {
       id
       name
-      stream
+      stream_name
 
       town {
         id

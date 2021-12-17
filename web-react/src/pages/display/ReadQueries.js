@@ -45,7 +45,7 @@ export const DISPLAY_MEMBER_LEADERSHIP = gql`
       leadsFellowship {
         id
         name
-        stream
+        stream_name
         leader {
           firstName
           lastName
@@ -54,27 +54,27 @@ export const DISPLAY_MEMBER_LEADERSHIP = gql`
       leadsBacenta {
         id
         name
-        stream
+        stream_name
       }
       leadsTown {
         id
         name
-        stream
+        stream_name
       }
       leadsCampus {
         id
         name
-        stream
+        stream_name
       }
       leadsCouncil {
         id
         name
-        stream
+        stream_name
       }
       leadsSonta {
         id
         name
-        stream
+        stream_name
       }
       leadsBasonta {
         id
@@ -91,17 +91,17 @@ export const DISPLAY_MEMBER_LEADERSHIP = gql`
       isAdminForCouncil {
         id
         name
-        stream
+        stream_name
       }
       isAdminForCampus {
         id
         name
-        stream
+        stream_name
       }
       isAdminForTown {
         id
         name
-        stream
+        stream_name
       }
     }
   }
@@ -112,7 +112,7 @@ export const DISPLAY_MEMBER_CHURCH = gql`
     members(where: { id: $id }) {
       id
       #church info
-      stream
+      stream_name
       ministry {
         id
         name
@@ -144,7 +144,7 @@ export const DISPLAY_MEMBER_CHURCH = gql`
           id
           firstName
           lastName
-          stream
+          stream_name
         }
         historyRecord
       }
@@ -157,7 +157,7 @@ export const DISPLAY_FELLOWSHIP = gql`
     fellowships(where: { id: $id }, options: { limit: 1 }) {
       id
       labels
-      stream
+      stream_name
       bankingCode
       name
       memberCount
@@ -204,7 +204,7 @@ export const DISPLAY_FELLOWSHIP_HISTORY = gql`
           id
           firstName
           lastName
-          stream
+          stream_name
         }
         historyRecord
       }
@@ -259,7 +259,7 @@ export const DISPLAY_SONTA = gql`
           id
           firstName
           lastName
-          stream
+          stream_name
         }
         historyRecord
       }
@@ -278,25 +278,25 @@ export const DISPLAY_BACENTA = gql`
     bacentas(where: { id: $id }, options: { limit: 1 }) {
       id
       name
-      stream
+      stream_name
       fellowships {
         id
         name
         bacenta {
           id
           name
-          stream
+          stream_name
         }
       }
       town {
         id
         name
-        stream
+        stream_name
       }
       campus {
         id
         name
-        stream
+        stream_name
       }
       leader {
         id
@@ -319,7 +319,7 @@ export const DISPLAY_BACENTA = gql`
           id
           firstName
           lastName
-          stream
+          stream_name
         }
         historyRecord
       }
@@ -333,7 +333,7 @@ export const DISPLAY_TOWN = gql`
     towns(where: { id: $id }, options: { limit: 1 }) {
       id
       name
-      stream
+      stream_name
       bacentas {
         id
         name
@@ -408,7 +408,7 @@ export const DISPLAY_TOWN = gql`
           id
           firstName
           lastName
-          stream
+          stream_name
         }
         historyRecord
       }
@@ -423,7 +423,7 @@ export const DISPLAY_CAMPUS = gql`
     campuses(where: { id: $id }, options: { limit: 1 }) {
       id
       name
-      stream
+      stream_name
       activeFellowshipCount
       council {
         id
@@ -499,7 +499,7 @@ export const DISPLAY_CAMPUS = gql`
           id
           firstName
           lastName
-          stream
+          stream_name
         }
         historyRecord
       }
@@ -514,7 +514,11 @@ export const DISPLAY_COUNCIL = gql`
     councils(where: { id: $id }, options: { limit: 1 }) {
       id
       name
-      stream
+      stream {
+        id
+        name
+      }
+      stream_name
       constituencyCount
       bacentaCount
       fellowshipCount
@@ -523,12 +527,12 @@ export const DISPLAY_COUNCIL = gql`
       towns(options: { limit: 5 }) {
         id
         name
-        stream
+        stream_name
       }
       campuses(options: { limit: 5 }) {
         id
         name
-        stream
+        stream_name
       }
 
       admin {
@@ -573,7 +577,7 @@ export const DISPLAY_COUNCIL = gql`
           id
           firstName
           lastName
-          stream
+          stream_name
         }
         historyRecord
       }
@@ -603,26 +607,7 @@ export const DISPLAY_STREAM = gql`
         id
         firstName
         lastName
-        fellowship {
-          id
-          bacenta {
-            id
-            town {
-              id
-              name
-              bishop {
-                id
-              }
-            }
-            campus {
-              id
-              name
-              bishop {
-                id
-              }
-            }
-          }
-        }
+        stream_name
       }
       leader {
         id
@@ -641,7 +626,7 @@ export const DISPLAY_STREAM = gql`
           id
           firstName
           lastName
-          stream
+          stream_name
         }
         historyRecord
       }

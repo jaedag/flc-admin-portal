@@ -17,7 +17,7 @@ type Member {
     @relationship(type: "HAS_TITLE", properties: "HasTitle", direction: OUT)
   ministry: Ministry @relationship(type: "BELONGS_TO", direction: OUT)
   occupation: Occupation @relationship(type: "HAS_OCCUPATION", direction: OUT)
-  stream: String
+  stream_name: String
     @cypher(
       statement: """
       MATCH (this)-[:BELONGS_TO]->(:Fellowship)<-[:HAS*4]-(stream:Stream)
@@ -230,7 +230,7 @@ type HistoryLog @auth(rules: [{ isAuthenticated: true }]) {
 type Constituency {
   id: ID @id
   name: String
-  stream: String
+  stream_name: String
     @cypher(
       statement: """
       MATCH (this)<-[:HAS*2]-(stream:Stream)
@@ -438,21 +438,21 @@ type Stream {
   members: [Member]
     @cypher(
       statement: """
-      MATCH (this)-[:HAS*5]->(:Fellowship)<-[:BELONGS_TO]-(members:Member)
+      MATCH (this)-[:HAS*4]->(:Fellowship)<-[:BELONGS_TO]-(members:Member)
       RETURN DISTINCT members
       """
     )
   memberCount: Int
     @cypher(
       statement: """
-      MATCH (this)-[:HAS*5]->(:Fellowship)<-[:BELONGS_TO]-(members:Member)
+      MATCH (this)-[:HAS*4]->(:Fellowship)<-[:BELONGS_TO]-(members:Member)
       RETURN COUNT(DISTINCT members)
       """
     )
   pastorCount: Int
     @cypher(
       statement: """
-      MATCH (this)-[:HAS*5]->(:Fellowship)<-[:BELONGS_TO]-(pastors:Member)-[:HAS_TITLE]->(:Title)
+      MATCH (this)-[:HAS*4]->(:Fellowship)<-[:BELONGS_TO]-(pastors:Member)-[:HAS_TITLE]->(:Title)
       RETURN COUNT(DISTINCT pastors)
       """
     )
@@ -487,13 +487,14 @@ type Council {
   id: ID @id
   name: String!
   leader: Member @relationship(type: "LEADS", direction: IN)
-  stream: String
+  stream_name: String
     @cypher(
       statement: """
       MATCH (this)<-[:HAS]-(stream:Stream)
       RETURN DISTINCT toLower(stream.name)
       """
     )
+  stream: Stream @relationship(type: "HAS", direction: IN)
   towns: [Town] @relationship(type: "HAS", direction: OUT)
   campuses: [Campus] @relationship(type: "HAS", direction: OUT)
   bacentas: [Bacenta]
@@ -662,7 +663,7 @@ type Council {
 type Campus {
   id: ID @id
   name: String
-  stream: String
+  stream_name: String
     @cypher(
       statement: """
       MATCH (this)<-[:HAS*2]-(stream:Stream)
@@ -822,7 +823,7 @@ type Campus {
 type Town {
   id: ID @id
   name: String
-  stream: String
+  stream_name: String
     @cypher(
       statement: """
       MATCH (this)<-[:HAS*2]-(stream:Stream)
@@ -983,7 +984,7 @@ type Town {
 type Bacenta {
   id: ID @id
   name: String
-  stream: String
+  stream_name: String
     @cypher(
       statement: """
       MATCH (this)<-[:HAS*3]-(stream:Stream)
@@ -1035,7 +1036,7 @@ type Fellowship {
   bankingCode: Int
   name: String
   location: Point
-  stream: String
+  stream_name: String
     @cypher(
       statement: """
       MATCH (this)<-[:HAS*4]-(stream:Stream)
@@ -1082,7 +1083,7 @@ type ClosedFellowship {
   bankingCode: Int
   name: String
   location: Point
-  stream: String
+  stream_name: String
     @cypher(
       statement: """
       MATCH (this)<-[:HAS*4]-(stream:Stream)
@@ -1129,7 +1130,7 @@ type ClosedFellowship {
   bankingCode: Int
   name: String
   location: Point
-  stream: String
+  stream_name: String
     @cypher(
       statement: """
       MATCH (this)<-[:HAS*4]-(stream:Stream)
@@ -1189,7 +1190,7 @@ type Ministry {
 type Sonta {
   id: ID @id
   name: String
-  stream: String
+  stream_name: String
     @cypher(
       statement: """
       MATCH (this)<-[:HAS*4]-(stream:Stream)

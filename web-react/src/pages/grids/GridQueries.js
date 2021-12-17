@@ -142,7 +142,7 @@ export const GET_COUNCIL_MEMBERS = gql`
         firstName
         lastName
         pictureUrl
-        stream
+        stream_name
         fellowship {
           id
           name
@@ -418,7 +418,7 @@ export const GET_FELLOWSHIP_MEMBERS = gql`
         firstName
         lastName
         pictureUrl
-        stream
+        stream_name
         fellowship {
           name
         }

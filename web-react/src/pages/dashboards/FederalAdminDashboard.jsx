@@ -100,7 +100,7 @@ const FederalAdminDashboard = () => {
                   <div className="media-body">
                     <h5 className="mt-0">{`${bishop.firstName} ${bishop.lastName}`}</h5>
                     <div>
-                      <span className="text-muted">{bishop.stream}</span>
+                      <span className="text-muted">{bishop.stream_name}</span>
                     </div>
                   </div>
                 </div>

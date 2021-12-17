@@ -9,14 +9,13 @@ const MobileSearchNav = () => {
   const { searchKey, setSearchKey } = useContext(SearchContext)
 
   const initialValues = {
-    searchKeyVal: searchKey,
+    searchKeyVal: searchKey ?? '',
   }
 
   const onSubmit = (values, onSubmitProps) => {
     onSubmitProps.setSubmitting(true)
     setSearchKey(values.searchKeyVal)
     onSubmitProps.setSubmitting(false)
-    onSubmitProps.resetForm()
   }
 
   return (
@@ -37,7 +36,7 @@ const MobileSearchNav = () => {
                   className="nav-search-btn"
                   type="submit"
                   onClick={() => {
-                    setSearchKey(formik.values.searchKey)
+                    setSearchKey(formik.values.searchKeyVal)
                   }}
                 >
                   Search

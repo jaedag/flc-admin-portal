@@ -227,8 +227,8 @@ export const directory = [
   {
     path: '/stream/displaydetails',
     component: DetailsStream,
-    roles: ['adminFederal', 'adminStream'],
-    placeholder: true,
+    roles: ['adminFederal', 'adminStream', 'adminCouncil'],
+    placeholder: false,
     exact: true,
   },
   {

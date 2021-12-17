@@ -14,7 +14,7 @@ const DetailsCouncil = () => {
   })
 
   const council = data?.councils[0]
-  let breadcrumb = [council?.leader, council]
+  let breadcrumb = [council?.stream, council]
 
   const details = [
     { title: 'Pastors', number: council?.pastorCount || 0, link: '#' },

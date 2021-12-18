@@ -94,8 +94,10 @@ type Member {
       RETURN COUNT(DISTINCT council)
       """
     )
+  isAdminForGatheringService: [GatheringService]
+    @relationship(type: "IS_ADMIN_FOR", direction: OUT)
   isAdminForCouncil: [Council]
-    @relationship(type: "IS_ADMIN_FOR", direction: OUT) #@neo4j_ignore
+    @relationship(type: "IS_ADMIN_FOR", direction: OUT)
   isAdminForCampus: [Campus] @relationship(type: "IS_ADMIN_FOR", direction: OUT)
   isAdminForTown: [Town] @relationship(type: "IS_ADMIN_FOR", direction: OUT)
 
@@ -391,7 +393,25 @@ type GatheringService {
   id: ID @id
   name: String!
   leader: Member @relationship(type: "LEADS", direction: IN)
-  councils: [Council] @relationship(type: "HAS", direction: OUT)
+  streams: [Stream] @relationship(type: "HAS", direction: OUT)
+  councils: [Council]
+    @cypher(
+      statement: "MATCH (this)-[:HAS*2]->(councils:Council) RETURN councils"
+    )
+  towns: [Town]
+    @cypher(statement: "MATCH (this)-[:HAS*3]->(towns:Town) RETURN towns")
+  campuses: [Campus]
+    @cypher(
+      statement: "MATCH (this)-[:HAS*3]->(campuses:Campus) RETURN campuses"
+    )
+  bacentas: [Bacenta]
+    @cypher(
+      statement: "MATCH (this)-[:HAS*4]->(bacenta:Bacenta) RETURN bacenta"
+    )
+  constituencies: [Constituency]
+    @cypher(
+      statement: "MATCH (this)-[:HAS*4]->(constituencies:Constituency) RETURN constituencies"
+    )
   members: [Member]
     @cypher(
       statement: """
@@ -406,7 +426,38 @@ type GatheringService {
       RETURN COUNT(DISTINCT members)
       """
     )
+  pastorCount: Int
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*5]->(:Fellowship)<-[:BELONGS_TO]-(pastors:Member)-[:HAS_TITLE]->(:Title)
+      RETURN COUNT(DISTINCT pastors)
+      """
+    )
+  streamCount: Int
+    @cypher(
+      statement: "MATCH (this)-[:HAS]->(stream:Stream) RETURN COUNT(stream)"
+    )
+  councilCount: Int
+    @cypher(
+      statement: "MATCH (this)-[:HAS*2]->(council:Council) RETURN COUNT(council)"
+    )
+  constituencyCount: Int
+    @cypher(
+      statement: "MATCH (this)-[:HAS*3]->(constituency) WHERE constituency:Campus OR constituency:Town RETURN COUNT(constituency)"
+    )
+  bacentaCount: Int
+    @cypher(
+      statement: "MATCH (this)-[:HAS*4]->(bacentas:Bacenta) RETURN COUNT(DISTINCT bacentas)"
+    )
+  fellowshipCount: Int
+    @cypher(
+      statement: "MATCH (this)-[:HAS*5]->(fellowships:Fellowship) RETURN COUNT(DISTINCT fellowships)"
+    )
   admin: Member @relationship(type: "IS_ADMIN_FOR", direction: IN)
+  history: [HistoryLog] @relationship(type: "HAS_HISTORY", direction: OUT)
+  serviceRecord: [ServiceRecord]
+    @relationship(type: "HAS_RECORD", direction: OUT)
+  serviceLogs: [ServiceLog] @relationship(type: "HAS_HISTORY", direction: OUT)
   services(limit: Int!): [ServiceRecord]
     @cypher(
       statement: """
@@ -421,6 +472,7 @@ type Stream {
   name: String!
   leader: Member @relationship(type: "LEADS", direction: IN)
   councils: [Council] @relationship(type: "HAS", direction: OUT)
+  gatheringService: GatheringService @relationship(type: "HAS", direction: IN)
   towns: [Town]
     @cypher(statement: "MATCH (this)-[:HAS*2]->(towns:Town) RETURN towns")
   campuses: [Campus]

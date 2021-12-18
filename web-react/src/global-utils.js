@@ -77,6 +77,10 @@ export const capitalise = (str) => {
 }
 export const plural = (church) => {
   switch (church) {
+    case 'council':
+      return 'councils'
+    case 'Council':
+      return 'Councils'
     case 'town':
       return 'towns'
     case 'Town':

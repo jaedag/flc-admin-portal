@@ -32,6 +32,7 @@ import UpdateFellowship from 'pages/update/UpdateFellowship'
 import UpdateBacenta from 'pages/update/UpdateBacenta'
 import UpdateSonta from 'pages/update/UpdateSonta'
 import UpdateTownCampus from 'pages/update/UpdateTownCampus'
+import DetailsGatheringService from 'pages/display/DetailsGatheringService.jsx'
 
 export const churchDirectory = [
   {
@@ -227,7 +228,14 @@ export const directory = [
   {
     path: '/stream/displaydetails',
     component: DetailsStream,
-    roles: ['adminFederal', 'adminStream', 'adminCouncil'],
+    roles: ['adminFederal', 'adminStream'],
+    placeholder: false,
+    exact: true,
+  },
+  {
+    path: '/gatheringservice/displaydetails',
+    component: DetailsGatheringService,
+    roles: ['adminFederal'],
     placeholder: false,
     exact: true,
   },

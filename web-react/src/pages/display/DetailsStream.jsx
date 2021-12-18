@@ -14,7 +14,7 @@ const DetailsStream = () => {
   })
 
   const stream = data?.streams[0]
-  let breadcrumb = [stream?.leader, stream]
+  let breadcrumb = [stream?.gatheringService, stream]
   const details = [
     { title: 'Pastors', number: stream?.pastorCount || '0', link: '#' },
     {

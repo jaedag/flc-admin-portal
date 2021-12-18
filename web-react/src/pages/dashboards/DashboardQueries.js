@@ -306,6 +306,25 @@ export const SERVANTS_ADMIN = gql`
           income
         }
       }
+      isAdminForGatheringService {
+        id
+        name
+        leader {
+          id
+          firstName
+          lastName
+          fullName
+        }
+        services(limit: 4) {
+          created_at
+          attendance
+          income
+          week
+          serviceDate {
+            date
+          }
+        }
+      }
     }
   }
 `

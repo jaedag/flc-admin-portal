@@ -31,6 +31,11 @@ const PastorsAdmin = () => {
       ? JSON.parse(sessionStorage.getItem('church'))
       : { church: '', subChurch: '' }
   )
+  const [gatheringId, setGatheringId] = useState(
+    sessionStorage.getItem('gatheringId')
+      ? sessionStorage.getItem('gatheringId')
+      : ''
+  )
   const [streamId, setStreamId] = useState(
     sessionStorage.getItem('streamId') ? sessionStorage.getItem('streamId') : ''
   )
@@ -185,6 +190,8 @@ const PastorsAdmin = () => {
           setFilters,
           church,
           setChurch,
+          gatheringId,
+          setGatheringId,
           streamId,
           setStreamId,
           councilId,

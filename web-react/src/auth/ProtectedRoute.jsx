@@ -11,6 +11,7 @@ const ProtectedRoute = ({ component, roles, placeholder, ...args }) => {
   const { isAuthenticated } = useAuth0()
   const church = useContext(ChurchContext)
   useEffect(() => {
+    church.setGatheringId(currentUser.gatheringService)
     if (!isAuthorised(currentUser.roles, ['adminFederal'])) {
       //if User is not a federal admin
 

@@ -19,7 +19,7 @@ const MemberDisplayCard = (props) => {
   switch (member.__typename) {
     case 'Member':
       icon = user
-      name = member.fullName
+      name = member.firstName + ' ' + member.lastName
       details = [
         member.fellowship && member.fellowship.name + ' Fellowship',
         member.ministry && member.ministry.name,

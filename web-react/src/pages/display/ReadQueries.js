@@ -595,12 +595,64 @@ export const DISPLAY_STREAM = gql`
       fellowshipCount
       memberCount
       pastorCount
+      gatheringService {
+        id
+        name
+      }
       councils {
         id
         name
         leader {
           id
         }
+      }
+
+      admin {
+        id
+        firstName
+        lastName
+        stream_name
+      }
+      leader {
+        id
+        firstName
+        lastName
+        fullName
+        pictureUrl
+      }
+      history(options: { limit: 10 }) {
+        id
+        timeStamp
+        created_at {
+          date
+        }
+        loggedBy {
+          id
+          firstName
+          lastName
+          stream_name
+        }
+        historyRecord
+      }
+    }
+  }
+`
+
+export const DISPLAY_GATHERING = gql`
+  query ($id: ID) {
+    gatheringServices(where: { id: $id }, options: { limit: 1 }) {
+      id
+      name
+      streamCount
+      councilCount
+      constituencyCount
+      bacentaCount
+      fellowshipCount
+      memberCount
+      pastorCount
+      councils {
+        id
+        name
       }
 
       admin {

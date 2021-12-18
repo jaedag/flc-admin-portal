@@ -61,6 +61,9 @@ const Navigator = () => {
         stream:
           data.memberByEmail?.fellowship?.bacenta[`${church}`]?.council.stream
             .id,
+        gatheringService:
+          data.memberByEmail?.fellowship?.bacenta[`${church}`]?.council.stream
+            .gatheringService.id,
         email: user?.email,
         roles: user ? user[`https://flcadmin.netlify.app/roles`] : [],
       })
@@ -126,6 +129,29 @@ const Navigator = () => {
           '/dashboard'
         ),
       })
+      return
+    }
+
+    if (churchType === 'GatheringService' && servantType === 'Admin') {
+      const adminsOneChurch = servant[`${verb}`].length === 1 ?? false
+
+      roles.push({
+        name: 'Admin',
+        church: servant[`${verb}`][0],
+        number: 'Federal Admin',
+        clickCard: () => {
+          clickCard(servant[`${verb}`][0])
+        },
+        link: authorisedLink(
+          currentUser,
+          ['adminFederal', 'adminCouncil'],
+          adminsOneChurch
+            ? `/${churchType.toLowerCase()}/displaydetails`
+            : `/servants/church-list`
+        ),
+      })
+
+      assessmentChurch = servant[`${verb}`][0]
       return
     }
 
@@ -215,7 +241,9 @@ const Navigator = () => {
     if (servantLeader?.leadsCouncil?.length) {
       setServantRoles(servantLeader, 'Bishop', 'Town')
     }
-
+    if (servantAdmin?.isAdminForGatheringService?.length) {
+      setServantRoles(servantAdmin, 'Admin', 'GatheringService')
+    }
     if (servantAdmin?.isAdminForCouncil?.length) {
       setServantRoles(servantAdmin, 'Admin', 'Council')
     }

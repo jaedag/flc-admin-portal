@@ -44,6 +44,7 @@ export const menuItems = [
       'leaderCampus',
       'adminCampus',
       'adminCouncil',
+      'adminFederal',
     ],
   },
   {
@@ -56,7 +57,13 @@ export const menuItems = [
       'leaderCampus',
       'adminCampus',
       'adminCouncil',
+      'adminFederal',
     ],
   },
-  { name: 'Reconciliation', to: '/recon', Icon: JournalCheck },
+  {
+    name: 'Reconciliation',
+    to: '/recon',
+    Icon: JournalCheck,
+    roles: ['adminFederal'],
+  },
 ]

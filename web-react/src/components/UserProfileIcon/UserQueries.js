@@ -17,6 +17,9 @@ export const GET_LOGGED_IN_USER = gql`
               id
               stream {
                 id
+                gatheringService {
+                  id
+                }
               }
             }
           }
@@ -26,6 +29,9 @@ export const GET_LOGGED_IN_USER = gql`
               id
               stream {
                 id
+                gatheringService {
+                  id
+                }
               }
             }
           }

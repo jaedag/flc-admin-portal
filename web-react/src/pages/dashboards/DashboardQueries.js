@@ -309,6 +309,7 @@ export const SERVANTS_ADMIN = gql`
       isAdminForGatheringService {
         id
         name
+        memberCount
         leader {
           id
           firstName
@@ -339,6 +340,7 @@ export const SERVANT_CHURCHES_COUNT = gql`
       leadsBacentaCount
       leadsConstituencyCount
       leadsCouncilCount
+      leadsGatheringServiceCount
     }
   }
 `

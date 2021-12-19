@@ -116,6 +116,7 @@ const PastorsAdmin = () => {
         subChurch: 'bacenta',
       })
     )
+
     if (member?.council?.id) {
       setCouncilId(member.council.id)
       sessionStorage.setItem('memberId', member.council.id)

@@ -3,12 +3,13 @@ import { Route } from 'react-router-dom'
 import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react'
 import { MemberContext } from '../../contexts/MemberContext'
 import { ChurchContext } from '../../contexts/ChurchContext'
-import BishopMembers from '../grids/CouncilMembers.jsx'
+import CouncilMembers from '../grids/CouncilMembers.jsx'
 import CampusTownMembers from '../grids/CampusTownMembers.jsx'
 import LoadingScreen from '../../components/base-component/LoadingScreen'
 import { isAuthorised } from '../../global-utils'
 import FellowshipMembers from 'pages/grids/FellowshipMembers'
 import BacentaMembers from 'pages/grids/BacentaMembers'
+import GatheringServiceMembers from 'pages/grids/GatheringServiceMembers'
 
 const MembersDirectoryRoute = ({ component, roles, ...args }) => {
   const { currentUser } = useContext(MemberContext)
@@ -16,6 +17,7 @@ const MembersDirectoryRoute = ({ component, roles, ...args }) => {
   const church = useContext(ChurchContext)
 
   useEffect(() => {
+    church.setGatheringId(currentUser.gatheringService)
     if (isAuthenticated && !currentUser.roles.includes('adminFederal')) {
       //if User is not a federal admin
       church.setCouncilId(currentUser.council)
@@ -52,11 +54,22 @@ const MembersDirectoryRoute = ({ component, roles, ...args }) => {
         {...args}
       />
     )
+  } else if (isAuthorised(['adminFederal', 'bishop'], currentUser.roles)) {
+    //if the user does not have permission but is a Bishop's Admin
+    return (
+      <Route
+        component={withAuthenticationRequired(GatheringServiceMembers, {
+          // eslint-disable-next-line react/display-name
+          onRedirecting: () => <LoadingScreen />,
+        })}
+        {...args}
+      />
+    )
   } else if (isAuthorised(['adminCouncil', 'bishop'], currentUser.roles)) {
     //if the user does not have permission but is a Bishop's Admin
     return (
       <Route
-        component={withAuthenticationRequired(BishopMembers, {
+        component={withAuthenticationRequired(CouncilMembers, {
           // eslint-disable-next-line react/display-name
           onRedirecting: () => <LoadingScreen />,
         })}

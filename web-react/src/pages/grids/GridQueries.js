@@ -131,6 +131,81 @@ export const GET_FEDERAL_PASTORS = gql`
   }
 `
 
+export const GET_GATHERING_SERVICE_MEMBERS = gql`
+  query ($id: ID) {
+    gatheringServices(where: { id: $id }) {
+      id
+      name
+
+      members {
+        id
+        firstName
+        lastName
+        pictureUrl
+        stream_name
+        fellowship {
+          id
+          name
+        }
+        ministry {
+          id
+          name
+        }
+        maritalStatus {
+          status
+        }
+        gender {
+          gender
+        }
+        title {
+          title
+        }
+        leadsFellowship {
+          id
+          name
+        }
+        leadsBacenta {
+          id
+          name
+        }
+        leadsMinistry {
+          id
+          name
+        }
+        leadsSonta {
+          id
+          name
+        }
+        leadsBasonta {
+          id
+          name
+        }
+        leadsTown {
+          id
+          name
+        }
+        leadsCampus {
+          id
+          name
+        }
+
+        isAdminForCouncil {
+          id
+          name
+        }
+        isAdminForCampus {
+          id
+          name
+        }
+        isAdminForTown {
+          id
+          name
+        }
+      }
+    }
+  }
+`
+
 export const GET_COUNCIL_MEMBERS = gql`
   query ($id: ID) {
     councils(where: { id: $id }) {

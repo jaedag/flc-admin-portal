@@ -28,21 +28,21 @@ type Member {
   members: [Member]
     @cypher(
       statement: """
-      MATCH (this)-[:LEADS|HAS|IS_ADMIN_FOR*1..4]->(:Fellowship)-[:BELONGS_TO]-(members)
+      MATCH (this)-[:LEADS|HAS|IS_ADMIN_FOR*1..6]->(:Fellowship)-[:BELONGS_TO]-(members)
       RETURN DISTINCT members
       """
     )
   memberCount: Int
     @cypher(
       statement: """
-      MATCH (this)-[:LEADS|HAS|IS_ADMIN_FOR*1..4]->(:Fellowship)-[:BELONGS_TO]-(members)
+      MATCH (this)-[:LEADS|HAS|IS_ADMIN_FOR*1..6]->(:Fellowship)-[:BELONGS_TO]-(members)
       RETURN COUNT(DISTINCT members)
       """
     )
   basontaMembers: [Member]
     @cypher(
       statement: """
-      MATCH (this)-[:LEADS|HAS|IS_ADMIN_FOR*1..4]->(:Fellowship)-[:BELONGS_TO]-(members)
+      MATCH (this)-[:LEADS|HAS|IS_ADMIN_FOR*1..6]->(:Fellowship)-[:BELONGS_TO]-(members)
       MATCH (members)-[:BELONGS_TO]->(:Ministry)
       RETURN DISTINCT members
       """
@@ -50,7 +50,7 @@ type Member {
   basontaMembershipCount: Int
     @cypher(
       statement: """
-      MATCH (this)-[:LEADS|HAS|IS_ADMIN_FOR*1..4]->(:Fellowship)-[:BELONGS_TO]-(members)
+      MATCH (this)-[:LEADS|HAS|IS_ADMIN_FOR*1..6]->(:Fellowship)-[:BELONGS_TO]-(members)
       MATCH (members)-[:BELONGS_TO]->(:Ministry)
       RETURN COUNT(DISTINCT members)
       """
@@ -92,6 +92,15 @@ type Member {
       statement: """
       MATCH (this)-[:LEADS|HAS|IS_ADMIN_FOR]->(council:Council)
       RETURN COUNT(DISTINCT council)
+      """
+    )
+  leadsGatheringService: [GatheringService]
+    @relationship(type: "LEADS", direction: OUT)
+  leadsGatheringServiceCount: Int
+    @cypher(
+      statement: """
+      MATCH (this)-[:LEADS|HAS|IS_ADMIN_FOR]->(gatheringService:GatheringService)
+      RETURN COUNT(DISTINCT gatheringService)
       """
     )
   isAdminForGatheringService: [GatheringService]

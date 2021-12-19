@@ -266,6 +266,18 @@ export const getMemberCount = (servant) => {
 export const getChurchCount = (servant) => {
   let churchesCount = ''
 
+  if (servant?.leadsGatheringServiceCount) {
+    if (churchesCount) {
+      churchesCount = churchesCount + ','
+    }
+
+    if (servant.leadsGatheringServiceCount === 1) {
+      churchesCount = servant.leadsGatheringServiceCount + ' Gathering Service'
+    } else {
+      churchesCount = servant.leadsGatheringServiceCount + ' Gathering Services'
+    }
+  }
+
   if (servant?.leadsCouncilCount) {
     if (churchesCount) {
       churchesCount = churchesCount + ','

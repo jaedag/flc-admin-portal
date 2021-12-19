@@ -26,11 +26,13 @@ const DetailsCampusTown = () => {
     variables: { id: campusId },
   })
 
+  const data = campusData || townData
+
   return (
     <BaseComponent
       loading={townLoading || campusLoading}
       error={townError || campusError}
-      data={campusData && townData}
+      data={data}
     >
       {church.church === 'town' && (
         <>

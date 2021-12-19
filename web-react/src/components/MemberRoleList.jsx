@@ -36,6 +36,7 @@ const MemberRoleList = ({ member }) => {
             name: church.name,
             church: church,
             id: church.id,
+            stream_name: church.stream_name,
             __typename: church.__typename,
           })
           return null
@@ -49,6 +50,7 @@ const MemberRoleList = ({ member }) => {
         rank.adminCouncil.push({
           admin: true,
           name: `${adminFor.name}`,
+          stream_name: adminFor.stream_name,
           id: adminFor.id,
           __typename: adminFor.__typename,
         })
@@ -72,6 +74,7 @@ const MemberRoleList = ({ member }) => {
       } else if (member.isAdminForTown[0]) {
         member.isAdminForTown.map((adminFor) => {
           rank.adminTown.push({
+            stream_name: adminFor.stream_name,
             constituency: true,
             name: `${adminFor.name}`,
             id: adminFor.id,
@@ -88,6 +91,7 @@ const MemberRoleList = ({ member }) => {
 
       rank[`${ch}Leader`].push({
         name: church.name,
+        stream_name: church.stream_name,
         bacenta: church.bacenta,
         sonta: church.sonta,
         campus: church.campus,

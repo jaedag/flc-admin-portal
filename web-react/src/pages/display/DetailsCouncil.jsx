@@ -3,11 +3,11 @@ import BaseComponent from 'components/base-component/BaseComponent'
 import DisplayChurchDetails from 'components/DisplayChurchDetails/DisplayChurchDetails'
 import { ChurchContext } from 'contexts/ChurchContext'
 import { capitalise, plural } from 'global-utils'
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { DISPLAY_COUNCIL } from './ReadQueries'
 
 const DetailsCouncil = () => {
-  const { councilId } = useContext(ChurchContext)
+  const { councilId, setChurch } = useContext(ChurchContext)
 
   const { data, loading, error } = useQuery(DISPLAY_COUNCIL, {
     variables: { id: councilId },
@@ -15,6 +15,9 @@ const DetailsCouncil = () => {
 
   const council = data?.councils[0]
   let breadcrumb = [council?.stream, council]
+  useEffect(() => {
+    setChurch({ church: council?.stream_name, subChurch: 'bacenta' })
+  }, [council?.stream_name])
 
   const details = [
     { title: 'Pastors', number: council?.pastorCount || 0, link: '#' },

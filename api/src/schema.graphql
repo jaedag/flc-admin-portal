@@ -106,14 +106,17 @@ type Member {
     @relationship(type: "WAS_TREASURER_FOR", direction: OUT)
 }
 
-# extend type Member @auth(rules: [{ isAuthenticated: true }])
-# extend type Fellowship @auth(rules: [{ isAuthenticated: true }])
-# extend type Bacenta @auth(rules: [{ isAuthenticated: true }])
-# extend type Campus @auth(rules: [{ isAuthenticated: true }])
-# extend type Town @auth(rules: [{ isAuthenticated: true }])
-# extend type Council @auth(rules: [{ isAuthenticated: true }])
-# extend type Sonta @auth(rules: [{ isAuthenticated: true }])
-# extend type Ministry @auth(rules: [{ isAuthenticated: true }])
+extend type Member @auth(rules: [{ isAuthenticated: true }])
+extend type Fellowship @auth(rules: [{ isAuthenticated: true }])
+extend type Bacenta @auth(rules: [{ isAuthenticated: true }])
+extend type Campus @auth(rules: [{ isAuthenticated: true }])
+extend type Town @auth(rules: [{ isAuthenticated: true }])
+extend type Constituency @auth(rules: [{ isAuthenticated: true }])
+extend type Council @auth(rules: [{ isAuthenticated: true }])
+extend type Stream @auth(rules: [{ isAuthenticated: true }])
+extend type GatheringService @auth(rules: [{ isAuthenticated: true }])
+extend type Sonta @auth(rules: [{ isAuthenticated: true }])
+extend type Ministry @auth(rules: [{ isAuthenticated: true }])
 
 type Gender @auth(rules: [{ isAuthenticated: true }]) {
   gender: String
@@ -140,7 +143,7 @@ interface HasTitle @relationshipProperties {
   dateAppointed: Date
 }
 
-type TimeGraph {
+type TimeGraph @auth(rules: [{ isAuthenticated: true }]) {
   date: Date
   memberDo: Member @relationship(type: "WAS_BORN_ON", direction: IN)
   # titleAppointmentDate: Member @relationship(type: "APPOINTED_ON", direction: IN)

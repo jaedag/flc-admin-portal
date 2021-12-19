@@ -7,7 +7,7 @@ import React, { useContext } from 'react'
 import { DISPLAY_COUNCIL } from './ReadQueries'
 
 const DetailsCouncil = () => {
-  const { councilId, church } = useContext(ChurchContext)
+  const { councilId } = useContext(ChurchContext)
 
   const { data, loading, error } = useQuery(DISPLAY_COUNCIL, {
     variables: { id: councilId },
@@ -39,14 +39,14 @@ const DetailsCouncil = () => {
         leader={council?.leader}
         churchHeading="Constituencies"
         churchType={council?.__typename}
-        subChurch={capitalise(church.church)}
+        subChurch={capitalise(council?.stream_name)}
         membership={council?.memberCount}
         details={details}
         churchCount={council?.constituencyCount}
         editlink="/council/editcouncil"
         editPermitted={['adminFederal']}
         history={council?.history.length !== 0 && council?.history}
-        buttons={council ? council[`${plural(church.church)}`] : []}
+        buttons={council ? council[`${plural(council.stream_name)}`] : []}
         breadcrumb={breadcrumb && breadcrumb}
         loading={loading}
       />

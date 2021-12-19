@@ -36,7 +36,7 @@ const DetailsCampusTown = () => {
         <>
           <DisplayChurchDetails
             name={townData?.towns[0].name}
-            leaderTitle={'Town CO'}
+            leaderTitle={'Constituency Overseer'}
             membership={townData?.towns[0].memberCount}
             leader={townData?.towns[0].leader}
             churchId={townId}
@@ -64,7 +64,7 @@ const DetailsCampusTown = () => {
         <>
           <DisplayChurchDetails
             name={campusData?.campuses[0].name}
-            leaderTitle={'Campus CO'}
+            leaderTitle={'Constituency Overseer'}
             membership={campusData?.campuses[0].memberCount}
             churchId={campusId}
             leader={campusData?.campuses[0].leader}

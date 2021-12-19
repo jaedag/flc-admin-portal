@@ -42,8 +42,8 @@ const DetailsGatheringService = () => {
     <BaseComponent loading={loading} error={error} data={data} placeholder>
       <DisplayChurchDetails
         name={gathering?.name}
-        leaderTitle="Bishop"
-        deatils={gatheringId}
+        leaderTitle="Resident Bishop"
+        churchId={gatheringId}
         leader={gathering?.leader}
         churchHeading="Streams"
         churchType={gathering?.__typename}

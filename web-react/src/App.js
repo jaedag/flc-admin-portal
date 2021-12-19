@@ -108,19 +108,24 @@ const PastorsAdmin = () => {
   }
 
   const determineStream = (member) => {
-    setChurch({ church: member.stream, subChurch: 'bacenta' })
+    setChurch({ church: member.stream_name, subChurch: 'bacenta' })
     sessionStorage.setItem(
       'church',
       JSON.stringify({
-        church: member.stream,
+        church: member.stream_name,
         subChurch: 'bacenta',
       })
     )
-
     if (member?.council?.id) {
-      setCouncilId(member?.council?.id)
-      sessionStorage.setItem('memberId', member?.council?.id)
+      setCouncilId(member.council.id)
+      sessionStorage.setItem('memberId', member.council.id)
     }
+
+    if (member.stream?.id) {
+      setStreamId(member.stream.id)
+      sessionStorage.setItem('streamId', member.stream.id)
+    }
+
     return
   }
 
@@ -148,10 +153,6 @@ const PastorsAdmin = () => {
         setTownId(card.id)
         sessionStorage.setItem('townId', card.id)
         break
-      case 'Council':
-        setCouncilId(card.id)
-        sessionStorage.setItem('councilId', card.id)
-        break
       case 'Campus':
         setCampusId(card.id)
         sessionStorage.setItem('campusId', card.id)
@@ -159,6 +160,14 @@ const PastorsAdmin = () => {
       case 'Basonta':
         setSontaId(card.sonta.id)
         sessionStorage.setItem('sontaId', card.sonta.id)
+        break
+      case 'Council':
+        setCouncilId(card.id)
+        sessionStorage.setItem('councilId', card.id)
+        break
+      case 'Stream':
+        setStreamId(card.id)
+        sessionStorage.setItem('streamId', card.id)
         break
       default:
         break

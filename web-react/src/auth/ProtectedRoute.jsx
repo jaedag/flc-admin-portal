@@ -14,7 +14,6 @@ const ProtectedRoute = ({ component, roles, placeholder, ...args }) => {
     church.setGatheringId(currentUser.gatheringService)
     if (!isAuthorised(currentUser.roles, ['adminFederal'])) {
       //if User is not a federal admin
-
       church.setChurch(currentUser.church)
       church.setCouncilId(currentUser.council)
       church.setStreamId(currentUser.stream)

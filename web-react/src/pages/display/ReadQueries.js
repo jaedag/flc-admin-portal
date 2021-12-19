@@ -599,12 +599,9 @@ export const DISPLAY_STREAM = gql`
         id
         name
       }
-      councils {
+      councils(options: { limit: 5 }) {
         id
         name
-        leader {
-          id
-        }
       }
 
       admin {

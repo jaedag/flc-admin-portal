@@ -7,7 +7,7 @@ import React, { useContext } from 'react'
 import { DISPLAY_STREAM } from './ReadQueries'
 
 const DetailsStream = () => {
-  const { streamId, church } = useContext(ChurchContext)
+  const { streamId } = useContext(ChurchContext)
 
   const { data, loading, error } = useQuery(DISPLAY_STREAM, {
     variables: { id: streamId },
@@ -20,7 +20,7 @@ const DetailsStream = () => {
     {
       title: 'Constituencies',
       number: stream?.constituencyCount,
-      link: `/${church.church}/displayall`,
+      link: `/${stream?.name}/displayall`,
     },
     {
       title: 'Bacenta',
@@ -41,12 +41,12 @@ const DetailsStream = () => {
         leaderTitle="Bishop"
         deatils={streamId}
         leader={stream?.leader}
-        churchHeading="Constituencies"
+        churchHeading="Streams"
+        churchCount={stream?.councils.length}
         churchType={stream?.__typename}
-        subChurch={capitalise(church.church)}
+        subChurch={capitalise('council')}
         membership={stream?.memberCount}
         details={details}
-        churchCount={stream?.constituencyCount}
         editlink="/stream/editstream"
         editPermitted={['adminFederal']}
         history={stream?.history.length !== 0 && stream?.history}

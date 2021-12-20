@@ -396,6 +396,53 @@ WITH log,town,oldLeader,leader
    RETURN leader.id AS id, leader.auth_id AS auth_id, leader.firstName AS firstName, leader.lastName AS lastName
 `
 
+export const makeCouncilLeader = `
+MATCH (leader:Member {id:$leaderId})
+MATCH (council:Council {id:$councilId})
+MATCH (council)<-[:HAS]-(stream:Stream)
+CREATE (log:HistoryLog:ServiceLog)
+  SET leader.auth_id = $auth_id,
+   log.id = apoc.create.uuid(),
+   log.timeStamp = datetime(),
+   log.historyRecord = leader.firstName + ' ' +leader.lastName + ' started ' + council.name+ ' Council under '+ stream.name + ' Stream'
+WITH leader,council, log
+OPTIONAL MATCH (council)<-[oldLeads:LEADS]-(oldLeader:Member)
+OPTIONAL MATCH (council)-[oldHistory:HAS_HISTORY]->()-[oldLeaderHistory:HAS_HISTORY]-(oldLeader)
+SET oldHistory.current = false, oldLeaderHistory.current = false //nullify old history relationship
+   DELETE oldLeads //Delete old relationship
+WITH log,council,oldLeader,leader
+       CALL{
+         WITH log,council,oldLeader, leader
+         WITH log,council,oldLeader, leader 
+         WHERE EXISTS (oldLeader.firstName) AND oldLeader.id <> $leaderId
+        
+       MERGE (oldLeader)-[hasHistory:HAS_HISTORY]->(log)
+       SET hasHistory.neverLed = true,
+       log.historyRecord = leader.firstName + ' ' +leader.lastName + ' became the leader of ' + council.name+ ' Council replacing ' + oldLeader.firstName +' '+oldLeader.lastName
+       RETURN COUNT(log)
+       }
+
+   MATCH (council)<-[:HAS]-(:Stream)-[rel:HAS_HISTORY]->(stream_history:ServiceLog) WHERE rel.current = true
+   OPTIONAL MATCH (stream_history)-[oldCouncilHistory:HAS]->(:ServiceLog)-[:HAS_HISTORY]-(council)
+
+   MATCH (currentUser:Member {auth_id:$auth.jwt.sub}) 
+
+   WITH currentUser, leader, council, log, oldCouncilHistory, stream_history
+   MERGE (leader)-[:LEADS]->(council)
+   MERGE (log)-[:LOGGED_BY]->(currentUser)
+   MERGE (date:TimeGraph {date: date()})
+   MERGE (log)-[:RECORDED_ON]->(date)
+   MERGE (leader)-[r1:HAS_HISTORY]->(log)
+   MERGE (council)-[r2:HAS_HISTORY]->(log)
+   MERGE (stream_history)-[r3:HAS]->(log)
+   SET r1.current = true,
+   r2.current = true,
+   r3.current = true
+   REMOVE oldCouncilHistory.current 
+   
+   RETURN leader.id AS id, leader.auth_id AS auth_id, leader.firstName AS firstName, leader.lastName AS lastName
+`
+
 export const getBacentaFellowshipServiceAggregates = `
   MATCH (bacenta:Bacenta {id:$id})
   

@@ -1,12 +1,12 @@
 import { gql } from '@apollo/client'
 
-export const ALL_MEMBERS = gql`
+export const GET_BISHOPS = gql`
   {
-    members(options: { limit: 50 }) {
+    members(where: { title: { title: "Bishop" } }) {
       id
       firstName
       lastName
-      pictureUrl
+      fullName
     }
   }
 `
@@ -74,6 +74,15 @@ export const BACENTA_DROPDOWN = gql`
         id
         name
       }
+    }
+  }
+`
+export const CONSTITUENCY_DROPDOWN = gql`
+  query ($nameSearch: String!) {
+    constituencyDropdown(nameSearch: $nameSearch) {
+      id
+      name
+      stream_name
     }
   }
 `
@@ -294,6 +303,84 @@ export const GET_COUNCIL_TOWNS = gql`
   }
 `
 
+export const GET_STREAM_COUNCILS = gql`
+  query ($id: ID) {
+    streams(where: { id: $id }) {
+      id
+      name
+      leader {
+        id
+        firstName
+        lastName
+        fullName
+      }
+      memberCount
+      admin {
+        id
+        firstName
+        lastName
+        stream_name
+      }
+      councils {
+        name
+        id
+        stream_name
+        leader {
+          id
+          firstName
+          lastName
+          stream_name
+        }
+        admin {
+          id
+          firstName
+          lastName
+          stream_name
+        }
+      }
+    }
+  }
+`
+
+export const GET_GATHERING_SERVICE_STREAMS = gql`
+  query ($id: ID) {
+    gatheringServices(where: { id: $id }) {
+      id
+      name
+      leader {
+        id
+        firstName
+        lastName
+        fullName
+      }
+      memberCount
+      admin {
+        id
+        firstName
+        lastName
+        stream_name
+      }
+      streams {
+        name
+        id
+        stream_name
+        leader {
+          id
+          firstName
+          lastName
+          stream_name
+        }
+        admin {
+          id
+          firstName
+          lastName
+          stream_name
+        }
+      }
+    }
+  }
+`
+
 export const GET_COUNCILS = gql`
   {
     councils {
@@ -303,6 +390,18 @@ export const GET_COUNCILS = gql`
         id
       }
       campuses {
+        id
+      }
+    }
+  }
+`
+
+export const GET_STREAMS = gql`
+  {
+    streams {
+      id
+      name
+      councils {
         id
       }
     }

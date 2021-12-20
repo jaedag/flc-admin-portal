@@ -15,7 +15,7 @@ import FellowshipMembers from 'pages/grids/FellowshipMembers'
 import SontaMembers from 'pages/grids/SontaMembers'
 import DetailsFellowship from 'pages/display/DetailsFellowship'
 import DetailsBacenta from 'pages/display/DetailsBacenta'
-import DetailsCampusTown from 'pages/display/DetailsCampusTown'
+import DetailsConstituency from 'pages/display/DetailsConstituency'
 import DetailsCouncil from 'pages/display/DetailsCouncil'
 import DetailsStream from 'pages/display/DetailsStream'
 import DetailsSonta from 'pages/display/DetailsSonta'
@@ -33,6 +33,9 @@ import UpdateBacenta from 'pages/update/UpdateBacenta'
 import UpdateSonta from 'pages/update/UpdateSonta'
 import UpdateTownCampus from 'pages/update/UpdateTownCampus'
 import DetailsGatheringService from 'pages/display/DetailsGatheringService.jsx'
+import DisplayAllCouncils from 'pages/display/AllCouncils'
+import DisplayAllStreams from 'pages/display/AllStreams'
+import CreateCouncil from 'pages/create/CreateCouncil'
 
 export const churchDirectory = [
   {
@@ -194,7 +197,7 @@ export const directory = [
   },
   {
     path: '/town/displaydetails',
-    component: DetailsCampusTown,
+    component: DetailsConstituency,
     roles: [
       'adminFederal',
       'adminCouncil',
@@ -207,7 +210,7 @@ export const directory = [
   },
   {
     path: '/campus/displaydetails',
-    component: DetailsCampusTown,
+    component: DetailsConstituency,
     roles: [
       'adminFederal',
       'adminCouncil',
@@ -297,8 +300,43 @@ export const directory = [
     placeholder: false,
     exact: true,
   },
+  {
+    path: '/council/displayall',
+    component: DisplayAllCouncils,
+    roles: ['adminFederal', 'adminStream'],
+    placeholder: false,
+    exact: true,
+  },
+  {
+    path: '/stream/displayall',
+    component: DisplayAllStreams,
+    roles: ['adminFederal'],
+    placeholder: false,
+    exact: true,
+  },
 
   //Creation Pages
+  {
+    path: '/fellowship/addfellowship',
+    component: CreateFellowship,
+    roles: ['adminFederal', 'adminCouncil', 'adminCampus', 'adminTown'],
+    placeholder: false,
+    exact: true,
+  },
+  {
+    path: '/bacenta/addbacenta',
+    component: CreateBacenta,
+    roles: ['adminFederal', 'adminCouncil', 'adminCampus', 'adminTown'],
+    placeholder: false,
+    exact: true,
+  },
+  {
+    path: '/sonta/addsonta',
+    component: CreateSonta,
+    roles: ['adminFederal', 'adminCouncil', 'adminCampus', 'adminTown'],
+    placeholder: false,
+    exact: true,
+  },
   {
     path: '/town/addtown',
     component: CreateTownCampus,
@@ -314,23 +352,9 @@ export const directory = [
     exact: true,
   },
   {
-    path: '/bacenta/addbacenta',
-    component: CreateBacenta,
-    roles: ['adminFederal', 'adminCouncil', 'adminCampus', 'adminTown'],
-    placeholder: false,
-    exact: true,
-  },
-  {
-    path: '/fellowship/addfellowship',
-    component: CreateFellowship,
-    roles: ['adminFederal', 'adminCouncil', 'adminCampus', 'adminTown'],
-    placeholder: false,
-    exact: true,
-  },
-  {
-    path: '/sonta/addsonta',
-    component: CreateSonta,
-    roles: ['adminFederal', 'adminCouncil', 'adminCampus', 'adminTown'],
+    path: '/council/addcouncil',
+    component: CreateCouncil,
+    roles: ['adminFederal', 'adminStream'],
     placeholder: false,
     exact: true,
   },

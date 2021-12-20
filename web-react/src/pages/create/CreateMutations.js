@@ -259,3 +259,30 @@ export const CREATE_CAMPUS_MUTATION = gql`
     }
   }
 `
+
+export const CREATE_COUNCIL_MUTATION = gql`
+  mutation CreateCouncil(
+    $name: String!
+    $leaderId: ID!
+    $streamId: ID!
+    $constituencies: [ID]
+  ) {
+    CreateCouncil(
+      name: $name
+      leaderId: $leaderId
+      streamId: $streamId
+      constituencies: $constituencies
+    ) {
+      id
+      name
+      stream_name
+      stream {
+        id
+        councils {
+          id
+          name
+        }
+      }
+    }
+  }
+`

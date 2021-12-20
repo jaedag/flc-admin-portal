@@ -301,7 +301,7 @@ const DisplayChurchDetails = (props) => {
         )}
       </Container>
 
-      {props.subChurch && props.buttons[0] ? (
+      {props.subChurch && props.buttons?.length ? (
         <>
           <Container>
             <hr className="hr-line" />
@@ -366,7 +366,7 @@ const DisplayChurchDetails = (props) => {
             <table>
               <tbody>
                 <tr>
-                  {props.buttonsSecondRow.map((church, index) => {
+                  {props.buttonsSecondRow?.map((church, index) => {
                     if (index > 4) {
                       return null
                     }

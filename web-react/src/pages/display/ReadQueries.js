@@ -602,6 +602,7 @@ export const DISPLAY_STREAM = gql`
       councils(options: { limit: 5 }) {
         id
         name
+        stream_name
       }
 
       admin {
@@ -647,9 +648,10 @@ export const DISPLAY_GATHERING = gql`
       fellowshipCount
       memberCount
       pastorCount
-      councils {
+      streams {
         id
         name
+        stream_name
       }
 
       admin {

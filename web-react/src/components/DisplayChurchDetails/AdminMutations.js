@@ -79,3 +79,21 @@ export const NEW_CAMPUS_ADMIN = gql`
     }
   }
 `
+
+export const NEW_COUNCIL_ADMIN = gql`
+  mutation MakeCampusAdmin($campusId: ID!, $adminId: ID!) {
+    MakeCampusAdmin(campusId: $campusId, adminId: $adminId) {
+      id
+      firstName
+      lastName
+      isAdminForCampus {
+        id
+        admin {
+          id
+          firstName
+          lastName
+        }
+      }
+    }
+  }
+`

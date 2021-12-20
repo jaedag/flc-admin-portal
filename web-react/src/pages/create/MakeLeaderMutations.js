@@ -89,3 +89,57 @@ export const NEW_TOWN_LEADER = gql`
     }
   }
 `
+
+export const NEW_COUNCIL_LEADER = gql`
+  mutation NewCouncilLeader($councilId: ID!, $leaderId: ID!) {
+    MakeCouncilLeader(councilId: $councilId, leaderId: $leaderId) {
+      id
+      firstName
+      lastName
+      leadsCouncil {
+        id
+        leader {
+          id
+          firstName
+          lastName
+        }
+      }
+    }
+  }
+`
+
+export const NEW_STREAM_LEADER = gql`
+  mutation NewStreamLeader($councilId: ID!, $leaderId: ID!) {
+    MakeStreamLeader(councilId: $councilId, leaderId: $leaderId) {
+      id
+      firstName
+      lastName
+      leadsStream {
+        id
+        leader {
+          id
+          firstName
+          lastName
+        }
+      }
+    }
+  }
+`
+
+export const NEW_GATHERING_SERVICE_LEADER = gql`
+  mutation NewStreamLeader($councilId: ID!, $leaderId: ID!) {
+    MakeStreamLeader(councilId: $councilId, leaderId: $leaderId) {
+      id
+      firstName
+      lastName
+      leadsStream {
+        id
+        leader {
+          id
+          firstName
+          lastName
+        }
+      }
+    }
+  }
+`

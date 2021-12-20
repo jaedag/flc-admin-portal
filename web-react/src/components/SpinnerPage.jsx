@@ -6,7 +6,7 @@ function SpinnerPage() {
     <div className="row">
       <div className="col my-auto">
         <div className="spinner-border-center full-center">
-          <Spinner animation="border" />
+          <Spinner animation="grow" />
         </div>
       </div>
     </div>

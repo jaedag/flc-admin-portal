@@ -47,14 +47,14 @@ const DetailsGatheringService = () => {
         leader={gathering?.leader}
         churchHeading="Streams"
         churchType={gathering?.__typename}
-        subChurch="Council"
+        subChurch="Stream"
         membership={gathering?.memberCount}
         details={details}
         churchCount={gathering?.streamCount}
         editlink="/stream/editstream"
         editPermitted={['adminFederal']}
         history={gathering?.history.length !== 0 && gathering?.history}
-        buttons={gathering?.councils ?? []}
+        buttons={gathering?.streams ?? []}
         breadcrumb={breadcrumb && breadcrumb}
         loading={loading}
       />

@@ -485,6 +485,13 @@ type Stream {
   leader: Member @relationship(type: "LEADS", direction: IN)
   councils: [Council] @relationship(type: "HAS", direction: OUT)
   gatheringService: GatheringService @relationship(type: "HAS", direction: IN)
+  stream_name: String
+    @cypher(
+      statement: """
+      MATCH (this:Stream)
+      RETURN DISTINCT toLower(this.name)
+      """
+    )
   towns: [Town]
     @cypher(statement: "MATCH (this)-[:HAS*2]->(towns:Town) RETURN towns")
   campuses: [Campus]
@@ -1298,6 +1305,10 @@ type Query {
     @cypher(
       statement: "MATCH (council:Council {id:$id})-[:HAS*3]->(fellowship:Fellowship) WHERE toLower(fellowship.name) CONTAINS toLower($fellowshipName) RETURN DISTINCT fellowship LIMIT 5"
     )
+  constituencyDropdown(nameSearch: String!): [Constituency]
+    @cypher(
+      statement: "MATCH (constituency:Constituency) WHERE toLower(constituency.name) CONTAINS toLower($nameSearch) RETURN DISTINCT constituency LIMIT 5"
+    )
   bishopsSontaMemberList(id: ID): [Member]!
     @cypher(
       statement: """
@@ -1722,6 +1733,8 @@ type Query {
 #Mutation Definitions
 type Mutation {
   #resolver Mutations
+  MakeStreamAdmin(adminId: ID!, streamId: ID!): Member
+  RemoveStreamAdmin(adminId: ID!, streamId: ID!): Member
   MakeCouncilAdmin(adminId: ID!, councilId: ID!): Member
   RemoveCouncilAdmin(adminId: ID!, councilId: ID!): Member
   MakeTownAdmin(adminId: ID!, townId: ID!): Member
@@ -1738,6 +1751,12 @@ type Mutation {
   RemoveTownLeader(leaderId: ID!, townId: ID!): Member
   MakeCampusLeader(leaderId: ID!, campusId: ID!): Member
   RemoveCampusLeader(leaderId: ID!, campusId: ID!): Member
+  MakeCouncilLeader(leaderId: ID!, councilId: ID!): Member
+  RemoveCouncilLeader(leaderId: ID!, councilId: ID!): Member
+  MakeStreamLeader(leaderId: ID!, streamId: ID!): Member
+  RemoveStreamLeader(leaderId: ID!, streamId: ID!): Member
+  MakeGatheringServiceLeader(leaderId: ID!, gatheringServiceId: ID!): Member
+  RemoveGatheringServiceLeader(leaderId: ID!, gatheringServiceId: ID!): Member
 
   #CREATE OPERATIONS
   # Add Member to the Database
@@ -1756,6 +1775,67 @@ type Mutation {
     ministry: String
     pictureUrl: String!
   ): Member
+
+  CreateCouncil(
+    name: String!
+    leaderId: ID!
+    councilId: ID!
+    bacentas: [ID]
+  ): Council
+    @auth(rules: [{ roles: ["adminFederal", "adminCouncil"] }])
+    @cypher(
+      statement: """
+       CREATE (council:Council {id:apoc.create.uuid(), name:$council})
+
+      WITH council
+      MATCH (leader:Member {id: $leaderId})
+      MATCH (currentUser:Member {auth_id:$auth.jwt.sub})
+      MATCH (stream:Stream {id: $streamId})
+      CREATE (constituency:Constituency {id:apoc.create.uuid(), name:$council})
+      CREATE (bacenta:Bacenta {id:apoc.create.uuid(), name:$council})
+      CREATE (fellowship:Fellowship {id:apoc.create.uuid(), name:$council})
+
+       CREATE (log:HistoryLog:ServiceLog)
+        SET
+        log.id =  apoc.create.uuid(),
+        log.timeStamp = datetime(),
+        log.historyRecord = leader.firstName + ' ' +leader.lastName + ' started ' + $townName +' Town Church under '+ council.name+ ' Council'
+
+      MERGE (stream)-[:HAS]->(council)
+      MERGE (council)-[:HAS]->(constituency)
+      MERGE (constituency)-[:HAS]->(bacenta)
+      MERGE (bacenta)-[:HAS]->(fellowship)
+      MERGE (leader)-[:LEADS]->(council)
+      MERGE (leader)-[:LEADS]->(constituency)
+      MERGE (leader)-[:LEADS]->(bacenta)
+      MERGE (leader)-[:LEADS]->(fellowship)
+
+      MERGE (date:TimeGraph {date: date()})
+      MERGE (log)-[:LOGGED_BY]->(currentUser)
+      MERGE (log)-[:RECORDED_ON]->(date)
+      MERGE (council)-[:HAS_HISTORY]->(log)
+      MERGE (constituency)-[:HAS_HISTORY]->(log)
+      MERGE (bacenta)-[:HAS_HISTORY]->(log)
+      MERGE (fellowship)-[:HAS_HISTORY]->(log)
+      MERGE (leader)-[r:HAS_HISTORY]->(log)
+        SET r.current = true
+
+      WITH town, council
+      CALL {
+        WITH town
+        WITH town WHERE $bacentas <> []
+        UNWIND $bacentas AS bacentaIds
+        MATCH (bacenta:Bacenta {id:bacentaIds})
+        OPTIONAL MATCH (oldCampusTown)-[r:HAS]->(bacenta)
+        DELETE r
+
+        MERGE (town)-[:HAS]->(bacenta)
+        RETURN count(town)
+      }
+
+      RETURN town
+      """
+    )
 
   CreateTown(
     townName: String!

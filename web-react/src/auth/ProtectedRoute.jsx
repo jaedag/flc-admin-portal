@@ -4,42 +4,46 @@ import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react'
 import { MemberContext } from '../contexts/MemberContext'
 import { ChurchContext } from '../contexts/ChurchContext'
 import { isAuthorised } from '../global-utils'
-import Login from 'components/Login'
+import { UnauthMsg } from './UnauthMsg'
+import LoadingScreen from 'components/base-component/LoadingScreen'
 
 const ProtectedRoute = ({ component, roles, placeholder, ...args }) => {
   const { currentUser } = useContext(MemberContext)
   const { isAuthenticated } = useAuth0()
   const church = useContext(ChurchContext)
 
-  church.setGatheringId(currentUser.gatheringService)
-
   useEffect(() => {
+    church.setGatheringId(currentUser.gatheringService)
+
     if (!isAuthorised(currentUser.roles, ['adminFederal'])) {
       //if User is not a federal admin
       church.setChurch(currentUser.church)
-      church.setCouncilId(currentUser.council)
       church.setStreamId(currentUser.stream)
-
-      if (!isAuthorised(currentUser.roles, ['adminCouncil', 'leaderCouncil'])) {
-        //User is not a Bishops Admin the he can only be looking at his constituency membership
-        church.setTownId(currentUser.constituency)
-        church.setCampusId(currentUser.constituency)
-
+      if (!isAuthorised(currentUser.roles, ['adminStream', 'leaderStream'])) {
+        church.setCouncilId(currentUser.council)
         if (
-          !isAuthorised(currentUser.roles, [
-            'adminCampus',
-            'adminTown',
-            'leaderCampus',
-            'leaderTown',
-          ])
+          !isAuthorised(currentUser.roles, ['adminCouncil', 'leaderCouncil'])
         ) {
-          //User is not a Constituency Admin the he can only be looking at his bacenta membership
-          church.setBacentaId(currentUser.fellowship?.bacenta?.id)
+          //User is not a Bishops Admin the he can only be looking at his constituency membership
+          church.setTownId(currentUser.constituency)
+          church.setCampusId(currentUser.constituency)
 
-          // if (!isAuthorised(currentUser.roles, ['leaderBacenta'])) {
-          //   //User is not a Bacenta Leader and he can only be looking at his fellowship membership
-          //   church.setFellowshipId(currentUser.fellowship?.id)
-          // }
+          if (
+            !isAuthorised(currentUser.roles, [
+              'adminCampus',
+              'adminTown',
+              'leaderCampus',
+              'leaderTown',
+            ])
+          ) {
+            //User is not a Constituency Admin the he can only be looking at his bacenta membership
+            church.setBacentaId(currentUser.fellowship?.bacenta?.id)
+
+            // if (!isAuthorised(currentUser.roles, ['leaderBacenta'])) {
+            //   //User is not a Bacenta Leader and he can only be looking at his fellowship membership
+            //   church.setFellowshipId(currentUser.fellowship?.id)
+            // }
+          }
         }
       }
     }
@@ -64,8 +68,10 @@ const ProtectedRoute = ({ component, roles, placeholder, ...args }) => {
         {...args}
       />
     )
+  } else if (!isAuthenticated) {
+    return <LoadingScreen />
   } else {
-    return <Login />
+    return <UnauthMsg />
   }
 }
 

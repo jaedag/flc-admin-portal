@@ -147,6 +147,36 @@ export const MAKE_CAMPUSTOWN_INACTIVE = gql`
   }
 `
 
+export const MAKE_COUNCIL_INACTIVE = gql`
+  mutation CloseDownCouncil($councilId: ID!) {
+    CloseDownCouncil(councilId: $councilId) {
+      id
+      name
+      stream_name
+
+      stream {
+        id
+        councils {
+          id
+        }
+        history(options: { limit: 10 }) {
+          id
+          timeStamp
+          created_at {
+            date
+          }
+          loggedBy {
+            id
+            firstName
+            lastName
+          }
+          historyRecord
+        }
+      }
+    }
+  }
+`
+
 export const SET_VACATION_FELLOWSHIP = gql`
   mutation SetVacationFellowship($fellowshipId: ID!) {
     SetVacationFellowship(fellowshipId: $fellowshipId) {

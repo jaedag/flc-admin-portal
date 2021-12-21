@@ -37,13 +37,7 @@ const Navigator = () => {
 
   const [memberByEmail] = useLazyQuery(GET_LOGGED_IN_USER, {
     onCompleted: (data) => {
-      let church
-      if (data.memberByEmail.fellowship.bacenta?.town?.id) {
-        church = 'town'
-      }
-      if (data.memberByEmail.fellowship.bacenta?.campus?.id) {
-        church = 'campus'
-      }
+      const church = data.memberByEmail.stream_name
 
       setCurrentUser({
         ...currentUser,
@@ -55,14 +49,14 @@ const Navigator = () => {
         picture: data.memberByEmail?.pictureUrl ?? null,
         fellowship: data.memberByEmail?.fellowship,
         council:
-          data.memberByEmail?.fellowship?.bacenta[`${church}`]?.council.id,
-        constituency: data.memberByEmail?.fellowship?.bacenta[`${church}`]?.id,
+          data.memberByEmail?.fellowship?.bacenta.constituency?.council.id,
+        constituency: data.memberByEmail?.fellowship?.bacenta.constituency?.id,
         church: { church: church, subChurch: 'bacenta' },
         stream:
-          data.memberByEmail?.fellowship?.bacenta[`${church}`]?.council.stream
+          data.memberByEmail?.fellowship?.bacenta.constituency?.council.stream
             .id,
         gatheringService:
-          data.memberByEmail?.fellowship?.bacenta[`${church}`]?.council.stream
+          data.memberByEmail?.fellowship?.bacenta.constituency?.council.stream
             .gatheringService.id,
         email: user?.email,
         roles: user ? user[`https://flcadmin.netlify.app/roles`] : [],
@@ -181,15 +175,17 @@ const Navigator = () => {
     if (servantType === 'Admin') {
       const adminsOneChurch = servant[`${verb}`].length === 1 ?? false
       roles.push({
-        name: 'Admin',
+        name: adminsOneChurch
+          ? churchType + ' Admin'
+          : plural(churchType) + 'Admin',
         church: servant[`${verb}`][0],
-        number: `${churchType} Admin`,
+        number: servant[`${verb}`].length,
         clickCard: () => {
           clickCard(servant[`${verb}`][0])
         },
         link: authorisedLink(
           currentUser,
-          ['adminFederal', 'adminCouncil', 'adminCampus', 'adminTown'],
+          ['adminFederal', 'adminCouncil', 'adminConstituency'],
           adminsOneChurch
             ? `/${churchType.toLowerCase()}/displaydetails`
             : `/servants/church-list`
@@ -201,6 +197,7 @@ const Navigator = () => {
     }
 
     const leadsOneChurch = servant[`${verb}`].length === 1 ?? false
+
     roles.push({
       name: leadsOneChurch ? churchType : plural(churchType),
       church: servant[`${verb}`][0],
@@ -237,7 +234,7 @@ const Navigator = () => {
       setServantRoles(servantLeader, 'Leader', 'Ministry')
     }
     if (servantLeader?.leadsCouncil?.length) {
-      setServantRoles(servantLeader, 'Bishop', 'Town')
+      setServantRoles(servantLeader, 'Bishop', 'Council')
     }
     if (servantAdmin?.isAdminForGatheringService?.length) {
       setServantRoles(servantAdmin, 'Admin', 'GatheringService')

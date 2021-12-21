@@ -4,7 +4,7 @@ import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react'
 
 import { MemberContext } from '../contexts/MemberContext'
 import { ChurchContext } from '../contexts/ChurchContext'
-import CampusTownMembers from '../pages/grids/ConstituencyMembers.jsx'
+import ConstituencyMembers from '../pages/grids/ConstituencyMembers.jsx'
 import LoadingScreen from '../components/base-component/LoadingScreen'
 import { isAuthorised } from '../global-utils'
 import Churches from 'pages/directory/Churches'
@@ -22,35 +22,32 @@ const ChurchDirectoryRoute = ({ component, roles, ...args }) => {
 
       if (!currentUser.roles.includes('adminCouncil')) {
         //User is not a Bishops Admin the he can only be looking at his constituency membership
-        church.setTownId(currentUser.constituency)
-        church.setCampusId(currentUser.constituency)
+        church.setConstituencyId(currentUser.constituency)
       }
     }
     // eslint-disable-next-line
   }, [
     currentUser,
     church.setCouncilId,
-    church.setTownId,
-    church.setCampusId,
+    church.setConstituencyId,
     church.setChurch,
   ])
 
   if (isAuthorised(roles, currentUser.roles)) {
     //if the user has permission to access the route
     return <Route component={component} {...args} />
-  } else if (isAuthorised(['adminCouncil', 'bishop'], currentUser.roles)) {
+  } else if (
+    isAuthorised(['adminCouncil', 'leaderCouncil'], currentUser.roles)
+  ) {
     //if the user does not have permission but is a Bishop's Admin
     return <Route component={component} {...args} />
   } else if (
-    isAuthorised(
-      ['adminCampus', 'adminTown', 'leaderCampus', 'leaderTown'],
-      currentUser.roles
-    )
+    isAuthorised(['adminConstituency', 'leaderConstituency'], currentUser.roles)
   ) {
     //If the user does not have permission but is a CO Admin
     return (
       <Route
-        component={withAuthenticationRequired(CampusTownMembers, {
+        component={withAuthenticationRequired(ConstituencyMembers, {
           // eslint-disable-next-line react/display-name
           onRedirecting: () => <LoadingScreen />,
         })}

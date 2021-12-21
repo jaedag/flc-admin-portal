@@ -9,7 +9,7 @@ import RoleView from '../../auth/RoleView'
 import BaseComponent from 'components/base-component/BaseComponent'
 
 const DisplayAllSontas = () => {
-  const { church, constituencyId, setConsituencyId } = useContext(ChurchContext)
+  const { constituencyId, setConsituencyId } = useContext(ChurchContext)
 
   const { data, loading, error } = useQuery(GET_CONSTITUENCY_BACENTAS, {
     variables: { id: constituencyId },
@@ -22,7 +22,7 @@ const DisplayAllSontas = () => {
           <div className="row justify-content-between">
             <div className="col-auto">
               <Link
-                to={`/${church.church}/displaydetails`}
+                to={`/constituency/displaydetails`}
                 onClick={() => {
                   setConsituencyId(constituencyId)
                 }}
@@ -33,12 +33,7 @@ const DisplayAllSontas = () => {
             </div>
             {data.sontas.length < 10 && (
               <RoleView
-                roles={[
-                  'adminFederal',
-                  'adminCouncil',
-                  'adminCampus',
-                  'adminTown',
-                ]}
+                roles={['adminFederal', 'adminCouncil', 'adminConstituency']}
               >
                 <div className="col-auto">
                   <Link

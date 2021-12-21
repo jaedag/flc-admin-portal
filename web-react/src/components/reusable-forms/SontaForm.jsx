@@ -1,7 +1,7 @@
 import BaseComponent from 'components/base-component/BaseComponent'
 import { Form, Formik } from 'formik'
 import * as Yup from 'yup'
-import { capitalise, makeSelectOptions } from 'global-utils'
+import { makeSelectOptions } from 'global-utils'
 import {
   COUNCIL_MEMBER_DROPDOWN,
   GET_COUNCIL_CONSTITUENCIES,
@@ -15,7 +15,7 @@ import { DISPLAY_CONSTITUENCY } from 'pages/display/ReadQueries'
 import RoleView from 'auth/RoleView'
 
 const SontaForm = ({ initialValues, onSubmit, title, loading, newSonta }) => {
-  const { church, constituencyId, councilId } = useContext(ChurchContext)
+  const { constituencyId, councilId } = useContext(ChurchContext)
 
   const {
     data: councilData,
@@ -96,16 +96,14 @@ const SontaForm = ({ initialValues, onSubmit, title, loading, newSonta }) => {
                           <FormikControl
                             className="form-control"
                             control="select"
-                            label={`Select a ${capitalise(church.church)}`}
+                            label={`Select a Constituency`}
                             name="constituency"
                             options={constituencyOptions}
                             defaultOption={`Select a Constituency`}
                           />
                         </RoleView>
-                        <RoleView roles={['adminCampus', 'adminTown']}>
-                          <label className="label">{`${capitalise(
-                            church.church
-                          )}:`}</label>
+                        <RoleView roles={['adminConstituency']}>
+                          <label className="label">{`Constituency:`}</label>
                           <div className="pl-2">
                             <p>{`${constituency?.name} Constituency`}</p>
                           </div>

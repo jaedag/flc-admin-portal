@@ -35,11 +35,7 @@ const MemberDisplayCard = (props) => {
       name = member.name + ' Bacenta'
       details = [member?.leader?.fullName]
       break
-    case 'Town':
-      icon = bussolid
-      name = member.name + ' Town'
-      details = [member?.leader?.fullName]
-      break
+
     case 'Constituency':
       icon = bussolid
       name = member.name + ' Constituency'

@@ -1,20 +1,17 @@
 import BacentaService from 'pages/record-service/BacentaService'
 import BacentaServiceDetails from 'pages/record-service/BacentaServiceDetails'
-import CampusService from 'pages/record-service/CampusService'
-import CampusServiceDetails from 'pages/record-service/CampusServiceDetails'
+import ConstituencyService from 'pages/record-service/ConstituencyService'
+import ConstituencyServiceDetails from 'pages/record-service/ConstituencyServiceDetails'
 import FellowshipService from 'pages/record-service/FellowshipService'
 import FellowshipServiceCancelled from 'pages/record-service/FellowshipServiceCancelled'
 import FellowshipServiceDetails from 'pages/record-service/FellowshipServiceDetails'
 import SontaService from 'pages/record-service/SontaService'
 import SontaServiceDetails from 'pages/record-service/SontaServiceDetails'
-import TownService from 'pages/record-service/TownService'
-import TownServiceDetails from 'pages/record-service/TownServiceDetails'
 import BacentaReport from 'pages/reports/BacentaReport'
-import CampusReport from 'pages/reports/CampusReport'
+import ConstituencyReport from 'pages/reports/ConstituencyReport'
 import CouncilReport from 'pages/reports/CouncilReport'
 import FellowshipReport from 'pages/reports/FellowshipReport'
 import SontaReport from 'pages/reports/SontaReport'
-import TownReport from 'pages/reports/TownReport'
 import BacentaJoint from 'pages/services/BacentaJoint'
 import BankingSlipSubmission from 'pages/services/BankingSlipSubmission'
 import BankingSlipView from 'pages/services/BankingSlipView'
@@ -57,8 +54,8 @@ export const services = [
     component: BacentaJoint,
     roles: [
       'adminCouncil',
-      'adminCampus',
-      'adminTown',
+      'adminConstituency',
+
       'adminFederal',
       'leaderBacenta',
     ],
@@ -66,19 +63,18 @@ export const services = [
     exact: true,
   },
   {
-    path: '/services/campus',
+    path: '/services/constituency',
     component: ConstituencyJoint,
-    roles: ['adminCouncil', 'adminCampus', 'adminFederal', 'leaderCampus'],
+    roles: [
+      'adminCouncil',
+      'adminConstituency',
+      'adminFederal',
+      'leaderConstituency',
+    ],
     placeholder: true,
     exact: true,
   },
-  {
-    path: '/services/town',
-    component: ConstituencyJoint,
-    roles: ['adminCouncil', 'adminTown', 'adminFederal', 'leaderTown'],
-    placeholder: true,
-    exact: true,
-  },
+
   {
     path: '/services/banking-slips',
     component: BankingSlipView,
@@ -102,12 +98,11 @@ export const reports = [
     roles: [
       'adminFederal',
       'adminCouncil',
-      'adminCampus',
-      'adminTown',
+      'adminConstituency',
+
       'leaderFellowship',
       'leaderBacenta',
-      'leaderCampus',
-      'leaderTown',
+      'leaderConstituency',
     ],
     placeholder: true,
     exact: true,
@@ -118,12 +113,11 @@ export const reports = [
     roles: [
       'adminFederal',
       'adminCouncil',
-      'adminCampus',
-      'adminTown',
+      'adminConstituency',
+
       'leaderFellowship',
       'leaderBacenta',
-      'leaderCampus',
-      'leaderTown',
+      'leaderConstituency',
     ],
     placeholder: true,
     exact: true,
@@ -134,30 +128,27 @@ export const reports = [
     roles: [
       'adminFederal',
       'adminCouncil',
-      'adminCampus',
-      'adminTown',
+      'adminConstituency',
       'leaderBacenta',
       'leaderSonta',
-      'leaderCampus',
-      'leaderTown',
+      'leaderConstituency',
     ],
     placeholder: true,
     exact: true,
   },
   {
-    path: '/campus/reports',
-    component: CampusReport,
-    roles: ['adminFederal', 'adminCouncil', 'adminCampus', 'leaderCampus'],
+    path: '/constituency/reports',
+    component: ConstituencyReport,
+    roles: [
+      'adminFederal',
+      'adminCouncil',
+      'adminConstituency',
+      'leaderConstituency',
+    ],
     placeholder: true,
     exact: true,
   },
-  {
-    path: '/town/reports',
-    component: TownReport,
-    roles: ['adminFederal', 'adminCouncil', 'adminTown', 'leaderTown'],
-    placeholder: true,
-    exact: true,
-  },
+
   {
     path: '/council/reports',
     component: CouncilReport,
@@ -170,14 +161,14 @@ export const reports = [
   {
     path: '/fellowship/service-details',
     component: FellowshipServiceDetails,
-    roles: ['adminFederal', 'adminCouncil', 'adminCampus', 'adminTown'],
+    roles: ['adminFederal', 'adminCouncil', 'adminConstituency'],
     placeholder: true,
     exact: true,
   },
   {
     path: '/services/fellowship/no-service',
     component: FellowshipServiceCancelled,
-    roles: ['adminFederal', 'adminCouncil', 'adminCampus', 'adminTown'],
+    roles: ['adminFederal', 'adminCouncil', 'adminConstituency'],
     placeholder: true,
     exact: true,
   },
@@ -187,8 +178,8 @@ export const reports = [
     roles: [
       'adminFederal',
       'adminCouncil',
-      'adminCampus',
-      'adminTown',
+      'adminConstituency',
+
       'leaderFellowship',
     ],
     placeholder: false,
@@ -200,24 +191,23 @@ export const reports = [
     roles: [
       'adminFederal',
       'adminCouncil',
-      'adminCampus',
-      'adminTown',
+      'adminConstituency',
+
       'leaderFellowship',
     ],
     placeholder: false,
     exact: true,
   },
+
   {
-    path: '/services/town/constituency-joint/form',
-    component: TownService,
-    roles: ['adminFederal', 'adminCouncil', 'adminTown', 'leaderTown'],
-    placeholder: false,
-    exact: true,
-  },
-  {
-    path: '/services/campus/constituency-joint/form',
-    component: CampusService,
-    roles: ['adminFederal', 'adminCouncil', 'adminCampus', 'leaderCampus'],
+    path: '/services/constituency-joint/form',
+    component: ConstituencyService,
+    roles: [
+      'adminFederal',
+      'adminCouncil',
+      'adminConstituency',
+      'leaderConstituency',
+    ],
     placeholder: false,
     exact: true,
   },
@@ -227,8 +217,8 @@ export const reports = [
     roles: [
       'adminFederal',
       'adminCouncil',
-      'adminCampus',
-      'adminTown',
+      'adminConstituency',
+
       'leaderBacenta',
     ],
     placeholder: false,
@@ -242,10 +232,10 @@ export const reports = [
     roles: [
       'adminFederal',
       'adminCouncil',
-      'adminCampus',
-      'adminTown',
-      'leaderCampus',
-      'leaderTown',
+      'adminConstituency',
+
+      'leaderConstituency',
+
       'leaderSonta',
     ],
     placeholder: false,
@@ -257,10 +247,10 @@ export const reports = [
     roles: [
       'adminFederal',
       'adminCouncil',
-      'adminCampus',
-      'adminTown',
-      'leaderCampus',
-      'leaderTown',
+      'adminConstituency',
+
+      'leaderConstituency',
+
       'leaderBacenta',
     ],
     placeholder: false,
@@ -274,49 +264,38 @@ export const reports = [
     roles: [
       'adminFederal',
       'adminCouncil',
-      'adminCampus',
-      'adminTown',
-      'leaderCampus',
-      'leaderTown',
+      'adminConstituency',
+
+      'leaderConstituency',
+
       'leaderBacenta',
     ],
     placeholder: false,
     exact: true,
   },
 
-  //Town Service
+  //Constituency Services
   {
-    path: '/town/record-service',
-    component: TownService,
+    path: '/constituency/record-service',
+    component: ConstituencyService,
     roles: [
       'adminFederal',
       'adminCouncil',
-      'adminCampus',
-      'adminTown',
-      'leaderTown',
+      'adminConstituency',
+      'leaderConstituency',
     ],
     placeholder: false,
     exact: true,
   },
   {
-    path: '/town/service-details',
-    component: TownServiceDetails,
-    roles: ['adminFederal', 'adminCouncil', 'adminTown', 'leaderTown'],
-    placeholder: false,
-    exact: true,
-  },
-  //Campus Services
-  {
-    path: '/campus/record-service',
-    component: CampusService,
-    roles: ['adminFederal', 'adminCouncil', 'adminCampus', 'leaderCampus'],
-    placeholder: false,
-    exact: true,
-  },
-  {
-    path: '/town/service-details',
-    component: CampusServiceDetails,
-    roles: ['adminFederal', 'adminCouncil', 'adminCampus', 'leaderCampus'],
+    path: '/constituency/service-details',
+    component: ConstituencyServiceDetails,
+    roles: [
+      'adminFederal',
+      'adminCouncil',
+      'adminConstituency',
+      'leaderConstituency',
+    ],
     placeholder: false,
     exact: true,
   },
@@ -328,10 +307,8 @@ export const reports = [
     roles: [
       'adminFederal',
       'adminCouncil',
-      'adminCampus',
-      'leaderCampus',
-      'adminTown',
-      'leaderTown',
+      'adminConstituency',
+      'leaderConstituency',
     ],
     placeholder: true,
     exact: true,
@@ -342,10 +319,8 @@ export const reports = [
     roles: [
       'adminFederal',
       'adminCouncil',
-      'adminCampus',
-      'leaderCampus',
-      'adminTown',
-      'leaderTown',
+      'adminConstituency',
+      'leaderConstituency',
     ],
     placeholder: true,
     exact: true,
@@ -356,10 +331,8 @@ export const reports = [
     roles: [
       'adminFederal',
       'adminCouncil',
-      'adminCampus',
-      'leaderCampus',
-      'adminTown',
-      'leaderTown',
+      'adminConstituency',
+      'leaderConstituency',
     ],
     placeholder: true,
     exact: true,
@@ -370,10 +343,8 @@ export const reports = [
     roles: [
       'adminFederal',
       'adminCouncil',
-      'adminCampus',
-      'leaderCampus',
-      'adminTown',
-      'leaderTown',
+      'adminConstituency',
+      'leaderConstituency',
     ],
     placeholder: true,
     exact: true,
@@ -384,10 +355,8 @@ export const reports = [
     roles: [
       'adminFederal',
       'adminCouncil',
-      'adminCampus',
-      'leaderCampus',
-      'adminTown',
-      'leaderTown',
+      'adminConstituency',
+      'leaderConstituency',
     ],
     placeholder: true,
     exact: true,
@@ -398,10 +367,8 @@ export const reports = [
     roles: [
       'adminFederal',
       'adminCouncil',
-      'adminCampus',
-      'leaderCampus',
-      'adminTown',
-      'leaderTown',
+      'adminConstituency',
+      'leaderConstituency',
     ],
     placeholder: true,
     exact: true,

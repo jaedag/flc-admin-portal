@@ -114,7 +114,6 @@ const ConstituencyForm = ({
                           'adminFederal',
                           'adminCouncil',
                           'adminConstituency',
-                          'adminTown',
                         ]}
                       >
                         <Col>

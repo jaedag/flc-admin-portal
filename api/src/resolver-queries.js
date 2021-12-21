@@ -366,10 +366,10 @@ export const getBacentaFellowshipServiceAggregates = `
 `
 
 // Adding both bacenta and fellowship services to get weekly constituency attendance
-export const getCampusTownServiceAggregates = `
-  MATCH (campusTown {id:$id})  WHERE campusTown:Town OR campusTown:Campus
+export const getConstituencyServiceAggregates = `
+  MATCH (constituency:Constituency {id:$id})
   
-  MATCH (campusTown)-[:HAS_HISTORY]->(log:ServiceLog)
+  MATCH (constituency)-[:HAS_HISTORY]->(log:ServiceLog)
   MATCH (log)-[:HAS*1..2]->(bacentaServices:ServiceLog)
   MATCH (bacentaServices)-[:HAS_RECORD]->(bacentaRecords:ServiceRecord)
    
@@ -441,10 +441,9 @@ CREATE (member:Member {whatsappNumber:$whatsappNumber})
 
            MATCH (fellowship:Fellowship {id: $fellowship})
            MATCH (fellowship)<-[:HAS]-(bacenta:Bacenta)
-           OPTIONAL MATCH (bacenta:Bacenta)<-[:HAS]-(campus:Campus)<-[:HAS]-(bishop:Member)
-           OPTIONAL MATCH (bacenta:Bacenta)<-[:HAS]-(town:Town)<-[:HAS]-(bishop:Member)
+          MATCH (bacenta:Bacenta)<-[:HAS]-(constituency:Constituency)<-[:HAS]-(council:Council)
            RETURN member  {.id, .firstName,.middleName,.lastName,.email,.phoneNumber,.whatsappNumber,
-            fellowship:fellowship {.id,bacenta:bacenta{.id,campus:campus{.id},town:town{.id}}}}
+            fellowship:fellowship {.id,bacenta:bacenta{.id,constituency:constituency{.id}}}}
       `
 
 export const checkFellowshipHasNoMembers = `
@@ -503,14 +502,14 @@ UNWIND labels(constituency) AS stream
 
 CREATE (log:HistoryLog {id:apoc.create.uuid()})
   SET log.timeStamp = datetime(),
-  log.historyRecord = bacenta.name + ' Bacenta was closed down under ' + campusTown.name +' Constituency with all its fellowships'
+  log.historyRecord = bacenta.name + ' Bacenta was closed down under ' + constituency.name +' Constituency with all its fellowships'
 
 
 MERGE (date:TimeGraph {date:date()})
 MERGE (log)-[:LOGGED_BY]->(admin)
 MERGE (log)-[:RECORDED_ON]->(date)
 MERGE (bacenta)-[:HAS_HISTORY]->(log)
-MERGE (campusTown)-[:HAS_HISTORY]->(log)
+MERGE (constituency)-[:HAS_HISTORY]->(log)
 
 SET bacenta:ClosedBacenta, fellowships:ClosedFellowship
 REMOVE bacenta:Bacenta,  fellowships:Fellowship:ActiveFellowship

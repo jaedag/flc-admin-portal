@@ -11,12 +11,11 @@ const CreateBacenta = () => {
   const initialValues = {
     name: '',
     leaderId: '',
-    campusTownSelect: '',
+    constituencySelect: '',
     fellowships: [''],
   }
 
-  const { church, clickCard, setTownId, setCampusId } =
-    useContext(ChurchContext)
+  const { clickCard, setConstituencyId } = useContext(ChurchContext)
   const history = useHistory()
 
   const [NewBacentaLeader] = useMutation(NEW_BACENTA_LEADER)
@@ -24,16 +23,12 @@ const CreateBacenta = () => {
 
   //onSubmit receives the form state as argument
   const onSubmit = (values, onSubmitProps) => {
-    if (church.church === 'town') {
-      setTownId(values.campusTownSelect)
-    } else if (church.church === 'campus') {
-      setCampusId(values.campusTownSelect)
-    }
+    setConstituencyId(values.constituencySelect)
 
     CreateBacenta({
       variables: {
         name: values.name,
-        townCampusId: values.campusTownSelect,
+        constituencyId: values.constituencySelect,
         leaderId: values.leaderId,
         fellowships: values.fellowships,
       },

@@ -75,10 +75,7 @@ const ServantsChurchList = () => {
       pushIntoChurch(servantLeader?.leadsMinistry)
     }
     if (servant?.leadsCouncil?.length) {
-      churches.push({ name: 'Campus Bishop', number: 'Bishop' })
-    }
-    if (servant?.leadsCouncil?.length) {
-      churches.push({ name: 'Town Bishop', number: 'Bishop' })
+      churches.push({ name: 'Bishop', number: 'Bishop' })
     }
     if (servantAdmin?.isAdminForCouncil?.length) {
       pushIntoChurch(servantAdmin?.isAdminForCouncil)

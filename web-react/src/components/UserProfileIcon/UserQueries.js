@@ -7,6 +7,7 @@ export const GET_LOGGED_IN_USER = gql`
       firstName
       lastName
       pictureUrl
+      stream_name
       fellowship {
         id
         bacenta {

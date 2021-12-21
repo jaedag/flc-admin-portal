@@ -5,26 +5,14 @@ export const FEDERAL_SEARCH = gql`
     federalSontaSearch(searchKey: $searchKey) {
       id
       name
-      town {
-        id
-        bishop {
-          id
-        }
-      }
-      campus {
-        bishop {
+      constituency {
+        council {
           id
         }
       }
     }
-    federalTownSearch(searchKey: $searchKey) {
-      id
-      name
-      bishop {
-        id
-      }
-    }
-    federalCampusSearch(searchKey: $searchKey) {
+
+    federalConstituencySearch(searchKey: $searchKey) {
       id
       name
       bishop {
@@ -34,12 +22,6 @@ export const FEDERAL_SEARCH = gql`
     federalBacentaSearch(searchKey: $searchKey) {
       id
       name
-      town {
-        id
-        bishop {
-          id
-        }
-      }
       campus {
         id
         bishop {
@@ -52,13 +34,7 @@ export const FEDERAL_SEARCH = gql`
       name
       bacenta {
         id
-        town {
-          id
-          bishop {
-            id
-          }
-        }
-        campus {
+        constituency {
           id
           bishop {
             id
@@ -82,13 +58,8 @@ export const FEDERAL_SEARCH = gql`
         }
         bacenta {
           id
-          town {
-            id
-            bishop {
-              id
-            }
-          }
-          campus {
+
+          constituency {
             id
             bishop {
               id
@@ -117,17 +88,8 @@ export const COUNCIL_SEARCH = gql`
       id
       name
     }
-    councilTownSearch(searchKey: $searchKey, councilId: $councilId) {
-      id
-      name
-      leader {
-        id
-        firstName
-        lastName
-        fullName
-      }
-    }
-    councilCampusSearch(searchKey: $searchKey, councilId: $councilId) {
+
+    councilConstituencySearch(searchKey: $searchKey, councilId: $councilId) {
       id
       name
       leader {

@@ -23,10 +23,8 @@ const DetailsFellowship = () => {
   const history = historyData?.fellowships[0]
 
   let breadcrumb = [
-    fellowship?.bacenta?.town?.council ?? fellowship?.bacenta?.campus?.council,
-    fellowship?.bacenta?.town
-      ? fellowship?.bacenta?.town
-      : fellowship?.bacenta?.campus,
+    fellowship?.bacenta?.constituency?.council,
+    fellowship?.bacenta?.constituency,
     fellowship?.bacenta,
     fellowship,
   ]
@@ -108,8 +106,7 @@ const DetailsFellowship = () => {
         'leaderFellowship',
         'adminFederal',
         'adminCouncil',
-        'adminTown',
-        'adminCampus',
+        'adminConstituency',
       ]}
       weekNumber={getWeekNumber()}
       last3Weeks={check}

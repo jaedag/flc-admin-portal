@@ -299,11 +299,9 @@ const PastorsAdmin = () => {
                       'adminFederal',
                       'adminCouncil',
                       'adminConstituency',
-                      'adminTown',
                       'leaderFellowship',
                       'leaderBacenta',
                       'leaderConstituency',
-                      'leaderTown',
                     ]}
                     exact
                   />

@@ -2,7 +2,6 @@ import { useMutation, useQuery } from '@apollo/client'
 import { Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import {
-  capitalise,
   DECIMAL_NUM_REGEX,
   makeSelectOptions,
   SERVICE_DAY_OPTIONS,
@@ -30,7 +29,7 @@ import HeadingSecondary from 'components/HeadingSecondary'
 import SubmitButton from 'components/formik-components/SubmitButton'
 
 const FellowshipForm = (props) => {
-  const { church, clickCard, isOpen, togglePopup, fellowshipId, councilId } =
+  const { clickCard, isOpen, togglePopup, fellowshipId, councilId } =
     useContext(ChurchContext)
 
   const { theme } = useContext(MemberContext)
@@ -75,7 +74,7 @@ const FellowshipForm = (props) => {
     ? makeSelectOptions(data.councils[0]?.constituencies)
     : []
 
-  let townCampusIdVar = props.initialValues.constituencySelect
+  let constituencyIdVar = props.initialValues.constituencySelect
 
   if (!props.initialValues.fellowshipName && !props.newFellowship) {
     return <LoadingScreen />
@@ -103,14 +102,12 @@ const FellowshipForm = (props) => {
                   {/* <!-- Basic Info Div --> */}
                   <Col className="mb-2">
                     <Row className="form-row">
-                      <RoleView
-                        roles={['adminCouncil', 'adminCampus', 'adminTown']}
-                      >
+                      <RoleView roles={['adminCouncil', 'adminConstituency']}>
                         <Col>
                           <FormikControl
                             className="form-control"
                             control="select"
-                            label={`${capitalise(church.church)}`}
+                            label={`Constituency`}
                             name="constituencySelect"
                             options={constituencyOptions}
                             onChange={(e) => {
@@ -118,7 +115,7 @@ const FellowshipForm = (props) => {
                                 'constituencySelect',
                                 e.target.value
                               )
-                              townCampusIdVar = e.target.value
+                              constituencyIdVar = e.target.value
                             }}
                             defaultOption={`Select a Constituency`}
                           />
@@ -131,7 +128,7 @@ const FellowshipForm = (props) => {
                             queryVariable="id"
                             dataset="bacentas"
                             varValue={
-                              townCampusIdVar ||
+                              constituencyIdVar ||
                               props.initialValues.constituencySelect
                             }
                             defaultOption="Select a Bacenta"
@@ -141,9 +138,7 @@ const FellowshipForm = (props) => {
                     </Row>
 
                     <Row className="form-row">
-                      <RoleView
-                        roles={['adminCouncil', 'adminCampus', 'adminTown']}
-                      >
+                      <RoleView roles={['adminCouncil', 'adminConstituency']}>
                         <Col sm={12}>
                           <FormikControl
                             className="form-control"
@@ -179,8 +174,7 @@ const FellowshipForm = (props) => {
                         roles={[
                           'adminFederal',
                           'adminCouncil',
-                          'adminCampus',
-                          'adminTown',
+                          'adminConstituency',
                         ]}
                       >
                         <Col sm={12}>

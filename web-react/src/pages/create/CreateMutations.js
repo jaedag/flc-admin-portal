@@ -39,13 +39,8 @@ export const CREATE_MEMBER_MUTATION = gql`
         id
         bacenta {
           id
-          town {
-            id
-            bishop {
-              id
-            }
-          }
-          campus {
+
+          constituency {
             id
             bishop {
               id
@@ -141,20 +136,20 @@ export const CREATE_FELLOWSHIP_MUTATION = gql`
 export const CREATE_BACENTA_MUTATION = gql`
   mutation CreateBacenta(
     $bacentaName: String!
-    $townCampusId: ID!
+    $constituencyId: ID!
     $leaderId: ID!
     $fellowships: [ID]
   ) {
     CreateBacenta(
       bacentaName: $bacentaName
-      townCampusId: $townCampusId
+      constituencyId: $constituencyId
       leaderId: $leaderId
       fellowships: $fellowships
     ) {
       id
       name
       stream_name
-      campus {
+      constituency {
         id
         bacentas {
           id
@@ -163,15 +158,7 @@ export const CREATE_BACENTA_MUTATION = gql`
           id
         }
       }
-      town {
-        id
-        bacentas {
-          id
-        }
-        bishop {
-          id
-        }
-      }
+
       leader {
         id
         firstName
@@ -183,10 +170,10 @@ export const CREATE_BACENTA_MUTATION = gql`
 `
 
 export const CREATE_SONTA_MUTATION = gql`
-  mutation CreateSonta($ministryId: ID!, $townCampusId: ID!, $leaderId: ID!) {
+  mutation CreateSonta($ministryId: ID!, $constituencyId: ID!, $leaderId: ID!) {
     CreateSonta(
       ministryId: $ministryId
-      townCampusId: $townCampusId
+      constituencyId: $constituencyId
       leaderId: $leaderId
     ) {
       id

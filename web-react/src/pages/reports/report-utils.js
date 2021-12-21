@@ -83,7 +83,7 @@ export const getServiceGraphData = (church) => {
     pushIntoData(church.fellowshipServiceAggregate) //Push in Fellowship Service Aggregates
   }
 
-  if (church.__typename === 'Campus' || church.__typename === 'Town') {
+  if (church.__typename === 'Constituency') {
     pushIntoData(church.componentServiceAggregate) //Push in Fellowship Service Aggregates
   }
 

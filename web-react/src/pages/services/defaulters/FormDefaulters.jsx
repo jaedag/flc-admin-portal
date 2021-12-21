@@ -26,7 +26,7 @@ const FormDefaulters = () => {
   useEffect(() => {
     if (
       isAuthorised(
-        ['adminTown', 'leaderTown', 'adminCampus', 'leaderCampus'],
+        ['adminConstituency', 'leaderConstituency'],
         currentUser.roles
       )
     ) {

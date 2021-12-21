@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react'
-import { Route } from 'react-router-dom'
+import { Route, useLocation } from 'react-router-dom'
 import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react'
 import { MemberContext } from '../contexts/MemberContext'
 import { ChurchContext } from '../contexts/ChurchContext'
@@ -11,6 +11,9 @@ const ProtectedRoute = ({ component, roles, placeholder, ...args }) => {
   const { currentUser } = useContext(MemberContext)
   const { isAuthenticated } = useAuth0()
   const church = useContext(ChurchContext)
+
+  const location = useLocation()
+  const atHome = location.pathname === '/'
 
   useEffect(() => {
     church.setGatheringId(currentUser.gatheringService)
@@ -29,10 +32,8 @@ const ProtectedRoute = ({ component, roles, placeholder, ...args }) => {
 
           if (
             !isAuthorised(currentUser.roles, [
-              'adminCampus',
-              'adminTown',
-              'leaderCampus',
-              'leaderTown',
+              'adminConstituency',
+              'leaderConstituency',
             ])
           ) {
             //User is not a Constituency Admin the he can only be looking at his bacenta membership
@@ -67,7 +68,9 @@ const ProtectedRoute = ({ component, roles, placeholder, ...args }) => {
         {...args}
       />
     )
-  } else if (!isAuthenticated) {
+  } else if (isAuthenticated) {
+    return <LoadingScreen />
+  } else if (!isAuthenticated && !atHome) {
     return <LoadingScreen />
   } else {
     return <UnauthMsg />

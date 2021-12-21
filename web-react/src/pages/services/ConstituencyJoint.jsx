@@ -26,11 +26,7 @@ const ConstituencyJoint = () => {
             title="Fill Joint Service Form"
             color="members"
             noCaption
-            onClick={() =>
-              history.push(
-                `/services/${currentUser.currentChurch?.__typename.toLowerCase()}/constituency-joint/form`
-              )
-            }
+            onClick={() => history.push(`/services/constituency-joint/form`)}
           />
         </div>
       </Container>

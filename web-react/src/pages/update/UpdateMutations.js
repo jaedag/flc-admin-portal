@@ -84,7 +84,7 @@ export const UPDATE_CONSTITUENCY_MUTATION = gql`
     $constituencyName: String!
     $councilId: ID!
   ) {
-    UpdateTownDetails(
+    UpdateConstituencyDetails(
       constituencyId: $constituencyId
       constituencyName: $constituencyName
       councilId: $councilId

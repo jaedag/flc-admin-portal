@@ -33,7 +33,7 @@ function FormikSearchbox(props) {
         lastName: row.lastName,
         fellowship: row.fellowship,
         bacenta: row.bacenta,
-        town: row.town,
+
         constituency: row.constituency,
         bishop: row.bishop,
         leadsFellowship: row.leadsFellowship,
@@ -82,7 +82,7 @@ function FormikSearchbox(props) {
         ...data.constituencyFellowshipSearch,
       ]
 
-      if (currentUser.roles.includes('adminConstituency', 'adminTown')) {
+      if (currentUser.roles.includes('adminConstituency')) {
         getSuggestions(combinedData)
       }
     },
@@ -102,7 +102,7 @@ function FormikSearchbox(props) {
       })
     } else if (
       isAuthorised(
-        ['adminConstituency', 'adminTown', 'leaderCampus', 'leaderTown'],
+        ['adminConstituency', 'leaderConstituency'],
         currentUser.roles
       )
     ) {

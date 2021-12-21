@@ -8,7 +8,7 @@ import SontaForm from 'components/reusable-forms/SontaForm'
 import { throwErrorMsg } from 'global-utils'
 
 function CreateSonta() {
-  const { clickCard, townId, campusId, church } = useContext(ChurchContext)
+  const { clickCard, constituencyId } = useContext(ChurchContext)
 
   const history = useHistory()
 
@@ -20,7 +20,7 @@ function CreateSonta() {
     CreateSonta({
       variables: {
         ministryId: values.ministrySelect,
-        townCampusId: church.church === 'town' ? townId : campusId,
+        constituencyId: constituencyId,
         leaderId: values.leaderId,
       },
     })

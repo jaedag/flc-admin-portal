@@ -34,10 +34,8 @@ const DetailsBacenta = () => {
         churchCount={displayBacenta?.fellowships.length}
         editlink="/bacenta/editbacenta"
         editPermitted={[
-          'leaderCampus',
-          'leaderTown',
-          'adminCampus',
-          'adminTown',
+          'leaderConstituency',
+          'adminConstituency',
           'adminCouncil',
           'adminFederal',
         ]}

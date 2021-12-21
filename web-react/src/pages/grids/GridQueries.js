@@ -250,68 +250,9 @@ export const GET_COUNCIL_MEMBERS = gql`
   }
 `
 
-export const GET_CAMPUSTOWN_MEMBERS = gql`
+export const GET_CONSTITUENCY_MEMBERS = gql`
   query ($id: ID) {
-    towns(where: { id: $id }) {
-      id
-      name
-      members {
-        id
-        firstName
-        lastName
-        pictureUrl
-        fellowship {
-          name
-        }
-        ministry {
-          name
-        }
-        maritalStatus {
-          status
-        }
-        gender {
-          gender
-        }
-        title {
-          title
-        }
-        leadsFellowship {
-          id
-          name
-        }
-        leadsBacenta {
-          id
-          name
-        }
-        leadsMinistry {
-          id
-          name
-        }
-        leadsSonta {
-          id
-          name
-        }
-        leadsBasonta {
-          id
-          name
-        }
-        leadsConstituency {
-          id
-          name
-        }
-
-        isAdminForCouncil {
-          id
-          name
-        }
-        isAdminForConstituency {
-          id
-          name
-        }
-      }
-    }
-
-    campuses(where: { id: $id }) {
+    constituencies(where: { id: $id }) {
       id
       name
       members {

@@ -25,8 +25,7 @@ import ViewAll from 'components/buttons/ViewAll'
 
 const DisplayChurchDetails = (props) => {
   const history = useHistory()
-  const isConstituency =
-    props.churchType === 'Campus' || props.churchType === 'Town'
+  const isConstituency = props.churchType === 'Constituency'
   const { setMemberId, theme, setCurrentUser, currentUser } =
     useContext(MemberContext)
   const [submitting, setSubmitting] = useState(false)

@@ -24,8 +24,7 @@ const SearchPageMobile = () => {
       onCompleted: (data) => {
         setCombinedData([
           ...data.federalMemberSearch,
-          ...data.federalCampusSearch,
-          ...data.federalTownSearch,
+          ...data.federalConstituencySearch,
           ...data.federalSontaSearch,
           ...data.federalBacentaSearch,
           ...data.federalFellowshipSearch,
@@ -39,8 +38,7 @@ const SearchPageMobile = () => {
       onCompleted: (data) => {
         setCombinedData([
           ...data.councilMemberSearch,
-          ...data.councilCampusSearch,
-          ...data.councilTownSearch,
+          ...data.councilConstituencySearch,
           ...data.councilSontaSearch,
           ...data.councilBacentaSearch,
           ...data.councilFellowshipSearch,
@@ -112,7 +110,7 @@ const SearchPageMobile = () => {
       })
     } else if (
       isAuthorised(
-        ['adminCampus', 'adminTown', 'leaderCampus', 'leaderTown'],
+        ['adminConstituency', 'leaderConstituency'],
         currentUser.roles
       )
     ) {

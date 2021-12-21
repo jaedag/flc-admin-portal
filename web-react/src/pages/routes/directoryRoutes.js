@@ -21,7 +21,7 @@ import DetailsStream from 'pages/display/DetailsStream'
 import DetailsSonta from 'pages/display/DetailsSonta'
 import DisplayAllBacentas from 'pages/display/AllBacentas'
 import DisplayAllSontas from 'pages/display/AllSontas'
-import DisplaySontasByCampusTown from 'pages/display/SontasByConstituency'
+import DisplaySontasByConstituency from 'pages/display/SontasByConstituency'
 import DisplayAllConstituencies from 'pages/display/AllConstituencies'
 import DisplayAllFellowships from 'pages/display/AllFellowships'
 import CreateConstituency from 'pages/create/CreateConstituency'
@@ -62,14 +62,14 @@ export const memberGrids = [
   {
     path: '/constituency/members',
     component: ConstituencyMembers,
-    roles: ['adminFederal', 'adminCouncil', 'adminCampus'],
+    roles: ['adminFederal', 'adminCouncil', 'adminConstituency'],
     exact: true,
   },
 
   {
     path: '/bacenta/members',
     component: BacentaMembers,
-    roles: ['adminFederal', 'adminCouncil', 'adminCampus', 'adminTown'],
+    roles: ['adminFederal', 'adminCouncil', 'adminConstituency'],
     exact: true,
   },
   {
@@ -78,8 +78,7 @@ export const memberGrids = [
     roles: [
       'adminFederal',
       'adminCouncil',
-      'adminCampus',
-      'adminTown',
+      'adminConstituency',
       'leaderFellowship',
     ],
     exact: true,
@@ -87,13 +86,7 @@ export const memberGrids = [
   {
     path: '/sonta/members',
     component: SontaMembers,
-    roles: [
-      'adminFederal',
-      'adminCouncil',
-      'adminCampus',
-      'adminTown',
-      'leaderSonta',
-    ],
+    roles: ['adminFederal', 'adminCouncil', 'adminConstituency', 'leaderSonta'],
     exact: true,
   },
 ]
@@ -133,10 +126,8 @@ export const directory = [
     roles: [
       'adminFederal',
       'adminCouncil',
-      'adminCampus',
-      'adminTown',
-      'leaderCampus',
-      'leaderTown',
+      'adminConstituency',
+      'leaderConstituency',
       'leaderBacenta',
       'leaderFellowship',
     ],
@@ -149,11 +140,9 @@ export const directory = [
     roles: [
       'adminFederal',
       'adminCouncil',
-      'adminCampus',
-      'adminTown',
+      'adminConstituency',
       'leaderBacenta',
-      'leaderTown',
-      'leaderCampus',
+      'leaderConstituency',
     ],
     placeholder: true,
     exact: true,
@@ -196,9 +185,9 @@ export const directory = [
     roles: [
       'adminFederal',
       'adminCouncil',
-      'adminTown',
+      'adminConstituency',
       'leaderCouncil',
-      'leaderTown',
+      'leaderConstituency',
     ],
     placeholder: true,
     exact: true,
@@ -249,19 +238,13 @@ export const directory = [
     exact: true,
   },
   {
-    path: '/town/display-sontas',
-    component: DisplaySontasByCampusTown,
+    path: '/constituency/display-sontas',
+    component: DisplaySontasByConstituency,
     roles: ['all'],
     placeholder: false,
     exact: true,
   },
-  {
-    path: '/campus/display-sontas',
-    component: DisplaySontasByCampusTown,
-    roles: ['all'],
-    placeholder: false,
-    exact: true,
-  },
+
   {
     path: '/constituency/displayall',
     component: DisplayAllConstituencies,
@@ -296,21 +279,21 @@ export const directory = [
   {
     path: '/fellowship/addfellowship',
     component: CreateFellowship,
-    roles: ['adminFederal', 'adminCouncil', 'adminCampus', 'adminTown'],
+    roles: ['adminFederal', 'adminCouncil', 'adminConstituency'],
     placeholder: false,
     exact: true,
   },
   {
     path: '/bacenta/addbacenta',
     component: CreateBacenta,
-    roles: ['adminFederal', 'adminCouncil', 'adminCampus', 'adminTown'],
+    roles: ['adminFederal', 'adminCouncil', 'adminConstituency'],
     placeholder: false,
     exact: true,
   },
   {
     path: '/sonta/addsonta',
     component: CreateSonta,
-    roles: ['adminFederal', 'adminCouncil', 'adminCampus', 'adminTown'],
+    roles: ['adminFederal', 'adminCouncil', 'adminConstituency'],
     placeholder: false,
     exact: true,
   },
@@ -334,39 +317,26 @@ export const directory = [
   {
     path: '/fellowship/editfellowship',
     component: UpdateFellowship,
-    roles: ['adminFederal', 'adminCouncil', 'adminCampus', 'adminTown'],
+    roles: ['adminFederal', 'adminCouncil', 'adminConstituency'],
     placeholder: false,
     exact: true,
   },
   {
     path: '/bacenta/editbacenta',
     component: UpdateBacenta,
-    roles: [
-      'adminFederal',
-      'adminCouncil',
-      'adminCampus',
-      'adminTown',
-      'leaderTown',
-    ],
+    roles: ['adminFederal', 'adminCouncil', 'adminConstituency'],
     placeholder: false,
     exact: true,
   },
   {
     path: '/sonta/editsonta',
     component: UpdateSonta,
-    roles: ['adminFederal', 'adminCouncil', 'adminCampus', 'adminTown'],
+    roles: ['adminFederal', 'adminCouncil', 'adminConstituency'],
     placeholder: false,
     exact: true,
   },
   {
-    path: '/town/edittown',
-    component: UpdateConstituency,
-    roles: ['adminFederal', 'adminCouncil'],
-    placeholder: false,
-    exact: true,
-  },
-  {
-    path: '/campus/editcampus',
+    path: '/constituency/editconstituency',
     component: UpdateConstituency,
     roles: ['adminFederal', 'adminCouncil'],
     placeholder: false,

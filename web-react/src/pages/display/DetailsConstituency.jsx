@@ -1,6 +1,5 @@
 import React, { useContext } from 'react'
 import { useQuery } from '@apollo/client'
-import { capitalise } from '../../global-utils'
 import DisplayChurchDetails from '../../components/DisplayChurchDetails/DisplayChurchDetails'
 
 import { DISPLAY_CONSTITUENCY } from './ReadQueries'
@@ -8,7 +7,7 @@ import { ChurchContext } from '../../contexts/ChurchContext'
 import BaseComponent from 'components/base-component/BaseComponent'
 
 const DetailsConstituency = () => {
-  const { church, constituencyId } = useContext(ChurchContext)
+  const { constituencyId } = useContext(ChurchContext)
 
   const { data, loading, error } = useQuery(DISPLAY_CONSTITUENCY, {
     variables: { id: constituencyId },
@@ -28,12 +27,12 @@ const DetailsConstituency = () => {
           churchCount={data?.constituencies[0].bacentas.length}
           church2Count={data?.constituencies[0].fellowshipCount}
           admin={data?.constituencies[0].admin}
-          churchType={`${capitalise(church.church)}`}
-          subChurch={`${capitalise(church.subChurch)}`}
+          churchType={`Constituency`}
+          subChurch={`Bacenta`}
           subChurchBasonta="Sonta"
           buttons={data?.constituencies[0].bacentas}
           buttonsSecondRow={data?.constituencies[0].sontas}
-          editlink="/town/edittown"
+          editlink="/constituency/editconstituency"
           editPermitted={['adminCouncil', 'adminFederal']}
           history={
             data?.constituencies[0]?.history.length !== 0 &&

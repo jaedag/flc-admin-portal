@@ -60,7 +60,7 @@ const MemberRoleList = ({ member }) => {
     if (churchType === 'adminConstituency') {
       if (member.isAdminForConstituency[0]) {
         member.isAdminForConstituency.map((adminFor) => {
-          rank.adminTown.push({
+          rank.adminConstituency.push({
             stream_name: adminFor.stream_name,
             constituency: true,
             name: `${adminFor.name}`,
@@ -98,7 +98,7 @@ const MemberRoleList = ({ member }) => {
     updateRank(member, 'bacenta')
   }
   if (member.leadsConstituency[0]) {
-    updateRank(member, 'town')
+    updateRank(member, 'constituency')
   }
   if (member.leadsSonta[0]) {
     updateRank(member, 'sonta')
@@ -146,10 +146,7 @@ const MemberRoleList = ({ member }) => {
             return rank[1].map((place, i) => {
               let leader
 
-              if (
-                place.__typename === 'Campus' ||
-                place.__typename === 'Town'
-              ) {
+              if (place.__typename === 'Constituency') {
                 if (member.leadsCouncil[0]) {
                   return
                 }

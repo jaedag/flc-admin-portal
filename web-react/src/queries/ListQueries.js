@@ -13,7 +13,7 @@ export const GET_BISHOPS = gql`
 
 export const GET_FELLOWSHIP_LEADERS = gql`
   {
-    townList(firstName: $firstName, lastName: $lastName) {
+    constituencyList(firstName: $firstName, lastName: $lastName) {
       id
       bacentas {
         id

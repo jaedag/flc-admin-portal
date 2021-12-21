@@ -43,8 +43,7 @@ const Services = () => {
               noCaption
             />
           )}
-          {(currentUser.currentChurch?.__typename === 'Town' ||
-            currentUser.currentChurch?.__typename === 'Campus') && (
+          {currentUser.currentChurch?.__typename === 'Constituency' && (
             <MenuButton
               iconComponent={Book}
               title="Constituency Joint Service"

@@ -1,45 +1,5 @@
 import { gql } from '@apollo/client'
 
-export const BISH_DASHBOARD_COUNTS = gql`
-  query bishDashboardData($id: ID) {
-    members(where: { id: $id }) {
-      id
-      firstName
-      lastName
-      pictureUrl
-      admin {
-        id
-        firstName
-        lastName
-        fellowship {
-          id
-          bacenta {
-            id
-            town {
-              id
-              name
-              bishop {
-                id
-              }
-            }
-            campus {
-              name
-              bishop {
-                id
-              }
-            }
-          }
-        }
-      }
-    }
-    bishopMemberCount(id: $id)
-    bishopPastorCount(id: $id)
-    bishopCampusTownCount(id: $id)
-    bishopBacentaCount(id: $id)
-    bishopFellowshipCount(id: $id)
-    bishopSontaMemberCount(id: $id)
-  }
-`
 export const MAKE_BISHOP_ADMIN = gql`
   mutation MakeBishopAdmin($bishopId: ID!, $newAdminId: ID!, $oldAdminId: ID!) {
     RemoveBishopAdmin(bishopId: $bishopId, adminId: $oldAdminId) {

@@ -1,15 +1,15 @@
 import React, { useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useMutation } from '@apollo/client'
-import { capitalise, throwErrorMsg } from '../../global-utils'
+import { throwErrorMsg } from '../../global-utils'
 import { GET_COUNCIL_CONSTITUENCIES } from '../../queries/ListQueries'
 import { CREATE_CONSTITUENCY_MUTATION } from './CreateMutations'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import { NEW_CONSTITUENCY_LEADER } from './MakeLeaderMutations'
-import CampusTownForm from '../../components/reusable-forms/ConstituencyForm'
+import ConstituencyForm from '../../components/reusable-forms/ConstituencyForm'
 
 const CreateConstituency = () => {
-  const { church, clickCard, councilId, setConstituencyId, setCouncilId } =
+  const { clickCard, councilId, setConstituencyId, setCouncilId } =
     useContext(ChurchContext)
 
   const history = useHistory()
@@ -49,7 +49,8 @@ const CreateConstituency = () => {
         NewConstituencyLeader({
           variables: {
             leaderId: values.leaderId,
-            townId: res.data.CreateConstituency.council.constituencies[0].id,
+            constituencyId:
+              res.data.CreateConstituency.council.constituencies[0].id,
           },
         }).catch((error) => {
           throwErrorMsg('There was an error adding leader', error)
@@ -64,10 +65,10 @@ const CreateConstituency = () => {
   }
 
   return (
-    <CampusTownForm
+    <ConstituencyForm
       initialValues={initialValues}
       onSubmit={onSubmit}
-      title={`Create a New ${capitalise(church.church)}`}
+      title={`Create a New Constituency`}
       newConstituency={true}
     />
   )

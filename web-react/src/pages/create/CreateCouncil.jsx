@@ -8,7 +8,7 @@ import { NEW_COUNCIL_LEADER } from './MakeLeaderMutations'
 import CouncilForm from 'components/reusable-forms/CouncilForm'
 
 const CreateCouncil = () => {
-  const { church, clickCard, streamId, setStreamId, setCouncilId } =
+  const { clickCard, streamId, setStreamId, setCouncilId } =
     useContext(ChurchContext)
 
   const history = useHistory()
@@ -29,7 +29,7 @@ const CreateCouncil = () => {
 
     CreateCouncil({
       variables: {
-        campusName: values.campusTownName,
+        name: values.name,
         leaderId: values.leaderId,
         streamId: values.streamSelect,
         bacentas: values.bacentas,
@@ -47,10 +47,10 @@ const CreateCouncil = () => {
         })
 
         setCouncilId(res.data.CreateCouncil.id)
-        history.push(`/${church.church}/displaydetails`)
+        history.push(`/council/displaydetails`)
       })
       .catch((error) => {
-        throwErrorMsg('There was an error creating campus', error)
+        throwErrorMsg('There was an error creating council', error)
       })
 
     onSubmitProps.setSubmitting(false)

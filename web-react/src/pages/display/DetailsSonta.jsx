@@ -7,7 +7,7 @@ import { ChurchContext } from '../../contexts/ChurchContext'
 import BaseComponent from 'components/base-component/BaseComponent'
 
 const DetailsSonta = () => {
-  const { sontaId, church } = useContext(ChurchContext)
+  const { sontaId } = useContext(ChurchContext)
 
   const {
     data: sontaData,
@@ -18,20 +18,12 @@ const DetailsSonta = () => {
   })
 
   let breadcrumb
-  if (church.church === 'town') {
-    breadcrumb = [
-      sontaData?.sontas[0].town?.bishop,
-      sontaData?.sontas[0].town,
-      sontaData?.sontas[0],
-    ]
-  }
-  if (church.church === 'campus') {
-    breadcrumb = [
-      sontaData?.sontas[0].campus?.bishop,
-      sontaData?.sontas[0].campus,
-      sontaData?.sontas[0],
-    ]
-  }
+
+  breadcrumb = [
+    sontaData?.sontas[0].constituency?.council,
+    sontaData?.sontas[0].constituency,
+    sontaData?.sontas[0],
+  ]
 
   return (
     <BaseComponent loading={sontaLoading} error={sontaError} data={sontaData}>
@@ -48,10 +40,8 @@ const DetailsSonta = () => {
         editlink="/sonta/editsonta"
         editPermitted={[
           'leaderSonta',
-          'leaderCampus',
-          'leaderTown',
-          'adminCampus',
-          'adminTown',
+          'leaderConstituency',
+          'adminConstituency',
           'adminCouncil',
           'adminFederal',
         ]}

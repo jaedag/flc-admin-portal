@@ -599,7 +599,7 @@ export const resolvers = {
 
       const session = context.driver.session()
       const serviceAggregateResponse = await session.run(
-        cypher.getCampusTownServiceAggregates,
+        cypher.getConstituencyServiceAggregates,
         obj
       )
 
@@ -623,10 +623,9 @@ export const resolvers = {
           'adminFederal',
           'adminCouncil',
           'adminConstituency',
-          'adminTown',
           'leaderFellowship',
           'leaderBacenta',
-          'leaderTown',
+
           'leaderConstituency',
         ],
         context.auth.roles
@@ -674,8 +673,6 @@ export const resolvers = {
           'adminFederal',
           'adminCouncil',
           'adminConstituency',
-          'adminTown',
-          'leaderTown',
           'leaderConstituency',
         ],
         context.auth.roles
@@ -708,7 +705,7 @@ export const resolvers = {
         RemoveServant(
           context,
           args,
-          ['adminFederal', 'adminCouncil', 'adminConstituency', 'adminTown'],
+          ['adminFederal', 'adminCouncil', 'adminConstituency'],
           'Fellowship',
           'Leader'
         )
@@ -721,7 +718,7 @@ export const resolvers = {
 
     CloseDownBacenta: async (object, args, context) => {
       isAuth(
-        ['adminFederal', 'adminCouncil', 'adminConstituency', 'adminTown'],
+        ['adminFederal', 'adminCouncil', 'adminConstituency'],
         context.auth.roles
       )
 
@@ -752,7 +749,7 @@ export const resolvers = {
         RemoveServant(
           context,
           args,
-          ['adminFederal', 'adminCouncil', 'adminConstituency', 'adminTown'],
+          ['adminFederal', 'adminCouncil', 'adminConstituency'],
           'Bacenta',
           'Leader'
         )
@@ -820,13 +817,7 @@ export const resolvers = {
       return MakeServant(
         context,
         args,
-        [
-          'adminFederal',
-          'adminStream',
-          'adminCouncil',
-          'adminConstituency',
-          'adminTown',
-        ],
+        ['adminFederal', 'adminStream', 'adminCouncil', 'adminConstituency'],
         'Fellowship',
         'Leader'
       )
@@ -835,13 +826,7 @@ export const resolvers = {
       return RemoveServant(
         context,
         args,
-        [
-          'adminFederal',
-          'adminStream',
-          'adminCouncil',
-          'adminConstituency',
-          'adminTown',
-        ],
+        ['adminFederal', 'adminStream', 'adminCouncil', 'adminConstituency'],
         'Fellowship',
         'Leader'
       )
@@ -850,13 +835,7 @@ export const resolvers = {
       return MakeServant(
         context,
         args,
-        [
-          'adminFederal',
-          'adminStream',
-          'adminCouncil',
-          'adminConstituency',
-          'adminTown',
-        ],
+        ['adminFederal', 'adminStream', 'adminCouncil', 'adminConstituency'],
         'Sonta',
         'Leader'
       )
@@ -865,13 +844,7 @@ export const resolvers = {
       return RemoveServant(
         context,
         args,
-        [
-          'adminFederal',
-          'adminStream',
-          'adminCouncil',
-          'adminConstituency',
-          'adminTown',
-        ],
+        ['adminFederal', 'adminStream', 'adminCouncil', 'adminConstituency'],
         'Sonta',
         'Leader'
       )
@@ -880,13 +853,7 @@ export const resolvers = {
       return MakeServant(
         context,
         args,
-        [
-          'adminFederal',
-          'adminStream',
-          'adminCouncil',
-          'adminConstituency',
-          'adminTown',
-        ],
+        ['adminFederal', 'adminStream', 'adminCouncil', 'adminConstituency'],
         'Bacenta',
         'Leader'
       )
@@ -895,13 +862,7 @@ export const resolvers = {
       return RemoveServant(
         context,
         args,
-        [
-          'adminFederal',
-          'adminStream',
-          'adminCouncil',
-          'adminConstituency',
-          'adminTown',
-        ],
+        ['adminFederal', 'adminStream', 'adminCouncil', 'adminConstituency'],
         'Bacenta',
         'Leader'
       )

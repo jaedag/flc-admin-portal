@@ -16,10 +16,8 @@
 .colour-sontas {
   background-image: linear-gradient(#770e0b, #4e0a09, #2b0707);
 }
-.colour-campuses,
-.colour-campus,
-.colour-town,
-.colour-towns {
+.colour-constituencies,
+.colour-constituency {
   background-image: linear-gradient(#3c096f, #2c0b53, #1b0e36);
 }
 .colour-admin {

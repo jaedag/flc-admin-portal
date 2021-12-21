@@ -3,8 +3,7 @@ import { Route } from 'react-router-dom'
 import { useAuth0 } from '@auth0/auth0-react'
 import BacentaReport from './BacentaReport'
 import FellowshipReport from './FellowshipReport'
-import CampusReport from './CampusReport'
-import TownReport from './TownReport'
+import ConstituencyReport from './ConstituencyReport'
 import { MemberContext } from 'contexts/MemberContext'
 import { ChurchContext } from 'contexts/ChurchContext'
 import { isAuthorised } from 'global-utils'
@@ -22,16 +21,14 @@ const ProtectedReports = ({ component, roles, ...args }) => {
 
       if (!currentUser.roles.includes('adminCouncil')) {
         //User is not a Bishops Admin the he can only be looking at his constituency membership
-        church.setTownId(currentUser.constituency)
-        church.setCampusId(currentUser.constituency)
+        church.setConstituencyId(currentUser.constituency)
       }
     }
     // eslint-disable-next-line
   }, [
     currentUser,
     church.setCouncilId,
-    church.setTownId,
-    church.setCampusId,
+    church.setConstituencyId,
     church.setChurch,
   ])
 
@@ -41,12 +38,11 @@ const ProtectedReports = ({ component, roles, ...args }) => {
   } else if (isAuthorised(['adminCouncil', 'bishop'], currentUser.roles)) {
     //if the user does not have permission but is a Bishop's Admin
     return <Route component={component} {...args} />
-  } else if (isAuthorised(['adminCampus', 'leaderCampus'], currentUser.roles)) {
+  } else if (
+    isAuthorised(['adminConstituency', 'leaderConstituency'], currentUser.roles)
+  ) {
     //If the user does not have permission but is a CO Admin
-    return <Route component={CampusReport} />
-  } else if (isAuthorised(['adminTown', 'leaderTown'], currentUser.roles)) {
-    //If the user does not have permission but is a CO Admin
-    return <Route component={TownReport} />
+    return <Route component={ConstituencyReport} />
   } else if (isAuthorised(['leaderBacenta'], currentUser.roles)) {
     //If the user does not have permission but is a Bacenta Leader
     church.setBacentaId(currentUser.fellowship.bacenta.id)

@@ -23,7 +23,7 @@ import HeadingSecondary from 'components/HeadingSecondary'
 import { MemberContext } from 'contexts/MemberContext'
 
 const BacentaForm = ({ initialValues, onSubmit, title, newBacenta }) => {
-  const { church, togglePopup, isOpen, clickCard, bacentaId, councilId } =
+  const { togglePopup, isOpen, clickCard, bacentaId, councilId } =
     useContext(ChurchContext)
   const { theme } = useContext(MemberContext)
   const history = useHistory()
@@ -92,9 +92,7 @@ const BacentaForm = ({ initialValues, onSubmit, title, newBacenta }) => {
                           'adminFederal',
                           'adminCouncil',
                           'adminConstituency',
-                          'adminTown',
                           'leaderConstituency',
-                          'leaderTown',
                         ]}
                       >
                         <Col>
@@ -204,9 +202,9 @@ const BacentaForm = ({ initialValues, onSubmit, title, newBacenta }) => {
                       },
                     })
                       .then((res) => {
-                        clickCard(res.data.CloseDownBacenta[`${church.church}`])
+                        clickCard(res.data.CloseDownBacenta.constituency)
                         togglePopup()
-                        history.push(`/${church.church}/displaydetails`)
+                        history.push(`/constituency/displaydetails`)
                       })
                       .catch((error) => {
                         // eslint-disable-next-line no-console

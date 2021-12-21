@@ -45,16 +45,16 @@ export const LOG_BACENTA_HISTORY = gql`
     $historyRecord: String!
     $oldLeaderId: ID
     $newLeaderId: ID
-    $oldCampusTownId: ID
-    $newCampusTownId: ID
+    $oldConstituencyId: ID
+    $newConstituencyId: ID
   ) {
     LogBacentaHistory(
       bacentaId: $bacentaId
       historyRecord: $historyRecord
       newLeaderId: $newLeaderId
       oldLeaderId: $oldLeaderId
-      oldCampusTownId: $oldCampusTownId
-      newCampusTownId: $newCampusTownId
+      oldConstituencyId: $oldConstituencyId
+      newConstituencyId: $newConstituencyId
     ) {
       id
       name
@@ -122,7 +122,7 @@ export const LOG_CONSTITUENCY_HISTORY = gql`
         historyRecord
       }
     }
-    ConnectChurchHistory(churchId: $campusTownId) {
+    ConnectChurchHistory(churchId: $constituencyId) {
       id
       historyRecord
     }
@@ -180,16 +180,16 @@ export const LOG_SONTA_HISTORY = gql`
     $historyRecord: String!
     $oldLeaderId: ID
     $newLeaderId: ID
-    $oldCampusTownId: ID
-    $newCampusTownId: ID
+    $oldConstituencyId: ID
+    $newConstituencyId: ID
   ) {
     LogSontaHistory(
       sontaId: $sontaId
       historyRecord: $historyRecord
       newLeaderId: $newLeaderId
       oldLeaderId: $oldLeaderId
-      oldCampusTownId: $oldCampusTownId
-      newCampusTownId: $newCampusTownId
+      oldConstituencyId: $oldConstituencyId
+      newConstituencyId: $newConstituencyId
     ) {
       id
       name

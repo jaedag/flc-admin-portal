@@ -154,8 +154,8 @@ const UpdateBacenta = () => {
           bacentaId: bacentaId,
           newLeaderId: '',
           oldLeaderId: '',
-          oldConstituencyTownId: '',
-          newConstituencyTownId: '',
+          oldConstituencyId: '',
+          newConstituencyId: '',
           historyRecord: `Bacenta name has been changed from ${initialValues.name} to ${values.name}`,
         },
       })

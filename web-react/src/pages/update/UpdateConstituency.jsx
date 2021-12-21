@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/client'
-import { alertMsg, capitalise, throwErrorMsg } from '../../global-utils'
+import { alertMsg, throwErrorMsg } from '../../global-utils'
 import { GET_COUNCIL_CONSTITUENCIES } from '../../queries/ListQueries'
 import {
   UPDATE_CONSTITUENCY_MUTATION,
@@ -17,7 +17,7 @@ import { MAKE_CONSTITUENCY_LEADER } from './ChangeLeaderMutations'
 import ConstituencyForm from 'components/reusable-forms/ConstituencyForm'
 
 const UpdateConstituency = () => {
-  const { church, constituencyId, setCouncilId } = useContext(ChurchContext)
+  const { constituencyId, setCouncilId } = useContext(ChurchContext)
   const { data, loading } = useQuery(DISPLAY_CONSTITUENCY, {
     variables: { id: constituencyId },
   })
@@ -264,7 +264,7 @@ const UpdateConstituency = () => {
     <ConstituencyForm
       initialValues={initialValues}
       onSubmit={onSubmit}
-      title={`Update ${capitalise(church.church)} Form`}
+      title={`Update Constituency Form`}
       loading={loading || !initialValues.name}
       newConstituency={false}
     />

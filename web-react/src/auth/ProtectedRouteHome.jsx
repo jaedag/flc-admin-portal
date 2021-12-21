@@ -4,7 +4,6 @@ import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react'
 import { UnauthMsg } from './UnauthMsg'
 import { MemberContext } from '../contexts/MemberContext'
 import { ChurchContext } from '../contexts/ChurchContext'
-// import DisplayCampusTownDetails from '../pages/display/DetailsConstituency.jsx'
 import LoadingScreen from '../components/base-component/LoadingScreen'
 import { isAuthorised } from '../global-utils'
 import UserDashboard from 'pages/dashboards/UserDashboard'
@@ -46,10 +45,8 @@ const ProtectedRoute = ({ component, roles, ...args }) => {
     isAuthorised(
       [
         'adminCouncil',
-        'adminCampus',
-        'adminTown',
-        'leaderCampus',
-        'leaderTown',
+        'adminConstituency',
+        'leaderConstituency',
         'leaderBacenta',
         'leaderSonta',
         'leaderFellowship',

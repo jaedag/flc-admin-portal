@@ -4,28 +4,28 @@ import { ChurchContext } from '../../contexts/ChurchContext'
 import { useQuery } from '@apollo/client'
 import { getServiceGraphData, getMonthlyStatAverage } from './report-utils'
 import ChurchGraph from '../../components/ChurchGraph/ChurchGraph'
-import { CAMPUS_REPORT } from './ReportQueries'
+import { CONSTITUENCY_REPORT } from './ReportQueries'
 import MembershipCard from './CompMembershipCard'
 import StatDisplay from './CompStatDisplay'
 import BaseComponent from 'components/base-component/BaseComponent'
 
-export const CampusReport = () => {
-  const { campusId } = useContext(ChurchContext)
+export const ConstituencyReport = () => {
+  const { constituencyId } = useContext(ChurchContext)
 
-  const { data, loading, error } = useQuery(CAMPUS_REPORT, {
-    variables: { campusId: campusId },
+  const { data, loading, error } = useQuery(CONSTITUENCY_REPORT, {
+    variables: { id: constituencyId },
   })
 
-  const churchData = getServiceGraphData(data?.campuses[0])
+  const churchData = getServiceGraphData(data?.constituencies[0])
 
   return (
     <BaseComponent loading={loading} error={error} data={data}>
       <div className="container">
         <div className=" my-3">
-          <h5 className="mb-0">{`${data?.campuses[0].name} Campus`}</h5>{' '}
+          <h5 className="mb-0">{`${data?.constituencies[0].name} Constituency`}</h5>{' '}
           <p>
             <span className="text-secondary font-weight-bold">Leader: </span>
-            {`${data?.campuses[0].leader.fullName}`}
+            {`${data?.constituencies[0].leader.fullName}`}
           </p>
         </div>
 
@@ -34,7 +34,7 @@ export const CampusReport = () => {
             <MembershipCard
               link="/campus/members"
               title="Membership"
-              count={data?.campuses[0].memberCount}
+              count={data?.constituencies[0].memberCount}
             />
           </div>
         </div>
@@ -64,4 +64,4 @@ export const CampusReport = () => {
   )
 }
 
-export default CampusReport
+export default ConstituencyReport

@@ -38,8 +38,7 @@ const UpdateFellowship = () => {
     fellowshipName: fellowship?.name,
     leaderId: fellowship?.leader?.id,
     leaderName: `${fellowship?.leader?.firstName} ${fellowship?.leader?.lastName} `,
-    townCampusSelect:
-      fellowship?.bacenta?.town?.id ?? fellowship?.bacenta?.campus?.id,
+    constituencySelect: fellowship?.bacenta?.constituency?.id,
     bacentaSelect: fellowship?.bacenta?.id,
     meetingDay: fellowship?.meetingDay?.day,
     vacationStatus: fellowship?.labels.includes('Vacation')

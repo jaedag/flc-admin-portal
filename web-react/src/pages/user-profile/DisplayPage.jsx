@@ -22,14 +22,11 @@ const DisplayPage = () => {
     loading,
     error,
   } = useQuery(DISPLAY_MEMBER_BIO, {
-    variables: { id: currentUser.id },
+    variables: { id: currentUser?.id },
   })
   const { data: churchData } = useQuery(DISPLAY_MEMBER_CHURCH, {
-    variables: { id: currentUser.id },
+    variables: { id: currentUser?.id },
   })
-
-  //const location = useLocation()
-  //const atProfile = location.pathname === '/user-profile'
 
   const member = bioData?.members[0]
   const memberChurch = churchData?.members[0]

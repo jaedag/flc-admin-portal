@@ -63,6 +63,9 @@ const Navigator = () => {
       })
     },
   })
+  // What leadership roles does this person play?
+  let roles = []
+  let assessmentChurchData, assessmentChurch
 
   useEffect(() => {
     if (!currentUser?.email?.length) {
@@ -87,10 +90,6 @@ const Navigator = () => {
   const servant = data?.members[0]
   const servantAdmin = adminData?.members[0]
   const servantLeader = leaderData?.members[0]
-
-  // What leadership roles does this person play?
-  let roles = []
-  let assessmentChurchData, assessmentChurch
 
   const setServantRoles = (servant, servantType, churchType) => {
     let verb
@@ -263,7 +262,6 @@ const Navigator = () => {
       variant={theme}
       expand={false}
       sticky="top"
-      defaultActiveKey="0"
     >
       <Container fluid>
         <Navbar.Toggle

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { Switch, BrowserRouter as Router } from 'react-router-dom'
-import BishopDashboard from './pages/dashboards/BishopDashboard.jsx'
 import { MemberContext, SearchContext } from './contexts/MemberContext'
 import { ChurchContext } from './contexts/ChurchContext'
 import ProtectedRoute from './auth/ProtectedRoute.jsx'
@@ -49,6 +48,11 @@ const PastorsAdmin = () => {
       ? sessionStorage.getItem('constituencyId')
       : ''
   )
+  const [bacentaId, setBacentaId] = useState(
+    sessionStorage.getItem('bacentaId')
+      ? sessionStorage.getItem('bacentaId')
+      : ''
+  )
   const [fellowshipId, setFellowshipId] = useState(
     sessionStorage.getItem('fellowshipId')
       ? sessionStorage.getItem('fellowshipId')
@@ -59,11 +63,7 @@ const PastorsAdmin = () => {
       ? sessionStorage.getItem('serviceRecordsId')
       : ''
   )
-  const [bacentaId, setBacentaId] = useState(
-    sessionStorage.getItem('bacentaId')
-      ? sessionStorage.getItem('bacentaId')
-      : ''
-  )
+
   const [sontaId, setSontaId] = useState(
     sessionStorage.getItem('sontaId') ? sessionStorage.getItem('sontaId') : ''
   )
@@ -286,12 +286,7 @@ const PastorsAdmin = () => {
                     placeholder
                     exact
                   />
-                  <ProtectedRouteHome
-                    path="/dashboard"
-                    component={BishopDashboard}
-                    roles={['adminFederal', 'adminCouncil']}
-                    exact
-                  />
+
                   <ProtectedRouteHome
                     path="/dashboard/servants"
                     component={ServantsDashboard}

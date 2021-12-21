@@ -11,7 +11,6 @@ import PlusSign from 'components/buttons/PlusMinusSign/PlusSign'
 import MinusSign from 'components/buttons/PlusMinusSign/MinusSign'
 import { COUNCIL_BACENTA_DROPDOWN } from 'components/formik-components/ComboboxQueries'
 import { MAKE_CONSTITUENCY_INACTIVE } from 'pages/update/CloseChurchMutations'
-import { BISH_DASHBOARD_COUNTS } from 'pages/dashboards/DashboardQueries'
 import { useHistory } from 'react-router'
 import Popup from 'components/Popup/Popup'
 import RoleView from 'auth/RoleView'
@@ -36,11 +35,7 @@ const ConstituencyForm = ({
     loading: councilLoading,
     error: councilError,
   } = useQuery(GET_COUNCILS)
-  const [CloseDownConstituency] = useMutation(MAKE_CONSTITUENCY_INACTIVE, {
-    refetchQueries: [
-      { query: BISH_DASHBOARD_COUNTS, variables: { id: councilId } },
-    ],
-  })
+  const [CloseDownConstituency] = useMutation(MAKE_CONSTITUENCY_INACTIVE)
 
   const constituencyCouncilOptions = makeSelectOptions(
     councilData?.councils.filter(

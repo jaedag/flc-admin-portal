@@ -7,7 +7,7 @@ import { getWeekNumber, throwErrorMsg } from 'global-utils'
 
 const DetailsFellowship = () => {
   const { fellowshipId } = useContext(ChurchContext)
-  // console.log(fellowshipId)
+
   const {
     data: fellowshipData,
     loading: fellowshipLoading,

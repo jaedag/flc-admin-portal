@@ -13,7 +13,7 @@ const ProtectedRoute = ({ component, roles, placeholder, ...args }) => {
   const church = useContext(ChurchContext)
 
   const location = useLocation()
-  const atHome = location.pathname === '/'
+  const atHome = location?.pathname === '/'
 
   useEffect(() => {
     church.setGatheringId(currentUser.gatheringService)

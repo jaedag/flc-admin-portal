@@ -15,35 +15,30 @@ const DetailsConstituency = () => {
 
   return (
     <BaseComponent loading={loading} error={error} data={data}>
-      <>
-        <DisplayChurchDetails
-          name={data?.constituencies[0].name}
-          leaderTitle={'Constituency Overseer'}
-          membership={data?.constituencies[0].memberCount}
-          leader={data?.constituencies[0].leader}
-          churchId={constituencyId}
-          churchHeading="Bacentas"
-          church2Heading="Fellowships"
-          churchCount={data?.constituencies[0].bacentas.length}
-          church2Count={data?.constituencies[0].fellowshipCount}
-          admin={data?.constituencies[0].admin}
-          churchType={`Constituency`}
-          subChurch={`Bacenta`}
-          subChurchBasonta="Sonta"
-          buttons={data?.constituencies[0].bacentas}
-          buttonsSecondRow={data?.constituencies[0].sontas}
-          editlink="/constituency/editconstituency"
-          editPermitted={['adminCouncil', 'adminFederal']}
-          history={
-            data?.constituencies[0]?.history.length !== 0 &&
-            data?.constituencies[0]?.history
-          }
-          breadcrumb={[
-            data?.constituencies[0]?.council,
-            data?.constituencies[0],
-          ]}
-        />
-      </>
+      <DisplayChurchDetails
+        name={data?.constituencies[0].name}
+        leaderTitle={'Constituency Overseer'}
+        membership={data?.constituencies[0].memberCount}
+        leader={data?.constituencies[0].leader}
+        churchId={constituencyId}
+        churchHeading="Bacentas"
+        church2Heading="Fellowships"
+        churchCount={data?.constituencies[0].bacentas.length}
+        church2Count={data?.constituencies[0].fellowshipCount}
+        admin={data?.constituencies[0].admin}
+        churchType={`Constituency`}
+        subChurch={`Bacenta`}
+        subChurchBasonta="Sonta"
+        buttons={data?.constituencies[0].bacentas}
+        buttonsSecondRow={data?.constituencies[0].sontas}
+        editlink="/constituency/editconstituency"
+        editPermitted={['adminCouncil', 'adminFederal']}
+        history={
+          data?.constituencies[0]?.history.length !== 0 &&
+          data?.constituencies[0]?.history
+        }
+        breadcrumb={[data?.constituencies[0]?.council, data?.constituencies[0]]}
+      />
     </BaseComponent>
   )
 }

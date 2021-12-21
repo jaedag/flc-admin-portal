@@ -247,13 +247,13 @@ const DisplayChurchDetails = (props) => {
           </Button>
         </div>
 
-        {location?.latitude && (
+        {props?.location?.latitude && (
           <Container className="mt-4 text-center">
             <h3>LOCATION</h3>
             <p>Click here for directions</p>
             <a
               className="btn p-3"
-              href={`https://www.google.com/maps/search/?api=1&query=${props.location?.latitude}%2C${props.location?.longitude}`}
+              href={`https://www.google.com/maps/search/?api=1&query=${props?.location?.latitude}%2C${props?.location?.longitude}`}
             >
               <Geo size="75" />
             </a>

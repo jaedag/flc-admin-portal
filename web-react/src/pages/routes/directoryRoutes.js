@@ -6,7 +6,6 @@ import UserProfileEditPage from 'pages/user-profile/EditPage'
 import CreateMember from 'pages/create/CreateMember'
 import UpdateMember from 'pages/update/UpdateMember'
 import SearchPageMobile from 'pages/mobile/SearchPage'
-import MemberFiltersMobile from 'pages/mobile/MemberFilters'
 import MembersGrid from 'components/members-grids/MembersGrid'
 import CouncilMembers from 'pages/grids/CouncilMembers'
 import ConstituencyMembers from 'pages/grids/ConstituencyMembers'
@@ -152,13 +151,6 @@ export const directory = [
   {
     path: '/search-results',
     component: SearchPageMobile,
-    roles: ['all'],
-    placeholder: true,
-    exact: true,
-  },
-  {
-    path: '/filter-members',
-    component: MemberFiltersMobile,
     roles: ['all'],
     placeholder: true,
     exact: true,

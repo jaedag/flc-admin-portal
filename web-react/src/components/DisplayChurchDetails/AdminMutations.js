@@ -1,25 +1,38 @@
 import { gql } from '@apollo/client'
 
-export const REMOVE_TOWN_ADMIN = gql`
-  mutation ($townId: ID!, $adminId: ID!) {
-    RemoveTownAdmin(adminId: $adminId, townId: $townId) {
+export const REMOVE_CONSTITUENCY_ADMIN = gql`
+  mutation RemoveConstituencyAdmin($constituencyId: ID!, $adminId: ID!) {
+    RemoveConstituencyAdmin(
+      adminId: $adminId
+      constituencyId: $constituencyId
+    ) {
       id
     }
   }
 `
 
-export const MAKE_TOWN_ADMIN = gql`
-  mutation MakeTownAdmin($townId: ID!, $newAdminId: ID!, $oldAdminId: ID!) {
-    RemoveTownAdmin(townId: $townId, adminId: $oldAdminId) {
+export const MAKE_CONSTITUENCY_ADMIN = gql`
+  mutation MakeConstituencyAdmin(
+    $constituencyId: ID!
+    $newAdminId: ID!
+    $oldAdminId: ID!
+  ) {
+    RemoveConstituencyAdmin(
+      constituencyId: $constituencyId
+      adminId: $oldAdminId
+    ) {
       id
       firstName
       lastName
     }
-    MakeTownAdmin(townId: $townId, adminId: $newAdminId) {
+    MakeConstituencyAdmin(
+      constituencyId: $constituencyId
+      adminId: $newAdminId
+    ) {
       id
       firstName
       lastName
-      isAdminForTown {
+      isAdminForConstituency {
         id
         admin {
           id
@@ -31,44 +44,13 @@ export const MAKE_TOWN_ADMIN = gql`
   }
 `
 
-export const REMOVE_CAMPUS_ADMIN = gql`
-  mutation RemoveCampusAdmin($campusId: ID!, $adminId: ID!) {
-    RemoveCampusAdmin(adminId: $adminId, campusId: $campusId) {
-      id
-    }
-  }
-`
-
-export const MAKE_CAMPUS_ADMIN = gql`
-  mutation MakeCampusAdmin($campusId: ID!, $newAdminId: ID!, $oldAdminId: ID!) {
-    RemoveCampusAdmin(campusId: $campusId, adminId: $oldAdminId) {
+export const NEW_CONSTITUENCY_ADMIN = gql`
+  mutation MakeConstituencyAdmin($constituencyId: ID!, $adminId: ID!) {
+    MakeConstituencyAdmin(constituencyId: $constituencyId, adminId: $adminId) {
       id
       firstName
       lastName
-    }
-    MakeCampusAdmin(campusId: $campusId, adminId: $newAdminId) {
-      id
-      firstName
-      lastName
-      isAdminForCampus {
-        id
-        admin {
-          id
-          firstName
-          lastName
-        }
-      }
-    }
-  }
-`
-
-export const NEW_CAMPUS_ADMIN = gql`
-  mutation MakeCampusAdmin($campusId: ID!, $adminId: ID!) {
-    MakeCampusAdmin(campusId: $campusId, adminId: $adminId) {
-      id
-      firstName
-      lastName
-      isAdminForCampus {
+      isAdminForConstituency {
         id
         admin {
           id
@@ -81,12 +63,12 @@ export const NEW_CAMPUS_ADMIN = gql`
 `
 
 export const NEW_COUNCIL_ADMIN = gql`
-  mutation MakeCampusAdmin($campusId: ID!, $adminId: ID!) {
-    MakeCampusAdmin(campusId: $campusId, adminId: $adminId) {
+  mutation MakeCouncilAdmin($councilId: ID!, $adminId: ID!) {
+    MakeCouncilAdmin(councilId: $councilId, adminId: $adminId) {
       id
       firstName
       lastName
-      isAdminForCampus {
+      isAdminForCouncil {
         id
         admin {
           id

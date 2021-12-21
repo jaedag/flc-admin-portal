@@ -83,11 +83,7 @@ export const memberFilter = (memberData, filters) => {
 
   if (filters.leaderRank.includes('Admin')) {
     leaderData.admins = filteredData.filter((member) => {
-      if (
-        member.isAdminForTown[0] ||
-        member.isAdminForCampus[0] ||
-        member.isAdminForCouncil[0]
-      ) {
+      if (member.isAdminForConstituency[0] || member.isAdminForCouncil[0]) {
         return member
       }
       return null
@@ -107,7 +103,7 @@ export const memberFilter = (memberData, filters) => {
   }
   if (filters.leaderRank.includes('CO')) {
     leaderData.cOs = filteredData.filter((member) => {
-      if (member.leadsTown[0] || member.leadsCampus[0]) {
+      if (member.leadsConstituency[0]) {
         return member
       }
       return null

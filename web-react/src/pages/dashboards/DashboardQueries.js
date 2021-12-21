@@ -152,7 +152,7 @@ export const SERVANTS_LEADERSHIP = gql`
 
       # The person leads in the Fellowship side
 
-      leadsTown {
+      leadsConstituency {
         id
         name
         stream_name
@@ -179,33 +179,7 @@ export const SERVANTS_LEADERSHIP = gql`
           income
         }
       }
-      leadsCampus {
-        id
-        name
-        stream_name
-        memberCount
-        leader {
-          id
-          firstName
-          lastName
-          fullName
-        }
-        services(limit: 4) {
-          created_at
-          attendance
-          income
-          week
-          serviceDate {
-            date
-          }
-        }
 
-        componentServiceAggregate {
-          week
-          attendance
-          income
-        }
-      }
       leadsSonta {
         id
         name
@@ -224,7 +198,7 @@ export const SERVANTS_ADMIN = gql`
       id
 
       # The person is an admin
-      isAdminForTown {
+      isAdminForConstituency {
         id
         name
         stream_name
@@ -236,34 +210,6 @@ export const SERVANTS_ADMIN = gql`
           fullName
         }
         services(limit: 4) {
-          created_at
-          attendance
-          income
-          week
-          serviceDate {
-            date
-          }
-        }
-
-        componentServiceAggregate {
-          week
-          attendance
-          income
-        }
-      }
-      isAdminForCampus {
-        id
-        name
-        stream_name
-        memberCount
-        leader {
-          id
-          firstName
-          lastName
-          fullName
-        }
-        services(limit: 4) {
-          id
           created_at
           attendance
           income

@@ -54,31 +54,13 @@ export const NEW_BACENTA_LEADER = gql`
   }
 `
 
-export const NEW_CAMPUS_LEADER = gql`
-  mutation NewCampusLeader($campusId: ID!, $leaderId: ID!) {
-    MakeCampusLeader(campusId: $campusId, leaderId: $leaderId) {
+export const NEW_CONSTITUENCY_LEADER = gql`
+  mutation NewConstituencyLeader($campusId: ID!, $leaderId: ID!) {
+    MakeConstituencyLeader(campusId: $campusId, leaderId: $leaderId) {
       id
       firstName
       lastName
-      leadsCampus {
-        id
-        leader {
-          id
-          firstName
-          lastName
-        }
-      }
-    }
-  }
-`
-
-export const NEW_TOWN_LEADER = gql`
-  mutation NewTownLeader($townId: ID!, $leaderId: ID!) {
-    MakeTownLeader(townId: $townId, leaderId: $leaderId) {
-      id
-      firstName
-      lastName
-      leadsTown {
+      leadsConstituency {
         id
         leader {
           id

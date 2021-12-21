@@ -56,12 +56,7 @@ export const DISPLAY_MEMBER_LEADERSHIP = gql`
         name
         stream_name
       }
-      leadsTown {
-        id
-        name
-        stream_name
-      }
-      leadsCampus {
+      leadsConstituency {
         id
         name
         stream_name
@@ -93,12 +88,7 @@ export const DISPLAY_MEMBER_LEADERSHIP = gql`
         name
         stream_name
       }
-      isAdminForCampus {
-        id
-        name
-        stream_name
-      }
-      isAdminForTown {
+      isAdminForConstituency {
         id
         name
         stream_name
@@ -171,7 +161,7 @@ export const DISPLAY_FELLOWSHIP = gql`
       bacenta {
         id
         name
-        town {
+        constituency {
           id
           name
         }
@@ -231,16 +221,8 @@ export const DISPLAY_SONTA = gql`
           title
         }
       }
-      town {
-        id
-        name
-        bishop {
-          id
-          firstName
-          lastName
-        }
-      }
-      campus {
+
+      constituency {
         id
         name
         bishop {
@@ -288,12 +270,8 @@ export const DISPLAY_BACENTA = gql`
           stream_name
         }
       }
-      town {
-        id
-        name
-        stream_name
-      }
-      campus {
+
+      constituency {
         id
         name
         stream_name
@@ -328,23 +306,16 @@ export const DISPLAY_BACENTA = gql`
   }
 `
 
-export const DISPLAY_TOWN = gql`
+export const DISPLAY_CONSTITUENCY = gql`
   query ($id: ID) {
-    towns(where: { id: $id }, options: { limit: 1 }) {
+    constituencies(where: { id: $id }, options: { limit: 1 }) {
       id
       name
       stream_name
       bacentas {
         id
         name
-        town {
-          id
-          name
-          bishop {
-            id
-          }
-        }
-        campus {
+        constituency {
           id
           name
           bishop {
@@ -364,14 +335,7 @@ export const DISPLAY_TOWN = gql`
           id
           bacenta {
             id
-            town {
-              id
-              name
-              bishop {
-                id
-              }
-            }
-            campus {
+            constituency {
               id
               name
               bishop {
@@ -384,97 +348,6 @@ export const DISPLAY_TOWN = gql`
       council {
         id
         name
-      }
-      bishop {
-        id
-        firstName
-        lastName
-        fullName
-      }
-      leader {
-        id
-        firstName
-        lastName
-        fullName
-        pictureUrl
-      }
-      history(options: { limit: 10 }) {
-        id
-        timeStamp
-        created_at {
-          date
-        }
-        loggedBy {
-          id
-          firstName
-          lastName
-          stream_name
-        }
-        historyRecord
-      }
-      memberCount
-      fellowshipCount
-    }
-  }
-`
-
-export const DISPLAY_CAMPUS = gql`
-  query ($id: ID) {
-    campuses(where: { id: $id }, options: { limit: 1 }) {
-      id
-      name
-      stream_name
-      activeFellowshipCount
-      council {
-        id
-        name
-      }
-      bacentas {
-        id
-        name
-        town {
-          id
-          name
-          bishop {
-            id
-          }
-        }
-        campus {
-          id
-          name
-          bishop {
-            id
-          }
-        }
-      }
-      sontas {
-        id
-        name
-      }
-      admin {
-        id
-        firstName
-        lastName
-        fellowship {
-          id
-          bacenta {
-            id
-            town {
-              id
-              name
-              bishop {
-                id
-              }
-            }
-            campus {
-              id
-              name
-              bishop {
-                id
-              }
-            }
-          }
-        }
       }
       bishop {
         id
@@ -524,12 +397,7 @@ export const DISPLAY_COUNCIL = gql`
       fellowshipCount
       memberCount
       pastorCount
-      towns(options: { limit: 5 }) {
-        id
-        name
-        stream_name
-      }
-      campuses(options: { limit: 5 }) {
+      constituencies(options: { limit: 5 }) {
         id
         name
         stream_name
@@ -543,14 +411,8 @@ export const DISPLAY_COUNCIL = gql`
           id
           bacenta {
             id
-            town {
-              id
-              name
-              bishop {
-                id
-              }
-            }
-            campus {
+
+            constituency {
               id
               name
               bishop {

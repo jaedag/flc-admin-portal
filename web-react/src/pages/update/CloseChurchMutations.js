@@ -12,18 +12,11 @@ export const MAKE_FELLOWSHIP_INACTIVE = gql`
           id
           name
         }
-        town {
+        constituency {
           id
-          bishop {
-            id
-          }
+          stream_name
         }
-        campus {
-          id
-          bishop {
-            id
-          }
-        }
+
         history(options: { limit: 10 }) {
           id
           timeStamp
@@ -48,36 +41,12 @@ export const MAKE_BACENTA_INACTIVE = gql`
       id
       name
       stream_name
-      town {
+      constituency {
         id
         bacentas {
           id
         }
-        bishop {
-          id
-        }
-        history(options: { limit: 10 }) {
-          id
-          timeStamp
-          created_at {
-            date
-          }
-          loggedBy {
-            id
-            firstName
-            lastName
-          }
-          historyRecord
-        }
-      }
-      campus {
-        id
-        bacentas {
-          id
-        }
-        bishop {
-          id
-        }
+
         history(options: { limit: 10 }) {
           id
           timeStamp
@@ -96,38 +65,18 @@ export const MAKE_BACENTA_INACTIVE = gql`
   }
 `
 
-export const MAKE_CAMPUSTOWN_INACTIVE = gql`
-  mutation CloseDownCampusTown($campusTownId: ID!) {
-    CloseDownCampusTown(campusTownId: $campusTownId) {
+export const MAKE_CONSTITUENCY_INACTIVE = gql`
+  mutation CloseDownConstituency($constituencyId: ID!) {
+    CloseDownConstituency(constituencyId: $constituencyId) {
       id
       name
       stream_name
 
-      town {
+      constituency {
         id
         council {
           id
-          towns
-        }
-        history(options: { limit: 10 }) {
-          id
-          timeStamp
-          created_at {
-            date
-          }
-          loggedBy {
-            id
-            firstName
-            lastName
-          }
-          historyRecord
-        }
-      }
-      campus {
-        id
-        council {
-          id
-          towns
+          constituencies
         }
         history(options: { limit: 10 }) {
           id

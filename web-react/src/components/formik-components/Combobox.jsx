@@ -30,8 +30,7 @@ function Combobox(props) {
           name: row[`${suggestionText}`],
           id: row[`${suggestionID}`],
           bacenta: row.bacenta,
-          campus: row.campus,
-          town: row.town,
+          constituency: row.constituency,
         }))
       )
     },

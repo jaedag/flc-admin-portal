@@ -34,12 +34,11 @@ function FormikSearchbox(props) {
         fellowship: row.fellowship,
         bacenta: row.bacenta,
         town: row.town,
-        campus: row.campus,
+        constituency: row.constituency,
         bishop: row.bishop,
         leadsFellowship: row.leadsFellowship,
         leadsBacenta: row.leadsBacenta,
-        leadsCampus: row.leadsCampus,
-        leadsTown: row.leadsTown,
+        leadsConstituency: row.leadsConstituency,
         leadsCouncil: row.leadsCouncil,
         id: row.id,
       }))
@@ -49,8 +48,7 @@ function FormikSearchbox(props) {
     onCompleted: (data) => {
       const combinedData = [
         ...data.federalMemberSearch,
-        ...data.federalCampusSearch,
-        ...data.federalTownSearch,
+        ...data.federalConstituencySearch,
         ...data.federalSontaSearch,
         ...data.federalBacentaSearch,
         ...data.federalFellowshipSearch,
@@ -64,8 +62,7 @@ function FormikSearchbox(props) {
     onCompleted: (data) => {
       const combinedData = [
         ...data.councilMemberSearch,
-        ...data.councilCampusSearch,
-        ...data.councilTownSearch,
+        ...data.councilConstituencySearch,
         ...data.councilSontaSearch,
         ...data.councilBacentaSearch,
         ...data.councilFellowshipSearch,
@@ -85,7 +82,7 @@ function FormikSearchbox(props) {
         ...data.constituencyFellowshipSearch,
       ]
 
-      if (currentUser.roles.includes('adminCampus', 'adminTown')) {
+      if (currentUser.roles.includes('adminConstituency', 'adminTown')) {
         getSuggestions(combinedData)
       }
     },
@@ -105,7 +102,7 @@ function FormikSearchbox(props) {
       })
     } else if (
       isAuthorised(
-        ['adminCampus', 'adminTown', 'leaderCampus', 'leaderTown'],
+        ['adminConstituency', 'adminTown', 'leaderCampus', 'leaderTown'],
         currentUser.roles
       )
     ) {

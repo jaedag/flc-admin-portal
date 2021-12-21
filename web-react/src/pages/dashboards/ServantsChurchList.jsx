@@ -62,11 +62,8 @@ const ServantsChurchList = () => {
     if (servant?.leadsBacenta?.length) {
       pushIntoChurch(servant?.leadsBacenta)
     }
-    if (servantLeader?.leadsTown?.length) {
-      pushIntoChurch(servantLeader?.leadsTown)
-    }
-    if (servantLeader?.leadsCampus?.length) {
-      pushIntoChurch(servantLeader?.leadsCampus)
+    if (servantLeader?.leadsConstituency?.length) {
+      pushIntoChurch(servantLeader?.leadsConstituency)
     }
     if (servantLeader?.leadsSonta?.length) {
       pushIntoChurch(servantLeader?.leadsSonta)
@@ -86,11 +83,8 @@ const ServantsChurchList = () => {
     if (servantAdmin?.isAdminForCouncil?.length) {
       pushIntoChurch(servantAdmin?.isAdminForCouncil)
     }
-    if (servantAdmin?.isAdminForCampus?.length) {
-      pushIntoChurch(servantAdmin?.isAdminForCampus)
-    }
-    if (servantAdmin?.isAdminForTown?.length) {
-      pushIntoChurch(servantAdmin?.isAdminForTown)
+    if (servantAdmin?.isAdminForConstituency?.length) {
+      pushIntoChurch(servantAdmin?.isAdminForConstituency)
     }
 
     //run the get graph function after all checking is done to avoid multiple unnecessary runs

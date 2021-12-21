@@ -9,7 +9,7 @@ import SearchPageMobile from 'pages/mobile/SearchPage'
 import MemberFiltersMobile from 'pages/mobile/MemberFilters'
 import MembersGrid from 'components/members-grids/MembersGrid'
 import CouncilMembers from 'pages/grids/CouncilMembers'
-import CampusTownMembers from 'pages/grids/CampusTownMembers'
+import ConstituencyMembers from 'pages/grids/ConstituencyMembers'
 import BacentaMembers from 'pages/grids/BacentaMembers'
 import FellowshipMembers from 'pages/grids/FellowshipMembers'
 import SontaMembers from 'pages/grids/SontaMembers'
@@ -21,17 +21,17 @@ import DetailsStream from 'pages/display/DetailsStream'
 import DetailsSonta from 'pages/display/DetailsSonta'
 import DisplayAllBacentas from 'pages/display/AllBacentas'
 import DisplayAllSontas from 'pages/display/AllSontas'
-import DisplaySontasByCampusTown from 'pages/display/SontasByCampusTown'
-import DisplayAllTownCampuses from 'pages/display/AllTownCampuses'
+import DisplaySontasByCampusTown from 'pages/display/SontasByConstituency'
+import DisplayAllConstituencies from 'pages/display/AllConstituencies'
 import DisplayAllFellowships from 'pages/display/AllFellowships'
-import CreateTownCampus from 'pages/create/CreateTownCampus'
+import CreateConstituency from 'pages/create/CreateConstituency'
 import CreateBacenta from 'pages/create/CreateBacenta'
 import CreateFellowship from 'pages/create/CreateFellowship'
 import CreateSonta from 'pages/create/CreateSonta'
 import UpdateFellowship from 'pages/update/UpdateFellowship'
 import UpdateBacenta from 'pages/update/UpdateBacenta'
 import UpdateSonta from 'pages/update/UpdateSonta'
-import UpdateTownCampus from 'pages/update/UpdateTownCampus'
+import UpdateConstituency from 'pages/update/UpdateConstituency'
 import DetailsGatheringService from 'pages/display/DetailsGatheringService.jsx'
 import DisplayAllCouncils from 'pages/display/AllCouncils'
 import DisplayAllStreams from 'pages/display/AllStreams'
@@ -60,17 +60,12 @@ export const memberGrids = [
     exact: true,
   },
   {
-    path: '/campus/members',
-    component: CampusTownMembers,
+    path: '/constituency/members',
+    component: ConstituencyMembers,
     roles: ['adminFederal', 'adminCouncil', 'adminCampus'],
     exact: true,
   },
-  {
-    path: '/town/members',
-    component: CampusTownMembers,
-    roles: ['adminFederal', 'adminCouncil', 'adminTown'],
-    exact: true,
-  },
+
   {
     path: '/bacenta/members',
     component: BacentaMembers,
@@ -196,7 +191,7 @@ export const directory = [
     exact: true,
   },
   {
-    path: '/town/displaydetails',
+    path: '/constituency/displaydetails',
     component: DetailsConstituency,
     roles: [
       'adminFederal',
@@ -208,19 +203,7 @@ export const directory = [
     placeholder: true,
     exact: true,
   },
-  {
-    path: '/campus/displaydetails',
-    component: DetailsConstituency,
-    roles: [
-      'adminFederal',
-      'adminCouncil',
-      'adminCampus',
-      'leaderCouncil',
-      'leaderCampus',
-    ],
-    placeholder: true,
-    exact: true,
-  },
+
   {
     path: '/council/displaydetails',
     component: DetailsCouncil,
@@ -280,19 +263,13 @@ export const directory = [
     exact: true,
   },
   {
-    path: '/town/displayall',
-    component: DisplayAllTownCampuses,
+    path: '/constituency/displayall',
+    component: DisplayAllConstituencies,
     roles: ['adminFederal', 'adminCouncil'],
     placeholder: false,
     exact: true,
   },
-  {
-    path: '/campus/displayall',
-    component: DisplayAllTownCampuses,
-    roles: ['adminFederal', 'adminCouncil'],
-    placeholder: false,
-    exact: true,
-  },
+
   {
     path: '/fellowship/displayall',
     component: DisplayAllFellowships,
@@ -338,19 +315,13 @@ export const directory = [
     exact: true,
   },
   {
-    path: '/town/addtown',
-    component: CreateTownCampus,
+    path: '/constituency/addconstituency',
+    component: CreateConstituency,
     roles: ['adminFederal', 'adminCouncil'],
     placeholder: false,
     exact: true,
   },
-  {
-    path: '/campus/addcampus',
-    component: CreateTownCampus,
-    roles: ['adminFederal', 'adminCouncil'],
-    placeholder: false,
-    exact: true,
-  },
+
   {
     path: '/council/addcouncil',
     component: CreateCouncil,
@@ -389,14 +360,14 @@ export const directory = [
   },
   {
     path: '/town/edittown',
-    component: UpdateTownCampus,
+    component: UpdateConstituency,
     roles: ['adminFederal', 'adminCouncil'],
     placeholder: false,
     exact: true,
   },
   {
     path: '/campus/editcampus',
-    component: UpdateTownCampus,
+    component: UpdateConstituency,
     roles: ['adminFederal', 'adminCouncil'],
     placeholder: false,
     exact: true,

@@ -9,10 +9,10 @@ import BaseComponent from 'components/base-component/BaseComponent'
 import { Container, Row, Col, Button } from 'react-bootstrap'
 
 const DisplayAllStreams = () => {
-  const { clickCard, streamId } = useContext(ChurchContext)
+  const { clickCard, gatheringId } = useContext(ChurchContext)
 
   const { data, loading, error } = useQuery(GET_GATHERING_SERVICE_STREAMS, {
-    variables: { id: streamId },
+    variables: { id: gatheringId },
   })
 
   const streams = data?.gatheringServices[0]?.streams

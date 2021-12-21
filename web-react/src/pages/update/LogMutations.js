@@ -84,17 +84,17 @@ export const LOG_BACENTA_HISTORY = gql`
   }
 `
 
-export const LOG_CAMPUSTOWN_HISTORY = gql`
-  mutation LogCampusTownHistory(
-    $campusTownId: ID!
+export const LOG_CONSTITUENCY_HISTORY = gql`
+  mutation LogConstituencyHistory(
+    $constituencyId: ID!
     $historyRecord: String!
     $oldLeaderId: ID
     $newLeaderId: ID
     $oldCouncilId: ID
     $newCouncilId: ID
   ) {
-    LogCampusTownHistory(
-      campusTownId: $campusTownId
+    LogConstituencyHistory(
+      constituencyId: $constituencyId
       historyRecord: $historyRecord
       newLeaderId: $newLeaderId
       oldLeaderId: $oldLeaderId

@@ -93,6 +93,8 @@ export const plural = (church) => {
       return 'campuses'
     case 'Campus':
       return 'Campuses'
+    case 'Constituency':
+      return 'Constituencies'
     case 'senior high school':
       return 'senior high schools'
     case 'Senior High School':

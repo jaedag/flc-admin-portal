@@ -4,49 +4,40 @@ import * as Yup from 'yup'
 import { capitalise, makeSelectOptions } from 'global-utils'
 import {
   COUNCIL_MEMBER_DROPDOWN,
-  GET_COUNCIL_CAMPUSES,
-  GET_COUNCIL_TOWNS,
+  GET_COUNCIL_CONSTITUENCIES,
   GET_MINISTRIES,
 } from 'queries/ListQueries'
 import React, { useContext } from 'react'
 import FormikControl from 'components/formik-components/FormikControl'
 import { ChurchContext } from 'contexts/ChurchContext'
 import { useQuery } from '@apollo/client'
-import { DISPLAY_CAMPUS, DISPLAY_TOWN } from 'pages/display/ReadQueries'
+import { DISPLAY_CONSTITUENCY } from 'pages/display/ReadQueries'
 import RoleView from 'auth/RoleView'
 
 const SontaForm = ({ initialValues, onSubmit, title, loading, newSonta }) => {
-  const { church, campusId, townId, bishopId } = useContext(ChurchContext)
+  const { church, constituencyId, councilId } = useContext(ChurchContext)
 
   const {
-    data: townsData,
-    loading: townsLoading,
-    error: townsError,
-  } = useQuery(GET_COUNCIL_TOWNS, {
-    variables: { id: bishopId },
+    data: councilData,
+    loading: councilLoading,
+    error: councilError,
+  } = useQuery(GET_COUNCIL_CONSTITUENCIES, {
+    variables: { id: councilId },
   })
+
   const {
-    data: campusesData,
-    loading: campusesLoading,
-    error: campusesError,
-  } = useQuery(GET_COUNCIL_CAMPUSES, {
-    variables: { id: bishopId },
+    data: constituenciesData,
+    loading: constituenciesLoading,
+    error: constituenciesError,
+  } = useQuery(DISPLAY_CONSTITUENCY, {
+    variables: { id: constituencyId },
   })
-  const { data: townData, loading: townLoading } = useQuery(DISPLAY_TOWN, {
-    variables: { id: church.church === 'town' ? townId : campusId },
-  })
-  const { data: campusData, loading: campusLoading } = useQuery(
-    DISPLAY_CAMPUS,
-    {
-      variables: { id: church.church === 'town' ? townId : campusId },
-    }
-  )
+
   const { data: ministryListData, loading: ministryListLoading } =
     useQuery(GET_MINISTRIES)
 
-  const isCampus = church.church === 'campus'
-  const campusTownLoading = isCampus ? campusLoading : townLoading
-  const campusTownData = isCampus ? campusData?.campuses[0] : townData?.towns[0]
+  const constituencyLoading = constituenciesLoading
+  const constituency = constituenciesData?.constituencies[0]
 
   let initialValuesForNewSonta
 
@@ -54,7 +45,7 @@ const SontaForm = ({ initialValues, onSubmit, title, loading, newSonta }) => {
     initialValuesForNewSonta = {
       ministrySelect: '',
       leaderId: '',
-      campusTown: campusTownData?.id ?? '',
+      constituency: constituency?.id ?? '',
     }
   }
 
@@ -64,26 +55,27 @@ const SontaForm = ({ initialValues, onSubmit, title, loading, newSonta }) => {
   })
 
   const ministryOptions = makeSelectOptions(ministryListData?.ministries)
-  const townOptions = makeSelectOptions(townsData?.members[0].leadsCouncil)
-  const campusOptions = makeSelectOptions(campusesData?.members[0].leadsCouncil)
+  const constituencyOptions = makeSelectOptions(
+    councilData?.members[0].leadsCouncil
+  )
 
-  const sontasNotInCampusTown = ministryOptions?.filter((ministry) => {
-    return !campusTownData?.sontas.some(
-      (sonta) => sonta['name'] === `${campusTownData?.name} ${ministry.key}`
+  const sontasNotInconstituency = ministryOptions?.filter((ministry) => {
+    return !constituency?.sontas.some(
+      (sonta) => sonta['name'] === `${constituency?.name} ${ministry.key}`
     )
   })
 
   return (
     <BaseComponent
       loading={
-        campusTownLoading ||
+        constituencyLoading ||
         ministryListLoading ||
-        campusesLoading ||
-        townsLoading ||
+        constituenciesLoading ||
+        councilLoading ||
         loading
       }
-      error={townsError || campusesError}
-      data={townsData && campusesData && ministryListData}
+      error={constituenciesError && councilError}
+      data={constituenciesData && ministryListData && councilData}
     >
       <Formik
         initialValues={initialValuesForNewSonta || initialValues}
@@ -105,15 +97,9 @@ const SontaForm = ({ initialValues, onSubmit, title, loading, newSonta }) => {
                             className="form-control"
                             control="select"
                             label={`Select a ${capitalise(church.church)}`}
-                            name="campusTown"
-                            options={
-                              church.church === 'town'
-                                ? townOptions
-                                : campusOptions
-                            }
-                            defaultOption={`Select a ${capitalise(
-                              church.church
-                            )}`}
+                            name="constituency"
+                            options={constituencyOptions}
+                            defaultOption={`Select a Constituency`}
                           />
                         </RoleView>
                         <RoleView roles={['adminCampus', 'adminTown']}>
@@ -121,9 +107,7 @@ const SontaForm = ({ initialValues, onSubmit, title, loading, newSonta }) => {
                             church.church
                           )}:`}</label>
                           <div className="pl-2">
-                            <p>{`${campusTownData?.name} ${capitalise(
-                              church.church
-                            )}`}</p>
+                            <p>{`${constituency?.name} Constituency`}</p>
                           </div>
                         </RoleView>
                       </div>
@@ -137,7 +121,7 @@ const SontaForm = ({ initialValues, onSubmit, title, loading, newSonta }) => {
                           control="select"
                           name="ministrySelect"
                           options={
-                            newSonta ? sontasNotInCampusTown : ministryOptions
+                            newSonta ? sontasNotInconstituency : ministryOptions
                           }
                           defaultOption="Ministry"
                         />
@@ -154,7 +138,7 @@ const SontaForm = ({ initialValues, onSubmit, title, loading, newSonta }) => {
                           setFieldValue={formik.setFieldValue}
                           optionsQuery={COUNCIL_MEMBER_DROPDOWN}
                           queryVariable1="id"
-                          variable1={bishopId}
+                          variable1={councilId}
                           queryVariable2="nameSearch"
                           suggestionText="name"
                           suggestionID="id"

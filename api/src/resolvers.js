@@ -593,29 +593,7 @@ export const resolvers = {
       return serviceAggregates
     },
   },
-  Campus: {
-    componentServiceAggregate: async (obj, args, context) => {
-      let serviceAggregates = []
-
-      const session = context.driver.session()
-      const serviceAggregateResponse = await session.run(
-        cypher.getCampusTownServiceAggregates,
-        obj
-      )
-
-      serviceAggregateResponse.records.map((record) => {
-        let serviceAggregate = {}
-
-        record.keys.forEach(
-          (key, i) => (serviceAggregate[key] = record._fields[i])
-        )
-        serviceAggregates.push(serviceAggregate)
-      })
-
-      return serviceAggregates
-    },
-  },
-  Town: {
+  Constituency: {
     componentServiceAggregate: async (obj, args, context) => {
       let serviceAggregates = []
 
@@ -644,12 +622,12 @@ export const resolvers = {
         [
           'adminFederal',
           'adminCouncil',
-          'adminCampus',
+          'adminConstituency',
           'adminTown',
           'leaderFellowship',
           'leaderBacenta',
           'leaderTown',
-          'leaderCampus',
+          'leaderConstituency',
         ],
         context.auth.roles
       )
@@ -695,10 +673,10 @@ export const resolvers = {
         [
           'adminFederal',
           'adminCouncil',
-          'adminCampus',
+          'adminConstituency',
           'adminTown',
           'leaderTown',
-          'leaderCampus',
+          'leaderConstituency',
         ],
         context.auth.roles
       )
@@ -730,7 +708,7 @@ export const resolvers = {
         RemoveServant(
           context,
           args,
-          ['adminFederal', 'adminCouncil', 'adminCampus', 'adminTown'],
+          ['adminFederal', 'adminCouncil', 'adminConstituency', 'adminTown'],
           'Fellowship',
           'Leader'
         )
@@ -743,7 +721,7 @@ export const resolvers = {
 
     CloseDownBacenta: async (object, args, context) => {
       isAuth(
-        ['adminFederal', 'adminCouncil', 'adminCampus', 'adminTown'],
+        ['adminFederal', 'adminCouncil', 'adminConstituency', 'adminTown'],
         context.auth.roles
       )
 
@@ -774,7 +752,7 @@ export const resolvers = {
         RemoveServant(
           context,
           args,
-          ['adminFederal', 'adminCouncil', 'adminCampus', 'adminTown'],
+          ['adminFederal', 'adminCouncil', 'adminConstituency', 'adminTown'],
           'Bacenta',
           'Leader'
         )
@@ -820,39 +798,21 @@ export const resolvers = {
         'Admin'
       )
     },
-    MakeTownAdmin: async (object, args, context) => {
-      return MakeServant(
-        context,
-        args,
-        ['adminFederal', 'adminStream', 'adminCouncil'],
-        'Town',
-        'Admin'
-      )
-    },
-    RemoveTownAdmin: async (object, args, context) => {
-      return RemoveServant(
-        context,
-        args,
-        ['adminFederal', 'adminStream', 'adminCouncil'],
-        'Town',
-        'Admin'
-      )
-    },
-    MakeCampusAdmin: async (object, args, context) => {
+    MakeConstituencyAdmin: async (object, args, context) => {
       return MakeServant(
         context,
         args,
         ['adminFederal', 'adminStream', 'adminStream', 'adminCouncil'],
-        'Campus',
+        'Constituency',
         'Admin'
       )
     },
-    RemoveCampusAdmin: async (object, args, context) => {
+    RemoveConstituencyAdmin: async (object, args, context) => {
       return RemoveServant(
         context,
         args,
         ['adminFederal', 'adminStream', 'adminCouncil'],
-        'Campus',
+        'Constituency',
         'Admin'
       )
     },
@@ -864,7 +824,7 @@ export const resolvers = {
           'adminFederal',
           'adminStream',
           'adminCouncil',
-          'adminCampus',
+          'adminConstituency',
           'adminTown',
         ],
         'Fellowship',
@@ -879,7 +839,7 @@ export const resolvers = {
           'adminFederal',
           'adminStream',
           'adminCouncil',
-          'adminCampus',
+          'adminConstituency',
           'adminTown',
         ],
         'Fellowship',
@@ -894,7 +854,7 @@ export const resolvers = {
           'adminFederal',
           'adminStream',
           'adminCouncil',
-          'adminCampus',
+          'adminConstituency',
           'adminTown',
         ],
         'Sonta',
@@ -909,7 +869,7 @@ export const resolvers = {
           'adminFederal',
           'adminStream',
           'adminCouncil',
-          'adminCampus',
+          'adminConstituency',
           'adminTown',
         ],
         'Sonta',
@@ -924,7 +884,7 @@ export const resolvers = {
           'adminFederal',
           'adminStream',
           'adminCouncil',
-          'adminCampus',
+          'adminConstituency',
           'adminTown',
         ],
         'Bacenta',
@@ -939,46 +899,28 @@ export const resolvers = {
           'adminFederal',
           'adminStream',
           'adminCouncil',
-          'adminCampus',
+          'adminConstituency',
           'adminTown',
         ],
         'Bacenta',
         'Leader'
       )
     },
-    MakeCampusLeader: async (object, args, context) => {
+    MakeConstituencyLeader: async (object, args, context) => {
       return MakeServant(
         context,
         args,
         ['adminFederal', 'adminStream', 'adminCouncil'],
-        'Campus',
+        'Constituency',
         'Leader'
       )
     },
-    RemoveCampusLeader: async (object, args, context) => {
+    RemoveConstituencyLeader: async (object, args, context) => {
       return RemoveServant(
         context,
         args,
         ['adminFederal', 'adminStream', 'adminCouncil'],
-        'Campus',
-        'Leader'
-      )
-    },
-    MakeTownLeader: async (object, args, context) => {
-      return MakeServant(
-        context,
-        args,
-        ['adminFederal', 'adminStream', 'adminCouncil'],
-        'Town',
-        'Leader'
-      )
-    },
-    RemoveTownLeader: async (object, args, context) => {
-      return RemoveServant(
-        context,
-        args,
-        ['adminFederal', 'adminStream', 'adminCouncil'],
-        'Town',
+        'Constituency',
         'Leader'
       )
     },

@@ -4,7 +4,7 @@ import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react'
 
 import { MemberContext } from '../contexts/MemberContext'
 import { ChurchContext } from '../contexts/ChurchContext'
-import CampusTownMembers from '../pages/grids/CampusTownMembers.jsx'
+import CampusTownMembers from '../pages/grids/ConstituencyMembers.jsx'
 import LoadingScreen from '../components/base-component/LoadingScreen'
 import { isAuthorised } from '../global-utils'
 import Churches from 'pages/directory/Churches'

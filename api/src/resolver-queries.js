@@ -9,21 +9,17 @@ WITH apoc.cypher.runFirstColumn(
   RETURN bacenta", {this: member}, true) | member_bacentas { .id,.name }],
   leadsSonta: [ member_sontas IN apoc.cypher.runFirstColumn("MATCH (this)-[:LEADS]-(sonta:Sonta)
   RETURN sonta", {this: member}, true) | member_sontas { .id,.name }],
-  isAdminForCampus: [ member_adminCampuses IN apoc.cypher.runFirstColumn("MATCH (this)-[:IS_ADMIN_FOR]-(adminCampus:Campus)
-  RETURN adminCampus", {this: member}, true) | member_adminCampuses { .id,.name }],
-  isAdminForTown: [ member_adminTowns IN apoc.cypher.runFirstColumn("MATCH (this)-[:IS_ADMIN_FOR]-(adminTown:Town)
-  RETURN adminTown", {this: member}, true) | member_adminTowns { .id,.name }],
+  isAdminForConstituency: [ member_adminConstituencies IN apoc.cypher.runFirstColumn("MATCH (this)-[:IS_ADMIN_FOR]-(adminConstituency:Constituency)
+  RETURN adminConstituency", {this: member}, true) | member_adminConstituencies { .id,.name }],
   isAdminForCouncil: [ member_adminCouncils IN apoc.cypher.runFirstColumn("MATCH (this)-[:IS_ADMIN_FOR]-(adminCouncil:Member)
   RETURN adminCouncil", {this: member}, true) | member_adminCouncils { .id,.name}],
-  leadsCampus: [ member_campus IN apoc.cypher.runFirstColumn("MATCH (this)-[:LEADS]-(campus:Campus)
-  RETURN campus", {this: member}, true) | member_campus { .id,.name }],
-  leadsTown: [ member_town IN apoc.cypher.runFirstColumn("MATCH (this)-[:LEADS]-(town:Town)
-  RETURN town", {this: member}, true) | member_town { .id,.name }] } AS member
+  leadsConstituency: [ member_constituency IN apoc.cypher.runFirstColumn("MATCH (this)-[:LEADS]-(constituency:Constituency)
+  RETURN constituency", {this: member}, true) | member_constituency { .id,.name }] } AS member
   `
 
 export const matchChurchQuery = `
   MATCH (church {id:$id}) 
-  WHERE church:Fellowship OR church:Bacenta OR church:Campus OR church:Town OR church:Sonta OR church:Ministry OR church:Member
+  WHERE church:Fellowship OR church:Bacenta OR church:Constituency OR church:Sonta OR church:Ministry OR church:Member
   RETURN church.id AS id, church.name AS name, church.firstName AS firstName, church.lastName AS lastName, labels(church) AS type
   `
 
@@ -89,78 +85,39 @@ WITH log,bishop,oldAdmin,admin
    RETURN admin.id AS id, admin.auth_id AS auth_id, admin.firstName AS firstName, admin.lastName AS lastName
 `
 
-export const makeTownAdmin = `
+export const makeConstituencyAdmin = `
 MATCH (admin:Member {id:$adminId})
-MATCH (town:Town {id:$townId})
-CREATE (log:HistoryLog)
-  SET admin.auth_id = $auth_id,
-   log.id = apoc.create.uuid(),
-   log.timeStamp = datetime(),
-   log.historyRecord = admin.firstName + ' ' +admin.lastName + ' became admin for ' + town.name
-WITH admin,town, log
-OPTIONAL MATCH (town)<-[oldAdmins:IS_ADMIN_FOR]-(oldAdmin:Member)
-OPTIONAL MATCH (town)-[oldHistory:HAS_HISTORY]->()-[oldAdminHistory:HAS_HISTORY]-(oldAdmin)
-SET oldHistory.current = false, oldAdminHistory.current = false //nullify old history relationship
-   DELETE oldAdmins //Delete old relationship
-WITH log,town,oldAdmin,admin
-       CALL{
-         WITH log,town,oldAdmin, admin
-         WITH log,town,oldAdmin, admin 
-         WHERE EXISTS (oldAdmin.firstName) AND oldAdmin.id <> $adminId
-        
-       MERGE (oldAdmin)-[hasHistory:HAS_HISTORY]->(log)
-       SET hasHistory.neverAdmin = true,
-       log.historyRecord = admin.firstName + ' ' +admin.lastName + ' became the admin of ' + town.name + " Town replacing " + oldAdmin.firstName +" "+oldAdmin.lastName
-       RETURN COUNT(log)
-       }
-  
-   MATCH (currentUser:Member {auth_id:$auth.jwt.sub}) 
-   WITH currentUser, admin, town, log
-   MERGE (admin)-[:IS_ADMIN_FOR]->(town)
-   MERGE (log)-[:LOGGED_BY]->(currentUser)
-   MERGE (date:TimeGraph {date: date()})
-   MERGE (log)-[:RECORDED_ON]->(date)
-   MERGE (admin)-[r1:HAS_HISTORY]->(log)
-   MERGE (town)-[r2:HAS_HISTORY]->(log)
-   SET r1.current = true,
-   r2.current = true
-
-   RETURN admin.id AS id, admin.auth_id AS auth_id, admin.firstName AS firstName, admin.lastName AS lastName
-`
-
-export const makeCampusAdmin = `
-MATCH (admin:Member {id:$adminId})
-MATCH (campus:Campus {id:$campusId})
+MATCH (constituency:Constituency {id:$constituencyId})
 CREATE (log:HistoryLog:ServiceLog)
   SET admin.auth_id = $auth_id,
    log.id = apoc.create.uuid(),
    log.timeStamp = datetime(),
-   log.historyRecord = admin.firstName + ' ' +admin.lastName + ' became admin for ' + campus.name
-WITH admin,campus, log
-OPTIONAL MATCH (campus)<-[oldAdmins:IS_ADMIN_FOR]-(oldAdmin:Member)
-OPTIONAL MATCH (campus)-[oldHistory:HAS_HISTORY]->()-[oldAdminHistory:HAS_HISTORY]-(oldAdmin)
+   log.historyRecord = admin.firstName + ' ' +admin.lastName + ' became admin for ' + constituency.name
+WITH admin,constituency, log
+OPTIONAL MATCH (constituency)<-[oldAdmins:IS_ADMIN_FOR]-(oldAdmin:Member)
+OPTIONAL MATCH (constituency)-[oldHistory:HAS_HISTORY]->()-[oldAdminHistory:HAS_HISTORY]-(oldAdmin)
 SET oldHistory.current = false, oldAdminHistory.current = false //nullify old history relationship
    DELETE oldAdmins //Delete old relationship
-WITH log,campus,oldAdmin,admin
+WITH log,constituency,oldAdmin,admin
        CALL{
-         WITH log,campus,oldAdmin, admin
-         WITH log,campus,oldAdmin, admin 
+         WITH log,constituency,oldAdmin, admin
+         WITH log,constituency,oldAdmin, admin 
          WHERE EXISTS (oldAdmin.firstName) AND oldAdmin.id <> $adminId
         
        MERGE (oldAdmin)-[hasHistory:HAS_HISTORY]->(log)
        SET hasHistory.neverAdmin = true,
-       log.historyRecord = admin.firstName + ' ' +admin.lastName + ' became the admin of ' + campus.name + " Campus replacing " + oldAdmin.firstName +" "+oldAdmin.lastName
+       log.historyRecord = admin.firstName + ' ' +admin.lastName + ' became the admin of ' + constituency.name + " constituency replacing " + oldAdmin.firstName +" "+oldAdmin.lastName
        RETURN COUNT(log)
        }
   
    MATCH (currentUser:Member {auth_id:$auth.jwt.sub}) 
-   WITH currentUser, admin, campus, log
-   MERGE (admin)-[:IS_ADMIN_FOR]->(campus)
+   WITH currentUser, admin, constituency, log
+   MERGE (admin)-[:IS_ADMIN_FOR]->(constituency)
    MERGE (log)-[:LOGGED_BY]->(currentUser)
    MERGE (date:TimeGraph {date: date()})
    MERGE (log)-[:RECORDED_ON]->(date)
    MERGE (admin)-[r1:HAS_HISTORY]->(log)
-   MERGE (campus)-[r2:HAS_HISTORY]->(log)
+   MERGE (constituency)-[r2:HAS_HISTORY]->(log)
    SET r1.current = true,
    r2.current = true
    
@@ -217,19 +174,19 @@ WITH log,fellowship,oldLeader,leader
 export const makeBacentaLeader = `
 MATCH (leader:Member {id:$leaderId})
 MATCH (bacenta:Bacenta {id:$bacentaId})
-MATCH (bacenta)<-[:HAS]-(campusTown) 
-UNWIND labels(campusTown) AS stream
+MATCH (bacenta)<-[:HAS]-(constituency) 
+UNWIND labels(constituency) AS stream
 CREATE (log:HistoryLog:ServiceLog)
   SET leader.auth_id = $auth_id,
    log.id = apoc.create.uuid(),
    log.timeStamp = datetime(),
-   log.historyRecord = leader.firstName + ' ' +leader.lastName + ' started ' + bacenta.name +' Bacenta under '+ campusTown.name + ' ' + stream
-WITH leader,bacenta, log, campusTown
+   log.historyRecord = leader.firstName + ' ' +leader.lastName + ' started ' + bacenta.name +' Bacenta under '+ constituency.name + ' ' + stream
+WITH leader,bacenta, log, constituency
 OPTIONAL MATCH (bacenta)<-[oldLeads:LEADS]-(oldLeader:Member)
 OPTIONAL MATCH (bacenta)-[oldHistory:HAS_HISTORY]->()-[oldLeaderHistory:HAS_HISTORY]-(oldLeader)
 SET oldHistory.current = false, oldLeaderHistory.current = false //nullify old history relationship
    DELETE oldLeads //Delete old relationship
-WITH log,bacenta,oldLeader,leader, campusTown
+WITH log,bacenta,oldLeader,leader, constituency
        CALL{
          WITH log,bacenta,oldLeader, leader
          WITH log,bacenta,oldLeader, leader 
@@ -241,19 +198,19 @@ WITH log,bacenta,oldLeader,leader, campusTown
        RETURN COUNT(log)
        }
  
-       MATCH (bacenta)<-[:HAS]-(campusTown)-[rel:HAS_HISTORY]->(campusTownHistory:ServiceLog) WHERE rel.current = true
-       OPTIONAL MATCH (campusTownHistory)-[oldBacentaHistory:HAS]->(:ServiceLog)-[:HAS_HISTORY]-(bacenta)   
+       MATCH (bacenta)<-[:HAS]-(constituency)-[rel:HAS_HISTORY]->(constituencyHistory:ServiceLog) WHERE rel.current = true
+       OPTIONAL MATCH (constituencyHistory)-[oldBacentaHistory:HAS]->(:ServiceLog)-[:HAS_HISTORY]-(bacenta)   
 
    MATCH (currentUser:Member {auth_id:$auth.jwt.sub})
 
-   WITH currentUser, leader, bacenta, log, oldBacentaHistory, campusTownHistory
+   WITH currentUser, leader, bacenta, log, oldBacentaHistory, constituencyHistory
    MERGE (leader)-[:LEADS]->(bacenta)
    MERGE (log)-[:LOGGED_BY]->(currentUser)
    MERGE (date:TimeGraph {date: date()})
    MERGE (log)-[:RECORDED_ON]->(date)
    MERGE (leader)-[r1:HAS_HISTORY]->(log)
    MERGE (bacenta)-[r2:HAS_HISTORY]->(log)
-   MERGE (campusTownHistory)-[r3:HAS]->(log)
+   MERGE (constituencyHistory)-[r3:HAS]->(log)
    SET r1.current = true,
    r2.current = true,
    r3.currennt = true
@@ -265,13 +222,13 @@ WITH log,bacenta,oldLeader,leader, campusTown
 export const makeSontaLeader = `
 MATCH (leader:Member {id:$leaderId})
 MATCH (sonta:Sonta {id:$sontaId})
-OPTIONAL MATCH (sonta)<-[:HAS_SONTA]-(campusTown) 
-UNWIND labels(campusTown) AS stream
+OPTIONAL MATCH (sonta)<-[:HAS_SONTA]-(constituency) 
+UNWIND labels(constituency) AS stream
 CREATE (log:HistoryLog:ServiceLog)
   SET leader.auth_id = $auth_id,
    log.id = apoc.create.uuid(),
    log.timeStamp = datetime(),
-   log.historyRecord = leader.firstName + ' ' +leader.lastName + ' started ' + sonta.name +' Sonta under '+ campusTown.name + ' ' + stream
+   log.historyRecord = leader.firstName + ' ' +leader.lastName + ' started ' + sonta.name +' Sonta under '+ constituency.name + ' ' + stream
 WITH leader,sonta, log
 OPTIONAL MATCH (sonta)<-[oldLeads:LEADS]-(oldLeader:Member)
 OPTIONAL MATCH (sonta)-[oldHistory:HAS_HISTORY]->()-[oldLeaderHistory:HAS_HISTORY]-(oldLeader)
@@ -302,96 +259,49 @@ WITH log,sonta,oldLeader,leader
    RETURN leader.id AS id, leader.auth_id AS auth_id, leader.firstName AS firstName, leader.lastName AS lastName
 `
 
-export const makeCampusLeader = `
+export const makeConstituencyLeader = `
 MATCH (leader:Member {id:$leaderId})
-MATCH (campus:Campus {id:$campusId})
-MATCH (campus)<-[:HAS]-(council:Council)
+MATCH (constituency:Constituency {id:$constituencyId})
+MATCH (constituency)<-[:HAS]-(council:Council)
 CREATE (log:HistoryLog:ServiceLog)
   SET leader.auth_id = $auth_id,
    log.id = apoc.create.uuid(),
    log.timeStamp = datetime(),
-   log.historyRecord = leader.firstName + ' ' +leader.lastName + ' started ' + campus.name+ ' Campus under Coucil '+ council.name
-WITH leader,campus, log
-OPTIONAL MATCH (campus)<-[oldLeads:LEADS]-(oldLeader:Member)
-OPTIONAL MATCH (campus)-[oldHistory:HAS_HISTORY]->()-[oldLeaderHistory:HAS_HISTORY]-(oldLeader)
+   log.historyRecord = leader.firstName + ' ' +leader.lastName + ' started ' + constituency.name+ ' Constituency under Coucil '+ council.name
+WITH leader,constituency, log
+OPTIONAL MATCH (constituency)<-[oldLeads:LEADS]-(oldLeader:Member)
+OPTIONAL MATCH (constituency)-[oldHistory:HAS_HISTORY]->()-[oldLeaderHistory:HAS_HISTORY]-(oldLeader)
 SET oldHistory.current = false, oldLeaderHistory.current = false //nullify old history relationship
    DELETE oldLeads //Delete old relationship
-WITH log,campus,oldLeader,leader
+WITH log,constituency,oldLeader,leader
        CALL{
-         WITH log,campus,oldLeader, leader
-         WITH log,campus,oldLeader, leader 
+         WITH log,constituency,oldLeader, leader
+         WITH log,constituency,oldLeader, leader 
          WHERE EXISTS (oldLeader.firstName) AND oldLeader.id <> $leaderId
         
        MERGE (oldLeader)-[hasHistory:HAS_HISTORY]->(log)
        SET hasHistory.neverLed = true,
-       log.historyRecord = leader.firstName + ' ' +leader.lastName + ' became the leader of ' + campus.name + " Campus replacing " + oldLeader.firstName +" "+oldLeader.lastName
+       log.historyRecord = leader.firstName + ' ' +leader.lastName + ' became the leader of ' + constituency.name + " Constituency replacing " + oldLeader.firstName +" "+oldLeader.lastName
        RETURN COUNT(log)
        }
 
-   MATCH (campus)<-[:HAS]-(:Council)-[rel:HAS_HISTORY]->(councilHistory:ServiceLog) WHERE rel.current = true
-   OPTIONAL MATCH (councilHistory)-[oldCampusHistory:HAS]->(:ServiceLog)-[:HAS_HISTORY]-(campus)
+   MATCH (constituency)<-[:HAS]-(:Council)-[rel:HAS_HISTORY]->(councilHistory:ServiceLog) WHERE rel.current = true
+   OPTIONAL MATCH (councilHistory)-[oldConstituencyHistory:HAS]->(:ServiceLog)-[:HAS_HISTORY]-(constituency)
 
    MATCH (currentUser:Member {auth_id:$auth.jwt.sub}) 
 
-   WITH currentUser, leader, campus, log, oldCampusHistory, councilHistory
-   MERGE (leader)-[:LEADS]->(campus)
+   WITH currentUser, leader, constituency, log, oldConstituencyHistory, councilHistory
+   MERGE (leader)-[:LEADS]->(constituency)
    MERGE (log)-[:LOGGED_BY]->(currentUser)
    MERGE (date:TimeGraph {date: date()})
    MERGE (log)-[:RECORDED_ON]->(date)
    MERGE (leader)-[r1:HAS_HISTORY]->(log)
-   MERGE (campus)-[r2:HAS_HISTORY]->(log)
+   MERGE (constituency)-[r2:HAS_HISTORY]->(log)
    MERGE (councilHistory)-[r3:HAS]->(log)
    SET r1.current = true,
    r2.current = true,
    r3.current = true
-   REMOVE oldCampusHistory.current 
-   
-   RETURN leader.id AS id, leader.auth_id AS auth_id, leader.firstName AS firstName, leader.lastName AS lastName
-`
-
-export const makeTownLeader = `
-MATCH (leader:Member {id:$leaderId})
-MATCH (town:Town {id:$townId})
-MATCH (town)<-[:HAS]-(council:Council)
-CREATE (log:HistoryLog:ServiceLog)
-  SET leader.auth_id = $auth_id,
-   log.id = apoc.create.uuid(),
-   log.timeStamp = datetime(),
-   log.historyRecord = leader.firstName + ' ' +leader.lastName + ' started ' + town.name+ ' Town under Council '+ council.name
-WITH leader,town, log
-OPTIONAL MATCH (town)<-[oldLeads:LEADS]-(oldLeader:Member)
-OPTIONAL MATCH (town)-[oldHistory:HAS_HISTORY]->()-[oldLeaderHistory:HAS_HISTORY]-(oldLeader)
-SET oldHistory.current = false, oldLeaderHistory.current = false //nullify old history relationship
-   DELETE oldLeads //Delete old relationship
-WITH log,town,oldLeader,leader
-       CALL{
-         WITH log,town,oldLeader, leader
-         WITH log,town,oldLeader, leader 
-         WHERE EXISTS (oldLeader.firstName) AND oldLeader.id <> $leaderId
-        
-       MERGE (oldLeader)-[hasHistory:HAS_HISTORY]->(log)
-       SET hasHistory.neverLed = true,
-       log.historyRecord = leader.firstName + ' ' +leader.lastName + ' became the leader of ' + town.name + " Town replacing " + oldLeader.firstName +" "+oldLeader.lastName
-       RETURN COUNT(log)
-       }
-
-   MATCH (town)<-[:HAS]-(:Council)-[rel:HAS_HISTORY]->(councilHistory:ServiceLog) WHERE rel.current = true
-   OPTIONAL MATCH (councilHistory)-[oldTownHistory:HAS]->(:ServiceLog)-[:HAS_HISTORY]-(town)
-
-   MATCH (currentUser:Member {auth_id:$auth.jwt.sub}) 
-
-   WITH currentUser, leader, town, log, oldTownHistory, councilHistory
-   MERGE (leader)-[:LEADS]->(town)
-   MERGE (log)-[:LOGGED_BY]->(currentUser)
-   MERGE (date:TimeGraph {date: date()})
-   MERGE (log)-[:RECORDED_ON]->(date)
-   MERGE (leader)-[r1:HAS_HISTORY]->(log)
-   MERGE (town)-[r2:HAS_HISTORY]->(log)
-   MERGE (councilHistory)-[r3:HAS]->(log)
-   SET r1.current = true,
-   r2.current = true,
-   r3.current = true
-   REMOVE oldTownHistory.current 
+   REMOVE oldConstituencyHistory.current 
    
    RETURN leader.id AS id, leader.auth_id AS auth_id, leader.firstName AS firstName, leader.lastName AS lastName
 `

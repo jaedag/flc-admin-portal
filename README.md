@@ -28,7 +28,7 @@ All Contributors welcome. Make your changes in a separate branch before submitti
 1.  Be able to hold all membership and leadership records (Bacenta and Basonta).
 2.  Be able to search and filter all membership records based on selected criteria.
 3.  Be able to display information on one member
-4.  Display registration numbers at all levels (Town/Campus/School, Bacenta, Basonta)
+4.  Display registration numbers at all levels (Constituency, Bacenta, Basonta)
 5.  Be able to import data in a csv file, and export data in a csv file.
 6.  An extensive transaction log of leadership histories.
 7.  Database Backups implementation.
@@ -47,7 +47,7 @@ All Contributors welcome. Make your changes in a separate branch before submitti
 6.  Generating monthly graph reports at the bishops level/ COs level, bacenta level.
 7.  Requesting records on any leader in the church (Graphs)
 8.  Bishops Monthly Report sent via Mail as a PDF.
-9.  Monthly CO Reports per Campus, Town.
+9.  Monthly CO Reports per Constituency.
 10. Requesting records on any bacenta in the church.
 11. Monitoring the tithes of leaders (Needs ideas on how to achieve this)
     <br/>

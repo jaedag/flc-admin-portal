@@ -5,19 +5,19 @@ import DisplayChurchList from '../../components/DisplayChurchList'
 
 import ErrorScreen from '../../components/base-component/ErrorScreen'
 import LoadingScreen from '../../components/base-component/LoadingScreen'
-import { GET_SONTAS_BY_CAMPUSTOWN } from '../../queries/ListQueries'
+import { GET_SONTAS_BY_CONSTITUENCY } from '../../queries/ListQueries'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import { MemberContext } from '../../contexts/MemberContext'
 import RoleView from '../../auth/RoleView'
 
-const DisplaySontasByCampusTown = () => {
-  const { church, bishopId, setSontaId } = useContext(ChurchContext)
+const DisplaySontasByConstituency = () => {
+  const { church, councilId, setSontaId } = useContext(ChurchContext)
   const { setMemberId } = useContext(MemberContext)
 
   const { data: sontaData, loading: sontaLoading } = useQuery(
-    GET_SONTAS_BY_CAMPUSTOWN,
+    GET_SONTAS_BY_CONSTITUENCY,
     {
-      variables: { id: bishopId },
+      variables: { id: councilId },
     }
   )
 
@@ -36,7 +36,7 @@ const DisplaySontasByCampusTown = () => {
                 <Link
                   to={`/member/displaydetails`}
                   onClick={() => {
-                    setMemberId(bishopId)
+                    setMemberId(councilId)
                   }}
                 >
                   {' '}
@@ -98,7 +98,7 @@ const DisplaySontasByCampusTown = () => {
                 <Link
                   to={`/member/displaydetails`}
                   onClick={() => {
-                    setMemberId(bishopId)
+                    setMemberId(councilId)
                   }}
                 >
                   {' '}
@@ -160,4 +160,4 @@ const DisplaySontasByCampusTown = () => {
   }
 }
 
-export default DisplaySontasByCampusTown
+export default DisplaySontasByConstituency

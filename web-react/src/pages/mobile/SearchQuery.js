@@ -100,17 +100,10 @@ export const FEDERAL_SEARCH = gql`
         id
         name
       }
-      leadsCampus {
+      leadsConstituency {
         id
         name
-        bishop {
-          id
-        }
-      }
-      leadsTown {
-        id
-        name
-        bishop {
+        council {
           id
         }
       }

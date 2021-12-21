@@ -140,11 +140,8 @@ const ServantsDashboard = () => {
     if (servant?.leadsBacenta?.length) {
       setServantRoles(servant, 'Leader', 'Bacenta')
     }
-    if (servantLeader?.leadsTown?.length) {
-      setServantRoles(servantLeader, 'Leader', 'Town')
-    }
-    if (servantLeader?.leadsCampus?.length) {
-      setServantRoles(servantLeader, 'Leader', 'Campus')
+    if (servantLeader?.leadsConstituency?.length) {
+      setServantRoles(servantLeader, 'Leader', 'Constituency')
     }
     if (servantLeader?.leadsSonta?.length) {
       setServantRoles(servantLeader, 'Leader', 'Sonta')
@@ -162,11 +159,8 @@ const ServantsDashboard = () => {
     if (servantAdmin?.isAdminForCouncil?.length) {
       setServantRoles(servantAdmin, 'Admin', 'Council')
     }
-    if (servantAdmin?.isAdminForCampus?.length) {
-      setServantRoles(servantAdmin, 'Admin', 'Campus')
-    }
-    if (servantAdmin?.isAdminForTown?.length) {
-      setServantRoles(servantAdmin, 'Admin', 'Town')
+    if (servantAdmin?.isAdminForConstituency?.length) {
+      setServantRoles(servantAdmin, 'Admin', 'Constituency')
     }
 
     //run the get graph function after all checking is done to avoid multiple unnecessary runs

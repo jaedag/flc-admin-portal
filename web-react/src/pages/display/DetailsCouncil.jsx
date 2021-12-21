@@ -2,7 +2,6 @@ import { useQuery } from '@apollo/client'
 import BaseComponent from 'components/base-component/BaseComponent'
 import DisplayChurchDetails from 'components/DisplayChurchDetails/DisplayChurchDetails'
 import { ChurchContext } from 'contexts/ChurchContext'
-import { capitalise, plural } from 'global-utils'
 import React, { useContext, useEffect } from 'react'
 import { DISPLAY_COUNCIL } from './ReadQueries'
 
@@ -42,14 +41,14 @@ const DetailsCouncil = () => {
         leader={council?.leader}
         churchHeading="Constituencies"
         churchType={council?.__typename}
-        subChurch={capitalise(council?.stream_name)}
+        subChurch="Constituency"
         membership={council?.memberCount}
         details={details}
         churchCount={council?.constituencyCount}
         editlink="/council/editcouncil"
         editPermitted={['adminFederal']}
         history={council?.history.length !== 0 && council?.history}
-        buttons={council ? council[`${plural(council.stream_name)}`] : []}
+        buttons={council ? council.constituencies : []}
         breadcrumb={breadcrumb && breadcrumb}
         loading={loading}
       />

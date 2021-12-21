@@ -15,10 +15,8 @@ const DetailsBacenta = () => {
   const displayBacenta = data?.bacentas[0]
 
   let breadcrumb = [
-    displayBacenta?.town
-      ? displayBacenta?.town.council
-      : displayBacenta?.campus.council,
-    displayBacenta?.town ? displayBacenta?.town : displayBacenta?.campus,
+    displayBacenta?.constituency.council,
+    displayBacenta?.constituency,
     displayBacenta,
   ]
 

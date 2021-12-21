@@ -206,42 +206,15 @@ export const CREATE_SONTA_MUTATION = gql`
   }
 `
 
-export const CREATE_TOWN_MUTATION = gql`
-  mutation CreateTown(
-    $townName: String!
+export const CREATE_CONSTITUENCY_MUTATION = gql`
+  mutation CreateConstituency(
+    $name: String!
     $leaderId: ID!
     $councilId: ID!
     $bacentas: [ID]
   ) {
-    CreateTown(
-      townName: $townName
-      leaderId: $leaderId
-      councilId: $councilId
-      bacentas: $bacentas
-    ) {
-      id
-      name
-      stream_name
-      council {
-        id
-        towns {
-          id
-          name
-        }
-      }
-    }
-  }
-`
-
-export const CREATE_CAMPUS_MUTATION = gql`
-  mutation CreateCampus(
-    $campusName: String!
-    $leaderId: ID!
-    $councilId: ID!
-    $bacentas: [ID]
-  ) {
-    CreateCampus(
-      campusName: $campusName
+    CreateConstituency(
+      name: $name
       leaderId: $leaderId
       councilId: $councilId
       bacentas: $bacentas

@@ -9,7 +9,7 @@ import { throwErrorMsg } from 'global-utils'
 
 const CreateBacenta = () => {
   const initialValues = {
-    bacentaName: '',
+    name: '',
     leaderId: '',
     campusTownSelect: '',
     fellowships: [''],
@@ -32,7 +32,7 @@ const CreateBacenta = () => {
 
     CreateBacenta({
       variables: {
-        bacentaName: values.bacentaName,
+        name: values.name,
         townCampusId: values.campusTownSelect,
         leaderId: values.leaderId,
         fellowships: values.fellowships,

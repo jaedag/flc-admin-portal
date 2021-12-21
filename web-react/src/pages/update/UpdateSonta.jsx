@@ -1,10 +1,7 @@
 import React, { useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/client'
-import {
-  GET_CAMPUS_BACENTAS,
-  GET_TOWN_BACENTAS,
-} from '../../queries/ListQueries'
+import { GET_CONSTITUENCY_BACENTAS } from '../../queries/ListQueries'
 import { UPDATE_SONTA_MUTATION } from './UpdateMutations'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import { DISPLAY_SONTA } from '../display/ReadQueries'
@@ -14,7 +11,7 @@ import SontaForm from 'components/reusable-forms/SontaForm'
 import { throwErrorMsg } from 'global-utils'
 
 const UpdateSonta = () => {
-  const { church, sontaId, townId, setTownId, setCampusId, campusId } =
+  const { sontaId, constituencyId, setConstituencyId } =
     useContext(ChurchContext)
 
   const { data: sontaData, loading: sontaLoading } = useQuery(DISPLAY_SONTA, {
@@ -29,7 +26,7 @@ const UpdateSonta = () => {
     leaderName: sonta?.leader.fullName ?? '',
     leaderId: sonta?.leader?.id || '',
     ministrySelect: sonta?.ministry.id || '',
-    campusTown: church.church === 'town' ? sonta?.town?.id : sonta?.campus?.id,
+    constituency: sonta?.constituency?.id,
   }
 
   const [LogSontaHistory] = useMutation(LOG_SONTA_HISTORY, {
@@ -39,27 +36,17 @@ const UpdateSonta = () => {
   const [MakeSontaLeader] = useMutation(MAKE_SONTA_LEADER)
   const [UpdateSonta] = useMutation(UPDATE_SONTA_MUTATION, {
     refetchQueries: [
-      { query: GET_TOWN_BACENTAS, variables: { id: townId } },
-      { query: GET_CAMPUS_BACENTAS, variables: { id: campusId } },
+      { query: GET_CONSTITUENCY_BACENTAS, variables: { id: constituencyId } },
       {
-        query: GET_TOWN_BACENTAS,
-        variables: { id: initialValues.campusTown },
-      },
-      {
-        query: GET_CAMPUS_BACENTAS,
-        variables: { id: initialValues.campusTown },
+        query: GET_CONSTITUENCY_BACENTAS,
+        variables: { id: initialValues.constituency },
       },
     ],
   })
 
   //onSubmit receives the form state as argument
   const onSubmit = (values, onSubmitProps) => {
-    if (church.church === 'town') {
-      setTownId(values.campusTown)
-    }
-    if (church.church === 'campus') {
-      setCampusId(values.campusTown)
-    }
+    setConstituencyId(values.constituency)
 
     //Log if Sonta Name Changes
     if (values.sontaName !== initialValues.sontaName) {

@@ -11,10 +11,8 @@ import {
 } from 'global-utils'
 import {
   COUNCIL_MEMBER_DROPDOWN,
-  GET_COUNCIL_CAMPUSES,
-  GET_COUNCIL_TOWNS,
-  GET_CAMPUS_BACENTAS,
-  GET_TOWN_BACENTAS,
+  GET_COUNCIL_CONSTITUENCIES,
+  GET_CONSTITUENCY_BACENTAS,
 } from 'queries/ListQueries'
 import React, { useContext, useState } from 'react'
 import { ChurchContext } from 'contexts/ChurchContext'
@@ -38,23 +36,14 @@ const FellowshipForm = (props) => {
   const { theme } = useContext(MemberContext)
   const history = useHistory()
 
-  const { data: townsData, error: townListError } = useQuery(
-    GET_COUNCIL_TOWNS,
-    {
-      variables: { id: councilId },
-    }
-  )
-  const { data: campusesData, error: campusListError } = useQuery(
-    GET_COUNCIL_CAMPUSES,
-    {
-      variables: { id: councilId },
-    }
-  )
+  const { data, error } = useQuery(GET_COUNCIL_CONSTITUENCIES, {
+    variables: { id: councilId },
+  })
+
   const [CloseDownFellowship] = useMutation(MAKE_FELLOWSHIP_INACTIVE)
 
-  if (townListError || campusListError) {
-    throwErrorMsg(townListError)
-    throwErrorMsg(campusListError)
+  if (error) {
+    throwErrorMsg(error)
   }
 
   const validationSchema = Yup.object({
@@ -82,13 +71,11 @@ const FellowshipForm = (props) => {
 
   const [positionLoading, setPositionLoading] = useState(false)
 
-  const townOptions = townsData
-    ? makeSelectOptions(townsData.councils[0]?.towns)
+  const constituencyOptions = data
+    ? makeSelectOptions(data.councils[0]?.constituencies)
     : []
-  const campusOptions = campusesData
-    ? makeSelectOptions(campusesData.councils[0]?.campuses)
-    : []
-  let townCampusIdVar = props.initialValues.townCampusSelect
+
+  let townCampusIdVar = props.initialValues.constituencySelect
 
   if (!props.initialValues.fellowshipName && !props.newFellowship) {
     return <LoadingScreen />
@@ -124,38 +111,28 @@ const FellowshipForm = (props) => {
                             className="form-control"
                             control="select"
                             label={`${capitalise(church.church)}`}
-                            name="townCampusSelect"
-                            options={
-                              church.church === 'town'
-                                ? townOptions
-                                : campusOptions
-                            }
+                            name="constituencySelect"
+                            options={constituencyOptions}
                             onChange={(e) => {
                               formik.setFieldValue(
-                                'townCampusSelect',
+                                'constituencySelect',
                                 e.target.value
                               )
                               townCampusIdVar = e.target.value
                             }}
-                            defaultOption={`Select a ${capitalise(
-                              church.church
-                            )}`}
+                            defaultOption={`Select a Constituency`}
                           />
                           <FormikControl
                             className="form-control"
                             control="selectWithQuery"
                             name="bacentaSelect"
                             label="Bacenta"
-                            optionsQuery={
-                              church.church === 'town'
-                                ? GET_TOWN_BACENTAS
-                                : GET_CAMPUS_BACENTAS
-                            }
+                            optionsQuery={GET_CONSTITUENCY_BACENTAS}
                             queryVariable="id"
                             dataset="bacentas"
                             varValue={
                               townCampusIdVar ||
-                              props.initialValues.townCampusSelect
+                              props.initialValues.constituencySelect
                             }
                             defaultOption="Select a Bacenta"
                           />

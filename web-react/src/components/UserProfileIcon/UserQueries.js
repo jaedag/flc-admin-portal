@@ -11,19 +11,7 @@ export const GET_LOGGED_IN_USER = gql`
         id
         bacenta {
           id
-          campus {
-            id
-            council {
-              id
-              stream {
-                id
-                gatheringService {
-                  id
-                }
-              }
-            }
-          }
-          town {
+          constituency {
             id
             council {
               id

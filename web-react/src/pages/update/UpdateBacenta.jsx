@@ -3,18 +3,13 @@ import { useHistory } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/client'
 import { alertMsg, capitalise, throwErrorMsg } from '../../global-utils'
 
-import {
-  GET_CAMPUS_BACENTAS,
-  GET_TOWN_BACENTAS,
-} from '../../queries/ListQueries'
+import { GET_CONSTITUENCY_BACENTAS } from '../../queries/ListQueries'
 import {
   ADD_BACENTA_FELLOWSHIPS,
-  ADD_BACENTA_TOWN,
-  ADD_BACENTA_CAMPUS,
-  REMOVE_BACENTA_TOWN,
-  REMOVE_BACENTA_CAMPUS,
+  REMOVE_BACENTA_CONSTITUENCY,
   UPDATE_BACENTA_MUTATION,
   REMOVE_FELLOWSHIP_BACENTA,
+  ADD_BACENTA_CONSTITUENCY,
 } from './UpdateMutations'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import { DISPLAY_BACENTA } from '../display/ReadQueries'
@@ -24,8 +19,7 @@ import BacentaForm from '../../components/reusable-forms/BacentaForm'
 import { MAKE_FELLOWSHIP_INACTIVE } from './CloseChurchMutations'
 
 const UpdateBacenta = () => {
-  const { church, bacentaId, setTownId, setCampusId } =
-    useContext(ChurchContext)
+  const { church, bacentaId, setConstituencyId } = useContext(ChurchContext)
   const { data: bacentaData, loading: bacentaLoading } = useQuery(
     DISPLAY_BACENTA,
     {
@@ -37,11 +31,10 @@ const UpdateBacenta = () => {
   const bacenta = bacentaData?.bacentas[0]
 
   const initialValues = {
-    bacentaName: bacenta?.name,
+    name: bacenta?.name,
     leaderName: bacenta?.leader?.fullName ?? '',
     leaderId: bacenta?.leader?.id || '',
-    campusTownSelect:
-      church.church === 'town' ? bacenta?.town?.id : bacenta?.campus?.id,
+    constituencySelect: bacenta?.constituency?.id,
     fellowships: bacenta?.fellowships.length ? bacenta?.fellowships : [''],
   }
 
@@ -55,12 +48,8 @@ const UpdateBacenta = () => {
   const [UpdateBacenta] = useMutation(UPDATE_BACENTA_MUTATION, {
     refetchQueries: [
       {
-        query: GET_TOWN_BACENTAS,
-        variables: { id: initialValues.campusTownSelect },
-      },
-      {
-        query: GET_CAMPUS_BACENTAS,
-        variables: { id: initialValues.campusTownSelect },
+        query: GET_CONSTITUENCY_BACENTAS,
+        variables: { id: initialValues.constituencySelect },
       },
     ],
   })
@@ -80,12 +69,12 @@ const UpdateBacenta = () => {
         //Fellowship has previous bacenta which is current bacenta and is going
         oldBacentaId = bacentaId
         newBacentaId = ''
-        historyRecord = `${fellowship.name} Fellowship has been closed down under ${initialValues.bacentaName} Bacenta`
+        historyRecord = `${fellowship.name} Fellowship has been closed down under ${initialValues.name} Bacenta`
       } else if (prevBacenta.id !== bacentaId) {
         //Fellowship has previous bacenta which is not current bacenta and is joining
         oldBacentaId = prevBacenta.id
         newBacentaId = bacentaId
-        historyRecord = `${fellowship.name} Fellowship has been moved to ${initialValues.bacentaName} Bacenta from ${prevBacenta.name} Bacenta`
+        historyRecord = `${fellowship.name} Fellowship has been moved to ${initialValues.name} Bacenta from ${prevBacenta.name} Bacenta`
       }
 
       //After removing the fellowship from a bacenta, then you log that change.
@@ -102,109 +91,50 @@ const UpdateBacenta = () => {
     },
   })
 
-  //Changes upwards. ie. Changes to the CampusTown the Bacenta is under
+  //Changes upwards. ie. Changes to the Constituency the Bacenta is under
 
-  const [RemoveBacentaTown] = useMutation(REMOVE_BACENTA_TOWN)
-  const [RemoveBacentaCampus] = useMutation(REMOVE_BACENTA_CAMPUS)
-  const [AddBacentaTown] = useMutation(ADD_BACENTA_TOWN, {
+  const [RemoveBacentaConstituency] = useMutation(REMOVE_BACENTA_CONSTITUENCY)
+
+  const [AddBacentaConstituency] = useMutation(ADD_BACENTA_CONSTITUENCY, {
     onCompleted: (data) => {
-      const oldTown = bacenta?.town
-      const newTown = data.updateBacentas.bacentas[0].town
-      if (!oldTown) {
-        //If There is no old town
-        let recordIfNoOldTown = `${oldTown.name} Bacenta has been moved to ${
-          newTown.name
-        } ${capitalise(church.church)} `
+      const oldConstituency = bacenta?.constituency
+      const newConstituency = data.updateBacentas.constituencies[0].constituency
+      if (!oldConstituency) {
+        //If There is no old Constituency
+        let recordIfNooldConstituency = `${initialValues.name} Bacenta has been moved to ${newConstituency.name} Constituency`
 
         LogBacentaHistory({
           variables: {
             bacentaId: bacentaId,
             newLeaderId: '',
             oldLeaderId: '',
-            newCampusTownId: newTown.id,
-            oldCampusTownId: oldTown.id,
-            historyRecord: recordIfNoOldTown,
+            newConstituencyId: newConstituency.id,
+            oldConstituencyId: oldConstituency.id,
+            historyRecord: recordIfNooldConstituency,
           },
         })
       } else {
-        //If there is an old town
+        //If there is an old Constituency
 
-        //Break Link to the Old Town
-        RemoveBacentaTown({
+        //Break Link to the Old Constituency
+        RemoveBacentaConstituency({
           variables: {
-            townId: oldTown.id,
+            constituencyId: oldConstituency.id,
             bacentaId: bacentaId,
           },
         })
 
-        let recordIfOldTown = `${oldTown.name} Bacenta has been moved from ${
-          bacenta?.town.name
-        } ${capitalise(church.church)} to ${newTown.name} ${capitalise(
-          church.church
-        )}`
+        let recordIfoldConstituency = `${initialValues.name} Bacenta has been moved from ${oldConstituency.name} Constituency to ${newConstituency.name} Constituency`
 
-        //After Adding the bacenta to a campus/town, then you log that change.
+        //After Adding the bacenta to a constituency, then you log that change.
         LogBacentaHistory({
           variables: {
             bacentaId: bacentaId,
             newLeaderId: '',
             oldLeaderId: '',
-            newCampusTownId: newTown.id,
-            oldCampusTownId: oldTown.id,
-            historyRecord: recordIfOldTown,
-          },
-        })
-      }
-    },
-  })
-  const [AddBacentaCampus] = useMutation(ADD_BACENTA_CAMPUS, {
-    onCompleted: (data) => {
-      const oldCampus = bacenta?.campus
-      const newCampus = data.updateBacentas.bacentas[0].campus
-      if (!oldCampus) {
-        //If There is no old campus
-        let recordIfNoOldCampus = `${
-          initialValues.bacentaName
-        } Bacenta has been moved to ${newCampus.name} ${capitalise(
-          church.church
-        )} `
-
-        LogBacentaHistory({
-          variables: {
-            bacentaId: bacentaId,
-            newLeaderId: '',
-            oldLeaderId: '',
-            newCampusTownId: newCampus.id,
-            oldCampusTownId: oldCampus.id,
-            historyRecord: recordIfNoOldCampus,
-          },
-        })
-      } else {
-        //If there is an old Campus
-
-        //Break Link to the Old Campus
-        RemoveBacentaCampus({
-          variables: {
-            campusId: oldCampus.id,
-            bacentaId: bacentaId,
-          },
-        })
-
-        let recordIfOldCampus = `${
-          initialValues.bacentaName
-        } Bacenta has been moved from ${oldCampus.name} ${capitalise(
-          church.church
-        )} to ${newCampus.name} ${capitalise(church.church)}`
-
-        //After Adding the bacenta to a campus/town, then you log that change.
-        LogBacentaHistory({
-          variables: {
-            bacentaId: bacentaId,
-            newLeaderId: '',
-            oldLeaderId: '',
-            newCampusTownId: newCampus.id,
-            oldCampusTownId: oldCampus.id,
-            historyRecord: recordIfOldCampus,
+            newConstituencyId: newConstituency.id,
+            oldConstituencyId: oldConstituency.id,
+            historyRecord: recordIfoldConstituency,
           },
         })
       }
@@ -214,23 +144,19 @@ const UpdateBacenta = () => {
   //onSubmit receives the form state as argument
   const onSubmit = (values, onSubmitProps) => {
     onSubmitProps.setSubmitting(true)
-    if (church.church === 'town') {
-      setTownId(values.campusTownSelect)
-    }
-    if (church.church === 'campus') {
-      setCampusId(values.campusTownSelect)
-    }
+
+    setConstituencyId(values.constituencySelect)
 
     //Log if Bacenta Name Changes
-    if (values.bacentaName !== initialValues.bacentaName) {
+    if (values.name !== initialValues.name) {
       LogBacentaHistory({
         variables: {
           bacentaId: bacentaId,
           newLeaderId: '',
           oldLeaderId: '',
-          oldCampusTownId: '',
-          newCampusTownId: '',
-          historyRecord: `Bacenta name has been changed from ${initialValues.bacentaName} to ${values.bacentaName}`,
+          oldConstituencyTownId: '',
+          newConstituencyTownId: '',
+          historyRecord: `Bacenta name has been changed from ${initialValues.name} to ${values.name}`,
         },
       })
     }
@@ -253,35 +179,20 @@ const UpdateBacenta = () => {
         )
     }
 
-    //Log If The TownCampus Changes
-    if (values.campusTownSelect !== initialValues.campusTownSelect) {
-      if (church.church === 'town') {
-        RemoveBacentaTown({
-          variables: {
-            campusId: initialValues.campusTownSelect,
-            bacentaId: bacentaId,
-          },
-        })
-        AddBacentaTown({
-          variables: {
-            townId: values.campusTownSelect,
-            bacentaId: bacentaId,
-          },
-        })
-      } else if (church.church === 'campus') {
-        RemoveBacentaCampus({
-          variables: {
-            campusId: initialValues.campusTownSelect,
-            bacentaId: bacentaId,
-          },
-        })
-        AddBacentaCampus({
-          variables: {
-            campusId: values.campusTownSelect,
-            bacentaId: bacentaId,
-          },
-        })
-      }
+    //Log If The Constituency Changes
+    if (values.constituencySelect !== initialValues.constituencySelect) {
+      RemoveBacentaConstituency({
+        variables: {
+          constituencyId: initialValues.constituencySelect,
+          bacentaId: bacentaId,
+        },
+      })
+      AddBacentaConstituency({
+        variables: {
+          constituencyId: values.constituencySelect,
+          bacentaId: bacentaId,
+        },
+      })
     }
 
     //For the adding and removing of fellowships
@@ -330,7 +241,7 @@ const UpdateBacenta = () => {
               newBacentaId: bacentaId,
               oldBacentaId: '',
               historyRecord: `${fellowship.name} 
-              Fellowship has been started again under ${initialValues.bacentaName} Bacenta`,
+              Fellowship has been started again under ${initialValues.name} Bacenta`,
             },
           })
         }
@@ -347,9 +258,9 @@ const UpdateBacenta = () => {
     UpdateBacenta({
       variables: {
         bacentaId: bacentaId,
-        bacentaName: values.bacentaName,
+        name: values.name,
         leaderId: values.leaderId,
-        campusTownId: values.campusTownSelect,
+        constituencyId: values.constituencySelect,
       },
     }).catch((error) =>
       throwErrorMsg('There was an error updating this bacenta', error)

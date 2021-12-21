@@ -12,7 +12,7 @@ import UserDashboard from 'pages/dashboards/UserDashboard'
 const ProtectedRoute = ({ component, roles, ...args }) => {
   const { currentUser, setMemberId } = useContext(MemberContext)
   const { isAuthenticated } = useAuth0()
-  const { setCouncilId, setTownId, setCampusId, setChurch } =
+  const { setCouncilId, setConstituencyId, setChurch } =
     useContext(ChurchContext)
 
   useEffect(() => {
@@ -23,12 +23,11 @@ const ProtectedRoute = ({ component, roles, ...args }) => {
 
       if (!currentUser.roles.includes('adminCouncil')) {
         //User is not a councils Admin the he can only be looking at his constituency membership
-        setTownId(currentUser.constituency)
-        setCampusId(currentUser.constituency)
+        setConstituencyId(currentUser.constituency)
       }
     }
     // eslint-disable-next-line
-  }, [currentUser, setCouncilId, setTownId, setCampusId, setChurch])
+  }, [currentUser, setCouncilId, setConstituencyId, setChurch])
 
   if (isAuthorised(roles, currentUser.roles)) {
     //if the user has permission to access the route

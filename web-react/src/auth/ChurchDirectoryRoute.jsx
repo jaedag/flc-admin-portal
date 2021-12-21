@@ -20,16 +20,14 @@ const ChurchDirectoryRoute = ({ component, roles, ...args }) => {
 
       if (!currentUser.roles.includes('adminCouncil')) {
         //User is not a Bishops Admin the he can only be looking at his constituency membership
-        church.setTownId(currentUser.constituency)
-        church.setCampusId(currentUser.constituency)
+        church.setConstituencyId(currentUser.constituency)
       }
     }
     // eslint-disable-next-line
   }, [
     currentUser,
     church.setCouncilId,
-    church.setTownId,
-    church.setCampusId,
+    church.setConstituencyId,
     church.setChurch,
   ])
 
@@ -41,11 +39,11 @@ const ChurchDirectoryRoute = ({ component, roles, ...args }) => {
     return <Route component={component} {...args} />
   } else if (isAuthorised(['leaderTown', 'adminTown'], currentUser.roles)) {
     //If the user does not have permission but is a Town Leader or Admin
-    church.setCampusId(currentUser.fellowship.bacenta.town.id)
+    church.setConstituency(currentUser.fellowship.bacenta.constituency.id)
     return <Route component={Churches} />
   } else if (isAuthorised(['leaderCampus', 'adminCampus'], currentUser.roles)) {
     //If the user does not have permission but is a Campus Leader or Admin
-    church.setCampusId(currentUser.fellowship.bacenta.campus.id)
+    church.setConstituency(currentUser.fellowship.bacenta.constituency.id)
     return <Route component={Churches} />
   } else if (isAuthorised(['leaderBacenta'], currentUser.roles)) {
     //If the user does not have permission but is a Bacenta Leader

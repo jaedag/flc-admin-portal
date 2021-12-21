@@ -14,7 +14,7 @@ import * as Yup from 'yup'
 import Popup from '../Popup/Popup'
 import { COUNCIL_MEMBER_DROPDOWN } from '../../queries/ListQueries'
 import { useMutation } from '@apollo/client'
-import { MAKE_TOWN_ADMIN, MAKE_CAMPUS_ADMIN } from './AdminMutations'
+import { MAKE_CONSTITUENCY_ADMIN } from './AdminMutations'
 import FormikControl from '../formik-components/FormikControl'
 import { plural, throwErrorMsg } from '../../global-utils'
 import Breadcrumb from './Breadcrumb'
@@ -30,13 +30,12 @@ const DisplayChurchDetails = (props) => {
   const { setMemberId, theme, setCurrentUser, currentUser } =
     useContext(MemberContext)
   const [submitting, setSubmitting] = useState(false)
-  const { clickCard, togglePopup, isOpen, campusId, townId, councilId } =
+  const { clickCard, togglePopup, isOpen, constituencyId, councilId } =
     useContext(ChurchContext)
 
   //Change Admin Initialised
 
-  const [MakeTownAdmin] = useMutation(MAKE_TOWN_ADMIN)
-  const [MakeCampusAdmin] = useMutation(MAKE_CAMPUS_ADMIN)
+  const [MakeConstituencyAdmin] = useMutation(MAKE_CONSTITUENCY_ADMIN)
 
   const initialValues = {
     adminName: props.admin
@@ -51,35 +50,20 @@ const DisplayChurchDetails = (props) => {
   })
   const onSubmit = (values, onSubmitProps) => {
     setSubmitting(true)
-    if (props.churchType === 'Town') {
-      MakeTownAdmin({
-        variables: {
-          townId: townId,
-          newAdminId: values.adminSelect,
-          oldAdminId: initialValues.adminSelect ?? 'no-old-admin',
-        },
+
+    MakeConstituencyAdmin({
+      variables: {
+        constituencyId: constituencyId,
+        newAdminId: values.adminSelect,
+        oldAdminId: initialValues.adminSelect ?? 'no-old-admin',
+      },
+    })
+      .then(() => {
+        togglePopup()
+        setSubmitting(false)
+        alert('Constituency Admin has been changed successfully')
       })
-        .then(() => {
-          togglePopup()
-          setSubmitting(false)
-          alert('Town Admin has been changed successfully')
-        })
-        .catch((e) => throwErrorMsg(e))
-    } else if (props.churchType === 'Campus') {
-      MakeCampusAdmin({
-        variables: {
-          campusId: campusId,
-          newAdminId: values.adminSelect,
-          oldAdminId: initialValues.adminSelect ?? 'no-old-admin',
-        },
-      })
-        .then(() => {
-          togglePopup()
-          alert('Campus Admin has been changed successfully')
-          setSubmitting(false)
-        })
-        .catch((e) => throwErrorMsg(e))
-    }
+      .catch((e) => throwErrorMsg(e))
 
     onSubmitProps.resetForm()
   }

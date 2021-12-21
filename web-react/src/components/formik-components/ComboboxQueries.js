@@ -8,11 +8,7 @@ export const COUNCIL_FELLOWSHIP_DROPDOWN = gql`
       bacenta {
         id
         name
-        campus {
-          id
-          name
-        }
-        town {
+        constituency {
           id
           name
         }
@@ -26,11 +22,7 @@ export const COUNCIL_BACENTA_DROPDOWN = gql`
     councilBacentaDropdown(id: $id, nameSearch: $nameSearch) {
       id
       name
-      campus {
-        id
-        name
-      }
-      town {
+      constituency {
         id
         name
       }

@@ -44,8 +44,7 @@ function ComboboxTwoVariables(props) {
               id: row.id,
               name: row[`${suggestionText}`],
               //if any type of church
-              campus: row.campus,
-              town: row.town,
+              constituency: row.constituency,
             }
           })
         )
@@ -57,8 +56,7 @@ function ComboboxTwoVariables(props) {
               name: row[`${suggestionText}`],
               //if any type of church
               bacenta: row.bacenta,
-              campus: row.campus,
-              town: row.town,
+              constituency: row.constituency,
             }
           })
         )

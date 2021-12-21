@@ -16,10 +16,7 @@ const Breadcrumb = ({ breadcrumb }) => {
 
             let breadname
             if (bread?.__typename === 'Sonta') {
-              bread.campus &&
-                (breadname = bread.name.replace(bread.campus.name, ''))
-              bread.town &&
-                (breadname = bread.name.replace(bread.town.name, ''))
+              breadname = bread.name.replace(bread.constituency.name, '')
             } else {
               breadname = bread.name
             }

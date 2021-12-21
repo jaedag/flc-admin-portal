@@ -77,12 +77,11 @@ type Member {
   leadsMinistry: [Ministry] @relationship(type: "LEADS", direction: OUT)
   leadsSonta: [Sonta] @relationship(type: "LEADS", direction: OUT)
   leadsBasonta: [Basonta] @relationship(type: "LEADS", direction: OUT)
-  leadsTown: [Town] @relationship(type: "LEADS", direction: OUT)
-  leadsCampus: [Campus] @relationship(type: "LEADS", direction: OUT)
+  leadsConstituency: [Constituency] @relationship(type: "LEADS", direction: OUT)
   leadsConstituencyCount: Int
     @cypher(
       statement: """
-      MATCH (this)-[:LEADS|IS_ADMIN_FOR]->(constituency) WHERE constituency:Campus OR constituency:Town
+      MATCH (this)-[:LEADS|IS_ADMIN_FOR]->(constituency:Constituency)
       RETURN COUNT(DISTINCT constituency)
       """
     )
@@ -107,8 +106,8 @@ type Member {
     @relationship(type: "IS_ADMIN_FOR", direction: OUT)
   isAdminForCouncil: [Council]
     @relationship(type: "IS_ADMIN_FOR", direction: OUT)
-  isAdminForCampus: [Campus] @relationship(type: "IS_ADMIN_FOR", direction: OUT)
-  isAdminForTown: [Town] @relationship(type: "IS_ADMIN_FOR", direction: OUT)
+  isAdminForConstituency: [Constituency]
+    @relationship(type: "IS_ADMIN_FOR", direction: OUT)
 
   #OTHER WORKS
   was_treasurer_for: [ServiceRecord]!
@@ -118,8 +117,6 @@ type Member {
 extend type Member @auth(rules: [{ isAuthenticated: true }])
 extend type Fellowship @auth(rules: [{ isAuthenticated: true }])
 extend type Bacenta @auth(rules: [{ isAuthenticated: true }])
-extend type Campus @auth(rules: [{ isAuthenticated: true }])
-extend type Town @auth(rules: [{ isAuthenticated: true }])
 extend type Constituency @auth(rules: [{ isAuthenticated: true }])
 extend type Council @auth(rules: [{ isAuthenticated: true }])
 extend type Stream @auth(rules: [{ isAuthenticated: true }])
@@ -215,8 +212,7 @@ type ServiceLog @auth(rules: [{ isAuthenticated: true }]) {
   fellowship: [Fellowship] @relationship(type: "HAS_HISTORY", direction: IN)
   bacenta: [Bacenta] @relationship(type: "HAS_HISTORY", direction: IN)
   # bacentaFellowshipRecords(bacentaId: ID!): [BacentaFellowshipServiceRecords]
-  campus: [Campus] @relationship(type: "HAS_HISTORY", direction: IN)
-  town: [Town] @relationship(type: "HAS_HISTORY", direction: IN)
+  constituency: [Constituency] @relationship(type: "HAS_HISTORY", direction: IN)
   sonta: [Sonta] @relationship(type: "HAS_HISTORY", direction: IN)
 }
 
@@ -235,12 +231,327 @@ type HistoryLog @auth(rules: [{ isAuthenticated: true }]) {
   leaders: [Member] @relationship(type: "HAS_HISTORY", direction: IN)
   fellowship: [Fellowship] @relationship(type: "HAS_HISTORY", direction: IN)
   bacenta: [Bacenta] @relationship(type: "HAS_HISTORY", direction: IN)
-  campus: [Campus] @relationship(type: "HAS_HISTORY", direction: IN)
-  town: [Town] @relationship(type: "HAS_HISTORY", direction: IN)
+  constituency: [Constituency] @relationship(type: "HAS_HISTORY", direction: IN)
   sonta: [Sonta] @relationship(type: "HAS_HISTORY", direction: IN)
 }
 
-# Campus-Bacenta, Town-Bacenta
+type GatheringService {
+  id: ID @id
+  name: String!
+  leader: Member @relationship(type: "LEADS", direction: IN)
+  streams: [Stream] @relationship(type: "HAS", direction: OUT)
+  councils: [Council]
+    @cypher(
+      statement: "MATCH (this)-[:HAS*2]->(councils:Council) RETURN councils"
+    )
+  constituencies: [Constituency]
+    @cypher(
+      statement: "MATCH (this)-[:HAS*4]->(constituencies:Constituency) RETURN constituencies"
+    )
+  bacentas: [Bacenta]
+    @cypher(
+      statement: "MATCH (this)-[:HAS*4]->(bacenta:Bacenta) RETURN bacenta"
+    )
+  members: [Member]
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*5]->(:Fellowship)<-[:BELONGS_TO]-(members:Member)
+      RETURN DISTINCT members
+      """
+    )
+  memberCount: Int
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*5]->(:Fellowship)<-[:BELONGS_TO]-(members:Member)
+      RETURN COUNT(DISTINCT members)
+      """
+    )
+  pastorCount: Int
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*5]->(:Fellowship)<-[:BELONGS_TO]-(pastors:Member)-[:HAS_TITLE]->(:Title)
+      RETURN COUNT(DISTINCT pastors)
+      """
+    )
+  streamCount: Int
+    @cypher(
+      statement: "MATCH (this)-[:HAS]->(stream:Stream) RETURN COUNT(stream)"
+    )
+  councilCount: Int
+    @cypher(
+      statement: "MATCH (this)-[:HAS*2]->(council:Council) RETURN COUNT(council)"
+    )
+  constituencyCount: Int
+    @cypher(
+      statement: "MATCH (this)-[:HAS*3]->(constituency:Constituency) RETURN COUNT(constituency)"
+    )
+  bacentaCount: Int
+    @cypher(
+      statement: "MATCH (this)-[:HAS*4]->(bacentas:Bacenta) RETURN COUNT(DISTINCT bacentas)"
+    )
+  fellowshipCount: Int
+    @cypher(
+      statement: "MATCH (this)-[:HAS*5]->(fellowships:Fellowship) RETURN COUNT(DISTINCT fellowships)"
+    )
+  admin: Member @relationship(type: "IS_ADMIN_FOR", direction: IN)
+  history: [HistoryLog] @relationship(type: "HAS_HISTORY", direction: OUT)
+  serviceRecord: [ServiceRecord]
+    @relationship(type: "HAS_RECORD", direction: OUT)
+  serviceLogs: [ServiceLog] @relationship(type: "HAS_HISTORY", direction: OUT)
+  services(limit: Int!): [ServiceRecord]
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(services:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph)
+      RETURN services ORDER BY date.date DESC LIMIT $limit
+      """
+    )
+}
+
+type Stream {
+  id: ID @id
+  name: String!
+  leader: Member @relationship(type: "LEADS", direction: IN)
+  councils: [Council] @relationship(type: "HAS", direction: OUT)
+  gatheringService: GatheringService @relationship(type: "HAS", direction: IN)
+  stream_name: String
+    @cypher(
+      statement: """
+      MATCH (this:Stream)
+      RETURN DISTINCT toLower(this.name)
+      """
+    )
+  constituencies: [Constituency]
+    @cypher(
+      statement: "MATCH (this)-[:HAS*3]->(constituencies:Constituency) RETURN constituencies"
+    )
+  bacentas: [Bacenta]
+    @cypher(
+      statement: "MATCH (this)-[:HAS*3]->(bacenta:Bacenta) RETURN bacenta"
+    )
+
+  members: [Member]
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*4]->(:Fellowship)<-[:BELONGS_TO]-(members:Member)
+      RETURN DISTINCT members
+      """
+    )
+  memberCount: Int
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*4]->(:Fellowship)<-[:BELONGS_TO]-(members:Member)
+      RETURN COUNT(DISTINCT members)
+      """
+    )
+  pastorCount: Int
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*4]->(:Fellowship)<-[:BELONGS_TO]-(pastors:Member)-[:HAS_TITLE]->(:Title)
+      RETURN COUNT(DISTINCT pastors)
+      """
+    )
+  constituencyCount: Int
+    @cypher(
+      statement: "MATCH (this)-[:HAS*2]->(constituency:Constituency) RETURN COUNT(constituency)"
+    )
+  bacentaCount: Int
+    @cypher(
+      statement: "MATCH (this)-[:HAS*3]->(bacentas:Bacenta) RETURN COUNT(DISTINCT bacentas)"
+    )
+  fellowshipCount: Int
+    @cypher(
+      statement: "MATCH (this)-[:HAS*4]->(fellowships:Fellowship) RETURN COUNT(DISTINCT fellowships)"
+    )
+  admin: Member @relationship(type: "IS_ADMIN_FOR", direction: IN)
+  history: [HistoryLog] @relationship(type: "HAS_HISTORY", direction: OUT)
+  serviceRecord: [ServiceRecord]
+    @relationship(type: "HAS_RECORD", direction: OUT)
+  serviceLogs: [ServiceLog] @relationship(type: "HAS_HISTORY", direction: OUT)
+  services(limit: Int!): [ServiceRecord]
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(services:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph)
+      RETURN services ORDER BY date.date DESC LIMIT $limit
+      """
+    )
+  componentServiceAggregate: [ComponentServiceAggregate] @ignore
+}
+
+type Council {
+  id: ID @id
+  name: String!
+  leader: Member @relationship(type: "LEADS", direction: IN)
+  stream_name: String
+    @cypher(
+      statement: """
+      MATCH (this)<-[:HAS]-(stream:Stream)
+      RETURN DISTINCT toLower(stream.name)
+      """
+    )
+  stream: Stream @relationship(type: "HAS", direction: IN)
+  bacentas: [Bacenta]
+    @cypher(
+      statement: "MATCH (this)-[:HAS*1..2]->(bacenta:Bacenta) RETURN bacenta"
+    )
+  constituencies: [Constituency] @relationship(type: "HAS", direction: OUT)
+  members: [Member]
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*3]->(:Fellowship)<-[:BELONGS_TO]-(members:Member)
+      RETURN DISTINCT members
+      """
+    )
+  memberCount: Int
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*3]->(:Fellowship)<-[:BELONGS_TO]-(members:Member)
+      RETURN COUNT(DISTINCT members)
+      """
+    )
+  pastorCount: Int
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*3]->(:Fellowship)<-[:BELONGS_TO]-(pastors:Member)-[:HAS_TITLE]->(:Title)
+      RETURN COUNT(DISTINCT pastors)
+      """
+    )
+  constituencyCount: Int
+    @cypher(
+      statement: "MATCH (this)-[:HAS]->(constituency:Constituency) RETURN COUNT(constituency)"
+    )
+  bacentaCount: Int
+    @cypher(
+      statement: "MATCH (this)-[:HAS*2]->(bacentas:Bacenta) RETURN COUNT(DISTINCT bacentas)"
+    )
+  fellowshipCount: Int
+    @cypher(
+      statement: "MATCH (this)-[:HAS*3]->(fellowships:Fellowship) RETURN COUNT(DISTINCT fellowships)"
+    )
+  activeFellowshipCount: Int
+    @cypher(
+      statement: "MATCH (this)-[:HAS*3]->(fellowships:ActiveFellowship) RETURN COUNT(DISTINCT fellowships)"
+    )
+  admin: Member @relationship(type: "IS_ADMIN_FOR", direction: IN)
+  history: [HistoryLog] @relationship(type: "HAS_HISTORY", direction: OUT)
+  serviceRecord: [ServiceRecord]
+    @relationship(type: "HAS_RECORD", direction: OUT)
+  serviceLogs: [ServiceLog] @relationship(type: "HAS_HISTORY", direction: OUT)
+  services(limit: Int!): [ServiceRecord]
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(services:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph)
+      RETURN services ORDER BY date.date DESC LIMIT $limit
+      """
+    )
+  servicesThisWeek: [Fellowship]
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*3]->(fellowships:ActiveFellowship)
+      WHERE EXISTS {
+        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week
+        }
+      RETURN fellowships
+      """
+    )
+  servicesThisWeekCount: Int
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*3]->(fellowships:ActiveFellowship)
+      WHERE EXISTS {
+        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week
+        }
+      RETURN COUNT(DISTINCT fellowships)
+      """
+    )
+  cancelledServicesThisWeek: [Fellowship]
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*3]->(fellowships:ActiveFellowship)
+      WHERE EXISTS {
+        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week AND record.noServiceReason IS NOT NULL
+        }
+      RETURN fellowships
+      """
+    )
+  cancelledServicesThisWeekCount: Int
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*3]->(fellowships:ActiveFellowship)
+      WHERE EXISTS {
+        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week AND record.noServiceReason IS NOT NULL AND record.attendance IS NULL
+        }
+      RETURN COUNT(fellowships)
+      """
+    )
+  formDefaultersThisWeek: [Fellowship]
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*3]->(fellowships:ActiveFellowship)
+      WHERE EXISTS {
+        MATCH (fellowships)-[:MEETS_ON]->(day:ServiceDay)
+        WHERE day.dayNumber < date().dayOfWeek OR  time() > time('20:30')
+         }
+        AND NOT EXISTS {MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date.date.week = date().week}
+      RETURN DISTINCT fellowships
+      """
+    )
+  formDefaultersThisWeekCount: Int
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*3]->(fellowships:ActiveFellowship)
+      WHERE EXISTS {
+        MATCH (fellowships)-[:MEETS_ON]->(day:ServiceDay)
+        WHERE day.dayNumber < date().dayOfWeek OR  time() > time('20:30')
+         }
+        AND NOT EXISTS {MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date.date.week = date().week}
+
+      RETURN COUNT(DISTINCT fellowships)
+      """
+    )
+  bankingDefaultersThisWeek: [Fellowship]
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*3]->(fellowships) WHERE fellowships:ActiveFellowship OR fellowships:ClosedFellowship
+      MATCH (fellowships) WHERE EXISTS {
+        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week AND record.noServiceReason IS NULL AND record.bankingSlip IS NULL
+        }
+      RETURN fellowships
+      """
+    )
+  bankingDefaultersThisWeekCount: Int
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*3]->(fellowships) WHERE fellowships:ActiveFellowship OR fellowships:ClosedFellowship
+      MATCH (fellowships) WHERE EXISTS {
+        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week AND record.noServiceReason IS NULL AND record.bankingSlip IS NULL
+        }
+      RETURN COUNT(fellowships)
+      """
+    )
+  bankedThisWeek: [Fellowship]
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*3]->(fellowships) WHERE fellowships:ActiveFellowship OR fellowships:ClosedFellowship
+      MATCH (fellowships) WHERE EXISTS {
+        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week AND record.noServiceReason IS NULL AND record.bankingSlip IS NOT NULL
+        }
+      RETURN fellowships
+      """
+    )
+  bankedThisWeekCount: Int
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*3]->(fellowships) WHERE fellowships:ActiveFellowship OR fellowships:ClosedFellowship
+      MATCH (fellowships) WHERE EXISTS {
+        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week AND record.noServiceReason IS NULL AND record.bankingSlip IS NOT NULL
+        }
+      RETURN COUNT(fellowships)
+      """
+    )
+
+  componentServiceAggregate: [ComponentServiceAggregate] @ignore
+}
+
 type Constituency {
   id: ID @id
   name: String
@@ -401,657 +712,6 @@ type Constituency {
   componentServiceAggregate: [ComponentServiceAggregate] @ignore
 }
 
-type GatheringService {
-  id: ID @id
-  name: String!
-  leader: Member @relationship(type: "LEADS", direction: IN)
-  streams: [Stream] @relationship(type: "HAS", direction: OUT)
-  councils: [Council]
-    @cypher(
-      statement: "MATCH (this)-[:HAS*2]->(councils:Council) RETURN councils"
-    )
-  towns: [Town]
-    @cypher(statement: "MATCH (this)-[:HAS*3]->(towns:Town) RETURN towns")
-  campuses: [Campus]
-    @cypher(
-      statement: "MATCH (this)-[:HAS*3]->(campuses:Campus) RETURN campuses"
-    )
-  bacentas: [Bacenta]
-    @cypher(
-      statement: "MATCH (this)-[:HAS*4]->(bacenta:Bacenta) RETURN bacenta"
-    )
-  constituencies: [Constituency]
-    @cypher(
-      statement: "MATCH (this)-[:HAS*4]->(constituencies:Constituency) RETURN constituencies"
-    )
-  members: [Member]
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS*5]->(:Fellowship)<-[:BELONGS_TO]-(members:Member)
-      RETURN DISTINCT members
-      """
-    )
-  memberCount: Int
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS*5]->(:Fellowship)<-[:BELONGS_TO]-(members:Member)
-      RETURN COUNT(DISTINCT members)
-      """
-    )
-  pastorCount: Int
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS*5]->(:Fellowship)<-[:BELONGS_TO]-(pastors:Member)-[:HAS_TITLE]->(:Title)
-      RETURN COUNT(DISTINCT pastors)
-      """
-    )
-  streamCount: Int
-    @cypher(
-      statement: "MATCH (this)-[:HAS]->(stream:Stream) RETURN COUNT(stream)"
-    )
-  councilCount: Int
-    @cypher(
-      statement: "MATCH (this)-[:HAS*2]->(council:Council) RETURN COUNT(council)"
-    )
-  constituencyCount: Int
-    @cypher(
-      statement: "MATCH (this)-[:HAS*3]->(constituency) WHERE constituency:Campus OR constituency:Town RETURN COUNT(constituency)"
-    )
-  bacentaCount: Int
-    @cypher(
-      statement: "MATCH (this)-[:HAS*4]->(bacentas:Bacenta) RETURN COUNT(DISTINCT bacentas)"
-    )
-  fellowshipCount: Int
-    @cypher(
-      statement: "MATCH (this)-[:HAS*5]->(fellowships:Fellowship) RETURN COUNT(DISTINCT fellowships)"
-    )
-  admin: Member @relationship(type: "IS_ADMIN_FOR", direction: IN)
-  history: [HistoryLog] @relationship(type: "HAS_HISTORY", direction: OUT)
-  serviceRecord: [ServiceRecord]
-    @relationship(type: "HAS_RECORD", direction: OUT)
-  serviceLogs: [ServiceLog] @relationship(type: "HAS_HISTORY", direction: OUT)
-  services(limit: Int!): [ServiceRecord]
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(services:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph)
-      RETURN services ORDER BY date.date DESC LIMIT $limit
-      """
-    )
-}
-
-type Stream {
-  id: ID @id
-  name: String!
-  leader: Member @relationship(type: "LEADS", direction: IN)
-  councils: [Council] @relationship(type: "HAS", direction: OUT)
-  gatheringService: GatheringService @relationship(type: "HAS", direction: IN)
-  stream_name: String
-    @cypher(
-      statement: """
-      MATCH (this:Stream)
-      RETURN DISTINCT toLower(this.name)
-      """
-    )
-  towns: [Town]
-    @cypher(statement: "MATCH (this)-[:HAS*2]->(towns:Town) RETURN towns")
-  campuses: [Campus]
-    @cypher(
-      statement: "MATCH (this)-[:HAS*2]->(campuses:Campus) RETURN campuses"
-    )
-  bacentas: [Bacenta]
-    @cypher(
-      statement: "MATCH (this)-[:HAS*3]->(bacenta:Bacenta) RETURN bacenta"
-    )
-  constituencies: [Constituency]
-    @cypher(
-      statement: "MATCH (this)-[:HAS*3]->(constituencies:Constituency) RETURN constituencies"
-    )
-  members: [Member]
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS*4]->(:Fellowship)<-[:BELONGS_TO]-(members:Member)
-      RETURN DISTINCT members
-      """
-    )
-  memberCount: Int
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS*4]->(:Fellowship)<-[:BELONGS_TO]-(members:Member)
-      RETURN COUNT(DISTINCT members)
-      """
-    )
-  pastorCount: Int
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS*4]->(:Fellowship)<-[:BELONGS_TO]-(pastors:Member)-[:HAS_TITLE]->(:Title)
-      RETURN COUNT(DISTINCT pastors)
-      """
-    )
-  constituencyCount: Int
-    @cypher(
-      statement: "MATCH (this)-[:HAS*2]->(constituency) WHERE constituency:Campus OR constituency:Town RETURN COUNT(constituency)"
-    )
-  bacentaCount: Int
-    @cypher(
-      statement: "MATCH (this)-[:HAS*3]->(bacentas:Bacenta) RETURN COUNT(DISTINCT bacentas)"
-    )
-  fellowshipCount: Int
-    @cypher(
-      statement: "MATCH (this)-[:HAS*4]->(fellowships:Fellowship) RETURN COUNT(DISTINCT fellowships)"
-    )
-  admin: Member @relationship(type: "IS_ADMIN_FOR", direction: IN)
-  history: [HistoryLog] @relationship(type: "HAS_HISTORY", direction: OUT)
-  serviceRecord: [ServiceRecord]
-    @relationship(type: "HAS_RECORD", direction: OUT)
-  serviceLogs: [ServiceLog] @relationship(type: "HAS_HISTORY", direction: OUT)
-  services(limit: Int!): [ServiceRecord]
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(services:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph)
-      RETURN services ORDER BY date.date DESC LIMIT $limit
-      """
-    )
-  componentServiceAggregate: [ComponentServiceAggregate] @ignore
-}
-
-type Council {
-  id: ID @id
-  name: String!
-  leader: Member @relationship(type: "LEADS", direction: IN)
-  stream_name: String
-    @cypher(
-      statement: """
-      MATCH (this)<-[:HAS]-(stream:Stream)
-      RETURN DISTINCT toLower(stream.name)
-      """
-    )
-  stream: Stream @relationship(type: "HAS", direction: IN)
-  towns: [Town] @relationship(type: "HAS", direction: OUT)
-  campuses: [Campus] @relationship(type: "HAS", direction: OUT)
-  bacentas: [Bacenta]
-    @cypher(
-      statement: "MATCH (this)-[:HAS*1..2]->(bacenta:Bacenta) RETURN bacenta"
-    )
-  constituencies: [Constituency] @relationship(type: "HAS", direction: OUT)
-  members: [Member]
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS*3]->(:Fellowship)<-[:BELONGS_TO]-(members:Member)
-      RETURN DISTINCT members
-      """
-    )
-  memberCount: Int
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS*3]->(:Fellowship)<-[:BELONGS_TO]-(members:Member)
-      RETURN COUNT(DISTINCT members)
-      """
-    )
-  pastorCount: Int
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS*3]->(:Fellowship)<-[:BELONGS_TO]-(pastors:Member)-[:HAS_TITLE]->(:Title)
-      RETURN COUNT(DISTINCT pastors)
-      """
-    )
-  constituencyCount: Int
-    @cypher(
-      statement: "MATCH (this)-[:HAS]->(constituency) WHERE constituency:Campus OR constituency:Town RETURN COUNT(constituency)"
-    )
-  bacentaCount: Int
-    @cypher(
-      statement: "MATCH (this)-[:HAS*2]->(bacentas:Bacenta) RETURN COUNT(DISTINCT bacentas)"
-    )
-  fellowshipCount: Int
-    @cypher(
-      statement: "MATCH (this)-[:HAS*3]->(fellowships:Fellowship) RETURN COUNT(DISTINCT fellowships)"
-    )
-  activeFellowshipCount: Int
-    @cypher(
-      statement: "MATCH (this)-[:HAS*3]->(fellowships:ActiveFellowship) RETURN COUNT(DISTINCT fellowships)"
-    )
-  admin: Member @relationship(type: "IS_ADMIN_FOR", direction: IN)
-  history: [HistoryLog] @relationship(type: "HAS_HISTORY", direction: OUT)
-  serviceRecord: [ServiceRecord]
-    @relationship(type: "HAS_RECORD", direction: OUT)
-  serviceLogs: [ServiceLog] @relationship(type: "HAS_HISTORY", direction: OUT)
-  services(limit: Int!): [ServiceRecord]
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(services:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph)
-      RETURN services ORDER BY date.date DESC LIMIT $limit
-      """
-    )
-  servicesThisWeek: [Fellowship]
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS*3]->(fellowships:ActiveFellowship)
-      WHERE EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week
-        }
-      RETURN fellowships
-      """
-    )
-  servicesThisWeekCount: Int
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS*3]->(fellowships:ActiveFellowship)
-      WHERE EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week
-        }
-      RETURN COUNT(DISTINCT fellowships)
-      """
-    )
-  cancelledServicesThisWeek: [Fellowship]
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS*3]->(fellowships:ActiveFellowship)
-      WHERE EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week AND record.noServiceReason IS NOT NULL
-        }
-      RETURN fellowships
-      """
-    )
-  cancelledServicesThisWeekCount: Int
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS*3]->(fellowships:ActiveFellowship)
-      WHERE EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week AND record.noServiceReason IS NOT NULL AND record.attendance IS NULL
-        }
-      RETURN COUNT(fellowships)
-      """
-    )
-  formDefaultersThisWeek: [Fellowship]
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS*3]->(fellowships:ActiveFellowship)
-      WHERE EXISTS {
-        MATCH (fellowships)-[:MEETS_ON]->(day:ServiceDay)
-        WHERE day.dayNumber < date().dayOfWeek OR  time() > time('20:30')
-         }
-        AND NOT EXISTS {MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date.date.week = date().week}
-      RETURN DISTINCT fellowships
-      """
-    )
-  formDefaultersThisWeekCount: Int
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS*3]->(fellowships:ActiveFellowship)
-      WHERE EXISTS {
-        MATCH (fellowships)-[:MEETS_ON]->(day:ServiceDay)
-        WHERE day.dayNumber < date().dayOfWeek OR  time() > time('20:30')
-         }
-        AND NOT EXISTS {MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date.date.week = date().week}
-
-      RETURN COUNT(DISTINCT fellowships)
-      """
-    )
-  bankingDefaultersThisWeek: [Fellowship]
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS*3]->(fellowships) WHERE fellowships:ActiveFellowship OR fellowships:ClosedFellowship
-      MATCH (fellowships) WHERE EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week AND record.noServiceReason IS NULL AND record.bankingSlip IS NULL
-        }
-      RETURN fellowships
-      """
-    )
-  bankingDefaultersThisWeekCount: Int
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS*3]->(fellowships) WHERE fellowships:ActiveFellowship OR fellowships:ClosedFellowship
-      MATCH (fellowships) WHERE EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week AND record.noServiceReason IS NULL AND record.bankingSlip IS NULL
-        }
-      RETURN COUNT(fellowships)
-      """
-    )
-  bankedThisWeek: [Fellowship]
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS*3]->(fellowships) WHERE fellowships:ActiveFellowship OR fellowships:ClosedFellowship
-      MATCH (fellowships) WHERE EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week AND record.noServiceReason IS NULL AND record.bankingSlip IS NOT NULL
-        }
-      RETURN fellowships
-      """
-    )
-  bankedThisWeekCount: Int
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS*3]->(fellowships) WHERE fellowships:ActiveFellowship OR fellowships:ClosedFellowship
-      MATCH (fellowships) WHERE EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week AND record.noServiceReason IS NULL AND record.bankingSlip IS NOT NULL
-        }
-      RETURN COUNT(fellowships)
-      """
-    )
-
-  componentServiceAggregate: [ComponentServiceAggregate] @ignore
-}
-
-type Campus {
-  id: ID @id
-  name: String
-  stream_name: String
-    @cypher(
-      statement: """
-      MATCH (this)<-[:HAS*2]-(stream:Stream)
-      RETURN DISTINCT toLower(stream.name)
-      """
-    )
-  members: [Member]
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS*2]->(fellowship:Fellowship)<-[:BELONGS_TO]-(members:Member)
-      RETURN DISTINCT members
-      """
-    )
-  memberCount: Int
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS*2]->(fellowship:Fellowship)<-[:BELONGS_TO]-(members:Member)
-      RETURN COUNT(DISTINCT members)
-      """
-    )
-  fellowshipCount: Int
-    @cypher(
-      statement: "MATCH (this)-[:HAS]-(:Bacenta)-[:HAS]->(fellowship:Fellowship) RETURN COUNT(fellowship)"
-    )
-  activeFellowshipCount: Int
-    @cypher(
-      statement: "MATCH (this)-[:HAS]-(:Bacenta)-[:HAS]->(fellowship:ActiveFellowship) RETURN COUNT(fellowship)"
-    )
-  leader: Member @relationship(type: "LEADS", direction: IN)
-  sontas: [Sonta] @relationship(type: "HAS_SONTA", direction: OUT)
-  bacentas: [Bacenta] @relationship(type: "HAS", direction: OUT)
-  council: Council @relationship(type: "HAS", direction: IN)
-  bishop: Member
-    @cypher(
-      statement: "MATCH (this)-[:HAS]-(:Council)-[:LEADS]-(bishop:Member) RETURN bishop"
-    )
-  admin: Member @relationship(type: "IS_ADMIN_FOR", direction: IN)
-  history: [HistoryLog] @relationship(type: "HAS_HISTORY", direction: OUT)
-  serviceRecord: [ServiceRecord]
-    @relationship(type: "HAS_RECORD", direction: OUT)
-  serviceLogs: [ServiceLog] @relationship(type: "HAS_HISTORY", direction: OUT)
-  services(limit: Int!): [ServiceRecord]
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(records:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph)
-      RETURN records ORDER BY date.date DESC LIMIT $limit
-      """
-    )
-  servicesThisWeek: [Fellowship]
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS*2]->(fellowships:ActiveFellowship)
-      WHERE EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week
-        }
-      RETURN fellowships
-      """
-    )
-  servicesThisWeekCount: Int
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS*2]->(fellowships:ActiveFellowship)
-      WHERE EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week
-        }
-      RETURN COUNT(fellowships)
-      """
-    )
-  cancelledServicesThisWeek: [Fellowship]
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS*2]->(fellowships:ActiveFellowship)
-      WHERE EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week AND record.noServiceReason IS NOT NULL
-        }
-      RETURN fellowships
-      """
-    )
-  cancelledServicesThisWeekCount: Int
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS*2]->(fellowships:ActiveFellowship)
-      WHERE EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week AND record.noServiceReason IS NOT NULL
-        }
-      RETURN COUNT(fellowships)
-      """
-    )
-  formDefaultersThisWeek: [Fellowship]
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS*2]->(fellowships:ActiveFellowship)
-      WHERE EXISTS {
-        MATCH (fellowships)-[:MEETS_ON]->(day:ServiceDay)
-        WHERE day.dayNumber < date().dayOfWeek OR  time() > time('20:30')
-         }
-        AND NOT EXISTS {MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date.date.week = date().week}
-      RETURN DISTINCT fellowships
-      """
-    )
-  formDefaultersThisWeekCount: Int
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS*2]->(fellowships:ActiveFellowship)
-      WHERE EXISTS {
-        MATCH (fellowships)-[:MEETS_ON]->(day:ServiceDay)
-        WHERE day.dayNumber < date().dayOfWeek OR  time() > time('20:30')
-         }
-        AND NOT EXISTS {MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date.date.week = date().week}
-      RETURN COUNT(DISTINCT fellowships)
-      """
-    )
-  bankingDefaultersThisWeek: [Fellowship]
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS*2]->(fellowships) WHERE fellowships:ActiveFellowship OR fellowships:ClosedFellowship
-      MATCH (fellowships) WHERE EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week AND record.noServiceReason IS NULL AND record.bankingSlip IS NULL
-        }
-      RETURN fellowships
-      """
-    )
-  bankingDefaultersThisWeekCount: Int
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS*2]->(fellowships) WHERE fellowships:ActiveFellowship OR fellowships:ClosedFellowship
-      MATCH (fellowships) WHERE EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week AND record.noServiceReason IS NULL AND record.bankingSlip IS NULL
-        }
-      RETURN COUNT(fellowships)
-      """
-    )
-  bankedThisWeek: [Fellowship]
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS*2]->(fellowships) WHERE fellowships:ActiveFellowship OR fellowships:ClosedFellowship
-      MATCH (fellowships) WHERE EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week AND record.noServiceReason IS NULL AND record.bankingSlip IS NOT NULL
-        }
-      RETURN fellowships
-      """
-    )
-  bankedThisWeekCount: Int
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS*2]->(fellowships) WHERE fellowships:ActiveFellowship OR fellowships:ClosedFellowship
-      MATCH (fellowships) WHERE EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week AND record.noServiceReason IS NULL AND record.bankingSlip IS NOT NULL
-        }
-      RETURN COUNT(fellowships)
-      """
-    )
-
-  componentServiceAggregate: [ComponentServiceAggregate] @ignore
-}
-
-type Town {
-  id: ID @id
-  name: String
-  stream_name: String
-    @cypher(
-      statement: """
-      MATCH (this)<-[:HAS*2]-(stream:Stream)
-      RETURN DISTINCT toLower(stream.name)
-      """
-    )
-
-  members: [Member]
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS*2]->(fellowship:Fellowship)<-[:BELONGS_TO]-(members:Member)
-      RETURN DISTINCT members
-      """
-    )
-  memberCount: Int
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS*2]->(fellowship:Fellowship)<-[:BELONGS_TO]-(members:Member)
-      RETURN COUNT(DISTINCT members)
-      """
-    )
-  fellowshipCount: Int
-    @cypher(
-      statement: "MATCH (this)-[:HAS]-(:Bacenta)-[:HAS]->(fellowship:Fellowship) RETURN COUNT(fellowship)"
-    )
-  activeFellowshipCount: Int
-    @cypher(
-      statement: "MATCH (this)-[:HAS]-(:Bacenta)-[:HAS]->(fellowship:ActiveFellowship) RETURN COUNT(fellowship)"
-    )
-  leader: Member @relationship(type: "LEADS", direction: IN)
-  sontas: [Sonta] @relationship(type: "HAS_SONTA", direction: OUT)
-  bacentas: [Bacenta] @relationship(type: "HAS", direction: OUT)
-  council: Council @relationship(type: "HAS", direction: IN)
-  bishop: Member
-    @cypher(
-      statement: "MATCH (this)-[:HAS]-(:Council)-[:LEADS]-(bishop:Member) RETURN bishop"
-    )
-  admin: Member @relationship(type: "IS_ADMIN_FOR", direction: IN)
-  history: [HistoryLog] @relationship(type: "HAS_HISTORY", direction: OUT)
-  serviceRecord: [ServiceRecord]
-    @relationship(type: "HAS_RECORD", direction: OUT)
-  serviceLogs: [ServiceLog] @relationship(type: "HAS_HISTORY", direction: OUT)
-  services(limit: Int!): [ServiceRecord]
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(records:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph)
-      RETURN records ORDER BY date.date DESC LIMIT $limit
-      """
-    )
-  servicesThisWeek: [Fellowship]
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS*2]->(fellowships:ActiveFellowship)
-      WHERE EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week
-        }
-      RETURN fellowships
-      """
-    )
-  servicesThisWeekCount: Int
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS*2]->(fellowships:ActiveFellowship)
-      WHERE EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week
-        }
-      RETURN COUNT(fellowships)
-      """
-    )
-  cancelledServicesThisWeek: [Fellowship]
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS*2]->(fellowships:ActiveFellowship)
-      WHERE EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week AND record.noServiceReason IS NOT NULL
-        }
-      RETURN fellowships
-      """
-    )
-  cancelledServicesThisWeekCount: Int
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS*2]->(fellowships:ActiveFellowship)
-      WHERE EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week AND record.noServiceReason IS NOT NULL
-        }
-      RETURN COUNT(fellowships)
-      """
-    )
-  formDefaultersThisWeek: [Fellowship]
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS*2]->(fellowships:ActiveFellowship)
-      WHERE EXISTS {
-        MATCH (fellowships)-[:MEETS_ON]->(day:ServiceDay)
-        WHERE day.dayNumber < date().dayOfWeek OR  time() > time('20:30')
-         }
-        AND NOT EXISTS {MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date.date.week = date().week}
-      RETURN DISTINCT fellowships
-      """
-    )
-  formDefaultersThisWeekCount: Int
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS*2]->(fellowships:ActiveFellowship)
-      WHERE EXISTS {
-        MATCH (fellowships)-[:MEETS_ON]->(day:ServiceDay)
-        WHERE day.dayNumber < date().dayOfWeek OR  time() > time('20:30')
-         }
-        AND NOT EXISTS {MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date.date.week = date().week}
-      RETURN COUNT(DISTINCT fellowships)
-      """
-    )
-  bankingDefaultersThisWeek: [Fellowship]
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS*2]->(fellowships) WHERE fellowships:ActiveFellowship OR fellowships:ClosedFellowship
-      MATCH (fellowships) WHERE EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week AND record.noServiceReason IS NULL AND record.bankingSlip IS NULL
-        }
-      RETURN fellowships
-      """
-    )
-  bankingDefaultersThisWeekCount: Int
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS*2]->(fellowships) WHERE fellowships:ActiveFellowship OR fellowships:ClosedFellowship
-      MATCH (fellowships) WHERE EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week AND record.noServiceReason IS NULL AND record.bankingSlip IS NULL
-        }
-      RETURN COUNT(fellowships)
-      """
-    )
-  bankedThisWeek: [Fellowship]
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS*2]->(fellowships) WHERE fellowships:ActiveFellowship OR fellowships:ClosedFellowship
-      MATCH (fellowships) WHERE EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week AND record.noServiceReason IS NULL AND record.bankingSlip IS NOT NULL
-        }
-      RETURN fellowships
-      """
-    )
-  bankedThisWeekCount: Int
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS*2]->(fellowships) WHERE fellowships:ActiveFellowship OR fellowships:ClosedFellowship
-      MATCH (fellowships) WHERE EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week AND record.noServiceReason IS NULL AND record.bankingSlip IS NULL
-        }
-      RETURN COUNT(fellowships)
-      """
-    )
-
-  componentServiceAggregate: [ComponentServiceAggregate] @ignore
-}
-
 type Bacenta {
   id: ID @id
   name: String
@@ -1079,8 +739,6 @@ type Bacenta {
   leader: Member @relationship(type: "LEADS", direction: IN)
   fellowships: [Fellowship] @relationship(type: "HAS", direction: OUT)
   basontas: Basonta @relationship(type: "HAS_BASONTA", direction: OUT)
-  town: Town @relationship(type: "HAS", direction: IN)
-  campus: Campus @relationship(type: "HAS", direction: IN)
   constituency: Constituency @relationship(type: "HAS", direction: IN)
   history: [HistoryLog] @relationship(type: "HAS_HISTORY", direction: OUT)
   serviceLogs: [ServiceLog] @relationship(type: "HAS_HISTORY", direction: OUT)
@@ -1103,53 +761,6 @@ type Bacenta {
 
 # Shared Units: Fellowship, Fellowship, Sonta
 type Fellowship {
-  id: ID @id
-  bankingCode: Int
-  name: String
-  location: Point
-  stream_name: String
-    @cypher(
-      statement: """
-      MATCH (this)<-[:HAS*4]-(stream:Stream)
-      RETURN DISTINCT toLower(stream.name)
-      """
-    )
-  bacenta: Bacenta @relationship(type: "HAS", direction: IN)
-  leader: Member @relationship(type: "LEADS", direction: IN)
-  members: [Member] @relationship(type: "BELONGS_TO", direction: IN)
-  memberCount: Int
-    @cypher(
-      statement: """
-      MATCH (this)<-[:BELONGS_TO]-(members:Member)
-      RETURN COUNT(DISTINCT members)
-      """
-    )
-  meetingDay: ServiceDay @relationship(type: "MEETS_ON", direction: OUT)
-  history: [HistoryLog] @relationship(type: "HAS_HISTORY", direction: OUT)
-  serviceLogs: [ServiceLog] @relationship(type: "HAS_HISTORY", direction: OUT)
-  services(limit: Int!): [ServiceRecord]
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(services:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph)
-      RETURN services ORDER BY date.date DESC LIMIT $limit
-      """
-    )
-  labels: [String]
-    @cypher(
-      statement: """
-      MATCH (this)
-      RETURN labels(this)
-      """
-    )
-  council: Council
-    @cypher(
-      statement: """
-      MATCH (this)<-[:HAS*3]-(council:Council)
-      RETURN council
-      """
-    )
-}
-type ClosedFellowship {
   id: ID @id
   bankingCode: Int
   name: String
@@ -1271,9 +882,8 @@ type Sonta {
   leader: Member @relationship(type: "LEADS", direction: IN)
   basonta: [Basonta] @relationship(type: "HAS_BASONTA", direction: OUT)
   ministry: Ministry @relationship(type: "HAS_SONTA", direction: IN)
-  town: Town @relationship(type: "HAS_SONTA", direction: IN)
   history: [HistoryLog] @relationship(type: "HAS_HISTORY", direction: OUT)
-  campus: Campus @relationship(type: "HAS_SONTA", direction: IN)
+  constituency: Constituency @relationship(type: "HAS_SONTA", direction: IN)
   serviceLogs: [ServiceLog] @relationship(type: "HAS_HISTORY", direction: OUT)
 }
 type Basonta {
@@ -1289,18 +899,7 @@ type Query {
   #At the Federal Level
 
   #At the Episcopal Level
-  bishopCampusTownCount(id: ID): Int!
-    @cypher(
-      statement: "MATCH (:Member {id: $id})-[:HAS]->(campusTown) WHERE campusTown:Campus OR campusTown:Town RETURN COUNT(DISTINCT campusTown)"
-    )
-  bishopBacentaCount(id: ID): Int!
-    @cypher(
-      statement: "MATCH (:Member {id: $id})-[:HAS]->()-[:HAS]-(bacenta:Bacenta) RETURN COUNT(DISTINCT bacenta)"
-    )
-  bishopFellowshipCount(id: ID): Int!
-    @cypher(
-      statement: "MATCH (:Member {id: $id})-[:HAS]->()-[:HAS]->(:Bacenta)-[:HAS]-(fellowship:Fellowship) RETURN COUNT(DISTINCT fellowship)"
-    )
+
   councilFellowshipDropdown(id: ID!, fellowshipName: String!): [Fellowship]
     @cypher(
       statement: "MATCH (council:Council {id:$id})-[:HAS*3]->(fellowship:Fellowship) WHERE toLower(fellowship.name) CONTAINS toLower($fellowshipName) RETURN DISTINCT fellowship LIMIT 5"
@@ -1338,8 +937,8 @@ type Query {
   councilBacentaDropdown(id: ID!, nameSearch: String!): [Bacenta]
     @cypher(
       statement: """
-      MATCH (:Council {id: $id})-[:HAS]->(campusTown) WHERE campusTown:Campus OR campusTown:Town
-      MATCH (campusTown)-[:HAS]->(bacenta:Bacenta)
+      MATCH (:Council {id: $id})-[:HAS]->(constituency:Constituency)
+      MATCH (constituency)-[:HAS]->(bacenta:Bacenta)
       WHERE toLower(bacenta.name) CONTAINS toLower($nameSearch)
       RETURN bacenta LIMIT 5
       """
@@ -1348,56 +947,11 @@ type Query {
   councilMemberDropdown(id: ID!, nameSearch: String!): [Member]
     @cypher(
       statement: """
-      MATCH (:Council {id: $id})-[:HAS]->(campusTown) WHERE campusTown:Town OR campusTown:Campus
-      MATCH (campusTown)-[:HAS]->(:Bacenta)-[:HAS]->(:Fellowship)<-[:BELONGS_TO]-(member:Member)
+      MATCH (:Council {id: $id})-[:HAS]->(constituency:Constituency)
+      MATCH (constituency)-[:HAS]->(:Bacenta)-[:HAS]->(:Fellowship)<-[:BELONGS_TO]-(member:Member)
       WHERE toLower(member.firstName+ ' ' + member.lastName) CONTAINS toLower($nameSearch)
       RETURN member LIMIT 5
       """
-    )
-
-  #At the Town Level
-  townSontaList(id: ID): [Sonta]
-    @cypher(
-      statement: "MATCH (town:Town {id: $id})-[:HAS_SONTA]->(sonta:Sonta)  RETURN sonta"
-    )
-  townBacentaCount(id: ID): Int!
-    @cypher(
-      statement: "MATCH(:Town {id:$id})-[:HAS]->(bacenta:Bacenta) RETURN COUNT(bacenta)"
-    )
-  townSontaCount(id: ID): Int!
-    @cypher(
-      statement: "MATCH (:Town {id:$id})-[:HAS_SONTA]->(sonta:Sonta) RETURN COUNT(sonta)"
-    )
-  townSontamembershipCount(id: ID): Int!
-    @cypher(
-      statement: "MATCH (:Town {id: $id})-[]-(:Bacenta)-[]->(:Fellowship)<-[:BELONGS_TO]-(member:Member) MATCH (member)-[:BELONGS_TO]->(:Ministry) RETURN COUNT(DISTINCT member)"
-    )
-
-  #At the Campus Level
-  campusFellowshipList(id: ID): [Fellowship]
-    @cypher(
-      statement: "MATCH (campus:Campus {id: $id})-[:HAS]->(:Bacenta)-[:HAS]-> (fellowship:Fellowship) RETURN fellowship"
-    )
-  campusSontaList(id: ID): [Sonta]
-    @cypher(
-      statement: "MATCH (campus:Campus {id: $id})-[:HAS_SONTA]->(sonta:Sonta)  RETURN sonta"
-    )
-  campusBacentaList(id: ID): [Bacenta]
-    @cypher(
-      statement: "MATCH (t:Campus {id:$id})-[:HAS]->(bacenta:Bacenta) RETURN bacenta"
-    )
-  campusBacentaCount(id: ID): Int!
-    @cypher(
-      statement: "MATCH(:Campus {id:$id})-[:HAS]->(bacenta:Bacenta) RETURN COUNT(bacenta)"
-    )
-  campusSontaCount(id: ID): Int!
-    @cypher(
-      statement: "MATCH (:Campus {id:$id})-[:HAS_MINISTRY]->(sonta:Sonta) RETURN COUNT(sonta)"
-    )
-
-  campusSontamembershipCount(id: ID): Int!
-    @cypher(
-      statement: "MATCH (:Campus {id: $id})-[]-(:Bacenta)-[]->(:Fellowship)<-[:BELONGS_TO]-(member:Member) MATCH (member)-[:BELONGS_TO]->(:Ministry) RETURN COUNT(DISTINCT member)"
     )
 
   #At the Bacenta Level
@@ -1405,49 +959,20 @@ type Query {
     @cypher(
       statement: "MATCH (bacenta:Bacenta) WHERE toLower(bacenta.name) CONTAINS toLower($bacentaName) RETURN bacenta LIMIT 5"
     )
-  bacentaFellowshipList(id: ID): [Fellowship]
-    @cypher(
-      statement: """
-      MATCH (fellowship:Fellowship)
-      WHERE (:Bacenta {id:$id})-[:HAS]->(fellowship)
-      RETURN fellowship
-      """
-    )
-  bacentaFellowshipCount(id: ID): Int!
-    @cypher(
-      statement: "MATCH (:Bacenta {id:$id})-[:HAS]->(fellowship:Fellowship) RETURN COUNT(fellowship)"
-    )
-  bacentaSontaCount(id: ID): Int!
-    @cypher(
-      statement: "MATCH (sonta:Sonta)<-[:HAS_MINISTRY]-(:Bacenta {name:$bacenta}) RETURN COUNT(sonta)"
-    )
 
   fellowshipDropdown(fellowshipName: String): [Fellowship]
     @cypher(
       statement: "MATCH (fellowship:Fellowship) WHERE toLower(fellowship.name) CONTAINS toLower($fellowshipName) RETURN DISTINCT fellowship LIMIT 5"
     )
 
-  #At the Ministry Level
-  sontaTownList(bishopId: ID, ministryId: ID): [Town]
-    @cypher(
-      statement: """
-      MATCH (ministry:Ministry {id: $ministryId})<-[:BELONGS_TO]-(member:Member)
-      MATCH (member)-[:BELONGS_TO]->(:Fellowship)<-[:HAS]-()<-[:HAS]-(campusTown)
-      MATCH (campusTown)<-[:HAS|HAS]-(:Member {id: $bishopId})
-      RETURN DISTINCT campusTown,ministry
-      """
-    )
-
-  #At the Sonta Level
-  sontaList: [Sonta] @cypher(statement: "MATCH (s:Sonta) RETURN s")
   townSontaLeader(bishopId: ID): [Member]
     @cypher(
       statement: """
       MATCH (ministry:Ministry)<-[:BELONGS_TO]-(member:Member)
-      MATCH (member)-[:BELONGS_TO]->(:Fellowship)<-[:HAS]-()<-[:HAS]-(campusTown)
-      MATCH (campusTown)<-[:HAS|HAS]-(:Member {id: $bishopId})
-      MATCH (campusTown)-[:HAS_SONTA]->(s:Sonta {id:$sontaId})<-[:LEADS]-(sontaLeader:Member)
-      WHERE sonta.name CONTAINS campusTown.name
+      MATCH (member)-[:BELONGS_TO]->(:Fellowship)<-[:HAS]-()<-[:HAS]-(constituency)
+      MATCH (constituency)<-[:HAS|HAS]-(:Member {id: $bishopId})
+      MATCH (constituency)-[:HAS_SONTA]->(s:Sonta {id:$sontaId})<-[:LEADS]-(sontaLeader:Member)
+      WHERE sonta.name CONTAINS constituency.name
          RETURN DISTINCT sontaLeader
       """
     )
@@ -1475,25 +1000,7 @@ type Query {
       statement: "MATCH (member:Member {email:$email}) RETURN member LIMIT 1"
     )
 
-  #DASHBOARD QUERIES
-
   #Fuzzy Search
-  memberGridList(
-    gender: String
-    maritalStatus: String
-    ministryId: ID
-    leaderTitle: String
-    leaderRank: String
-  ): [Member]
-    @cypher(
-      statement: """
-      MATCH (member:Member)
-      WHERE (member)-[:HAS_GENDER]->(:Gender{gender:$gender})
-      OR (member)-[:HAS_MARITAL_STATUS]->(:MaritalStatus{status:$maritalStatus})
-      RETURN member
-      """
-    )
-
   federalMemberSearch(searchKey: String): [Member]
     @auth(rules: [{ roles: ["adminFederal"] }])
     @cypher(
@@ -1513,7 +1020,7 @@ type Query {
     @auth(rules: [{ roles: ["adminCouncil"] }])
     @cypher(
       statement: """
-      MATCH (council:Council {id: $councilId})-[:HAS]->(campusTown)-[:HAS]->(:Bacenta)-[:HAS]->(:Fellowship)<-[:BELONGS_TO*]-(member:Member)
+      MATCH (council:Council {id: $councilId})-[:HAS]->(:Constituency)-[:HAS]->(:Bacenta)-[:HAS]->(:Fellowship)<-[:BELONGS_TO*]-(member:Member)
       WHERE toLower(member.firstName) = toLower($searchKey)
       OR toLower(member.lastName) = toLower($searchKey)
       OR toLower(member.firstName) STARTS WITH toLower($searchKey)
@@ -1524,10 +1031,10 @@ type Query {
       """
     )
   constituencyMemberSearch(searchKey: String, constituencyId: ID): [Member]
-    @auth(rules: [{ roles: ["adminCampus", "adminTown"] }])
+    @auth(rules: [{ roles: ["adminConstituency", "adminTown"] }])
     @cypher(
       statement: """
-      MATCH (constituency {id:$constituencyId}) WHERE constituency:Campus OR constituency:Town
+      MATCH (constituency:Constituency {id:$constituencyId})
       MATCH (constituency)-[:HAS]->(:Bacenta)-[:HAS]->(fellowship:Fellowship)<-[:BELONGS_TO]-(member:Member)
       WHERE toLower(member.firstName) = toLower($searchKey)
       OR toLower(member.lastName) = toLower($searchKey)
@@ -1591,10 +1098,10 @@ type Query {
     searchKey: String
     constituencyId: ID
   ): [Fellowship]
-    @auth(rules: [{ roles: ["adminCampus", "adminTown"] }])
+    @auth(rules: [{ roles: ["adminConstituency", "adminTown"] }])
     @cypher(
       statement: """
-      MATCH (constituency {id:$constituencyId})-[:HAS*2]->(fellowship:Fellowship)
+      MATCH (constituency:Constituency {id:$constituencyId})-[:HAS*2]->(fellowship:Fellowship)
 
       WHERE toLower(fellowship.name) STARTS WITH toLower($searchKey)
       OR toLower(fellowship.name) CONTAINS toLower($searchKey)
@@ -1636,10 +1143,10 @@ type Query {
     searchKey: String
     constituencyId: ID
   ): [Fellowship]
-    @auth(rules: [{ roles: ["adminCampus", "adminTown"] }])
+    @auth(rules: [{ roles: ["adminConstituency", "adminTown"] }])
     @cypher(
       statement: """
-      MATCH (constituency {id:$constituencyId}) WHERE constituency:Campus OR constituency:Town
+      MATCH (constituency:Constituency {id:$constituencyId})
       MATCH (constituency)-[:HAS]->(bacenta)
 
       WHERE toLower(bacenta.name) STARTS WITH toLower($searchKey)
@@ -1647,48 +1154,28 @@ type Query {
       RETURN bacenta LIMIT 5
       """
     )
-  federalCampusSearch(searchKey: String): [Campus]
+  federalConstituencySearch(searchKey: String): [Constituency]
     @auth(rules: [{ roles: ["adminFederal"] }])
     @cypher(
       statement: """
-      MATCH (campus:Campus)
-      WHERE toLower(campus.name) STARTS WITH toLower($searchKey)
-      OR toLower(campus.name) CONTAINS toLower($searchKey)
-      RETURN campus LIMIT 5
+      MATCH (constituency:Constituency)
+      WHERE toLower(constituency.name) STARTS WITH toLower($searchKey)
+      OR toLower(constituency.name) CONTAINS toLower($searchKey)
+      RETURN constituency LIMIT 5
       """
     )
-  councilCampusSearch(searchKey: String, councilId: ID): [Campus]
+  councilConstituencySearch(searchKey: String, councilId: ID): [Constituency]
     @auth(rules: [{ roles: ["adminCouncil"] }])
     @cypher(
       statement: """
-      MATCH (council:Council {id: $councilId})-[:HAS]->(campus)
+      MATCH (council:Council {id: $councilId})-[:HAS]->(constituency)
 
-      WHERE toLower(campus.name) STARTS WITH toLower($searchKey)
-      OR toLower(campus.name) CONTAINS toLower($searchKey)
-      RETURN campus LIMIT 5
+      WHERE toLower(constituency.name) STARTS WITH toLower($searchKey)
+      OR toLower(constituency.name) CONTAINS toLower($searchKey)
+      RETURN constituency LIMIT 5
       """
     )
-  federalTownSearch(searchKey: String): [Town]
-    @auth(rules: [{ roles: ["adminFederal"] }])
-    @cypher(
-      statement: """
-      MATCH (town:Town)
-      WHERE toLower(town.name) STARTS WITH toLower($searchKey)
-      OR toLower(town.name) CONTAINS toLower($searchKey)
-      RETURN town LIMIT 5
-      """
-    )
-  councilTownSearch(searchKey: String, councilId: ID): [Town]
-    @auth(rules: [{ roles: ["adminCouncil"] }])
-    @cypher(
-      statement: """
-      MATCH (council:Council {id: $councilId})-[:HAS]->(town)
 
-      WHERE toLower(town.name) STARTS WITH toLower($searchKey)
-      OR toLower(town.name) CONTAINS toLower($searchKey)
-      RETURN town LIMIT 5
-      """
-    )
   federalSontaSearch(searchKey: String): [Sonta]
     @auth(rules: [{ roles: ["adminFederal"] }])
     @cypher(
@@ -1703,8 +1190,8 @@ type Query {
     @auth(rules: [{ roles: ["adminCouncil"] }])
     @cypher(
       statement: """
-      MATCH (council:Council {id: $councilId})-[:HAS]->(campusTown)
-      MATCH (campusTown)-[:HAS_SONTA]->(sonta)
+      MATCH (council:Council {id: $councilId})-[:HAS]->(constituency)
+      MATCH (constituency)-[:HAS_SONTA]->(sonta)
 
       WHERE toLower(sonta.name) STARTS WITH toLower($searchKey)
       OR toLower(sonta.name) CONTAINS toLower($searchKey)
@@ -1712,10 +1199,10 @@ type Query {
       """
     )
   constituencySontaSearch(searchKey: String, constituencyId: ID): [Fellowship]
-    @auth(rules: [{ roles: ["adminCampus", "adminTown"] }])
+    @auth(rules: [{ roles: ["adminConstituency", "adminTown"] }])
     @cypher(
       statement: """
-      MATCH (constituency {id:$constituencyId}) WHERE constituency:Campus OR constituency:Town
+      MATCH (constituency:Constituency {id:$constituencyId})
       MATCH (constituency)-[:HAS_SONTA]->(sonta)
 
       WHERE toLower(sonta.name) STARTS WITH toLower($searchKey)
@@ -1737,20 +1224,16 @@ type Mutation {
   RemoveStreamAdmin(adminId: ID!, streamId: ID!): Member
   MakeCouncilAdmin(adminId: ID!, councilId: ID!): Member
   RemoveCouncilAdmin(adminId: ID!, councilId: ID!): Member
-  MakeTownAdmin(adminId: ID!, townId: ID!): Member
-  RemoveTownAdmin(adminId: ID!, townId: ID!): Member
-  MakeCampusAdmin(adminId: ID!, campusId: ID!): Member
-  RemoveCampusAdmin(adminId: ID!, campusId: ID!): Member
+  MakeConstituencyAdmin(adminId: ID!, constituencyId: ID!): Member
+  RemoveConstituencyAdmin(adminId: ID!, constituencyId: ID!): Member
   MakeFellowshipLeader(leaderId: ID!, fellowshipId: ID!): Member
   RemoveFellowshipLeader(leaderId: ID!, fellowshipId: ID!): Member
   MakeBacentaLeader(leaderId: ID!, bacentaId: ID!): Member
   RemoveBacentaLeader(leaderId: ID!, bacentaId: ID!): Member
   MakeSontaLeader(leaderId: ID!, sontaId: ID!): Member
   RemoveSontaLeader(leaderId: ID!, sontaId: ID!): Member
-  MakeTownLeader(leaderId: ID!, townId: ID!): Member
-  RemoveTownLeader(leaderId: ID!, townId: ID!): Member
-  MakeCampusLeader(leaderId: ID!, campusId: ID!): Member
-  RemoveCampusLeader(leaderId: ID!, campusId: ID!): Member
+  MakeConstituencyLeader(leaderId: ID!, constituencyId: ID!): Member
+  RemoveConstituencyLeader(leaderId: ID!, constituencyId: ID!): Member
   MakeCouncilLeader(leaderId: ID!, councilId: ID!): Member
   RemoveCouncilLeader(leaderId: ID!, councilId: ID!): Member
   MakeStreamLeader(leaderId: ID!, streamId: ID!): Member
@@ -1799,7 +1282,7 @@ type Mutation {
         SET
         log.id =  apoc.create.uuid(),
         log.timeStamp = datetime(),
-        log.historyRecord = leader.firstName + ' ' +leader.lastName + ' started ' + $townName +' Town Church under '+ council.name+ ' Council'
+        log.historyRecord = leader.firstName + ' ' +leader.lastName + ' started ' + $name +' Council under '+ stream.name+ ' Stream'
 
       MERGE (stream)-[:HAS]->(council)
       MERGE (council)-[:HAS]->(constituency)
@@ -1820,36 +1303,36 @@ type Mutation {
       MERGE (leader)-[r:HAS_HISTORY]->(log)
         SET r.current = true
 
-      WITH town, council
+      WITH council, stream
       CALL {
-        WITH town
-        WITH town WHERE $bacentas <> []
-        UNWIND $bacentas AS bacentaIds
-        MATCH (bacenta:Bacenta {id:bacentaIds})
-        OPTIONAL MATCH (oldCampusTown)-[r:HAS]->(bacenta)
+        WITH council
+        WITH council WHERE $constituencies <> []
+        UNWIND $constituencies AS constituencyIds
+        MATCH (constituency:Constituency {id:constituencyIds})
+        OPTIONAL MATCH (oldCouncil)-[r:HAS]->(constituency)
         DELETE r
 
-        MERGE (town)-[:HAS]->(bacenta)
-        RETURN count(town)
+        MERGE (council)-[:HAS]->(bacenta)
+        RETURN count(council)
       }
 
-      RETURN town
+      RETURN council
       """
     )
 
-  CreateTown(
-    townName: String!
+  CreateConstituency(
+    name: String!
     leaderId: ID!
     councilId: ID!
     bacentas: [ID]
-  ): Town
-    @auth(rules: [{ roles: ["adminFederal", "adminCouncil"] }])
+  ): Constituency
+    @auth(rules: [{ roles: ["adminFederal", "adminStream", "adminCouncil"] }])
     @cypher(
       statement: """
-       CREATE (town:Town:Constituency {name:$townName})
+       CREATE (constituency:Constituency {name:$name})
          	SET
-      	town.id = apoc.create.uuid()
-      WITH town
+      	constituency.id = apoc.create.uuid()
+      WITH constituency
       MATCH (leader:Member {id: $leaderId})
       MATCH (currentUser:Member {auth_id:$auth.jwt.sub})
       MATCH (council:Council {id: $councilId})
@@ -1858,95 +1341,52 @@ type Mutation {
         SET
         log.id =  apoc.create.uuid(),
         log.timeStamp = datetime(),
-        log.historyRecord = leader.firstName + ' ' +leader.lastName + ' started ' + $townName +' Town Church under '+ council.name+ ' Council'
+        log.historyRecord = leader.firstName + ' ' +leader.lastName + ' started ' + $name +' Constituency under '+ council.name+ ' Council'
 
-      MERGE (council)-[:HAS]->(town)
-      MERGE (leader)-[:LEADS]->(town)
-
-      MERGE (date:TimeGraph {date: date()})
-      MERGE (log)-[:LOGGED_BY]->(currentUser)
-      MERGE (log)-[:RECORDED_ON]->(date)
-      MERGE (council)-[:HAS_HISTORY]->(log)
-      MERGE (town)-[:HAS_HISTORY]->(log)
-      MERGE (leader)-[r:HAS_HISTORY]->(log)
-        SET r.current = true
-
-      WITH town, council
-      CALL {
-        WITH town
-        WITH town WHERE $bacentas <> []
-        UNWIND $bacentas AS bacentaIds
-        MATCH (bacenta:Bacenta {id:bacentaIds})
-        OPTIONAL MATCH (oldCampusTown)-[r:HAS]->(bacenta)
-        DELETE r
-
-        MERGE (town)-[:HAS]->(bacenta)
-        RETURN count(town)
-      }
-
-      RETURN town
-      """
-    )
-  CreateCampus(
-    campusName: String!
-    leaderId: ID!
-    councilId: ID!
-    bacentas: [ID]
-  ): Campus
-    @auth(rules: [{ roles: ["adminFederal", "adminCouncil"] }])
-    @cypher(
-      statement: """
-      CREATE (campus:Campus:Constituency {name:$campusName})
-         	SET
-      	campus.id = apoc.create.uuid()
-      WITH campus
-      MATCH (leader:Member {id: $leaderId})
-      MATCH (currentUser:Member {auth_id:$auth.jwt.sub})
-      MATCH (council:Council {id: $councilId})
-
-       CREATE (log:HistoryLog)
-        SET
-        log.id =  apoc.create.uuid(),
-        log.timeStamp = datetime(),
-        log.historyRecord = leader.firstName + ' ' +leader.lastName + ' started ' + $campusName +' Campus Church under '+ council.name+ ' Council'
-
-      MERGE (council)-[:HAS]->(campus)
-      MERGE (leader)-[:LEADS]->(campus)
+      MERGE (council)-[:HAS]->(constituency)
+      MERGE (leader)-[:LEADS]->(constituency)
 
       MERGE (date:TimeGraph {date: date()})
       MERGE (log)-[:LOGGED_BY]->(currentUser)
       MERGE (log)-[:RECORDED_ON]->(date)
       MERGE (council)-[:HAS_HISTORY]->(log)
-      MERGE (campus)-[:HAS_HISTORY]->(log)
+      MERGE (constituency)-[:HAS_HISTORY]->(log)
       MERGE (leader)-[r:HAS_HISTORY]->(log)
         SET r.current = true
 
-      WITH campus, council
+      WITH constituency, council
       CALL {
-        WITH campus
-        WITH campus WHERE $bacentas <> []
+        WITH constituency
+        WITH constituency WHERE $bacentas <> []
         UNWIND $bacentas AS bacentaIds
         MATCH (bacenta:Bacenta {id:bacentaIds})
-        OPTIONAL MATCH (oldCampusTown)-[r:HAS]->(bacenta)
+        OPTIONAL MATCH (oldconstituency)-[r:HAS]->(bacenta)
         DELETE r
 
-        MERGE (campus)-[:HAS]->(bacenta)
-        RETURN count(campus)
+        MERGE (constituency)-[:HAS]->(bacenta)
+        RETURN count(constituency)
       }
 
-      RETURN campus
+      RETURN constituency
       """
     )
 
   CreateBacenta(
     bacentaName: String!
-    townCampusId: ID!
+    constituencyId: ID!
     leaderId: ID!
     fellowships: [ID]
   ): Bacenta  #Return town and drill down to get bacenta info
     @auth(
       rules: [
-        { roles: ["adminFederal", "adminCouncil", "adminCampus", "adminTown"] }
+        {
+          roles: [
+            "adminFederal"
+            "adminCouncil"
+            "adminConstituency"
+            "adminTown"
+          ]
+        }
       ]
     )
     @cypher(
@@ -1956,22 +1396,22 @@ type Mutation {
       	bacenta.id = apoc.create.uuid()
       WITH bacenta
        MATCH (leader:Member {id:$leaderId})
-       MATCH (campusTown {id:$townCampusId}) WHERE campusTown:Town OR campusTown:Campus
+       MATCH (constituency:Constituency {id:$constituencyId})
        MATCH (currentUser:Member {auth_id:$auth.jwt.sub})
-       UNWIND labels(campusTown) AS stream
+       UNWIND labels(constituency) AS stream
 
       CREATE (log:HistoryLog:ServiceLog)
       SET log.id = apoc.create.uuid(),
        log.timeStamp = datetime(),
-       log.historyRecord = leader.firstName + ' ' +leader.lastName + ' started ' + bacenta.name +' Bacenta under '+ campusTown.name + ' ' + stream
+       log.historyRecord = leader.firstName + ' ' +leader.lastName + ' started ' + bacenta.name +' Bacenta under '+ constituency.name + ' ' + stream
 
-       MERGE (campusTown)-[:HAS]->(bacenta)
+       MERGE (constituency)-[:HAS]->(bacenta)
        MERGE (leader)-[:LEADS]->(bacenta)
 
        MERGE (date:TimeGraph {date: date()})
        MERGE (log)-[:LOGGED_BY]->(currentUser)
        MERGE (log)-[:RECORDED_ON]->(date)
-       MERGE (campusTown)-[:HAS_HISTORY]->(log)
+       MERGE (constituency)-[:HAS_HISTORY]->(log)
        MERGE (bacenta)-[:HAS_HISTORY]->(log)
        MERGE (leader)-[r:HAS_HISTORY]->(log)
         SET r.current = true
@@ -1992,10 +1432,21 @@ type Mutation {
       RETURN bacenta
       """
     )
-  CreateSonta(ministryId: ID!, townCampusId: ID!, leaderId: ID!): Town
+  CreateSonta(
+    ministryId: ID!
+    constituencyId: ID!
+    leaderId: ID!
+  ): Constituency
     @auth(
       rules: [
-        { roles: ["adminFederal", "adminCouncil", "adminCampus", "adminTown"] }
+        {
+          roles: [
+            "adminFederal"
+            "adminCouncil"
+            "adminConstituency"
+            "adminTown"
+          ]
+        }
       ]
     )
     @cypher(
@@ -2006,32 +1457,32 @@ type Mutation {
       WITH sonta
        MATCH (ministry:Ministry {id:$ministryId})
        MATCH (leader:Member {id: $leaderId})
-       MATCH (campusTown {id:$townCampusId}) WHERE campusTown:Town OR campusTown:Campus
+       MATCH (constituency:Constituency {id:$constituencyId})
 
        MATCH (currentUser:Member {auth_id:$auth.jwt.sub})
-       UNWIND labels(campusTown) AS stream
+       UNWIND labels(constituency) AS stream
 
        CREATE (log:HistoryLog:ServiceLog)
         SET log.id = apoc.create.uuid(),
          log.timeStamp = datetime(),
-         log.historyRecord = leader.firstName + ' ' +leader.lastName + ' started ' + sonta.name +' Sonta under '+ campusTown.name + ' ' + stream
+         log.historyRecord = leader.firstName + ' ' +leader.lastName + ' started ' + sonta.name +' Sonta under '+ constituency.name + ' ' + stream
 
 
-       SET sonta.name = campusTown.name + ' ' + ministry.name
+       SET sonta.name = constituency.name + ' ' + ministry.name
 
        MERGE (ministry)-[:HAS_SONTA]->(sonta)
-       MERGE (campusTown)-[:HAS_SONTA]->(sonta)
+       MERGE (constituency)-[:HAS_SONTA]->(sonta)
        MERGE (leader)-[:LEADS]->(sonta)
 
       MERGE (date:TimeGraph {date: date()})
       MERGE (log)-[:LOGGED_BY]->(currentUser)
        MERGE (log)-[:RECORDED_ON]->(date)
-       MERGE (campusTown)-[:HAS_HISTORY]->(log)
+       MERGE (constituency)-[:HAS_HISTORY]->(log)
        MERGE (sonta)-[:HAS_HISTORY]->(log)
        MERGE (leader)-[r:HAS_HISTORY]->(log)
         SET r.current = true
 
-      RETURN campusTown
+      RETURN constituency
       """
     )
   CreateFellowship(
@@ -2044,7 +1495,14 @@ type Mutation {
   ): Fellowship
     @auth(
       rules: [
-        { roles: ["adminFederal", "adminCouncil", "adminCampus", "adminTown"] }
+        {
+          roles: [
+            "adminFederal"
+            "adminCouncil"
+            "adminConstituency"
+            "adminTown"
+          ]
+        }
       ]
     )
     @cypher(
@@ -2094,11 +1552,11 @@ type Mutation {
           roles: [
             "adminFederal"
             "adminCouncil"
-            "adminCampus"
+            "adminConstituency"
             "adminTown"
             "leaderFellowship"
             "leaderBacenta"
-            "leaderCampus"
+            "leaderConstituency"
             "leaderTown"
           ]
         }
@@ -2180,60 +1638,46 @@ type Mutation {
       """
     )
 
-  UpdateTownDetails(townId: ID!, townName: String!, councilId: ID!): Town
-    @auth(rules: [{ roles: ["adminFederal", "adminCouncil"] }])
-    @cypher(
-      statement: """
-      MATCH (town:Town {id: $townId})
-      	SET town.name = $townName
-
-      WITH town
-         CALL {
-         	WITH town
-          MATCH (council:Council {id: $councilId})
-          OPTIONAL MATCH (town)<-[r:HAS]-()
-          DELETE r
-          MERGE (council)-[:HAS]->(town)
-         	RETURN count(town)
-         	}
-
-      MATCH (town)<-[:LEADS]-(leader:Member)
-      RETURN town
-      """
-    )
-  UpdateCampusDetails(
-    campusId: ID!
-    campusName: String!
+  UpdateConstituencyDetails(
+    constituencyId: ID!
+    constituencyName: String!
     councilId: ID!
-  ): Campus
+  ): Constituency
     @auth(rules: [{ roles: ["adminFederal", "adminCouncil"] }])
     @cypher(
       statement: """
-           MATCH (campus:Campus {id: $campusId})
-           	SET campus.name = $campusName
+           MATCH (constituency:Constituency {id: $constituencyId})
+           	SET constituency.name = $constituencyName
 
-           WITH campus
+           WITH constituency
               CALL {
-              	WITH campus
+              	WITH constituency
 
                   MATCH (council:Council {id: $councilId})
-                  OPTIONAL MATCH (campus)<-[r:HAS]-()
+                  OPTIONAL MATCH (constituency)<-[r:HAS]-()
                   DELETE r
-                  MERGE (council)-[:HAS]->(campus)
-              	RETURN count(campus)
+                  MERGE (council)-[:HAS]->(constituency)
+              	RETURN count(constituency)
               	}
-      MATCH (campus)<-[:LEADS]-(leader:Member)
-      RETURN campus
+      MATCH (constituency)<-[:LEADS]-(leader:Member)
+      RETURN constituency
       """
     )
   UpdateBacentaDetails(
     bacentaId: ID!
     bacentaName: String!
-    campusTownId: ID!
+    constituencyId: ID!
   ): Bacenta
     @auth(
       rules: [
-        { roles: ["adminFederal", "adminCouncil", "adminCampus", "adminTown"] }
+        {
+          roles: [
+            "adminFederal"
+            "adminCouncil"
+            "adminConstituency"
+            "adminTown"
+          ]
+        }
       ]
     )
     @cypher(
@@ -2244,11 +1688,11 @@ type Mutation {
       WITH bacenta
          CALL {
          	WITH bacenta
-      		OPTIONAL MATCH (campusTown {id: $campusTownId}) WHERE campusTown:Campus OR campusTown:Town
+      		OPTIONAL MATCH (constituency:Constituency {id: $constituencyId})
 
             OPTIONAL MATCH (bacenta)<-[r:HAS]-()
             DELETE r
-            MERGE (campusTown)-[:HAS]->(bacenta)
+            MERGE (constituency)-[:HAS]->(bacenta)
          	RETURN count(bacenta)
          	}
       MATCH (bacenta)<-[:LEADS]-(leader:Member)
@@ -2259,7 +1703,14 @@ type Mutation {
   UpdateSontaDetails(sontaId: ID!, sontaName: String!): Sonta
     @auth(
       rules: [
-        { roles: ["adminFederal", "adminCouncil", "adminCampus", "adminTown"] }
+        {
+          roles: [
+            "adminFederal"
+            "adminCouncil"
+            "adminConstituency"
+            "adminTown"
+          ]
+        }
       ]
     )
     @cypher(
@@ -2282,7 +1733,14 @@ type Mutation {
   ): Fellowship
     @auth(
       rules: [
-        { roles: ["adminFederal", "adminCouncil", "adminCampus", "adminTown"] }
+        {
+          roles: [
+            "adminFederal"
+            "adminCouncil"
+            "adminConstituency"
+            "adminTown"
+          ]
+        }
       ]
     )
     @cypher(
@@ -2310,7 +1768,7 @@ type Mutation {
     @cypher(
       statement: """
       MATCH (church {id: $churchId})
-      WHERE church:Bacenta OR church:Town OR church:Campus OR church:Sonta
+      WHERE church:Bacenta OR church:Constituency OR church:Sonta
       MATCH (church)-[r:HAS_HISTORY]->(churchHistory:ServiceLog) WHERE r.current=true
       MATCH (church)-[:HAS]->(downRelatedChurch)
       MATCH (upRelatedChurch)-[:HAS]->(church)
@@ -2398,8 +1856,8 @@ type Mutation {
     historyRecord: String!
     newLeaderId: ID
     oldLeaderId: ID
-    newCampusTownId: ID
-    oldCampusTownId: ID
+    newconstituencyId: ID
+    oldconstituencyId: ID
   ): Bacenta
     @cypher(
       statement: """
@@ -2435,26 +1893,26 @@ type Mutation {
        WITH log,bacenta
        CALL {
          WITH log
-         WITH log WHERE $oldCampusTownId IS NOT NULL
-         MATCH (oldCampusTown {id: $oldCampusTownId}) WHERE oldCampusTown:Town OR oldCampusTown:Campus
-         MERGE (oldCampusTown)-[:HAS_HISTORY]->(log)
+         WITH log WHERE $oldconstituencyId IS NOT NULL
+         MATCH (oldconstituency:Constituency {id: $oldconstituencyId})
+         MERGE (oldconstituency)-[:HAS_HISTORY]->(log)
          RETURN COUNT(log)
        }
 
        WITH log,bacenta
        CALL {
          WITH log
-         WITH log WHERE $newCampusTownId IS NOT NULL
-         MATCH (newCampusTown {id: $newCampusTownId}) WHERE newCampusTown:Town OR newCampusTown:Campus
-         MERGE (newCampusTown)-[:HAS_HISTORY]->(log)
+         WITH log WHERE $newconstituencyId IS NOT NULL
+         MATCH (newconstituency:Constituency {id: $newconstituencyId})
+         MERGE (newconstituency)-[:HAS_HISTORY]->(log)
          RETURN COUNT(log)
        }
 
        RETURN bacenta
       """
     )
-  LogCampusTownHistory(
-    campusTownId: ID!
+  LogConstituencyHistory(
+    constituencyId: ID!
     historyRecord: String!
     newLeaderId: ID
     oldLeaderId: ID
@@ -2463,17 +1921,17 @@ type Mutation {
   ): Constituency
     @cypher(
       statement: """
-      MATCH  (campusTown {id: $campusTownId}) WHERE campusTown:Campus OR campusTown:Town
+      MATCH  (constituency:Constituency {id: $constituencyId})
       MATCH (admin:Member {auth_id: $auth.jwt.sub})
       CREATE (log:HistoryLog {id: apoc.create.uuid()})
         SET log.historyRecord = $historyRecord,
           log.timeStamp = datetime()
       MERGE (date:TimeGraph {date: date()})
-      MERGE (campusTown)-[r:HAS_HISTORY]->(log)
+      MERGE (constituency)-[r:HAS_HISTORY]->(log)
       MERGE (log)-[:RECORDED_ON]->(date)
       MERGE (log)-[:LOGGED_BY]->(admin)
 
-      WITH log,campusTown
+      WITH log,constituency
       CALL{
         WITH log
         WITH log WHERE $newLeaderId IS NOT NULL
@@ -2489,7 +1947,7 @@ type Mutation {
       RETURN COUNT(log)
       }
 
-      WITH log,campusTown
+      WITH log,constituency
       CALL {
         WITH log
         WITH log WHERE $oldLeaderId IS NOT NULL
@@ -2499,7 +1957,7 @@ type Mutation {
       }
 
 
-      WITH log,campusTown
+      WITH log,constituency
       CALL {
         WITH log
         WITH log WHERE $oldCouncilId IS NOT NULL
@@ -2508,7 +1966,7 @@ type Mutation {
         RETURN COUNT(log)
       }
 
-      WITH log,campusTown
+      WITH log,constituency
       CALL {
         WITH log
         WITH log WHERE $newCouncilId IS NOT NULL
@@ -2517,7 +1975,7 @@ type Mutation {
         RETURN COUNT(log)
       }
 
-      RETURN campusTown
+      RETURN constituency
       """
     )
 
@@ -2653,7 +2111,7 @@ type Mutation {
         serviceRecord.treasurerSelfie = $treasurerSelfie,
         serviceRecord.servicePicture = $servicePicture
       WITH serviceRecord
-      MATCH (church {id:$id}) WHERE church:Fellowship OR church:Bacenta OR church:Campus OR church:Town
+      MATCH (church {id:$id}) WHERE church:Fellowship OR church:Bacenta OR church:Constituency
       MATCH (church)-[has_history:HAS_HISTORY]->(log:HistoryLog) WHERE has_history.current = true
       MATCH (leader:Member {auth_id: $auth.jwt.sub})
 
@@ -2683,7 +2141,7 @@ type Mutation {
         serviceRecord.noServiceReason = $noServiceReason
 
       WITH serviceRecord
-      MATCH (church {id:$id}) WHERE church:Fellowship OR church:Bacenta OR church:Campus OR church:Town
+      MATCH (church {id:$id}) WHERE church:Fellowship OR church:Bacenta OR church:Constituency
       MATCH (church)-[has_history:HAS_HISTORY]->(log:HistoryLog) WHERE has_history.current = true
       MATCH (leader:Member {auth_id: $auth.jwt.sub})
 
@@ -2709,7 +2167,7 @@ type Mutation {
         serviceRecord.attendance = $attendance,
         serviceRecord.servicePicture = $servicePicture
       WITH serviceRecord
-      MATCH (church {id:$id}) WHERE church:Fellowship OR church:Bacenta OR church:Sonta OR church:Campus OR church:Town
+      MATCH (church {id:$id}) WHERE church:Fellowship OR church:Bacenta OR church:Sonta OR church:Constituency
       MATCH (church)-[has_history:HAS_HISTORY]->(log:HistoryLog) WHERE has_history.current = true
       MATCH (leader:Member {auth_id: $auth.jwt.sub})
 
@@ -2752,18 +2210,18 @@ type Mutation {
   CloseDownFellowship(fellowshipId: ID!): Fellowship
   CloseDownBacenta(bacentaId: ID!): Bacenta
 
-  CloseDownCampusTown(campusTownId: ID!): Constituency
+  CloseDownConstituency(constituencyId: ID!): Constituency
     @cypher(
       statement: """
-      MATCH (campusTown {id:$campusTownId}) WHERE campusTown:Campus OR campusTown:Town
+      MATCH (constituency:Constituency {id:$constituencyId})
       MATCH (admin:Member {auth_id: $auth.jwt.sub})
-      MATCH (campusTown)-[:HAS]-(council:Council)
-      OPTIONAL MATCH (campusTown)-[:HAS]->(bacentas)-[:HAS]->(fellowships)
-      UNWIND labels(campusTown) AS stream
+      MATCH (constituency)-[:HAS]-(council:Council)
+      OPTIONAL MATCH (constituency)-[:HAS]->(bacentas)-[:HAS]->(fellowships)
+      UNWIND labels(constituency) AS stream
 
       CREATE (log:HistoryLog {id:apoc.create.uuid()})
         SET log.timeStamp = datetime(),
-        log.historyRecord = campusTown.name + ' '+stream +' was closed down under ' + council.name +' Council'
+        log.historyRecord = constituency.name + ' '+stream +' was closed down under ' + council.name +' Council'
 
 
       MERGE (date:TimeGraph {date:date()})
@@ -2772,10 +2230,10 @@ type Mutation {
       MERGE (council)-[:HAS_HISTORY]->(log)
       MERGE (bishop)-[:HAS_HISTORY]->(log)
 
-      SET campusTown:ClosedCampusTown, bacentas:ClosedBacenta, fellowships:ClosedFellowship
-      REMOVE campusTown:Campus:Town,bacentas:Bacenta,fellowships:Fellowship
+      SET constituency:Closedconstituency, bacentas:ClosedBacenta, fellowships:ClosedFellowship
+      REMOVE constituency:Constituency,bacentas:Bacenta,fellowships:Fellowship
 
-      RETURN campusTown
+      RETURN constituency
       """
     )
 
@@ -2793,13 +2251,13 @@ type Mutation {
         log.historyRecord = fellowship.name + ' was made into a Bacenta with '+ newFellowship.name+' as a fellowship under it.'
 
       WITH newFellowship, log, fellowship
-      MATCH (fellowship)<-[hasFellowship:HAS]-(:Bacenta)<-[:HAS]-(campusTown)
+      MATCH (fellowship)<-[hasFellowship:HAS]-(:Bacenta)<-[:HAS]-(constituency)
       MATCH (fellowship)-[meetsOnDay:MEETS_ON]->(meetingDay)
       MATCH (fellowship)<-[belongsTo:BELONGS_TO]-(member:Member)
       MATCH (fellowship)<-[:LEADS]-(leader:Member)
 
       MERGE (date:TimeGraph {date:date()})
-      MERGE (campusTown)-[:HAS]->(fellowship)
+      MERGE (constituency)-[:HAS]->(fellowship)
       MERGE (newFellowship)-[:MEETS_ON]->(meetingDay)
       MERGE (newFellowship)<-[:LEADS]-(leader)
       MERGE (member)-[:BELONGS_TO]->(newFellowship)

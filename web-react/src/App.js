@@ -44,11 +44,10 @@ const PastorsAdmin = () => {
       ? sessionStorage.getItem('councilId')
       : ''
   )
-  const [townId, setTownId] = useState(
-    sessionStorage.getItem('townId') ? sessionStorage.getItem('townId') : ''
-  )
-  const [campusId, setCampusId] = useState(
-    sessionStorage.getItem('campusId') ? sessionStorage.getItem('campusId') : ''
+  const [constituencyId, setConstituencyId] = useState(
+    sessionStorage.getItem('constituencyId')
+      ? sessionStorage.getItem('constituencyId')
+      : ''
   )
   const [fellowshipId, setFellowshipId] = useState(
     sessionStorage.getItem('fellowshipId')
@@ -150,13 +149,9 @@ const PastorsAdmin = () => {
         setBacentaId(card.id)
         sessionStorage.setItem('bacentaId', card.id)
         break
-      case 'Town':
-        setTownId(card.id)
-        sessionStorage.setItem('townId', card.id)
-        break
-      case 'Campus':
-        setCampusId(card.id)
-        sessionStorage.setItem('campusId', card.id)
+      case 'Constituency':
+        setConstituencyId(card.id)
+        sessionStorage.setItem('constituencyId', card.id)
         break
       case 'Basonta':
         setSontaId(card.sonta.id)
@@ -206,10 +201,8 @@ const PastorsAdmin = () => {
           setStreamId,
           councilId,
           setCouncilId,
-          townId,
-          setTownId,
-          campusId,
-          setCampusId,
+          constituencyId,
+          setConstituencyId,
           bacentaId,
           setBacentaId,
           fellowshipId,
@@ -305,11 +298,11 @@ const PastorsAdmin = () => {
                     roles={[
                       'adminFederal',
                       'adminCouncil',
-                      'adminCampus',
+                      'adminConstituency',
                       'adminTown',
                       'leaderFellowship',
                       'leaderBacenta',
-                      'leaderCampus',
+                      'leaderConstituency',
                       'leaderTown',
                     ]}
                     exact

@@ -25,8 +25,7 @@ const ProtectedRoute = ({ component, roles, placeholder, ...args }) => {
           !isAuthorised(currentUser.roles, ['adminCouncil', 'leaderCouncil'])
         ) {
           //User is not a Bishops Admin the he can only be looking at his constituency membership
-          church.setTownId(currentUser.constituency)
-          church.setCampusId(currentUser.constituency)
+          church.setConstituencyId(currentUser.constituency)
 
           if (
             !isAuthorised(currentUser.roles, [

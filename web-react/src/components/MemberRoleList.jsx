@@ -15,15 +15,13 @@ const MemberRoleList = ({ member }) => {
   //To Display Ranks on the Member Card
   let rank = {
     bishop: [],
-    campusLeader: [],
-    townLeader: [],
+    constituencyLeader: [],
     sontaLeader: [],
     basontaLeader: [],
     bacentaLeader: [],
     fellowshipLeader: [],
     adminCouncil: [],
-    adminCampus: [],
-    adminTown: [],
+    adminConstituency: [],
   }
   let isServant = false
 
@@ -59,20 +57,9 @@ const MemberRoleList = ({ member }) => {
       return
     }
 
-    if (churchType === 'adminCampus' || churchType === 'adminTown') {
-      if (member.isAdminForCampus[0]) {
-        member.isAdminForCampus.map((adminFor) => {
-          rank.adminCampus.push({
-            constituency: true,
-            name: `${adminFor.name}`,
-            id: adminFor.id,
-            __typename: adminFor.__typename,
-          })
-          return null
-        })
-        return
-      } else if (member.isAdminForTown[0]) {
-        member.isAdminForTown.map((adminFor) => {
+    if (churchType === 'adminConstituency') {
+      if (member.isAdminForConstituency[0]) {
+        member.isAdminForConstituency.map((adminFor) => {
           rank.adminTown.push({
             stream_name: adminFor.stream_name,
             constituency: true,
@@ -94,9 +81,7 @@ const MemberRoleList = ({ member }) => {
         stream_name: church.stream_name,
         bacenta: church.bacenta,
         sonta: church.sonta,
-        campus: church.campus,
-        town: church.town,
-        bishop: church.bishop,
+        constituency: church.constituency,
         id: church.id,
         link: '',
         __typename: church.__typename,
@@ -112,11 +97,8 @@ const MemberRoleList = ({ member }) => {
   if (member.leadsBacenta[0]) {
     updateRank(member, 'bacenta')
   }
-  if (member.leadsTown[0]) {
+  if (member.leadsConstituency[0]) {
     updateRank(member, 'town')
-  }
-  if (member.leadsCampus[0]) {
-    updateRank(member, 'campus')
   }
   if (member.leadsSonta[0]) {
     updateRank(member, 'sonta')
@@ -134,11 +116,8 @@ const MemberRoleList = ({ member }) => {
   if (member?.isAdminForCouncil[0]) {
     updateRank(member, 'adminCouncil')
   }
-  if (member?.isAdminForCampus[0]) {
-    updateRank(member, 'adminCampus')
-  }
-  if (member?.isAdminForTown[0]) {
-    updateRank(member, 'adminTown')
+  if (member?.isAdminForConstituency[0]) {
+    updateRank(member, 'adminConstituency')
   }
 
   if (!isServant) {

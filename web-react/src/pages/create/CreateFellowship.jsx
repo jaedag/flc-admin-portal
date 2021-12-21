@@ -11,7 +11,7 @@ const CreateFellowship = () => {
   const initialValues = {
     fellowshipName: '',
     leaderId: '',
-    townCampusSelect: '',
+    constituencySelect: '',
     bacentaSelect: '',
     meetingDay: '',
     vacationStatus: '',

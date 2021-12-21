@@ -2,7 +2,7 @@ import { useMutation, useQuery } from '@apollo/client'
 import BaseComponent from 'components/base-component/BaseComponent'
 import { FieldArray, Form, Formik } from 'formik'
 import * as Yup from 'yup'
-import { capitalise, makeSelectOptions } from 'global-utils'
+import { makeSelectOptions } from 'global-utils'
 import { COUNCIL_MEMBER_DROPDOWN, GET_COUNCILS } from 'queries/ListQueries'
 import React, { useContext } from 'react'
 import { ChurchContext } from 'contexts/ChurchContext'
@@ -10,7 +10,7 @@ import FormikControl from 'components/formik-components/FormikControl'
 import PlusSign from 'components/buttons/PlusMinusSign/PlusSign'
 import MinusSign from 'components/buttons/PlusMinusSign/MinusSign'
 import { COUNCIL_BACENTA_DROPDOWN } from 'components/formik-components/ComboboxQueries'
-import { MAKE_CAMPUSTOWN_INACTIVE } from 'pages/update/CloseChurchMutations'
+import { MAKE_CONSTITUENCY_INACTIVE } from 'pages/update/CloseChurchMutations'
 import { BISH_DASHBOARD_COUNTS } from 'pages/dashboards/DashboardQueries'
 import { useHistory } from 'react-router'
 import Popup from 'components/Popup/Popup'
@@ -20,21 +20,14 @@ import { MemberContext } from 'contexts/MemberContext'
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import HeadingSecondary from 'components/HeadingSecondary'
 
-const CampusTownForm = ({
+const ConstituencyForm = ({
   initialValues,
   onSubmit,
   title,
   newConstituency,
 }) => {
-  const {
-    church,
-    togglePopup,
-    isOpen,
-    clickCard,
-    campusId,
-    townId,
-    councilId,
-  } = useContext(ChurchContext)
+  const { togglePopup, isOpen, clickCard, constituencyId, councilId } =
+    useContext(ChurchContext)
   const { theme } = useContext(MemberContext)
 
   const history = useHistory()
@@ -43,27 +36,20 @@ const CampusTownForm = ({
     loading: councilLoading,
     error: councilError,
   } = useQuery(GET_COUNCILS)
-  const [CloseDownCampusTown] = useMutation(MAKE_CAMPUSTOWN_INACTIVE, {
+  const [CloseDownConstituency] = useMutation(MAKE_CONSTITUENCY_INACTIVE, {
     refetchQueries: [
       { query: BISH_DASHBOARD_COUNTS, variables: { id: councilId } },
     ],
   })
 
-  const townCouncilOptions = makeSelectOptions(
+  const constituencyCouncilOptions = makeSelectOptions(
     councilData?.councils.filter(
-      (council) => council.towns.length > 0 && council
-    )
-  )
-  const campusCouncilOptions = makeSelectOptions(
-    councilData?.councils.filter(
-      (council) => council.campuses.length > 0 && council
+      (council) => council.constituencies.length > 0 && council
     )
   )
 
   const validationSchema = Yup.object({
-    campusTownName: Yup.string().required(
-      `${capitalise(church.church)} Name is a required field`
-    ),
+    name: Yup.string().required(`Constituency Name is a required field`),
     leaderId: Yup.string().required(
       'Please choose a leader from the drop down'
     ),
@@ -83,7 +69,7 @@ const CampusTownForm = ({
       <Container>
         <HeadingPrimary>{title}</HeadingPrimary>
         <HeadingSecondary>
-          {initialValues.campusTownName + ' ' + capitalise(church.church)}
+          {initialValues.name + ' Constituency'}
         </HeadingSecondary>
       </Container>
       <Formik
@@ -107,11 +93,7 @@ const CampusTownForm = ({
                             control="select"
                             name="councilSelect"
                             label="Select a Council"
-                            options={
-                              church.church === 'campus'
-                                ? campusCouncilOptions
-                                : townCouncilOptions
-                            }
+                            options={constituencyCouncilOptions}
                             defaultOption="Select a Council"
                           />
                         </Col>
@@ -121,9 +103,9 @@ const CampusTownForm = ({
                     <FormikControl
                       className="form-control"
                       control="input"
-                      name="campusTownName"
-                      label={`Name of ${capitalise(church.church)}`}
-                      placeholder={`Name of ${capitalise(church.church)}`}
+                      name="name"
+                      label={`Name of Constituency`}
+                      placeholder={`Name of Constituency`}
                     />
 
                     <Row className="d-flex align-items-center mb-3">
@@ -131,7 +113,7 @@ const CampusTownForm = ({
                         roles={[
                           'adminFederal',
                           'adminCouncil',
-                          'adminCampus',
+                          'adminConstituency',
                           'adminTown',
                         ]}
                       >
@@ -159,10 +141,7 @@ const CampusTownForm = ({
                     </Row>
 
                     <small className="pt-2">
-                      {`Select any bacentas
-                       that are being moved to this ${capitalise(
-                         church.church
-                       )}`}
+                      {`Select any bacentas that are being moved to this Constituency`}
                     </small>
                     <FieldArray name="bacentas">
                       {(fieldArrayProps) => {
@@ -240,22 +219,21 @@ const CampusTownForm = ({
                   type="submit"
                   className={`btn-main ${theme}`}
                   onClick={() => {
-                    CloseDownCampusTown({
+                    CloseDownConstituency({
                       variables: {
-                        campusTownId:
-                          church.church === 'campus' ? campusId : townId,
+                        constituencyId,
                       },
                     })
                       .then((res) => {
-                        clickCard(res.data.CloseDownCampusTown)
+                        clickCard(res.data.CloseDownConstituency)
                         togglePopup()
-                        history.push(`/${church.church}/displayall`)
+                        history.push(`/constituency/displayall`)
                       })
                       .catch((error) => {
                         // eslint-disable-next-line no-console
                         console.error(error)
                         alert(
-                          `There was an error closing down this ${church.church}`,
+                          `There was an error closing down this constituency`,
                           error
                         )
                       })
@@ -281,7 +259,7 @@ const CampusTownForm = ({
                 className={`btn-secondary ${theme} mt-3`}
                 onClick={togglePopup}
               >
-                {`Close Down ${capitalise(church.church)}`}
+                {`Close Down Constituency`}
               </Button>
             )}
           </Container>
@@ -291,4 +269,4 @@ const CampusTownForm = ({
   )
 }
 
-export default CampusTownForm
+export default ConstituencyForm

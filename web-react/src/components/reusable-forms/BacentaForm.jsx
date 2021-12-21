@@ -2,11 +2,10 @@ import { useMutation, useQuery } from '@apollo/client'
 import BaseComponent from 'components/base-component/BaseComponent'
 import { FieldArray, Form, Formik } from 'formik'
 import * as Yup from 'yup'
-import { capitalise, makeSelectOptions, throwErrorMsg } from 'global-utils'
+import { makeSelectOptions, throwErrorMsg } from 'global-utils'
 import {
   COUNCIL_MEMBER_DROPDOWN,
-  GET_COUNCIL_CAMPUSES,
-  GET_COUNCIL_TOWNS,
+  GET_COUNCIL_CONSTITUENCIES,
 } from 'queries/ListQueries'
 import React, { useContext } from 'react'
 import { ChurchContext } from 'contexts/ChurchContext'
@@ -30,26 +29,16 @@ const BacentaForm = ({ initialValues, onSubmit, title, newBacenta }) => {
   const history = useHistory()
 
   const [CloseDownBacenta] = useMutation(MAKE_BACENTA_INACTIVE)
-  const {
-    data: townsData,
-    loading: townsLoading,
-    error: townsError,
-  } = useQuery(GET_COUNCIL_TOWNS, {
-    variables: { id: councilId },
-  })
-  const {
-    data: campusesData,
-    loading: campusesLoading,
-    error: campusesError,
-  } = useQuery(GET_COUNCIL_CAMPUSES, {
+  const { data, loading, error } = useQuery(GET_COUNCIL_CONSTITUENCIES, {
     variables: { id: councilId },
   })
 
-  const townOptions = makeSelectOptions(townsData?.councils[0]?.towns)
-  const campusOptions = makeSelectOptions(campusesData?.councils[0]?.campuses)
+  const constituencyOptions = makeSelectOptions(
+    data?.councils[0]?.constituencies
+  )
 
   const validationSchema = Yup.object({
-    bacentaName: Yup.string().required('Bacenta Name is a required field'),
+    name: Yup.string().required('Bacenta Name is a required field'),
     leaderId: Yup.string().required('Please choose a leader from the dropdown'),
     fellowships: newBacenta
       ? null
@@ -59,14 +48,10 @@ const BacentaForm = ({ initialValues, onSubmit, title, newBacenta }) => {
   })
 
   return (
-    <BaseComponent
-      loading={campusesLoading || townsLoading}
-      error={townsError || campusesError}
-      data={townsData && campusesData}
-    >
+    <BaseComponent loading={loading} error={error} data={data}>
       <Container>
         <HeadingPrimary>{title}</HeadingPrimary>
-        <HeadingSecondary>{initialValues.bacentaName}</HeadingSecondary>
+        <HeadingSecondary>{initialValues.name}</HeadingSecondary>
       </Container>
       <Formik
         initialValues={initialValues}
@@ -86,21 +71,15 @@ const BacentaForm = ({ initialValues, onSubmit, title, newBacenta }) => {
                         <FormikControl
                           className="form-control"
                           control="select"
-                          label={`Select a ${capitalise(church.church)}`}
-                          name="campusTownSelect"
-                          options={
-                            church.church === 'town'
-                              ? townOptions
-                              : campusOptions
-                          }
-                          defaultOption={`Select a ${capitalise(
-                            church.church
-                          )}`}
+                          label={`Select a Constituency`}
+                          name="constituencySelect"
+                          options={constituencyOptions}
+                          defaultOption={`Select a Constituency`}
                         />
                         <FormikControl
                           className="form-control"
                           control="input"
-                          name="bacentaName"
+                          name="name"
                           label="Name of Bacenta"
                           placeholder="Enter Name Here"
                         />
@@ -112,9 +91,9 @@ const BacentaForm = ({ initialValues, onSubmit, title, newBacenta }) => {
                         roles={[
                           'adminFederal',
                           'adminCouncil',
-                          'adminCampus',
+                          'adminConstituency',
                           'adminTown',
-                          'leaderCampus',
+                          'leaderConstituency',
                           'leaderTown',
                         ]}
                       >

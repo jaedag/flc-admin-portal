@@ -3,10 +3,7 @@ import BaseComponent from 'components/base-component/BaseComponent'
 import { FieldArray, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import { makeSelectOptions, throwErrorMsg } from 'global-utils'
-import {
-  COUNCIL_MEMBER_DROPDOWN,
-  GET_COUNCIL_CONSTITUENCIES,
-} from 'queries/ListQueries'
+import { GET_COUNCIL_CONSTITUENCIES } from 'queries/ListQueries'
 import React, { useContext } from 'react'
 import { ChurchContext } from 'contexts/ChurchContext'
 import FormikControl from 'components/formik-components/FormikControl'
@@ -97,20 +94,13 @@ const BacentaForm = ({ initialValues, onSubmit, title, newBacenta }) => {
                       >
                         <Col>
                           <FormikControl
-                            control="combobox2"
+                            control="memberSearch"
                             name="leaderId"
                             initialValue={initialValues?.leaderName}
                             placeholder="Start typing"
                             label="Select a Leader"
                             setFieldValue={formik.setFieldValue}
-                            optionsQuery={COUNCIL_MEMBER_DROPDOWN}
-                            queryVariable1="id"
-                            variable1={councilId}
-                            queryVariable2="nameSearch"
-                            suggestionText="name"
-                            suggestionID="id"
-                            dataset="councilMemberDropdown"
-                            aria-describedby="Council Member List"
+                            aria-describedby="Member Search Box"
                             className="form-control"
                             error={formik.errors.leaderId}
                           />

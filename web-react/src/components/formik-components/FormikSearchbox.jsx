@@ -18,7 +18,6 @@ function FormikSearchbox(props) {
   const { label, name, placeholder, setFieldValue } = props
 
   const [searchString, setSearchString] = useState('')
-  const [debouncedText, setDebouncedText] = useState('')
   const [suggestions, setSuggestions] = useState([])
   const { clickCard } = useContext(ChurchContext)
   const { currentUser } = useContext(MemberContext)
@@ -116,15 +115,14 @@ function FormikSearchbox(props) {
   }
   useEffect(() => {
     const timerId = setTimeout(() => {
-      whichSearch(debouncedText)
-      setDebouncedText(searchString)
+      whichSearch(searchString)
       return
     }, 200)
 
     return () => {
       clearTimeout(timerId)
     }
-  }, [searchString, debouncedText])
+  }, [searchString])
 
   return (
     <div>
@@ -156,9 +154,7 @@ function FormikSearchbox(props) {
           if (method === 'enter') {
             event.preventDefault()
           }
-          setDebouncedText(
-            suggestion.name ?? suggestion.firstName + ' ' + suggestion.lastName
-          )
+
           setFieldValue(`${name}`, suggestion.id)
           clickCard(suggestion)
           history.push(`/${suggestion.__typename.toLowerCase()}/displaydetails`)

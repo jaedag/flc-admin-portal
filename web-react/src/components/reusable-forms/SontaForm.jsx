@@ -2,11 +2,7 @@ import BaseComponent from 'components/base-component/BaseComponent'
 import { Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import { makeSelectOptions } from 'global-utils'
-import {
-  COUNCIL_MEMBER_DROPDOWN,
-  GET_COUNCIL_CONSTITUENCIES,
-  GET_MINISTRIES,
-} from 'queries/ListQueries'
+import { GET_COUNCIL_CONSTITUENCIES, GET_MINISTRIES } from 'queries/ListQueries'
 import React, { useContext } from 'react'
 import FormikControl from 'components/formik-components/FormikControl'
 import { ChurchContext } from 'contexts/ChurchContext'
@@ -128,20 +124,13 @@ const SontaForm = ({ initialValues, onSubmit, title, loading, newSonta }) => {
                     <div className="row d-flex align-items-center">
                       <div className="col">
                         <FormikControl
-                          control="combobox2"
+                          control="memberSearch"
                           name="leaderId"
                           initialValue={initialValues?.leaderName}
                           label="Select a Leader"
                           placeholder="Select a Leader"
                           setFieldValue={formik.setFieldValue}
-                          optionsQuery={COUNCIL_MEMBER_DROPDOWN}
-                          queryVariable1="id"
-                          variable1={councilId}
-                          queryVariable2="nameSearch"
-                          suggestionText="name"
-                          suggestionID="id"
-                          dataset="councilMemberDropdown"
-                          aria-describedby="Bishop Member List"
+                          aria-describedby="Member Search Box"
                           className="form-control"
                           error={formik.errors.leaderId}
                         />

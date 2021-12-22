@@ -9,7 +9,6 @@ import {
   VACATION_OPTIONS,
 } from 'global-utils'
 import {
-  COUNCIL_MEMBER_DROPDOWN,
   GET_COUNCIL_CONSTITUENCIES,
   GET_CONSTITUENCY_BACENTAS,
 } from 'queries/ListQueries'
@@ -102,7 +101,13 @@ const FellowshipForm = (props) => {
                   {/* <!-- Basic Info Div --> */}
                   <Col className="mb-2">
                     <Row className="form-row">
-                      <RoleView roles={['adminCouncil', 'adminConstituency']}>
+                      <RoleView
+                        roles={[
+                          'adminFederal',
+                          'adminCouncil',
+                          'adminConstituency',
+                        ]}
+                      >
                         <Col>
                           <FormikControl
                             className="form-control"
@@ -138,7 +143,13 @@ const FellowshipForm = (props) => {
                     </Row>
 
                     <Row className="form-row">
-                      <RoleView roles={['adminCouncil', 'adminConstituency']}>
+                      <RoleView
+                        roles={[
+                          'adminFederal',
+                          'adminCouncil',
+                          'adminConstituency',
+                        ]}
+                      >
                         <Col sm={12}>
                           <FormikControl
                             className="form-control"
@@ -179,20 +190,13 @@ const FellowshipForm = (props) => {
                       >
                         <Col sm={12}>
                           <FormikControl
-                            control="combobox2"
+                            control="memberSearch"
                             name="leaderId"
                             label="Fellowship Leader"
                             initialValue={props.initialValues.leaderName}
                             placeholder="Select a Leader"
                             setFieldValue={formik.setFieldValue}
-                            optionsQuery={COUNCIL_MEMBER_DROPDOWN}
-                            queryVariable1="id"
-                            variable1={councilId}
-                            queryVariable2="nameSearch"
-                            suggestionText="name"
-                            suggestionID="id"
-                            dataset="councilMemberDropdown"
-                            aria-describedby="Council Member List"
+                            aria-describedby="Member Search Box"
                             className="form-control"
                             error={formik.errors.leaderId}
                           />

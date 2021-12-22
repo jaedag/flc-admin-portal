@@ -259,6 +259,14 @@ type GatheringService {
       RETURN DISTINCT members
       """
     )
+  memberSearch(key: String!, limit: Int!): [Member]
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*5]->(:Fellowship)<-[:BELONGS_TO]-(members:Member)
+      WHERE toLower(members.firstName+ ' ' + members.lastName) CONTAINS toLower($key)
+      RETURN DISTINCT members LIMIT $limit
+      """
+    )
   memberCount: Int
     @cypher(
       statement: """
@@ -336,6 +344,14 @@ type Stream {
       RETURN DISTINCT members
       """
     )
+  memberSearch(key: String!, limit: Int!): [Member]
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*4]->(:Fellowship)<-[:BELONGS_TO]-(members:Member)
+      WHERE toLower(members.firstName+ ' ' + members.lastName) CONTAINS toLower($key)
+      RETURN DISTINCT members LIMIT $limit
+      """
+    )
   memberCount: Int
     @cypher(
       statement: """
@@ -399,6 +415,14 @@ type Council {
       statement: """
       MATCH (this)-[:HAS*3]->(:Fellowship)<-[:BELONGS_TO]-(members:Member)
       RETURN DISTINCT members
+      """
+    )
+  memberSearch(key: String!, limit: Int!): [Member]
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*3]->(:Fellowship)<-[:BELONGS_TO]-(members:Member)
+      WHERE toLower(members.firstName+ ' ' + members.lastName) CONTAINS toLower($key)
+      RETURN DISTINCT members LIMIT $limit
       """
     )
   memberCount: Int
@@ -569,6 +593,14 @@ type Constituency {
       RETURN DISTINCT members
       """
     )
+  memberSearch(key: String!, limit: Int!): [Member]
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*2]->(:Fellowship)<-[:BELONGS_TO]-(members:Member)
+      WHERE toLower(members.firstName+ ' ' + members.lastName) CONTAINS toLower($key)
+      RETURN DISTINCT members LIMIT $limit
+      """
+    )
   memberCount: Int
     @cypher(
       statement: """
@@ -729,6 +761,14 @@ type Bacenta {
       RETURN DISTINCT members
       """
     )
+  memberSearch(key: String!, limit: Int!): [Member]
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS]->(:Fellowship)<-[:BELONGS_TO]-(members:Member)
+      WHERE toLower(members.firstName+ ' ' + members.lastName) CONTAINS toLower($key)
+      RETURN DISTINCT members LIMIT $limit
+      """
+    )
   memberCount: Int
     @cypher(
       statement: """
@@ -775,6 +815,14 @@ type Fellowship {
   bacenta: Bacenta @relationship(type: "HAS", direction: IN)
   leader: Member @relationship(type: "LEADS", direction: IN)
   members: [Member] @relationship(type: "BELONGS_TO", direction: IN)
+  memberSearch(key: String!, limit: Int!): [Member]
+    @cypher(
+      statement: """
+      MATCH (this)<-[:BELONGS_TO]-(members:Member)
+      WHERE toLower(members.firstName+ ' ' + members.lastName) CONTAINS toLower($key)
+      RETURN DISTINCT members LIMIT $limit
+      """
+    )
   memberCount: Int
     @cypher(
       statement: """
@@ -822,6 +870,14 @@ type ClosedFellowship {
   bacenta: Bacenta @relationship(type: "HAS", direction: IN)
   leader: Member @relationship(type: "LEADS", direction: IN)
   members: [Member] @relationship(type: "BELONGS_TO", direction: IN)
+  memberSearch(key: String!, limit: Int!): [Member]
+    @cypher(
+      statement: """
+      MATCH (this)<-[:BELONGS_TO]-(members:Member)
+      WHERE toLower(members.firstName+ ' ' + members.lastName) CONTAINS toLower($key)
+      RETURN DISTINCT members LIMIT $limit
+      """
+    )
   memberCount: Int
     @cypher(
       statement: """

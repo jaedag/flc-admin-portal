@@ -3,7 +3,7 @@ import BaseComponent from 'components/base-component/BaseComponent'
 import { FieldArray, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import { makeSelectOptions } from 'global-utils'
-import { COUNCIL_MEMBER_DROPDOWN, GET_COUNCILS } from 'queries/ListQueries'
+import { GET_COUNCILS } from 'queries/ListQueries'
 import React, { useContext } from 'react'
 import { ChurchContext } from 'contexts/ChurchContext'
 import FormikControl from 'components/formik-components/FormikControl'
@@ -113,20 +113,13 @@ const ConstituencyForm = ({
                       >
                         <Col>
                           <FormikControl
-                            control="combobox2"
+                            control="memberSearch"
                             name="leaderId"
                             label="Choose a CO"
                             placeholder="Start typing..."
                             initialValue={initialValues?.leaderName}
                             setFieldValue={formik.setFieldValue}
-                            optionsQuery={COUNCIL_MEMBER_DROPDOWN}
-                            queryVariable1="id"
-                            variable1={councilId}
-                            queryVariable2="nameSearch"
-                            suggestionText="name"
-                            suggestionID="id"
-                            dataset="councilMemberDropdown"
-                            aria-describedby="Council Member List"
+                            aria-describedby="Member Search Box"
                             className="form-control"
                             error={formik.errors.leaderId}
                           />

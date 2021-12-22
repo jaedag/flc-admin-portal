@@ -9,12 +9,12 @@ const MemberRoleList = ({ member }) => {
     return null
   }
 
-  const { clickCard, determineStream } = useContext(ChurchContext)
+  const { clickCard } = useContext(ChurchContext)
   const history = useHistory()
 
   //To Display Ranks on the Member Card
   let rank = {
-    bishop: [],
+    councilLeader: [],
     constituencyLeader: [],
     sontaLeader: [],
     basontaLeader: [],
@@ -30,9 +30,10 @@ const MemberRoleList = ({ member }) => {
     if (churchType === 'bishop') {
       if (member.leadsCouncil[0]) {
         member.leadsCouncil.map((church) => {
-          rank.bishop.push({
+          rank.councilLeader.push({
             name: church.name,
             church: church,
+            link: '/council/displaydetails',
             id: church.id,
             stream_name: church.stream_name,
             __typename: church.__typename,
@@ -130,15 +131,6 @@ const MemberRoleList = ({ member }) => {
         {/* <DashboardButton btnLink="/dashboard/servants">
         View Records
       </DashboardButton> */}
-
-        {member.leadsCouncil[0] && (
-          <span
-            onClick={() => {
-              determineStream(member)
-              history.push('/dashboard')
-            }}
-          >{`Bishop in the First Love Bacenta`}</span>
-        )}
 
         {
           //Rank Discussions */}

@@ -12,7 +12,6 @@ import RoleView from '../../auth/RoleView'
 import { Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import Popup from '../Popup/Popup'
-import { COUNCIL_MEMBER_DROPDOWN } from '../../queries/ListQueries'
 import { useMutation } from '@apollo/client'
 import { MAKE_CONSTITUENCY_ADMIN } from './AdminMutations'
 import FormikControl from '../formik-components/FormikControl'
@@ -29,7 +28,7 @@ const DisplayChurchDetails = (props) => {
   const { setMemberId, theme, setCurrentUser, currentUser } =
     useContext(MemberContext)
   const [submitting, setSubmitting] = useState(false)
-  const { clickCard, togglePopup, isOpen, constituencyId, councilId } =
+  const { clickCard, togglePopup, isOpen, constituencyId } =
     useContext(ChurchContext)
 
   //Change Admin Initialised
@@ -122,19 +121,12 @@ const DisplayChurchDetails = (props) => {
                     <Row className="form-row">
                       <Col>
                         <FormikControl
-                          control="combobox2"
+                          control="memberSearch"
                           name="adminSelect"
                           initialValue={initialValues?.adminName}
                           placeholder="Select an Admin"
                           setFieldValue={formik.setFieldValue}
-                          optionsQuery={COUNCIL_MEMBER_DROPDOWN}
-                          queryVariable1="id"
-                          variable1={councilId}
-                          queryVariable2="nameSearch"
-                          suggestionText="name"
-                          suggestionID="id"
-                          dataset="councilMemberDropdown"
-                          aria-describedby="Council Member List"
+                          aria-describedby="Member Search"
                           className="form-control"
                           error={formik.errors.admin}
                         />
@@ -247,7 +239,7 @@ const DisplayChurchDetails = (props) => {
           </Button>
         </div>
 
-        {props?.location?.latitude && (
+        {props?.location?.latitude !== 0 && (
           <Container className="mt-4 text-center">
             <h3>LOCATION</h3>
             <p>Click here for directions</p>

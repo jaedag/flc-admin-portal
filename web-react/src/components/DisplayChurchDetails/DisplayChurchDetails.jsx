@@ -239,7 +239,7 @@ const DisplayChurchDetails = (props) => {
           </Button>
         </div>
 
-        {props?.location?.latitude !== 0 && (
+        {props?.location && props.location?.latitude !== 0 && (
           <Container className="mt-4 text-center">
             <h3>LOCATION</h3>
             <p>Click here for directions</p>

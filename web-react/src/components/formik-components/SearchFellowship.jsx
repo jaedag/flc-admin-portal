@@ -5,69 +5,59 @@ import { DEBOUNCE_TIMER, isAuthorised, throwErrorMsg } from 'global-utils'
 import React, { useContext, useEffect, useState } from 'react'
 import Autosuggest from 'react-autosuggest'
 import {
-  COUNCIL_MEMBER_SEARCH,
-  GATHERINGSERVICE_MEMBER_SEARCH,
-  STREAM_MEMBER_SEARCH,
-  CONSTITUENCY_MEMBER_SEARCH,
-  BACENTA_MEMBER_SEARCH,
-  FELLOWSHIP_MEMBER_SEARCH,
-} from './MemberSearchQueries'
+  COUNCIL_FELLOWSHIP_SEARCH,
+  GATHERINGSERVICE_FELLOWSHIP_SEARCH,
+  STREAM_FELLOWSHIP_SEARCH,
+  CONSTITUENCY_FELLOWSHIP_SEARCH,
+  BACENTA_FELLOWSHIP_SEARCH,
+} from './SearchFellowshipQueries'
 import TextError from './TextError'
 
-const MemberSearch = (props) => {
+const SearchFellowship = (props) => {
   const { currentUser } = useContext(MemberContext)
   const [suggestions, setSuggestions] = useState([])
   const [searchString, setSearchString] = useState(props.initialValue ?? '')
 
   const [gatheringServiceSearch, { error: gatheringServiceError }] =
-    useLazyQuery(GATHERINGSERVICE_MEMBER_SEARCH, {
+    useLazyQuery(GATHERINGSERVICE_FELLOWSHIP_SEARCH, {
       onCompleted: (data) => {
-        setSuggestions(data.gatheringServices[0].memberSearch)
+        setSuggestions(data.gatheringServices[0].fellowshipSearch)
         return
       },
     })
   const [streamSearch, { error: streamError }] = useLazyQuery(
-    STREAM_MEMBER_SEARCH,
+    STREAM_FELLOWSHIP_SEARCH,
     {
       onCompleted: (data) => {
-        setSuggestions(data.streamSearch[0].memberSearch)
+        setSuggestions(data.streamSearch[0].fellowshipSearch)
         return
       },
     }
   )
   const [councilSearch, { error: councilError }] = useLazyQuery(
-    COUNCIL_MEMBER_SEARCH,
+    COUNCIL_FELLOWSHIP_SEARCH,
     {
       onCompleted: (data) => {
-        setSuggestions(data.councilSearch[0].memberSearch)
+        setSuggestions(data.councilSearch[0].fellowshipSearch)
         return
       },
     }
   )
 
   const [constituencySearch, { error: constituencyError }] = useLazyQuery(
-    CONSTITUENCY_MEMBER_SEARCH,
+    CONSTITUENCY_FELLOWSHIP_SEARCH,
     {
       onCompleted: (data) => {
-        setSuggestions(data.constituencySearch[0].memberSearch)
+        setSuggestions(data.constituencySearch[0].fellowshipSearch)
         return
       },
     }
   )
   const [bacentaSearch, { error: bacentaError }] = useLazyQuery(
-    BACENTA_MEMBER_SEARCH,
+    BACENTA_FELLOWSHIP_SEARCH,
     {
       onCompleted: (data) => {
-        setSuggestions(data.bacentaSearch[0].memberSearch)
-        return
-      },
-    }
-  )
-  const [fellowshipSearch, { error: fellowshipError }] = useLazyQuery(
-    FELLOWSHIP_MEMBER_SEARCH,
-    {
-      onCompleted: (data) => {
-        setSuggestions(data.fellowshipSearch[0].memberSearch)
+        setSuggestions(data.bacentaSearch[0].fellowshipSearch)
         return
       },
     }
@@ -78,8 +68,7 @@ const MemberSearch = (props) => {
     streamError ||
     councilError ||
     constituencyError ||
-    bacentaError ||
-    fellowshipError
+    bacentaError
   throwErrorMsg(error)
 
   const whichSearch = (searchString) => {
@@ -124,13 +113,6 @@ const MemberSearch = (props) => {
       bacentaSearch({
         variables: {
           id: currentUser.fellowship.bacenta.id,
-          key: searchString?.trim(),
-        },
-      })
-    } else if (isAuthorised(['leaderFellowship'], currentUser.roles)) {
-      fellowshipSearch({
-        variables: {
-          id: currentUser.fellowship.id,
           key: searchString?.trim(),
         },
       })
@@ -180,18 +162,14 @@ const MemberSearch = (props) => {
           if (method === 'enter') {
             event.preventDefault()
           }
-          setSearchString(suggestion.firstName + ' ' + suggestion.lastName)
+          setSearchString(suggestion.name)
 
           props.setFieldValue(`${props.name}`, suggestion.id)
         }}
-        getSuggestionValue={(suggestion) =>
-          suggestion.firstName + ' ' + suggestion.lastName
-        }
+        getSuggestionValue={(suggestion) => suggestion.name}
         highlightFirstSuggestion={true}
         renderSuggestion={(suggestion) => (
-          <div className="combobox-control">
-            {suggestion.firstName + ' ' + suggestion.lastName}
-          </div>
+          <div className="combobox-control">{suggestion.name}</div>
         )}
       />
 
@@ -201,4 +179,4 @@ const MemberSearch = (props) => {
   )
 }
 
-export default MemberSearch
+export default SearchFellowship

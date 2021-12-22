@@ -9,7 +9,6 @@ import { ChurchContext } from 'contexts/ChurchContext'
 import FormikControl from 'components/formik-components/FormikControl'
 import PlusSign from 'components/buttons/PlusMinusSign/PlusSign'
 import MinusSign from 'components/buttons/PlusMinusSign/MinusSign'
-import { COUNCIL_BACENTA_DROPDOWN } from 'components/formik-components/ComboboxQueries'
 import { MAKE_CONSTITUENCY_INACTIVE } from 'pages/update/CloseChurchMutations'
 import { useHistory } from 'react-router'
 import Popup from 'components/Popup/Popup'
@@ -25,7 +24,7 @@ const ConstituencyForm = ({
   title,
   newConstituency,
 }) => {
-  const { togglePopup, isOpen, clickCard, constituencyId, councilId } =
+  const { togglePopup, isOpen, clickCard, constituencyId } =
     useContext(ChurchContext)
   const { theme } = useContext(MemberContext)
 
@@ -142,20 +141,11 @@ const ConstituencyForm = ({
                               <Row key={index} className="form-row">
                                 <Col>
                                   <FormikControl
-                                    control="combobox2"
+                                    control="bacentaSearch"
                                     name={`bacentas[${index}]`}
                                     placeholder="Bacenta Name"
                                     initialValue={bacenta?.name}
                                     setFieldValue={formik.setFieldValue}
-                                    optionsQuery={COUNCIL_BACENTA_DROPDOWN}
-                                    queryVariable1="id"
-                                    variable1={councilId}
-                                    queryVariable2="nameSearch"
-                                    suggestionText="name"
-                                    suggestionID="id"
-                                    dataset="councilBacentaDropdown"
-                                    church="bacenta"
-                                    returnObject={!newConstituency && true}
                                     aria-describedby="Bacenta Name"
                                     className="form-control"
                                     error={

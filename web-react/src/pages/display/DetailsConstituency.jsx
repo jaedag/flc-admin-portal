@@ -16,21 +16,21 @@ const DetailsConstituency = () => {
   return (
     <BaseComponent loading={loading} error={error} data={data}>
       <DisplayChurchDetails
-        name={data?.constituencies[0].name}
+        name={data?.constituencies[0]?.name}
         leaderTitle={'Constituency Overseer'}
-        membership={data?.constituencies[0].memberCount}
-        leader={data?.constituencies[0].leader}
+        membership={data?.constituencies[0]?.memberCount}
+        leader={data?.constituencies[0]?.leader}
         churchId={constituencyId}
         churchHeading="Bacentas"
         church2Heading="Fellowships"
-        churchCount={data?.constituencies[0].bacentas.length}
-        church2Count={data?.constituencies[0].fellowshipCount}
-        admin={data?.constituencies[0].admin}
+        churchCount={data?.constituencies[0]?.bacentas.length}
+        church2Count={data?.constituencies[0]?.fellowshipCount}
+        admin={data?.constituencies[0]?.admin}
         churchType={`Constituency`}
         subChurch={`Bacenta`}
         subChurchBasonta="Sonta"
-        buttons={data?.constituencies[0].bacentas}
-        buttonsSecondRow={data?.constituencies[0].sontas}
+        buttons={data?.constituencies[0]?.bacentas}
+        buttonsSecondRow={data?.constituencies[0]?.sontas}
         editlink="/constituency/editconstituency"
         editPermitted={['adminCouncil', 'adminFederal']}
         history={

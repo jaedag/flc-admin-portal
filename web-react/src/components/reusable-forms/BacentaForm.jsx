@@ -9,7 +9,6 @@ import { ChurchContext } from 'contexts/ChurchContext'
 import FormikControl from 'components/formik-components/FormikControl'
 import PlusSign from 'components/buttons/PlusMinusSign/PlusSign'
 import MinusSign from 'components/buttons/PlusMinusSign/MinusSign'
-import { COUNCIL_FELLOWSHIP_DROPDOWN } from 'components/formik-components/ComboboxQueries'
 import { useHistory } from 'react-router'
 import { MAKE_BACENTA_INACTIVE } from 'pages/update/CloseChurchMutations'
 import Popup from 'components/Popup/Popup'
@@ -123,20 +122,11 @@ const BacentaForm = ({ initialValues, onSubmit, title, newBacenta }) => {
                               <Row key={index} className="form-row">
                                 <Col>
                                   <FormikControl
-                                    control="combobox2"
+                                    control="fellowshipSearch"
                                     name={`fellowships[${index}]`}
                                     initialValue={fellowship?.name}
                                     placeholder="Enter Fellowship Name"
                                     setFieldValue={formik.setFieldValue}
-                                    optionsQuery={COUNCIL_FELLOWSHIP_DROPDOWN}
-                                    queryVariable1="id"
-                                    variable1={councilId}
-                                    queryVariable2="fellowshipName"
-                                    suggestionText="name"
-                                    suggestionID="id"
-                                    returnObject={!newBacenta && true}
-                                    church="fellowship"
-                                    dataset="councilFellowshipDropdown"
                                     aria-describedby="Fellowship Name"
                                     className="form-control"
                                     error={

@@ -233,9 +233,9 @@ const DisplayPage = () => {
                     </div>
                   </Stack>
                 </Accordion>
-              </Col>
-              <Col className="mt-3 text-center">
-                <AuthButton mobileFullSize />
+                <div className="mt-3 text-center">
+                  <AuthButton mobileFullSize />
+                </div>
               </Col>
             </Row>
           </div>

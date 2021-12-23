@@ -16,7 +16,7 @@ import React, { useContext, useState } from 'react'
 import { ChurchContext } from 'contexts/ChurchContext'
 import FormikControl from 'components/formik-components/FormikControl'
 import { MAKE_FELLOWSHIP_INACTIVE } from 'pages/update/CloseChurchMutations'
-import { useHistory } from 'react-router'
+import { useNavigate } from 'react-router'
 import Popup from 'components/Popup/Popup'
 import RoleView from 'auth/RoleView'
 import { Container, Row, Col, Button, Spinner } from 'react-bootstrap'
@@ -32,7 +32,7 @@ const FellowshipForm = (props) => {
     useContext(ChurchContext)
 
   const { theme } = useContext(MemberContext)
-  const history = useHistory()
+  const navigate = useNavigate()
 
   const { data, error } = useQuery(GET_COUNCIL_CONSTITUENCIES, {
     variables: { id: councilId },
@@ -289,7 +289,7 @@ const FellowshipForm = (props) => {
                       .then((res) => {
                         clickCard(res.data.CloseDownFellowship.bacenta)
                         togglePopup()
-                        history.push('/bacenta/displaydetails')
+                        navigate('/bacenta/displaydetails')
                       })
                       .catch((error) => {
                         // eslint-disable-next-line no-console

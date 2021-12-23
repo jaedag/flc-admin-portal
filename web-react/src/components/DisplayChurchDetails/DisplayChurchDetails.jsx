@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react'
-import { Link, useHistory } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import DetailsCard from '../card/DetailsCard'
 import { MemberContext } from '../../contexts/MemberContext'
 import { ChurchContext } from '../../contexts/ChurchContext'
@@ -23,7 +23,7 @@ import { Geo, PencilSquare } from 'react-bootstrap-icons'
 import ViewAll from 'components/buttons/ViewAll'
 
 const DisplayChurchDetails = (props) => {
-  const history = useHistory()
+  const navigate = useNavigate()
   const isConstituency = props.churchType === 'Constituency'
   const { setMemberId, theme, setCurrentUser, currentUser } =
     useContext(MemberContext)
@@ -178,7 +178,7 @@ const DisplayChurchDetails = (props) => {
           <Col>
             <DetailsCard
               onClick={() =>
-                history.push(`/${props.subChurch.toLowerCase()}/displayall`)
+                navigate(`/${props.subChurch.toLowerCase()}/displayall`)
               }
               heading={props.churchHeading}
               detail={props.churchCount}
@@ -188,7 +188,7 @@ const DisplayChurchDetails = (props) => {
           <Col className={!props.loading && `col-auto`}>
             <DetailsCard
               onClick={() =>
-                history.push(`/${props.churchType.toLowerCase()}/members`)
+                navigate(`/${props.churchType.toLowerCase()}/members`)
               }
               heading="Members"
               detail={!props.loading && (props.membership || '0')}
@@ -201,7 +201,7 @@ const DisplayChurchDetails = (props) => {
             {props.details.map((detail, i) => (
               <Col key={i} xs={detail.width ?? 6}>
                 <DetailsCard
-                  onClick={() => history.push(detail.link)}
+                  onClick={() => navigate(detail.link)}
                   heading={detail.title}
                   detail={detail.number}
                 />
@@ -215,7 +215,7 @@ const DisplayChurchDetails = (props) => {
           <Button
             className={`btn-trends ${theme}`}
             onClick={() => {
-              history.push(`/${props.churchType.toLowerCase()}/reports`)
+              navigate(`/${props.churchType.toLowerCase()}/reports`)
             }}
           >
             View Trends
@@ -232,7 +232,7 @@ const DisplayChurchDetails = (props) => {
                   __typename: props.churchType,
                 },
               })
-              history.push(`/services/${props.churchType.toLowerCase()}`)
+              navigate(`/services/${props.churchType.toLowerCase()}`)
             }}
           >
             Service Forms

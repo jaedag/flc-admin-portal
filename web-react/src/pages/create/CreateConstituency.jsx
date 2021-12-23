@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useMutation } from '@apollo/client'
 import { throwErrorMsg } from '../../global-utils'
 import { GET_COUNCIL_CONSTITUENCIES } from '../../queries/ListQueries'
@@ -12,7 +12,7 @@ const CreateConstituency = () => {
   const { clickCard, councilId, setConstituencyId, setCouncilId } =
     useContext(ChurchContext)
 
-  const history = useHistory()
+  const navigate = useNavigate()
 
   const initialValues = {
     name: '',
@@ -28,7 +28,7 @@ const CreateConstituency = () => {
     ],
     onCompleted: (newConstituencyData) => {
       setConstituencyId(newConstituencyData.CreateConstituency.id)
-      history.push(`/constituency/displaydetails`)
+      navigate(`/constituency/displaydetails`)
     },
   })
 
@@ -56,7 +56,7 @@ const CreateConstituency = () => {
           throwErrorMsg('There was an error adding leader', error)
         })
 
-        history.push(`/constituency/displaydetails`)
+        navigate(`/constituency/displaydetails`)
       })
       .catch((error) => throwErrorMsg('There was an error', error))
 

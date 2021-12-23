@@ -2,7 +2,7 @@ import FormikControl from 'components/formik-components/FormikControl'
 import { Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import React, { useContext } from 'react'
-import { useHistory } from 'react-router'
+import { useNavigate } from 'react-router'
 import { ServiceContext } from 'contexts/ServiceContext'
 import { RECORD_CANCELLED_SERVICE } from './RecordServiceMutations'
 import { useMutation } from '@apollo/client'
@@ -14,7 +14,7 @@ import { MemberContext } from 'contexts/MemberContext'
 const CancelledServiceForm = ({ church, churchId, churchType }) => {
   const { theme } = useContext(MemberContext)
   const { setServiceRecordId } = useContext(ServiceContext)
-  const history = useHistory()
+  const navigate = useNavigate()
 
   const [RecordCancelledService] = useMutation(RECORD_CANCELLED_SERVICE)
 
@@ -41,7 +41,7 @@ const CancelledServiceForm = ({ church, churchId, churchType }) => {
       onSubmitProps.setSubmitting(false)
       onSubmitProps.resetForm()
       setServiceRecordId(res.data.RecordCancelledService.id)
-      history.push(`/${churchType}/service-details`)
+      navigate(`/${churchType}/service-details`)
     })
   }
 

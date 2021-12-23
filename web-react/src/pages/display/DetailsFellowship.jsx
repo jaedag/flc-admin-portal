@@ -20,7 +20,7 @@ const DetailsFellowship = () => {
   })
   throwErrorMsg(fellowshipError)
   const fellowship = fellowshipData?.fellowships[0]
-  const history = historyData?.fellowships[0]
+  const navigate = historyData?.fellowships[0]
 
   let breadcrumb = [
     fellowship?.bacenta?.constituency?.council,

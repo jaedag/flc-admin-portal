@@ -5,11 +5,11 @@ import * as Yup from 'yup'
 import { Col, Button, Nav } from 'react-bootstrap'
 import './SearchBox.css'
 import { SearchContext } from 'contexts/MemberContext'
-import { useHistory } from 'react-router'
+import { useNavigate } from 'react-router'
 
 function SearchBox() {
   const { setSearchKey } = useContext(SearchContext)
-  const history = useHistory()
+  const navigate = useNavigate()
   const initialValues = {
     searchKeyVal: '',
   }
@@ -46,7 +46,7 @@ function SearchBox() {
                 type="submit"
                 onClick={() => {
                   setSearchKey(formik.values.searchKey)
-                  history.push('/search-results')
+                  navigate('/search-results')
                 }}
               >
                 Search

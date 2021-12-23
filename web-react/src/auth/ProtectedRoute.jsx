@@ -52,16 +52,16 @@ const ProtectedRoute = ({ component, roles, placeholder, ...args }) => {
 
   if (isAuthorised(roles, currentUser.roles)) {
     //if the user has permission to access the route
-    return <Route component={component} {...args} />
+    return <Route element={component} {...args} />
   } else if (currentUser.roles.includes('leaderFellowship')) {
     //If the user does not have permission but is a Fellowship Leader
     church.setFellowshipId(currentUser.fellowship.id)
-    return <Route component={component} {...args} />
+    return <Route element={component} {...args} />
   } else if (placeholder && isAuthenticated) {
     //If the user does not have permission but is a Fellowship Leader
     return (
       <Route
-        component={withAuthenticationRequired(component, {
+        element={withAuthenticationRequired(component, {
           // eslint-disable-next-line react/display-name
           onRedirecting: () => component,
         })}

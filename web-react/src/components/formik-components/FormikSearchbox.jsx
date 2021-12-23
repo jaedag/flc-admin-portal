@@ -4,7 +4,7 @@ import './react-autosuggest.css'
 import { useLazyQuery } from '@apollo/client'
 import { ErrorMessage } from 'formik'
 import TextError from './TextError'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import {
   COUNCIL_SEARCH,
   CONSTITUENCY_SEARCH,
@@ -21,7 +21,7 @@ function FormikSearchbox(props) {
   const [suggestions, setSuggestions] = useState([])
   const { clickCard } = useContext(ChurchContext)
   const { currentUser } = useContext(MemberContext)
-  const history = useHistory()
+  const navigate = useNavigate()
 
   const getSuggestions = (data) => {
     setSuggestions(
@@ -157,7 +157,7 @@ function FormikSearchbox(props) {
 
           setFieldValue(`${name}`, suggestion.id)
           clickCard(suggestion)
-          history.push(`/${suggestion.__typename.toLowerCase()}/displaydetails`)
+          navigate(`/${suggestion.__typename.toLowerCase()}/displaydetails`)
         }}
         getSuggestionValue={(suggestion) =>
           `${

@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useMutation } from '@apollo/client'
 import { parsePhoneNum, throwErrorMsg } from '../../global-utils'
 import {
@@ -63,7 +63,7 @@ const CreateMember = () => {
 
   const [AddMemberTitle] = useMutation(ADD_MEMBER_TITLE_MUTATION)
 
-  const history = useHistory()
+  const navigate = useNavigate()
 
   const onSubmit = async (values, onSubmitProps) => {
     const { setSubmitting, resetForm } = onSubmitProps
@@ -110,7 +110,7 @@ const CreateMember = () => {
 
         setSubmitting(false)
         resetForm()
-        history.push('/member/displaydetails')
+        navigate('/member/displaydetails')
       })
       .catch((err) =>
         throwErrorMsg('There was an error creating the member profile\n', err)

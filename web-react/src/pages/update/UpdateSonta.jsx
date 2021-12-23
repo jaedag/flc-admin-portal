@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/client'
 import { GET_CONSTITUENCY_BACENTAS } from '../../queries/ListQueries'
 import { UPDATE_SONTA_MUTATION } from './UpdateMutations'
@@ -18,7 +18,7 @@ const UpdateSonta = () => {
     variables: { id: sontaId },
   })
 
-  const history = useHistory()
+  const navigate = useNavigate()
   const sonta = sontaData?.sontas[0]
 
   const initialValues = {
@@ -78,7 +78,7 @@ const UpdateSonta = () => {
         leaderId: values.leaderId,
       },
     })
-      .then(() => history.push(`/sonta/displaydetails`))
+      .then(() => navigate(`/sonta/displaydetails`))
       .catch((error) =>
         throwErrorMsg('There was an error updating this sonta', error)
       )

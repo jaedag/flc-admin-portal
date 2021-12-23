@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { useHistory } from 'react-router'
+import { useNavigate } from 'react-router'
 import { useQuery } from '@apollo/client'
 import { ChurchContext } from 'contexts/ChurchContext'
 import { MemberContext } from 'contexts/MemberContext'
@@ -21,7 +21,7 @@ import BaseComponent from 'components/base-component/BaseComponent'
 const ServantsChurchList = () => {
   const { memberId } = useContext(MemberContext)
   const { clickCard } = useContext(ChurchContext)
-  const history = useHistory()
+  const navigate = useNavigate()
   const { data, loading, error } = useQuery(SERVANTS_DASHBOARD, {
     variables: { id: memberId },
   })
@@ -106,7 +106,7 @@ const ServantsChurchList = () => {
                 color="churches"
                 onClick={() => {
                   church.clickCard()
-                  history.push(church.link)
+                  navigate(church.link)
                 }}
               />
             )

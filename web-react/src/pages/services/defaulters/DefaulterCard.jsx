@@ -4,12 +4,12 @@ import { ServiceContext } from 'contexts/ServiceContext'
 import React, { useContext } from 'react'
 import { Card, Button } from 'react-bootstrap'
 import { TelephoneFill, Whatsapp } from 'react-bootstrap-icons'
-import { useHistory } from 'react-router'
+import { useNavigate } from 'react-router'
 
 const DefaulterCard = ({ defaulter, link }) => {
   const { setFellowshipId } = useContext(ChurchContext)
   const { setServiceRecordId } = useContext(ServiceContext)
-  const history = useHistory()
+  const navigate = useNavigate()
 
   const serviceDetails = defaulter?.services?.length && defaulter?.services[0]
   return (
@@ -22,9 +22,7 @@ const DefaulterCard = ({ defaulter, link }) => {
           onClick={() => {
             setFellowshipId(defaulter?.id)
 
-            history.push(
-              `/${defaulter?.__typename.toLowerCase()}/displaydetails`
-            )
+            navigate(`/${defaulter?.__typename.toLowerCase()}/displaydetails`)
           }}
           className="fw-bold"
         >
@@ -41,7 +39,7 @@ const DefaulterCard = ({ defaulter, link }) => {
             onClick={() => {
               setFellowshipId(defaulter?.id)
               setServiceRecordId(serviceDetails?.id)
-              history.push(
+              navigate(
                 link || `/${defaulter?.__typename.toLowerCase()}/displaydetails`
               )
             }}

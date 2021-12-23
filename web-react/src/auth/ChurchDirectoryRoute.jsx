@@ -33,26 +33,26 @@ const ChurchDirectoryRoute = ({ component, roles, ...args }) => {
 
   if (isAuthorised(roles, currentUser.roles)) {
     //if the user has permission to access the route
-    return <Route component={component} {...args} />
+    return <Route element={component} {...args} />
   } else if (isAuthorised(['adminCouncil', 'bishop'], currentUser.roles)) {
     //if the user does not have permission but is a Bishop's Admin
-    return <Route component={component} {...args} />
+    return <Route element={component} {...args} />
   } else if (
     isAuthorised(['leaderConstituency', 'adminConstituency'], currentUser.roles)
   ) {
     //If the user does not have permission but is a Constituency Leader or Admin
     church.setConstituencyId(currentUser.fellowship.bacenta.constituency.id)
-    return <Route component={Churches} />
+    return <Route element={Churches} />
   } else if (isAuthorised(['leaderBacenta'], currentUser.roles)) {
     //If the user does not have permission but is a Bacenta Leader
     church.setBacentaId(currentUser.fellowship.bacenta.id)
-    return <Route component={Churches} />
+    return <Route element={Churches} />
   } else if (isAuthorised(['leaderFellowship'], currentUser.roles)) {
     //If the user does not have permission but is a Fellowship Leader
     church.setFellowshipId(currentUser.fellowship.id)
-    return <Route component={Churches} />
+    return <Route element={Churches} />
   } else {
-    return <Route component={Churches} />
+    return <Route element={Churches} />
   }
 }
 

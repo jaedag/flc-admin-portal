@@ -14,7 +14,7 @@ import FormikControl from 'components/formik-components/FormikControl'
 import PlusSign from 'components/buttons/PlusMinusSign/PlusSign'
 import MinusSign from 'components/buttons/PlusMinusSign/MinusSign'
 import { MAKE_COUNCIL_INACTIVE } from 'pages/update/CloseChurchMutations'
-import { useHistory } from 'react-router'
+import { useNavigate } from 'react-router'
 import Popup from 'components/Popup/Popup'
 import RoleView from 'auth/RoleView'
 import { Spinner, Button, Container, Row, Col } from 'react-bootstrap'
@@ -27,7 +27,7 @@ const CouncilForm = ({ initialValues, onSubmit, title, newCouncil }) => {
     useContext(ChurchContext)
   const { theme } = useContext(MemberContext)
 
-  const history = useHistory()
+  const navigate = useNavigate()
   const { data, loading, error } = useQuery(GET_STREAMS)
   const [CloseDownCouncil] = useMutation(MAKE_COUNCIL_INACTIVE)
 
@@ -198,7 +198,7 @@ const CouncilForm = ({ initialValues, onSubmit, title, newCouncil }) => {
                       .then((res) => {
                         clickCard(res.data.CloseDownCouncil)
                         togglePopup()
-                        history.push(`/council/displayall`)
+                        navigate(`/council/displayall`)
                       })
                       .catch((error) => {
                         // eslint-disable-next-line no-console

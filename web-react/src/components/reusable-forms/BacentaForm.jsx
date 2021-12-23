@@ -9,7 +9,7 @@ import { ChurchContext } from 'contexts/ChurchContext'
 import FormikControl from 'components/formik-components/FormikControl'
 import PlusSign from 'components/buttons/PlusMinusSign/PlusSign'
 import MinusSign from 'components/buttons/PlusMinusSign/MinusSign'
-import { useHistory } from 'react-router'
+import { useNavigate } from 'react-router'
 import { MAKE_BACENTA_INACTIVE } from 'pages/update/CloseChurchMutations'
 import Popup from 'components/Popup/Popup'
 import RoleView from 'auth/RoleView'
@@ -22,7 +22,7 @@ const BacentaForm = ({ initialValues, onSubmit, title, newBacenta }) => {
   const { togglePopup, isOpen, clickCard, bacentaId, councilId } =
     useContext(ChurchContext)
   const { theme } = useContext(MemberContext)
-  const history = useHistory()
+  const navigate = useNavigate()
 
   const [CloseDownBacenta] = useMutation(MAKE_BACENTA_INACTIVE)
   const { data, loading, error } = useQuery(GET_COUNCIL_CONSTITUENCIES, {
@@ -184,7 +184,7 @@ const BacentaForm = ({ initialValues, onSubmit, title, newBacenta }) => {
                       .then((res) => {
                         clickCard(res.data.CloseDownBacenta.constituency)
                         togglePopup()
-                        history.push(`/constituency/displaydetails`)
+                        navigate(`/constituency/displaydetails`)
                       })
                       .catch((error) => {
                         // eslint-disable-next-line no-console

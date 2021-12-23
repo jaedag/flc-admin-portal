@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import './Timeline.css'
 import { parseDate, parseNeoTime } from '../../global-utils'
@@ -8,7 +8,7 @@ const Timeline = (props) => {
   const { record, limit, modifier } = props
 
   const { clickCard } = useContext(ChurchContext)
-  const history = useHistory()
+  const navigate = useNavigate()
 
   if (!record) {
     return null
@@ -32,7 +32,7 @@ const Timeline = (props) => {
                       className="font-weight-bold"
                       onClick={() => {
                         clickCard(element?.loggedBy)
-                        history.push('/member/displaydetails')
+                        navigate('/member/displaydetails')
                       }}
                     >
                       {element?.loggedBy &&
@@ -64,7 +64,7 @@ const Timeline = (props) => {
                       className="font-weight-bold"
                       onClick={() => {
                         clickCard(element?.loggedBy)
-                        history.push('/member/displaydetails')
+                        navigate('/member/displaydetails')
                       }}
                     >
                       {element?.loggedBy &&

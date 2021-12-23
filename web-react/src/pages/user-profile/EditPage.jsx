@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/client'
 import { parsePhoneNum } from '../../global-utils'
 
@@ -15,7 +15,7 @@ import BaseComponent from 'components/base-component/BaseComponent'
 
 const UserProfileEditPage = () => {
   const { currentUser } = useContext(MemberContext)
-  const history = useHistory()
+  const navigate = useNavigate()
 
   const {
     data: memberData,
@@ -85,7 +85,7 @@ const UserProfileEditPage = () => {
     })
 
     onSubmitProps.setSubmitting(false)
-    history.push(`/user-profile`)
+    navigate(`/user-profile`)
   }
 
   return (

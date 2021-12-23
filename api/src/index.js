@@ -46,12 +46,18 @@ const neoSchema = new Neo4jGraphQL({
  * instance into the context object so it is available in the
  * generated resolvers to connect to the database.
  */
-const server = new ApolloServer({
-  context: ({ req }) => req,
-  schema: neoSchema.schema,
-  introspection: true,
-  playground: true,
-})
+
+const startServer = async () => {
+  const server = new ApolloServer({
+    context: ({ req }) => req,
+    schema: neoSchema.schema,
+    introspection: true,
+    playground: true,
+  })
+
+  await server.start()
+  server.applyMiddleware({ app, path })
+}
 
 // Specify host, port and path for GraphQL endpoint
 const port = process.env.GRAPHQL_SERVER_PORT || 4001
@@ -63,7 +69,7 @@ const host = process.env.GRAPHQL_SERVER_HOST || '0.0.0.0'
  * This also also allows us to specify a path for the GraphQL endpoint
  */
 
-server.applyMiddleware({ app, path })
+startServer()
 
 app.listen({ host, port, path }, () => {
   // eslint-disable-next-line

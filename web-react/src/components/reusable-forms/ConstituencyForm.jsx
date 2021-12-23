@@ -10,7 +10,7 @@ import FormikControl from 'components/formik-components/FormikControl'
 import PlusSign from 'components/buttons/PlusMinusSign/PlusSign'
 import MinusSign from 'components/buttons/PlusMinusSign/MinusSign'
 import { MAKE_CONSTITUENCY_INACTIVE } from 'pages/update/CloseChurchMutations'
-import { useHistory } from 'react-router'
+import { useNavigate } from 'react-router'
 import Popup from 'components/Popup/Popup'
 import RoleView from 'auth/RoleView'
 import { Spinner, Button, Container, Row, Col } from 'react-bootstrap'
@@ -28,7 +28,7 @@ const ConstituencyForm = ({
     useContext(ChurchContext)
   const { theme } = useContext(MemberContext)
 
-  const history = useHistory()
+  const navigate = useNavigate()
   const {
     data: councilData,
     loading: councilLoading,
@@ -204,7 +204,7 @@ const ConstituencyForm = ({
                       .then((res) => {
                         clickCard(res.data.CloseDownConstituency)
                         togglePopup()
-                        history.push(`/constituency/displayall`)
+                        navigate(`/constituency/displayall`)
                       })
                       .catch((error) => {
                         // eslint-disable-next-line no-console

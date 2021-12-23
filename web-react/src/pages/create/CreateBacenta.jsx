@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useMutation } from '@apollo/client'
 import { CREATE_BACENTA_MUTATION } from './CreateMutations'
 import { ChurchContext } from '../../contexts/ChurchContext'
@@ -16,7 +16,7 @@ const CreateBacenta = () => {
   }
 
   const { clickCard, setConstituencyId } = useContext(ChurchContext)
-  const history = useHistory()
+  const navigate = useNavigate()
 
   const [NewBacentaLeader] = useMutation(NEW_BACENTA_LEADER)
   const [CreateBacenta] = useMutation(CREATE_BACENTA_MUTATION)
@@ -46,7 +46,7 @@ const CreateBacenta = () => {
 
         onSubmitProps.setSubmitting(false)
         onSubmitProps.resetForm()
-        history.push('/bacenta/displaydetails')
+        navigate('/bacenta/displaydetails')
       })
       .catch((error) =>
         throwErrorMsg('There was an error creating bacenta', error)

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Switch, BrowserRouter as Router } from 'react-router-dom'
+import { Routes, BrowserRouter as Router } from 'react-router-dom'
 import { MemberContext, SearchContext } from './contexts/MemberContext'
 import { ChurchContext } from './contexts/ChurchContext'
 import ProtectedRoute from './auth/ProtectedRoute.jsx'
@@ -231,7 +231,7 @@ const PastorsAdmin = () => {
             >
               <Navigation />
               <div className={`bg ${theme}`}>
-                <Switch>
+                <Routes>
                   {[
                     ...dashboards,
                     ...directory,
@@ -244,7 +244,7 @@ const PastorsAdmin = () => {
                     <ProtectedRoute
                       key={i}
                       path={route.path}
-                      component={route.component}
+                      element={route.element}
                       roles={route.roles}
                       placeholder={route.placeholder}
                       exact={route.exact}
@@ -254,7 +254,7 @@ const PastorsAdmin = () => {
                     <ChurchDirectoryRoute
                       key={i}
                       path={route.path}
-                      component={route.component}
+                      element={route.element}
                       roles={route.roles}
                       placeholder={route.placeholder}
                       exact={route.exact}
@@ -264,7 +264,7 @@ const PastorsAdmin = () => {
                     <MembersDirectoryRoute
                       key={i}
                       path={route.path}
-                      component={route.component}
+                      element={route.element}
                       roles={route.roles}
                       placeholder={route.placeholder}
                       exact={route.exact}
@@ -274,7 +274,7 @@ const PastorsAdmin = () => {
                     <ProtectedMembersRoute
                       key={i}
                       path={route.path}
-                      component={route.component}
+                      element={route.element}
                       roles={route.roles}
                       placeholder={route.placeholder}
                       exact={route.exact}
@@ -289,7 +289,7 @@ const PastorsAdmin = () => {
 
                   <ProtectedRouteHome
                     path="/dashboard/servants"
-                    component={ServantsDashboard}
+                    element={ServantsDashboard}
                     roles={[
                       'adminFederal',
                       'adminCouncil',
@@ -302,11 +302,11 @@ const PastorsAdmin = () => {
                   />
                   <ProtectedRouteHome
                     path="/servants/church-list"
-                    component={ServantsChurchList}
+                    element={ServantsChurchList}
                     roles={['all']}
                     exact
                   />
-                </Switch>
+                </Routes>
               </div>
             </ServiceContext.Provider>
           </SearchContext.Provider>

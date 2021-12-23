@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { useHistory } from 'react-router'
+import { useNavigate } from 'react-router'
 import { ChurchContext } from '../contexts/ChurchContext'
 import { capitalise } from '../global-utils'
 import PlaceholderCustom from './Placeholder'
@@ -10,7 +10,7 @@ const MemberRoleList = ({ member }) => {
   }
 
   const { clickCard } = useContext(ChurchContext)
-  const history = useHistory()
+  const navigate = useNavigate()
 
   //To Display Ranks on the Member Card
   let rank = {
@@ -156,7 +156,7 @@ const MemberRoleList = ({ member }) => {
                   key={i}
                   onClick={() => {
                     clickCard(place)
-                    history.push(place.link)
+                    navigate(place.link)
                   }}
                 >
                   <p className="font-weight-bold text-secondary mb-0">{`${place.__typename} ${leader}:`}</p>

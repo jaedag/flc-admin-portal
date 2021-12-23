@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/client'
 import { alertMsg, throwErrorMsg } from '../../global-utils'
 import { GET_COUNCIL_CONSTITUENCIES } from '../../queries/ListQueries'
@@ -22,7 +22,7 @@ const UpdateConstituency = () => {
     variables: { id: constituencyId },
   })
 
-  const history = useHistory()
+  const navigate = useNavigate()
   const constituency = data?.constituencies[0]
 
   const initialValues = {
@@ -176,7 +176,7 @@ const UpdateConstituency = () => {
       })
         .then(() => {
           alertMsg('Leader Changed Successfully')
-          history.push(`/constituency/displaydetails`)
+          navigate(`/constituency/displaydetails`)
         })
         .catch((err) =>
           throwErrorMsg('There was a problem changing the CO', err)
@@ -257,7 +257,7 @@ const UpdateConstituency = () => {
 
     onSubmitProps.setSubmitting(false)
     onSubmitProps.resetForm()
-    history.push(`/constituency/displaydetails`)
+    navigate(`/constituency/displaydetails`)
   }
 
   return (

@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import user from '../../assets/user.png'
 import bussolid from '../../assets/bus-solid.svg'
@@ -13,7 +13,7 @@ const MemberDisplayCard = (props) => {
   const { member, ...rest } = props
   const { setChurch, clickCard } = useContext(ChurchContext)
   const { theme } = useContext(MemberContext)
-  const history = useHistory()
+  const navigate = useNavigate()
   let icon, name, details
 
   switch (member.__typename) {
@@ -57,7 +57,7 @@ const MemberDisplayCard = (props) => {
       onClick={() => {
         clickCard(member)
         setChurch({ church: member?.stream_name, subChurch: 'bacenta' })
-        history.push(`/${member.__typename.toLowerCase()}/displaydetails`)
+        navigate(`/${member.__typename.toLowerCase()}/displaydetails`)
       }}
     >
       <div className="d-flex align-items-center">

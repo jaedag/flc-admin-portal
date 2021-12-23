@@ -32,7 +32,7 @@ const ProtectedRoute = ({ component, roles, ...args }) => {
     //if the user has permission to access the route
     return (
       <Route
-        component={withAuthenticationRequired(component, {
+        element={withAuthenticationRequired(component, {
           // eslint-disable-next-line react/display-name
           onRedirecting: () => {
             return <LoadingScreen />
@@ -58,7 +58,7 @@ const ProtectedRoute = ({ component, roles, ...args }) => {
     //If the user does not have permission but is a CO Admin
     return (
       <Route
-        component={withAuthenticationRequired(UserDashboard, {
+        element={withAuthenticationRequired(UserDashboard, {
           // eslint-disable-next-line react/display-name
           onRedirecting: () => {
             return <LoadingScreen />

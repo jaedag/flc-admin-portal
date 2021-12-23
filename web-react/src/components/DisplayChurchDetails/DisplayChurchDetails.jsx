@@ -264,12 +264,14 @@ const DisplayChurchDetails = (props) => {
                     className={`${week.filled ? 'filled' : 'not-filled'}`}
                   >{`${week.filled ? 'Filled' : 'Not Filled'}`}</span>
                 </p>
-                <p>
-                  Banking Slip -{' '}
-                  <span
-                    className={`${week.banked ? 'filled' : 'not-filled'}`}
-                  >{`${week.banked ? 'Submitted' : 'Not Submitted'}`}</span>
-                </p>
+                {week.banked && (
+                  <p>
+                    Banking Slip -{' '}
+                    <span
+                      className={`${week.banked ? 'filled' : 'not-filled'}`}
+                    >{`${week.banked ? 'Submitted' : 'Not Submitted'}`}</span>
+                  </p>
+                )}
               </Container>
             ))}
           </>

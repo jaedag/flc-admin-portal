@@ -1,6 +1,7 @@
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import HeadingSecondary from 'components/HeadingSecondary'
 import PlaceholderCustom from 'components/Placeholder'
+import SpinnerPage from 'components/SpinnerPage'
 import { MemberContext } from 'contexts/MemberContext'
 import React, { useContext } from 'react'
 import { Col, Container, Row, Table, Button } from 'react-bootstrap'
@@ -10,6 +11,14 @@ import './ServiceDetails.css'
 const ServiceDetails = ({ service, church, loading }) => {
   const { theme } = useContext(MemberContext)
   const history = useHistory()
+
+  if (!service) {
+    history.goBack()
+  }
+
+  if (loading) {
+    return <SpinnerPage />
+  }
 
   return (
     <Container>
@@ -22,7 +31,7 @@ const ServiceDetails = ({ service, church, loading }) => {
       </PlaceholderCustom>
       <Row>
         <Col>
-          {service?.attendance ? (
+          {service?.attendance && (
             <Row className="d-flex justify-content-center">
               <Table variant={theme} striperd bordered>
                 <tbody>
@@ -133,7 +142,8 @@ const ServiceDetails = ({ service, church, loading }) => {
                 </div>
               </div>
             </Row>
-          ) : (
+          )}
+          {service?.noServiceReason && (
             <>
               <div>{`No Service was held on ${new Date(
                 service?.serviceDate.date

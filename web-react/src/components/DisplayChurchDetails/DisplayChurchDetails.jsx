@@ -264,7 +264,7 @@ const DisplayChurchDetails = (props) => {
                     className={`${week.filled ? 'filled' : 'not-filled'}`}
                   >{`${week.filled ? 'Filled' : 'Not Filled'}`}</span>
                 </p>
-                {week.filled && (
+                {week.banked && (
                   <p>
                     Banking Slip -{' '}
                     <span

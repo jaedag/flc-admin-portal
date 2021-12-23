@@ -50,8 +50,7 @@ const DetailsFellowship = () => {
       return {
         number: week,
         filled: false,
-        banked:
-          lastFilledBanking?.length && (lastFilledBanking[i] ? true : false),
+        banked: null,
       }
     }
   })

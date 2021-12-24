@@ -34,7 +34,7 @@
     "@testing-library/react": "^12.0.0",
     "@wojtekmaj/enzyme-adapter-react-17": "^0.6.6",
     "enzyme": "^3.11.0",
-    "http-proxy-middleware": "^0.20.0",
+    "http-proxy-middleware": "^2.0.1",
     "waait": "^1.0.5"
   },
   "license": "Apache-2.0",

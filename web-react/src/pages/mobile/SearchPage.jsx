@@ -151,15 +151,21 @@ const SearchPageMobile = () => {
       )}
 
       <Container>
-        {combinedData.slice(0, 10).map((searchResult, index) => {
-          return (
-            <MemberDisplayCard
-              key={index}
-              index={index}
-              member={searchResult}
-            />
-          )
-        })}
+        {combinedData.length === 0 && !loading && (
+          <Container className="text-center py-5">
+            No results to display
+          </Container>
+        )}
+        {!loading &&
+          combinedData.slice(0, 10).map((searchResult, index) => {
+            return (
+              <MemberDisplayCard
+                key={index}
+                index={index}
+                member={searchResult}
+              />
+            )
+          })}
       </Container>
     </>
   )

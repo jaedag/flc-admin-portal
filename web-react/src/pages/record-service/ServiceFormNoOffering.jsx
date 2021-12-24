@@ -2,7 +2,7 @@ import FormikControl from 'components/formik-components/FormikControl'
 import { Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import React, { useContext } from 'react'
-import { useHistory } from 'react-router'
+import { useNavigate } from 'react-router'
 import { ServiceContext } from 'contexts/ServiceContext'
 
 const ServiceFormNoOffering = ({
@@ -12,7 +12,7 @@ const ServiceFormNoOffering = ({
   RecordServiceMutation,
 }) => {
   const { setServiceRecordId } = useContext(ServiceContext)
-  const history = useHistory()
+  const navigate = useNavigate()
 
   const initialValues = {
     serviceDate: new Date().toISOString().slice(0, 10),
@@ -46,7 +46,7 @@ const ServiceFormNoOffering = ({
       onSubmitProps.setSubmitting(false)
       onSubmitProps.resetForm()
       setServiceRecordId(res.data.RecordServiceNoOffering.id)
-      history.push(`/${churchType}/service-details`)
+      navigate(`/${churchType}/service-details`)
     })
   }
 

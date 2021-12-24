@@ -24,8 +24,8 @@ const Navigator = () => {
   const { currentUser, theme, setUserJobs, setCurrentUser } =
     useContext(MemberContext)
   const { clickCard } = useContext(ChurchContext)
-  const { user, isAuthenticated } = useAuth0()
-  const { data, loading } = useQuery(SERVANTS_DASHBOARD, {
+  const { user } = useAuth0()
+  const { data } = useQuery(SERVANTS_DASHBOARD, {
     variables: { id: currentUser.id },
   })
   const { data: adminData } = useQuery(SERVANTS_ADMIN, {
@@ -79,13 +79,11 @@ const Navigator = () => {
     })
     // eslint-disable-next-line
   }, [
-    isAuthenticated,
     data,
     adminData,
     leaderData,
-    loading,
-    roles,
-    setUserJobs,
+    // roles,
+    // setUserJobs,
   ])
   const servant = data?.members[0]
   const servantAdmin = adminData?.members[0]

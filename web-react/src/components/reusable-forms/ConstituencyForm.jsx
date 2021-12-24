@@ -3,15 +3,14 @@ import BaseComponent from 'components/base-component/BaseComponent'
 import { FieldArray, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import { makeSelectOptions } from 'global-utils'
-import { COUNCIL_MEMBER_DROPDOWN, GET_COUNCILS } from 'queries/ListQueries'
+import { GET_COUNCILS } from 'queries/ListQueries'
 import React, { useContext } from 'react'
 import { ChurchContext } from 'contexts/ChurchContext'
 import FormikControl from 'components/formik-components/FormikControl'
 import PlusSign from 'components/buttons/PlusMinusSign/PlusSign'
 import MinusSign from 'components/buttons/PlusMinusSign/MinusSign'
-import { COUNCIL_BACENTA_DROPDOWN } from 'components/formik-components/ComboboxQueries'
 import { MAKE_CONSTITUENCY_INACTIVE } from 'pages/update/CloseChurchMutations'
-import { useHistory } from 'react-router'
+import { useNavigate } from 'react-router'
 import Popup from 'components/Popup/Popup'
 import RoleView from 'auth/RoleView'
 import { Spinner, Button, Container, Row, Col } from 'react-bootstrap'
@@ -25,11 +24,11 @@ const ConstituencyForm = ({
   title,
   newConstituency,
 }) => {
-  const { togglePopup, isOpen, clickCard, constituencyId, councilId } =
+  const { togglePopup, isOpen, clickCard, constituencyId } =
     useContext(ChurchContext)
   const { theme } = useContext(MemberContext)
 
-  const history = useHistory()
+  const navigate = useNavigate()
   const {
     data: councilData,
     loading: councilLoading,
@@ -113,20 +112,13 @@ const ConstituencyForm = ({
                       >
                         <Col>
                           <FormikControl
-                            control="combobox2"
+                            control="memberSearch"
                             name="leaderId"
                             label="Choose a CO"
                             placeholder="Start typing..."
                             initialValue={initialValues?.leaderName}
                             setFieldValue={formik.setFieldValue}
-                            optionsQuery={COUNCIL_MEMBER_DROPDOWN}
-                            queryVariable1="id"
-                            variable1={councilId}
-                            queryVariable2="nameSearch"
-                            suggestionText="name"
-                            suggestionID="id"
-                            dataset="councilMemberDropdown"
-                            aria-describedby="Council Member List"
+                            aria-describedby="Member Search Box"
                             className="form-control"
                             error={formik.errors.leaderId}
                           />
@@ -149,20 +141,11 @@ const ConstituencyForm = ({
                               <Row key={index} className="form-row">
                                 <Col>
                                   <FormikControl
-                                    control="combobox2"
+                                    control="bacentaSearch"
                                     name={`bacentas[${index}]`}
                                     placeholder="Bacenta Name"
                                     initialValue={bacenta?.name}
                                     setFieldValue={formik.setFieldValue}
-                                    optionsQuery={COUNCIL_BACENTA_DROPDOWN}
-                                    queryVariable1="id"
-                                    variable1={councilId}
-                                    queryVariable2="nameSearch"
-                                    suggestionText="name"
-                                    suggestionID="id"
-                                    dataset="councilBacentaDropdown"
-                                    church="bacenta"
-                                    returnObject={!newConstituency && true}
                                     aria-describedby="Bacenta Name"
                                     className="form-control"
                                     error={
@@ -221,7 +204,7 @@ const ConstituencyForm = ({
                       .then((res) => {
                         clickCard(res.data.CloseDownConstituency)
                         togglePopup()
-                        history.push(`/constituency/displayall`)
+                        navigate(`/constituency/displayall`)
                       })
                       .catch((error) => {
                         // eslint-disable-next-line no-console

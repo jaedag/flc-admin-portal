@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useMutation } from '@apollo/client'
 import { CREATE_SONTA_MUTATION } from './CreateMutations'
 import { ChurchContext } from '../../contexts/ChurchContext'
@@ -10,7 +10,7 @@ import { throwErrorMsg } from 'global-utils'
 function CreateSonta() {
   const { clickCard, constituencyId } = useContext(ChurchContext)
 
-  const history = useHistory()
+  const navigate = useNavigate()
 
   const [CreateSonta] = useMutation(CREATE_SONTA_MUTATION)
   const [NewSontaLeader] = useMutation(NEW_SONTA_LEADER)
@@ -34,7 +34,7 @@ function CreateSonta() {
         }).catch((error) =>
           throwErrorMsg('There was an error adding leader', error)
         )
-        history.push('/sonta/displaydetails')
+        navigate('/sonta/displaydetails')
         onSubmitProps.setSubmitting(false)
         onSubmitProps.resetForm()
       })

@@ -6,14 +6,14 @@ import { parseMemberCount } from 'global-utils'
 import React, { useContext } from 'react'
 import { Container } from 'react-bootstrap'
 import { EmojiFrown } from 'react-bootstrap-icons'
-import { useHistory } from 'react-router'
+import { useNavigate } from 'react-router'
 import MemberIcon from '../../assets/people-svgrepo-com-2.svg'
 
 const ServicesChurchList = () => {
   const { currentUser, setCurrentUser, userJobs, theme } =
     useContext(MemberContext)
 
-  const history = useHistory()
+  const navigate = useNavigate()
   return (
     <div className="d-flex align-items-center justify-content-center ">
       <Container>
@@ -40,7 +40,7 @@ const ServicesChurchList = () => {
                     ...currentUser,
                     currentChurch: job.church,
                   })
-                  history.push('/services')
+                  navigate('/services')
                 }}
                 color="churches"
               />
@@ -59,7 +59,7 @@ const ServicesChurchList = () => {
               title="Defaulters"
               color="danger"
               iconComponent={EmojiFrown}
-              onClick={() => history.push('/services/defaulters')}
+              onClick={() => navigate('/services/defaulters')}
               noCaption
             />
           </RoleView>

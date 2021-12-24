@@ -5,6 +5,7 @@ export const FEDERAL_SEARCH = gql`
     federalSontaSearch(searchKey: $searchKey) {
       id
       name
+      stream_name
       constituency {
         council {
           id
@@ -15,32 +16,17 @@ export const FEDERAL_SEARCH = gql`
     federalConstituencySearch(searchKey: $searchKey) {
       id
       name
-      bishop {
-        id
-      }
+      stream_name
     }
     federalBacentaSearch(searchKey: $searchKey) {
       id
       name
-      campus {
-        id
-        bishop {
-          id
-        }
-      }
+      stream_name
     }
     federalFellowshipSearch(searchKey: $searchKey) {
       id
       name
-      bacenta {
-        id
-        constituency {
-          id
-          bishop {
-            id
-          }
-        }
-      }
+      stream_name
     }
     federalMemberSearch(searchKey: $searchKey) {
       id
@@ -51,32 +37,10 @@ export const FEDERAL_SEARCH = gql`
       fellowship {
         id
         name
-        leader {
-          id
-          firstName
-          lastName
-        }
-        bacenta {
-          id
-
-          constituency {
-            id
-            bishop {
-              id
-            }
-          }
-        }
       }
       ministry {
         id
         name
-      }
-      leadsConstituency {
-        id
-        name
-        council {
-          id
-        }
       }
     }
   }

@@ -30,28 +30,28 @@ import Services from 'pages/services/ServicesMenu'
 export const services = [
   {
     path: '/services',
-    component: Services,
+    element: Services,
     roles: ['all'],
     placeholder: true,
     exact: true,
   },
   {
     path: '/services/church-list',
-    component: ServicesChurchList,
+    element: ServicesChurchList,
     roles: ['all'],
     placeholder: true,
     exact: true,
   },
   {
     path: '/services/fellowship',
-    component: Fellowship,
+    element: Fellowship,
     roles: ['all'],
     placeholder: true,
     exact: true,
   },
   {
     path: '/services/bacenta',
-    component: BacentaJoint,
+    element: BacentaJoint,
     roles: [
       'adminCouncil',
       'adminConstituency',
@@ -64,7 +64,7 @@ export const services = [
   },
   {
     path: '/services/constituency',
-    component: ConstituencyJoint,
+    element: ConstituencyJoint,
     roles: [
       'adminCouncil',
       'adminConstituency',
@@ -77,14 +77,14 @@ export const services = [
 
   {
     path: '/services/banking-slips',
-    component: BankingSlipView,
+    element: BankingSlipView,
     roles: ['all'],
     placeholder: true,
     exact: true,
   },
   {
     path: '/services/banking-slip/submission',
-    component: BankingSlipSubmission,
+    element: BankingSlipSubmission,
     roles: ['all'],
     placeholder: true,
     exact: true,
@@ -94,7 +94,7 @@ export const services = [
 export const reports = [
   {
     path: '/fellowship/reports',
-    component: FellowshipReport,
+    element: FellowshipReport,
     roles: [
       'adminFederal',
       'adminCouncil',
@@ -109,7 +109,7 @@ export const reports = [
   },
   {
     path: '/bacenta/reports',
-    component: BacentaReport,
+    element: BacentaReport,
     roles: [
       'adminFederal',
       'adminCouncil',
@@ -124,7 +124,7 @@ export const reports = [
   },
   {
     path: '/sonta/reports',
-    component: SontaReport,
+    element: SontaReport,
     roles: [
       'adminFederal',
       'adminCouncil',
@@ -138,7 +138,7 @@ export const reports = [
   },
   {
     path: '/constituency/reports',
-    component: ConstituencyReport,
+    element: ConstituencyReport,
     roles: [
       'adminFederal',
       'adminCouncil',
@@ -151,7 +151,7 @@ export const reports = [
 
   {
     path: '/council/reports',
-    component: CouncilReport,
+    element: CouncilReport,
     roles: ['adminFederal', 'adminCouncil'],
     placeholder: true,
     exact: true,
@@ -160,21 +160,21 @@ export const reports = [
   //Fellowship Services
   {
     path: '/fellowship/service-details',
-    component: FellowshipServiceDetails,
+    element: FellowshipServiceDetails,
     roles: ['adminFederal', 'adminCouncil', 'adminConstituency'],
     placeholder: true,
     exact: true,
   },
   {
     path: '/services/fellowship/no-service',
-    component: FellowshipServiceCancelled,
+    element: FellowshipServiceCancelled,
     roles: ['adminFederal', 'adminCouncil', 'adminConstituency'],
     placeholder: true,
     exact: true,
   },
   {
     path: '/services/fellowship/form',
-    component: FellowshipService,
+    element: FellowshipService,
     roles: [
       'adminFederal',
       'adminCouncil',
@@ -187,7 +187,7 @@ export const reports = [
   },
   {
     path: '/fellowship/record-service',
-    component: FellowshipService,
+    element: FellowshipService,
     roles: [
       'adminFederal',
       'adminCouncil',
@@ -201,7 +201,7 @@ export const reports = [
 
   {
     path: '/services/constituency-joint/form',
-    component: ConstituencyService,
+    element: ConstituencyService,
     roles: [
       'adminFederal',
       'adminCouncil',
@@ -213,7 +213,7 @@ export const reports = [
   },
   {
     path: '/bacenta/record-service',
-    component: BacentaService,
+    element: BacentaService,
     roles: [
       'adminFederal',
       'adminCouncil',
@@ -228,7 +228,7 @@ export const reports = [
   //Sonta Service Details
   {
     path: '/sonta/record-service',
-    component: SontaService,
+    element: SontaService,
     roles: [
       'adminFederal',
       'adminCouncil',
@@ -243,7 +243,7 @@ export const reports = [
   },
   {
     path: '/sonta/service-details',
-    component: SontaServiceDetails,
+    element: SontaServiceDetails,
     roles: [
       'adminFederal',
       'adminCouncil',
@@ -260,7 +260,7 @@ export const reports = [
   //Bacenta Service Things
   {
     path: '/bacenta/service-details',
-    component: BacentaServiceDetails,
+    element: BacentaServiceDetails,
     roles: [
       'adminFederal',
       'adminCouncil',
@@ -277,7 +277,7 @@ export const reports = [
   //Constituency Services
   {
     path: '/constituency/record-service',
-    component: ConstituencyService,
+    element: ConstituencyService,
     roles: [
       'adminFederal',
       'adminCouncil',
@@ -289,7 +289,7 @@ export const reports = [
   },
   {
     path: '/constituency/service-details',
-    component: ConstituencyServiceDetails,
+    element: ConstituencyServiceDetails,
     roles: [
       'adminFederal',
       'adminCouncil',
@@ -303,7 +303,7 @@ export const reports = [
   //Defaulters Flow
   {
     path: '/services/defaulters',
-    component: Defaulters,
+    element: Defaulters,
     roles: [
       'adminFederal',
       'adminCouncil',
@@ -315,7 +315,7 @@ export const reports = [
   },
   {
     path: '/services/form-defaulters',
-    component: FormDefaulters,
+    element: FormDefaulters,
     roles: [
       'adminFederal',
       'adminCouncil',
@@ -327,7 +327,7 @@ export const reports = [
   },
   {
     path: '/services/banking-defaulters',
-    component: BankingDefaulters,
+    element: BankingDefaulters,
     roles: [
       'adminFederal',
       'adminCouncil',
@@ -339,7 +339,7 @@ export const reports = [
   },
   {
     path: '/services/banked',
-    component: Banked,
+    element: Banked,
     roles: [
       'adminFederal',
       'adminCouncil',
@@ -351,7 +351,7 @@ export const reports = [
   },
   {
     path: '/services/filled-services',
-    component: ServicesThisWeek,
+    element: ServicesThisWeek,
     roles: [
       'adminFederal',
       'adminCouncil',
@@ -363,7 +363,7 @@ export const reports = [
   },
   {
     path: '/services/cancelled-services',
-    component: CancelledServicesThisWeek,
+    element: CancelledServicesThisWeek,
     roles: [
       'adminFederal',
       'adminCouncil',
@@ -377,7 +377,7 @@ export const reports = [
   //Council By Constituency
   {
     path: '/services/council-by-constituencies',
-    component: CouncilByConstituency,
+    element: CouncilByConstituency,
     roles: ['adminFederal', 'adminCouncil', 'leaderCouncil'],
     placeholder: true,
     exact: true,

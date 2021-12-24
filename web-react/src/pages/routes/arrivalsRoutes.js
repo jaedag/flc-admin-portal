@@ -3,7 +3,7 @@ import Arrivals from 'pages/dashboards/Arrivals'
 export const arrivals = [
   {
     path: '/arrivals',
-    component: Arrivals,
+    element: Arrivals,
     placeholder: true,
     exact: true,
   },

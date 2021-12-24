@@ -4,7 +4,6 @@ import express from 'express'
 import neo4j from 'neo4j-driver'
 import { Neo4jGraphQL } from '@neo4j/graphql'
 import dotenv from 'dotenv'
-import { initializeDatabase } from './initialize'
 import { resolvers } from './resolvers'
 
 // set environment variables from .env
@@ -42,36 +41,23 @@ const neoSchema = new Neo4jGraphQL({
  */
 
 /*
- * Perform any database initialization steps such as
- * creating constraints or ensuring indexes are online
- *
- */
-const init = async (driver) => {
-  await initializeDatabase(driver)
-}
-
-/*
- * We catch any errors that occur during initialization
- * to handle cases where we still want the API to start
- * regardless, such as running with a read only user.
- * In this case, ensure that any desired initialization steps
- * have occurred
- */
-
-init(driver)
-
-/*
  * Create a new ApolloServer instance, serving the GraphQL schema
  * created using makeAugmentedSchema above and injecting the Neo4j driver
  * instance into the context object so it is available in the
  * generated resolvers to connect to the database.
  */
-const server = new ApolloServer({
-  context: ({ req }) => req,
-  schema: neoSchema.schema,
-  introspection: true,
-  playground: true,
-})
+
+const startServer = async () => {
+  const server = new ApolloServer({
+    context: ({ req }) => req,
+    schema: neoSchema.schema,
+    introspection: true,
+    playground: true,
+  })
+
+  await server.start()
+  server.applyMiddleware({ app, path })
+}
 
 // Specify host, port and path for GraphQL endpoint
 const port = process.env.GRAPHQL_SERVER_PORT || 4001
@@ -83,7 +69,7 @@ const host = process.env.GRAPHQL_SERVER_HOST || '0.0.0.0'
  * This also also allows us to specify a path for the GraphQL endpoint
  */
 
-server.applyMiddleware({ app, path })
+startServer()
 
 app.listen({ host, port, path }, () => {
   // eslint-disable-next-line

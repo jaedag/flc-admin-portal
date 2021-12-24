@@ -3,7 +3,7 @@ import Reconciliation from 'pages/dashboards/Reconciliation'
 export const reconciliation = [
   {
     path: '/recon',
-    component: Reconciliation,
+    element: Reconciliation,
     placeholder: true,
     exact: true,
   },

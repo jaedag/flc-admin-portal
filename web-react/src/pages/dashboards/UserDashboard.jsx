@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { useHistory } from 'react-router'
+import { useNavigate } from 'react-router'
 import ChurchGraph from 'components/ChurchGraph/ChurchGraph'
 import './Dashboards.css'
 import { MemberContext } from 'contexts/MemberContext'
@@ -12,7 +12,7 @@ import Placeholder from '../../components/Placeholder'
 
 const UserDashboard = () => {
   const { currentUser, userJobs, setMemberId } = useContext(MemberContext)
-  const history = useHistory()
+  const navigate = useNavigate()
 
   return (
     <>
@@ -36,7 +36,7 @@ const UserDashboard = () => {
                       onClick={() => {
                         setMemberId(currentUser.id)
                         role.clickCard()
-                        history.push(role.link)
+                        navigate(role.link)
                       }}
                     >
                       <RoleCard number={role.number} role={role.name} />

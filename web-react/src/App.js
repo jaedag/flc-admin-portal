@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Switch, BrowserRouter as Router } from 'react-router-dom'
+import { Routes, BrowserRouter as Router, Route } from 'react-router-dom'
 import { MemberContext, SearchContext } from './contexts/MemberContext'
 import { ChurchContext } from './contexts/ChurchContext'
 import ProtectedRoute from './auth/ProtectedRoute.jsx'
@@ -231,7 +231,7 @@ const PastorsAdmin = () => {
             >
               <Navigation />
               <div className={`bg ${theme}`}>
-                <Switch>
+                <Routes>
                   {[
                     ...dashboards,
                     ...directory,
@@ -241,72 +241,104 @@ const PastorsAdmin = () => {
                     ...reconciliation,
                     ...reports,
                   ].map((route, i) => (
-                    <ProtectedRoute
+                    <Route
                       key={i}
                       path={route.path}
-                      component={route.component}
-                      roles={route.roles}
-                      placeholder={route.placeholder}
-                      exact={route.exact}
+                      element={
+                        <ProtectedRoute
+                          roles={route.roles}
+                          placeholder={route.placeholder}
+                        >
+                          <route.element />
+                        </ProtectedRoute>
+                      }
                     />
                   ))}
                   {churchDirectory.map((route, i) => (
-                    <ChurchDirectoryRoute
+                    <Route
                       key={i}
                       path={route.path}
-                      component={route.component}
-                      roles={route.roles}
-                      placeholder={route.placeholder}
-                      exact={route.exact}
+                      element={
+                        <ChurchDirectoryRoute
+                          roles={route.roles}
+                          placeholder={route.placeholder}
+                        >
+                          <route.element />
+                        </ChurchDirectoryRoute>
+                      }
                     />
                   ))}
                   {memberDirectory.map((route, i) => (
-                    <MembersDirectoryRoute
+                    <Route
                       key={i}
                       path={route.path}
-                      component={route.component}
-                      roles={route.roles}
-                      placeholder={route.placeholder}
-                      exact={route.exact}
+                      element={
+                        <MembersDirectoryRoute
+                          roles={route.roles}
+                          placeholder={route.placeholder}
+                        >
+                          <route.element />
+                        </MembersDirectoryRoute>
+                      }
                     />
                   ))}
                   {memberGrids.map((route, i) => (
-                    <ProtectedMembersRoute
+                    <Route
                       key={i}
                       path={route.path}
-                      component={route.component}
-                      roles={route.roles}
-                      placeholder={route.placeholder}
-                      exact={route.exact}
+                      element={
+                        <ProtectedMembersRoute
+                          roles={route.roles}
+                          placeholder={route.placeholder}
+                        >
+                          <route.element />
+                        </ProtectedMembersRoute>
+                      }
                     />
                   ))}
-                  <ProtectedReports
+                  <Route
                     path="/services/trends"
-                    roles={['all']}
-                    placeholder
-                    exact
+                    element={
+                      <ProtectedReports roles={['all']} placeholder exact />
+                    }
                   />
-
-                  <ProtectedRouteHome
+                  <Route
                     path="/dashboard/servants"
-                    component={ServantsDashboard}
-                    roles={[
-                      'adminFederal',
-                      'adminCouncil',
-                      'adminConstituency',
-                      'leaderFellowship',
-                      'leaderBacenta',
-                      'leaderConstituency',
-                    ]}
-                    exact
+                    element={
+                      <ProtectedRouteHome
+                        roles={[
+                          'adminFederal',
+                          'adminCouncil',
+                          'adminConstituency',
+                          'leaderFellowship',
+                          'leaderBacenta',
+                          'leaderConstituency',
+                        ]}
+                        placeholder
+                      >
+                        <ServantsDashboard />
+                      </ProtectedRouteHome>
+                    }
                   />
-                  <ProtectedRouteHome
+                  <Route
                     path="/servants/church-list"
-                    component={ServantsChurchList}
-                    roles={['all']}
-                    exact
+                    element={
+                      <ProtectedRouteHome
+                        roles={[
+                          'adminFederal',
+                          'adminCouncil',
+                          'adminConstituency',
+                          'leaderFellowship',
+                          'leaderBacenta',
+                          'leaderConstituency',
+                        ]}
+                        placeholder
+                      >
+                        <ServantsChurchList />
+                      </ProtectedRouteHome>
+                    }
                   />
-                </Switch>
+                </Routes>
               </div>
             </ServiceContext.Provider>
           </SearchContext.Provider>

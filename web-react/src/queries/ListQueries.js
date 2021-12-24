@@ -47,16 +47,6 @@ export const FELLOWSHIP_DROPDOWN = gql`
   }
 `
 
-export const COUNCIL_MEMBER_DROPDOWN = gql`
-  query ($id: ID!, $nameSearch: String!) {
-    councilMemberDropdown(id: $id, nameSearch: $nameSearch) {
-      id
-      firstName
-      lastName
-    }
-  }
-`
-
 export const BACENTA_DROPDOWN = gql`
   query ($bacentaName: String) {
     bacentaDropdown(bacentaName: $bacentaName, first: 8) {

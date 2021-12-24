@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useMutation } from '@apollo/client'
 import { throwErrorMsg } from '../../global-utils'
 import { CREATE_COUNCIL_MUTATION } from './CreateMutations'
@@ -11,7 +11,7 @@ const CreateCouncil = () => {
   const { clickCard, streamId, setStreamId, setCouncilId } =
     useContext(ChurchContext)
 
-  const history = useHistory()
+  const navigate = useNavigate()
 
   const initialValues = {
     councilName: '',
@@ -47,7 +47,7 @@ const CreateCouncil = () => {
         })
 
         setCouncilId(res.data.CreateCouncil.id)
-        history.push(`/council/displaydetails`)
+        navigate(`/council/displaydetails`)
       })
       .catch((error) => {
         throwErrorMsg('There was an error creating council', error)

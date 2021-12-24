@@ -50,26 +50,25 @@ const DetailsFellowship = () => {
       return {
         number: week,
         filled: false,
-        banked:
-          lastFilledBanking?.length && (lastFilledBanking[i] ? true : false),
+        banked: null,
       }
     }
   })
 
-  let fellowshipType = 'Fellowship',
-    vacation
+  let fellowshipType = fellowshipData && 'Fellowship',
+    vacation = fellowshipData && 'Active'
 
   if (fellowship?.labels.includes('ChurchPlanter')) {
     fellowshipType = 'IC'
   }
   if (fellowship?.labels.includes('Vacation')) {
-    vacation = true
+    vacation = 'Vacation'
   }
 
   const details = [
     {
       title: 'Status',
-      number: vacation ? 'Vacation' : 'Active',
+      number: vacation,
       link: '#',
       width: '',
     },
@@ -109,7 +108,7 @@ const DetailsFellowship = () => {
         'adminConstituency',
       ]}
       weekNumber={getWeekNumber()}
-      last3Weeks={check}
+      last3Weeks={fellowship && check}
       history={history?.history.length && history?.history}
       breadcrumb={breadcrumb && breadcrumb}
     />

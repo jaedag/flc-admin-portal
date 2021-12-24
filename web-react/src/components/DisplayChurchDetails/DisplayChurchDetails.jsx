@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react'
-import { Link, useHistory } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import DetailsCard from '../card/DetailsCard'
 import { MemberContext } from '../../contexts/MemberContext'
 import { ChurchContext } from '../../contexts/ChurchContext'
@@ -12,7 +12,6 @@ import RoleView from '../../auth/RoleView'
 import { Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import Popup from '../Popup/Popup'
-import { COUNCIL_MEMBER_DROPDOWN } from '../../queries/ListQueries'
 import { useMutation } from '@apollo/client'
 import { MAKE_CONSTITUENCY_ADMIN } from './AdminMutations'
 import FormikControl from '../formik-components/FormikControl'
@@ -24,12 +23,12 @@ import { Geo, PencilSquare } from 'react-bootstrap-icons'
 import ViewAll from 'components/buttons/ViewAll'
 
 const DisplayChurchDetails = (props) => {
-  const history = useHistory()
+  const navigate = useNavigate()
   const isConstituency = props.churchType === 'Constituency'
   const { setMemberId, theme, setCurrentUser, currentUser } =
     useContext(MemberContext)
   const [submitting, setSubmitting] = useState(false)
-  const { clickCard, togglePopup, isOpen, constituencyId, councilId } =
+  const { clickCard, togglePopup, isOpen, constituencyId } =
     useContext(ChurchContext)
 
   //Change Admin Initialised
@@ -122,19 +121,12 @@ const DisplayChurchDetails = (props) => {
                     <Row className="form-row">
                       <Col>
                         <FormikControl
-                          control="combobox2"
+                          control="memberSearch"
                           name="adminSelect"
                           initialValue={initialValues?.adminName}
                           placeholder="Select an Admin"
                           setFieldValue={formik.setFieldValue}
-                          optionsQuery={COUNCIL_MEMBER_DROPDOWN}
-                          queryVariable1="id"
-                          variable1={councilId}
-                          queryVariable2="nameSearch"
-                          suggestionText="name"
-                          suggestionID="id"
-                          dataset="councilMemberDropdown"
-                          aria-describedby="Council Member List"
+                          aria-describedby="Member Search"
                           className="form-control"
                           error={formik.errors.admin}
                         />
@@ -186,7 +178,7 @@ const DisplayChurchDetails = (props) => {
           <Col>
             <DetailsCard
               onClick={() =>
-                history.push(`/${props.subChurch.toLowerCase()}/displayall`)
+                navigate(`/${props.subChurch.toLowerCase()}/displayall`)
               }
               heading={props.churchHeading}
               detail={props.churchCount}
@@ -196,7 +188,7 @@ const DisplayChurchDetails = (props) => {
           <Col className={!props.loading && `col-auto`}>
             <DetailsCard
               onClick={() =>
-                history.push(`/${props.churchType.toLowerCase()}/members`)
+                navigate(`/${props.churchType.toLowerCase()}/members`)
               }
               heading="Members"
               detail={!props.loading && (props.membership || '0')}
@@ -209,7 +201,7 @@ const DisplayChurchDetails = (props) => {
             {props.details.map((detail, i) => (
               <Col key={i} xs={detail.width ?? 6}>
                 <DetailsCard
-                  onClick={() => history.push(detail.link)}
+                  onClick={() => navigate(detail.link)}
                   heading={detail.title}
                   detail={detail.number}
                 />
@@ -223,7 +215,7 @@ const DisplayChurchDetails = (props) => {
           <Button
             className={`btn-trends ${theme}`}
             onClick={() => {
-              history.push(`/${props.churchType.toLowerCase()}/reports`)
+              navigate(`/${props.churchType.toLowerCase()}/reports`)
             }}
           >
             View Trends
@@ -240,14 +232,14 @@ const DisplayChurchDetails = (props) => {
                   __typename: props.churchType,
                 },
               })
-              history.push(`/services/${props.churchType.toLowerCase()}`)
+              navigate(`/services/${props.churchType.toLowerCase()}`)
             }}
           >
             Service Forms
           </Button>
         </div>
 
-        {props?.location?.latitude && (
+        {props?.location && props.location?.latitude !== 0 && (
           <Container className="mt-4 text-center">
             <h3>LOCATION</h3>
             <p>Click here for directions</p>
@@ -272,12 +264,14 @@ const DisplayChurchDetails = (props) => {
                     className={`${week.filled ? 'filled' : 'not-filled'}`}
                   >{`${week.filled ? 'Filled' : 'Not Filled'}`}</span>
                 </p>
-                <p>
-                  Banking Slip -{' '}
-                  <span
-                    className={`${week.banked ? 'filled' : 'not-filled'}`}
-                  >{`${week.banked ? 'Submitted' : 'Not Submitted'}`}</span>
-                </p>
+                {week.banked && (
+                  <p>
+                    Banking Slip -{' '}
+                    <span
+                      className={`${week.banked ? 'filled' : 'not-filled'}`}
+                    >{`${week.banked ? 'Submitted' : 'Not Submitted'}`}</span>
+                  </p>
+                )}
               </Container>
             ))}
           </>

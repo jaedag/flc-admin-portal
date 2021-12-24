@@ -1,7 +1,7 @@
 import PlaceholderCustom from 'components/Placeholder'
 import { ServiceContext } from 'contexts/ServiceContext'
 import React, { useContext } from 'react'
-import { useHistory } from 'react-router'
+import { useNavigate } from 'react-router'
 import {
   ResponsiveContainer,
   XAxis,
@@ -17,7 +17,7 @@ import './ChurchGraph.css'
 const ChurchGraph = (props) => {
   const { loading, stat1, stat2, churchData, secondaryTitle } = props
   const { setServiceRecordId } = useContext(ServiceContext)
-  const history = useHistory()
+  const navigate = useNavigate()
 
   return (
     <>
@@ -86,7 +86,7 @@ const ChurchGraph = (props) => {
                   onClick={(data) => {
                     if (data.id) {
                       setServiceRecordId(data.id)
-                      history.push(`/${props.church}/service-details`)
+                      navigate(`/${props.church}/service-details`)
                     }
                   }}
                 >
@@ -107,7 +107,7 @@ const ChurchGraph = (props) => {
                     onClick={(data) => {
                       if (data.id) {
                         setServiceRecordId(data.id)
-                        history.push(`/${props.church}/service-details`)
+                        navigate(`/${props.church}/service-details`)
                       }
                     }}
                   >

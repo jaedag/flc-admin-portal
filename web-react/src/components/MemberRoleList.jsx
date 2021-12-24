@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { useHistory } from 'react-router'
+import { useNavigate } from 'react-router'
 import { ChurchContext } from '../contexts/ChurchContext'
 import { capitalise } from '../global-utils'
 import PlaceholderCustom from './Placeholder'
@@ -9,12 +9,12 @@ const MemberRoleList = ({ member }) => {
     return null
   }
 
-  const { clickCard, determineStream } = useContext(ChurchContext)
-  const history = useHistory()
+  const { clickCard } = useContext(ChurchContext)
+  const navigate = useNavigate()
 
   //To Display Ranks on the Member Card
   let rank = {
-    bishop: [],
+    councilLeader: [],
     constituencyLeader: [],
     sontaLeader: [],
     basontaLeader: [],
@@ -30,9 +30,10 @@ const MemberRoleList = ({ member }) => {
     if (churchType === 'bishop') {
       if (member.leadsCouncil[0]) {
         member.leadsCouncil.map((church) => {
-          rank.bishop.push({
+          rank.councilLeader.push({
             name: church.name,
             church: church,
+            link: '/council/displaydetails',
             id: church.id,
             stream_name: church.stream_name,
             __typename: church.__typename,
@@ -131,15 +132,6 @@ const MemberRoleList = ({ member }) => {
         View Records
       </DashboardButton> */}
 
-        {member.leadsCouncil[0] && (
-          <span
-            onClick={() => {
-              determineStream(member)
-              history.push('/dashboard')
-            }}
-          >{`Bishop in the First Love Bacenta`}</span>
-        )}
-
         {
           //Rank Discussions */}
           Object.entries(rank).map((rank) => {
@@ -164,7 +156,7 @@ const MemberRoleList = ({ member }) => {
                   key={i}
                   onClick={() => {
                     clickCard(place)
-                    history.push(place.link)
+                    navigate(place.link)
                   }}
                 >
                   <p className="font-weight-bold text-secondary mb-0">{`${place.__typename} ${leader}:`}</p>

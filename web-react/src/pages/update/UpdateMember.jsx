@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/client'
 
 import { parsePhoneNum, throwErrorMsg } from '../../global-utils'
@@ -68,7 +68,7 @@ const UpdateMember = () => {
     ],
   }
 
-  const history = useHistory()
+  const navigate = useNavigate()
 
   const [UpdateMember] = useMutation(UPDATE_MEMBER_MUTATION)
   const [AddMemberTitle] = useMutation(ADD_MEMBER_TITLE_MUTATION)
@@ -119,7 +119,7 @@ const UpdateMember = () => {
 
         setSubmitting(false)
         resetForm()
-        history.push('/member/displaydetails')
+        navigate('/member/displaydetails')
       })
       .catch((err) =>
         throwErrorMsg('There was an error creating the member profile\n', err)

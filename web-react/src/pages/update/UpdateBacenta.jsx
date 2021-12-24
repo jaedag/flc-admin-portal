@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/client'
 import { alertMsg, capitalise, throwErrorMsg } from '../../global-utils'
 
@@ -27,7 +27,7 @@ const UpdateBacenta = () => {
     }
   )
 
-  const history = useHistory()
+  const navigate = useNavigate()
   const bacenta = bacentaData?.bacentas[0]
 
   const initialValues = {
@@ -172,7 +172,7 @@ const UpdateBacenta = () => {
       })
         .then(() => {
           alertMsg('Leader Changed Successfully')
-          history.push(`/bacenta/displaydetails`)
+          navigate(`/bacenta/displaydetails`)
         })
         .catch((error) =>
           throwErrorMsg('There was an error changing the leader', error)
@@ -268,7 +268,7 @@ const UpdateBacenta = () => {
 
     onSubmitProps.setSubmitting(false)
     onSubmitProps.resetForm()
-    history.push(`/bacenta/displaydetails`)
+    navigate(`/bacenta/displaydetails`)
   }
 
   return (

@@ -254,18 +254,22 @@ export const UPDATE_FELLOWSHIP = gql`
       venueLongitude: $venueLongitude
     ) {
       id
+      labels
+      stream_name
+      bankingCode
       name
+      memberCount
+      location {
+        longitude
+        latitude
+      }
       meetingDay {
         day
       }
       bacenta {
         id
         name
-        fellowships {
-          id
-        }
-
-        constituencies {
+        constituency {
           id
           name
         }
@@ -274,10 +278,10 @@ export const UPDATE_FELLOWSHIP = gql`
         id
         firstName
         lastName
-        title {
-          title
-        }
+        fullName
+        pictureUrl
       }
+
       history(options: { limit: 10 }) {
         id
         timeStamp

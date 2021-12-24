@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { useHistory, useLocation } from 'react-router'
+import { useNavigate, useLocation } from 'react-router'
 import ChurchGraph from 'components/ChurchGraph/ChurchGraph'
 import './Dashboards.css'
 import { MemberContext } from 'contexts/MemberContext'
@@ -25,7 +25,7 @@ import Placeholder from '../../components/Placeholder'
 const ServantsDashboard = () => {
   const { memberId, currentUser } = useContext(MemberContext)
   const { clickCard } = useContext(ChurchContext)
-  const history = useHistory()
+  const navigate = useNavigate()
   const location = useLocation()
   const atHome = location.pathname === '/'
 
@@ -194,7 +194,7 @@ const ServantsDashboard = () => {
                         key={i}
                         onClick={() => {
                           role.clickCard()
-                          history.push(role.link)
+                          navigate(role.link)
                         }}
                       >
                         <RoleCard number={role.number} role={role.name} />

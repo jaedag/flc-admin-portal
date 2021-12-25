@@ -23,6 +23,7 @@ import { reports, services } from 'pages/routes/servicesRoutes.js'
 import { arrivals } from 'pages/routes/arrivalsRoutes.js'
 import { campaigns } from 'pages/routes/campaignsRoutes.js'
 import { reconciliation } from 'pages/routes/reconRoutes.js'
+import PageNotFound from 'pages/page-not-found/PageNotFound'
 
 const PastorsAdmin = () => {
   const [church, setChurch] = useState(
@@ -338,6 +339,7 @@ const PastorsAdmin = () => {
                       </ProtectedRouteHome>
                     }
                   />
+                  <Route path="*" element={<PageNotFound />} />
                 </Routes>
               </div>
             </ServiceContext.Provider>

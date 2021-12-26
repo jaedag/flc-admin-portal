@@ -12,21 +12,50 @@ export const FEDERAL_SEARCH = gql`
         }
       }
     }
+    federalCouncilSearch(searchKey: $searchKey) {
+      id
+      name
+      stream_name
+      leader {
+        id
+        firstName
+        lastName
+        fullName
+      }
+    }
 
     federalConstituencySearch(searchKey: $searchKey) {
       id
       name
       stream_name
+      leader {
+        id
+        firstName
+        lastName
+        fullName
+      }
     }
     federalBacentaSearch(searchKey: $searchKey) {
       id
       name
       stream_name
+      leader {
+        id
+        firstName
+        lastName
+        fullName
+      }
     }
     federalFellowshipSearch(searchKey: $searchKey) {
       id
       name
       stream_name
+      leader {
+        id
+        firstName
+        lastName
+        fullName
+      }
     }
     federalMemberSearch(searchKey: $searchKey) {
       id
@@ -117,6 +146,12 @@ export const CONSTITUENCY_SEARCH = gql`
     ) {
       id
       name
+      leader {
+        id
+        firstName
+        lastName
+        fullName
+      }
     }
     constituencyFellowshipSearch(
       searchKey: $searchKey
@@ -124,6 +159,12 @@ export const CONSTITUENCY_SEARCH = gql`
     ) {
       id
       name
+      leader {
+        id
+        firstName
+        lastName
+        fullName
+      }
     }
     constituencyMemberSearch(
       searchKey: $searchKey
@@ -152,6 +193,12 @@ export const BACENTA_SEARCH = gql`
     bacentaFellowshipSearch(searchKey: $searchKey, bacentaId: $bacentaId) {
       id
       name
+      leader {
+        id
+        firstName
+        lastName
+        fullName
+      }
     }
     bacentaMemberSearch(searchKey: $searchKey, bacentaId: $bacentaId) {
       id

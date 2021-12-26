@@ -41,6 +41,21 @@ const MemberDisplayCard = (props) => {
       name = member.name + ' Constituency'
       details = [member?.leader?.fullName]
       break
+    case 'Council':
+      icon = bussolid
+      name = member.name + ' Council'
+      details = [member?.leader?.fullName]
+      break
+    case 'Stream':
+      icon = bussolid
+      name = member.name + ' Stream'
+      details = [member?.leader?.fullName]
+      break
+    case 'GatheringService':
+      icon = bussolid
+      name = member.name + ' Gathering Service'
+      details = [member?.leader?.fullName]
+      break
     case 'Sonta':
       icon = bussolid
       name = member.name + ' Sonta'

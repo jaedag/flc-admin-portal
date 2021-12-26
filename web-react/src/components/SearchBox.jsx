@@ -20,6 +20,7 @@ function SearchBox() {
   const onSubmit = (values, onSubmitProps) => {
     onSubmitProps.setSubmitting(true)
     setSearchKey(values.searchKeyVal)
+    navigate('/search-results')
     onSubmitProps.setSubmitting(false)
   }
 
@@ -29,7 +30,7 @@ function SearchBox() {
       validationSchema={validationSchema}
       onSubmit={onSubmit}
     >
-      {(formik) => (
+      {() => (
         <Form className="form-row">
           <Col className="d-flex mt-2">
             <FormikControl
@@ -41,14 +42,7 @@ function SearchBox() {
             />
 
             <Nav.Link className="m-0 p-0" as="div" eventKey={10}>
-              <Button
-                className="nav-search-btn"
-                type="submit"
-                onClick={() => {
-                  setSearchKey(formik.values.searchKey)
-                  navigate('/search-results')
-                }}
-              >
+              <Button className="nav-search-btn" type="submit">
                 Search
               </Button>
             </Nav.Link>

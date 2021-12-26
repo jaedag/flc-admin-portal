@@ -36,7 +36,6 @@ const server = new ApolloServer({
     return { req: event }
   },
   introspection: true,
-  playground: false,
 })
 
 exports.handler = server.createHandler()

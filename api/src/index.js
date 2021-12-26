@@ -52,7 +52,6 @@ const startServer = async () => {
     context: ({ req }) => req,
     schema: neoSchema.schema,
     introspection: true,
-    playground: true,
   })
 
   await server.start()

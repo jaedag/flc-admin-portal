@@ -16,6 +16,9 @@ This project is a starter for building a [GRANDstack](https://grandstack.io) (Gr
 The aim is to build a Church Management Portal for Managing the [First Love Church](https://www.firstlovecenter.com) in Accra.
 All Contributors welcome. Make your changes in a separate branch before submitting a PR. Read the [Contributor Guide](./CONTRIBUTING.md) for guidelines.
 
+
+You can find the UX designs by clicking [this link](https://xd.adobe.com/view/3d9789d7-2694-4135-95e6-6fc538304e51-68c4/).
+
 - [PHASE 1: Directory (State of the Flock Part 1) ✅](#phase-1-directory-state-of-the-flock-part-1-)
 - [PHASE 2: Attendance and Income Records (State of the Flock Part 2)](#phase-2-attendance-and-income-records-state-of-the-flock-part-2)
 - [PHASE 3: Records of the Campaigns (SSMG)](#phase-3-records-of-the-campaigns-ssmg)

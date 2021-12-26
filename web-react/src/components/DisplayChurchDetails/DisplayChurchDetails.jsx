@@ -181,7 +181,7 @@ const DisplayChurchDetails = (props) => {
                 navigate(`/${props.subChurch.toLowerCase()}/displayall`)
               }
               heading={props.churchHeading}
-              detail={props.churchCount}
+              detail={!props.loading && (props.churchCount || '0')}
             />
           </Col>
 
@@ -203,7 +203,7 @@ const DisplayChurchDetails = (props) => {
                 <DetailsCard
                   onClick={() => navigate(detail.link)}
                   heading={detail.title}
-                  detail={detail.number}
+                  detail={!props.loading && (detail.number || '0')}
                 />
               </Col>
             ))}

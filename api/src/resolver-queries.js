@@ -7,19 +7,25 @@ WITH apoc.cypher.runFirstColumn(
   RETURN fellowship", {this: member}, true) | member_fellowships { .id,.name }],
   leadsBacenta: [ member_bacentas IN apoc.cypher.runFirstColumn("MATCH (this)-[:LEADS]-(bacenta:Bacenta)
   RETURN bacenta", {this: member}, true) | member_bacentas { .id,.name }],
+   leadsConstituency: [ member_constituency IN apoc.cypher.runFirstColumn("MATCH (this)-[:LEADS]-(constituency:Constituency)
+  RETURN constituency", {this: member}, true) | member_constituency { .id,.name }],
+   leadsCouncil: [ member_council IN apoc.cypher.runFirstColumn("MATCH (this)-[:LEADS]-(council:Council)
+  RETURN council", {this: member}, true) | member_council { .id,.name }],
+  leadsStream: [ member_stream IN apoc.cypher.runFirstColumn("MATCH (this)-[:LEADS]-(stream:Stream)
+  RETURN stream", {this: member}, true) | member_stream { .id,.name }],
+  leadsGatheringService: [ member_gatheringService IN apoc.cypher.runFirstColumn("MATCH (this)-[:LEADS]-(gatheringService:GatheringService)
+  RETURN gatheringService", {this: member}, true) | member_gatheringService { .id,.name }],
   leadsSonta: [ member_sontas IN apoc.cypher.runFirstColumn("MATCH (this)-[:LEADS]-(sonta:Sonta)
   RETURN sonta", {this: member}, true) | member_sontas { .id,.name }],
   isAdminForConstituency: [ member_adminConstituencies IN apoc.cypher.runFirstColumn("MATCH (this)-[:IS_ADMIN_FOR]-(adminConstituency:Constituency)
   RETURN adminConstituency", {this: member}, true) | member_adminConstituencies { .id,.name }],
   isAdminForCouncil: [ member_adminCouncils IN apoc.cypher.runFirstColumn("MATCH (this)-[:IS_ADMIN_FOR]-(adminCouncil:Member)
-  RETURN adminCouncil", {this: member}, true) | member_adminCouncils { .id,.name}],
-  leadsConstituency: [ member_constituency IN apoc.cypher.runFirstColumn("MATCH (this)-[:LEADS]-(constituency:Constituency)
-  RETURN constituency", {this: member}, true) | member_constituency { .id,.name }] } AS member
+  RETURN adminCouncil", {this: member}, true) | member_adminCouncils { .id,.name}] } AS member
   `
 
 export const matchChurchQuery = `
   MATCH (church {id:$id}) 
-  WHERE church:Fellowship OR church:Bacenta OR church:Constituency OR church:Sonta OR church:Ministry OR church:Member
+  WHERE church:Fellowship OR church:Bacenta OR church:Constituency OR church:Council OR church:Stream OR church:GatheringService OR church:Sonta OR church:Ministry OR church:Member
   RETURN church.id AS id, church.name AS name, church.firstName AS firstName, church.lastName AS lastName, labels(church) AS type
   `
 

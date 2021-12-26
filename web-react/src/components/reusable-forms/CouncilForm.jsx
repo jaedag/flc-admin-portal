@@ -34,7 +34,7 @@ const CouncilForm = ({ initialValues, onSubmit, title, newCouncil }) => {
   const streamOptions = makeSelectOptions(data?.streams)
 
   const validationSchema = Yup.object({
-    councilName: Yup.string().required(`Council Name is a required field`),
+    name: Yup.string().required(`Council Name is a required field`),
     leaderId: Yup.string().required(
       'Please choose a leader from the drop down'
     ),
@@ -84,7 +84,7 @@ const CouncilForm = ({ initialValues, onSubmit, title, newCouncil }) => {
                     <FormikControl
                       className="form-control"
                       control="input"
-                      name="councilName"
+                      name="name"
                       label={`Name of Council`}
                       placeholder={`Name of Council`}
                     />

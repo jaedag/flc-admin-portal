@@ -38,4 +38,17 @@ const server = new ApolloServer({
   introspection: true,
 })
 
-exports.handler = server.createHandler()
+// exports.handler = server.createHandler()
+
+const apolloHandler = server.createHandler()
+
+export const handler = (event, context, ...args) => {
+  return apolloHandler(
+    {
+      ...event,
+      requestContext: context,
+    },
+    context,
+    ...args
+  )
+}

@@ -107,12 +107,11 @@ const errorHandling = (member) => {
 }
 const rearrangeCypherObject = (response) => {
   let member = {}
-  // console.log(response)
 
   response.records[0]?.keys.forEach(
     (key, i) => (member[key] = response.records[0]._fields[i])
   )
-  console.log(member)
+
   return member?.member || member
 }
 const parseForCache = (servant, church, verb, role) => {

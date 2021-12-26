@@ -14,7 +14,7 @@ const CreateCouncil = () => {
   const navigate = useNavigate()
 
   const initialValues = {
-    councilName: '',
+    name: '',
     leaderId: '',
     streamSelect: streamId,
     constituencies: [''],
@@ -32,7 +32,7 @@ const CreateCouncil = () => {
         name: values.name,
         leaderId: values.leaderId,
         streamId: values.streamSelect,
-        bacentas: values.bacentas,
+        constituencies: values.constituencies,
       },
     })
       .then((res) => {

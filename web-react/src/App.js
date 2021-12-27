@@ -4,7 +4,6 @@ import { MemberContext, SearchContext } from './contexts/MemberContext'
 import { ChurchContext } from './contexts/ChurchContext'
 import ProtectedRoute from './auth/ProtectedRoute.jsx'
 import ProtectedRouteHome from './auth/ProtectedRouteHome.jsx'
-import ProtectedMembersRoute from './pages/directory/MembersDirectoryRoute.jsx'
 import ServantsDashboard from 'pages/dashboards/ServantsDashboard'
 import ServantsChurchList from 'pages/dashboards/ServantsChurchList'
 import { ServiceContext } from 'contexts/ServiceContext'
@@ -269,7 +268,7 @@ const PastorsAdmin = () => {
                       }
                     />
                   ))}
-                  {memberDirectory.map((route, i) => (
+                  {[...memberDirectory, ...memberGrids].map((route, i) => (
                     <Route
                       key={i}
                       path={route.path}
@@ -283,20 +282,7 @@ const PastorsAdmin = () => {
                       }
                     />
                   ))}
-                  {memberGrids.map((route, i) => (
-                    <Route
-                      key={i}
-                      path={route.path}
-                      element={
-                        <ProtectedMembersRoute
-                          roles={route.roles}
-                          placeholder={route.placeholder}
-                        >
-                          <route.element />
-                        </ProtectedMembersRoute>
-                      }
-                    />
-                  ))}
+
                   <Route
                     path="/services/trends"
                     element={

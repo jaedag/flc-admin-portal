@@ -9,7 +9,7 @@ import LoadingScreen from '../components/base-component/LoadingScreen'
 import { isAuthorised } from '../global-utils'
 import Churches from 'pages/directory/Churches'
 
-const ChurchDirectoryRoute = ({ component, roles, ...args }) => {
+const ProtectedReports = ({ component, roles, ...args }) => {
   const { currentUser } = useContext(MemberContext)
   const { isAuthenticated } = useAuth0()
   const church = useContext(ChurchContext)
@@ -67,4 +67,4 @@ const ChurchDirectoryRoute = ({ component, roles, ...args }) => {
   }
 }
 
-export default ChurchDirectoryRoute
+export default ProtectedReports

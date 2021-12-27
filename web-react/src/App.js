@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Switch, BrowserRouter as Router } from 'react-router-dom'
-import BishopDashboard from './pages/dashboards/BishopDashboard.jsx'
+import { Routes, BrowserRouter as Router, Route } from 'react-router-dom'
 import { MemberContext, SearchContext } from './contexts/MemberContext'
 import { ChurchContext } from './contexts/ChurchContext'
 import ProtectedRoute from './auth/ProtectedRoute.jsx'
@@ -24,12 +23,18 @@ import { reports, services } from 'pages/routes/servicesRoutes.js'
 import { arrivals } from 'pages/routes/arrivalsRoutes.js'
 import { campaigns } from 'pages/routes/campaignsRoutes.js'
 import { reconciliation } from 'pages/routes/reconRoutes.js'
+import PageNotFound from 'pages/page-not-found/PageNotFound'
 
 const PastorsAdmin = () => {
   const [church, setChurch] = useState(
     sessionStorage.getItem('church')
       ? JSON.parse(sessionStorage.getItem('church'))
       : { church: '', subChurch: '' }
+  )
+  const [gatheringId, setGatheringId] = useState(
+    sessionStorage.getItem('gatheringId')
+      ? sessionStorage.getItem('gatheringId')
+      : ''
   )
   const [streamId, setStreamId] = useState(
     sessionStorage.getItem('streamId') ? sessionStorage.getItem('streamId') : ''
@@ -39,11 +44,15 @@ const PastorsAdmin = () => {
       ? sessionStorage.getItem('councilId')
       : ''
   )
-  const [townId, setTownId] = useState(
-    sessionStorage.getItem('townId') ? sessionStorage.getItem('townId') : ''
+  const [constituencyId, setConstituencyId] = useState(
+    sessionStorage.getItem('constituencyId')
+      ? sessionStorage.getItem('constituencyId')
+      : ''
   )
-  const [campusId, setCampusId] = useState(
-    sessionStorage.getItem('campusId') ? sessionStorage.getItem('campusId') : ''
+  const [bacentaId, setBacentaId] = useState(
+    sessionStorage.getItem('bacentaId')
+      ? sessionStorage.getItem('bacentaId')
+      : ''
   )
   const [fellowshipId, setFellowshipId] = useState(
     sessionStorage.getItem('fellowshipId')
@@ -55,11 +64,7 @@ const PastorsAdmin = () => {
       ? sessionStorage.getItem('serviceRecordsId')
       : ''
   )
-  const [bacentaId, setBacentaId] = useState(
-    sessionStorage.getItem('bacentaId')
-      ? sessionStorage.getItem('bacentaId')
-      : ''
-  )
+
   const [sontaId, setSontaId] = useState(
     sessionStorage.getItem('sontaId') ? sessionStorage.getItem('sontaId') : ''
   )
@@ -103,19 +108,25 @@ const PastorsAdmin = () => {
   }
 
   const determineStream = (member) => {
-    setChurch({ church: member.stream, subChurch: 'bacenta' })
+    setChurch({ church: member.stream_name, subChurch: 'bacenta' })
     sessionStorage.setItem(
       'church',
       JSON.stringify({
-        church: member.stream,
+        church: member.stream_name,
         subChurch: 'bacenta',
       })
     )
 
     if (member?.council?.id) {
-      setCouncilId(member?.council?.id)
-      sessionStorage.setItem('memberId', member?.council?.id)
+      setCouncilId(member.council.id)
+      sessionStorage.setItem('memberId', member.council.id)
     }
+
+    if (member.stream?.id) {
+      setStreamId(member.stream.id)
+      sessionStorage.setItem('streamId', member.stream.id)
+    }
+
     return
   }
 
@@ -139,21 +150,21 @@ const PastorsAdmin = () => {
         setBacentaId(card.id)
         sessionStorage.setItem('bacentaId', card.id)
         break
-      case 'Town':
-        setTownId(card.id)
-        sessionStorage.setItem('townId', card.id)
+      case 'Constituency':
+        setConstituencyId(card.id)
+        sessionStorage.setItem('constituencyId', card.id)
+        break
+      case 'Basonta':
+        setSontaId(card.sonta.id)
+        sessionStorage.setItem('sontaId', card.sonta.id)
         break
       case 'Council':
         setCouncilId(card.id)
         sessionStorage.setItem('councilId', card.id)
         break
-      case 'Campus':
-        setCampusId(card.id)
-        sessionStorage.setItem('campusId', card.id)
-        break
-      case 'Basonta':
-        setSontaId(card.sonta.id)
-        sessionStorage.setItem('sontaId', card.sonta.id)
+      case 'Stream':
+        setStreamId(card.id)
+        sessionStorage.setItem('streamId', card.id)
         break
       default:
         break
@@ -185,14 +196,14 @@ const PastorsAdmin = () => {
           setFilters,
           church,
           setChurch,
+          gatheringId,
+          setGatheringId,
           streamId,
           setStreamId,
           councilId,
           setCouncilId,
-          townId,
-          setTownId,
-          campusId,
-          setCampusId,
+          constituencyId,
+          setConstituencyId,
           bacentaId,
           setBacentaId,
           fellowshipId,
@@ -221,7 +232,7 @@ const PastorsAdmin = () => {
             >
               <Navigation />
               <div className={`bg ${theme}`}>
-                <Switch>
+                <Routes>
                   {[
                     ...dashboards,
                     ...directory,
@@ -231,79 +242,105 @@ const PastorsAdmin = () => {
                     ...reconciliation,
                     ...reports,
                   ].map((route, i) => (
-                    <ProtectedRoute
+                    <Route
                       key={i}
                       path={route.path}
-                      component={route.component}
-                      roles={route.roles}
-                      placeholder={route.placeholder}
-                      exact={route.exact}
+                      element={
+                        <ProtectedRoute
+                          roles={route.roles}
+                          placeholder={route.placeholder}
+                        >
+                          <route.element />
+                        </ProtectedRoute>
+                      }
                     />
                   ))}
                   {churchDirectory.map((route, i) => (
-                    <ChurchDirectoryRoute
+                    <Route
                       key={i}
                       path={route.path}
-                      component={route.component}
-                      roles={route.roles}
-                      placeholder={route.placeholder}
-                      exact={route.exact}
+                      element={
+                        <ChurchDirectoryRoute
+                          roles={route.roles}
+                          placeholder={route.placeholder}
+                        >
+                          <route.element />
+                        </ChurchDirectoryRoute>
+                      }
                     />
                   ))}
                   {memberDirectory.map((route, i) => (
-                    <MembersDirectoryRoute
+                    <Route
                       key={i}
                       path={route.path}
-                      component={route.component}
-                      roles={route.roles}
-                      placeholder={route.placeholder}
-                      exact={route.exact}
+                      element={
+                        <MembersDirectoryRoute
+                          roles={route.roles}
+                          placeholder={route.placeholder}
+                        >
+                          <route.element />
+                        </MembersDirectoryRoute>
+                      }
                     />
                   ))}
                   {memberGrids.map((route, i) => (
-                    <ProtectedMembersRoute
+                    <Route
                       key={i}
                       path={route.path}
-                      component={route.component}
-                      roles={route.roles}
-                      placeholder={route.placeholder}
-                      exact={route.exact}
+                      element={
+                        <ProtectedMembersRoute
+                          roles={route.roles}
+                          placeholder={route.placeholder}
+                        >
+                          <route.element />
+                        </ProtectedMembersRoute>
+                      }
                     />
                   ))}
-                  <ProtectedReports
+                  <Route
                     path="/services/trends"
-                    roles={['all']}
-                    placeholder
-                    exact
+                    element={
+                      <ProtectedReports roles={['all']} placeholder exact />
+                    }
                   />
-                  <ProtectedRouteHome
-                    path="/dashboard"
-                    component={BishopDashboard}
-                    roles={['adminFederal', 'adminCouncil']}
-                    exact
-                  />
-                  <ProtectedRouteHome
+                  <Route
                     path="/dashboard/servants"
-                    component={ServantsDashboard}
-                    roles={[
-                      'adminFederal',
-                      'adminCouncil',
-                      'adminCampus',
-                      'adminTown',
-                      'leaderFellowship',
-                      'leaderBacenta',
-                      'leaderCampus',
-                      'leaderTown',
-                    ]}
-                    exact
+                    element={
+                      <ProtectedRouteHome
+                        roles={[
+                          'adminFederal',
+                          'adminCouncil',
+                          'adminConstituency',
+                          'leaderFellowship',
+                          'leaderBacenta',
+                          'leaderConstituency',
+                        ]}
+                        placeholder
+                      >
+                        <ServantsDashboard />
+                      </ProtectedRouteHome>
+                    }
                   />
-                  <ProtectedRouteHome
+                  <Route
                     path="/servants/church-list"
-                    component={ServantsChurchList}
-                    roles={['all']}
-                    exact
+                    element={
+                      <ProtectedRouteHome
+                        roles={[
+                          'adminFederal',
+                          'adminCouncil',
+                          'adminConstituency',
+                          'leaderFellowship',
+                          'leaderBacenta',
+                          'leaderConstituency',
+                        ]}
+                        placeholder
+                      >
+                        <ServantsChurchList />
+                      </ProtectedRouteHome>
+                    }
                   />
-                </Switch>
+                  <Route path="*" element={<PageNotFound />} />
+                </Routes>
               </div>
             </ServiceContext.Provider>
           </SearchContext.Provider>

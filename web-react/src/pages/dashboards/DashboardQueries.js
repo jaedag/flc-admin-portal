@@ -1,45 +1,5 @@
 import { gql } from '@apollo/client'
 
-export const BISH_DASHBOARD_COUNTS = gql`
-  query bishDashboardData($id: ID) {
-    members(where: { id: $id }) {
-      id
-      firstName
-      lastName
-      pictureUrl
-      admin {
-        id
-        firstName
-        lastName
-        fellowship {
-          id
-          bacenta {
-            id
-            town {
-              id
-              name
-              bishop {
-                id
-              }
-            }
-            campus {
-              name
-              bishop {
-                id
-              }
-            }
-          }
-        }
-      }
-    }
-    bishopMemberCount(id: $id)
-    bishopPastorCount(id: $id)
-    bishopCampusTownCount(id: $id)
-    bishopBacentaCount(id: $id)
-    bishopFellowshipCount(id: $id)
-    bishopSontaMemberCount(id: $id)
-  }
-`
 export const MAKE_BISHOP_ADMIN = gql`
   mutation MakeBishopAdmin($bishopId: ID!, $newAdminId: ID!, $oldAdminId: ID!) {
     RemoveBishopAdmin(bishopId: $bishopId, adminId: $oldAdminId) {
@@ -152,7 +112,7 @@ export const SERVANTS_LEADERSHIP = gql`
 
       # The person leads in the Fellowship side
 
-      leadsTown {
+      leadsConstituency {
         id
         name
         stream_name
@@ -179,33 +139,7 @@ export const SERVANTS_LEADERSHIP = gql`
           income
         }
       }
-      leadsCampus {
-        id
-        name
-        stream_name
-        memberCount
-        leader {
-          id
-          firstName
-          lastName
-          fullName
-        }
-        services(limit: 4) {
-          created_at
-          attendance
-          income
-          week
-          serviceDate {
-            date
-          }
-        }
 
-        componentServiceAggregate {
-          week
-          attendance
-          income
-        }
-      }
       leadsSonta {
         id
         name
@@ -224,7 +158,7 @@ export const SERVANTS_ADMIN = gql`
       id
 
       # The person is an admin
-      isAdminForTown {
+      isAdminForConstituency {
         id
         name
         stream_name
@@ -236,34 +170,6 @@ export const SERVANTS_ADMIN = gql`
           fullName
         }
         services(limit: 4) {
-          created_at
-          attendance
-          income
-          week
-          serviceDate {
-            date
-          }
-        }
-
-        componentServiceAggregate {
-          week
-          attendance
-          income
-        }
-      }
-      isAdminForCampus {
-        id
-        name
-        stream_name
-        memberCount
-        leader {
-          id
-          firstName
-          lastName
-          fullName
-        }
-        services(limit: 4) {
-          id
           created_at
           attendance
           income
@@ -306,6 +212,26 @@ export const SERVANTS_ADMIN = gql`
           income
         }
       }
+      isAdminForGatheringService {
+        id
+        name
+        memberCount
+        leader {
+          id
+          firstName
+          lastName
+          fullName
+        }
+        services(limit: 4) {
+          created_at
+          attendance
+          income
+          week
+          serviceDate {
+            date
+          }
+        }
+      }
     }
   }
 `
@@ -320,6 +246,7 @@ export const SERVANT_CHURCHES_COUNT = gql`
       leadsBacentaCount
       leadsConstituencyCount
       leadsCouncilCount
+      leadsGatheringServiceCount
     }
   }
 `

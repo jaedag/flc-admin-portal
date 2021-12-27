@@ -16,6 +16,9 @@ This project is a starter for building a [GRANDstack](https://grandstack.io) (Gr
 The aim is to build a Church Management Portal for Managing the [First Love Church](https://www.firstlovecenter.com) in Accra.
 All Contributors welcome. Make your changes in a separate branch before submitting a PR. Read the [Contributor Guide](./CONTRIBUTING.md) for guidelines.
 
+
+You can find the UX designs by clicking [this link](https://xd.adobe.com/view/3d9789d7-2694-4135-95e6-6fc538304e51-68c4/).
+
 - [PHASE 1: Directory (State of the Flock Part 1) ✅](#phase-1-directory-state-of-the-flock-part-1-)
 - [PHASE 2: Attendance and Income Records (State of the Flock Part 2)](#phase-2-attendance-and-income-records-state-of-the-flock-part-2)
 - [PHASE 3: Records of the Campaigns (SSMG)](#phase-3-records-of-the-campaigns-ssmg)
@@ -28,7 +31,7 @@ All Contributors welcome. Make your changes in a separate branch before submitti
 1.  Be able to hold all membership and leadership records (Bacenta and Basonta).
 2.  Be able to search and filter all membership records based on selected criteria.
 3.  Be able to display information on one member
-4.  Display registration numbers at all levels (Town/Campus/School, Bacenta, Basonta)
+4.  Display registration numbers at all levels (Constituency, Bacenta, Basonta)
 5.  Be able to import data in a csv file, and export data in a csv file.
 6.  An extensive transaction log of leadership histories.
 7.  Database Backups implementation.
@@ -47,7 +50,7 @@ All Contributors welcome. Make your changes in a separate branch before submitti
 6.  Generating monthly graph reports at the bishops level/ COs level, bacenta level.
 7.  Requesting records on any leader in the church (Graphs)
 8.  Bishops Monthly Report sent via Mail as a PDF.
-9.  Monthly CO Reports per Campus, Town.
+9.  Monthly CO Reports per Constituency.
 10. Requesting records on any bacenta in the church.
 11. Monitoring the tithes of leaders (Needs ideas on how to achieve this)
     <br/>

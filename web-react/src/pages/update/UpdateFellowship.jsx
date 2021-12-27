@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/client'
 import { GET_BACENTA_FELLOWSHIPS } from '../../queries/ListQueries'
 import {
@@ -30,7 +30,7 @@ const UpdateFellowship = () => {
       }),
   })
 
-  const history = useHistory()
+  const navigate = useNavigate()
 
   const fellowship = fellowshipData?.fellowships[0]
 
@@ -38,8 +38,7 @@ const UpdateFellowship = () => {
     fellowshipName: fellowship?.name,
     leaderId: fellowship?.leader?.id,
     leaderName: `${fellowship?.leader?.firstName} ${fellowship?.leader?.lastName} `,
-    townCampusSelect:
-      fellowship?.bacenta?.town?.id ?? fellowship?.bacenta?.campus?.id,
+    constituencySelect: fellowship?.bacenta?.constituency?.id,
     bacentaSelect: fellowship?.bacenta?.id,
     meetingDay: fellowship?.meetingDay?.day,
     vacationStatus: fellowship?.labels.includes('Vacation')
@@ -186,7 +185,7 @@ const UpdateFellowship = () => {
       })
         .then(() => {
           alertMsg('Leader Changed Successfully')
-          history.push(`/fellowship/displaydetails`)
+          navigate(`/fellowship/displaydetails`)
         })
         .catch((err) =>
           throwErrorMsg('There was a problem changing fellowship leader', err)
@@ -194,7 +193,7 @@ const UpdateFellowship = () => {
     }
     onSubmitProps.setSubmitting(false)
     onSubmitProps.resetForm()
-    history.push(`/fellowship/displaydetails`)
+    navigate(`/fellowship/displaydetails`)
   }
 
   return (

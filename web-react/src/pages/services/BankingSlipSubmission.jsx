@@ -13,14 +13,14 @@ import { MemberContext } from 'contexts/MemberContext'
 import { useMutation, useQuery } from '@apollo/client'
 import HeadingSecondary from 'components/HeadingSecondary'
 import BaseComponent from 'components/base-component/BaseComponent'
-import { useHistory } from 'react-router'
+import { useNavigate } from 'react-router'
 import { ChurchContext } from 'contexts/ChurchContext'
 
 const BankingSlipSubmission = () => {
   const { serviceRecordId } = useContext(ServiceContext)
   const { theme } = useContext(MemberContext)
   const { setFellowshipId } = useContext(ChurchContext)
-  const history = useHistory()
+  const navigate = useNavigate()
 
   const { data, loading, error } = useQuery(DISPLAY_SERVICE_RECORDS, {
     variables: { serviceId: serviceRecordId },
@@ -46,7 +46,7 @@ const BankingSlipSubmission = () => {
       onSubmitProps.setSubmitting(false)
       onSubmitProps.resetForm()
 
-      history.push(`/fellowship/service-details`)
+      navigate(`/fellowship/service-details`)
     })
   }
 

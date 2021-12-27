@@ -12,18 +12,11 @@ export const MAKE_FELLOWSHIP_INACTIVE = gql`
           id
           name
         }
-        town {
+        constituency {
           id
-          bishop {
-            id
-          }
+          stream_name
         }
-        campus {
-          id
-          bishop {
-            id
-          }
-        }
+
         history(options: { limit: 10 }) {
           id
           timeStamp
@@ -48,14 +41,12 @@ export const MAKE_BACENTA_INACTIVE = gql`
       id
       name
       stream_name
-      town {
+      constituency {
         id
         bacentas {
           id
         }
-        bishop {
-          id
-        }
+
         history(options: { limit: 10 }) {
           id
           timeStamp
@@ -70,13 +61,22 @@ export const MAKE_BACENTA_INACTIVE = gql`
           historyRecord
         }
       }
-      campus {
+    }
+  }
+`
+
+export const MAKE_CONSTITUENCY_INACTIVE = gql`
+  mutation CloseDownConstituency($constituencyId: ID!) {
+    CloseDownConstituency(constituencyId: $constituencyId) {
+      id
+      name
+      stream_name
+
+      constituency {
         id
-        bacentas {
+        council {
           id
-        }
-        bishop {
-          id
+          constituencies
         }
         history(options: { limit: 10 }) {
           id
@@ -96,38 +96,17 @@ export const MAKE_BACENTA_INACTIVE = gql`
   }
 `
 
-export const MAKE_CAMPUSTOWN_INACTIVE = gql`
-  mutation CloseDownCampusTown($campusTownId: ID!) {
-    CloseDownCampusTown(campusTownId: $campusTownId) {
+export const MAKE_COUNCIL_INACTIVE = gql`
+  mutation CloseDownCouncil($councilId: ID!) {
+    CloseDownCouncil(councilId: $councilId) {
       id
       name
       stream_name
 
-      town {
+      stream {
         id
-        council {
+        councils {
           id
-          towns
-        }
-        history(options: { limit: 10 }) {
-          id
-          timeStamp
-          created_at {
-            date
-          }
-          loggedBy {
-            id
-            firstName
-            lastName
-          }
-          historyRecord
-        }
-      }
-      campus {
-        id
-        council {
-          id
-          towns
         }
         history(options: { limit: 10 }) {
           id

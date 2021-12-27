@@ -1,19 +1,19 @@
 import { gql } from '@apollo/client'
 
-export const ALL_MEMBERS = gql`
+export const GET_BISHOPS = gql`
   {
-    members(options: { limit: 50 }) {
+    members(where: { title: { title: "Bishop" } }) {
       id
       firstName
       lastName
-      pictureUrl
+      fullName
     }
   }
 `
 
 export const GET_FELLOWSHIP_LEADERS = gql`
   {
-    townList(firstName: $firstName, lastName: $lastName) {
+    constituencyList(firstName: $firstName, lastName: $lastName) {
       id
       bacentas {
         id
@@ -38,25 +38,11 @@ export const FELLOWSHIP_DROPDOWN = gql`
       bacenta {
         id
         name
-        campus {
-          id
-          name
-        }
-        town {
+        constituency {
           id
           name
         }
       }
-    }
-  }
-`
-
-export const COUNCIL_MEMBER_DROPDOWN = gql`
-  query ($id: ID!, $nameSearch: String!) {
-    councilMemberDropdown(id: $id, nameSearch: $nameSearch) {
-      id
-      firstName
-      lastName
     }
   }
 `
@@ -66,21 +52,27 @@ export const BACENTA_DROPDOWN = gql`
     bacentaDropdown(bacentaName: $bacentaName, first: 8) {
       id
       name
-      campus {
-        id
-        name
-      }
-      town {
+
+      constituency {
         id
         name
       }
     }
   }
 `
+export const CONSTITUENCY_DROPDOWN = gql`
+  query ($nameSearch: String!) {
+    constituencyDropdown(nameSearch: $nameSearch) {
+      id
+      name
+      stream_name
+    }
+  }
+`
 
-export const GET_TOWN_BACENTAS = gql`
+export const GET_CONSTITUENCY_BACENTAS = gql`
   query ($id: ID) {
-    towns(where: { id: $id }) {
+    constituencies(where: { id: $id }) {
       id
       name
       stream_name
@@ -118,49 +110,9 @@ export const GET_TOWN_BACENTAS = gql`
   }
 `
 
-export const GET_CAMPUS_BACENTAS = gql`
+export const GET_SONTAS_BY_CONSTITUENCY = gql`
   query ($id: ID) {
-    campuses(where: { id: $id }) {
-      id
-      name
-      stream_name
-      council {
-        id
-      }
-      leader {
-        firstName
-        lastName
-      }
-      memberCount
-      sontas {
-        id
-        name
-        leader {
-          id
-          firstName
-          lastName
-        }
-      }
-      bacentas {
-        id
-        name
-        stream_name
-        council {
-          id
-        }
-        leader {
-          id
-          firstName
-          lastName
-        }
-      }
-    }
-  }
-`
-
-export const GET_SONTAS_BY_CAMPUSTOWN = gql`
-  query ($id: ID) {
-    towns(where: { bishop: { id: $id } }) {
+    constituencies(where: { bishop: { id: $id } }) {
       id
       name
       bishop {
@@ -179,28 +131,10 @@ export const GET_SONTAS_BY_CAMPUSTOWN = gql`
       }
     }
     bishopSontaMemberCount(id: $id)
-    campuses(where: { bishop: { id: $id } }) {
-      id
-      name
-      bishop {
-        id
-        firstName
-        lastName
-      }
-      sontas {
-        id
-        name
-        leader {
-          id
-          firstName
-          lastName
-        }
-      }
-    }
   }
 `
 
-export const GET_COUNCIL_CAMPUSES = gql`
+export const GET_COUNCIL_CONSTITUENCIES = gql`
   query ($id: ID) {
     councils(where: { id: $id }) {
       id
@@ -218,7 +152,7 @@ export const GET_COUNCIL_CAMPUSES = gql`
         lastName
         stream_name
       }
-      campuses {
+      constituencies {
         name
         id
         stream_name
@@ -247,9 +181,9 @@ export const GET_COUNCIL_CAMPUSES = gql`
   }
 `
 
-export const GET_COUNCIL_TOWNS = gql`
+export const GET_STREAM_COUNCILS = gql`
   query ($id: ID) {
-    councils(where: { id: $id }) {
+    streams(where: { id: $id }) {
       id
       name
       leader {
@@ -265,7 +199,7 @@ export const GET_COUNCIL_TOWNS = gql`
         lastName
         stream_name
       }
-      towns {
+      councils {
         name
         id
         stream_name
@@ -281,13 +215,44 @@ export const GET_COUNCIL_TOWNS = gql`
           lastName
           stream_name
         }
-        sontas {
+      }
+    }
+  }
+`
+
+export const GET_GATHERING_SERVICE_STREAMS = gql`
+  query ($id: ID) {
+    gatheringServices(where: { id: $id }) {
+      id
+      name
+      leader {
+        id
+        firstName
+        lastName
+        fullName
+      }
+      memberCount
+      admin {
+        id
+        firstName
+        lastName
+        stream_name
+      }
+      streams {
+        name
+        id
+        stream_name
+        leader {
           id
-          name
+          firstName
+          lastName
+          stream_name
         }
-        bacentas {
+        admin {
           id
-          name
+          firstName
+          lastName
+          stream_name
         }
       }
     }
@@ -299,10 +264,19 @@ export const GET_COUNCILS = gql`
     councils {
       id
       name
-      towns {
+      constituencies {
         id
       }
-      campuses {
+    }
+  }
+`
+
+export const GET_STREAMS = gql`
+  {
+    streams {
+      id
+      name
+      councils {
         id
       }
     }
@@ -340,17 +314,8 @@ export const GET_BACENTA_FELLOWSHIPS = gql`
             lastName
             fullName
           }
-          town {
+          constituency {
             id
-            bishop {
-              id
-            }
-          }
-          campus {
-            id
-            bishop {
-              id
-            }
           }
         }
       }

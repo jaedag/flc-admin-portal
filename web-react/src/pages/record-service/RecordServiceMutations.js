@@ -30,6 +30,8 @@ export const RECORD_SERVICE = gql`
           id
           services(limit: 4) {
             id
+            week
+            bankingSlip
           }
         }
       }
@@ -169,8 +171,8 @@ export const DISPLAY_SONTA_SERVICE = gql`
   }
 `
 
-export const DISPLAY_TOWN_SERVICE = gql`
-  query DisplayServiceRecords($serviceId: ID!, $townId: ID!) {
+export const DISPLAY_CONSTITUENCY_SERVICE = gql`
+  query DisplayServiceRecords($serviceId: ID!, $constituencyId: ID!) {
     serviceRecords(where: { id: $serviceId }) {
       id
       created_at
@@ -189,34 +191,7 @@ export const DISPLAY_TOWN_SERVICE = gql`
         fullName
       }
     }
-    towns(where: { id: $townId }) {
-      id
-      name
-    }
-  }
-`
-
-export const DISPLAY_CAMPUS_SERVICE = gql`
-  query DisplayServiceRecords($serviceId: ID!, $campusId: ID!) {
-    serviceRecords(where: { id: $serviceId }) {
-      id
-      created_at
-      serviceDate {
-        date
-      }
-      attendance
-      income
-      foreignCurrency
-      treasurerSelfie
-      servicePicture
-      treasurers {
-        id
-        firstName
-        lastName
-        fullName
-      }
-    }
-    campuses(where: { id: $campusId }) {
+    constituencies(where: { id: $constituencyId }) {
       id
       name
     }

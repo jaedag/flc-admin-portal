@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react'
-import { Link, useHistory } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import DetailsCard from '../card/DetailsCard'
 import { MemberContext } from '../../contexts/MemberContext'
 import { ChurchContext } from '../../contexts/ChurchContext'
@@ -12,9 +12,8 @@ import RoleView from '../../auth/RoleView'
 import { Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import Popup from '../Popup/Popup'
-import { COUNCIL_MEMBER_DROPDOWN } from '../../queries/ListQueries'
 import { useMutation } from '@apollo/client'
-import { MAKE_TOWN_ADMIN, MAKE_CAMPUS_ADMIN } from './AdminMutations'
+import { MAKE_CONSTITUENCY_ADMIN } from './AdminMutations'
 import FormikControl from '../formik-components/FormikControl'
 import { plural, throwErrorMsg } from '../../global-utils'
 import Breadcrumb from './Breadcrumb'
@@ -24,19 +23,17 @@ import { Geo, PencilSquare } from 'react-bootstrap-icons'
 import ViewAll from 'components/buttons/ViewAll'
 
 const DisplayChurchDetails = (props) => {
-  const history = useHistory()
-  const isConstituency =
-    props.churchType === 'Campus' || props.churchType === 'Town'
+  const navigate = useNavigate()
+  const isConstituency = props.churchType === 'Constituency'
   const { setMemberId, theme, setCurrentUser, currentUser } =
     useContext(MemberContext)
   const [submitting, setSubmitting] = useState(false)
-  const { clickCard, togglePopup, isOpen, campusId, townId, councilId } =
+  const { clickCard, togglePopup, isOpen, constituencyId } =
     useContext(ChurchContext)
 
   //Change Admin Initialised
 
-  const [MakeTownAdmin] = useMutation(MAKE_TOWN_ADMIN)
-  const [MakeCampusAdmin] = useMutation(MAKE_CAMPUS_ADMIN)
+  const [MakeConstituencyAdmin] = useMutation(MAKE_CONSTITUENCY_ADMIN)
 
   const initialValues = {
     adminName: props.admin
@@ -51,35 +48,20 @@ const DisplayChurchDetails = (props) => {
   })
   const onSubmit = (values, onSubmitProps) => {
     setSubmitting(true)
-    if (props.churchType === 'Town') {
-      MakeTownAdmin({
-        variables: {
-          townId: townId,
-          newAdminId: values.adminSelect,
-          oldAdminId: initialValues.adminSelect ?? 'no-old-admin',
-        },
+
+    MakeConstituencyAdmin({
+      variables: {
+        constituencyId: constituencyId,
+        newAdminId: values.adminSelect,
+        oldAdminId: initialValues.adminSelect ?? 'no-old-admin',
+      },
+    })
+      .then(() => {
+        togglePopup()
+        setSubmitting(false)
+        alert('Constituency Admin has been changed successfully')
       })
-        .then(() => {
-          togglePopup()
-          setSubmitting(false)
-          alert('Town Admin has been changed successfully')
-        })
-        .catch((e) => throwErrorMsg(e))
-    } else if (props.churchType === 'Campus') {
-      MakeCampusAdmin({
-        variables: {
-          campusId: campusId,
-          newAdminId: values.adminSelect,
-          oldAdminId: initialValues.adminSelect ?? 'no-old-admin',
-        },
-      })
-        .then(() => {
-          togglePopup()
-          alert('Campus Admin has been changed successfully')
-          setSubmitting(false)
-        })
-        .catch((e) => throwErrorMsg(e))
-    }
+      .catch((e) => throwErrorMsg(e))
 
     onSubmitProps.resetForm()
   }
@@ -139,19 +121,12 @@ const DisplayChurchDetails = (props) => {
                     <Row className="form-row">
                       <Col>
                         <FormikControl
-                          control="combobox2"
+                          control="memberSearch"
                           name="adminSelect"
                           initialValue={initialValues?.adminName}
                           placeholder="Select an Admin"
                           setFieldValue={formik.setFieldValue}
-                          optionsQuery={COUNCIL_MEMBER_DROPDOWN}
-                          queryVariable1="id"
-                          variable1={councilId}
-                          queryVariable2="nameSearch"
-                          suggestionText="name"
-                          suggestionID="id"
-                          dataset="councilMemberDropdown"
-                          aria-describedby="Council Member List"
+                          aria-describedby="Member Search"
                           className="form-control"
                           error={formik.errors.admin}
                         />
@@ -203,17 +178,17 @@ const DisplayChurchDetails = (props) => {
           <Col>
             <DetailsCard
               onClick={() =>
-                history.push(`/${props.subChurch.toLowerCase()}/displayall`)
+                navigate(`/${props.subChurch.toLowerCase()}/displayall`)
               }
               heading={props.churchHeading}
-              detail={props.churchCount}
+              detail={!props.loading && (props.churchCount || '0')}
             />
           </Col>
 
           <Col className={!props.loading && `col-auto`}>
             <DetailsCard
               onClick={() =>
-                history.push(`/${props.churchType.toLowerCase()}/members`)
+                navigate(`/${props.churchType.toLowerCase()}/members`)
               }
               heading="Members"
               detail={!props.loading && (props.membership || '0')}
@@ -226,9 +201,9 @@ const DisplayChurchDetails = (props) => {
             {props.details.map((detail, i) => (
               <Col key={i} xs={detail.width ?? 6}>
                 <DetailsCard
-                  onClick={() => history.push(detail.link)}
+                  onClick={() => navigate(detail.link)}
                   heading={detail.title}
-                  detail={detail.number}
+                  detail={!props.loading && (detail.number || '0')}
                 />
               </Col>
             ))}
@@ -240,7 +215,7 @@ const DisplayChurchDetails = (props) => {
           <Button
             className={`btn-trends ${theme}`}
             onClick={() => {
-              history.push(`/${props.churchType.toLowerCase()}/reports`)
+              navigate(`/${props.churchType.toLowerCase()}/reports`)
             }}
           >
             View Trends
@@ -257,20 +232,20 @@ const DisplayChurchDetails = (props) => {
                   __typename: props.churchType,
                 },
               })
-              history.push(`/services/${props.churchType.toLowerCase()}`)
+              navigate(`/services/${props.churchType.toLowerCase()}`)
             }}
           >
             Service Forms
           </Button>
         </div>
 
-        {location?.latitude && (
+        {props?.location && props.location?.latitude !== 0 && (
           <Container className="mt-4 text-center">
             <h3>LOCATION</h3>
             <p>Click here for directions</p>
             <a
               className="btn p-3"
-              href={`https://www.google.com/maps/search/?api=1&query=${props.location?.latitude}%2C${props.location?.longitude}`}
+              href={`https://www.google.com/maps/search/?api=1&query=${props?.location?.latitude}%2C${props?.location?.longitude}`}
             >
               <Geo size="75" />
             </a>
@@ -289,19 +264,21 @@ const DisplayChurchDetails = (props) => {
                     className={`${week.filled ? 'filled' : 'not-filled'}`}
                   >{`${week.filled ? 'Filled' : 'Not Filled'}`}</span>
                 </p>
-                <p>
-                  Banking Slip -{' '}
-                  <span
-                    className={`${week.banked ? 'filled' : 'not-filled'}`}
-                  >{`${week.banked ? 'Submitted' : 'Not Submitted'}`}</span>
-                </p>
+                {week.banked && (
+                  <p>
+                    Banking Slip -{' '}
+                    <span
+                      className={`${week.banked ? 'filled' : 'not-filled'}`}
+                    >{`${week.banked ? 'Submitted' : 'Not Submitted'}`}</span>
+                  </p>
+                )}
               </Container>
             ))}
           </>
         )}
       </Container>
 
-      {props.subChurch && props.buttons[0] ? (
+      {props.subChurch && props.buttons?.length ? (
         <>
           <Container>
             <hr className="hr-line" />
@@ -366,7 +343,7 @@ const DisplayChurchDetails = (props) => {
             <table>
               <tbody>
                 <tr>
-                  {props.buttonsSecondRow.map((church, index) => {
+                  {props.buttonsSecondRow?.map((church, index) => {
                     if (index > 4) {
                       return null
                     }

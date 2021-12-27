@@ -8,7 +8,7 @@ import MemberIcon from '../../assets/people-svgrepo-com.svg'
 import { useQuery } from '@apollo/client'
 import { SERVANT_CHURCHES_COUNT } from './DashboardQueries'
 import MenuButton from 'components/buttons/MenuButton'
-import { useHistory } from 'react-router'
+import { useNavigate } from 'react-router'
 import { getChurchCount, getMemberCount } from 'global-utils'
 
 const Directory = () => {
@@ -16,7 +16,7 @@ const Directory = () => {
   const { data } = useQuery(SERVANT_CHURCHES_COUNT, {
     variables: { id: currentUser.id },
   })
-  const history = useHistory()
+  const navigate = useNavigate()
 
   return (
     <div className="d-flex align-items-center justify-content-center ">
@@ -34,14 +34,14 @@ const Directory = () => {
             title="members"
             caption={getMemberCount(data?.members[0])}
             color="members"
-            onClick={() => history.push(`/directory/members`)}
+            onClick={() => navigate(`/directory/members`)}
           />
           <MenuButton
             icon={ChurchIcon}
             title="churches"
             caption={getChurchCount(data?.members[0])}
             color="churches"
-            onClick={() => history.push(`/directory/churches`)}
+            onClick={() => navigate(`/directory/churches`)}
           />
         </div>
       </Container>

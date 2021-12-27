@@ -20,43 +20,39 @@ const ChurchDirectoryRoute = ({ component, roles, ...args }) => {
 
       if (!currentUser.roles.includes('adminCouncil')) {
         //User is not a Bishops Admin the he can only be looking at his constituency membership
-        church.setTownId(currentUser.constituency)
-        church.setCampusId(currentUser.constituency)
+        church.setConstituencyId(currentUser.constituency)
       }
     }
     // eslint-disable-next-line
   }, [
     currentUser,
     church.setCouncilId,
-    church.setTownId,
-    church.setCampusId,
+    church.setConstituencyId,
     church.setChurch,
   ])
 
   if (isAuthorised(roles, currentUser.roles)) {
     //if the user has permission to access the route
-    return <Route component={component} {...args} />
+    return <Route element={component} {...args} />
   } else if (isAuthorised(['adminCouncil', 'bishop'], currentUser.roles)) {
     //if the user does not have permission but is a Bishop's Admin
-    return <Route component={component} {...args} />
-  } else if (isAuthorised(['leaderTown', 'adminTown'], currentUser.roles)) {
-    //If the user does not have permission but is a Town Leader or Admin
-    church.setCampusId(currentUser.fellowship.bacenta.town.id)
-    return <Route component={Churches} />
-  } else if (isAuthorised(['leaderCampus', 'adminCampus'], currentUser.roles)) {
-    //If the user does not have permission but is a Campus Leader or Admin
-    church.setCampusId(currentUser.fellowship.bacenta.campus.id)
-    return <Route component={Churches} />
+    return <Route element={component} {...args} />
+  } else if (
+    isAuthorised(['leaderConstituency', 'adminConstituency'], currentUser.roles)
+  ) {
+    //If the user does not have permission but is a Constituency Leader or Admin
+    church.setConstituencyId(currentUser.fellowship.bacenta.constituency.id)
+    return <Route element={Churches} />
   } else if (isAuthorised(['leaderBacenta'], currentUser.roles)) {
     //If the user does not have permission but is a Bacenta Leader
     church.setBacentaId(currentUser.fellowship.bacenta.id)
-    return <Route component={Churches} />
+    return <Route element={Churches} />
   } else if (isAuthorised(['leaderFellowship'], currentUser.roles)) {
     //If the user does not have permission but is a Fellowship Leader
     church.setFellowshipId(currentUser.fellowship.id)
-    return <Route component={Churches} />
+    return <Route element={Churches} />
   } else {
-    return <Route component={Churches} />
+    return <Route element={Churches} />
   }
 }
 

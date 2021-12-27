@@ -4,12 +4,12 @@ import { MemberContext } from 'contexts/MemberContext'
 import { parseMemberCount } from 'global-utils'
 import React, { useContext } from 'react'
 import { Container } from 'react-bootstrap'
-import { useHistory } from 'react-router'
+import { useNavigate } from 'react-router'
 import MemberIcon from '../../assets/people-svgrepo-com-2.svg'
 
 const Churches = () => {
   const { currentUser, userJobs } = useContext(MemberContext)
-  const history = useHistory()
+  const navigate = useNavigate()
 
   return (
     <div className="d-flex align-items-center justify-content-center ">
@@ -36,7 +36,7 @@ const Churches = () => {
                 iconCaption={job.church.__typename}
                 onClick={() => {
                   job.clickCard()
-                  history.push(
+                  navigate(
                     `/${job.church.__typename.toLowerCase()}/displaydetails`
                   )
                 }}

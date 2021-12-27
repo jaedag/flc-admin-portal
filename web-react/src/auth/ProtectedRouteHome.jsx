@@ -4,7 +4,6 @@ import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react'
 import { UnauthMsg } from './UnauthMsg'
 import { MemberContext } from '../contexts/MemberContext'
 import { ChurchContext } from '../contexts/ChurchContext'
-// import DisplayCampusTownDetails from '../pages/display/DetailsCampusTown.jsx'
 import LoadingScreen from '../components/base-component/LoadingScreen'
 import { isAuthorised } from '../global-utils'
 import UserDashboard from 'pages/dashboards/UserDashboard'
@@ -12,7 +11,7 @@ import UserDashboard from 'pages/dashboards/UserDashboard'
 const ProtectedRoute = ({ component, roles, ...args }) => {
   const { currentUser, setMemberId } = useContext(MemberContext)
   const { isAuthenticated } = useAuth0()
-  const { setCouncilId, setTownId, setCampusId, setChurch } =
+  const { setCouncilId, setConstituencyId, setChurch } =
     useContext(ChurchContext)
 
   useEffect(() => {
@@ -23,18 +22,17 @@ const ProtectedRoute = ({ component, roles, ...args }) => {
 
       if (!currentUser.roles.includes('adminCouncil')) {
         //User is not a councils Admin the he can only be looking at his constituency membership
-        setTownId(currentUser.constituency)
-        setCampusId(currentUser.constituency)
+        setConstituencyId(currentUser.constituency)
       }
     }
     // eslint-disable-next-line
-  }, [currentUser, setCouncilId, setTownId, setCampusId, setChurch])
+  }, [currentUser, setCouncilId, setConstituencyId, setChurch])
 
   if (isAuthorised(roles, currentUser.roles)) {
     //if the user has permission to access the route
     return (
       <Route
-        component={withAuthenticationRequired(component, {
+        element={withAuthenticationRequired(component, {
           // eslint-disable-next-line react/display-name
           onRedirecting: () => {
             return <LoadingScreen />
@@ -47,10 +45,8 @@ const ProtectedRoute = ({ component, roles, ...args }) => {
     isAuthorised(
       [
         'adminCouncil',
-        'adminCampus',
-        'adminTown',
-        'leaderCampus',
-        'leaderTown',
+        'adminConstituency',
+        'leaderConstituency',
         'leaderBacenta',
         'leaderSonta',
         'leaderFellowship',
@@ -62,7 +58,7 @@ const ProtectedRoute = ({ component, roles, ...args }) => {
     //If the user does not have permission but is a CO Admin
     return (
       <Route
-        component={withAuthenticationRequired(UserDashboard, {
+        element={withAuthenticationRequired(UserDashboard, {
           // eslint-disable-next-line react/display-name
           onRedirecting: () => {
             return <LoadingScreen />

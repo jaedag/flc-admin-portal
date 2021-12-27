@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { useHistory, useLocation } from 'react-router'
+import { useNavigate, useLocation } from 'react-router'
 import ChurchGraph from 'components/ChurchGraph/ChurchGraph'
 import './Dashboards.css'
 import { MemberContext } from 'contexts/MemberContext'
@@ -25,7 +25,7 @@ import Placeholder from '../../components/Placeholder'
 const ServantsDashboard = () => {
   const { memberId, currentUser } = useContext(MemberContext)
   const { clickCard } = useContext(ChurchContext)
-  const history = useHistory()
+  const navigate = useNavigate()
   const location = useLocation()
   const atHome = location.pathname === '/'
 
@@ -107,7 +107,7 @@ const ServantsDashboard = () => {
         },
         link: authorisedLink(
           currentUser,
-          ['adminFederal', 'adminCouncil', 'adminCampus', 'adminTown'],
+          ['adminFederal', 'adminCouncil', 'adminConstituency'],
           adminsOneChurch
             ? `/${churchType.toLowerCase()}/displaydetails`
             : `/servants/${churchType.toLowerCase()}-list`
@@ -140,11 +140,8 @@ const ServantsDashboard = () => {
     if (servant?.leadsBacenta?.length) {
       setServantRoles(servant, 'Leader', 'Bacenta')
     }
-    if (servantLeader?.leadsTown?.length) {
-      setServantRoles(servantLeader, 'Leader', 'Town')
-    }
-    if (servantLeader?.leadsCampus?.length) {
-      setServantRoles(servantLeader, 'Leader', 'Campus')
+    if (servantLeader?.leadsConstituency?.length) {
+      setServantRoles(servantLeader, 'Leader', 'Constituency')
     }
     if (servantLeader?.leadsSonta?.length) {
       setServantRoles(servantLeader, 'Leader', 'Sonta')
@@ -162,11 +159,8 @@ const ServantsDashboard = () => {
     if (servantAdmin?.isAdminForCouncil?.length) {
       setServantRoles(servantAdmin, 'Admin', 'Council')
     }
-    if (servantAdmin?.isAdminForCampus?.length) {
-      setServantRoles(servantAdmin, 'Admin', 'Campus')
-    }
-    if (servantAdmin?.isAdminForTown?.length) {
-      setServantRoles(servantAdmin, 'Admin', 'Town')
+    if (servantAdmin?.isAdminForConstituency?.length) {
+      setServantRoles(servantAdmin, 'Admin', 'Constituency')
     }
 
     //run the get graph function after all checking is done to avoid multiple unnecessary runs
@@ -200,7 +194,7 @@ const ServantsDashboard = () => {
                         key={i}
                         onClick={() => {
                           role.clickCard()
-                          history.push(role.link)
+                          navigate(role.link)
                         }}
                       >
                         <RoleCard number={role.number} role={role.name} />

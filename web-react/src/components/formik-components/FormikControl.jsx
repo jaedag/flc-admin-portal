@@ -6,10 +6,12 @@ import SelectWithQuery from './SelectWithQuery'
 import RadioButtons from './RadioButtons'
 import CheckboxGroup from './CheckboxGroup'
 import Combobox from './Combobox'
-import ComboboxTwoVariables from './ComboboxTwoVariables'
 import FormikSearchbox from './FormikSearchbox'
 import ImageUpload from './ImageUpload'
 import CheckboxWithQuery from './CheckboxWithQuery'
+import SearchMember from './SearchMember'
+import SearchFellowship from './SearchFellowship'
+import SearchBacenta from './SearchBacenta'
 
 function FormikControl(props) {
   const { control, ...rest } = props
@@ -19,8 +21,12 @@ function FormikControl(props) {
       return <Input {...rest} />
     case 'combobox':
       return <Combobox {...rest} />
-    case 'combobox2':
-      return <ComboboxTwoVariables {...rest} />
+    case 'memberSearch':
+      return <SearchMember {...rest} />
+    case 'fellowshipSearch':
+      return <SearchFellowship {...rest} />
+    case 'bacentaSearch':
+      return <SearchBacenta {...rest} />
     case 'searchbox':
       return <FormikSearchbox {...rest} />
     case 'textarea':

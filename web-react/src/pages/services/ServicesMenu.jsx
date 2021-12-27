@@ -8,11 +8,11 @@ import {
   Book,
   FileEarmarkArrowUpFill,
 } from 'react-bootstrap-icons'
-import { useHistory } from 'react-router'
+import { useNavigate } from 'react-router'
 
 const Services = () => {
   const { currentUser, theme } = useContext(MemberContext)
-  const history = useHistory()
+  const navigate = useNavigate()
 
   return (
     <div className="d-flex align-items-center justify-content-center ">
@@ -30,7 +30,7 @@ const Services = () => {
               iconComponent={Book}
               title="Fellowship Service"
               color="members"
-              onClick={() => history.push(`/services/fellowship`)}
+              onClick={() => navigate(`/services/fellowship`)}
               noCaption
             />
           )}
@@ -39,18 +39,17 @@ const Services = () => {
               iconComponent={Book}
               title="Bacenta Service"
               color="members"
-              onClick={() => history.push(`/services/bacenta`)}
+              onClick={() => navigate(`/services/bacenta`)}
               noCaption
             />
           )}
-          {(currentUser.currentChurch?.__typename === 'Town' ||
-            currentUser.currentChurch?.__typename === 'Campus') && (
+          {currentUser.currentChurch?.__typename === 'Constituency' && (
             <MenuButton
               iconComponent={Book}
               title="Constituency Joint Service"
               color="members"
               noCaption
-              onClick={() => history.push(`/services/constituency-joint`)}
+              onClick={() => navigate(`/services/constituency-joint`)}
             />
           )}
 
@@ -60,7 +59,7 @@ const Services = () => {
             color="members"
             noCaption
             onClick={() =>
-              history.push(
+              navigate(
                 `${currentUser.currentChurch?.__typename.toLowerCase()}/reports`
               )
             }
@@ -71,7 +70,7 @@ const Services = () => {
               title="Banking Slips"
               color="members"
               noCaption
-              onClick={() => history.push(`/services/banking-slips`)}
+              onClick={() => navigate(`/services/banking-slips`)}
             />
           )}
         </div>

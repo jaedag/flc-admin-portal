@@ -33,12 +33,7 @@ const DisplayAllFellowships = () => {
               </Link>
             </Col>
             <RoleView
-              roles={[
-                'adminFederal',
-                'adminCouncil',
-                'adminCampus',
-                'adminTown',
-              ]}
+              roles={['adminFederal', 'adminCouncil', 'adminConstituency']}
             >
               <Col className="col-auto">
                 <Link

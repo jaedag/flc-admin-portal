@@ -1,181 +1,101 @@
 import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { useQuery } from '@apollo/client'
-import { capitalise } from '../../global-utils'
 import DisplayChurchList from '../../components/DisplayChurchList'
 
-import ErrorScreen from '../../components/base-component/ErrorScreen'
-import LoadingScreen from '../../components/base-component/LoadingScreen'
-import {
-  GET_CAMPUS_BACENTAS,
-  GET_TOWN_BACENTAS,
-} from '../../queries/ListQueries'
+import { GET_CONSTITUENCY_BACENTAS } from '../../queries/ListQueries'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import RoleView from '../../auth/RoleView'
+import BaseComponent from 'components/base-component/BaseComponent'
+import { Col, Container, Row, Button } from 'react-bootstrap'
 
 const DisplayAllBacentas = () => {
-  const { church, townId, campusId, setBacentaId, setTownId, setCampusId } =
+  const { constituencyId, setBacentaId, setConstituencyId, clickCard } =
     useContext(ChurchContext)
 
-  const { data: townBacentaData, loading: townLoading } = useQuery(
-    GET_TOWN_BACENTAS,
-    {
-      variables: { id: townId },
-    }
-  )
-  const { data: campusBacentaData, loading: campusLoading } = useQuery(
-    GET_CAMPUS_BACENTAS,
-    {
-      variables: { id: campusId },
-    }
-  )
+  const { data, loading, error } = useQuery(GET_CONSTITUENCY_BACENTAS, {
+    variables: { id: constituencyId },
+  })
 
-  if (campusLoading || townLoading) {
-    // Spinner Icon for Loading Screens
-    return <LoadingScreen />
-  } else if (campusBacentaData && church.church === 'campus') {
-    const campus = campusBacentaData.campuses[0]
-    return (
-      <>
-        <div className=" container">
-          <div className="mb-4 border-bottom">
-            <div className="row justify-content-between">
-              <div className="col-auto">
-                <Link
-                  to={`/${church.church}/displaydetails`}
-                  onClick={() => {
-                    setCampusId(campusId)
-                  }}
-                >
-                  {' '}
-                  <h4>{`${campus.name} ${capitalise(church.church)}`}</h4>
-                </Link>
-              </div>
-              <RoleView
-                roles={[
-                  'adminFederal',
-                  'adminCouncil',
-                  'adminCampus',
-                  'adminTown',
-                ]}
+  const constituency = data?.constituencies[0]
+  return (
+    <BaseComponent loading={loading} data={data} error={error}>
+      <Container>
+        <div className="mb-4 border-bottom">
+          <Row className="mb-2">
+            <Col>
+              <Link
+                to={`/constituency/displaydetails`}
+                onClick={() => {
+                  setConstituencyId(constituencyId)
+                }}
               >
-                <div className="col-auto">
-                  <Link
-                    to="/bacenta/addbacenta"
-                    className="btn btn-primary text-nowrap"
-                  >
-                    Add Bacenta
-                  </Link>
-                </div>
-              </RoleView>
-            </div>
-            <div className="row">
-              <div className="col">
+                {' '}
+                <h4>{`${constituency?.name} Constituency`}</h4>
+              </Link>
+              <Link
+                to="/member/displaydetails"
+                onClick={() => {
+                  clickCard(constituency?.leader)
+                }}
+              >
                 <h6 className="text-muted">
                   Overseer:
-                  {campus.leader
-                    ? ` ${campus.leader.firstName} ${campus.leader.lastName}`
+                  {constituency?.leader
+                    ? ` ${constituency?.leader.firstName} ${constituency?.leader.lastName}`
                     : null}
                 </h6>
-              </div>
-            </div>
-
-            <div className="row justify-content-between">
-              <div className="py-1 px-2 m-2 card">{`Bacentas: ${campus.bacentas.length}`}</div>
-              <Link
-                className="py-1 px-2 m-2 card text-white"
-                to="/sonta/displayall"
-              >{`Sontas: ${campus.sontas.length}`}</Link>
-              <Link
-                to="/campus/members"
-                className="py-1 px-2 m-2 card"
-              >{`Membership: ${campus?.memberCount}`}</Link>
-            </div>
-          </div>
-
-          <DisplayChurchList
-            data={campus.bacentas}
-            setter={setBacentaId}
-            churchType="Bacenta"
-          />
-        </div>
-      </>
-    )
-  } else if (townBacentaData && church.church === 'town') {
-    const town = townBacentaData.towns[0]
-    return (
-      <>
-        <div className=" container">
-          <div className="mb-4 border-bottom">
-            <div className="row justify-content-between">
-              <div className="col-auto">
+              </Link>
+              {constituency?.admin ? (
                 <Link
-                  to={`/${church.church}/displaydetails`}
+                  className="pb-4"
+                  to="/member/displaydetails"
                   onClick={() => {
-                    setTownId(townId)
+                    clickCard(constituency?.admin)
                   }}
                 >
-                  {' '}
-                  <h4>{`${town.name} ${capitalise(church.church)}`}</h4>
+                  {`Admin: ${constituency?.admin?.firstName} ${constituency?.admin?.lastName}`}
                 </Link>
-              </div>
-              <RoleView
-                roles={[
-                  'adminFederal',
-                  'adminCouncil',
-                  'adminCampus',
-                  'adminTown',
-                ]}
-              >
-                <div className="col-auto">
-                  <Link
-                    to="/bacenta/addbacenta"
-                    className="btn btn-primary text-nowrap"
-                  >
-                    Add Bacenta
-                  </Link>
-                </div>
-                <div className="col-auto">
-                  <Link
-                    to="/sonta/addsonta"
-                    className="btn btn-primary text-nowrap"
-                  >
-                    Add Sonta
-                  </Link>
-                </div>
-              </RoleView>
-            </div>
-            <div className="row">
-              <div className="col">
-                <h6 className="text-muted">
-                  Constituency Overseer:
-                  {town.leader
-                    ? ` ${town.leader.firstName} ${town.leader.lastName}`
-                    : null}
-                </h6>
-              </div>
-            </div>
+              ) : null}
+            </Col>
+            <RoleView
+              roles={['adminFederal', 'adminCouncil', 'adminConstituency']}
+            >
+              <Col className="col-auto">
+                <Link
+                  to="/bacenta/addbacenta"
+                  className="btn btn-primary text-nowrap"
+                >
+                  Add Bacenta
+                </Link>
+              </Col>
+            </RoleView>
+          </Row>
 
-            <div className="row justify-content-between">
-              <div className="py-1 px-2 m-2 card">{`Bacentas: ${town.bacentas.length}`}</div>
-              <Link
-                className="py-1 px-2 m-2 card text-white"
-                to="/sonta/displayall"
-              >{`Sontas: ${town.sontas.length}`}</Link>
-              <Link
-                to="/town/members"
-                className="py-1 px-2 m-2 card"
-              >{`Membership: ${town.memberCount}`}</Link>
-            </div>
-          </div>
+          <Row className="justify-content-between mb-2">
+            <Col>
+              <Button>{`Bacentas: ${constituency?.bacentas.length}`}</Button>
+            </Col>
+            <Col className="col-auto">
+              <Link to="/constituency/members">
+                <Button>{`Membership: ${constituency?.memberCount}`}</Button>
+              </Link>
 
-          <DisplayChurchList data={town.bacentas} churchType="Bacenta" />
+              <Link to="/sonta/displayall">
+                <Button>{`Sontas: ${constituency?.sontas.length}`}</Button>
+              </Link>
+            </Col>
+          </Row>
         </div>
-      </>
-    )
-  } else {
-    return <ErrorScreen />
-  }
+
+        <DisplayChurchList
+          data={constituency?.bacentas}
+          setter={setBacentaId}
+          churchType="Bacenta"
+        />
+      </Container>
+    </BaseComponent>
+  )
 }
 
 export default DisplayAllBacentas

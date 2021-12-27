@@ -10,8 +10,8 @@ import {
 } from './SearchQuery'
 import { MemberContext, SearchContext } from '../../contexts/MemberContext'
 import MemberDisplayCard from '../../components/card/MemberDisplayCard'
-import { isAuthorised } from 'global-utils.js'
-import { Container } from 'react-bootstrap'
+import { isAuthorised, throwErrorMsg } from 'global-utils.js'
+import { Container, Spinner } from 'react-bootstrap'
 
 const SearchPageMobile = () => {
   const { searchKey } = useContext(SearchContext)
@@ -19,34 +19,38 @@ const SearchPageMobile = () => {
 
   const [combinedData, setCombinedData] = useState([])
 
-  const [federalSearch] = useLazyQuery(FEDERAL_SEARCH, {
-    onCompleted: (data) => {
-      setCombinedData([
-        ...data.federalMemberSearch,
-        ...data.federalCampusSearch,
-        ...data.federalTownSearch,
-        ...data.federalSontaSearch,
-        ...data.federalBacentaSearch,
-        ...data.federalFellowshipSearch,
-      ])
-      return
-    },
-  })
+  const [federalSearch, { loading: federalLoading, error: federalError }] =
+    useLazyQuery(FEDERAL_SEARCH, {
+      onCompleted: (data) => {
+        setCombinedData([
+          ...data.federalMemberSearch,
+          ...data.federalCouncilSearch,
+          ...data.federalConstituencySearch,
+          ...data.federalSontaSearch,
+          ...data.federalBacentaSearch,
+          ...data.federalFellowshipSearch,
+        ])
+        return
+      },
+    })
 
-  const [councilSearch] = useLazyQuery(COUNCIL_SEARCH, {
-    onCompleted: (data) => {
-      setCombinedData([
-        ...data.councilMemberSearch,
-        ...data.councilCampusSearch,
-        ...data.councilTownSearch,
-        ...data.councilSontaSearch,
-        ...data.councilBacentaSearch,
-        ...data.councilFellowshipSearch,
-      ])
-      return
-    },
-  })
-  const [constituencySearch] = useLazyQuery(CONSTITUENCY_SEARCH, {
+  const [councilSearch, { loading: councilLoading, error: councilError }] =
+    useLazyQuery(COUNCIL_SEARCH, {
+      onCompleted: (data) => {
+        setCombinedData([
+          ...data.councilMemberSearch,
+          ...data.councilConstituencySearch,
+          ...data.councilSontaSearch,
+          ...data.councilBacentaSearch,
+          ...data.councilFellowshipSearch,
+        ])
+        return
+      },
+    })
+  const [
+    constituencySearch,
+    { loading: constituencyLoading, error: constituencyError },
+  ] = useLazyQuery(CONSTITUENCY_SEARCH, {
     onCompleted: (data) => {
       setCombinedData([
         ...data.constituencyMemberSearch,
@@ -58,22 +62,40 @@ const SearchPageMobile = () => {
     },
   })
 
-  const [bacentaSearch] = useLazyQuery(BACENTA_SEARCH, {
-    onCompleted: (data) => {
-      setCombinedData([
-        ...data.bacentaMemberSearch,
-        ...data.bacentaFellowshipSearch,
-      ])
-      return
-    },
-  })
+  const [bacentaSearch, { loading: bacentaLoading, error: bacentaError }] =
+    useLazyQuery(BACENTA_SEARCH, {
+      onCompleted: (data) => {
+        setCombinedData([
+          ...data.bacentaMemberSearch,
+          ...data.bacentaFellowshipSearch,
+        ])
+        return
+      },
+    })
 
-  const [fellowshipSearch] = useLazyQuery(FELLOWSHIP_SEARCH, {
+  const [
+    fellowshipSearch,
+    { loading: fellowshipLoading, error: fellowshipError },
+  ] = useLazyQuery(FELLOWSHIP_SEARCH, {
     onCompleted: (data) => {
       setCombinedData([...data.fellowshipMemberSearch])
       return
     },
   })
+  const error =
+    federalError ||
+    councilError ||
+    constituencyError ||
+    bacentaError ||
+    fellowshipError
+  throwErrorMsg(error)
+
+  const loading =
+    federalLoading ||
+    councilLoading ||
+    constituencyLoading ||
+    bacentaLoading ||
+    fellowshipLoading
 
   const whichSearch = (searchString) => {
     if (isAuthorised(['adminFederal'], currentUser.roles)) {
@@ -89,7 +111,7 @@ const SearchPageMobile = () => {
       })
     } else if (
       isAuthorised(
-        ['adminCampus', 'adminTown', 'leaderCampus', 'leaderTown'],
+        ['adminConstituency', 'leaderConstituency'],
         currentUser.roles
       )
     ) {
@@ -123,16 +145,28 @@ const SearchPageMobile = () => {
   return (
     <>
       <MobileSearchNav />
+      {loading && (
+        <Container className="text-center">
+          <Spinner animation="grow" className="mt-5" />
+        </Container>
+      )}
+
       <Container>
-        {combinedData.slice(0, 10).map((searchResult, index) => {
-          return (
-            <MemberDisplayCard
-              key={index}
-              index={index}
-              member={searchResult}
-            />
-          )
-        })}
+        {combinedData.length === 0 && !loading && (
+          <Container className="text-center py-5">
+            No results to display
+          </Container>
+        )}
+        {!loading &&
+          combinedData.slice(0, 10).map((searchResult, index) => {
+            return (
+              <MemberDisplayCard
+                key={index}
+                index={index}
+                member={searchResult}
+              />
+            )
+          })}
       </Container>
     </>
   )

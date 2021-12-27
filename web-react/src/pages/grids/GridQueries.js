@@ -39,10 +39,7 @@ export const GET_FEDERAL_MEMBERS = gql`
       leadsBasonta {
         name
       }
-      leadsTown {
-        name
-      }
-      leadsCampus {
+      leadsConstituency {
         name
       }
 
@@ -50,11 +47,7 @@ export const GET_FEDERAL_MEMBERS = gql`
         id
         name
       }
-      isAdminForCampus {
-        id
-        name
-      }
-      isAdminForTown {
+      isAdminForConstituency {
         id
         name
       }
@@ -106,11 +99,7 @@ export const GET_FEDERAL_PASTORS = gql`
         id
         name
       }
-      leadsTown {
-        id
-        name
-      }
-      leadsCampus {
+      leadsConstituency {
         id
         name
       }
@@ -119,13 +108,76 @@ export const GET_FEDERAL_PASTORS = gql`
         id
         name
       }
-      isAdminForCampus {
+      isAdminForConstituency {
         id
         name
       }
-      isAdminForTown {
+    }
+  }
+`
+
+export const GET_GATHERING_SERVICE_MEMBERS = gql`
+  query ($id: ID) {
+    gatheringServices(where: { id: $id }) {
+      id
+      name
+
+      members {
         id
-        name
+        firstName
+        lastName
+        pictureUrl
+        stream_name
+        fellowship {
+          id
+          name
+        }
+        ministry {
+          id
+          name
+        }
+        maritalStatus {
+          status
+        }
+        gender {
+          gender
+        }
+        title {
+          title
+        }
+        leadsFellowship {
+          id
+          name
+        }
+        leadsBacenta {
+          id
+          name
+        }
+        leadsMinistry {
+          id
+          name
+        }
+        leadsSonta {
+          id
+          name
+        }
+        leadsBasonta {
+          id
+          name
+        }
+        leadsConstituency {
+          id
+          name
+        }
+
+        isAdminForCouncil {
+          id
+          name
+        }
+        isAdminForConstituency {
+          id
+          name
+        }
       }
     }
   }
@@ -180,11 +232,7 @@ export const GET_COUNCIL_MEMBERS = gql`
           id
           name
         }
-        leadsTown {
-          id
-          name
-        }
-        leadsCampus {
+        leadsConstituency {
           id
           name
         }
@@ -193,11 +241,7 @@ export const GET_COUNCIL_MEMBERS = gql`
           id
           name
         }
-        isAdminForCampus {
-          id
-          name
-        }
-        isAdminForTown {
+        isAdminForConstituency {
           id
           name
         }
@@ -206,9 +250,9 @@ export const GET_COUNCIL_MEMBERS = gql`
   }
 `
 
-export const GET_CAMPUSTOWN_MEMBERS = gql`
+export const GET_CONSTITUENCY_MEMBERS = gql`
   query ($id: ID) {
-    towns(where: { id: $id }) {
+    constituencies(where: { id: $id }) {
       id
       name
       members {
@@ -251,11 +295,7 @@ export const GET_CAMPUSTOWN_MEMBERS = gql`
           id
           name
         }
-        leadsTown {
-          id
-          name
-        }
-        leadsCampus {
+        leadsConstituency {
           id
           name
         }
@@ -264,78 +304,7 @@ export const GET_CAMPUSTOWN_MEMBERS = gql`
           id
           name
         }
-        isAdminForCampus {
-          id
-          name
-        }
-        isAdminForTown {
-          id
-          name
-        }
-      }
-    }
-
-    campuses(where: { id: $id }) {
-      id
-      name
-      members {
-        id
-        firstName
-        lastName
-        pictureUrl
-        fellowship {
-          name
-        }
-        ministry {
-          name
-        }
-        maritalStatus {
-          status
-        }
-        gender {
-          gender
-        }
-        title {
-          title
-        }
-        leadsFellowship {
-          id
-          name
-        }
-        leadsBacenta {
-          id
-          name
-        }
-        leadsMinistry {
-          id
-          name
-        }
-        leadsSonta {
-          id
-          name
-        }
-        leadsBasonta {
-          id
-          name
-        }
-        leadsTown {
-          id
-          name
-        }
-        leadsCampus {
-          id
-          name
-        }
-
-        isAdminForCouncil {
-          id
-          name
-        }
-        isAdminForCampus {
-          id
-          name
-        }
-        isAdminForTown {
+        isAdminForConstituency {
           id
           name
         }
@@ -384,10 +353,8 @@ export const GET_BACENTA_MEMBERS = gql`
         leadsBasonta {
           name
         }
-        leadsTown {
-          name
-        }
-        leadsCampus {
+        leadsConstituency {
+          id
           name
         }
 
@@ -395,11 +362,7 @@ export const GET_BACENTA_MEMBERS = gql`
           id
           name
         }
-        isAdminForCampus {
-          id
-          name
-        }
-        isAdminForTown {
+        isAdminForConstituency {
           id
           name
         }
@@ -454,11 +417,7 @@ export const GET_FELLOWSHIP_MEMBERS = gql`
           id
           name
         }
-        leadsTown {
-          id
-          name
-        }
-        leadsCampus {
+        leadsConstituency {
           id
           name
         }
@@ -467,11 +426,7 @@ export const GET_FELLOWSHIP_MEMBERS = gql`
           id
           name
         }
-        isAdminForCampus {
-          id
-          name
-        }
-        isAdminForTown {
+        isAdminForConstituency {
           id
           name
         }
@@ -520,10 +475,8 @@ export const GET_SONTA_MEMBERS = gql`
         leadsBasonta {
           name
         }
-        leadsTown {
-          name
-        }
-        leadsCampus {
+        leadsConstituency {
+          id
           name
         }
 
@@ -531,11 +484,7 @@ export const GET_SONTA_MEMBERS = gql`
           id
           name
         }
-        isAdminForCampus {
-          id
-          name
-        }
-        isAdminForTown {
+        isAdminForConstituency {
           id
           name
         }

@@ -4,11 +4,11 @@ import { MemberContext } from 'contexts/MemberContext'
 import React, { useContext } from 'react'
 import { Container } from 'react-bootstrap'
 import { PencilSquare, XCircleFill } from 'react-bootstrap-icons'
-import { useHistory } from 'react-router'
+import { useNavigate } from 'react-router'
 
 const Fellowship = () => {
   const { currentUser, theme } = useContext(MemberContext)
-  const history = useHistory()
+  const navigate = useNavigate()
   return (
     <div className="d-flex align-items-center justify-content-center ">
       <Container>
@@ -24,14 +24,14 @@ const Fellowship = () => {
             iconComponent={PencilSquare}
             title="Fill Service Form"
             color="members"
-            onClick={() => history.push(`/services/fellowship/form`)}
+            onClick={() => navigate(`/services/fellowship/form`)}
             noCaption
           />
           <MenuButton
             iconComponent={XCircleFill}
             title="No Service"
             color="members"
-            onClick={() => history.push(`/services/fellowship/no-service`)}
+            onClick={() => navigate(`/services/fellowship/no-service`)}
             noCaption
           />
         </div>

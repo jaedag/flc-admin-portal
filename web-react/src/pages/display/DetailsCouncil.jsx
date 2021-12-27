@@ -2,12 +2,11 @@ import { useQuery } from '@apollo/client'
 import BaseComponent from 'components/base-component/BaseComponent'
 import DisplayChurchDetails from 'components/DisplayChurchDetails/DisplayChurchDetails'
 import { ChurchContext } from 'contexts/ChurchContext'
-import { capitalise, plural } from 'global-utils'
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { DISPLAY_COUNCIL } from './ReadQueries'
 
 const DetailsCouncil = () => {
-  const { councilId, church } = useContext(ChurchContext)
+  const { councilId, setChurch } = useContext(ChurchContext)
 
   const { data, loading, error } = useQuery(DISPLAY_COUNCIL, {
     variables: { id: councilId },
@@ -15,9 +14,12 @@ const DetailsCouncil = () => {
 
   const council = data?.councils[0]
   let breadcrumb = [council?.stream, council]
+  useEffect(() => {
+    setChurch({ church: council?.stream_name, subChurch: 'bacenta' })
+  }, [council?.stream_name])
 
   const details = [
-    { title: 'Pastors', number: council?.pastorCount || 0, link: '#' },
+    { title: 'Pastors', number: council?.pastorCount, link: '#' },
     {
       title: 'Bacentas',
       number: council?.bacentaCount,
@@ -39,14 +41,14 @@ const DetailsCouncil = () => {
         leader={council?.leader}
         churchHeading="Constituencies"
         churchType={council?.__typename}
-        subChurch={capitalise(church.church)}
+        subChurch="Constituency"
         membership={council?.memberCount}
         details={details}
         churchCount={council?.constituencyCount}
         editlink="/council/editcouncil"
         editPermitted={['adminFederal']}
         history={council?.history.length !== 0 && council?.history}
-        buttons={council ? council[`${plural(church.church)}`] : []}
+        buttons={council ? council.constituencies : []}
         breadcrumb={breadcrumb && breadcrumb}
         loading={loading}
       />

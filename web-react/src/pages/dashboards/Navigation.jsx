@@ -24,8 +24,8 @@ const Navigator = () => {
   const { currentUser, theme, setUserJobs, setCurrentUser } =
     useContext(MemberContext)
   const { clickCard } = useContext(ChurchContext)
-  const { user, isAuthenticated } = useAuth0()
-  const { data, loading } = useQuery(SERVANTS_DASHBOARD, {
+  const { user } = useAuth0()
+  const { data } = useQuery(SERVANTS_DASHBOARD, {
     variables: { id: currentUser.id },
   })
   const { data: adminData } = useQuery(SERVANTS_ADMIN, {
@@ -37,13 +37,7 @@ const Navigator = () => {
 
   const [memberByEmail] = useLazyQuery(GET_LOGGED_IN_USER, {
     onCompleted: (data) => {
-      let church
-      if (data.memberByEmail.fellowship.bacenta?.town?.id) {
-        church = 'town'
-      }
-      if (data.memberByEmail.fellowship.bacenta?.campus?.id) {
-        church = 'campus'
-      }
+      const church = data.memberByEmail.stream_name
 
       setCurrentUser({
         ...currentUser,
@@ -55,17 +49,23 @@ const Navigator = () => {
         picture: data.memberByEmail?.pictureUrl ?? null,
         fellowship: data.memberByEmail?.fellowship,
         council:
-          data.memberByEmail?.fellowship?.bacenta[`${church}`]?.council.id,
-        constituency: data.memberByEmail?.fellowship?.bacenta[`${church}`]?.id,
+          data.memberByEmail?.fellowship?.bacenta.constituency?.council.id,
+        constituency: data.memberByEmail?.fellowship?.bacenta.constituency?.id,
         church: { church: church, subChurch: 'bacenta' },
         stream:
-          data.memberByEmail?.fellowship?.bacenta[`${church}`]?.council.stream
+          data.memberByEmail?.fellowship?.bacenta.constituency?.council.stream
             .id,
+        gatheringService:
+          data.memberByEmail?.fellowship?.bacenta.constituency?.council.stream
+            .gatheringService.id,
         email: user?.email,
         roles: user ? user[`https://flcadmin.netlify.app/roles`] : [],
       })
     },
   })
+  // What leadership roles does this person play?
+  let roles = []
+  let assessmentChurchData, assessmentChurch
 
   useEffect(() => {
     if (!currentUser?.email?.length) {
@@ -79,21 +79,15 @@ const Navigator = () => {
     })
     // eslint-disable-next-line
   }, [
-    isAuthenticated,
     data,
     adminData,
     leaderData,
-    loading,
-    roles,
-    setUserJobs,
+    // roles,
+    // setUserJobs,
   ])
   const servant = data?.members[0]
   const servantAdmin = adminData?.members[0]
   const servantLeader = leaderData?.members[0]
-
-  // What leadership roles does this person play?
-  let roles = []
-  let assessmentChurchData, assessmentChurch
 
   const setServantRoles = (servant, servantType, churchType) => {
     let verb
@@ -129,6 +123,29 @@ const Navigator = () => {
       return
     }
 
+    if (churchType === 'GatheringService' && servantType === 'Admin') {
+      const adminsOneChurch = servant[`${verb}`].length === 1 ?? false
+
+      roles.push({
+        name: 'Admin',
+        church: servant[`${verb}`][0],
+        number: 'Federal Admin',
+        clickCard: () => {
+          clickCard(servant[`${verb}`][0])
+        },
+        link: authorisedLink(
+          currentUser,
+          ['adminFederal', 'adminCouncil'],
+          adminsOneChurch
+            ? `/${churchType.toLowerCase()}/displaydetails`
+            : `/servants/church-list`
+        ),
+      })
+
+      assessmentChurch = servant[`${verb}`][0]
+      return
+    }
+
     if (churchType === 'Council' && servantType === 'Admin') {
       const adminsOneChurch = servant[`${verb}`].length === 1 ?? false
 
@@ -155,15 +172,17 @@ const Navigator = () => {
     if (servantType === 'Admin') {
       const adminsOneChurch = servant[`${verb}`].length === 1 ?? false
       roles.push({
-        name: 'Admin',
+        name: adminsOneChurch
+          ? churchType + ' Admin'
+          : plural(churchType) + 'Admin',
         church: servant[`${verb}`][0],
-        number: `${churchType} Admin`,
+        number: servant[`${verb}`].length,
         clickCard: () => {
           clickCard(servant[`${verb}`][0])
         },
         link: authorisedLink(
           currentUser,
-          ['adminFederal', 'adminCouncil', 'adminCampus', 'adminTown'],
+          ['adminFederal', 'adminCouncil', 'adminConstituency'],
           adminsOneChurch
             ? `/${churchType.toLowerCase()}/displaydetails`
             : `/servants/church-list`
@@ -175,6 +194,7 @@ const Navigator = () => {
     }
 
     const leadsOneChurch = servant[`${verb}`].length === 1 ?? false
+
     roles.push({
       name: leadsOneChurch ? churchType : plural(churchType),
       church: servant[`${verb}`][0],
@@ -197,12 +217,10 @@ const Navigator = () => {
     if (servant?.leadsBacenta?.length) {
       setServantRoles(servant, 'Leader', 'Bacenta')
     }
-    if (servantLeader?.leadsTown?.length) {
-      setServantRoles(servantLeader, 'Leader', 'Town')
+    if (servantLeader?.leadsConstituency?.length) {
+      setServantRoles(servantLeader, 'Leader', 'Constituency')
     }
-    if (servantLeader?.leadsCampus?.length) {
-      setServantRoles(servantLeader, 'Leader', 'Campus')
-    }
+
     if (servantLeader?.leadsSonta?.length) {
       setServantRoles(servantLeader, 'Leader', 'Sonta')
     }
@@ -213,17 +231,16 @@ const Navigator = () => {
       setServantRoles(servantLeader, 'Leader', 'Ministry')
     }
     if (servantLeader?.leadsCouncil?.length) {
-      setServantRoles(servantLeader, 'Bishop', 'Town')
+      setServantRoles(servantLeader, 'Bishop', 'Council')
     }
-
+    if (servantAdmin?.isAdminForGatheringService?.length) {
+      setServantRoles(servantAdmin, 'Admin', 'GatheringService')
+    }
     if (servantAdmin?.isAdminForCouncil?.length) {
       setServantRoles(servantAdmin, 'Admin', 'Council')
     }
-    if (servantAdmin?.isAdminForCampus?.length) {
-      setServantRoles(servantAdmin, 'Admin', 'Campus')
-    }
-    if (servantAdmin?.isAdminForTown?.length) {
-      setServantRoles(servantAdmin, 'Admin', 'Town')
+    if (servantAdmin?.isAdminForConstituency?.length) {
+      setServantRoles(servantAdmin, 'Admin', 'Constituency')
     }
 
     //run the get graph function after all checking is done to avoid multiple unnecessary runs
@@ -243,7 +260,6 @@ const Navigator = () => {
       variant={theme}
       expand={false}
       sticky="top"
-      defaultActiveKey="0"
     >
       <Container fluid>
         <Navbar.Toggle

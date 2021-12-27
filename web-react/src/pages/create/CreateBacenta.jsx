@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useMutation } from '@apollo/client'
 import { CREATE_BACENTA_MUTATION } from './CreateMutations'
 import { ChurchContext } from '../../contexts/ChurchContext'
@@ -9,31 +9,26 @@ import { throwErrorMsg } from 'global-utils'
 
 const CreateBacenta = () => {
   const initialValues = {
-    bacentaName: '',
+    name: '',
     leaderId: '',
-    campusTownSelect: '',
+    constituencySelect: '',
     fellowships: [''],
   }
 
-  const { church, clickCard, setTownId, setCampusId } =
-    useContext(ChurchContext)
-  const history = useHistory()
+  const { clickCard, setConstituencyId } = useContext(ChurchContext)
+  const navigate = useNavigate()
 
   const [NewBacentaLeader] = useMutation(NEW_BACENTA_LEADER)
   const [CreateBacenta] = useMutation(CREATE_BACENTA_MUTATION)
 
   //onSubmit receives the form state as argument
   const onSubmit = (values, onSubmitProps) => {
-    if (church.church === 'town') {
-      setTownId(values.campusTownSelect)
-    } else if (church.church === 'campus') {
-      setCampusId(values.campusTownSelect)
-    }
+    setConstituencyId(values.constituencySelect)
 
     CreateBacenta({
       variables: {
-        bacentaName: values.bacentaName,
-        townCampusId: values.campusTownSelect,
+        name: values.name,
+        constituencyId: values.constituencySelect,
         leaderId: values.leaderId,
         fellowships: values.fellowships,
       },
@@ -51,7 +46,7 @@ const CreateBacenta = () => {
 
         onSubmitProps.setSubmitting(false)
         onSubmitProps.resetForm()
-        history.push('/bacenta/displaydetails')
+        navigate('/bacenta/displaydetails')
       })
       .catch((error) =>
         throwErrorMsg('There was an error creating bacenta', error)

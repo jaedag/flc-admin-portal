@@ -54,13 +54,13 @@ export const NEW_BACENTA_LEADER = gql`
   }
 `
 
-export const NEW_CAMPUS_LEADER = gql`
-  mutation NewCampusLeader($campusId: ID!, $leaderId: ID!) {
-    MakeCampusLeader(campusId: $campusId, leaderId: $leaderId) {
+export const NEW_CONSTITUENCY_LEADER = gql`
+  mutation NewConstituencyLeader($campusId: ID!, $leaderId: ID!) {
+    MakeConstituencyLeader(campusId: $campusId, leaderId: $leaderId) {
       id
       firstName
       lastName
-      leadsCampus {
+      leadsConstituency {
         id
         leader {
           id
@@ -72,13 +72,49 @@ export const NEW_CAMPUS_LEADER = gql`
   }
 `
 
-export const NEW_TOWN_LEADER = gql`
-  mutation NewTownLeader($townId: ID!, $leaderId: ID!) {
-    MakeTownLeader(townId: $townId, leaderId: $leaderId) {
+export const NEW_COUNCIL_LEADER = gql`
+  mutation NewCouncilLeader($councilId: ID!, $leaderId: ID!) {
+    MakeCouncilLeader(councilId: $councilId, leaderId: $leaderId) {
       id
       firstName
       lastName
-      leadsTown {
+      leadsCouncil {
+        id
+        leader {
+          id
+          firstName
+          lastName
+        }
+      }
+    }
+  }
+`
+
+export const NEW_STREAM_LEADER = gql`
+  mutation NewStreamLeader($councilId: ID!, $leaderId: ID!) {
+    MakeStreamLeader(councilId: $councilId, leaderId: $leaderId) {
+      id
+      firstName
+      lastName
+      leadsStream {
+        id
+        leader {
+          id
+          firstName
+          lastName
+        }
+      }
+    }
+  }
+`
+
+export const NEW_GATHERING_SERVICE_LEADER = gql`
+  mutation NewStreamLeader($councilId: ID!, $leaderId: ID!) {
+    MakeStreamLeader(councilId: $councilId, leaderId: $leaderId) {
+      id
+      firstName
+      lastName
+      leadsStream {
         id
         leader {
           id

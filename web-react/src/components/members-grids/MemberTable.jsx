@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import userIcon from '../../assets/user.png'
 import TabletDesktopView from '../responsive-design/TabletDesktopView'
 import MobileView from '../responsive-design/MobileView'
@@ -16,7 +16,7 @@ const MemberTable = (props) => {
 
   const { setChurch } = useContext(ChurchContext)
   const { theme, setMemberId } = useContext(MemberContext)
-  const history = useHistory()
+  const navigate = useNavigate()
 
   const loading = memberLoading || memberError || !memberData
 
@@ -74,7 +74,7 @@ const MemberTable = (props) => {
                         church: soul.stream_name,
                         subChurch: 'bacenta',
                       })
-                      history.push('/member/displaydetails')
+                      navigate('/member/displaydetails')
                     }}
                   >
                     <img
@@ -114,7 +114,7 @@ const MemberTable = (props) => {
                       church: soul.stream_name,
                       subChurch: 'bacenta',
                     })
-                    history.push('/member/displaydetails')
+                    navigate('/member/displaydetails')
                   }}
                 >
                   <div className="flex-shrink-0">

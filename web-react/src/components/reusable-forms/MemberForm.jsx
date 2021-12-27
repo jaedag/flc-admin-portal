@@ -1,9 +1,8 @@
 import { useQuery } from '@apollo/client'
 import { FieldArray, Form, Formik } from 'formik'
 import * as Yup from 'yup'
-import React, { useContext } from 'react'
+import React from 'react'
 import RoleView from '../../auth/RoleView'
-import { ChurchContext } from '../../contexts/ChurchContext'
 import {
   GENDER_OPTIONS,
   makeSelectOptions,
@@ -15,7 +14,6 @@ import { GET_MINISTRIES } from '../../queries/ListQueries'
 import MinusSign from '../buttons/PlusMinusSign/MinusSign'
 import PlusSign from '../buttons/PlusMinusSign/PlusSign'
 import ErrorScreen from '../base-component/ErrorScreen'
-import { COUNCIL_FELLOWSHIP_DROPDOWN } from '../formik-components/ComboboxQueries'
 import FormikControl from '../formik-components/FormikControl'
 import { HeadingPrimary } from '../HeadingPrimary/HeadingPrimary'
 import { Col, Container, Row } from 'react-bootstrap'
@@ -23,8 +21,6 @@ import LoadingScreen from 'components/base-component/LoadingScreen'
 import SubmitButton from 'components/formik-components/SubmitButton'
 
 function MemberForm({ initialValues, onSubmit, title, loading, update }) {
-  const { councilId } = useContext(ChurchContext)
-
   const { data: ministriesData, loading: ministriesLoading } =
     useQuery(GET_MINISTRIES)
   const validationSchema = Yup.object({
@@ -215,18 +211,11 @@ function MemberForm({ initialValues, onSubmit, title, loading, update }) {
                   <div className="form-row row-cols-1 row-cols-md-2 justify-content-center">
                     <Col sm={10}>
                       <FormikControl
-                        control="combobox2"
+                        control="fellowshipSearch"
                         name="fellowship"
                         label="Fellowship*"
                         placeholder="Start Typing"
                         setFieldValue={formik.setFieldValue}
-                        optionsQuery={COUNCIL_FELLOWSHIP_DROPDOWN}
-                        queryVariable1="id"
-                        variable1={councilId}
-                        queryVariable2="fellowshipName"
-                        suggestionText="name"
-                        suggestionID="id"
-                        church="fellowship"
                         aria-describedby="Fellowship Name"
                         className="form-control"
                         initialValue={initialValues?.fellowship || null}

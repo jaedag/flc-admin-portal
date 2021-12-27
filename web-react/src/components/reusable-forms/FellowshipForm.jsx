@@ -2,7 +2,6 @@ import { useMutation, useQuery } from '@apollo/client'
 import { Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import {
-  capitalise,
   DECIMAL_NUM_REGEX,
   makeSelectOptions,
   SERVICE_DAY_OPTIONS,
@@ -10,17 +9,14 @@ import {
   VACATION_OPTIONS,
 } from 'global-utils'
 import {
-  COUNCIL_MEMBER_DROPDOWN,
-  GET_COUNCIL_CAMPUSES,
-  GET_COUNCIL_TOWNS,
-  GET_CAMPUS_BACENTAS,
-  GET_TOWN_BACENTAS,
+  GET_COUNCIL_CONSTITUENCIES,
+  GET_CONSTITUENCY_BACENTAS,
 } from 'queries/ListQueries'
 import React, { useContext, useState } from 'react'
 import { ChurchContext } from 'contexts/ChurchContext'
 import FormikControl from 'components/formik-components/FormikControl'
 import { MAKE_FELLOWSHIP_INACTIVE } from 'pages/update/CloseChurchMutations'
-import { useHistory } from 'react-router'
+import { useNavigate } from 'react-router'
 import Popup from 'components/Popup/Popup'
 import RoleView from 'auth/RoleView'
 import { Container, Row, Col, Button, Spinner } from 'react-bootstrap'
@@ -32,29 +28,20 @@ import HeadingSecondary from 'components/HeadingSecondary'
 import SubmitButton from 'components/formik-components/SubmitButton'
 
 const FellowshipForm = (props) => {
-  const { church, clickCard, isOpen, togglePopup, fellowshipId, councilId } =
+  const { clickCard, isOpen, togglePopup, fellowshipId, councilId } =
     useContext(ChurchContext)
 
   const { theme } = useContext(MemberContext)
-  const history = useHistory()
+  const navigate = useNavigate()
 
-  const { data: townsData, error: townListError } = useQuery(
-    GET_COUNCIL_TOWNS,
-    {
-      variables: { id: councilId },
-    }
-  )
-  const { data: campusesData, error: campusListError } = useQuery(
-    GET_COUNCIL_CAMPUSES,
-    {
-      variables: { id: councilId },
-    }
-  )
+  const { data, error } = useQuery(GET_COUNCIL_CONSTITUENCIES, {
+    variables: { id: councilId },
+  })
+
   const [CloseDownFellowship] = useMutation(MAKE_FELLOWSHIP_INACTIVE)
 
-  if (townListError || campusListError) {
-    throwErrorMsg(townListError)
-    throwErrorMsg(campusListError)
+  if (error) {
+    throwErrorMsg(error)
   }
 
   const validationSchema = Yup.object({
@@ -82,13 +69,11 @@ const FellowshipForm = (props) => {
 
   const [positionLoading, setPositionLoading] = useState(false)
 
-  const townOptions = townsData
-    ? makeSelectOptions(townsData.councils[0]?.towns)
+  const constituencyOptions = data
+    ? makeSelectOptions(data.councils[0]?.constituencies)
     : []
-  const campusOptions = campusesData
-    ? makeSelectOptions(campusesData.councils[0]?.campuses)
-    : []
-  let townCampusIdVar = props.initialValues.townCampusSelect
+
+  let constituencyIdVar = props.initialValues.constituencySelect
 
   if (!props.initialValues.fellowshipName && !props.newFellowship) {
     return <LoadingScreen />
@@ -117,45 +102,39 @@ const FellowshipForm = (props) => {
                   <Col className="mb-2">
                     <Row className="form-row">
                       <RoleView
-                        roles={['adminCouncil', 'adminCampus', 'adminTown']}
+                        roles={[
+                          'adminFederal',
+                          'adminCouncil',
+                          'adminConstituency',
+                        ]}
                       >
                         <Col>
                           <FormikControl
                             className="form-control"
                             control="select"
-                            label={`${capitalise(church.church)}`}
-                            name="townCampusSelect"
-                            options={
-                              church.church === 'town'
-                                ? townOptions
-                                : campusOptions
-                            }
+                            label={`Constituency`}
+                            name="constituencySelect"
+                            options={constituencyOptions}
                             onChange={(e) => {
                               formik.setFieldValue(
-                                'townCampusSelect',
+                                'constituencySelect',
                                 e.target.value
                               )
-                              townCampusIdVar = e.target.value
+                              constituencyIdVar = e.target.value
                             }}
-                            defaultOption={`Select a ${capitalise(
-                              church.church
-                            )}`}
+                            defaultOption={`Select a Constituency`}
                           />
                           <FormikControl
                             className="form-control"
                             control="selectWithQuery"
                             name="bacentaSelect"
                             label="Bacenta"
-                            optionsQuery={
-                              church.church === 'town'
-                                ? GET_TOWN_BACENTAS
-                                : GET_CAMPUS_BACENTAS
-                            }
+                            optionsQuery={GET_CONSTITUENCY_BACENTAS}
                             queryVariable="id"
                             dataset="bacentas"
                             varValue={
-                              townCampusIdVar ||
-                              props.initialValues.townCampusSelect
+                              constituencyIdVar ||
+                              props.initialValues.constituencySelect
                             }
                             defaultOption="Select a Bacenta"
                           />
@@ -165,7 +144,11 @@ const FellowshipForm = (props) => {
 
                     <Row className="form-row">
                       <RoleView
-                        roles={['adminCouncil', 'adminCampus', 'adminTown']}
+                        roles={[
+                          'adminFederal',
+                          'adminCouncil',
+                          'adminConstituency',
+                        ]}
                       >
                         <Col sm={12}>
                           <FormikControl
@@ -202,26 +185,18 @@ const FellowshipForm = (props) => {
                         roles={[
                           'adminFederal',
                           'adminCouncil',
-                          'adminCampus',
-                          'adminTown',
+                          'adminConstituency',
                         ]}
                       >
                         <Col sm={12}>
                           <FormikControl
-                            control="combobox2"
+                            control="memberSearch"
                             name="leaderId"
                             label="Fellowship Leader"
                             initialValue={props.initialValues.leaderName}
                             placeholder="Select a Leader"
                             setFieldValue={formik.setFieldValue}
-                            optionsQuery={COUNCIL_MEMBER_DROPDOWN}
-                            queryVariable1="id"
-                            variable1={councilId}
-                            queryVariable2="nameSearch"
-                            suggestionText="name"
-                            suggestionID="id"
-                            dataset="councilMemberDropdown"
-                            aria-describedby="Council Member List"
+                            aria-describedby="Member Search Box"
                             className="form-control"
                             error={formik.errors.leaderId}
                           />
@@ -314,7 +289,7 @@ const FellowshipForm = (props) => {
                       .then((res) => {
                         clickCard(res.data.CloseDownFellowship.bacenta)
                         togglePopup()
-                        history.push('/bacenta/displaydetails')
+                        navigate('/bacenta/displaydetails')
                       })
                       .catch((error) => {
                         // eslint-disable-next-line no-console

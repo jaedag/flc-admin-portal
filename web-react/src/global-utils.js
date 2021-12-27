@@ -77,6 +77,14 @@ export const capitalise = (str) => {
 }
 export const plural = (church) => {
   switch (church) {
+    case 'stream':
+      return 'streams'
+    case 'Stream':
+      return 'Streams'
+    case 'council':
+      return 'councils'
+    case 'Council':
+      return 'Councils'
     case 'town':
       return 'towns'
     case 'Town':
@@ -85,6 +93,8 @@ export const plural = (church) => {
       return 'campuses'
     case 'Campus':
       return 'Campuses'
+    case 'Constituency':
+      return 'Constituencies'
     case 'senior high school':
       return 'senior high schools'
     case 'Senior High School':
@@ -153,14 +163,24 @@ export const parseDate = (date) => {
   // Create date from input value
   let inputDate = new Date(date)
 
+  // To calculate the time difference of two dates
+  const differenceInTime = todaysDate.getTime() - inputDate.getTime()
+
+  // To calculate the no. of days between two dates
+  const differenceInDays = differenceInTime / (1000 * 3600 * 24)
+
   // call setHours to take the time out of the comparison
   if (inputDate.toDateString() === todaysDate.toDateString()) {
     // Date equals today's date
     return 'Today'
-  } else if (inputDate.getDate() === todaysDate.getDate() - 1) {
+  } else if (Math.floor(differenceInDays) === 1) {
     // Date equals yesterday's date
     return 'Yesterday'
+  } else if (Math.floor(differenceInDays) < 7) {
+    // Date equals yesterday's date
+    return Math.floor(differenceInDays) + ' days ago'
   }
+
   return inputDate.toDateString()
 }
 
@@ -261,6 +281,18 @@ export const getMemberCount = (servant) => {
 }
 export const getChurchCount = (servant) => {
   let churchesCount = ''
+
+  if (servant?.leadsGatheringServiceCount) {
+    if (churchesCount) {
+      churchesCount = churchesCount + ','
+    }
+
+    if (servant.leadsGatheringServiceCount === 1) {
+      churchesCount = servant.leadsGatheringServiceCount + ' Gathering Service'
+    } else {
+      churchesCount = servant.leadsGatheringServiceCount + ' Gathering Services'
+    }
+  }
 
   if (servant?.leadsCouncilCount) {
     if (churchesCount) {

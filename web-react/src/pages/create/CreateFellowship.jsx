@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useMutation } from '@apollo/client'
 import { CREATE_FELLOWSHIP_MUTATION } from './CreateMutations'
 import { ChurchContext } from '../../contexts/ChurchContext'
@@ -11,7 +11,7 @@ const CreateFellowship = () => {
   const initialValues = {
     fellowshipName: '',
     leaderId: '',
-    townCampusSelect: '',
+    constituencySelect: '',
     bacentaSelect: '',
     meetingDay: '',
     vacationStatus: '',
@@ -21,7 +21,7 @@ const CreateFellowship = () => {
 
   const { clickCard, setFellowshipId } = useContext(ChurchContext)
 
-  const history = useHistory()
+  const navigate = useNavigate()
 
   const [NewFellowshipLeader] = useMutation(NEW_FELLOWSHIP_LEADER)
   const [CreateFellowship] = useMutation(CREATE_FELLOWSHIP_MUTATION)
@@ -55,7 +55,7 @@ const CreateFellowship = () => {
           )
 
         setFellowshipId(res.data.CreateFellowship.id)
-        history.push('/fellowship/displaydetails')
+        navigate('/fellowship/displaydetails')
       })
       .catch((error) =>
         throwErrorMsg('There was an error creating fellowship', error)

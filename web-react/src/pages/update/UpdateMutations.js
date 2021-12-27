@@ -78,11 +78,15 @@ export const UPDATE_MEMBER_MUTATION = gql`
   }
 `
 
-export const UPDATE_TOWN_MUTATION = gql`
-  mutation UpdateTown($townId: ID!, $townName: String!, $councilId: ID!) {
-    UpdateTownDetails(
-      townId: $townId
-      townName: $townName
+export const UPDATE_CONSTITUENCY_MUTATION = gql`
+  mutation UpdateConstituency(
+    $constituencyId: ID!
+    $constituencyName: String!
+    $councilId: ID!
+  ) {
+    UpdateConstituencyDetails(
+      constituencyId: $constituencyId
+      constituencyName: $constituencyName
       councilId: $councilId
     ) {
       id
@@ -90,15 +94,12 @@ export const UPDATE_TOWN_MUTATION = gql`
       bacentas {
         id
         name
-        town {
+        constituency {
           id
           name
           council {
             id
-            towns {
-              id
-            }
-            campuses {
+            constituencies {
               id
             }
           }
@@ -114,107 +115,8 @@ export const UPDATE_TOWN_MUTATION = gql`
         lastName
         fellowship {
           id
-          bacenta {
-            id
-            town {
-              id
-              name
-              bishop {
-                id
-              }
-            }
-            campus {
-              id
-              name
-              bishop {
-                id
-              }
-            }
-          }
+          stream_name
         }
-      }
-      bishop {
-        id
-        firstName
-        lastName
-        fullName
-      }
-      leader {
-        id
-        firstName
-        lastName
-      }
-      history(options: { limit: 10 }) {
-        id
-        timeStamp
-        created_at {
-          date
-        }
-        loggedBy {
-          id
-          firstName
-          lastName
-        }
-        historyRecord
-      }
-    }
-  }
-`
-
-export const UPDATE_CAMPUS_MUTATION = gql`
-  mutation UpdateCampus($campusId: ID!, $campusName: String!, $bishopId: ID!) {
-    UpdateCampusDetails(
-      campusId: $campusId
-      campusName: $campusName
-      bishopId: $bishopId
-    ) {
-      id
-      name
-      bacentas {
-        id
-        name
-        campus {
-          id
-          name
-          bishop {
-            id
-          }
-        }
-      }
-      sontas {
-        id
-        name
-      }
-      admin {
-        id
-        firstName
-        lastName
-        fellowship {
-          id
-          bacenta {
-            id
-            town {
-              id
-              name
-              bishop {
-                id
-              }
-            }
-            campus {
-              id
-              name
-              bishop {
-                id
-              }
-            }
-          }
-        }
-      }
-      bishop {
-        id
-        firstName
-        lastName
-        fullName
       }
       leader {
         id
@@ -242,12 +144,12 @@ export const UPDATE_BACENTA_MUTATION = gql`
   mutation UpdateBacenta(
     $bacentaId: ID!
     $bacentaName: String!
-    $campusTownId: ID!
+    $constituencyId: ID!
   ) {
     UpdateBacentaDetails(
       bacentaId: $bacentaId
       bacentaName: $bacentaName
-      campusTownId: $campusTownId
+      constituencyId: $constituencyId
     ) {
       id
       name
@@ -257,46 +159,23 @@ export const UPDATE_BACENTA_MUTATION = gql`
         bacenta {
           id
           name
-          town {
+          constituencies {
             id
-            bishop {
-              id
-            }
-          }
-          campus {
-            id
-            bishop {
+            council {
               id
             }
           }
         }
       }
-      town {
+      constituencies {
         id
         name
         bacentas {
           id
           name
         }
-        bishop {
-          id
-          firstName
-          lastName
-        }
       }
-      campus {
-        id
-        name
-        bacentas {
-          id
-          name
-        }
-        bishop {
-          id
-          firstName
-          lastName
-        }
-      }
+
       leader {
         id
         firstName
@@ -328,24 +207,11 @@ export const UPDATE_SONTA_MUTATION = gql`
     UpdateSontaDetails(sontaId: $sontaId, sontaName: $sontaName) {
       id
       name
-      town {
+      constituency {
         id
         name
-        bishop {
-          id
-          firstName
-          lastName
-        }
       }
-      campus {
-        id
-        name
-        bishop {
-          id
-          firstName
-          lastName
-        }
-      }
+
       leader {
         id
         firstName
@@ -388,43 +254,34 @@ export const UPDATE_FELLOWSHIP = gql`
       venueLongitude: $venueLongitude
     ) {
       id
+      labels
+      stream_name
+      bankingCode
       name
+      memberCount
+      location {
+        longitude
+        latitude
+      }
       meetingDay {
         day
       }
       bacenta {
         id
         name
-        fellowships {
-          id
-        }
-        town {
+        constituency {
           id
           name
-          bishop {
-            id
-            firstName
-            lastName
-          }
-        }
-        campus {
-          id
-          name
-          bishop {
-            id
-            firstName
-            lastName
-          }
         }
       }
       leader {
         id
         firstName
         lastName
-        title {
-          title
-        }
+        fullName
+        pictureUrl
       }
+
       history(options: { limit: 10 }) {
         id
         timeStamp
@@ -442,15 +299,15 @@ export const UPDATE_FELLOWSHIP = gql`
   }
 `
 
-export const ADD_BACENTA_TOWN = gql`
-  mutation AddBacentaTown($townId: ID!, $bacentaId: ID!) {
+export const ADD_BACENTA_CONSTITUENCY = gql`
+  mutation AddBacentaConstituency($constituencyId: ID!, $bacentaId: ID!) {
     updateBacentas(
       where: { id: $bacentaId }
-      connect: { town: { where: { node: { id: $townId } } } }
+      connect: { constituency: { where: { node: { id: $constituencyId } } } }
     ) {
       bacentas {
         id
-        town {
+        constituency {
           id
           name
         }
@@ -459,70 +316,23 @@ export const ADD_BACENTA_TOWN = gql`
   }
 `
 
-export const ADD_BACENTA_CAMPUS = gql`
-  mutation AddBacentaCampus($campusId: ID!, $bacentaId: ID!) {
+export const REMOVE_BACENTA_CONSTITUENCY = gql`
+  mutation RemoveBacentaConstituency($constituencyId: ID!, $bacentaId: ID!) {
     updateBacentas(
       where: { id: $bacentaId }
-      connect: { campus: { where: { node: { id: $campusId } } } }
+      disconnect: { constituency: { where: { node: { id: $constituencyId } } } }
     ) {
       bacentas {
         id
-        campus {
+        name
+        constituency {
           id
           name
         }
       }
     }
-  }
-`
-
-export const REMOVE_BACENTA_TOWN = gql`
-  mutation RemoveBacentaTown($townId: ID!, $bacentaId: ID!) {
-    updateBacentas(
-      where: { id: $bacentaId }
-      disconnect: { town: { where: { node: { id: $townId } } } }
-    ) {
-      bacentas {
-        id
-        name
-        town {
-          id
-          name
-          bacentas {
-            id
-          }
-        }
-      }
-    }
-    updateTowns(where: { id: $townId }) {
-      towns {
-        id
-        name
-        bacentas {
-          id
-        }
-      }
-    }
-  }
-`
-
-export const REMOVE_BACENTA_CAMPUS = gql`
-  mutation RemoveBacentaCampus($campusId: ID!, $bacentaId: ID!) {
-    updateBacentas(
-      where: { id: $bacentaId }
-      disconnect: { campus: { where: { node: { id: $campusId } } } }
-    ) {
-      bacentas {
-        id
-        name
-        campus {
-          id
-          name
-        }
-      }
-    }
-    updateCampuses(where: { id: $campusId }) {
-      campuses {
+    updateConstituencies(where: { id: $constituencyId }) {
+      constituencies {
         id
         name
       }
@@ -605,14 +415,14 @@ export const ADD_FELLOWSHIP_BACENTA = gql`
   }
 `
 
-//Updating Campus/Town Mutations
-export const ADD_TOWN_COUNCIL = gql`
-  mutation AddTownCouncil($townId: ID!, $councilId: ID!) {
-    updateTowns(
-      where: { id: $townId }
+//Updating Constituency Mutations
+export const ADD_CONSTITUENCY_COUNCIL = gql`
+  mutation AddConstituencyCouncil($constituencyId: ID!, $councilId: ID!) {
+    updateConstituencies(
+      where: { id: $constituencyId }
       connect: { council: { where: { node: { id: $councilId } } } }
     ) {
-      towns {
+      constituencies {
         id
         name
         council {
@@ -624,13 +434,13 @@ export const ADD_TOWN_COUNCIL = gql`
   }
 `
 
-export const REMOVE_TOWN_COUNCIL = gql`
-  mutation RemoveTownCouncil($townId: ID!, $councilId: ID!) {
-    updateTowns(
-      where: { id: $townId }
+export const REMOVE_CONSTITUENCY_COUNCIL = gql`
+  mutation RemoveConstituencyCouncil($constituencyId: ID!, $councilId: ID!) {
+    updateConstituencies(
+      where: { id: $constituencyId }
       disconnect: { council: { where: { node: { id: $councilId } } } }
     ) {
-      towns {
+      constituencies {
         id
         name
       }
@@ -638,59 +448,13 @@ export const REMOVE_TOWN_COUNCIL = gql`
   }
 `
 
-export const ADD_CAMPUS_COUNCIL = gql`
-  mutation AddCampusCouncil($campusId: ID!, $councilId: ID!) {
-    updateCampuses(
-      where: { id: $campusId }
-      connect: { council: { where: { node: { id: $councilId } } } }
-    ) {
-      campuses {
-        id
-        name
-        council {
-          id
-          name
-        }
-      }
-    }
-  }
-`
-
-export const REMOVE_CAMPUS_COUNCIL = gql`
-  mutation RemoveCampusCouncil($campusId: ID!, $councilId: ID!) {
-    updateCampuses(
-      where: { id: $campusId }
-      disconnect: { council: { where: { node: { id: $councilId } } } }
-    ) {
-      campuses {
-        id
-        name
-      }
-    }
-  }
-`
-
-export const ADD_CAMPUS_BACENTAS = gql`
-  mutation AddCampusBacentas($campusId: ID!, $bacentaId: ID!) {
-    updateCampuses(
-      where: { id: $campusId }
+export const ADD_CONSTITUENCY_BACENTAS = gql`
+  mutation AddConstituencyBacentas($constituencyId: ID!, $bacentaId: ID!) {
+    updateConstituencies(
+      where: { id: $constituencyId }
       connect: { bacentas: { where: { node: { id: $bacentaId } } } }
     ) {
-      campuses {
-        id
-        name
-      }
-    }
-  }
-`
-
-export const ADD_TOWN_BACENTAS = gql`
-  mutation AddTownBacentas($townId: ID!, $bacentaId: ID!) {
-    updateTowns(
-      where: { id: $townId }
-      connect: { bacentas: { where: { node: { id: $bacentaId } } } }
-    ) {
-      towns {
+      constituencies {
         id
         name
       }

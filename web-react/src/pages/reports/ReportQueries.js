@@ -83,9 +83,9 @@ export const SONTA_REPORT = gql`
   }
 `
 
-export const CAMPUS_REPORT = gql`
-  query campusReports($campusId: ID!) {
-    campuses(where: { id: $campusId }) {
+export const CONSTITUENCY_REPORT = gql`
+  query constiutencyReports($id: ID!) {
+    constituencies(where: { id: $id }) {
       id
       name
       leader {
@@ -104,36 +104,6 @@ export const CAMPUS_REPORT = gql`
         }
       }
 
-      componentServiceAggregate {
-        week
-        attendance
-        income
-      }
-      memberCount
-    }
-  }
-`
-
-export const TOWN_REPORT = gql`
-  query townReports($townId: ID!) {
-    towns(where: { id: $townId }) {
-      id
-      name
-      leader {
-        id
-        firstName
-        lastName
-        fullName
-      }
-      services(limit: 4) {
-        created_at
-        attendance
-        income
-        week
-        serviceDate {
-          date
-        }
-      }
       componentServiceAggregate {
         week
         attendance

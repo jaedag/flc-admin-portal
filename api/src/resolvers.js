@@ -107,12 +107,11 @@ const errorHandling = (member) => {
 }
 const rearrangeCypherObject = (response) => {
   let member = {}
-  // console.log(response)
 
   response.records[0]?.keys.forEach(
     (key, i) => (member[key] = response.records[0]._fields[i])
   )
-  console.log(member)
+
   return member?.member || member
 }
 const parseForCache = (servant, church, verb, role) => {
@@ -593,35 +592,13 @@ export const resolvers = {
       return serviceAggregates
     },
   },
-  Campus: {
+  Constituency: {
     componentServiceAggregate: async (obj, args, context) => {
       let serviceAggregates = []
 
       const session = context.driver.session()
       const serviceAggregateResponse = await session.run(
-        cypher.getCampusTownServiceAggregates,
-        obj
-      )
-
-      serviceAggregateResponse.records.map((record) => {
-        let serviceAggregate = {}
-
-        record.keys.forEach(
-          (key, i) => (serviceAggregate[key] = record._fields[i])
-        )
-        serviceAggregates.push(serviceAggregate)
-      })
-
-      return serviceAggregates
-    },
-  },
-  Town: {
-    componentServiceAggregate: async (obj, args, context) => {
-      let serviceAggregates = []
-
-      const session = context.driver.session()
-      const serviceAggregateResponse = await session.run(
-        cypher.getCampusTownServiceAggregates,
+        cypher.getConstituencyServiceAggregates,
         obj
       )
 
@@ -644,12 +621,11 @@ export const resolvers = {
         [
           'adminFederal',
           'adminCouncil',
-          'adminCampus',
-          'adminTown',
+          'adminConstituency',
           'leaderFellowship',
           'leaderBacenta',
-          'leaderTown',
-          'leaderCampus',
+
+          'leaderConstituency',
         ],
         context.auth.roles
       )
@@ -695,10 +671,8 @@ export const resolvers = {
         [
           'adminFederal',
           'adminCouncil',
-          'adminCampus',
-          'adminTown',
-          'leaderTown',
-          'leaderCampus',
+          'adminConstituency',
+          'leaderConstituency',
         ],
         context.auth.roles
       )
@@ -730,7 +704,7 @@ export const resolvers = {
         RemoveServant(
           context,
           args,
-          ['adminFederal', 'adminCouncil', 'adminCampus', 'adminTown'],
+          ['adminFederal', 'adminCouncil', 'adminConstituency'],
           'Fellowship',
           'Leader'
         )
@@ -743,7 +717,7 @@ export const resolvers = {
 
     CloseDownBacenta: async (object, args, context) => {
       isAuth(
-        ['adminFederal', 'adminCouncil', 'adminCampus', 'adminTown'],
+        ['adminFederal', 'adminCouncil', 'adminConstituency'],
         context.auth.roles
       )
 
@@ -774,7 +748,7 @@ export const resolvers = {
         RemoveServant(
           context,
           args,
-          ['adminFederal', 'adminCouncil', 'adminCampus', 'adminTown'],
+          ['adminFederal', 'adminCouncil', 'adminConstituency'],
           'Bacenta',
           'Leader'
         )
@@ -784,45 +758,57 @@ export const resolvers = {
         throwErrorMsg(error)
       }
     },
+    MakeStreamAdmin: async (object, args, context) => {
+      return MakeServant(
+        context,
+        args,
+        ['adminFederal', 'adminStream'],
+        'Stream',
+        'Admin'
+      )
+    },
+    RemoveStreamAdmin: async (object, args, context) => {
+      return RemoveServant(
+        context,
+        args,
+        ['adminFederal', 'adminStream'],
+        'Stream',
+        'Admin'
+      )
+    },
     MakeCouncilAdmin: async (object, args, context) => {
-      return MakeServant(context, args, ['adminFederal'], 'Council', 'Admin')
+      return MakeServant(
+        context,
+        args,
+        ['adminFederal', 'adminStream'],
+        'Council',
+        'Admin'
+      )
     },
     RemoveCouncilAdmin: async (object, args, context) => {
-      return RemoveServant(context, args, ['adminFederal'], 'Council', 'Admin')
-    },
-    MakeTownAdmin: async (object, args, context) => {
-      return MakeServant(
-        context,
-        args,
-        ['adminFederal', 'adminCouncil'],
-        'Town',
-        'Admin'
-      )
-    },
-    RemoveTownAdmin: async (object, args, context) => {
       return RemoveServant(
         context,
         args,
-        ['adminFederal', 'adminCouncil'],
-        'Town',
+        ['adminFederal', 'adminStream'],
+        'Council',
         'Admin'
       )
     },
-    MakeCampusAdmin: async (object, args, context) => {
+    MakeConstituencyAdmin: async (object, args, context) => {
       return MakeServant(
         context,
         args,
-        ['adminFederal', 'adminCouncil'],
-        'Campus',
+        ['adminFederal', 'adminStream', 'adminStream', 'adminCouncil'],
+        'Constituency',
         'Admin'
       )
     },
-    RemoveCampusAdmin: async (object, args, context) => {
+    RemoveConstituencyAdmin: async (object, args, context) => {
       return RemoveServant(
         context,
         args,
-        ['adminFederal', 'adminCouncil'],
-        'Campus',
+        ['adminFederal', 'adminStream', 'adminCouncil'],
+        'Constituency',
         'Admin'
       )
     },
@@ -830,7 +816,7 @@ export const resolvers = {
       return MakeServant(
         context,
         args,
-        ['adminFederal', 'adminCouncil', 'adminCampus', 'adminTown'],
+        ['adminFederal', 'adminStream', 'adminCouncil', 'adminConstituency'],
         'Fellowship',
         'Leader'
       )
@@ -839,7 +825,7 @@ export const resolvers = {
       return RemoveServant(
         context,
         args,
-        ['adminFederal', 'adminCouncil', 'adminCampus', 'adminTown'],
+        ['adminFederal', 'adminStream', 'adminCouncil', 'adminConstituency'],
         'Fellowship',
         'Leader'
       )
@@ -848,7 +834,7 @@ export const resolvers = {
       return MakeServant(
         context,
         args,
-        ['adminFederal', 'adminCouncil', 'adminCampus', 'adminTown'],
+        ['adminFederal', 'adminStream', 'adminCouncil', 'adminConstituency'],
         'Sonta',
         'Leader'
       )
@@ -857,7 +843,7 @@ export const resolvers = {
       return RemoveServant(
         context,
         args,
-        ['adminFederal', 'adminCouncil', 'adminCampus', 'adminTown'],
+        ['adminFederal', 'adminStream', 'adminCouncil', 'adminConstituency'],
         'Sonta',
         'Leader'
       )
@@ -866,7 +852,7 @@ export const resolvers = {
       return MakeServant(
         context,
         args,
-        ['adminFederal', 'adminCouncil', 'adminCampus', 'adminTown'],
+        ['adminFederal', 'adminStream', 'adminCouncil', 'adminConstituency'],
         'Bacenta',
         'Leader'
       )
@@ -875,44 +861,68 @@ export const resolvers = {
       return RemoveServant(
         context,
         args,
-        ['adminFederal', 'adminCouncil', 'adminCampus', 'adminTown'],
+        ['adminFederal', 'adminStream', 'adminCouncil', 'adminConstituency'],
         'Bacenta',
         'Leader'
       )
     },
-    MakeCampusLeader: async (object, args, context) => {
+    MakeConstituencyLeader: async (object, args, context) => {
       return MakeServant(
         context,
         args,
-        ['adminFederal', 'adminCouncil'],
-        'Campus',
+        ['adminFederal', 'adminStream', 'adminCouncil'],
+        'Constituency',
         'Leader'
       )
     },
-    RemoveCampusLeader: async (object, args, context) => {
+    RemoveConstituencyLeader: async (object, args, context) => {
       return RemoveServant(
         context,
         args,
-        ['adminFederal', 'adminCouncil'],
-        'Campus',
+        ['adminFederal', 'adminStream', 'adminCouncil'],
+        'Constituency',
         'Leader'
       )
     },
-    MakeTownLeader: async (object, args, context) => {
+    MakeCouncilLeader: async (object, args, context) => {
       return MakeServant(
         context,
         args,
-        ['adminFederal', 'adminCouncil'],
-        'Town',
+        ['adminFederal', 'adminStream'],
+        'Council',
         'Leader'
       )
     },
-    RemoveTownLeader: async (object, args, context) => {
+    RemoveCouncilLeader: async (object, args, context) => {
       return RemoveServant(
         context,
         args,
-        ['adminFederal', 'adminCouncil'],
-        'Town',
+        ['adminFederal', 'adminStream'],
+        'Council',
+        'Leader'
+      )
+    },
+    MakeStreamLeader: async (object, args, context) => {
+      return MakeServant(context, args, ['adminFederal'], 'Stream', 'Leader')
+    },
+    RemoveStreamLeader: async (object, args, context) => {
+      return RemoveServant(context, args, ['adminFederal'], 'Stream', 'Leader')
+    },
+    MakeGatheringServiceLeader: async (object, args, context) => {
+      return MakeServant(
+        context,
+        args,
+        ['adminFederal'],
+        'GatheringService',
+        'Leader'
+      )
+    },
+    RemoveGatheringServiceLeader: async (object, args, context) => {
+      return RemoveServant(
+        context,
+        args,
+        ['adminFederal'],
+        'GatheringService',
         'Leader'
       )
     },

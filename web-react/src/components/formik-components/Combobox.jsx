@@ -4,6 +4,7 @@ import './react-autosuggest.css'
 import { useLazyQuery } from '@apollo/client'
 import { ErrorMessage } from 'formik'
 import TextError from './TextError'
+import { DEBOUNCE_TIMER } from 'global-utils'
 
 function Combobox(props) {
   const {
@@ -21,7 +22,6 @@ function Combobox(props) {
 
   const [searchString, setSearchString] = useState(props.initialValue ?? '')
   const [suggestions, setSuggestions] = useState([])
-  const [debouncedText, setDebouncedText] = useState('')
 
   const [query] = useLazyQuery(optionsQuery, {
     onCompleted: (data) => {
@@ -30,8 +30,7 @@ function Combobox(props) {
           name: row[`${suggestionText}`],
           id: row[`${suggestionID}`],
           bacenta: row.bacenta,
-          campus: row.campus,
-          town: row.town,
+          constituency: row.constituency,
         }))
       )
     },
@@ -39,13 +38,13 @@ function Combobox(props) {
 
   useEffect(() => {
     const timerId = setTimeout(() => {
-      setDebouncedText(searchString)
-    }, 200)
-    query({
-      variables: {
-        [`${queryVariable}`]: debouncedText?.trim(),
-      },
-    })
+      query({
+        variables: {
+          [`${queryVariable}`]: searchString?.trim(),
+        },
+      })
+    }, DEBOUNCE_TIMER)
+
     return () => {
       clearTimeout(timerId)
     }
@@ -79,7 +78,7 @@ function Combobox(props) {
           try {
             query({
               variables: {
-                [`${queryVariable}`]: debouncedText?.trim(),
+                [`${queryVariable}`]: searchString?.trim(),
               },
             })
           } catch {

@@ -111,58 +111,28 @@ export const MAKE_SONTA_LEADER = gql`
   }
 `
 
-export const MAKE_CAMPUS_LEADER = gql`
-  mutation MakeCampusLeader(
-    $campusId: ID!
+export const MAKE_CONSTITUENCY_LEADER = gql`
+  mutation MakeConstituencyLeader(
+    $constituencyId: ID!
     $newLeaderId: ID!
     $oldLeaderId: ID!
   ) {
-    RemoveCampusLeader(campusId: $campusId, leaderId: $oldLeaderId) {
+    RemoveConstituencyLeader(
+      constituencyId: $constituencyId
+      leaderId: $oldLeaderId
+    ) {
       id
       firstName
       lastName
     }
-    MakeCampusLeader(campusId: $campusId, leaderId: $newLeaderId) {
+    MakeConstituencyLeader(
+      constituencyId: $constituencyId
+      leaderId: $newLeaderId
+    ) {
       id
       firstName
       lastName
-      leadsCampus {
-        id
-        leader {
-          id
-          firstName
-          lastName
-        }
-        # history(options: { limit: 10 }) {
-        #   id
-        #   timeStamp
-        #   created_at {
-        #     date
-        #   }
-        #   loggedBy {
-        #     id
-        #     firstName
-        #     lastName
-        #   }
-        #   historyRecord
-        # }
-      }
-    }
-  }
-`
-
-export const MAKE_TOWN_LEADER = gql`
-  mutation MakeTownLeader($townId: ID!, $newLeaderId: ID!, $oldLeaderId: ID!) {
-    RemoveTownLeader(townId: $townId, leaderId: $oldLeaderId) {
-      id
-      firstName
-      lastName
-    }
-    MakeTownLeader(townId: $townId, leaderId: $newLeaderId) {
-      id
-      firstName
-      lastName
-      leadsTown {
+      leadsConstituency {
         id
         leader {
           id

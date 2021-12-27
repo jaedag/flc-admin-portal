@@ -4,7 +4,7 @@ import './react-autosuggest.css'
 import { useLazyQuery } from '@apollo/client'
 import { ErrorMessage } from 'formik'
 import TextError from './TextError'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import {
   COUNCIL_SEARCH,
   CONSTITUENCY_SEARCH,
@@ -18,11 +18,10 @@ function FormikSearchbox(props) {
   const { label, name, placeholder, setFieldValue } = props
 
   const [searchString, setSearchString] = useState('')
-  const [debouncedText, setDebouncedText] = useState('')
   const [suggestions, setSuggestions] = useState([])
   const { clickCard } = useContext(ChurchContext)
   const { currentUser } = useContext(MemberContext)
-  const history = useHistory()
+  const navigate = useNavigate()
 
   const getSuggestions = (data) => {
     setSuggestions(
@@ -33,13 +32,12 @@ function FormikSearchbox(props) {
         lastName: row.lastName,
         fellowship: row.fellowship,
         bacenta: row.bacenta,
-        town: row.town,
-        campus: row.campus,
+
+        constituency: row.constituency,
         bishop: row.bishop,
         leadsFellowship: row.leadsFellowship,
         leadsBacenta: row.leadsBacenta,
-        leadsCampus: row.leadsCampus,
-        leadsTown: row.leadsTown,
+        leadsConstituency: row.leadsConstituency,
         leadsCouncil: row.leadsCouncil,
         id: row.id,
       }))
@@ -49,8 +47,7 @@ function FormikSearchbox(props) {
     onCompleted: (data) => {
       const combinedData = [
         ...data.federalMemberSearch,
-        ...data.federalCampusSearch,
-        ...data.federalTownSearch,
+        ...data.federalConstituencySearch,
         ...data.federalSontaSearch,
         ...data.federalBacentaSearch,
         ...data.federalFellowshipSearch,
@@ -64,8 +61,7 @@ function FormikSearchbox(props) {
     onCompleted: (data) => {
       const combinedData = [
         ...data.councilMemberSearch,
-        ...data.councilCampusSearch,
-        ...data.councilTownSearch,
+        ...data.councilConstituencySearch,
         ...data.councilSontaSearch,
         ...data.councilBacentaSearch,
         ...data.councilFellowshipSearch,
@@ -85,7 +81,7 @@ function FormikSearchbox(props) {
         ...data.constituencyFellowshipSearch,
       ]
 
-      if (currentUser.roles.includes('adminCampus', 'adminTown')) {
+      if (currentUser.roles.includes('adminConstituency')) {
         getSuggestions(combinedData)
       }
     },
@@ -105,7 +101,7 @@ function FormikSearchbox(props) {
       })
     } else if (
       isAuthorised(
-        ['adminCampus', 'adminTown', 'leaderCampus', 'leaderTown'],
+        ['adminConstituency', 'leaderConstituency'],
         currentUser.roles
       )
     ) {
@@ -119,15 +115,14 @@ function FormikSearchbox(props) {
   }
   useEffect(() => {
     const timerId = setTimeout(() => {
-      whichSearch(debouncedText)
-      setDebouncedText(searchString)
+      whichSearch(searchString)
       return
     }, 200)
 
     return () => {
       clearTimeout(timerId)
     }
-  }, [searchString, debouncedText])
+  }, [searchString])
 
   return (
     <div>
@@ -159,12 +154,10 @@ function FormikSearchbox(props) {
           if (method === 'enter') {
             event.preventDefault()
           }
-          setDebouncedText(
-            suggestion.name ?? suggestion.firstName + ' ' + suggestion.lastName
-          )
+
           setFieldValue(`${name}`, suggestion.id)
           clickCard(suggestion)
-          history.push(`/${suggestion.__typename.toLowerCase()}/displaydetails`)
+          navigate(`/${suggestion.__typename.toLowerCase()}/displaydetails`)
         }}
         getSuggestionValue={(suggestion) =>
           `${

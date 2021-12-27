@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { useHistory } from 'react-router'
+import { useNavigate } from 'react-router'
 import { useQuery } from '@apollo/client'
 import { ChurchContext } from 'contexts/ChurchContext'
 import { MemberContext } from 'contexts/MemberContext'
@@ -21,7 +21,7 @@ import BaseComponent from 'components/base-component/BaseComponent'
 const ServantsChurchList = () => {
   const { memberId } = useContext(MemberContext)
   const { clickCard } = useContext(ChurchContext)
-  const history = useHistory()
+  const navigate = useNavigate()
   const { data, loading, error } = useQuery(SERVANTS_DASHBOARD, {
     variables: { id: memberId },
   })
@@ -62,11 +62,8 @@ const ServantsChurchList = () => {
     if (servant?.leadsBacenta?.length) {
       pushIntoChurch(servant?.leadsBacenta)
     }
-    if (servantLeader?.leadsTown?.length) {
-      pushIntoChurch(servantLeader?.leadsTown)
-    }
-    if (servantLeader?.leadsCampus?.length) {
-      pushIntoChurch(servantLeader?.leadsCampus)
+    if (servantLeader?.leadsConstituency?.length) {
+      pushIntoChurch(servantLeader?.leadsConstituency)
     }
     if (servantLeader?.leadsSonta?.length) {
       pushIntoChurch(servantLeader?.leadsSonta)
@@ -78,19 +75,13 @@ const ServantsChurchList = () => {
       pushIntoChurch(servantLeader?.leadsMinistry)
     }
     if (servant?.leadsCouncil?.length) {
-      churches.push({ name: 'Campus Bishop', number: 'Bishop' })
-    }
-    if (servant?.leadsCouncil?.length) {
-      churches.push({ name: 'Town Bishop', number: 'Bishop' })
+      churches.push({ name: 'Bishop', number: 'Bishop' })
     }
     if (servantAdmin?.isAdminForCouncil?.length) {
       pushIntoChurch(servantAdmin?.isAdminForCouncil)
     }
-    if (servantAdmin?.isAdminForCampus?.length) {
-      pushIntoChurch(servantAdmin?.isAdminForCampus)
-    }
-    if (servantAdmin?.isAdminForTown?.length) {
-      pushIntoChurch(servantAdmin?.isAdminForTown)
+    if (servantAdmin?.isAdminForConstituency?.length) {
+      pushIntoChurch(servantAdmin?.isAdminForConstituency)
     }
 
     //run the get graph function after all checking is done to avoid multiple unnecessary runs
@@ -115,7 +106,7 @@ const ServantsChurchList = () => {
                 color="churches"
                 onClick={() => {
                   church.clickCard()
-                  history.push(church.link)
+                  navigate(church.link)
                 }}
               />
             )

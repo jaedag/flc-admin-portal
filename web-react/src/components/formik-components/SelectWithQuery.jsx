@@ -27,10 +27,8 @@ function SelectWithQuery(props) {
   const { isAuthenticated } = useAuth0()
 
   let options
-  if (data?.towns?.length) {
-    options = makeSelectOptions(data.towns[0].bacentas)
-  } else if (data?.campuses?.length) {
-    options = makeSelectOptions(data.campuses[0].bacentas)
+  if (data?.constituencies?.length) {
+    options = makeSelectOptions(data.constituencies[0].bacentas)
   } else {
     options = data ? makeSelectOptions(data[dataset ? `${dataset}` : null]) : []
   }

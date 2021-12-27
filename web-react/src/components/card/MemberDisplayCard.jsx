@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import user from '../../assets/user.png'
 import bussolid from '../../assets/bus-solid.svg'
@@ -13,13 +13,13 @@ const MemberDisplayCard = (props) => {
   const { member, ...rest } = props
   const { setChurch, clickCard } = useContext(ChurchContext)
   const { theme } = useContext(MemberContext)
-  const history = useHistory()
+  const navigate = useNavigate()
   let icon, name, details
 
   switch (member.__typename) {
     case 'Member':
       icon = user
-      name = member.fullName
+      name = member.firstName + ' ' + member.lastName
       details = [
         member.fellowship && member.fellowship.name + ' Fellowship',
         member.ministry && member.ministry.name,
@@ -35,14 +35,25 @@ const MemberDisplayCard = (props) => {
       name = member.name + ' Bacenta'
       details = [member?.leader?.fullName]
       break
-    case 'Town':
+
+    case 'Constituency':
       icon = bussolid
-      name = member.name + ' Town'
+      name = member.name + ' Constituency'
       details = [member?.leader?.fullName]
       break
-    case 'Campus':
+    case 'Council':
       icon = bussolid
-      name = member.name + ' Campus'
+      name = member.name + ' Council'
+      details = [member?.leader?.fullName]
+      break
+    case 'Stream':
+      icon = bussolid
+      name = member.name + ' Stream'
+      details = [member?.leader?.fullName]
+      break
+    case 'GatheringService':
+      icon = bussolid
+      name = member.name + ' Gathering Service'
       details = [member?.leader?.fullName]
       break
     case 'Sonta':
@@ -61,7 +72,7 @@ const MemberDisplayCard = (props) => {
       onClick={() => {
         clickCard(member)
         setChurch({ church: member?.stream_name, subChurch: 'bacenta' })
-        history.push(`/${member.__typename.toLowerCase()}/displaydetails`)
+        navigate(`/${member.__typename.toLowerCase()}/displaydetails`)
       }}
     >
       <div className="d-flex align-items-center">

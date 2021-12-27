@@ -7,25 +7,20 @@ export const GET_LOGGED_IN_USER = gql`
       firstName
       lastName
       pictureUrl
+      stream_name
       fellowship {
         id
         bacenta {
           id
-          campus {
+          constituency {
             id
             council {
               id
               stream {
                 id
-              }
-            }
-          }
-          town {
-            id
-            council {
-              id
-              stream {
-                id
+                gatheringService {
+                  id
+                }
               }
             }
           }

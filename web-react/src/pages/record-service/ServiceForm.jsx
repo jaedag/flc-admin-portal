@@ -1,12 +1,10 @@
 import MinusSign from 'components/buttons/PlusMinusSign/MinusSign'
 import PlusSign from 'components/buttons/PlusMinusSign/PlusSign'
 import FormikControl from 'components/formik-components/FormikControl'
-import { ChurchContext } from 'contexts/ChurchContext'
 import { FieldArray, Form, Formik } from 'formik'
 import * as Yup from 'yup'
-import { COUNCIL_MEMBER_DROPDOWN } from 'queries/ListQueries'
 import React, { useContext } from 'react'
-import { useHistory } from 'react-router'
+import { useNavigate } from 'react-router'
 import { ServiceContext } from 'contexts/ServiceContext'
 import { Col, Container, Row } from 'react-bootstrap'
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
@@ -18,9 +16,8 @@ const ServiceForm = ({
   churchType,
   RecordServiceMutation,
 }) => {
-  const { councilId } = useContext(ChurchContext)
   const { setServiceRecordId } = useContext(ServiceContext)
-  const history = useHistory()
+  const navigate = useNavigate()
 
   const initialValues = {
     serviceDate: new Date().toISOString().slice(0, 10),
@@ -80,7 +77,7 @@ const ServiceForm = ({
       onSubmitProps.setSubmitting(false)
       onSubmitProps.resetForm()
       setServiceRecordId(res.data.RecordService.id)
-      history.push(`/${churchType}/service-details`)
+      navigate(`/${churchType}/service-details`)
     })
   }
 
@@ -153,18 +150,11 @@ const ServiceForm = ({
                               <Row key={index} className="form-row">
                                 <Col>
                                   <FormikControl
-                                    control="combobox2"
+                                    control="memberSearch"
                                     name={`treasurers[${index}]`}
                                     placeholder="Start typing"
                                     setFieldValue={formik.setFieldValue}
-                                    optionsQuery={COUNCIL_MEMBER_DROPDOWN}
-                                    queryVariable1="id"
-                                    variable1={councilId}
-                                    queryVariable2="nameSearch"
-                                    suggestionText="name"
-                                    suggestionID="id"
-                                    dataset="councilMemberDropdown"
-                                    aria-describedby="Council Member List"
+                                    aria-describedby="Member List"
                                     className="form-control"
                                     error={
                                       !Array.isArray(formik.errors.treasurers)

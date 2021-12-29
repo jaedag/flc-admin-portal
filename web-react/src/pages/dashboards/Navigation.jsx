@@ -78,6 +78,7 @@ const Navigator = () => {
       assessmentData: assessmentChurchData,
       assessmentChurch: assessmentChurch,
     })
+
     // eslint-disable-next-line
   }, [
     data,
@@ -107,68 +108,51 @@ const Navigator = () => {
         break
     }
 
-    if (servantType === 'Bishop') {
-      roles.push({
-        name: 'Bishop',
-        church: servant[`${verb}`][0],
-        number: `${churchType} Bishop`,
-        clickCard: () => {
-          clickCard(servant[`${verb}`][0])
-        },
-        link: authorisedLink(
-          currentUser,
-          ['adminFederal', 'adminCouncil', 'leaderBishop'],
-          '/dashboard'
-        ),
-      })
-      return
-    }
+    // if (churchType === 'GatheringService' && servantType === 'Admin') {
+    //   const adminsOneChurch = servant[`${verb}`].length === 1 ?? false
 
-    if (churchType === 'GatheringService' && servantType === 'Admin') {
-      const adminsOneChurch = servant[`${verb}`].length === 1 ?? false
+    //   roles.push({
+    //     name: 'Admin',
+    //     church: servant[`${verb}`],
+    //     number: 'Federal Admin',
+    //     clickCard: () => {
+    //       clickCard(servant[`${verb}`][0])
+    //     },
+    //     link: authorisedLink(
+    //       currentUser,
+    //       ['adminFederal', 'adminCouncil'],
+    //       adminsOneChurch
+    //         ? `/${churchType.toLowerCase()}/displaydetails`
+    //         : `/servants/church-list`
+    //     ),
+    //   })
 
-      roles.push({
-        name: 'Admin',
-        church: servant[`${verb}`][0],
-        number: 'Federal Admin',
-        clickCard: () => {
-          clickCard(servant[`${verb}`][0])
-        },
-        link: authorisedLink(
-          currentUser,
-          ['adminFederal', 'adminCouncil'],
-          adminsOneChurch
-            ? `/${churchType.toLowerCase()}/displaydetails`
-            : `/servants/church-list`
-        ),
-      })
+    //   assessmentChurch = servant[`${verb}`][0]
+    //   return
+    // }
 
-      assessmentChurch = servant[`${verb}`][0]
-      return
-    }
+    // if (churchType === 'Council' && servantType === 'Admin') {
+    //   const adminsOneChurch = servant[`${verb}`].length === 1 ?? false
 
-    if (churchType === 'Council' && servantType === 'Admin') {
-      const adminsOneChurch = servant[`${verb}`].length === 1 ?? false
+    //   roles.push({
+    //     name: 'Admin',
+    //     church: servant[`${verb}`],
+    //     number: 'Council Admin',
+    //     clickCard: () => {
+    //       clickCard(servant[`${verb}`][0])
+    //     },
+    //     link: authorisedLink(
+    //       currentUser,
+    //       ['adminFederal', 'adminCouncil'],
+    //       adminsOneChurch
+    //         ? `/${churchType.toLowerCase()}/displaydetails`
+    //         : `/servants/church-list`
+    //     ),
+    //   })
 
-      roles.push({
-        name: 'Admin',
-        church: servant[`${verb}`][0],
-        number: 'Council Admin',
-        clickCard: () => {
-          clickCard(servant[`${verb}`][0])
-        },
-        link: authorisedLink(
-          currentUser,
-          ['adminFederal', 'adminCouncil'],
-          adminsOneChurch
-            ? `/${churchType.toLowerCase()}/displaydetails`
-            : `/servants/church-list`
-        ),
-      })
-
-      assessmentChurch = servant[`${verb}`][0]
-      return
-    }
+    //   assessmentChurch = servant[`${verb}`][0]
+    //   return
+    // }
 
     if (servantType === 'Admin') {
       const adminsOneChurch = servant[`${verb}`].length === 1 ?? false
@@ -176,7 +160,7 @@ const Navigator = () => {
         name: adminsOneChurch
           ? churchType + ' Admin'
           : plural(churchType) + 'Admin',
-        church: servant[`${verb}`][0],
+        church: servant[`${verb}`],
         number: servant[`${verb}`].length,
         clickCard: () => {
           clickCard(servant[`${verb}`][0])
@@ -198,7 +182,7 @@ const Navigator = () => {
 
     roles.push({
       name: leadsOneChurch ? churchType : plural(churchType),
-      church: servant[`${verb}`][0],
+      church: servant[`${verb}`],
       number: servant[`${verb}`]?.length,
       clickCard: () => {
         clickCard(servant[`${verb}`][0])
@@ -221,7 +205,15 @@ const Navigator = () => {
     if (servantLeader?.leadsConstituency?.length) {
       setServantRoles(servantLeader, 'Leader', 'Constituency')
     }
-
+    if (servantLeader?.leadsCouncil?.length) {
+      setServantRoles(servantLeader, 'Leader', 'Council')
+    }
+    if (servantLeader?.leadsStream?.length) {
+      setServantRoles(servantLeader, 'Leader', 'Stream')
+    }
+    if (servantLeader?.leadsGatheringService?.length) {
+      setServantRoles(servantLeader, 'Leader', 'GatheringService')
+    }
     if (servantLeader?.leadsSonta?.length) {
       setServantRoles(servantLeader, 'Leader', 'Sonta')
     }
@@ -231,9 +223,7 @@ const Navigator = () => {
     if (servantLeader?.leadsMinistry?.length) {
       setServantRoles(servantLeader, 'Leader', 'Ministry')
     }
-    if (servantLeader?.leadsCouncil?.length) {
-      setServantRoles(servantLeader, 'Bishop', 'Council')
-    }
+
     if (servantAdmin?.isAdminForGatheringService?.length) {
       setServantRoles(servantAdmin, 'Admin', 'GatheringService')
     }

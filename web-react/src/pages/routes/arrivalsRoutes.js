@@ -5,6 +5,5 @@ export const arrivals = [
     path: '/arrivals',
     element: Arrivals,
     placeholder: true,
-    exact: true,
   },
 ]

@@ -180,6 +180,44 @@ export const GET_COUNCIL_CONSTITUENCIES = gql`
     }
   }
 `
+export const GET_GATHERING_SERVICE_CONSTITUENCIES = gql`
+  query ($id: ID) {
+    gatheringServices(where: { id: $id }) {
+      id
+      name
+      leader {
+        id
+        firstName
+        lastName
+        fullName
+      }
+      memberCount
+      admin {
+        id
+        firstName
+        lastName
+        stream_name
+      }
+      constituencies {
+        name
+        id
+        stream_name
+        leader {
+          id
+          firstName
+          lastName
+          stream_name
+        }
+        admin {
+          id
+          firstName
+          lastName
+          stream_name
+        }
+      }
+    }
+  }
+`
 
 export const GET_STREAM_COUNCILS = gql`
   query ($id: ID) {

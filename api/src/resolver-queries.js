@@ -53,39 +53,39 @@ CREATE (log:HistoryLog)
 
 RETURN member.id`
 
-export const makeBishopAdmin = `
+export const makeCouncilAdmin = `
 MATCH (admin:Member {id:$adminId})
-MATCH (bishop:Member {id:$bishopId})
+MATCH (council:Council {id:$councilId})
 CREATE (log:HistoryLog)
   SET admin.auth_id = $auth_id,
    log.id = apoc.create.uuid(),
    log.timeStamp = datetime(),
-   log.historyRecord = admin.firstName + ' ' +admin.lastName + ' became admin for Bishop ' + bishop.firstName  + ' ' + bishop.lastName
-WITH admin,bishop, log
-OPTIONAL MATCH (bishop)<-[oldAdmins:IS_ADMIN_FOR]-(oldAdmin:Member)
-OPTIONAL MATCH (bishop)-[oldHistory:HAS_HISTORY]->()-[oldAdminHistory:HAS_HISTORY]-(oldAdmin)
+   log.historyRecord = admin.firstName + ' ' +admin.lastName + ' became admin for ' + council.name + ' Council'
+WITH admin,council, log
+OPTIONAL MATCH (council)<-[oldAdmins:IS_ADMIN_FOR]-(oldAdmin:Member)
+OPTIONAL MATCH (council)-[oldHistory:HAS_HISTORY]->()-[oldAdminHistory:HAS_HISTORY]-(oldAdmin)
 SET oldHistory.current = false, oldAdminHistory.current = false //nullify old history relationship
    DELETE oldAdmins //Delete old relationship
-WITH log,bishop,oldAdmin,admin
+WITH log,council,oldAdmin,admin
        CALL{
-         WITH log,bishop,oldAdmin, admin
-         WITH log,bishop,oldAdmin, admin 
+         WITH log,council,oldAdmin, admin
+         WITH log,council,oldAdmin, admin 
          WHERE EXISTS (oldAdmin.firstName) AND oldAdmin.id <> $adminId
         
        MERGE (oldAdmin)-[hasHistory:HAS_HISTORY]->(log)
        SET hasHistory.neverAdmin = true,
-       log.historyRecord = admin.firstName + ' ' +admin.lastName + ' became the admin of Bishop ' + bishop.firstName + ' ' + bishop.lastName + ' replacing ' + oldAdmin.firstName +' '+oldAdmin.lastName
+       log.historyRecord = admin.firstName + ' ' +admin.lastName + ' became the admin ' + council.name + ' Council replacing ' + oldAdmin.firstName +' '+oldAdmin.lastName
        RETURN COUNT(log)
        }
   
    MATCH (currentUser:Member {auth_id:$auth.jwt.sub}) 
-   WITH currentUser, admin, bishop, log
-   MERGE (admin)-[:IS_ADMIN_FOR]->(bishop)
+   WITH currentUser, admin, council, log
+   MERGE (admin)-[:IS_ADMIN_FOR]->(council)
    MERGE (log)-[:LOGGED_BY]->(currentUser)
    MERGE (date:TimeGraph {date: date()})
    MERGE (log)-[:RECORDED_ON]->(date)
    MERGE (admin)-[r1:HAS_HISTORY]->(log)
-   MERGE (bishop)-[r2:HAS_HISTORY]->(log)
+   MERGE (council)-[r2:HAS_HISTORY]->(log)
    SET r1.current = true,
    r2.current = true
    RETURN admin.id AS id, admin.auth_id AS auth_id, admin.firstName AS firstName, admin.lastName AS lastName

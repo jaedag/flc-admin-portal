@@ -13,7 +13,7 @@ const MembersDirectoryRoute = ({ children, roles }) => {
   const church = useContext(ChurchContext)
 
   useEffect(() => {
-    church.setGatheringId(currentUser.gatheringService)
+    church.setGatheringServiceId(currentUser.gatheringService)
 
     if (!isAuthorised(currentUser.roles, ['adminFederal'])) {
       //if User is not a federal admin

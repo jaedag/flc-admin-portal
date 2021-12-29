@@ -300,9 +300,11 @@ export const getChurchCount = (servant) => {
     }
 
     if (servant.leadsCouncilCount === 1) {
-      churchesCount = servant.leadsCouncilCount + ' Council'
+      churchesCount =
+        churchesCount + ' ' + servant.leadsCouncilCount + ' Council'
     } else {
-      churchesCount = servant.leadsCouncilCount + ' Councils'
+      churchesCount =
+        churchesCount + ' ' + servant.leadsCouncilCount + ' Councils'
     }
   }
 

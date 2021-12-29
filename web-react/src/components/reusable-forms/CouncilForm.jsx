@@ -3,11 +3,7 @@ import BaseComponent from 'components/base-component/BaseComponent'
 import { FieldArray, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import { capitalise, makeSelectOptions } from 'global-utils'
-import {
-  CONSTITUENCY_DROPDOWN,
-  GET_BISHOPS,
-  GET_STREAMS,
-} from 'queries/ListQueries'
+import { CONSTITUENCY_DROPDOWN, GET_STREAMS } from 'queries/ListQueries'
 import React, { useContext } from 'react'
 import { ChurchContext } from 'contexts/ChurchContext'
 import FormikControl from 'components/formik-components/FormikControl'
@@ -93,19 +89,13 @@ const CouncilForm = ({ initialValues, onSubmit, title, newCouncil }) => {
                       <RoleView roles={['adminFederal', 'adminStream']}>
                         <Col>
                           <FormikControl
-                            control="combobox"
+                            control="memberSearch"
                             name="leaderId"
-                            label="Choose a Council Leader"
+                            label="Choose a Leader"
                             placeholder="Start typing..."
                             initialValue={initialValues?.leaderName}
                             setFieldValue={formik.setFieldValue}
-                            optionsQuery={GET_BISHOPS}
-                            queryVariable="nameSearch"
-                            suggestionText="fullName"
-                            suggestionID="id"
-                            modifier="id-only"
-                            dataset="members"
-                            aria-describedby="Full Timers List"
+                            aria-describedby="Member Search Box"
                             className="form-control"
                             error={formik.errors.leaderId}
                           />

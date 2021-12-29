@@ -6,9 +6,9 @@ import { ChurchContext } from '../../contexts/ChurchContext'
 // import TabletDesktopView from 'components/responsive-design/TabletDesktopView'
 
 const GatheringServiceMembers = () => {
-  const { gatheringId } = useContext(ChurchContext)
+  const { gatheringServiceId } = useContext(ChurchContext)
   const { data, loading, error } = useQuery(GET_GATHERING_SERVICE_MEMBERS, {
-    variables: { id: gatheringId },
+    variables: { id: gatheringServiceId },
   })
 
   return (

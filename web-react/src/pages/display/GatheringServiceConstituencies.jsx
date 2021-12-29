@@ -2,20 +2,23 @@ import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { useQuery } from '@apollo/client'
 import DisplayChurchList from '../../components/DisplayChurchList'
-import { GET_GATHERING_SERVICE_STREAMS } from '../../queries/ListQueries'
+import { GET_GATHERING_SERVICE_CONSTITUENCIES } from '../../queries/ListQueries'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import RoleView from '../../auth/RoleView'
 import BaseComponent from 'components/base-component/BaseComponent'
 import { Container, Row, Col, Button } from 'react-bootstrap'
 
-const DisplayAllStreams = () => {
+const GatheringServiceConstituencies = () => {
   const { clickCard, gatheringServiceId } = useContext(ChurchContext)
 
-  const { data, loading, error } = useQuery(GET_GATHERING_SERVICE_STREAMS, {
-    variables: { id: gatheringServiceId },
-  })
+  const { data, loading, error } = useQuery(
+    GET_GATHERING_SERVICE_CONSTITUENCIES,
+    {
+      variables: { id: gatheringServiceId },
+    }
+  )
 
-  const streams = data?.gatheringServices[0]?.streams
+  const constituencies = data?.gatheringServices[0].constituencies
   const gatheringService = data?.gatheringServices[0]
 
   return (
@@ -25,12 +28,12 @@ const DisplayAllStreams = () => {
           <Row className="mb-2">
             <Col>
               <Link
-                to="/gatheringService/displaydetails"
+                to="/gatheringservice/displaydetails"
                 onClick={() => {
                   clickCard(gatheringService)
                 }}
               >
-                <h4>{`${gatheringService?.name} Streams`}</h4>
+                <h4>{`${gatheringService?.name}'s Constituencies`}</h4>
               </Link>
               <Link
                 to="/member/displaydetails"
@@ -39,7 +42,7 @@ const DisplayAllStreams = () => {
                 }}
               >
                 <h6 className="text-muted">
-                  Overseer:
+                  Resident Pastor:
                   {gatheringService?.leader
                     ? ` ${gatheringService.leader.firstName} ${gatheringService.leader.lastName}`
                     : null}
@@ -47,7 +50,7 @@ const DisplayAllStreams = () => {
               </Link>
               {gatheringService?.admin ? (
                 <Link
-                  className="pb-4"
+                  className="pb-4 text-muted"
                   to="/member/displaydetails"
                   onClick={() => {
                     clickCard(gatheringService?.admin)
@@ -57,10 +60,13 @@ const DisplayAllStreams = () => {
                 </Link>
               ) : null}
             </Col>
-            <RoleView roles={['adminFederal', 'adminStream']}>
+            <RoleView roles={['adminFederal', 'adminCouncil']}>
               <Col className="col-auto">
-                <Link to="/stream/addstream" className="btn btn-primary">
-                  Add Stream
+                <Link
+                  to="/constituency/addconstituency"
+                  className="btn btn-primary"
+                >
+                  Add Constituency
                 </Link>
               </Col>
             </RoleView>
@@ -68,19 +74,22 @@ const DisplayAllStreams = () => {
 
           <Row className="justify-content-between mb-2">
             <Col>
-              <Button>{`Streams: ${streams?.length}`}</Button>
+              <Button>{`Constituencies: ${constituencies?.length}`}</Button>
             </Col>
             <Col className="col-auto">
-              <Link to="/gatheringService/members">
+              <Link to="/bishop/members">
                 <Button>{`Membership: ${gatheringService?.memberCount}`}</Button>
               </Link>
             </Col>
           </Row>
         </div>
-        <DisplayChurchList data={streams} churchType="Stream" />
+        <DisplayChurchList
+          data={constituencies}
+          churchType="GatheringService"
+        />
       </Container>
     </BaseComponent>
   )
 }
 
-export default DisplayAllStreams
+export default GatheringServiceConstituencies

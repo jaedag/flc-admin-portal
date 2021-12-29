@@ -5,6 +5,5 @@ export const campaigns = [
     path: '/campaigns',
     element: Campaigns,
     placeholder: true,
-    exact: true,
   },
 ]

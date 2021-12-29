@@ -24,7 +24,28 @@ import ViewAll from 'components/buttons/ViewAll'
 
 const DisplayChurchDetails = (props) => {
   const navigate = useNavigate()
-  const isConstituency = props.churchType === 'Constituency'
+  let needsAdmin
+
+  let roles = []
+
+  switch (props.churchType) {
+    case 'Constituency':
+      needsAdmin = true
+      roles = ['adminFederal', 'adminStream', 'adminCouncil']
+      break
+    case 'Council':
+      needsAdmin = true
+      roles = ['adminFederal', 'adminStream']
+      break
+    case 'Stream':
+      needsAdmin = true
+      roles = ['adminFederal']
+      break
+    default:
+      needsAdmin = false
+      break
+  }
+
   const { setMemberId, theme, setCurrentUser, currentUser } =
     useContext(MemberContext)
   const [submitting, setSubmitting] = useState(false)
@@ -32,7 +53,6 @@ const DisplayChurchDetails = (props) => {
     useContext(ChurchContext)
 
   //Change Admin Initialised
-
   const [MakeConstituencyAdmin] = useMutation(MAKE_CONSTITUENCY_ADMIN)
 
   const initialValues = {
@@ -46,6 +66,7 @@ const DisplayChurchDetails = (props) => {
       'Please select an Admin from the dropdown'
     ),
   })
+
   const onSubmit = (values, onSubmitProps) => {
     setSubmitting(true)
 
@@ -94,8 +115,8 @@ const DisplayChurchDetails = (props) => {
             </Link>
           )}
 
-          {isConstituency && (
-            <RoleView roles={['adminFederal', 'adminCouncil']}>
+          {needsAdmin && (
+            <RoleView roles={roles}>
               <span
                 className={`text-nowrap`}
                 value="Change Admin"
@@ -188,7 +209,7 @@ const DisplayChurchDetails = (props) => {
           <Col className={!props.loading && `col-auto`}>
             <DetailsCard
               onClick={() =>
-                navigate(`/${props.churchType.toLowerCase()}/members`)
+                navigate(`/${props.churchType?.toLowerCase()}/members`)
               }
               heading="Members"
               detail={!props.loading && (props.membership || '0')}
@@ -317,7 +338,14 @@ const DisplayChurchDetails = (props) => {
             </table>
           </div>
         </>
-      ) : null}
+      ) : (
+        <Link
+          className="card text-secondary px-1"
+          to={`/${props.subChurch.toLowerCase()}/add${props.subChurch.toLowerCase()}`}
+        >
+          {`Add New ${props.subChurch}`}
+        </Link>
+      )}
 
       {props.subChurchBasonta === 'Sonta' ? (
         <>

@@ -23,6 +23,7 @@ import { arrivals } from 'pages/routes/arrivalsRoutes.js'
 import { campaigns } from 'pages/routes/campaignsRoutes.js'
 import { reconciliation } from 'pages/routes/reconRoutes.js'
 import PageNotFound from 'pages/page-not-found/PageNotFound'
+import SetPermissions from 'auth/SetPermissions'
 
 const PastorsAdmin = () => {
   const [church, setChurch] = useState(
@@ -30,50 +31,39 @@ const PastorsAdmin = () => {
       ? JSON.parse(sessionStorage.getItem('church'))
       : { church: '', subChurch: '' }
   )
-  const [gatheringId, setGatheringId] = useState(
-    sessionStorage.getItem('gatheringId')
-      ? sessionStorage.getItem('gatheringId')
+  const [gatheringServiceId, setGatheringServiceId] = useState(
+    sessionStorage.getItem('gatheringServiceId')
+      ? sessionStorage.getItem('gatheringServiceId')
       : ''
   )
   const [streamId, setStreamId] = useState(
-    sessionStorage.getItem('streamId') ? sessionStorage.getItem('streamId') : ''
+    sessionStorage.getItem('streamId') ?? ''
   )
+
   const [councilId, setCouncilId] = useState(
-    sessionStorage.getItem('councilId')
-      ? sessionStorage.getItem('councilId')
-      : ''
+    sessionStorage.getItem('councilId') ?? ''
   )
   const [constituencyId, setConstituencyId] = useState(
-    sessionStorage.getItem('constituencyId')
-      ? sessionStorage.getItem('constituencyId')
-      : ''
+    sessionStorage.getItem('constituencyId') ?? ''
   )
   const [bacentaId, setBacentaId] = useState(
-    sessionStorage.getItem('bacentaId')
-      ? sessionStorage.getItem('bacentaId')
-      : ''
+    sessionStorage.getItem('bacentaId') ?? ''
   )
   const [fellowshipId, setFellowshipId] = useState(
-    sessionStorage.getItem('fellowshipId')
-      ? sessionStorage.getItem('fellowshipId')
-      : ''
+    sessionStorage.getItem('fellowshipId') ?? ''
   )
   const [serviceRecordId, setServiceRecordId] = useState(
-    sessionStorage.getItem('serviceRecordsId')
-      ? sessionStorage.getItem('serviceRecordsId')
-      : ''
+    sessionStorage.getItem('serviceRecordsId') ?? ''
   )
 
   const [sontaId, setSontaId] = useState(
-    sessionStorage.getItem('sontaId') ? sessionStorage.getItem('sontaId') : ''
+    sessionStorage.getItem('sontaId') ?? ''
   )
   const [ministryId, setMinistryId] = useState(
-    sessionStorage.getItem('ministryId')
-      ? sessionStorage.getItem('ministryId')
-      : ''
+    sessionStorage.getItem('ministryId') ?? ''
   )
   const [memberId, setMemberId] = useState(
-    sessionStorage.getItem('memberId') ? sessionStorage.getItem('memberId') : ''
+    sessionStorage.getItem('memberId') ?? ''
   )
   const [theme, setTheme] = useState('dark')
   const [currentUser, setCurrentUser] = useState({
@@ -118,7 +108,7 @@ const PastorsAdmin = () => {
 
     if (member?.council?.id) {
       setCouncilId(member.council.id)
-      sessionStorage.setItem('memberId', member.council.id)
+      sessionStorage.setItem('councilId', member.council.id)
     }
 
     if (member.stream?.id) {
@@ -153,10 +143,6 @@ const PastorsAdmin = () => {
         setConstituencyId(card.id)
         sessionStorage.setItem('constituencyId', card.id)
         break
-      case 'Basonta':
-        setSontaId(card.sonta.id)
-        sessionStorage.setItem('sontaId', card.sonta.id)
-        break
       case 'Council':
         setCouncilId(card.id)
         sessionStorage.setItem('councilId', card.id)
@@ -164,6 +150,10 @@ const PastorsAdmin = () => {
       case 'Stream':
         setStreamId(card.id)
         sessionStorage.setItem('streamId', card.id)
+        break
+      case 'Basonta':
+        setSontaId(card.sonta.id)
+        sessionStorage.setItem('sontaId', card.sonta.id)
         break
       default:
         break
@@ -195,8 +185,8 @@ const PastorsAdmin = () => {
           setFilters,
           church,
           setChurch,
-          gatheringId,
-          setGatheringId,
+          gatheringServiceId,
+          setGatheringServiceId,
           streamId,
           setStreamId,
           councilId,
@@ -229,105 +219,107 @@ const PastorsAdmin = () => {
             <ServiceContext.Provider
               value={{ setServiceRecordId, serviceRecordId }}
             >
-              <Navigation />
-              <div className={`bg ${theme}`}>
-                <Routes>
-                  {[
-                    ...dashboards,
-                    ...directory,
-                    ...services,
-                    ...arrivals,
-                    ...campaigns,
-                    ...reconciliation,
-                    ...reports,
-                  ].map((route, i) => (
+              <SetPermissions>
+                <Navigation />
+                <div className={`bg ${theme}`}>
+                  <Routes>
+                    {[
+                      ...dashboards,
+                      ...directory,
+                      ...services,
+                      ...arrivals,
+                      ...campaigns,
+                      ...reconciliation,
+                      ...reports,
+                    ].map((route, i) => (
+                      <Route
+                        key={i}
+                        path={route.path}
+                        element={
+                          <ProtectedRoute
+                            roles={route.roles}
+                            placeholder={route.placeholder}
+                          >
+                            <route.element />
+                          </ProtectedRoute>
+                        }
+                      />
+                    ))}
+                    {churchDirectory.map((route, i) => (
+                      <Route
+                        key={i}
+                        path={route.path}
+                        element={
+                          <ChurchDirectoryRoute
+                            roles={route.roles}
+                            placeholder={route.placeholder}
+                          >
+                            <route.element />
+                          </ChurchDirectoryRoute>
+                        }
+                      />
+                    ))}
+                    {[...memberDirectory, ...memberGrids].map((route, i) => (
+                      <Route
+                        key={i}
+                        path={route.path}
+                        element={
+                          <MembersDirectoryRoute
+                            roles={route.roles}
+                            placeholder={route.placeholder}
+                          >
+                            <route.element />
+                          </MembersDirectoryRoute>
+                        }
+                      />
+                    ))}
+
                     <Route
-                      key={i}
-                      path={route.path}
+                      path="/services/trends"
+                      element={
+                        <ProtectedReports roles={['all']} placeholder exact />
+                      }
+                    />
+                    <Route
+                      path="/dashboard/servants"
+                      element={
+                        <ProtectedRouteHome
+                          roles={[
+                            'adminFederal',
+                            'adminCouncil',
+                            'adminConstituency',
+                            'leaderFellowship',
+                            'leaderBacenta',
+                            'leaderConstituency',
+                          ]}
+                          placeholder
+                        >
+                          <ServantsDashboard />
+                        </ProtectedRouteHome>
+                      }
+                    />
+                    <Route
+                      path="/servants/church-list"
                       element={
                         <ProtectedRoute
-                          roles={route.roles}
-                          placeholder={route.placeholder}
+                          roles={[
+                            'adminFederal',
+                            'adminCouncil',
+                            'adminConstituency',
+                            'leaderFellowship',
+                            'leaderBacenta',
+                            'leaderConstituency',
+                          ]}
+                          placeholder
                         >
-                          <route.element />
+                          <ServantsChurchList />
                         </ProtectedRoute>
                       }
                     />
-                  ))}
-                  {churchDirectory.map((route, i) => (
-                    <Route
-                      key={i}
-                      path={route.path}
-                      element={
-                        <ChurchDirectoryRoute
-                          roles={route.roles}
-                          placeholder={route.placeholder}
-                        >
-                          <route.element />
-                        </ChurchDirectoryRoute>
-                      }
-                    />
-                  ))}
-                  {[...memberDirectory, ...memberGrids].map((route, i) => (
-                    <Route
-                      key={i}
-                      path={route.path}
-                      element={
-                        <MembersDirectoryRoute
-                          roles={route.roles}
-                          placeholder={route.placeholder}
-                        >
-                          <route.element />
-                        </MembersDirectoryRoute>
-                      }
-                    />
-                  ))}
-
-                  <Route
-                    path="/services/trends"
-                    element={
-                      <ProtectedReports roles={['all']} placeholder exact />
-                    }
-                  />
-                  <Route
-                    path="/dashboard/servants"
-                    element={
-                      <ProtectedRouteHome
-                        roles={[
-                          'adminFederal',
-                          'adminCouncil',
-                          'adminConstituency',
-                          'leaderFellowship',
-                          'leaderBacenta',
-                          'leaderConstituency',
-                        ]}
-                        placeholder
-                      >
-                        <ServantsDashboard />
-                      </ProtectedRouteHome>
-                    }
-                  />
-                  <Route
-                    path="/servants/church-list"
-                    element={
-                      <ProtectedRouteHome
-                        roles={[
-                          'adminFederal',
-                          'adminCouncil',
-                          'adminConstituency',
-                          'leaderFellowship',
-                          'leaderBacenta',
-                          'leaderConstituency',
-                        ]}
-                        placeholder
-                      >
-                        <ServantsChurchList />
-                      </ProtectedRouteHome>
-                    }
-                  />
-                  <Route path="*" element={<PageNotFound />} />
-                </Routes>
-              </div>
+                    <Route path="*" element={<PageNotFound />} />
+                  </Routes>
+                </div>
+              </SetPermissions>
             </ServiceContext.Provider>
           </SearchContext.Provider>
         </MemberContext.Provider>

@@ -246,7 +246,7 @@ type GatheringService {
     )
   constituencies: [Constituency]
     @cypher(
-      statement: "MATCH (this)-[:HAS*4]->(constituencies:Constituency) RETURN constituencies"
+      statement: "MATCH (this)-[:HAS*3]->(constituencies:Constituency) RETURN constituencies"
     )
   bacentas: [Bacenta]
     @cypher(

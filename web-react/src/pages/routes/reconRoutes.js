@@ -5,6 +5,5 @@ export const reconciliation = [
     path: '/recon',
     element: Reconciliation,
     placeholder: true,
-    exact: true,
   },
 ]

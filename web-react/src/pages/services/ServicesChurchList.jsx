@@ -25,7 +25,7 @@ const ServicesChurchList = () => {
         </PlaceholderCustom>
 
         <div className="d-grid gap-2 mt-5 text-left">
-          {userJobs?.jobs[0] ? (
+          {userJobs?.jobs.length ? (
             userJobs.jobs.map((job, index) => (
               <MenuButton
                 key={index}

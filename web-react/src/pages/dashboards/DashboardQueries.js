@@ -140,6 +140,50 @@ export const SERVANTS_LEADERSHIP = gql`
         }
       }
 
+      leadsCouncil {
+        id
+        name
+        stream_name
+        memberCount
+        leader {
+          id
+          firstName
+          lastName
+          fullName
+        }
+        services(limit: 4) {
+          created_at
+          attendance
+          income
+          week
+          serviceDate {
+            date
+          }
+        }
+      }
+
+      leadsGatheringService {
+        id
+        name
+
+        memberCount
+        leader {
+          id
+          firstName
+          lastName
+          fullName
+        }
+        services(limit: 4) {
+          created_at
+          attendance
+          income
+          week
+          serviceDate {
+            date
+          }
+        }
+      }
+
       leadsSonta {
         id
         name

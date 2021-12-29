@@ -35,12 +35,12 @@ import DetailsGatheringService from 'pages/display/DetailsGatheringService.jsx'
 import DisplayAllCouncils from 'pages/display/AllCouncils'
 import DisplayAllStreams from 'pages/display/AllStreams'
 import CreateCouncil from 'pages/create/CreateCouncil'
+import GatheringServiceConstituencies from 'pages/display/GatheringServiceConstituencies'
 
 export const churchDirectory = [
   {
     path: '/directory/churches',
     element: Churches,
-    exact: true,
   },
 ]
 
@@ -48,7 +48,6 @@ export const memberDirectory = [
   {
     path: '/directory/members',
     element: MembersGrid,
-    exact: true,
   },
 ]
 export const memberGrids = [
@@ -56,20 +55,17 @@ export const memberGrids = [
     path: '/council/members',
     element: CouncilMembers,
     roles: ['adminFederal', 'adminCouncil'],
-    exact: true,
   },
   {
     path: '/constituency/members',
     element: ConstituencyMembers,
     roles: ['adminFederal', 'adminCouncil', 'adminConstituency'],
-    exact: true,
   },
 
   {
     path: '/bacenta/members',
     element: BacentaMembers,
     roles: ['adminFederal', 'adminCouncil', 'adminConstituency'],
-    exact: true,
   },
   {
     path: '/fellowship/members',
@@ -80,13 +76,11 @@ export const memberGrids = [
       'adminConstituency',
       'leaderFellowship',
     ],
-    exact: true,
   },
   {
     path: '/sonta/members',
     element: SontaMembers,
     roles: ['adminFederal', 'adminCouncil', 'adminConstituency', 'leaderSonta'],
-    exact: true,
   },
 ]
 
@@ -95,7 +89,6 @@ export const directory = [
     path: '/directory',
     element: Directory,
     placeholder: true,
-    exact: true,
   },
   // Member Display and Edit Pages
   {
@@ -103,21 +96,18 @@ export const directory = [
     element: UserDisplayPage,
     roles: ['all'],
     placeholder: true,
-    exact: true,
   },
   {
     path: '/member/displaydetails',
     element: DisplayMember,
     roles: ['all'],
     placeholder: true,
-    exact: true,
   },
   {
     path: '/user-profile/edit',
     element: UserProfileEditPage,
     roles: ['all'],
     placeholder: true,
-    exact: true,
   },
   {
     path: '/member/addmember',
@@ -131,7 +121,6 @@ export const directory = [
       'leaderFellowship',
     ],
     placeholder: true,
-    exact: true,
   },
   {
     path: '/member/editmember',
@@ -144,7 +133,6 @@ export const directory = [
       'leaderConstituency',
     ],
     placeholder: true,
-    exact: true,
   },
 
   //Search Routes
@@ -153,7 +141,6 @@ export const directory = [
     element: SearchPageMobile,
     roles: ['all'],
     placeholder: true,
-    exact: true,
   },
 
   //Display Church Details
@@ -162,14 +149,12 @@ export const directory = [
     element: DetailsFellowship,
     roles: ['all'],
     placeholder: true,
-    exact: true,
   },
   {
     path: '/bacenta/displaydetails',
     element: DetailsBacenta,
     roles: ['all'],
     placeholder: true,
-    exact: true,
   },
   {
     path: '/constituency/displaydetails',
@@ -182,7 +167,6 @@ export const directory = [
       'leaderConstituency',
     ],
     placeholder: true,
-    exact: true,
   },
 
   {
@@ -190,28 +174,30 @@ export const directory = [
     element: DetailsCouncil,
     roles: ['adminFederal', 'adminCouncil', 'leaderCouncil'],
     placeholder: true,
-    exact: true,
   },
   {
     path: '/stream/displaydetails',
     element: DetailsStream,
     roles: ['adminFederal', 'adminStream'],
     placeholder: false,
-    exact: true,
   },
   {
     path: '/gatheringservice/displaydetails',
     element: DetailsGatheringService,
     roles: ['adminFederal'],
     placeholder: false,
-    exact: true,
+  },
+  {
+    path: '/gatheringservice/constituencies',
+    element: GatheringServiceConstituencies,
+    roles: ['adminFederal'],
+    placeholder: false,
   },
   {
     path: '/sonta/displaydetails',
     element: DetailsSonta,
     roles: ['all'],
     placeholder: true,
-    exact: true,
   },
 
   //Display Lists in the Directory
@@ -220,21 +206,18 @@ export const directory = [
     element: DisplayAllBacentas,
     roles: ['all'],
     placeholder: false,
-    exact: true,
   },
   {
     path: '/sonta/displayall',
     element: DisplayAllSontas,
     roles: ['all'],
     placeholder: false,
-    exact: true,
   },
   {
     path: '/constituency/display-sontas',
     element: DisplaySontasByConstituency,
     roles: ['all'],
     placeholder: false,
-    exact: true,
   },
 
   {
@@ -242,7 +225,6 @@ export const directory = [
     element: DisplayAllConstituencies,
     roles: ['adminFederal', 'adminCouncil'],
     placeholder: false,
-    exact: true,
   },
 
   {
@@ -250,21 +232,18 @@ export const directory = [
     element: DisplayAllFellowships,
     roles: ['all'],
     placeholder: false,
-    exact: true,
   },
   {
     path: '/council/displayall',
     element: DisplayAllCouncils,
     roles: ['adminFederal', 'adminStream'],
     placeholder: false,
-    exact: true,
   },
   {
     path: '/stream/displayall',
     element: DisplayAllStreams,
     roles: ['adminFederal'],
     placeholder: false,
-    exact: true,
   },
 
   //Creation Pages
@@ -273,28 +252,24 @@ export const directory = [
     element: CreateFellowship,
     roles: ['adminFederal', 'adminCouncil', 'adminConstituency'],
     placeholder: false,
-    exact: true,
   },
   {
     path: '/bacenta/addbacenta',
     element: CreateBacenta,
     roles: ['adminFederal', 'adminCouncil', 'adminConstituency'],
     placeholder: false,
-    exact: true,
   },
   {
     path: '/sonta/addsonta',
     element: CreateSonta,
     roles: ['adminFederal', 'adminCouncil', 'adminConstituency'],
     placeholder: false,
-    exact: true,
   },
   {
     path: '/constituency/addconstituency',
     element: CreateConstituency,
     roles: ['adminFederal', 'adminCouncil'],
     placeholder: false,
-    exact: true,
   },
 
   {
@@ -302,7 +277,6 @@ export const directory = [
     element: CreateCouncil,
     roles: ['adminFederal', 'adminStream'],
     placeholder: false,
-    exact: true,
   },
 
   //Pages to Update the Directory
@@ -311,27 +285,23 @@ export const directory = [
     element: UpdateFellowship,
     roles: ['adminFederal', 'adminCouncil', 'adminConstituency'],
     placeholder: false,
-    exact: true,
   },
   {
     path: '/bacenta/editbacenta',
     element: UpdateBacenta,
     roles: ['adminFederal', 'adminCouncil', 'adminConstituency'],
     placeholder: false,
-    exact: true,
   },
   {
     path: '/sonta/editsonta',
     element: UpdateSonta,
     roles: ['adminFederal', 'adminCouncil', 'adminConstituency'],
     placeholder: false,
-    exact: true,
   },
   {
     path: '/constituency/editconstituency',
     element: UpdateConstituency,
     roles: ['adminFederal', 'adminCouncil'],
     placeholder: false,
-    exact: true,
   },
 ]

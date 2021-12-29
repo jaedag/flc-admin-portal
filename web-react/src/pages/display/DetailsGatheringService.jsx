@@ -6,10 +6,10 @@ import React, { useContext } from 'react'
 import { DISPLAY_GATHERING } from './ReadQueries'
 
 const DetailsGatheringService = () => {
-  const { gatheringId } = useContext(ChurchContext)
+  const { gatheringServiceId } = useContext(ChurchContext)
 
   const { data, loading, error } = useQuery(DISPLAY_GATHERING, {
-    variables: { id: gatheringId },
+    variables: { id: gatheringServiceId },
   })
 
   const gathering = data?.gatheringServices[0]
@@ -24,7 +24,7 @@ const DetailsGatheringService = () => {
     {
       title: 'Constituencies',
       number: gathering?.constituencyCount,
-      link: `/constituency/displayall`,
+      link: `/gatheringservice/constituencies`,
     },
     {
       title: 'Bacenta',
@@ -43,7 +43,7 @@ const DetailsGatheringService = () => {
       <DisplayChurchDetails
         name={gathering?.name}
         leaderTitle="Resident Bishop"
-        churchId={gatheringId}
+        churchId={gatheringServiceId}
         leader={gathering?.leader}
         churchHeading="Streams"
         churchType={gathering?.__typename}

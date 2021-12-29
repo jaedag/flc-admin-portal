@@ -33,21 +33,18 @@ export const services = [
     element: Services,
     roles: ['all'],
     placeholder: true,
-    exact: true,
   },
   {
     path: '/services/church-list',
     element: ServicesChurchList,
     roles: ['all'],
     placeholder: true,
-    exact: true,
   },
   {
     path: '/services/fellowship',
     element: Fellowship,
     roles: ['all'],
     placeholder: true,
-    exact: true,
   },
   {
     path: '/services/bacenta',
@@ -60,7 +57,6 @@ export const services = [
       'leaderBacenta',
     ],
     placeholder: true,
-    exact: true,
   },
   {
     path: '/services/constituency',
@@ -72,7 +68,6 @@ export const services = [
       'leaderConstituency',
     ],
     placeholder: true,
-    exact: true,
   },
 
   {
@@ -80,14 +75,12 @@ export const services = [
     element: BankingSlipView,
     roles: ['all'],
     placeholder: true,
-    exact: true,
   },
   {
     path: '/services/banking-slip/submission',
     element: BankingSlipSubmission,
     roles: ['all'],
     placeholder: true,
-    exact: true,
   },
 ]
 
@@ -105,7 +98,6 @@ export const reports = [
       'leaderConstituency',
     ],
     placeholder: true,
-    exact: true,
   },
   {
     path: '/bacenta/reports',
@@ -120,7 +112,6 @@ export const reports = [
       'leaderConstituency',
     ],
     placeholder: true,
-    exact: true,
   },
   {
     path: '/sonta/reports',
@@ -134,7 +125,6 @@ export const reports = [
       'leaderConstituency',
     ],
     placeholder: true,
-    exact: true,
   },
   {
     path: '/constituency/reports',
@@ -146,7 +136,6 @@ export const reports = [
       'leaderConstituency',
     ],
     placeholder: true,
-    exact: true,
   },
 
   {
@@ -154,7 +143,6 @@ export const reports = [
     element: CouncilReport,
     roles: ['adminFederal', 'adminCouncil'],
     placeholder: true,
-    exact: true,
   },
 
   //Fellowship Services
@@ -163,14 +151,12 @@ export const reports = [
     element: FellowshipServiceDetails,
     roles: ['adminFederal', 'adminCouncil', 'adminConstituency'],
     placeholder: true,
-    exact: true,
   },
   {
     path: '/services/fellowship/no-service',
     element: FellowshipServiceCancelled,
     roles: ['adminFederal', 'adminCouncil', 'adminConstituency'],
     placeholder: true,
-    exact: true,
   },
   {
     path: '/services/fellowship/form',
@@ -183,7 +169,6 @@ export const reports = [
       'leaderFellowship',
     ],
     placeholder: false,
-    exact: true,
   },
   {
     path: '/fellowship/record-service',
@@ -196,7 +181,6 @@ export const reports = [
       'leaderFellowship',
     ],
     placeholder: false,
-    exact: true,
   },
 
   {
@@ -209,7 +193,6 @@ export const reports = [
       'leaderConstituency',
     ],
     placeholder: false,
-    exact: true,
   },
   {
     path: '/bacenta/record-service',
@@ -222,7 +205,6 @@ export const reports = [
       'leaderBacenta',
     ],
     placeholder: false,
-    exact: true,
   },
 
   //Sonta Service Details
@@ -239,7 +221,6 @@ export const reports = [
       'leaderSonta',
     ],
     placeholder: false,
-    exact: true,
   },
   {
     path: '/sonta/service-details',
@@ -254,7 +235,6 @@ export const reports = [
       'leaderBacenta',
     ],
     placeholder: false,
-    exact: true,
   },
 
   //Bacenta Service Things
@@ -271,7 +251,6 @@ export const reports = [
       'leaderBacenta',
     ],
     placeholder: false,
-    exact: true,
   },
 
   //Constituency Services
@@ -285,7 +264,6 @@ export const reports = [
       'leaderConstituency',
     ],
     placeholder: false,
-    exact: true,
   },
   {
     path: '/constituency/service-details',
@@ -297,7 +275,6 @@ export const reports = [
       'leaderConstituency',
     ],
     placeholder: false,
-    exact: true,
   },
 
   //Defaulters Flow
@@ -311,7 +288,6 @@ export const reports = [
       'leaderConstituency',
     ],
     placeholder: true,
-    exact: true,
   },
   {
     path: '/services/form-defaulters',
@@ -323,7 +299,6 @@ export const reports = [
       'leaderConstituency',
     ],
     placeholder: true,
-    exact: true,
   },
   {
     path: '/services/banking-defaulters',
@@ -335,7 +310,6 @@ export const reports = [
       'leaderConstituency',
     ],
     placeholder: true,
-    exact: true,
   },
   {
     path: '/services/banked',
@@ -347,7 +321,6 @@ export const reports = [
       'leaderConstituency',
     ],
     placeholder: true,
-    exact: true,
   },
   {
     path: '/services/filled-services',
@@ -359,7 +332,6 @@ export const reports = [
       'leaderConstituency',
     ],
     placeholder: true,
-    exact: true,
   },
   {
     path: '/services/cancelled-services',
@@ -371,7 +343,6 @@ export const reports = [
       'leaderConstituency',
     ],
     placeholder: true,
-    exact: true,
   },
 
   //Council By Constituency
@@ -380,6 +351,5 @@ export const reports = [
     element: CouncilByConstituency,
     roles: ['adminFederal', 'adminCouncil', 'leaderCouncil'],
     placeholder: true,
-    exact: true,
   },
 ]

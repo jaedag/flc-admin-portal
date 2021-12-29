@@ -36,7 +36,7 @@ const DetailsCouncil = () => {
     <BaseComponent loading={loading} error={error} data={data} placeholder>
       <DisplayChurchDetails
         name={council?.name}
-        leaderTitle="Bishop"
+        leaderTitle="Council Overseer"
         churchId={councilId}
         leader={council?.leader}
         churchHeading="Constituencies"

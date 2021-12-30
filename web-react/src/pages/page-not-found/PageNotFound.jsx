@@ -3,7 +3,7 @@ import { Col, Image, Row } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import sadIcon from '../../assets/404.png'
 
-function PageNotFound() {
+const PageNotFound = () => {
   return (
     <div className="scroll-bottom">
       <div className="py-5">

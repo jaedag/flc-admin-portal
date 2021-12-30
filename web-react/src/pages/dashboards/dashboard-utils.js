@@ -1,14 +1,5 @@
-import {
-  BookFill,
-  FlagFill,
-  JournalCheck,
-  PencilSquare,
-  Speedometer2,
-  Truck,
-} from 'react-bootstrap-icons'
-
 export const menuItems = [
-  { name: 'Home', to: '/', Icon: Speedometer2, exact: true, roles: ['all'] },
+  { name: 'Home', to: '/', roles: ['all'] },
   {
     name: 'Directory',
     exact: true,
@@ -17,13 +8,11 @@ export const menuItems = [
       { name: 'Members', to: '/directory/members' },
       { name: 'Churches', to: '/directory/churches' },
     ],
-    Icon: BookFill,
     roles: ['all'],
   },
   {
     name: 'Services',
     to: '/services/church-list',
-    Icon: PencilSquare,
     roles: [
       'leaderFellowship',
       'leaderBacenta',
@@ -35,7 +24,6 @@ export const menuItems = [
   {
     name: 'Arrivals',
     to: '/arrivals',
-    Icon: Truck,
     roles: [
       'leaderConstituency',
       'adminConstituency',
@@ -46,7 +34,6 @@ export const menuItems = [
   {
     name: 'Campaigns',
     to: '/campaigns',
-    Icon: FlagFill,
     roles: [
       'leaderConstituency',
       'adminConstituency',
@@ -57,7 +44,6 @@ export const menuItems = [
   {
     name: 'Reconciliation',
     to: '/recon',
-    Icon: JournalCheck,
     roles: ['adminFederal'],
   },
 ]

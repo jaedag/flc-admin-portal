@@ -15,7 +15,7 @@ import './UserProfile.css'
 import AuthButton from 'components/buttons/AuthButton'
 
 const DisplayPage = () => {
-  const { currentUser } = useContext(MemberContext)
+  const { currentUser, theme } = useContext(MemberContext)
 
   const {
     data: bioData,
@@ -81,7 +81,7 @@ const DisplayPage = () => {
           <div className="py-5">
             <Row className="d-flex justify-content-center">
               <Col lg={8}>
-                <Accordion>
+                <Accordion className={theme}>
                   <Stack gap={4}>
                     <div className="px-4">
                       <Accordion.Item eventKey="0">

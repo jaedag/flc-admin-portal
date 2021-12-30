@@ -6,7 +6,7 @@ import { MemberContext } from 'contexts/MemberContext'
 import { authorisedLink, plural } from 'global-utils'
 import { getServiceGraphData } from 'pages/reports/report-utils'
 import React, { useContext, useEffect } from 'react'
-import { Container, Nav, Navbar, Offcanvas } from 'react-bootstrap'
+import { Container, Nav, Navbar, Offcanvas, Row, Col } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { menuItems } from './dashboard-utils'
 import {
@@ -19,9 +19,10 @@ import logo from 'assets/flc-logo-red.png'
 import { useAuth0 } from '@auth0/auth0-react'
 import { GET_LOGGED_IN_USER } from 'components/UserProfileIcon/UserQueries'
 import SearchBox from 'components/SearchBox'
+import { ToggleOff, ToggleOn } from 'react-bootstrap-icons'
 
 const Navigator = () => {
-  const { currentUser, theme, setUserJobs, setCurrentUser } =
+  const { currentUser, theme, setTheme, setUserJobs, setCurrentUser } =
     useContext(MemberContext)
   const { clickCard } = useContext(ChurchContext)
   const { user } = useAuth0()
@@ -291,7 +292,6 @@ const Navigator = () => {
                   <Nav.Link
                     as={Link}
                     eventKey={index}
-                    Icon={menuItem.Icon}
                     exact={menuItem.exact}
                     to={menuItem.to}
                     className="font-primary nav-btn"
@@ -305,14 +305,37 @@ const Navigator = () => {
             <SearchBox />
           </Offcanvas.Body>
           <Container className="footer">
-            <Nav.Link
-              as={Link}
-              eventKey={menuItems.length}
-              exact
-              to="/user-profile"
-            >
-              <UserProfileIcon />
-            </Nav.Link>
+            <Row>
+              <Col>
+                <Nav.Link
+                  as={Link}
+                  eventKey={menuItems.length}
+                  exact
+                  to="/user-profile"
+                >
+                  <UserProfileIcon />
+                </Nav.Link>
+              </Col>
+              <Col>
+                <div className="d-flex justify-content-center align-items-center h-100">
+                  {theme === 'light' ? (
+                    <ToggleOff
+                      size={30}
+                      onClick={() => {
+                        theme === 'light' ? setTheme('dark') : setTheme('light')
+                      }}
+                    />
+                  ) : (
+                    <ToggleOn
+                      size={30}
+                      onClick={() => {
+                        theme === 'dark' ? setTheme('light') : setTheme('dark')
+                      }}
+                    />
+                  )}
+                </div>
+              </Col>
+            </Row>
           </Container>
         </Navbar.Offcanvas>
       </Container>

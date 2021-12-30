@@ -15,7 +15,7 @@ const RoleCard = ({ number, role, loading }) => {
         animation="wave"
         xs={12}
       >
-        <div className="white text-center align-items-center my-auto">
+        <div className="white text-center text-white align-items-center my-auto">
           <div className={isString ? 'church-string' : `church-number`}>
             {number}
           </div>

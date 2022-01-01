@@ -88,7 +88,7 @@ const MemberDisplay = ({ memberId }) => {
       </Row>
       <Row>
         <Col sm={1} md="auto">
-          <DetailsCard heading="Date of Birth" detail={memberBirthday} />
+          <DetailsCard heading="Date of Birth" detail={memberBirthday || ''} />
         </Col>
         <Col sm={1} md="auto">
           <a href={`tel:${member?.phoneNumber}`}>

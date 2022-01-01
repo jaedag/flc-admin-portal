@@ -112,7 +112,7 @@ WITH log,constituency,oldAdmin,admin
         
        MERGE (oldAdmin)-[hasHistory:HAS_HISTORY]->(log)
        SET hasHistory.neverAdmin = true,
-       log.historyRecord = admin.firstName + ' ' +admin.lastName + ' became the admin of ' + constituency.name + " constituency replacing " + oldAdmin.firstName +" "+oldAdmin.lastName
+       log.historyRecord = admin.firstName + ' ' +admin.lastName + ' became the admin of ' + constituency.name + " Constituency replacing " + oldAdmin.firstName +" "+oldAdmin.lastName
        RETURN COUNT(log)
        }
   

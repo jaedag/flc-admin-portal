@@ -146,7 +146,7 @@ type Title @auth(rules: [{ isAuthenticated: true }]) {
 }
 
 interface HasTitle @relationshipProperties {
-  dateAppointed: Date
+  date: Date
 }
 
 type TimeGraph @auth(rules: [{ isAuthenticated: true }]) {

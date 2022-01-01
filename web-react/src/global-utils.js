@@ -59,6 +59,50 @@ export const authorisedLink = (currentUser, permittedRoles, link) => {
   return '#'
 }
 
+export const permitMeAndThoseAbove = (churchType) => {
+  let permittedFor = []
+  switch (churchType) {
+    case 'Constituency':
+      permittedFor = [
+        'adminFederal',
+        'adminStream',
+        'adminCouncil',
+        'adminConstituency',
+        'leaderFederal',
+        'leaderStream',
+        'leaderCouncil',
+        'leaderConstituency',
+      ]
+      break
+    case 'Council':
+      permittedFor = [
+        'adminFederal',
+        'adminStream',
+        'adminCouncil',
+        'leaderFederal',
+        'leaderStream',
+        'leaderCouncil',
+      ]
+      break
+    case 'Stream':
+      permittedFor = [
+        'adminFederal',
+        'adminStream',
+        'leaderFederal',
+        'leaderStream',
+      ]
+      break
+    case 'GatheringService':
+      permittedFor = ['adminFederal', 'leaderFederal']
+      break
+    default:
+      permittedFor = []
+      break
+  }
+
+  return permittedFor
+}
+
 export const transformCloudinaryImg = (url, size) => {
   if (size === 'large') {
     return url?.replace(
@@ -198,34 +242,53 @@ export function debounce(func, wait) {
   }
 }
 
+export const getHighestTitle = (member) => {
+  if (!member.titleConnection.edges?.length) {
+    return
+  }
+  let highestTitle
+
+  member.titleConnection.edges.map((title) => {
+    //Male Titles
+    if (member.gender.gender === 'Male') {
+      if (title.node.title === 'Pastor') {
+        highestTitle = 'Pastor'
+      }
+      if (title.node.title === 'Reverend') {
+        highestTitle = 'Reverend'
+      }
+      if (title.node.title === 'Bishop') {
+        highestTitle = 'Bishop'
+      }
+    }
+
+    //Female Titles
+    if (member.gender.gender === 'Female') {
+      if (title.node.title === 'Pastor') {
+        highestTitle = 'Lady Pastor'
+      }
+      if (title.node.title === 'Reverend') {
+        highestTitle = 'Lady Reverend'
+      }
+      if (title.node.title === 'Bishop') {
+        highestTitle = 'Elect Mother'
+      }
+    }
+  })
+
+  return highestTitle
+}
+
 export const getNameWithTitle = (member) => {
   if (!member) {
     return null
   }
-  let displayName = {
+  const displayName = {
     name: `${member.fullName}`,
-    title: '',
+    title: getHighestTitle(member),
   }
 
   if (member.titleConnection.edges?.length) {
-    if (member.gender.gender === 'Female') {
-      switch (member.titleConnection.edges[0].node.title) {
-        case 'Pastor':
-          displayName.title = 'Lady Pastor'
-          break
-        case 'Reverend':
-          displayName.title = 'Lady Reverend'
-          break
-        case 'Bishop':
-          displayName.title = 'Elect Mother'
-          break
-        default:
-          break
-      }
-    } else {
-      displayName.title = member.titleConnection.edges[0].node.title
-    }
-
     return `${displayName.title} ${displayName.name}`
   } else {
     return displayName.name

@@ -27,7 +27,7 @@ export const DISPLAY_MEMBER_BIO = gql`
       }
       titleConnection {
         edges {
-          dateAppointed
+          date
           node {
             title
           }

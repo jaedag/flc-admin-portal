@@ -3,7 +3,7 @@ import RoleView from 'auth/RoleView'
 import UserProfileIcon from 'components/UserProfileIcon/UserProfileIcon'
 import { ChurchContext } from 'contexts/ChurchContext'
 import { MemberContext } from 'contexts/MemberContext'
-import { authorisedLink, plural } from 'global-utils'
+import { authorisedLink, permitMeAndThoseAbove, plural } from 'global-utils'
 import { getServiceGraphData } from 'pages/reports/report-utils'
 import React, { useContext, useEffect } from 'react'
 import { Container, Nav, Navbar, Offcanvas, Row, Col } from 'react-bootstrap'
@@ -80,13 +80,8 @@ const Navigator = () => {
     })
 
     // eslint-disable-next-line
-  }, [
-    data,
-    adminData,
-    leaderData,
-    // roles,
-    // setUserJobs,
-  ])
+  }, [data, adminData, leaderData])
+
   const servant = data?.members[0]
   const servantAdmin = adminData?.members[0]
   const servantLeader = leaderData?.members[0]
@@ -101,58 +96,11 @@ const Navigator = () => {
       case 'Admin':
         verb = `isAdminFor${churchType}`
         break
-      case 'Bishop':
-        verb = `isBishopFor${churchType}`
-        break
       default:
         break
     }
 
-    // if (churchType === 'GatheringService' && servantType === 'Admin') {
-    //   const adminsOneChurch = servant[`${verb}`].length === 1 ?? false
-
-    //   roles.push({
-    //     name: 'Admin',
-    //     church: servant[`${verb}`],
-    //     number: 'Federal Admin',
-    //     clickCard: () => {
-    //       clickCard(servant[`${verb}`][0])
-    //     },
-    //     link: authorisedLink(
-    //       currentUser,
-    //       ['adminFederal', 'adminCouncil'],
-    //       adminsOneChurch
-    //         ? `/${churchType.toLowerCase()}/displaydetails`
-    //         : `/servants/church-list`
-    //     ),
-    //   })
-
-    //   assessmentChurch = servant[`${verb}`][0]
-    //   return
-    // }
-
-    // if (churchType === 'Council' && servantType === 'Admin') {
-    //   const adminsOneChurch = servant[`${verb}`].length === 1 ?? false
-
-    //   roles.push({
-    //     name: 'Admin',
-    //     church: servant[`${verb}`],
-    //     number: 'Council Admin',
-    //     clickCard: () => {
-    //       clickCard(servant[`${verb}`][0])
-    //     },
-    //     link: authorisedLink(
-    //       currentUser,
-    //       ['adminFederal', 'adminCouncil'],
-    //       adminsOneChurch
-    //         ? `/${churchType.toLowerCase()}/displaydetails`
-    //         : `/servants/church-list`
-    //     ),
-    //   })
-
-    //   assessmentChurch = servant[`${verb}`][0]
-    //   return
-    // }
+    const permittedForLink = permitMeAndThoseAbove(churchType)
 
     if (servantType === 'Admin') {
       const adminsOneChurch = servant[`${verb}`].length === 1 ?? false
@@ -167,7 +115,7 @@ const Navigator = () => {
         },
         link: authorisedLink(
           currentUser,
-          ['adminFederal', 'adminCouncil', 'adminConstituency'],
+          permittedForLink,
           adminsOneChurch
             ? `/${churchType.toLowerCase()}/displaydetails`
             : `/servants/church-list`

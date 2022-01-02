@@ -1,4 +1,4 @@
-import Reconciliation from 'pages/dashboards/Reconciliation'
+import Reconciliation from 'pages/reconciliation/Reconciliation'
 
 export const reconciliation = [
   {

@@ -4,7 +4,13 @@ type Member {
   firstName: String #@search
   middleName: String
   lastName: String
-  fullName: String @ignore
+  fullName: String
+    @cypher(
+      statement: """
+      MATCH (this)
+      RETURN this.firstName +' '+ this.lastName
+      """
+    )
   email: String
   phoneNumber: String
   whatsappNumber: String
@@ -869,7 +875,7 @@ type Bacenta {
       RETURN council
       """
     )
-  fellowshipServiceAggregate: [ComponentServiceAggregate] @ignore
+  componentServiceAggregate: [ComponentServiceAggregate] @ignore
 }
 
 # Shared Units: Fellowship, Fellowship, Sonta

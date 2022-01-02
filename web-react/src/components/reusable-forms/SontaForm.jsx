@@ -7,7 +7,7 @@ import React, { useContext } from 'react'
 import FormikControl from 'components/formik-components/FormikControl'
 import { ChurchContext } from 'contexts/ChurchContext'
 import { useQuery } from '@apollo/client'
-import { DISPLAY_CONSTITUENCY } from 'pages/display/ReadQueries'
+import { DISPLAY_CONSTITUENCY } from 'pages/directory/display/ReadQueries'
 import RoleView from 'auth/RoleView'
 
 const SontaForm = ({ initialValues, onSubmit, title, loading, newSonta }) => {

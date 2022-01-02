@@ -13,9 +13,9 @@ import RoleCard from './RoleCard'
 import {
   getServiceGraphData,
   getMonthlyStatAverage,
-} from '../reports/report-utils'
+} from '../services/reports/report-utils'
 import { ChurchContext } from 'contexts/ChurchContext'
-import StatDisplay from 'pages/reports/CompStatDisplay'
+import StatDisplay from 'pages/services/reports/CompStatDisplay'
 import { authorisedLink, plural } from 'global-utils'
 import BaseComponent from 'components/base-component/BaseComponent'
 import Container from 'react-bootstrap/Container'

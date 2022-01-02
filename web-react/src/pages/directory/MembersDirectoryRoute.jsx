@@ -1,12 +1,12 @@
 import React, { useContext, useEffect } from 'react'
 import { MemberContext } from '../../contexts/MemberContext'
 import { ChurchContext } from '../../contexts/ChurchContext'
-import CouncilMembers from '../grids/CouncilMembers.jsx'
-import ConstituencyMembers from '../grids/ConstituencyMembers.jsx'
+import CouncilMembers from './grids/CouncilMembers.jsx'
+import ConstituencyMembers from './grids/ConstituencyMembers.jsx'
 import { isAuthorised } from '../../global-utils'
-import FellowshipMembers from 'pages/grids/FellowshipMembers'
-import BacentaMembers from 'pages/grids/BacentaMembers'
-import GatheringServiceMembers from 'pages/grids/GatheringServiceMembers'
+import FellowshipMembers from 'pages/directory/grids/FellowshipMembers'
+import BacentaMembers from 'pages/directory/grids/BacentaMembers'
+import GatheringServiceMembers from 'pages/directory/grids/GatheringServiceMembers'
 
 const MembersDirectoryRoute = ({ children, roles }) => {
   const { currentUser } = useContext(MemberContext)

@@ -359,31 +359,19 @@ WITH log,council,oldLeader,leader
    RETURN leader.id AS id, leader.auth_id AS auth_id, leader.firstName AS firstName, leader.lastName AS lastName
 `
 
-export const getBacentaFellowshipServiceAggregates = `
-  MATCH (bacenta:Bacenta {id:$id})
+// Adding the records of the services underneath so that we can have the total attendances and incomes
+export const getComponentServiceAggregates = `
+  MATCH (church {id:$id}) WHERE church:Bacenta OR church:Constituency OR church:Council OR church:Stream OR church:GatheringService
   
-
-  MATCH (bacenta)-[:HAS_HISTORY]->(log:ServiceLog)
-  MATCH (log)-[:HAS]->(fellowshipServices:ServiceLog)-[:HAS_RECORD]->(records:ServiceRecord)
-  MATCH (records)-[:SERVICE_HELD_ON]->(date:TimeGraph) 
-
-  WITH DISTINCT records, date(date.date).week AS week WHERE records IS NOT NULL
-  RETURN week AS week,SUM(records.attendance) AS attendance, SUM(records.income) AS income ORDER BY week DESC LIMIT 12
-`
-
-// Adding both bacenta and fellowship services to get weekly constituency attendance
-export const getConstituencyServiceAggregates = `
-  MATCH (constituency:Constituency {id:$id})
-  
-  MATCH (constituency)-[:HAS_HISTORY]->(log:ServiceLog)
-  MATCH (log)-[:HAS*1..2]->(bacentaServices:ServiceLog)
-  MATCH (bacentaServices)-[:HAS_RECORD]->(bacentaRecords:ServiceRecord)
+  MATCH (church)-[:HAS_HISTORY]->(log:ServiceLog)
+  MATCH (log)-[:HAS*1..5]->(componentServices:ServiceLog)
+  MATCH (componentServices)-[:HAS_RECORD]->(componentRecords:ServiceRecord)
    
      
-  MATCH (bacentaRecords)-[:SERVICE_HELD_ON]->(date:TimeGraph)
-  WITH DISTINCT bacentaServices,bacentaRecords, date(date.date).week AS week
+  MATCH (componentRecords)-[:SERVICE_HELD_ON]->(date:TimeGraph)
+  WITH DISTINCT componentServices,componentRecords, date(date.date).week AS week
 
-RETURN week AS week,SUM(bacentaRecords.attendance) AS attendance, SUM(bacentaRecords.income) AS income ORDER BY week DESC LIMIT 12
+RETURN week AS week,SUM(componentRecords.attendance) AS attendance, SUM(componentRecords.income) AS income ORDER BY week DESC LIMIT 12
 `
 
 export const checkMemberEmailExists = `

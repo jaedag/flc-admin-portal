@@ -30,8 +30,6 @@ export const FELLOWSHIP_LEADER_DASHBOARD = gql`
       name
       leader {
         id
-        firstName
-        lastName
         fullName
       }
       serviceLogs {
@@ -55,8 +53,6 @@ export const SERVANTS_DASHBOARD = gql`
   query servantsDashboard($id: ID!) {
     members(where: { id: $id }) {
       id
-      firstName
-      lastName
       fullName
       pictureUrl
       leadsFellowship {
@@ -105,8 +101,6 @@ export const SERVANTS_LEADERSHIP = gql`
   query servantIsLeader($id: ID!) {
     members(where: { id: $id }) {
       id
-      firstName
-      lastName
       fullName
       pictureUrl
 
@@ -119,8 +113,6 @@ export const SERVANTS_LEADERSHIP = gql`
         memberCount
         leader {
           id
-          firstName
-          lastName
           fullName
         }
         services(limit: 4) {
@@ -147,8 +139,6 @@ export const SERVANTS_LEADERSHIP = gql`
         memberCount
         leader {
           id
-          firstName
-          lastName
           fullName
         }
         services(limit: 4) {
@@ -169,8 +159,6 @@ export const SERVANTS_LEADERSHIP = gql`
         memberCount
         leader {
           id
-          firstName
-          lastName
           fullName
         }
         services(limit: 4) {
@@ -209,8 +197,6 @@ export const SERVANTS_ADMIN = gql`
         memberCount
         leader {
           id
-          firstName
-          lastName
           fullName
         }
         services(limit: 4) {
@@ -236,8 +222,6 @@ export const SERVANTS_ADMIN = gql`
         memberCount
         leader {
           id
-          firstName
-          lastName
           fullName
         }
         services(limit: 4) {
@@ -262,8 +246,6 @@ export const SERVANTS_ADMIN = gql`
         memberCount
         leader {
           id
-          firstName
-          lastName
           fullName
         }
         services(limit: 4) {

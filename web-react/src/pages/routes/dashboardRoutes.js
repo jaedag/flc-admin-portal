@@ -1,4 +1,5 @@
 import UserDashboard from 'pages/dashboards/UserDashboard'
+import Maps from 'pages/maps/Maps'
 
 export const dashboards = [
   {
@@ -8,7 +9,7 @@ export const dashboards = [
   },
   {
     path: '/maps',
-    element: UserDashboard,
+    element: Maps,
     placeholder: true,
   },
 ]

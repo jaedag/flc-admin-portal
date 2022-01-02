@@ -1,4 +1,4 @@
-import Campaigns from 'pages/dashboards/Campaigns'
+import Campaigns from 'pages/campaigns/Campaigns'
 
 export const campaigns = [
   {

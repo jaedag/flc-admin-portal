@@ -15,7 +15,7 @@ import {
 import React, { useContext, useState } from 'react'
 import { ChurchContext } from 'contexts/ChurchContext'
 import FormikControl from 'components/formik-components/FormikControl'
-import { MAKE_FELLOWSHIP_INACTIVE } from 'pages/update/CloseChurchMutations'
+import { MAKE_FELLOWSHIP_INACTIVE } from 'pages/directory/update/CloseChurchMutations'
 import { useNavigate } from 'react-router'
 import Popup from 'components/Popup/Popup'
 import RoleView from 'auth/RoleView'

@@ -25,7 +25,7 @@ const Breadcrumb = ({ breadcrumb }) => {
                 <small
                   key={i}
                   to={
-                    bread?.firstName
+                    bread?.fullName
                       ? `/dashboard`
                       : `/${bread?.__typename.toLowerCase()}/displaydetails`
                   }
@@ -33,7 +33,7 @@ const Breadcrumb = ({ breadcrumb }) => {
                 >
                   {bread?.name
                     ? `${breadname} ${bread?.__typename}`
-                    : `Bishop ${bread?.firstName} ${bread?.lastName}`}
+                    : `Bishop ${bread?.fullName}`}
                 </small>
               )
             } else {
@@ -41,7 +41,7 @@ const Breadcrumb = ({ breadcrumb }) => {
                 <Link
                   key={i}
                   to={
-                    bread?.firstName
+                    bread?.fullName
                       ? `/member/displaydetails`
                       : `/${bread?.__typename.toLowerCase()}/displaydetails`
                   }
@@ -52,7 +52,7 @@ const Breadcrumb = ({ breadcrumb }) => {
                 >
                   {bread?.name
                     ? `${bread?.name} ${bread?.__typename}`
-                    : `Bishop ${bread?.firstName} ${bread?.lastName}`}
+                    : `Bishop ${bread?.fullName}`}
                   {' >'}
                   {'  '}
                 </Link>

@@ -11,7 +11,7 @@ import {
 import {
   getMonthlyStatAverage,
   getServiceGraphData,
-} from 'pages/reports/report-utils'
+} from 'pages/services/reports/report-utils'
 import { plural, transformCloudinaryImg } from 'global-utils'
 import MenuButton from 'components/buttons/MenuButton'
 import { Container } from 'react-bootstrap'

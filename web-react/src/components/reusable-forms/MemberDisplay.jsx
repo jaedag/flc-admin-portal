@@ -13,7 +13,7 @@ import {
   DISPLAY_MEMBER_BIO,
   DISPLAY_MEMBER_CHURCH,
   DISPLAY_MEMBER_LEADERSHIP,
-} from 'pages/display/ReadQueries'
+} from 'pages/directory/display/ReadQueries'
 import { Col, Container, Row } from 'react-bootstrap'
 import PlaceholderCustom from 'components/Placeholder'
 import DetailsCard from 'components/card/DetailsCard'

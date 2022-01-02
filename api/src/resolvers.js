@@ -563,19 +563,14 @@ export const resolvers = {
   // Context: Context object, database connection, API, etc
   // GraphQLResolveInfo
 
-  Member: {
-    fullName: (obj) => {
-      return `${obj.firstName} ${obj.lastName}`
-    },
-  },
   Bacenta: {
-    fellowshipServiceAggregate: async (obj, args, context) => {
+    componentServiceAggregate: async (obj, args, context) => {
       let serviceAggregates = []
 
       const session = context.driver.session()
 
       const serviceAggregateResponse = await session.run(
-        cypher.getBacentaFellowshipServiceAggregates,
+        cypher.getComponentServiceAggregates,
         obj
       )
 
@@ -593,25 +588,29 @@ export const resolvers = {
     },
   },
   Constituency: {
-    componentServiceAggregate: async (obj, args, context) => {
-      let serviceAggregates = []
+    componentServiceAggregate: (obj, args, context) => {
+      const getComponentServiceAggregates = async (context) => {
+        let serviceAggregates = []
 
-      const session = context.driver.session()
-      const serviceAggregateResponse = await session.run(
-        cypher.getConstituencyServiceAggregates,
-        obj
-      )
-
-      serviceAggregateResponse.records.map((record) => {
-        let serviceAggregate = {}
-
-        record.keys.forEach(
-          (key, i) => (serviceAggregate[key] = record._fields[i])
+        const session = context.driver.session()
+        const serviceAggregateResponse = await session.run(
+          cypher.getComponentServiceAggregates,
+          obj
         )
-        serviceAggregates.push(serviceAggregate)
-      })
 
-      return serviceAggregates
+        serviceAggregateResponse.records.map((record) => {
+          let serviceAggregate = {}
+
+          record.keys.forEach(
+            (key, i) => (serviceAggregate[key] = record._fields[i])
+          )
+          serviceAggregates.push(serviceAggregate)
+        })
+
+        return serviceAggregates
+      }
+
+      return getComponentServiceAggregates(context)
     },
   },
 

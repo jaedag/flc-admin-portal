@@ -10,7 +10,7 @@ import { ServiceContext } from 'contexts/ServiceContext'
 import ChurchDirectoryRoute from 'auth/ChurchDirectoryRoute'
 import MembersDirectoryRoute from './pages/directory/MembersDirectoryRoute.jsx'
 import Navigation from 'pages/dashboards/Navigation.jsx'
-import ProtectedReports from 'pages/reports/ProtectedReports.jsx'
+import ProtectedReports from 'pages/services/reports/ProtectedReports.jsx'
 import { dashboards } from 'pages/routes/dashboardRoutes.js'
 import {
   churchDirectory,

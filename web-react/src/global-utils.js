@@ -181,7 +181,7 @@ export const makeSelectOptions = (data) => {
 
   return data.map((data) => ({
     value: data.id,
-    key: data.name ? data.name : data.firstName + ' ' + data.lastName,
+    key: data.name ? data.name : data.fullName,
   }))
 }
 

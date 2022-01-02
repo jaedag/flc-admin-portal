@@ -27,8 +27,6 @@ export const CONSTITUENCY_SERVICES_LIST = gql`
         name
         leader {
           id
-          firstName
-          lastName
           fullName
           phoneNumber
           whatsappNumber
@@ -58,8 +56,6 @@ export const CONSTITUENCY_CANCELLED_SERVICES_LIST = gql`
         name
         leader {
           id
-          firstName
-          lastName
           fullName
           phoneNumber
           whatsappNumber
@@ -87,8 +83,6 @@ export const CONSTITUENCY_FORM_DEFAULTERS_LIST = gql`
         name
         leader {
           id
-          firstName
-          lastName
           fullName
           phoneNumber
           whatsappNumber
@@ -112,8 +106,6 @@ export const CONSTITUENCY_BANKING_DEFAULTERS_LIST = gql`
         name
         leader {
           id
-          firstName
-          lastName
           fullName
           phoneNumber
           whatsappNumber
@@ -142,8 +134,6 @@ export const CONSTITUENCY_BANKED_LIST = gql`
         name
         leader {
           id
-          firstName
-          lastName
           fullName
           phoneNumber
           whatsappNumber
@@ -188,8 +178,6 @@ export const COUNCIL_SERVICES_LIST = gql`
         name
         leader {
           id
-          firstName
-          lastName
           fullName
           phoneNumber
           whatsappNumber
@@ -226,8 +214,6 @@ export const COUNCIL_CANCELLED_SERVICES_LIST = gql`
         name
         leader {
           id
-          firstName
-          lastName
           fullName
           phoneNumber
           whatsappNumber
@@ -262,8 +248,6 @@ export const COUNCIL_FORM_DEFAULTERS_LIST = gql`
         name
         leader {
           id
-          firstName
-          lastName
           fullName
           phoneNumber
           whatsappNumber
@@ -294,8 +278,6 @@ export const COUNCIL_BANKING_DEFAULTERS_LIST = gql`
         name
         leader {
           id
-          firstName
-          lastName
           fullName
           phoneNumber
           whatsappNumber
@@ -331,8 +313,6 @@ export const COUNCIL_BANKED_LIST = gql`
         name
         leader {
           id
-          firstName
-          lastName
           fullName
           phoneNumber
           whatsappNumber
@@ -367,8 +347,6 @@ export const COUNCIL_BY_CONSTITUENCY = gql`
         name
         admin {
           id
-          firstName
-          lastName
           fullName
           phoneNumber
           whatsappNumber

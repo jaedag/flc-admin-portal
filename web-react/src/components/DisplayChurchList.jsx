@@ -32,11 +32,9 @@ const DisplayChurchList = (props) => {
                   <Card.Body>
                     <Card.Title>{church.name}</Card.Title>
                     <Card.Text>
-                      {church.leader
-                        ? `${church.leader.firstName} ${church.leader.lastName}`
-                        : null}
+                      {church.leader ? `${church.leader.fullName}` : null}
                       {church.admin && (
-                        <p className="text-muted">{`Admin: ${church.admin.firstName} ${church.admin.lastName}`}</p>
+                        <p className="text-muted">{`Admin: ${church.admin.fullName}`}</p>
                       )}
                       {churchType === 'GatheringService'
                         ? `${capitalise(church.stream_name)}`

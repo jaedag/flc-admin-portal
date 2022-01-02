@@ -9,7 +9,7 @@ import {
   COUNCIL_SEARCH,
   CONSTITUENCY_SEARCH,
   FEDERAL_SEARCH,
-} from '../../pages/mobile/SearchQuery.js'
+} from '../../pages/directory/mobile/SearchQuery.js'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import { capitalise, isAuthorised } from '../../global-utils'
 import { MemberContext } from '../../contexts/MemberContext'

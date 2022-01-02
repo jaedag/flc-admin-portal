@@ -1,4 +1,4 @@
-import Arrivals from 'pages/dashboards/Arrivals'
+import Arrivals from 'pages/arrivals/Arrivals'
 
 export const arrivals = [
   {

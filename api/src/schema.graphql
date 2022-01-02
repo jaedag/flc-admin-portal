@@ -335,6 +335,7 @@ type GatheringService {
       RETURN services ORDER BY date.date DESC LIMIT $limit
       """
     )
+  componentServiceAggregate: [ComponentServiceAggregate] @ignore
 }
 
 type Stream {

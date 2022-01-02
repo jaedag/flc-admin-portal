@@ -26,6 +26,8 @@ import ServicesThisWeek from 'pages/services/defaulters/ServicesThisWeek'
 import Fellowship from 'pages/services/Fellowship'
 import ServicesChurchList from 'pages/services/ServicesChurchList'
 import Services from 'pages/services/ServicesMenu'
+import StreamReport from 'pages/services/reports/StreamReport'
+import GatheringServiceReport from 'pages/services/reports/GatheringServiceReport'
 
 export const services = [
   {
@@ -142,6 +144,18 @@ export const reports = [
     path: '/council/reports',
     element: CouncilReport,
     roles: ['adminFederal', 'adminCouncil'],
+    placeholder: true,
+  },
+  {
+    path: '/stream/reports',
+    element: StreamReport,
+    roles: ['adminFederal', 'adminStream'],
+    placeholder: true,
+  },
+  {
+    path: '/gatheringservice/reports',
+    element: GatheringServiceReport,
+    roles: ['adminFederal'],
     placeholder: true,
   },
 

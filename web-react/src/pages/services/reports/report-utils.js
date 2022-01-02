@@ -6,7 +6,7 @@ export const getMonthlyStatAverage = (data, stat) => {
     return
   }
 
-  const statArray = data.map((service) => service[`${stat}`])
+  const statArray = data.map((service) => parseFloat(service[`${stat}`]))
   //Calculate average of the last four weeks of service
   return average(statArray.slice(-numberOfWeeks)).toFixed(2)
 }
@@ -41,6 +41,10 @@ export const getServiceGraphData = (church) => {
   let data = []
 
   const pushIntoData = (array) => {
+    if (!array || array?.length === 0) {
+      return
+    }
+
     if (array[0]?.__typename === 'ComponentServiceAggregate') {
       array.map((record) => {
         data.push({
@@ -48,7 +52,7 @@ export const getServiceGraphData = (church) => {
           date: record?.serviceDate,
           week: record.week,
           attendance: record.attendance,
-          income: record.income,
+          income: record.income.toFixed(2),
         })
       })
 
@@ -74,18 +78,12 @@ export const getServiceGraphData = (church) => {
         date: record?.serviceDate?.date || record.date,
         week: record.week,
         attendance: record.attendance,
-        income: record.income,
+        income: record.income.toFixed(2),
       })
     })
   }
 
-  if (church.__typename === 'Bacenta') {
-    pushIntoData(church.fellowshipServiceAggregate) //Push in Fellowship Service Aggregates
-  }
-
-  if (church.__typename === 'Constituency') {
-    pushIntoData(church.componentServiceAggregate) //Push in Fellowship Service Aggregates
-  }
+  pushIntoData(church.componentServiceAggregate) //Push in Service Aggregates
 
   //Pushing in direct service data eg. Joint Services and Fellowship Services
   pushIntoData(church.services)

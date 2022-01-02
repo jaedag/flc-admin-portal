@@ -87,7 +87,7 @@ export const SERVANTS_DASHBOARD = gql`
           }
         }
 
-        fellowshipServiceAggregate {
+        componentServiceAggregate {
           week
           attendance
           income

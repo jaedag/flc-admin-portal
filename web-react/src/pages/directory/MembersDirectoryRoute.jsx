@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext } from 'react'
 import { MemberContext } from '../../contexts/MemberContext'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import CouncilMembers from './grids/CouncilMembers.jsx'
@@ -11,41 +11,6 @@ import GatheringServiceMembers from 'pages/directory/grids/GatheringServiceMembe
 const MembersDirectoryRoute = ({ children, roles }) => {
   const { currentUser } = useContext(MemberContext)
   const church = useContext(ChurchContext)
-
-  useEffect(() => {
-    church.setGatheringServiceId(currentUser.gatheringService)
-
-    if (!isAuthorised(currentUser.roles, ['adminFederal'])) {
-      //if User is not a federal admin
-      church.setChurch(currentUser.church)
-      church.setStreamId(currentUser.stream)
-      if (!isAuthorised(currentUser.roles, ['adminStream', 'leaderStream'])) {
-        church.setCouncilId(currentUser.council)
-        if (
-          !isAuthorised(currentUser.roles, ['adminCouncil', 'leaderCouncil'])
-        ) {
-          //User is not a Bishops Admin the he can only be looking at his constituency membership
-          church.setConstituencyId(currentUser.constituency)
-
-          if (
-            !isAuthorised(currentUser.roles, [
-              'adminConstituency',
-              'leaderConstituency',
-            ])
-          ) {
-            //User is not a Constituency Admin the he can only be looking at his bacenta membership
-            church.setBacentaId(currentUser.fellowship?.bacenta?.id)
-
-            // if (!isAuthorised(currentUser.roles, ['leaderBacenta'])) {
-            //   //User is not a Bacenta Leader and he can only be looking at his fellowship membership
-            //   church.setFellowshipId(currentUser.fellowship?.id)
-            // }
-          }
-        }
-      }
-    }
-    // eslint-disable-next-line
-  }, [currentUser, church])
 
   if (isAuthorised(roles, currentUser.roles)) {
     //if the user has permission to access the route

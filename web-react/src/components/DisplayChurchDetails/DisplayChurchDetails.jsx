@@ -177,7 +177,6 @@ const DisplayChurchDetails = (props) => {
           )}
         </Container>
       </div>
-
       <Container>
         <Link
           to="/member/displaydetails"
@@ -296,8 +295,7 @@ const DisplayChurchDetails = (props) => {
           </>
         )}
       </Container>
-
-      {props.subChurch && props.buttons?.length ? (
+      {props.subChurch && props.buttons?.length && (
         <>
           <Container>
             <hr className="hr-line" />
@@ -336,7 +334,8 @@ const DisplayChurchDetails = (props) => {
             </table>
           </div>
         </>
-      ) : (
+      )}
+      {props.subChurch && !props.buttons?.length && (
         <Link
           className="card text-secondary px-1"
           to={`/${props.subChurch.toLowerCase()}/add${props.subChurch.toLowerCase()}`}
@@ -344,7 +343,6 @@ const DisplayChurchDetails = (props) => {
           {`Add New ${props.subChurch}`}
         </Link>
       )}
-
       {props.subChurchBasonta === 'Sonta' ? (
         <>
           <div className="container">
@@ -385,7 +383,6 @@ const DisplayChurchDetails = (props) => {
           </div>
         </>
       ) : null}
-
       {props.subChurch && props.basontaLeaders?.length ? (
         <>
           <div className="container">
@@ -423,7 +420,6 @@ const DisplayChurchDetails = (props) => {
           </div>
         </>
       ) : null}
-
       {props.history?.length && (
         <Container className="mt-5">
           <Row>

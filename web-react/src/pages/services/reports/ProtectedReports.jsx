@@ -15,7 +15,9 @@ const ProtectedReports = ({ component, roles, ...args }) => {
   if (isAuthorised(roles, currentUser.roles)) {
     //if the user has permission to access the route
     return <Route component={component} {...args} />
-  } else if (isAuthorised(['adminCouncil', 'bishop'], currentUser.roles)) {
+  } else if (
+    isAuthorised(['adminCouncil', 'leaderCouncil'], currentUser.roles)
+  ) {
     //if the user does not have permission but is a Bishop's Admin
     return <Route component={component} {...args} />
   } else if (

@@ -43,7 +43,7 @@ export const BACENTA_REPORT = gql`
         }
       }
 
-      fellowshipServiceAggregate {
+      componentServiceAggregate {
         week
         attendance
         income
@@ -109,6 +109,64 @@ export const CONSTITUENCY_REPORT = gql`
 export const COUNCIL_REPORT = gql`
   query councilReports($councilId: ID!) {
     councils(where: { id: $councilId }) {
+      id
+      name
+      leader {
+        id
+        fullName
+      }
+      services(limit: 4) {
+        created_at
+        attendance
+        income
+        week
+        serviceDate {
+          date
+        }
+      }
+
+      componentServiceAggregate {
+        week
+        attendance
+        income
+      }
+      memberCount
+    }
+  }
+`
+
+export const STREAM_REPORT = gql`
+  query streamReports($streamId: ID!) {
+    streams(where: { id: $streamId }) {
+      id
+      name
+      leader {
+        id
+        fullName
+      }
+      services(limit: 4) {
+        created_at
+        attendance
+        income
+        week
+        serviceDate {
+          date
+        }
+      }
+
+      componentServiceAggregate {
+        week
+        attendance
+        income
+      }
+      memberCount
+    }
+  }
+`
+
+export const GATHERINGSERVICE_REPORT = gql`
+  query gatheringServiceReports($gatheringServiceId: ID!) {
+    gatheringServices(where: { id: $gatheringServiceId }) {
       id
       name
       leader {

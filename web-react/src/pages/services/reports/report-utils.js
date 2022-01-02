@@ -8,7 +8,7 @@ export const getMonthlyStatAverage = (data, stat) => {
 
   const statArray = data.map((service) => parseFloat(service[`${stat}`]))
   //Calculate average of the last four weeks of service
-  return average(statArray.slice(-numberOfWeeks)).toFixed(2)
+  return average(statArray.slice(-numberOfWeeks))?.toFixed(2)
 }
 
 export const sortingFunction = (key, order = 'asc') => {
@@ -52,7 +52,7 @@ export const getServiceGraphData = (church) => {
           date: record?.serviceDate,
           week: record.week,
           attendance: record.attendance,
-          income: record.income.toFixed(2),
+          income: record.income?.toFixed(2),
         })
       })
 
@@ -78,7 +78,7 @@ export const getServiceGraphData = (church) => {
         date: record?.serviceDate?.date || record.date,
         week: record.week,
         attendance: record.attendance,
-        income: record.income.toFixed(2),
+        income: record.income?.toFixed(2),
       })
     })
   }

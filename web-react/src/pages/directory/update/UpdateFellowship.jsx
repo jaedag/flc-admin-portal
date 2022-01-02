@@ -178,7 +178,7 @@ const UpdateFellowship = () => {
     if (values.leaderId !== initialValues.leaderId) {
       return MakeFellowshipLeader({
         variables: {
-          oldLeaderId: initialValues.leaderId,
+          oldLeaderId: initialValues.leaderId || '',
           newLeaderId: values.leaderId,
           fellowshipId: fellowshipId,
         },

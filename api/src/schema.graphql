@@ -4,13 +4,7 @@ type Member {
   firstName: String #@search
   middleName: String
   lastName: String
-  fullName: String
-    @cypher(
-      statement: """
-      MATCH (this)
-      RETURN this.firstName +' '+ this.lastName
-      """
-    )
+  fullName: String @ignore
   email: String
   phoneNumber: String
   whatsappNumber: String

@@ -235,6 +235,7 @@ export const GET_STREAM_COUNCILS = gql`
         id
         firstName
         lastName
+        fullName
         stream_name
       }
       councils {

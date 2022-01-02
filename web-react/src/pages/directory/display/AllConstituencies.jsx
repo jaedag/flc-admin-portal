@@ -1,12 +1,12 @@
 import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { useQuery } from '@apollo/client'
-import DisplayChurchList from '../../../components/DisplayChurchList'
-import { GET_COUNCIL_CONSTITUENCIES } from '../../../queries/ListQueries'
-import { ChurchContext } from '../../../contexts/ChurchContext'
-import RoleView from '../../../auth/RoleView'
+import DisplayChurchList from 'components/DisplayChurchList'
+import { GET_COUNCIL_CONSTITUENCIES } from 'queries/ListQueries'
+import { ChurchContext } from 'contexts/ChurchContext'
 import BaseComponent from 'components/base-component/BaseComponent'
 import { Container, Row, Col, Button } from 'react-bootstrap'
+import RoleView from 'auth/RoleView'
 
 const DisplayAllConstituencies = () => {
   const { clickCard, councilId } = useContext(ChurchContext)
@@ -40,7 +40,7 @@ const DisplayAllConstituencies = () => {
                     clickCard(council?.admin)
                   }}
                 >
-                  {`Admin: ${council?.admin?.fullName}`}
+                  {`Admin: ${council?.admin?.firstName} ${council?.admin?.lastName}`}
                 </Link>
               ) : null}
             </Col>

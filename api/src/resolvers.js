@@ -581,7 +581,11 @@ export const resolvers = {
   // Args: Field Arguments
   // Context: Context object, database connection, API, etc
   // GraphQLResolveInfo
-
+  Member: {
+    fullName: (obj) => {
+      return `${obj.firstName} ${obj.lastName}`
+    },
+  },
   Bacenta: {
     componentServiceAggregate: async (obj, args, context) => {
       return getComponentServiceAggregates(obj, context)

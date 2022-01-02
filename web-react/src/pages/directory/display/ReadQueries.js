@@ -168,7 +168,8 @@ export const DISPLAY_FELLOWSHIP = gql`
       }
       leader {
         id
-        fullName
+        firstName
+        lastName
         pictureUrl
       }
     }
@@ -211,7 +212,8 @@ export const DISPLAY_SONTA = gql`
       }
       leader {
         id
-        fullName
+        firstName
+        lastName
         whatsappNumber
         title {
           title
@@ -274,7 +276,8 @@ export const DISPLAY_BACENTA = gql`
       }
       leader {
         id
-        fullName
+        firstName
+        lastName
         pictureUrl
         whatsappNumber
         title {
@@ -323,7 +326,8 @@ export const DISPLAY_CONSTITUENCY = gql`
       }
       admin {
         id
-        fullName
+        firstName
+        lastName
         fellowship {
           id
           bacenta {
@@ -344,11 +348,13 @@ export const DISPLAY_CONSTITUENCY = gql`
       }
       bishop {
         id
-        fullName
+        firstName
+        lastName
       }
       leader {
         id
-        fullName
+        firstName
+        lastName
         pictureUrl
       }
       history(options: { limit: 10 }) {
@@ -413,7 +419,8 @@ export const DISPLAY_COUNCIL = gql`
       }
       leader {
         id
-        fullName
+        firstName
+        lastName
         pictureUrl
       }
       history(options: { limit: 10 }) {
@@ -462,7 +469,8 @@ export const DISPLAY_STREAM = gql`
       }
       leader {
         id
-        fullName
+        firstName
+        lastName
         pictureUrl
       }
       history(options: { limit: 10 }) {
@@ -505,10 +513,13 @@ export const DISPLAY_GATHERING = gql`
         id
         firstName
         lastName
+        fullName
         stream_name
       }
       leader {
         id
+        firstName
+        lastName
         fullName
         pictureUrl
       }

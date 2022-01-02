@@ -15,6 +15,8 @@ export const BANKING_SLIP_QUERIES = gql`
         }
         created_by {
           id
+          firstName
+          lastName
           fullName
         }
         bankingSlip
@@ -57,6 +59,8 @@ export const DISPLAY_SERVICE_RECORDS = gql`
       created_at
       created_by {
         id
+        firstName
+        lastName
         fullName
       }
       serviceDate {

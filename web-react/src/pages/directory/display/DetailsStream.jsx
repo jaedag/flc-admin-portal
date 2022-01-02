@@ -41,7 +41,8 @@ const DetailsStream = () => {
         leaderTitle="Bishop"
         deatils={streamId}
         leader={stream?.leader}
-        churchHeading="Streams"
+        admin={stream?.admin}
+        churchHeading="Councils"
         churchCount={stream?.councils.length}
         churchType={stream?.__typename}
         subChurch={capitalise('council')}

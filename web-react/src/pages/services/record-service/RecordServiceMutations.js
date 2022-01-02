@@ -89,6 +89,8 @@ export const DISPLAY_FELLOWSHIP_SERVICE = gql`
       created_at
       created_by {
         id
+        firstName
+        lastName
         fullName
       }
       serviceDate {
@@ -103,6 +105,8 @@ export const DISPLAY_FELLOWSHIP_SERVICE = gql`
       bankingSlip
       treasurers {
         id
+        firstName
+        lastName
         fullName
       }
     }
@@ -128,6 +132,8 @@ export const DISPLAY_BACENTA_SERVICE = gql`
       servicePicture
       treasurers {
         id
+        firstName
+        lastName
         fullName
       }
     }
@@ -153,6 +159,8 @@ export const DISPLAY_SONTA_SERVICE = gql`
       servicePicture
       treasurers {
         id
+        firstName
+        lastName
         fullName
       }
     }
@@ -178,6 +186,8 @@ export const DISPLAY_CONSTITUENCY_SERVICE = gql`
       servicePicture
       treasurers {
         id
+        firstName
+        lastName
         fullName
       }
     }

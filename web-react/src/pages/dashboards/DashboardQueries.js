@@ -113,6 +113,8 @@ export const SERVANTS_LEADERSHIP = gql`
         memberCount
         leader {
           id
+          firstName
+          lastName
           fullName
         }
         services(limit: 4) {
@@ -139,6 +141,8 @@ export const SERVANTS_LEADERSHIP = gql`
         memberCount
         leader {
           id
+          firstName
+          lastName
           fullName
         }
         services(limit: 4) {
@@ -159,6 +163,8 @@ export const SERVANTS_LEADERSHIP = gql`
         memberCount
         leader {
           id
+          firstName
+          lastName
           fullName
         }
         services(limit: 4) {
@@ -197,6 +203,8 @@ export const SERVANTS_ADMIN = gql`
         memberCount
         leader {
           id
+          firstName
+          lastName
           fullName
         }
         services(limit: 4) {
@@ -222,6 +230,8 @@ export const SERVANTS_ADMIN = gql`
         memberCount
         leader {
           id
+          firstName
+          lastName
           fullName
         }
         services(limit: 4) {
@@ -246,6 +256,8 @@ export const SERVANTS_ADMIN = gql`
         memberCount
         leader {
           id
+          firstName
+          lastName
           fullName
         }
         services(limit: 4) {

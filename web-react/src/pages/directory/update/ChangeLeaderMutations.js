@@ -16,6 +16,8 @@ export const MAKE_FELLOWSHIP_LEADER = gql`
     }
     MakeFellowshipLeader(fellowshipId: $fellowshipId, leaderId: $newLeaderId) {
       id
+      firstName
+      lastName
       fullName
       leadsFellowship {
         id

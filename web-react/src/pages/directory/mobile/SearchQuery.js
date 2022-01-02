@@ -18,6 +18,8 @@ export const FEDERAL_SEARCH = gql`
       stream_name
       leader {
         id
+        firstName
+        lastName
         fullName
       }
     }
@@ -28,6 +30,8 @@ export const FEDERAL_SEARCH = gql`
       stream_name
       leader {
         id
+        firstName
+        lastName
         fullName
       }
     }
@@ -37,6 +41,8 @@ export const FEDERAL_SEARCH = gql`
       stream_name
       leader {
         id
+        firstName
+        lastName
         fullName
       }
     }
@@ -46,6 +52,8 @@ export const FEDERAL_SEARCH = gql`
       stream_name
       leader {
         id
+        firstName
+        lastName
         fullName
       }
     }
@@ -79,6 +87,8 @@ export const COUNCIL_SEARCH = gql`
       name
       leader {
         id
+        firstName
+        lastName
         fullName
       }
     }
@@ -87,6 +97,8 @@ export const COUNCIL_SEARCH = gql`
       name
       leader {
         id
+        firstName
+        lastName
         fullName
       }
     }
@@ -95,6 +107,8 @@ export const COUNCIL_SEARCH = gql`
       name
       leader {
         id
+        firstName
+        lastName
         fullName
       }
     }
@@ -132,6 +146,8 @@ export const CONSTITUENCY_SEARCH = gql`
       name
       leader {
         id
+        firstName
+        lastName
         fullName
       }
     }
@@ -143,6 +159,8 @@ export const CONSTITUENCY_SEARCH = gql`
       name
       leader {
         id
+        firstName
+        lastName
         fullName
       }
     }
@@ -173,6 +191,8 @@ export const BACENTA_SEARCH = gql`
       name
       leader {
         id
+        firstName
+        lastName
         fullName
       }
     }

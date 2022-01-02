@@ -161,6 +161,8 @@ export const CREATE_BACENTA_MUTATION = gql`
 
       leader {
         id
+        firstName
+        lastName
         fullName
       }
     }
@@ -182,6 +184,8 @@ export const CREATE_SONTA_MUTATION = gql`
         stream_name
         leader {
           id
+          firstName
+          lastName
           fullName
         }
       }

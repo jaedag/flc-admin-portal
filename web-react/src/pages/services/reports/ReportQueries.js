@@ -7,6 +7,8 @@ export const FELLOWSHIP_REPORT = gql`
       name
       leader {
         id
+        firstName
+        lastName
         fullName
       }
       services(limit: 4) {
@@ -31,6 +33,8 @@ export const BACENTA_REPORT = gql`
       name
       leader {
         id
+        firstName
+        lastName
         fullName
       }
       services(limit: 4) {
@@ -60,6 +64,8 @@ export const SONTA_REPORT = gql`
       name
       leader {
         id
+        firstName
+        lastName
         fullName
       }
       services(limit: 4) {
@@ -84,6 +90,8 @@ export const CONSTITUENCY_REPORT = gql`
       name
       leader {
         id
+        firstName
+        lastName
         fullName
       }
       services(limit: 4) {
@@ -113,6 +121,8 @@ export const COUNCIL_REPORT = gql`
       name
       leader {
         id
+        firstName
+        lastName
         fullName
       }
       services(limit: 4) {
@@ -142,6 +152,8 @@ export const STREAM_REPORT = gql`
       name
       leader {
         id
+        firstName
+        lastName
         fullName
       }
       services(limit: 4) {
@@ -171,6 +183,8 @@ export const GATHERINGSERVICE_REPORT = gql`
       name
       leader {
         id
+        firstName
+        lastName
         fullName
       }
       services(limit: 4) {

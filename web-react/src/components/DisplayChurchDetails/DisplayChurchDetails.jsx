@@ -56,7 +56,9 @@ const DisplayChurchDetails = (props) => {
   const [MakeConstituencyAdmin] = useMutation(MAKE_CONSTITUENCY_ADMIN)
 
   const initialValues = {
-    adminName: props.admin ? `${props.admin?.fullName}` : '',
+    adminName: props.admin
+      ? `${props.admin?.firstName} ${props.admin?.lastName}`
+      : '',
     adminSelect: props.admin?.id ?? '',
   }
   const validationSchema = Yup.object({
@@ -109,7 +111,7 @@ const DisplayChurchDetails = (props) => {
               }}
               className="mx-3 mb-2 text-muted font-weight-bold"
             >
-              {`Admin:`} {props.admin.fullName}
+              {`Admin: ${props.admin.firstName} ${props.admin.lastName}`}
             </Link>
           )}
 
@@ -187,7 +189,7 @@ const DisplayChurchDetails = (props) => {
           <DetailsCard
             loading={props.loading}
             heading={props.leaderTitle}
-            detail={props.leader?.fullName}
+            detail={props.leader?.firstName + ' ' + props.leader?.lastName}
             img={props.leader?.pictureUrl}
             bgNone
           />

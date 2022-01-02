@@ -276,6 +276,8 @@ export const UPDATE_FELLOWSHIP = gql`
       }
       leader {
         id
+        firstName
+        lastName
         fullName
         pictureUrl
       }

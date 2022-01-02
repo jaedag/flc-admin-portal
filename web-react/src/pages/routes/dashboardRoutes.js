@@ -6,4 +6,9 @@ export const dashboards = [
     element: UserDashboard,
     placeholder: true,
   },
+  {
+    path: '/maps',
+    element: UserDashboard,
+    placeholder: true,
+  },
 ]

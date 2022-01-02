@@ -1,6 +1,6 @@
 [![Netlify Status](https://api.netlify.com/api/v1/badges/3fc1e26f-bccb-4196-ba57-705d3b09bb82/deploy-status)](https://app.netlify.com/sites/flcadmin/deploys)
 
-This project is a starter for building a [GRANDstack](https://grandstack.io) (GraphQL, React, Apollo, Neo4j Database) application. There are two components to the starter, the web frontend application (in React and Angular flavors) and the API app (GraphQL server).
+This project was built using [GRANDstack](https://grandstack.io) (GraphQL, React, Apollo, Neo4j Database) application.
 <br/><br/>
 
 # [![First Love Logo](/img/fl-logo.png)](https://www.firstlovecenter.com) Where Are We Going?
@@ -62,8 +62,8 @@ All Contributors welcome. Make your changes in a separate branch before submitti
 
 ## PHASE 4: Geolocation (Google Earth Replacement) (Sheep Seeking)
 
-1. Plot centres on a map
-2. Plot leaders and members on a map
+1. Plot fellowships, bacentas, and centres on a map
+2. Plot all members on a map
 3. Plot outreach venues on a map with information on area populations, cost of bussing, etc
    <br/>
 

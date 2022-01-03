@@ -8,6 +8,7 @@ import {
   getMemberDob,
   transformCloudinaryImg,
   throwErrorMsg,
+  getHighestTitle,
 } from '../../global-utils'
 import {
   DISPLAY_MEMBER_BIO,
@@ -137,7 +138,7 @@ const MemberDisplay = ({ memberId }) => {
           <Col sm={1} md="auto">
             <DetailsCard
               heading="Pastoral Rank"
-              detail={member?.titleConnection?.edges[0]?.node.title}
+              detail={getHighestTitle(member)}
             />
           </Col>
         )}

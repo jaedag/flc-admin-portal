@@ -226,7 +226,7 @@ function MemberForm({ initialValues, onSubmit, title, loading, update }) {
                     <Col sm={10}>
                       <FormikControl
                         className="form-control"
-                        label="Ministry*"
+                        label="Ministry"
                         control="select"
                         name="ministry"
                         options={ministryOptions}

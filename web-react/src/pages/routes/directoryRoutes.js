@@ -36,13 +36,7 @@ import DisplayAllCouncils from 'pages/directory/display/AllCouncils'
 import DisplayAllStreams from 'pages/directory/display/AllStreams'
 import CreateCouncil from 'pages/directory/create/CreateCouncil'
 import GatheringServiceConstituencies from 'pages/directory/display/GatheringServiceConstituencies'
-
-export const churchDirectory = [
-  {
-    path: '/directory/churches',
-    element: Churches,
-  },
-]
+import UpdateCouncil from 'pages/directory/update/UpdateCouncil'
 
 export const memberDirectory = [
   {
@@ -89,6 +83,10 @@ export const directory = [
     path: '/directory',
     element: Directory,
     placeholder: true,
+  },
+  {
+    path: '/directory/churches',
+    element: Churches,
   },
   // Member Display and Edit Pages
   {
@@ -302,6 +300,12 @@ export const directory = [
     path: '/constituency/editconstituency',
     element: UpdateConstituency,
     roles: ['adminFederal', 'adminCouncil'],
+    placeholder: false,
+  },
+  {
+    path: '/council/editcouncil',
+    element: UpdateCouncil,
+    roles: ['adminFederal', 'adminStream'],
     placeholder: false,
   },
 ]

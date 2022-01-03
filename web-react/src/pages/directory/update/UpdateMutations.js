@@ -77,16 +77,70 @@ export const UPDATE_MEMBER_MUTATION = gql`
     }
   }
 `
+export const UPDATE_COUNCIL_MUTATION = gql`
+  mutation UpdateCouncil($councilId: ID!, $name: String!, $councilId: ID!) {
+    UpdateCouncilDetails(
+      councilId: $councilId
+      name: $name
+      councilId: $councilId
+    ) {
+      id
+      name
+      constituencies {
+        id
+        name
+        council {
+          id
+          name
+          stream {
+            id
+            councils {
+              id
+            }
+          }
+        }
+      }
+
+      admin {
+        id
+        firstName
+        lastName
+        fellowship {
+          id
+          stream_name
+        }
+      }
+      leader {
+        id
+        firstName
+        lastName
+      }
+      history(options: { limit: 10 }) {
+        id
+        timeStamp
+        created_at {
+          date
+        }
+        loggedBy {
+          id
+          firstName
+          lastName
+        }
+        historyRecord
+      }
+    }
+  }
+`
 
 export const UPDATE_CONSTITUENCY_MUTATION = gql`
   mutation UpdateConstituency(
     $constituencyId: ID!
-    $constituencyName: String!
+    $name: String!
     $councilId: ID!
   ) {
     UpdateConstituencyDetails(
       constituencyId: $constituencyId
-      constituencyName: $constituencyName
+      name: $name
       councilId: $councilId
     ) {
       id
@@ -143,12 +197,12 @@ export const UPDATE_CONSTITUENCY_MUTATION = gql`
 export const UPDATE_BACENTA_MUTATION = gql`
   mutation UpdateBacenta(
     $bacentaId: ID!
-    $bacentaName: String!
+    $name: String!
     $constituencyId: ID!
   ) {
     UpdateBacentaDetails(
       bacentaId: $bacentaId
-      bacentaName: $bacentaName
+      name: $name
       constituencyId: $constituencyId
     ) {
       id
@@ -203,8 +257,8 @@ export const UPDATE_BACENTA_MUTATION = gql`
 `
 
 export const UPDATE_SONTA_MUTATION = gql`
-  mutation UpdateSonta($sontaId: ID!, $sontaName: String!) {
-    UpdateSontaDetails(sontaId: $sontaId, sontaName: $sontaName) {
+  mutation UpdateSonta($sontaId: ID!, $name: String!) {
+    UpdateSontaDetails(sontaId: $sontaId, name: $name) {
       id
       name
       constituency {
@@ -455,6 +509,58 @@ export const ADD_CONSTITUENCY_BACENTAS = gql`
       connect: { bacentas: { where: { node: { id: $bacentaId } } } }
     ) {
       constituencies {
+        id
+        name
+        bacentas {
+          id
+        }
+      }
+    }
+  }
+`
+
+export const ADD_COUNCIL_CONSTITUENCIES = gql`
+  mutation AddCouncilConstituencies($councilId: ID!, $constituencieId: ID!) {
+    updateCouncils(
+      where: { id: $councilId }
+      connect: { constituencies: { where: { node: { id: $constituencieId } } } }
+    ) {
+      councils {
+        id
+        name
+        bacentas {
+          id
+        }
+      }
+    }
+  }
+`
+
+export const ADD_COUNCIL_STREAM = gql`
+  mutation AddCouncilStream($council: ID!, $streamId: ID!) {
+    updateCouncils(
+      where: { id: $council }
+      connect: { stream: { where: { node: { id: $streamId } } } }
+    ) {
+      councils {
+        id
+        name
+        stream {
+          id
+          name
+        }
+      }
+    }
+  }
+`
+
+export const REMOVE_COUNCIL_STREAM = gql`
+  mutation RemoveCouncilStream($councilId: ID!, $streamId: ID!) {
+    updateCouncils(
+      where: { id: $councilId }
+      disconnect: { stream: { where: { node: { id: $streamId } } } }
+    ) {
+      councils {
         id
         name
       }

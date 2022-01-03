@@ -33,7 +33,7 @@ const MembersDirectoryRoute = ({ children, roles }) => {
     return <BacentaMembers />
   } else if (isAuthorised(['leaderFellowship'], currentUser.roles)) {
     //If the user does not have permission but is a Fellowship Leader
-    church.setFellowshipId(currentUser.fellowship.id)
+    church.setFellowshipId(currentUser.fellowship)
     return <FellowshipMembers />
   } else {
     return <FellowshipMembers />

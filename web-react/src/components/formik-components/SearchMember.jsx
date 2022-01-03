@@ -130,7 +130,7 @@ const SearchMember = (props) => {
     } else if (isAuthorised(['leaderFellowship'], currentUser.roles)) {
       fellowshipSearch({
         variables: {
-          id: currentUser.fellowship.id,
+          id: currentUser.fellowship,
           key: searchString?.trim(),
         },
       })

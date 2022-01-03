@@ -48,7 +48,7 @@ const Navigator = () => {
         fullName:
           data.memberByEmail.firstName + ' ' + data.memberByEmail.lastName,
         picture: data.memberByEmail?.pictureUrl ?? null,
-        fellowship: data.memberByEmail?.fellowship,
+        fellowship: data.memberByEmail?.fellowship.id,
         council:
           data.memberByEmail?.fellowship?.bacenta.constituency?.council.id,
         constituency: data.memberByEmail?.fellowship?.bacenta.constituency?.id,
@@ -107,7 +107,7 @@ const Navigator = () => {
       roles.push({
         name: adminsOneChurch
           ? churchType + ' Admin'
-          : plural(churchType) + 'Admin',
+          : plural(churchType) + ' Admin',
         church: servant[`${verb}`],
         number: servant[`${verb}`].length,
         clickCard: () => {

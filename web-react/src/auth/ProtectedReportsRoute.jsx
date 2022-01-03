@@ -40,7 +40,7 @@ const ProtectedReports = ({ component, roles, ...args }) => {
     return <Route element={Churches} />
   } else if (isAuthorised(['leaderFellowship'], currentUser.roles)) {
     //If the user does not have permission but is a Fellowship Leader
-    church.setFellowshipId(currentUser.fellowship.id)
+    church.setFellowshipId(currentUser.fellowship)
     return <Route element={Churches} />
   } else {
     return <Route element={Churches} />

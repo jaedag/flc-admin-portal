@@ -46,7 +46,6 @@ function MemberForm({ initialValues, onSubmit, title, loading, update }) {
     fellowship: Yup.string().required(
       'Please pick a fellowship from the dropdown'
     ),
-    ministry: Yup.string().required('Ministry is a required field'),
   })
 
   if (ministriesLoading || loading) {

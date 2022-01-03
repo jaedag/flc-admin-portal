@@ -7,13 +7,11 @@ import ProtectedRouteHome from './auth/ProtectedRouteHome.jsx'
 import ServantsDashboard from 'pages/dashboards/ServantsDashboard'
 import ServantsChurchList from 'pages/dashboards/ServantsChurchList'
 import { ServiceContext } from 'contexts/ServiceContext'
-import ChurchDirectoryRoute from 'auth/ChurchDirectoryRoute'
 import MembersDirectoryRoute from './pages/directory/MembersDirectoryRoute.jsx'
 import Navigation from 'pages/dashboards/Navigation.jsx'
 import ProtectedReports from 'pages/services/reports/ProtectedReports.jsx'
 import { dashboards } from 'pages/routes/dashboardRoutes.js'
 import {
-  churchDirectory,
   directory,
   memberDirectory,
   memberGrids,
@@ -363,20 +361,6 @@ const PastorsAdmin = () => {
                           >
                             <route.element />
                           </ProtectedRoute>
-                        }
-                      />
-                    ))}
-                    {churchDirectory.map((route, i) => (
-                      <Route
-                        key={i}
-                        path={route.path}
-                        element={
-                          <ChurchDirectoryRoute
-                            roles={route.roles}
-                            placeholder={route.placeholder}
-                          >
-                            <route.element />
-                          </ChurchDirectoryRoute>
                         }
                       />
                     ))}

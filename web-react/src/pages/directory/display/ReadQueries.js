@@ -421,6 +421,7 @@ export const DISPLAY_COUNCIL = gql`
         id
         firstName
         lastName
+        fullName
         pictureUrl
       }
       history(options: { limit: 10 }) {

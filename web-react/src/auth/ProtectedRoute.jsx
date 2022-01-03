@@ -20,7 +20,35 @@ const ProtectedRoute = ({ children, roles, placeholder }) => {
     return children
   } else if (currentUser.roles.includes('leaderFellowship')) {
     //If the user does not have permission but is a Fellowship Leader
-    church.setFellowshipId(currentUser.fellowship.id)
+    church.setFellowshipId(currentUser.fellowship)
+    return children
+  } else if (currentUser.roles.includes('leaderBacenta')) {
+    //If the user does not have permission but is a Bacenta Leader
+    church.setBacentaId(currentUser.bacenta)
+    return children
+  } else if (
+    currentUser.roles.includes('leaderConstituency', 'adminConstituency')
+  ) {
+    //If the user does not have permission but is a Constituency Leader
+    church.setConstituencyId(currentUser.constituency)
+    return children
+  } else if (currentUser.roles.includes('leaderCouncil', 'adminCouncil')) {
+    //If the user does not have permission but is a Council Leader
+    church.setCouncilId(currentUser.council)
+    return children
+  } else if (currentUser.roles.includes('leaderStream', 'adminStream')) {
+    //If the user does not have permission but is a Stream Leader
+    church.setStreamId(currentUser.stream)
+    return children
+  } else if (
+    currentUser.roles.includes(
+      'leaderGatheringService',
+      'adminGatheringService',
+      'adminFederal'
+    )
+  ) {
+    //If the user does not have permission but is a GatheringService Leader
+    church.setGatheringServiceId(currentUser.gatheringService)
     return children
   } else if (placeholder && isAuthenticated) {
     //If the user does not have permission but is a Fellowship Leader

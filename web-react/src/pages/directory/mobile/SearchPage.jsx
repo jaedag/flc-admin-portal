@@ -131,7 +131,7 @@ const SearchPageMobile = () => {
     } else if (isAuthorised(['leaderFellowship'], currentUser.roles)) {
       fellowshipSearch({
         variables: {
-          fellowshipId: currentUser.fellowship.id,
+          fellowshipId: currentUser.fellowship,
           searchKey: searchString?.trim(),
         },
       })

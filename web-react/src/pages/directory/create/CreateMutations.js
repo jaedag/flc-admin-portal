@@ -243,3 +243,30 @@ export const CREATE_COUNCIL_MUTATION = gql`
     }
   }
 `
+
+export const CREATE_STREAM_MUTATION = gql`
+  mutation CreateStream(
+    $name: String!
+    $leaderId: ID!
+    $gatheringServiceId: ID!
+    $councils: [ID]
+  ) {
+    CreateStream(
+      name: $name
+      leaderId: $leaderId
+      gatheringServiceId: $gatheringServiceId
+      councils: $councils
+    ) {
+      id
+      name
+
+      gatheringService {
+        id
+        streams {
+          id
+          name
+        }
+      }
+    }
+  }
+`

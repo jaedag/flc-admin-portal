@@ -20,7 +20,9 @@ WITH apoc.cypher.runFirstColumn(
   isAdminForConstituency: [ member_adminConstituencies IN apoc.cypher.runFirstColumn("MATCH (this)-[:IS_ADMIN_FOR]-(adminConstituency:Constituency)
   RETURN adminConstituency", {this: member}, true) | member_adminConstituencies { .id,.name }],
   isAdminForCouncil: [ member_adminCouncils IN apoc.cypher.runFirstColumn("MATCH (this)-[:IS_ADMIN_FOR]-(adminCouncil:Member)
-  RETURN adminCouncil", {this: member}, true) | member_adminCouncils { .id,.name}] } AS member
+  RETURN adminCouncil", {this: member}, true) | member_adminCouncils { .id,.name}],
+   isAdminForStream: [ member_adminStreams IN apoc.cypher.runFirstColumn("MATCH (this)-[:IS_ADMIN_FOR]-(adminStream:Member)
+  RETURN adminStream", {this: member}, true) | member_adminStreams { .id,.name}] } AS member
   `
 
 export const matchChurchQuery = `
@@ -52,6 +54,44 @@ CREATE (log:HistoryLog)
   MERGE (log)-[:RECORDED_ON]->(date)
 
 RETURN member.id`
+
+export const makeStreamAdmin = `
+MATCH (admin:Member {id:$adminId})
+MATCH (stream:Stream {id:$streamId})
+CREATE (log:HistoryLog)
+  SET admin.auth_id = $auth_id,
+   log.id = apoc.create.uuid(),
+   log.timeStamp = datetime(),
+   log.historyRecord = admin.firstName + ' ' +admin.lastName + ' became admin for ' + stream.name + ' Stream'
+WITH admin,stream, log
+OPTIONAL MATCH (stream)<-[oldAdmins:IS_ADMIN_FOR]-(oldAdmin:Member)
+OPTIONAL MATCH (stream)-[oldHistory:HAS_HISTORY]->()-[oldAdminHistory:HAS_HISTORY]-(oldAdmin)
+SET oldHistory.current = false, oldAdminHistory.current = false //nullify old history relationship
+   DELETE oldAdmins //Delete old relationship
+WITH log,stream,oldAdmin,admin
+       CALL{
+         WITH log,stream,oldAdmin, admin
+         WITH log,stream,oldAdmin, admin 
+         WHERE EXISTS (oldAdmin.firstName) AND oldAdmin.id <> $adminId
+        
+       MERGE (oldAdmin)-[hasHistory:HAS_HISTORY]->(log)
+       SET hasHistory.neverAdmin = true,
+       log.historyRecord = admin.firstName + ' ' +admin.lastName + ' became the admin ' + stream.name + ' Stream replacing ' + oldAdmin.firstName +' '+oldAdmin.lastName
+       RETURN COUNT(log)
+       }
+  
+   MATCH (currentUser:Member {auth_id:$auth.jwt.sub}) 
+   WITH currentUser, admin, stream, log
+   MERGE (admin)-[:IS_ADMIN_FOR]->(stream)
+   MERGE (log)-[:LOGGED_BY]->(currentUser)
+   MERGE (date:TimeGraph {date: date()})
+   MERGE (log)-[:RECORDED_ON]->(date)
+   MERGE (admin)-[r1:HAS_HISTORY]->(log)
+   MERGE (stream)-[r2:HAS_HISTORY]->(log)
+   SET r1.current = true,
+   r2.current = true
+   RETURN admin.id AS id, admin.auth_id AS auth_id, admin.firstName AS firstName, admin.lastName AS lastName
+`
 
 export const makeCouncilAdmin = `
 MATCH (admin:Member {id:$adminId})
@@ -355,6 +395,53 @@ WITH log,council,oldLeader,leader
    r2.current = true,
    r3.current = true
    REMOVE oldCouncilHistory.current 
+   
+   RETURN leader.id AS id, leader.auth_id AS auth_id, leader.firstName AS firstName, leader.lastName AS lastName
+`
+
+export const makeStreamLeader = `
+MATCH (leader:Member {id:$leaderId})
+MATCH (stream:Stream {id:$streamId})
+MATCH (stream)<-[:HAS]-(gatheringService:GatheringService)
+CREATE (log:HistoryLog:ServiceLog)
+  SET leader.auth_id = $auth_id,
+   log.id = apoc.create.uuid(),
+   log.timeStamp = datetime(),
+   log.historyRecord = leader.firstName + ' ' +leader.lastName + ' started ' + stream.name+ ' Stream under '+ gatheringService.name + ' Gathering Service'
+WITH leader,stream, log
+OPTIONAL MATCH (stream)<-[oldLeads:LEADS]-(oldLeader:Member)
+OPTIONAL MATCH (stream)-[oldHistory:HAS_HISTORY]->()-[oldLeaderHistory:HAS_HISTORY]-(oldLeader)
+SET oldHistory.current = false, oldLeaderHistory.current = false //nullify old history relationship
+   DELETE oldLeads //Delete old relationship
+WITH log,stream,oldLeader,leader
+       CALL{
+         WITH log,stream,oldLeader, leader
+         WITH log,stream,oldLeader, leader 
+         WHERE EXISTS (oldLeader.firstName) AND oldLeader.id <> $leaderId
+        
+       MERGE (oldLeader)-[hasHistory:HAS_HISTORY]->(log)
+       SET hasHistory.neverLed = true,
+       log.historyRecord = leader.firstName + ' ' +leader.lastName + ' became the leader of ' + stream.name+ ' Stream replacing ' + oldLeader.firstName +' '+oldLeader.lastName
+       RETURN COUNT(log)
+       }
+
+   MATCH (stream)<-[:HAS]-(:GatheringService)-[rel:HAS_HISTORY]->(gatheringService_history:ServiceLog) WHERE rel.current = true
+   OPTIONAL MATCH (gatheringService_history)-[oldStreamHistory:HAS]->(:ServiceLog)-[:HAS_HISTORY]-(stream)
+
+   MATCH (currentUser:Member {auth_id:$auth.jwt.sub}) 
+
+   WITH currentUser, leader, stream, log, oldStreamHistory, gatheringService_history
+   MERGE (leader)-[:LEADS]->(stream)
+   MERGE (log)-[:LOGGED_BY]->(currentUser)
+   MERGE (date:TimeGraph {date: date()})
+   MERGE (log)-[:RECORDED_ON]->(date)
+   MERGE (leader)-[r1:HAS_HISTORY]->(log)
+   MERGE (stream)-[r2:HAS_HISTORY]->(log)
+   MERGE (gatheringService_history)-[r3:HAS]->(log)
+   SET r1.current = true,
+   r2.current = true,
+   r3.current = true
+   REMOVE oldStreamHistory.current 
    
    RETURN leader.id AS id, leader.auth_id AS auth_id, leader.firstName AS firstName, leader.lastName AS lastName
 `

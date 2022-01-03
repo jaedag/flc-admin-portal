@@ -94,8 +94,8 @@ export const NEW_COUNCIL_LEADER = gql`
 `
 
 export const NEW_STREAM_LEADER = gql`
-  mutation NewStreamLeader($councilId: ID!, $leaderId: ID!) {
-    MakeStreamLeader(councilId: $councilId, leaderId: $leaderId) {
+  mutation NewStreamLeader($streamId: ID!, $leaderId: ID!) {
+    MakeStreamLeader(streamId: $streamId, leaderId: $leaderId) {
       id
       firstName
       lastName
@@ -112,12 +112,15 @@ export const NEW_STREAM_LEADER = gql`
 `
 
 export const NEW_GATHERING_SERVICE_LEADER = gql`
-  mutation NewStreamLeader($councilId: ID!, $leaderId: ID!) {
-    MakeStreamLeader(councilId: $councilId, leaderId: $leaderId) {
+  mutation NewGatheringServiceLeader($gatheringServiceId: ID!, $leaderId: ID!) {
+    MakeGatheringServiceLeader(
+      gatheringServiceId: $gatheringServiceId
+      leaderId: $leaderId
+    ) {
       id
       firstName
       lastName
-      leadsStream {
+      leadsGatheringService {
         id
         leader {
           id

@@ -126,6 +126,35 @@ export const MAKE_COUNCIL_INACTIVE = gql`
   }
 `
 
+export const MAKE_STREAM_INACTIVE = gql`
+  mutation CloseDownStream($streamId: ID!) {
+    CloseDownStream(streamId: $streamId) {
+      id
+      name
+
+      gatheringService {
+        id
+        streams {
+          id
+        }
+        history(options: { limit: 10 }) {
+          id
+          timeStamp
+          created_at {
+            date
+          }
+          loggedBy {
+            id
+            firstName
+            lastName
+          }
+          historyRecord
+        }
+      }
+    }
+  }
+`
+
 export const SET_VACATION_FELLOWSHIP = gql`
   mutation SetVacationFellowship($fellowshipId: ID!) {
     SetVacationFellowship(fellowshipId: $fellowshipId) {

@@ -37,6 +37,7 @@ import DisplayAllStreams from 'pages/directory/display/AllStreams'
 import CreateCouncil from 'pages/directory/create/CreateCouncil'
 import GatheringServiceConstituencies from 'pages/directory/display/GatheringServiceConstituencies'
 import UpdateCouncil from 'pages/directory/update/UpdateCouncil'
+import CreateStream from 'pages/directory/create/CreateStream'
 
 export const memberDirectory = [
   {
@@ -269,11 +270,16 @@ export const directory = [
     roles: ['adminFederal', 'adminCouncil'],
     placeholder: false,
   },
-
   {
     path: '/council/addcouncil',
     element: CreateCouncil,
     roles: ['adminFederal', 'adminStream'],
+    placeholder: false,
+  },
+  {
+    path: '/stream/addstream',
+    element: CreateStream,
+    roles: ['adminFederal'],
     placeholder: false,
   },
 

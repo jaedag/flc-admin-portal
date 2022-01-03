@@ -761,22 +761,10 @@ export const resolvers = {
       }
     },
     MakeStreamAdmin: async (object, args, context) => {
-      return MakeServant(
-        context,
-        args,
-        ['adminFederal', 'adminStream'],
-        'Stream',
-        'Admin'
-      )
+      return MakeServant(context, args, ['adminFederal'], 'Stream', 'Admin')
     },
     RemoveStreamAdmin: async (object, args, context) => {
-      return RemoveServant(
-        context,
-        args,
-        ['adminFederal', 'adminStream'],
-        'Stream',
-        'Admin'
-      )
+      return RemoveServant(context, args, ['adminFederal'], 'Stream', 'Admin')
     },
     MakeCouncilAdmin: async (object, args, context) => {
       return MakeServant(

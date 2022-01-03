@@ -36,8 +36,9 @@ export const throwErrorMsg = (message, error) => {
   if (!message && !error) {
     return
   }
+
   // eslint-disable-next-line no-console
-  console.error(error || message)
+  console.error(message, ' ', error)
   alert(message + ' ' + error)
 }
 

@@ -93,6 +93,14 @@ type Member {
       RETURN COUNT(DISTINCT council)
       """
     )
+  leadsStream: [Stream] @relationship(type: "LEADS", direction: OUT)
+  leadsStreamCount: Int
+    @cypher(
+      statement: """
+      MATCH (this)-[:LEADS|IS_ADMIN_FOR]->(stream:Stream)
+      RETURN COUNT(DISTINCT stream)
+      """
+    )
   leadsGatheringService: [GatheringService]
     @relationship(type: "LEADS", direction: OUT)
   leadsGatheringServiceCount: Int
@@ -106,6 +114,7 @@ type Member {
     @relationship(type: "IS_ADMIN_FOR", direction: OUT)
   isAdminForCouncil: [Council]
     @relationship(type: "IS_ADMIN_FOR", direction: OUT)
+  isAdminForStream: [Stream] @relationship(type: "IS_ADMIN_FOR", direction: OUT)
   isAdminForConstituency: [Constituency]
     @relationship(type: "IS_ADMIN_FOR", direction: OUT)
 
@@ -1038,6 +1047,10 @@ type Query {
     @cypher(
       statement: "MATCH (constituency:Constituency) WHERE toLower(constituency.name) CONTAINS toLower($nameSearch) RETURN DISTINCT constituency LIMIT 5"
     )
+  councilDropdown(nameSearch: String!): [Council]
+    @cypher(
+      statement: "MATCH (council:Council) WHERE toLower(council.name) CONTAINS toLower($nameSearch) RETURN DISTINCT council LIMIT 5"
+    )
   bishopsSontaMemberList(id: ID): [Member]!
     @cypher(
       statement: """
@@ -1387,6 +1400,57 @@ type Mutation {
     pictureUrl: String!
   ): Member
 
+  CreateStream(
+    name: String!
+    leaderId: ID!
+    gatheringServiceId: ID!
+    councils: [ID]
+  ): Stream
+    @auth(rules: [{ roles: ["adminFederal"] }])
+    @cypher(
+      statement: """
+      CREATE (stream:Stream {id:apoc.create.uuid(), name:$name})
+
+      WITH stream
+      MATCH (leader:Member {id: $leaderId})
+      MATCH (currentUser:Member {auth_id:$auth.jwt.sub})
+      MATCH (gatheringService:GatheringService {id: $gatheringServiceId})
+
+
+       CREATE (log:HistoryLog:ServiceLog)
+        SET
+        log.id =  apoc.create.uuid(),
+        log.timeStamp = datetime(),
+        log.historyRecord = leader.firstName + ' ' +leader.lastName + ' started ' + $name +' Stream under '+ gatheringService.name+ ' Gathering Service'
+
+      MERGE (gatheringService)-[:HAS]->(stream)
+      MERGE (leader)-[:LEADS]->(stream)
+
+      MERGE (date:TimeGraph {date: date()})
+      MERGE (log)-[:LOGGED_BY]->(currentUser)
+      MERGE (log)-[:RECORDED_ON]->(date)
+      MERGE (stream)-[:HAS_HISTORY]->(log)
+
+      MERGE (leader)-[r:HAS_HISTORY]->(log)
+        SET r.current = true
+
+      WITH stream, gatheringService
+      CALL {
+        WITH stream
+        WITH stream WHERE $councils <> []
+        UNWIND $councils AS councilIds
+        MATCH (council:Council {id:councilIds})
+        OPTIONAL MATCH (oldStream)-[r:HAS]->(council)
+        DELETE r
+
+        MERGE (stream)-[:HAS]->(council)
+        RETURN count(stream)
+      }
+
+      RETURN stream
+      """
+    )
+
   CreateCouncil(
     name: String!
     leaderId: ID!
@@ -1430,7 +1494,7 @@ type Mutation {
         OPTIONAL MATCH (oldCouncil)-[r:HAS]->(constituency)
         DELETE r
 
-        MERGE (council)-[:HAS]->(bacenta)
+        MERGE (council)-[:HAS]->(constituency)
         RETURN count(council)
       }
 
@@ -2277,25 +2341,74 @@ type Mutation {
       statement: """
       MATCH (constituency:Constituency {id:$constituencyId})
       MATCH (admin:Member {auth_id: $auth.jwt.sub})
-      MATCH (constituency)-[:HAS]-(council:Council)
+      MATCH (constituency)<-[:HAS]-(council:Council)
       OPTIONAL MATCH (constituency)-[:HAS]->(bacentas)-[:HAS]->(fellowships)
-      UNWIND labels(constituency) AS stream
 
       CREATE (log:HistoryLog {id:apoc.create.uuid()})
         SET log.timeStamp = datetime(),
-        log.historyRecord = constituency.name + ' '+stream +' was closed down under ' + council.name +' Council'
+        log.historyRecord = constituency.name + ' Constituency was closed down under ' + council.name +' Council'
 
 
       MERGE (date:TimeGraph {date:date()})
       MERGE (log)-[:LOGGED_BY]->(admin)
       MERGE (log)-[:RECORDED_ON]->(date)
       MERGE (council)-[:HAS_HISTORY]->(log)
-      MERGE (bishop)-[:HAS_HISTORY]->(log)
+      MERGE (council)-[:HAS_HISTORY]->(log)
 
-      SET constituency:Closedconstituency, bacentas:ClosedBacenta, fellowships:ClosedFellowship
+      SET constituency:ClosedConstituency, bacentas:ClosedBacenta, fellowships:ClosedFellowship
       REMOVE constituency:Constituency,bacentas:Bacenta,fellowships:Fellowship
 
       RETURN constituency
+      """
+    )
+  CloseDownCouncil(councilId: ID!): Council
+    @cypher(
+      statement: """
+      MATCH (council:Council {id:$councilId})
+      MATCH (admin:Member {auth_id: $auth.jwt.sub})
+      MATCH (council)<-[:HAS]-(stream:Stream)
+      OPTIONAL MATCH (council)-[:HAS]->(constituencies)-[:HAS]->(bacentas)-[:HAS]->(fellowships)
+
+      CREATE (log:HistoryLog {id:apoc.create.uuid()})
+        SET log.timeStamp = datetime(),
+        log.historyRecord = council.name + ' Council was closed down under ' + stream.name +' Stream'
+
+
+      MERGE (date:TimeGraph {date:date()})
+      MERGE (log)-[:LOGGED_BY]->(admin)
+      MERGE (log)-[:RECORDED_ON]->(date)
+      MERGE (stream)-[:HAS_HISTORY]->(log)
+      MERGE (stream)-[:HAS_HISTORY]->(log)
+
+      SET council:ClosedCouncil, constituencies:ClosedConstituency, bacentas:ClosedBacenta, fellowships:ClosedFellowship
+      REMOVE council:Council,constituencies:Constituency,bacentas:Bacenta, fellowships:Fellowship
+
+      RETURN council
+      """
+    )
+  CloseDownStream(streamId: ID!): Stream
+    @cypher(
+      statement: """
+      MATCH (stream:Stream {id:$streamId})
+      MATCH (admin:Member {auth_id: $auth.jwt.sub})
+      MATCH (stream)<-[:HAS]-(gatheringService:GatheringService)
+      OPTIONAL MATCH (stream)-[:HAS]->(council)-[:HAS]->(constituencies)-[:HAS]->(bacentas)-[:HAS]->(fellowships)
+
+      CREATE (log:HistoryLog {id:apoc.create.uuid()})
+        SET log.timeStamp = datetime(),
+        log.historyRecord = stream.name + ' Stream was closed down under ' + gatheringService.name +' Gathering Service'
+
+
+      MERGE (date:TimeGraph {date:date()})
+      MERGE (log)-[:LOGGED_BY]->(admin)
+      MERGE (log)-[:RECORDED_ON]->(date)
+      MERGE (stream)-[:HAS_HISTORY]->(log)
+      MERGE (gatheringService)-[:HAS_HISTORY]->(log)
+
+      SET stream:ClosedStream, councils:ClosedCouncil, constituencies:Closedconstituency, bacentas:ClosedBacenta, fellowships:ClosedFellowship
+      REMOVE stream:Stream, council:Council, constituencies:Constituency,bacentas:Bacenta,fellowships:Fellowship
+
+      RETURN stream
       """
     )
 

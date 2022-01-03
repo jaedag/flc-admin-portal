@@ -3,13 +3,13 @@ import BaseComponent from 'components/base-component/BaseComponent'
 import { FieldArray, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import { makeSelectOptions } from 'global-utils'
-import { CONSTITUENCY_DROPDOWN, GET_STREAMS } from 'queries/ListQueries'
+import { COUNCIL_DROPDOWN, GET_GATHERINGSERVICES } from 'queries/ListQueries'
 import React, { useContext } from 'react'
 import { ChurchContext } from 'contexts/ChurchContext'
 import FormikControl from 'components/formik-components/FormikControl'
 import PlusSign from 'components/buttons/PlusMinusSign/PlusSign'
 import MinusSign from 'components/buttons/PlusMinusSign/MinusSign'
-import { MAKE_COUNCIL_INACTIVE } from 'pages/directory/update/CloseChurchMutations'
+import { MAKE_STREAM_INACTIVE } from 'pages/directory/update/CloseChurchMutations'
 import { useNavigate } from 'react-router'
 import Popup from 'components/Popup/Popup'
 import RoleView from 'auth/RoleView'
@@ -18,26 +18,25 @@ import { MemberContext } from 'contexts/MemberContext'
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import HeadingSecondary from 'components/HeadingSecondary'
 
-const CouncilForm = ({ initialValues, onSubmit, title, newCouncil }) => {
-  const { togglePopup, isOpen, clickCard, councilId } =
-    useContext(ChurchContext)
+const StreamForm = ({ initialValues, onSubmit, title, newStream }) => {
+  const { togglePopup, isOpen, clickCard, streamId } = useContext(ChurchContext)
   const { theme } = useContext(MemberContext)
 
   const navigate = useNavigate()
-  const { data, loading, error } = useQuery(GET_STREAMS)
-  const [CloseDownCouncil] = useMutation(MAKE_COUNCIL_INACTIVE)
+  const { data, loading, error } = useQuery(GET_GATHERINGSERVICES)
+  const [CloseDownStream] = useMutation(MAKE_STREAM_INACTIVE)
 
-  const streamOptions = makeSelectOptions(data?.streams)
+  const gatheringServiceOptions = makeSelectOptions(data?.gatheringServices)
 
   const validationSchema = Yup.object({
-    name: Yup.string().required(`Council Name is a required field`),
+    name: Yup.string().required(`Stream Name is a required field`),
     leaderId: Yup.string().required(
       'Please choose a leader from the drop down'
     ),
-    constituencies: newCouncil
+    councils: newStream
       ? null
       : Yup.array().of(
-          Yup.object().required('Please pick a constituency from the dropdown')
+          Yup.object().required('Please pick a council from the dropdown')
         ),
   })
 
@@ -45,7 +44,7 @@ const CouncilForm = ({ initialValues, onSubmit, title, newCouncil }) => {
     <BaseComponent loading={loading} error={error} data={data}>
       <Container>
         <HeadingPrimary>{title}</HeadingPrimary>
-        <HeadingSecondary>{initialValues.name + ' Council'}</HeadingSecondary>
+        <HeadingSecondary>{initialValues.name + ' Stream'}</HeadingSecondary>
       </Container>
       <Formik
         initialValues={initialValues}
@@ -60,16 +59,16 @@ const CouncilForm = ({ initialValues, onSubmit, title, newCouncil }) => {
                 <Row className="row-cols-1 row-cols-md-2">
                   {/* <!-- Basic Info Div --> */}
                   <Col className="mb-2">
-                    <RoleView roles={['adminFederal', 'adminStream']}>
+                    <RoleView roles={['adminFederal', 'adminGatheringService']}>
                       <Row className="form-row">
                         <Col>
                           <FormikControl
                             className="form-control"
                             control="select"
-                            name="streamSelect"
-                            label="Select a Stream"
-                            options={streamOptions}
-                            defaultOption="Select a Stream"
+                            name="gatheringServiceSelect"
+                            label="Select a Gathering Service"
+                            options={gatheringServiceOptions}
+                            defaultOption="Select a Gathering Service"
                           />
                         </Col>
                       </Row>
@@ -79,12 +78,12 @@ const CouncilForm = ({ initialValues, onSubmit, title, newCouncil }) => {
                       className="form-control"
                       control="input"
                       name="name"
-                      label={`Name of Council`}
-                      placeholder={`Name of Council`}
+                      label={`Name of Stream`}
+                      placeholder={`Name of Stream`}
                     />
 
                     <Row className="d-flex align-items-center mb-3">
-                      <RoleView roles={['adminFederal', 'adminStream']}>
+                      <RoleView roles={['adminFederal']}>
                         <Col>
                           <FormikControl
                             control="memberSearch"
@@ -102,37 +101,37 @@ const CouncilForm = ({ initialValues, onSubmit, title, newCouncil }) => {
                     </Row>
 
                     <small className="pt-2">
-                      {`Select any constituencies that are being moved to this Council`}
+                      {`Select any councils that are being moved to this Stream`}
                     </small>
-                    <FieldArray name="constituencies">
+                    <FieldArray name="councils">
                       {(fieldArrayProps) => {
                         const { push, remove, form } = fieldArrayProps
                         const { values } = form
-                        const { constituencies } = values
+                        const { councils } = values
 
                         return (
                           <>
-                            {constituencies.map((constituency, index) => (
+                            {councils.map((council, index) => (
                               <Row key={index} className="form-row">
                                 <Col>
                                   <FormikControl
                                     control="combobox"
-                                    name={`constituencies[${index}]`}
-                                    placeholder="Constituency Name"
-                                    initialValue={constituency?.name}
+                                    name={`councils[${index}]`}
+                                    placeholder="Council Name"
+                                    initialValue={council?.name}
                                     setFieldValue={formik.setFieldValue}
-                                    optionsQuery={CONSTITUENCY_DROPDOWN}
+                                    optionsQuery={COUNCIL_DROPDOWN}
                                     queryVariable="nameSearch"
                                     suggestionText="name"
                                     suggestionID="id"
-                                    dataset="constituencyDropdown"
+                                    dataset="councilDropdown"
                                     church="bacenta"
-                                    returnObject={!newCouncil && true}
+                                    returnObject={!newStream && true}
                                     aria-describedby="Bacenta Name"
                                     className="form-control"
                                     error={
-                                      formik.errors.constituencies &&
-                                      formik.errors.constituencies[index]
+                                      formik.errors.councils &&
+                                      formik.errors.councils[index]
                                     }
                                   />
                                 </Col>
@@ -178,21 +177,21 @@ const CouncilForm = ({ initialValues, onSubmit, title, newCouncil }) => {
                   type="submit"
                   className={`btn-main ${theme}`}
                   onClick={() => {
-                    CloseDownCouncil({
+                    CloseDownStream({
                       variables: {
-                        councilId: councilId,
+                        streamId: streamId,
                       },
                     })
                       .then((res) => {
-                        clickCard(res.data.CloseDownCouncil)
+                        clickCard(res.data.CloseDownStream)
                         togglePopup()
-                        navigate(`/council/displayall`)
+                        navigate(`/stream/displayall`)
                       })
                       .catch((error) => {
                         // eslint-disable-next-line no-console
                         console.error(error)
                         alert(
-                          `There was an error closing down this council`,
+                          `There was an error closing down this stream`,
                           error
                         )
                       })
@@ -210,7 +209,7 @@ const CouncilForm = ({ initialValues, onSubmit, title, newCouncil }) => {
               </Popup>
             )}
 
-            {!newCouncil && (
+            {!newStream && (
               <Button
                 variant="primary"
                 size="lg"
@@ -218,7 +217,7 @@ const CouncilForm = ({ initialValues, onSubmit, title, newCouncil }) => {
                 className={`btn-secondary ${theme} mt-3`}
                 onClick={togglePopup}
               >
-                {`Close Down Council`}
+                {`Close Down Stream`}
               </Button>
             )}
           </Container>
@@ -228,4 +227,4 @@ const CouncilForm = ({ initialValues, onSubmit, title, newCouncil }) => {
   )
 }
 
-export default CouncilForm
+export default StreamForm

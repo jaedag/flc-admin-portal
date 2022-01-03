@@ -171,6 +171,29 @@ export const SERVANTS_LEADERSHIP = gql`
         }
       }
 
+      leadsStream {
+        id
+        name
+
+        memberCount
+
+        services(limit: 4) {
+          created_at
+          attendance
+          income
+          week
+          serviceDate {
+            date
+          }
+        }
+
+        componentServiceAggregate {
+          week
+          attendance
+          income
+        }
+      }
+
       leadsGatheringService {
         id
         name
@@ -245,6 +268,33 @@ export const SERVANTS_ADMIN = gql`
         id
         name
         stream_name
+        memberCount
+        leader {
+          id
+          firstName
+          lastName
+          fullName
+        }
+        services(limit: 4) {
+          created_at
+          attendance
+          income
+          week
+          serviceDate {
+            date
+          }
+        }
+
+        componentServiceAggregate {
+          week
+          attendance
+          income
+        }
+      }
+      isAdminForStream {
+        id
+        name
+
         memberCount
         leader {
           id

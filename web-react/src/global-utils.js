@@ -49,6 +49,7 @@ export const isAuthorised = (permittedRoles, userRoles) => {
   if (permittedRoles?.includes('all')) {
     return true
   }
+
   return permittedRoles?.some((r) => userRoles.includes(r))
 }
 

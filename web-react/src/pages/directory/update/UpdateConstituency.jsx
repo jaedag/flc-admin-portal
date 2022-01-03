@@ -169,7 +169,7 @@ const UpdateConstituency = () => {
     if (values.leaderId !== initialValues.leaderId) {
       return MakeConstituencyLeader({
         variables: {
-          oldLeaderId: initialValues.leaderId,
+          oldLeaderId: initialValues.leaderId || 'old-leader',
           newLeaderId: values.leaderId,
           constituencyId: constituencyId,
         },

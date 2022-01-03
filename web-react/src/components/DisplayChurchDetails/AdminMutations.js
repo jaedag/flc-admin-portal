@@ -79,3 +79,30 @@ export const NEW_COUNCIL_ADMIN = gql`
     }
   }
 `
+
+export const MAKE_COUNCIL_ADMIN = gql`
+  mutation MakeCouncilAdmin(
+    $councilId: ID!
+    $newAdminId: ID!
+    $oldAdminId: ID!
+  ) {
+    RemoveCouncilAdmin(councilId: $councilId, adminId: $oldAdminId) {
+      id
+      firstName
+      lastName
+    }
+    MakeCouncilAdmin(councilId: $councilId, adminId: $newAdminId) {
+      id
+      firstName
+      lastName
+      isAdminForCouncil {
+        id
+        admin {
+          id
+          firstName
+          lastName
+        }
+      }
+    }
+  }
+`

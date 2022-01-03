@@ -26,25 +26,27 @@ const ServicesChurchList = () => {
 
         <div className="d-grid gap-2 mt-5 text-left">
           {userJobs?.jobs.length ? (
-            userJobs.jobs.map((job, index) => (
-              <MenuButton
-                key={index}
-                title={job.church.name}
-                caption={parseMemberCount(job.church.memberCount)}
-                icon={MemberIcon}
-                iconBg={true}
-                iconCaption={job.church.__typename}
-                onClick={() => {
-                  job.clickCard()
-                  setCurrentUser({
-                    ...currentUser,
-                    currentChurch: job.church,
-                  })
-                  navigate('/services')
-                }}
-                color="churches"
-              />
-            ))
+            userJobs.jobs.map((job) =>
+              job.church.map((church, index) => (
+                <MenuButton
+                  key={index}
+                  title={church.name}
+                  caption={parseMemberCount(church.memberCount)}
+                  icon={MemberIcon}
+                  iconBg={true}
+                  iconCaption={church.__typename}
+                  onClick={() => {
+                    church.clickCard()
+                    setCurrentUser({
+                      ...currentUser,
+                      currentChurch: church,
+                    })
+                    navigate('/services')
+                  }}
+                  color="churches"
+                />
+              ))
+            )
           ) : (
             <>
               <MenuButton color="churches" />

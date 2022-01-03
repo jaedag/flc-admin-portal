@@ -101,7 +101,7 @@ export const ADD_LEADER_HISTORY_MUTATION = gql`
 
 export const CREATE_FELLOWSHIP_MUTATION = gql`
   mutation CreateFellowship(
-    $fellowshipName: String!
+    $name: String!
     $bacentaId: ID!
     $leaderId: ID!
     $meetingDay: String!
@@ -109,7 +109,7 @@ export const CREATE_FELLOWSHIP_MUTATION = gql`
     $venueLatitude: Float
   ) {
     CreateFellowship(
-      fellowshipName: $fellowshipName
+      name: $name
       bacentaId: $bacentaId
       leaderId: $leaderId
       meetingDay: $meetingDay
@@ -135,13 +135,13 @@ export const CREATE_FELLOWSHIP_MUTATION = gql`
 
 export const CREATE_BACENTA_MUTATION = gql`
   mutation CreateBacenta(
-    $bacentaName: String!
+    $name: String!
     $constituencyId: ID!
     $leaderId: ID!
     $fellowships: [ID]
   ) {
     CreateBacenta(
-      bacentaName: $bacentaName
+      name: $name
       constituencyId: $constituencyId
       leaderId: $leaderId
       fellowships: $fellowships
@@ -152,9 +152,6 @@ export const CREATE_BACENTA_MUTATION = gql`
       constituency {
         id
         bacentas {
-          id
-        }
-        bishop {
           id
         }
       }
@@ -211,7 +208,7 @@ export const CREATE_CONSTITUENCY_MUTATION = gql`
       stream_name
       council {
         id
-        campuses {
+        constituencies {
           id
           name
         }

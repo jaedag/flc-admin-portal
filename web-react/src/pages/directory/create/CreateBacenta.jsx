@@ -8,15 +8,16 @@ import BacentaForm from '../../../components/reusable-forms/BacentaForm'
 import { throwErrorMsg } from 'global-utils'
 
 const CreateBacenta = () => {
+  const { clickCard, constituencyId, setConstituencyId } =
+    useContext(ChurchContext)
+  const navigate = useNavigate()
+
   const initialValues = {
     name: '',
     leaderId: '',
-    constituencySelect: '',
+    constituencySelect: constituencyId ?? '',
     fellowships: [''],
   }
-
-  const { clickCard, setConstituencyId } = useContext(ChurchContext)
-  const navigate = useNavigate()
 
   const [NewBacentaLeader] = useMutation(NEW_BACENTA_LEADER)
   const [CreateBacenta] = useMutation(CREATE_BACENTA_MUTATION)

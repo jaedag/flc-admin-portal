@@ -150,11 +150,23 @@ const Navigator = () => {
     if (servant?.leadsBacenta?.length) {
       setServantRoles(servant, 'Leader', 'Bacenta')
     }
+    if (servantLeader?.leadsSonta?.length) {
+      setServantRoles(servantLeader, 'Leader', 'Sonta')
+    }
     if (servantLeader?.leadsConstituency?.length) {
       setServantRoles(servantLeader, 'Leader', 'Constituency')
     }
+    if (servantAdmin?.isAdminForConstituency?.length) {
+      setServantRoles(servantAdmin, 'Admin', 'Constituency')
+    }
     if (servantLeader?.leadsCouncil?.length) {
       setServantRoles(servantLeader, 'Leader', 'Council')
+    }
+    if (servantAdmin?.isAdminForCouncil?.length) {
+      setServantRoles(servantAdmin, 'Admin', 'Council')
+    }
+    if (servantLeader?.leadsMinistry?.length) {
+      setServantRoles(servantLeader, 'Leader', 'Ministry')
     }
     if (servantLeader?.leadsStream?.length) {
       setServantRoles(servantLeader, 'Leader', 'Stream')
@@ -162,24 +174,11 @@ const Navigator = () => {
     if (servantLeader?.leadsGatheringService?.length) {
       setServantRoles(servantLeader, 'Leader', 'GatheringService')
     }
-    if (servantLeader?.leadsSonta?.length) {
-      setServantRoles(servantLeader, 'Leader', 'Sonta')
-    }
-    if (servantLeader?.leadsBasonta?.length) {
-      setServantRoles(servantLeader, 'Leader', 'Basonta')
-    }
-    if (servantLeader?.leadsMinistry?.length) {
-      setServantRoles(servantLeader, 'Leader', 'Ministry')
-    }
-
     if (servantAdmin?.isAdminForGatheringService?.length) {
       setServantRoles(servantAdmin, 'Admin', 'GatheringService')
     }
-    if (servantAdmin?.isAdminForCouncil?.length) {
-      setServantRoles(servantAdmin, 'Admin', 'Council')
-    }
-    if (servantAdmin?.isAdminForConstituency?.length) {
-      setServantRoles(servantAdmin, 'Admin', 'Constituency')
+    if (servantLeader?.leadsBasonta?.length) {
+      setServantRoles(servantLeader, 'Leader', 'Basonta')
     }
 
     //run the get graph function after all checking is done to avoid multiple unnecessary runs

@@ -374,6 +374,7 @@ const MakeServant = async (
     id: args[`${servantLower}Id`],
   })
   let servant = rearrangeCypherObject(servantResponse)
+
   errorHandling(servant)
 
   //Check for AuthID of servant
@@ -488,6 +489,10 @@ const RemoveServant = async (
     id: args[`${servantLower}Id`],
   })
   const servant = rearrangeCypherObject(servantResponse)
+
+  if (Object.keys(servant).length === 0) {
+    return
+  }
   errorHandling(servant)
 
   if (!servant.auth_id) {

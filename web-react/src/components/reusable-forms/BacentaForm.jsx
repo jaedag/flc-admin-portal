@@ -61,6 +61,7 @@ const BacentaForm = ({ initialValues, onSubmit, title, newBacenta }) => {
               <div className="form-group">
                 <Row className="row-cols-1 row-cols-md-2">
                   {/* <!-- Basic Info Div --> */}
+
                   <Col className="mb-2">
                     <Row className="form-row">
                       <Col>

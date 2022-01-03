@@ -165,7 +165,7 @@ const UpdateBacenta = () => {
     if (values.leaderId !== initialValues.leaderId) {
       return MakeBacentaLeader({
         variables: {
-          oldLeaderId: initialValues.leaderId,
+          oldLeaderId: initialValues.leaderId || 'old-leader',
           newLeaderId: values.leaderId,
           bacentaId: bacentaId,
         },

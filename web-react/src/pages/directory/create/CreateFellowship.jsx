@@ -8,20 +8,20 @@ import FellowshipForm from 'components/reusable-forms/FellowshipForm'
 import { throwErrorMsg } from 'global-utils'
 
 const CreateFellowship = () => {
+  const { clickCard, constituencyId, bacentaId, setFellowshipId } =
+    useContext(ChurchContext)
+  const navigate = useNavigate()
+
   const initialValues = {
-    fellowshipName: '',
+    name: '',
     leaderId: '',
-    constituencySelect: '',
-    bacentaSelect: '',
+    constituencySelect: constituencyId ?? '',
+    bacentaSelect: bacentaId ?? '',
     meetingDay: '',
     vacationStatus: '',
     venueLatitude: '',
     venueLongitude: '',
   }
-
-  const { clickCard, setFellowshipId } = useContext(ChurchContext)
-
-  const navigate = useNavigate()
 
   const [NewFellowshipLeader] = useMutation(NEW_FELLOWSHIP_LEADER)
   const [CreateFellowship] = useMutation(CREATE_FELLOWSHIP_MUTATION)
@@ -30,7 +30,7 @@ const CreateFellowship = () => {
   const onSubmit = (values, onSubmitProps) => {
     CreateFellowship({
       variables: {
-        fellowshipName: values.fellowshipName,
+        name: values.name,
         bacentaId: values.bacentaSelect,
         meetingDay: values.meetingDay,
         leaderId: values.leaderId,

@@ -36,11 +36,7 @@ const ConstituencyForm = ({
   } = useQuery(GET_COUNCILS)
   const [CloseDownConstituency] = useMutation(MAKE_CONSTITUENCY_INACTIVE)
 
-  const constituencyCouncilOptions = makeSelectOptions(
-    councilData?.councils.filter(
-      (council) => council.constituencies.length > 0 && council
-    )
-  )
+  const constituencyCouncilOptions = makeSelectOptions(councilData?.councils)
 
   const validationSchema = Yup.object({
     name: Yup.string().required(`Constituency Name is a required field`),
@@ -78,6 +74,7 @@ const ConstituencyForm = ({
               <div className="form-group">
                 <Row className="row-cols-1 row-cols-md-2">
                   {/* <!-- Basic Info Div --> */}
+
                   <Col className="mb-2">
                     <RoleView roles={['adminFederal']}>
                       <Row className="form-row">

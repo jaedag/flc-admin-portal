@@ -1441,7 +1441,7 @@ type Mutation {
   CreateConstituency(
     name: String!
     leaderId: ID!
-    streamId: ID!
+    councilId: ID!
     bacentas: [ID]
   ): Constituency
     @auth(rules: [{ roles: ["adminFederal", "adminStream", "adminCouncil"] }])
@@ -1490,7 +1490,7 @@ type Mutation {
     )
 
   CreateBacenta(
-    bacentaName: String!
+    name: String!
     constituencyId: ID!
     leaderId: ID!
     fellowships: [ID]
@@ -1500,7 +1500,7 @@ type Mutation {
     )
     @cypher(
       statement: """
-      CREATE (bacenta:Bacenta {name:$bacentaName})
+      CREATE (bacenta:Bacenta {name:$name})
          	SET
       	bacenta.id = apoc.create.uuid()
       WITH bacenta
@@ -1586,7 +1586,7 @@ type Mutation {
       """
     )
   CreateFellowship(
-    fellowshipName: String!
+    name: String!
     bacentaId: ID!
     leaderId: ID!
     meetingDay: String!
@@ -1599,7 +1599,7 @@ type Mutation {
     @cypher(
       statement: """
       MATCH (lastCode:LastBankingCode)
-      CREATE (fellowship:Fellowship:ActiveFellowship {name:$fellowshipName,location: point({latitude:toFloat($venueLatitude), longitude:toFloat($venueLongitude), crs:'WGS-84'})})
+      CREATE (fellowship:Fellowship:ActiveFellowship {name:$name,location: point({latitude:toFloat($venueLatitude), longitude:toFloat($venueLongitude), crs:'WGS-84'})})
          	SET
       	fellowship.id = apoc.create.uuid(),
         fellowship.bankingCode = lastCode.number + 1,

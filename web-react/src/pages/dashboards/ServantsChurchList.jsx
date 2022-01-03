@@ -51,7 +51,7 @@ const ServantsChurchList = () => {
         clickCard: () => {
           clickCard(church)
         },
-        link: `/${church.__typename}/displaydetails`,
+        link: `/${church.__typename.toLowerCase()}/displaydetails`,
       })
     })
   }

@@ -13,7 +13,7 @@ import { Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import Popup from '../Popup/Popup'
 import { useMutation } from '@apollo/client'
-import { MAKE_CONSTITUENCY_ADMIN } from './AdminMutations'
+import { MAKE_CONSTITUENCY_ADMIN, MAKE_COUNCIL_ADMIN } from './AdminMutations'
 import FormikControl from '../formik-components/FormikControl'
 import { plural, throwErrorMsg } from '../../global-utils'
 import Breadcrumb from './Breadcrumb'
@@ -49,11 +49,12 @@ const DisplayChurchDetails = (props) => {
   const { setMemberId, theme, setCurrentUser, currentUser } =
     useContext(MemberContext)
   const [submitting, setSubmitting] = useState(false)
-  const { clickCard, togglePopup, isOpen, constituencyId } =
+  const { clickCard, togglePopup, isOpen, constituencyId, councilId } =
     useContext(ChurchContext)
 
   //Change Admin Initialised
   const [MakeConstituencyAdmin] = useMutation(MAKE_CONSTITUENCY_ADMIN)
+  const [MakeCouncilAdmin] = useMutation(MAKE_COUNCIL_ADMIN)
 
   const initialValues = {
     adminName: props.admin
@@ -70,19 +71,37 @@ const DisplayChurchDetails = (props) => {
   const onSubmit = (values, onSubmitProps) => {
     setSubmitting(true)
 
-    MakeConstituencyAdmin({
-      variables: {
-        constituencyId: constituencyId,
-        newAdminId: values.adminSelect,
-        oldAdminId: initialValues.adminSelect ?? 'no-old-admin',
-      },
-    })
-      .then(() => {
-        togglePopup()
-        setSubmitting(false)
-        alert('Constituency Admin has been changed successfully')
+    if (props.churchType === 'Council') {
+      MakeCouncilAdmin({
+        variables: {
+          councilId: councilId,
+          newAdminId: values.adminSelect,
+          oldAdminId: initialValues.adminSelect || 'no-old-admin',
+        },
       })
-      .catch((e) => throwErrorMsg(e))
+        .then(() => {
+          togglePopup()
+          setSubmitting(false)
+          alert('Council Admin has been changed successfully')
+        })
+        .catch((e) => throwErrorMsg(e))
+    }
+
+    if (props.churchType === 'Constituency') {
+      MakeConstituencyAdmin({
+        variables: {
+          constituencyId: constituencyId,
+          newAdminId: values.adminSelect,
+          oldAdminId: initialValues.adminSelect || 'no-old-admin',
+        },
+      })
+        .then(() => {
+          togglePopup()
+          setSubmitting(false)
+          alert('Constituency Admin has been changed successfully')
+        })
+        .catch((e) => throwErrorMsg(e))
+    }
 
     onSubmitProps.resetForm()
   }
@@ -297,7 +316,8 @@ const DisplayChurchDetails = (props) => {
           </>
         )}
       </Container>
-      {props.subChurch && props.buttons?.length && (
+
+      {props.subChurch && props.buttons?.length ? (
         <>
           <Container>
             <hr className="hr-line" />
@@ -336,15 +356,22 @@ const DisplayChurchDetails = (props) => {
             </table>
           </div>
         </>
-      )}
-      {props.subChurch && !props.buttons?.length && (
-        <Link
-          className="card text-secondary px-1"
-          to={`/${props.subChurch.toLowerCase()}/add${props.subChurch.toLowerCase()}`}
-        >
-          {`Add New ${props.subChurch}`}
-        </Link>
-      )}
+      ) : null}
+      {props.subChurch && !props.buttons?.length ? (
+        <Container className="d-grid gap-2 mt-2">
+          <Button
+            className="btn-trends"
+            variant={theme}
+            onClick={() =>
+              navigate(
+                `/${props.subChurch.toLowerCase()}/add${props.subChurch.toLowerCase()}`
+              )
+            }
+          >
+            {`Add New ${props.subChurch}`}
+          </Button>
+        </Container>
+      ) : null}
       {props.subChurchBasonta === 'Sonta' ? (
         <>
           <div className="container">

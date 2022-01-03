@@ -35,7 +35,7 @@ const UpdateFellowship = () => {
   const fellowship = fellowshipData?.fellowships[0]
 
   const initialValues = {
-    fellowshipName: fellowship?.name,
+    name: fellowship?.name,
     leaderId: fellowship?.leader?.id,
     leaderName: `${fellowship?.leader?.fullName} `,
     constituencySelect: fellowship?.bacenta?.constituency?.id,
@@ -81,7 +81,7 @@ const UpdateFellowship = () => {
           oldLeaderId: '',
           newBacentaId: data.updateFellowships.fellowships[0]?.bacenta.id ?? '',
           oldBacentaId: fellowship?.bacenta ? fellowship?.bacenta.id : null,
-          historyRecord: `${initialValues.fellowshipName} Fellowship has been moved from ${fellowship?.bacenta.name} Bacenta to ${data.updateFellowships.fellowships[0]?.bacenta.name} Bacenta`,
+          historyRecord: `${initialValues.name} Fellowship has been moved from ${fellowship?.bacenta.name} Bacenta to ${data.updateFellowships.fellowships[0]?.bacenta.name} Bacenta`,
         },
       })
     },
@@ -97,7 +97,7 @@ const UpdateFellowship = () => {
     UpdateFellowship({
       variables: {
         id: fellowshipId,
-        name: values.fellowshipName,
+        name: values.name,
         leaderId: values.leaderId,
         meetingDay: values.meetingDay,
         venueLongitude: values.venueLongitude,
@@ -118,7 +118,7 @@ const UpdateFellowship = () => {
     }
 
     //Log if the Fellowship Name Changes
-    if (values.fellowshipName !== initialValues.fellowshipName) {
+    if (values.name !== initialValues.name) {
       LogFellowshipHistory({
         variables: {
           fellowshipId: fellowshipId,
@@ -127,7 +127,7 @@ const UpdateFellowship = () => {
           oldBacentaId: '',
           newBacentaId: '',
 
-          historyRecord: `The Fellowship name has been changed from ${initialValues.fellowshipName} to ${values.fellowshipName}`,
+          historyRecord: `The Fellowship name has been changed from ${initialValues.name} to ${values.name}`,
         },
       })
     }
@@ -142,7 +142,7 @@ const UpdateFellowship = () => {
           oldBacentaId: '',
           newBacentaId: '',
 
-          historyRecord: `${values.fellowshipName} Fellowship has changed their meeting day from ${initialValues.meetingDay} to ${values.meetingDay}`,
+          historyRecord: `${values.name} Fellowship has changed their meeting day from ${initialValues.meetingDay} to ${values.meetingDay}`,
         },
       })
     }
@@ -169,7 +169,7 @@ const UpdateFellowship = () => {
           oldBacentaId: '',
           newBacentaId: '',
 
-          historyRecord: `${values.fellowshipName} Fellowship has changed their venue`,
+          historyRecord: `${values.name} Fellowship has changed their venue`,
         },
       })
     }
@@ -178,7 +178,7 @@ const UpdateFellowship = () => {
     if (values.leaderId !== initialValues.leaderId) {
       return MakeFellowshipLeader({
         variables: {
-          oldLeaderId: initialValues.leaderId || '',
+          oldLeaderId: initialValues.leaderId || 'old-leader',
           newLeaderId: values.leaderId,
           fellowshipId: fellowshipId,
         },

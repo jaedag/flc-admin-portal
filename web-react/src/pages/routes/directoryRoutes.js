@@ -39,6 +39,8 @@ import GatheringServiceConstituencies from 'pages/directory/display/GatheringSer
 import UpdateCouncil from 'pages/directory/update/UpdateStream'
 import CreateStream from 'pages/directory/create/CreateStream'
 import UpdateStream from 'pages/directory/update/UpdateStream'
+import GatheringServiceMembers from 'pages/directory/grids/GatheringServiceMembers'
+import StreamMembers from 'pages/directory/grids/StreamMembers'
 
 export const memberDirectory = [
   {
@@ -47,6 +49,16 @@ export const memberDirectory = [
   },
 ]
 export const memberGrids = [
+  {
+    path: '/gatheringservice/members',
+    element: GatheringServiceMembers,
+    roles: ['adminFederal'],
+  },
+  {
+    path: '/stream/members',
+    element: StreamMembers,
+    roles: ['adminStream'],
+  },
   {
     path: '/council/members',
     element: CouncilMembers,

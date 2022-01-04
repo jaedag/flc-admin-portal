@@ -182,6 +182,72 @@ export const GET_GATHERING_SERVICE_MEMBERS = gql`
     }
   }
 `
+export const GET_STREAM_MEMBERS = gql`
+  query ($id: ID) {
+    streams(where: { id: $id }) {
+      id
+      name
+
+      members {
+        id
+        firstName
+        lastName
+        pictureUrl
+        stream_name
+        fellowship {
+          id
+          name
+        }
+        ministry {
+          id
+          name
+        }
+        maritalStatus {
+          status
+        }
+        gender {
+          gender
+        }
+        title {
+          title
+        }
+        leadsFellowship {
+          id
+          name
+        }
+        leadsBacenta {
+          id
+          name
+        }
+        leadsMinistry {
+          id
+          name
+        }
+        leadsSonta {
+          id
+          name
+        }
+        leadsBasonta {
+          id
+          name
+        }
+        leadsConstituency {
+          id
+          name
+        }
+
+        isAdminForCouncil {
+          id
+          name
+        }
+        isAdminForConstituency {
+          id
+          name
+        }
+      }
+    }
+  }
+`
 
 export const GET_COUNCIL_MEMBERS = gql`
   query ($id: ID) {

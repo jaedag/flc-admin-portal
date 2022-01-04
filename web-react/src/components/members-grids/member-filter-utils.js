@@ -1,4 +1,7 @@
 export const memberFilter = (memberData, filters) => {
+  if (!memberData) {
+    return
+  }
   let filteredData = memberData
 
   const filterFor = (data, field, subfield, criteria, subsubfield) => {

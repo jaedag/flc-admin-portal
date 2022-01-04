@@ -14,9 +14,9 @@ export const ConstituencyMembers = () => {
   return (
     <MembersGrid
       title={data ? `${data?.constituencies[0]?.name} Constituency` : null}
-      memberData={data?.constituencies[0]?.members}
-      memberLoading={loading}
-      memberError={error}
+      data={data?.constituencies[0]?.members}
+      loading={loading}
+      error={error}
     />
   )
 }

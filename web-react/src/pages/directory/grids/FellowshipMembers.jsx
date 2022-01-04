@@ -13,9 +13,9 @@ const FellowshipMembers = () => {
   return (
     <MembersGrid
       title={data ? `${data.fellowships[0]?.name} Fellowship Membership` : null}
-      memberData={data?.fellowships[0]?.members}
-      memberLoading={loading}
-      memberError={error}
+      data={data?.fellowships[0]?.members}
+      loading={loading}
+      error={error}
     />
   )
 }

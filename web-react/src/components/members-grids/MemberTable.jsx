@@ -11,16 +11,15 @@ import { MemberContext } from 'contexts/MemberContext.js'
 import { Container } from 'react-bootstrap'
 
 const MemberTable = (props) => {
-  const { memberData, memberError, memberLoading, offset, numberOfRecords } =
-    props
+  const { data, error, loading, offset, numberOfRecords } = props
 
   const { clickCard } = useContext(ChurchContext)
   const { theme } = useContext(MemberContext)
   const navigate = useNavigate()
 
-  const loading = memberLoading || memberError || !memberData
+  const pageLoading = loading || error || !data
 
-  if (loading) {
+  if (pageLoading) {
     return (
       <MobileView>
         <div className="member-grid">
@@ -35,13 +34,21 @@ const MemberTable = (props) => {
                     className="rounded-circle img-search-placeholder"
                     as="div"
                     xs={12}
-                    loading={loading}
+                    loading={pageLoading}
                   />
                   {/* </div> */}
 
                   <div className="flex-grow-1 ms-3">
-                    <PlaceholderCustom loading={loading} as="span" xs={12} />
-                    <PlaceholderCustom loading={loading} as="span" xs={12} />
+                    <PlaceholderCustom
+                      loading={pageLoading}
+                      as="span"
+                      xs={12}
+                    />
+                    <PlaceholderCustom
+                      loading={pageLoading}
+                      as="span"
+                      xs={12}
+                    />
                   </div>
                 </div>
               </Container>
@@ -58,7 +65,7 @@ const MemberTable = (props) => {
       <TabletDesktopView>
         <div className="container member-grid">
           <div className="row">
-            {memberData.map((soul, index) => {
+            {data.map((soul, index) => {
               if (index < offset) {
                 return null
               } else if (index >= offset + numberOfRecords - 1) {
@@ -93,7 +100,7 @@ const MemberTable = (props) => {
       {/* Mobile View */}
       <MobileView>
         <div className="member-grid">
-          {memberData.map((soul, index) => {
+          {data.map((soul, index) => {
             // if (index < offset) {
             //   return null
             // } else if (index >= offset + numberOfRecords) {

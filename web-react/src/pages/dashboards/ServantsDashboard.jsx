@@ -162,7 +162,7 @@ const ServantsDashboard = () => {
     if (servantLeader?.leadsMinistry?.length) {
       setServantRoles(servantLeader, 'Leader', 'Ministry')
     }
-    if (servant?.leadsCouncil?.length) {
+    if (servantLeader?.leadsCouncil?.length) {
       setServantRoles(servant, 'Leader', 'Council')
     }
 

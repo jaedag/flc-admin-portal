@@ -14,9 +14,9 @@ const StreamMembers = () => {
   return (
     <MembersGrid
       title={data ? `${data?.streams[0]?.name} Stream` : null}
-      memberData={data && data.streams[0].members}
-      memberLoading={loading}
-      memberError={error}
+      data={data && data.streams[0].members}
+      loading={loading}
+      error={error}
     />
   )
 }

@@ -14,9 +14,9 @@ const GatheringServiceMembers = () => {
   return (
     <MembersGrid
       title={data ? `${data?.gatheringServices[0]?.name}` : null}
-      memberData={data && data.gatheringServices[0].members}
-      memberLoading={loading}
-      memberError={error}
+      data={data && data.gatheringServices[0].members}
+      loading={loading}
+      error={error}
     />
   )
 }

@@ -97,6 +97,7 @@ export const directory = [
   {
     path: '/directory/churches',
     element: Churches,
+    roles: permitMeAndThoseAbove('Fellowship'),
   },
   // Member Display and Edit Pages
   {

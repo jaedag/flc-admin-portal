@@ -14,9 +14,9 @@ const CouncilMembers = () => {
   return (
     <MembersGrid
       title={data ? `${data?.councils[0]?.name} Council` : null}
-      memberData={data && data.councils[0].members}
-      memberLoading={loading}
-      memberError={error}
+      data={data && data.councils[0].members}
+      loading={loading}
+      error={error}
     />
   )
 }

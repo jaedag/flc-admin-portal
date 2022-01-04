@@ -1,7 +1,12 @@
 import { useLazyQuery } from '@apollo/client'
 import { MemberContext } from 'contexts/MemberContext'
 import { ErrorMessage } from 'formik'
-import { DEBOUNCE_TIMER, isAuthorised, throwErrorMsg } from 'global-utils'
+import {
+  DEBOUNCE_TIMER,
+  isAuthorised,
+  permitMeAndThoseAbove,
+  throwErrorMsg,
+} from 'global-utils'
 import React, { useContext, useEffect, useState } from 'react'
 import Autosuggest from 'react-autosuggest'
 import {
@@ -83,7 +88,9 @@ const SearchMember = (props) => {
   throwErrorMsg(error)
 
   const whichSearch = (searchString) => {
-    if (isAuthorised(['adminGatheringService'], currentUser.roles)) {
+    if (
+      isAuthorised(permitMeAndThoseAbove('GatheringService'), currentUser.roles)
+    ) {
       gatheringServiceSearch({
         variables: {
           id: currentUser.gatheringService,
@@ -91,7 +98,7 @@ const SearchMember = (props) => {
         },
       })
     } else if (
-      isAuthorised(['adminStream', 'leaderStream'], currentUser.roles)
+      isAuthorised(permitMeAndThoseAbove('Stream'), currentUser.roles)
     ) {
       streamSearch({
         variables: {
@@ -100,7 +107,7 @@ const SearchMember = (props) => {
         },
       })
     } else if (
-      isAuthorised(['adminCouncil', 'leaderCouncil'], currentUser.roles)
+      isAuthorised(permitMeAndThoseAbove('Council'), currentUser.roles)
     ) {
       councilSearch({
         variables: {
@@ -109,10 +116,7 @@ const SearchMember = (props) => {
         },
       })
     } else if (
-      isAuthorised(
-        ['adminConstituency', 'leaderConstituency'],
-        currentUser.roles
-      )
+      isAuthorised(permitMeAndThoseAbove('Constituency'), currentUser.roles)
     ) {
       constituencySearch({
         variables: {
@@ -120,14 +124,18 @@ const SearchMember = (props) => {
           key: searchString?.trim(),
         },
       })
-    } else if (isAuthorised(['leaderBacenta'], currentUser.roles)) {
+    } else if (
+      isAuthorised(permitMeAndThoseAbove('Bacenta'), currentUser.roles)
+    ) {
       bacentaSearch({
         variables: {
           id: currentUser.fellowship.bacenta.id,
           key: searchString?.trim(),
         },
       })
-    } else if (isAuthorised(['leaderFellowship'], currentUser.roles)) {
+    } else if (
+      isAuthorised(permitMeAndThoseAbove('Fellowship'), currentUser.roles)
+    ) {
       fellowshipSearch({
         variables: {
           id: currentUser.fellowship,

@@ -88,7 +88,13 @@ const SontaForm = ({ initialValues, onSubmit, title, loading, newSonta }) => {
                   <div className="col mb-2">
                     <div className="form-row row-cols-2">
                       <div className="col-10">
-                        <RoleView roles={['adminFederal', 'adminCouncil']}>
+                        <RoleView
+                          roles={[
+                            'adminFederal',
+                            'adminStream',
+                            'adminCouncil',
+                          ]}
+                        >
                           <FormikControl
                             className="form-control"
                             control="select"

@@ -77,12 +77,71 @@ export const UPDATE_MEMBER_MUTATION = gql`
     }
   }
 `
+export const UPDATE_STREAM_MUTATION = gql`
+  mutation UpdateStream(
+    $streamId: ID!
+    $name: String!
+    $gatheringServiceId: ID!
+  ) {
+    UpdateStreamDetails(
+      streamId: $streamId
+      name: $name
+      gatheringServiceId: $gatheringServiceId
+    ) {
+      id
+      name
+      councils {
+        id
+        name
+        stream {
+          id
+          name
+          gatheringService {
+            id
+            streams {
+              id
+            }
+          }
+        }
+      }
+
+      admin {
+        id
+        firstName
+        lastName
+        fellowship {
+          id
+          stream_name
+        }
+      }
+      leader {
+        id
+        firstName
+        lastName
+      }
+      history(options: { limit: 10 }) {
+        id
+        timeStamp
+        created_at {
+          date
+        }
+        loggedBy {
+          id
+          firstName
+          lastName
+        }
+        historyRecord
+      }
+    }
+  }
+`
+
 export const UPDATE_COUNCIL_MUTATION = gql`
-  mutation UpdateCouncil($councilId: ID!, $name: String!, $councilId: ID!) {
+  mutation UpdateCouncil($councilId: ID!, $name: String!, $streamId: ID!) {
     UpdateCouncilDetails(
       councilId: $councilId
       name: $name
-      councilId: $councilId
+      streamId: $streamId
     ) {
       id
       name
@@ -519,16 +578,17 @@ export const ADD_CONSTITUENCY_BACENTAS = gql`
   }
 `
 
+//Update Council Mutations
 export const ADD_COUNCIL_CONSTITUENCIES = gql`
-  mutation AddCouncilConstituencies($councilId: ID!, $constituencieId: ID!) {
+  mutation AddCouncilConstituencies($councilId: ID!, $constituencyId: ID!) {
     updateCouncils(
       where: { id: $councilId }
-      connect: { constituencies: { where: { node: { id: $constituencieId } } } }
+      connect: { constituencies: { where: { node: { id: $constituencyId } } } }
     ) {
       councils {
         id
         name
-        bacentas {
+        constituencies {
           id
         }
       }
@@ -537,9 +597,9 @@ export const ADD_COUNCIL_CONSTITUENCIES = gql`
 `
 
 export const ADD_COUNCIL_STREAM = gql`
-  mutation AddCouncilStream($council: ID!, $streamId: ID!) {
+  mutation AddCouncilStream($councilId: ID!, $streamId: ID!) {
     updateCouncils(
-      where: { id: $council }
+      where: { id: $councilId }
       connect: { stream: { where: { node: { id: $streamId } } } }
     ) {
       councils {
@@ -561,6 +621,61 @@ export const REMOVE_COUNCIL_STREAM = gql`
       disconnect: { stream: { where: { node: { id: $streamId } } } }
     ) {
       councils {
+        id
+        name
+      }
+    }
+  }
+`
+
+//Update Stream Mutations
+export const ADD_STREAM_COUNCILS = gql`
+  mutation AddStreamCouncils($streamId: ID!, $councilId: ID!) {
+    updateCouncils(
+      where: { id: $councilId }
+      connect: { councils: { where: { node: { id: $councilId } } } }
+    ) {
+      streams {
+        id
+        name
+        councils {
+          id
+        }
+      }
+    }
+  }
+`
+
+export const ADD_STREAM_GATHERINGSERVICE = gql`
+  mutation AddStreamGatheringService($streamId: ID!, $gatheringServiceId: ID!) {
+    updateStreams(
+      where: { id: $streamId }
+      connect: {
+        gatheringService: { where: { node: { id: $gatheringServiceId } } }
+      }
+    ) {
+      streams {
+        id
+        name
+        gatheringService {
+          id
+          name
+        }
+      }
+    }
+  }
+`
+
+export const REMOVE_STREAM_GATHERINGSERVICE = gql`
+  mutation RemoveStreamGatheringService(
+    $streamId: ID!
+    $gatheringServiceId: ID!
+  ) {
+    updateStreams(
+      where: { id: $streamId }
+      disconnect: { stream: { where: { node: { id: $gatheringServiceId } } } }
+    ) {
+      streams {
         id
         name
       }

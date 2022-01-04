@@ -143,7 +143,7 @@ export const reports = [
   {
     path: '/council/reports',
     element: CouncilReport,
-    roles: ['adminFederal', 'adminCouncil'],
+    roles: ['adminFederal', 'adminStream', 'adminCouncil'],
     placeholder: true,
   },
   {
@@ -163,13 +163,13 @@ export const reports = [
   {
     path: '/fellowship/service-details',
     element: FellowshipServiceDetails,
-    roles: ['adminFederal', 'adminCouncil', 'adminConstituency'],
+    roles: ['adminFederal', 'adminStream', 'adminCouncil', 'adminConstituency'],
     placeholder: true,
   },
   {
     path: '/services/fellowship/no-service',
     element: FellowshipServiceCancelled,
-    roles: ['adminFederal', 'adminCouncil', 'adminConstituency'],
+    roles: ['adminFederal', 'adminStream', 'adminCouncil', 'adminConstituency'],
     placeholder: true,
   },
   {
@@ -363,7 +363,7 @@ export const reports = [
   {
     path: '/services/council-by-constituencies',
     element: CouncilByConstituency,
-    roles: ['adminFederal', 'adminCouncil', 'leaderCouncil'],
+    roles: ['adminFederal', 'adminStream', 'adminCouncil', 'leaderCouncil'],
     placeholder: true,
   },
 ]

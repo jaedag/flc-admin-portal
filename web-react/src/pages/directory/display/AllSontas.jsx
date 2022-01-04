@@ -33,7 +33,12 @@ const DisplayAllSontas = () => {
             </div>
             {data.sontas.length < 10 && (
               <RoleView
-                roles={['adminFederal', 'adminCouncil', 'adminConstituency']}
+                roles={[
+                  'adminFederal',
+                  'adminStream',
+                  'adminCouncil',
+                  'adminConstituency',
+                ]}
               >
                 <div className="col-auto">
                   <Link

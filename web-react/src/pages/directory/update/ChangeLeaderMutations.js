@@ -196,3 +196,43 @@ export const MAKE_COUNCIL_LEADER = gql`
     }
   }
 `
+
+export const MAKE_STREAM_LEADER = gql`
+  mutation MakeStreamLeader(
+    $streamId: ID!
+    $newLeaderId: ID!
+    $oldLeaderId: ID!
+  ) {
+    RemoveStreamLeader(streamId: $streamId, leaderId: $oldLeaderId) {
+      id
+      firstName
+      lastName
+    }
+    MakeStreamLeader(streamId: $streamId, leaderId: $newLeaderId) {
+      id
+      firstName
+      lastName
+      leadsStream {
+        id
+        leader {
+          id
+          firstName
+          lastName
+        }
+        # history(options: { limit: 10 }) {
+        #   id
+        #   timeStamp
+        #   created_at {
+        #     date
+        #   }
+        #   loggedBy {
+        #     id
+        #     firstName
+        #     lastName
+        #   }
+        #   historyRecord
+        # }
+      }
+    }
+  }
+`

@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { useQuery } from '@apollo/client'
 import DisplayChurchList from '../../../components/DisplayChurchList'
-import { GET_GATHERING_SERVICE_STREAMS } from '../../../queries/ListQueries'
+import { GET_GATHERINGSERVICE_STREAMS } from '../../../queries/ListQueries'
 import { ChurchContext } from '../../../contexts/ChurchContext'
 import RoleView from '../../../auth/RoleView'
 import BaseComponent from 'components/base-component/BaseComponent'
@@ -11,7 +11,7 @@ import { Container, Row, Col, Button } from 'react-bootstrap'
 const DisplayAllStreams = () => {
   const { clickCard, gatheringServiceId } = useContext(ChurchContext)
 
-  const { data, loading, error } = useQuery(GET_GATHERING_SERVICE_STREAMS, {
+  const { data, loading, error } = useQuery(GET_GATHERINGSERVICE_STREAMS, {
     variables: { id: gatheringServiceId },
   })
 

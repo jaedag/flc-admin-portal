@@ -446,3 +446,10 @@ export const getWeekNumber = (date) => {
 
   return result
 }
+
+export const last3Weeks = () => {
+  const lastWeek = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
+  const last2Weeks = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000)
+
+  return [getWeekNumber(), getWeekNumber(lastWeek), getWeekNumber(last2Weeks)]
+}

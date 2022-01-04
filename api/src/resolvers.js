@@ -706,7 +706,7 @@ export const resolvers = {
         RemoveServant(
           context,
           args,
-          ['adminFederal', 'adminCouncil', 'adminConstituency'],
+          ['adminFederal', 'adminStream', 'adminCouncil', 'adminConstituency'],
           'Fellowship',
           'Leader'
         )
@@ -719,7 +719,7 @@ export const resolvers = {
 
     CloseDownBacenta: async (object, args, context) => {
       isAuth(
-        ['adminFederal', 'adminCouncil', 'adminConstituency'],
+        ['adminFederal', 'adminStream', 'adminCouncil', 'adminConstituency'],
         context.auth.roles
       )
 
@@ -750,7 +750,7 @@ export const resolvers = {
         RemoveServant(
           context,
           args,
-          ['adminFederal', 'adminCouncil', 'adminConstituency'],
+          ['adminFederal', 'adminStream', 'adminCouncil', 'adminConstituency'],
           'Bacenta',
           'Leader'
         )

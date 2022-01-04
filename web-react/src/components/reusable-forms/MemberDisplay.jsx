@@ -127,12 +127,14 @@ const MemberDisplay = ({ memberId }) => {
             detail={memberChurch?.fellowship?.name}
           />
         </Col>
-        <Col>
-          <DetailsCard
-            heading="Ministry"
-            detail={memberChurch?.ministry?.name}
-          />
-        </Col>
+        {memberChurch?.ministry && (
+          <Col>
+            <DetailsCard
+              heading="Ministry"
+              detail={memberChurch?.ministry?.name}
+            />
+          </Col>
+        )}
 
         {member?.titleConnection?.edges[0]?.node.title && (
           <Col sm={1} md="auto">

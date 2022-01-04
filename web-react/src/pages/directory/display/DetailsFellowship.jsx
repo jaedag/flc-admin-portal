@@ -3,7 +3,7 @@ import { useQuery } from '@apollo/client'
 import DisplayChurchDetails from '../../../components/DisplayChurchDetails/DisplayChurchDetails'
 import { DISPLAY_FELLOWSHIP, DISPLAY_FELLOWSHIP_HISTORY } from './ReadQueries'
 import { ChurchContext } from '../../../contexts/ChurchContext'
-import { getWeekNumber, throwErrorMsg } from 'global-utils'
+import { getWeekNumber, last3Weeks, throwErrorMsg } from 'global-utils'
 
 const DetailsFellowship = () => {
   const { fellowshipId } = useContext(ChurchContext)
@@ -32,13 +32,12 @@ const DetailsFellowship = () => {
     breadcrumb = [fellowship]
   }
 
-  const last3Weeks = [getWeekNumber(), getWeekNumber() - 1, getWeekNumber() - 2]
   const lastFilledServices = history?.services.map((service) => service.week)
   const lastFilledBanking = history?.services.map(
     (service) => service.bankingSlip
   )
 
-  const check = last3Weeks?.map((week, i) => {
+  const check = last3Weeks()?.map((week, i) => {
     if (lastFilledServices?.includes(week)) {
       return {
         number: week,

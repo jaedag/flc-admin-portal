@@ -35,7 +35,12 @@ const DisplaySontasByConstituency = () => {
               </Link>
             </div>
             <RoleView
-              roles={['adminFederal', 'adminCouncil', 'adminConstituency']}
+              roles={[
+                'adminFederal',
+                'adminStream',
+                'adminCouncil',
+                'adminConstituency',
+              ]}
             >
               <div className="col-auto">
                 <Link

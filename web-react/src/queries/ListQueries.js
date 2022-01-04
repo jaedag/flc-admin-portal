@@ -269,7 +269,7 @@ export const GET_STREAM_COUNCILS = gql`
   }
 `
 
-export const GET_GATHERING_SERVICE_STREAMS = gql`
+export const GET_GATHERINGSERVICE_STREAMS = gql`
   query ($id: ID) {
     gatheringServices(where: { id: $id }) {
       id

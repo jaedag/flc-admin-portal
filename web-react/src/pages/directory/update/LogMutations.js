@@ -135,11 +135,56 @@ export const LOG_COUNCIL_HISTORY = gql`
     $historyRecord: String!
     $oldLeaderId: ID
     $newLeaderId: ID
-    $oldGatheringServiceId: ID
-    $newGatheringServiceId: ID
+    $oldStreamId: ID
+    $newStreamId: ID
   ) {
     LogCouncilHistory(
       councilId: $councilId
+      historyRecord: $historyRecord
+      newLeaderId: $newLeaderId
+      oldLeaderId: $oldLeaderId
+      oldStreamId: $oldStreamId
+      newStreamId: $newStreamId
+    ) {
+      id
+      name
+      leader {
+        id
+        firstName
+        lastName
+      }
+      history(options: { limit: 10 }) {
+        id
+        timeStamp
+        created_at {
+          date
+        }
+        loggedBy {
+          id
+          firstName
+          lastName
+        }
+        historyRecord
+      }
+    }
+    ConnectChurchHistory(churchId: $councilId) {
+      id
+      historyRecord
+    }
+  }
+`
+
+export const LOG_STREAM_HISTORY = gql`
+  mutation LogStreamHistory(
+    $streamId: ID!
+    $historyRecord: String!
+    $oldLeaderId: ID
+    $newLeaderId: ID
+    $oldGatheringServiceId: ID
+    $newGatheringServiceId: ID
+  ) {
+    LogStreamHistory(
+      streamId: $streamId
       historyRecord: $historyRecord
       newLeaderId: $newLeaderId
       oldLeaderId: $oldLeaderId
@@ -167,7 +212,7 @@ export const LOG_COUNCIL_HISTORY = gql`
         historyRecord
       }
     }
-    ConnectCouncilHistory(churchId: $councilId) {
+    ConnectChurchHistory(churchId: $streamId) {
       id
       historyRecord
     }

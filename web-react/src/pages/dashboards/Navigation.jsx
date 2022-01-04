@@ -19,7 +19,7 @@ import logo from 'assets/flc-logo-red.png'
 import { useAuth0 } from '@auth0/auth0-react'
 import { GET_LOGGED_IN_USER } from 'components/UserProfileIcon/UserQueries'
 import SearchBox from 'components/SearchBox'
-import { ToggleOff, ToggleOn } from 'react-bootstrap-icons'
+import { Moon, MoonFill } from 'react-bootstrap-icons'
 
 const Navigator = () => {
   const { currentUser, theme, setTheme, setUserJobs, setCurrentUser } =
@@ -256,14 +256,14 @@ const Navigator = () => {
               <Col>
                 <div className="d-flex justify-content-center align-items-center h-100">
                   {theme === 'light' ? (
-                    <ToggleOff
+                    <Moon
                       size={30}
                       onClick={() => {
                         theme === 'light' ? setTheme('dark') : setTheme('light')
                       }}
                     />
                   ) : (
-                    <ToggleOn
+                    <MoonFill
                       size={30}
                       onClick={() => {
                         theme === 'dark' ? setTheme('light') : setTheme('dark')

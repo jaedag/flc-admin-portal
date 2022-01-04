@@ -7,7 +7,6 @@ import {
   CREATE_MEMBER_MUTATION,
 } from './CreateMutations'
 import { ChurchContext } from '../../../contexts/ChurchContext'
-import { MemberContext } from '../../../contexts/MemberContext'
 import MemberForm from '../../../components/reusable-forms/MemberForm'
 import { filterPastoralTitles } from 'components/reusable-forms/form-utils'
 
@@ -50,14 +49,12 @@ const CreateMember = () => {
   }
 
   const { clickCard } = useContext(ChurchContext)
-  const { setMemberId } = useContext(MemberContext)
 
   //All of the Hooks!
 
   const [CreateMember] = useMutation(CREATE_MEMBER_MUTATION, {
     onCompleted: (newMemberData) => {
       clickCard(newMemberData.CreateMember)
-      setMemberId(newMemberData.CreateMember.id)
     },
   })
 

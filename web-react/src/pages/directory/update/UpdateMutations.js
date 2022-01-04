@@ -64,7 +64,7 @@ export const UPDATE_MEMBER_MUTATION = gql`
       }
       titleConnection {
         edges {
-          dateAppointed
+          date
           node {
             title
           }

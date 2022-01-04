@@ -64,13 +64,26 @@ export const authorisedLink = (currentUser, permittedRoles, link) => {
 export const permitMeAndThoseAbove = (churchType) => {
   let permittedFor = []
   switch (churchType) {
+    case 'Bacenta':
+      permittedFor = [
+        'adminGatheringService',
+        'adminStream',
+        'adminCouncil',
+        'adminConstituency',
+        'leaderGatheringService',
+        'leaderStream',
+        'leaderCouncil',
+        'leaderConstituency',
+        'leaderBacenta',
+      ]
+      break
     case 'Constituency':
       permittedFor = [
         'adminGatheringService',
         'adminStream',
         'adminCouncil',
         'adminConstituency',
-        'leaderFederal',
+        'leaderGatheringService',
         'leaderStream',
         'leaderCouncil',
         'leaderConstituency',
@@ -81,7 +94,7 @@ export const permitMeAndThoseAbove = (churchType) => {
         'adminGatheringService',
         'adminStream',
         'adminCouncil',
-        'leaderFederal',
+        'leaderGatheringService',
         'leaderStream',
         'leaderCouncil',
       ]
@@ -90,12 +103,12 @@ export const permitMeAndThoseAbove = (churchType) => {
       permittedFor = [
         'adminGatheringService',
         'adminStream',
-        'leaderFederal',
+        'leaderGatheringService',
         'leaderStream',
       ]
       break
     case 'GatheringService':
-      permittedFor = ['adminGatheringService', 'leaderFederal']
+      permittedFor = ['adminGatheringService', 'leaderGatheringService']
       break
     default:
       permittedFor = []

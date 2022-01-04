@@ -4,13 +4,11 @@ import { useQuery } from '@apollo/client'
 import DisplayChurchList from '../../../components/DisplayChurchList'
 import { GET_SONTAS_BY_CONSTITUENCY } from '../../../queries/ListQueries'
 import { ChurchContext } from '../../../contexts/ChurchContext'
-import { MemberContext } from '../../../contexts/MemberContext'
 import RoleView from '../../../auth/RoleView'
 import BaseComponent from 'components/base-component/BaseComponent'
 
 const DisplaySontasByConstituency = () => {
-  const { councilId, setSontaId } = useContext(ChurchContext)
-  const { setMemberId } = useContext(MemberContext)
+  const { councilId, setConstituencyId, setSontaId } = useContext(ChurchContext)
 
   const { data, loading, error } = useQuery(GET_SONTAS_BY_CONSTITUENCY, {
     variables: { id: councilId },
@@ -25,13 +23,13 @@ const DisplaySontasByConstituency = () => {
           <div className="row justify-content-between">
             <div className="col-auto">
               <Link
-                to={`/member/displaydetails`}
+                to={`/constituency/displaydetails`}
                 onClick={() => {
-                  setMemberId(councilId)
+                  setConstituencyId(councilId)
                 }}
               >
                 {' '}
-                <h4>{`${constituencies[0].coucnil?.name}'s Sontas`}</h4>
+                <h4>{`${constituencies[0].council?.name}'s Sontas`}</h4>
               </Link>
             </div>
             <RoleView

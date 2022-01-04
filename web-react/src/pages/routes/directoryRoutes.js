@@ -41,6 +41,7 @@ import CreateStream from 'pages/directory/create/CreateStream'
 import UpdateStream from 'pages/directory/update/UpdateStream'
 import GatheringServiceMembers from 'pages/directory/grids/GatheringServiceMembers'
 import StreamMembers from 'pages/directory/grids/StreamMembers'
+import { permitMeAndThoseAbove } from 'global-utils'
 
 export const memberDirectory = [
   {
@@ -52,7 +53,7 @@ export const memberGrids = [
   {
     path: '/gatheringservice/members',
     element: GatheringServiceMembers,
-    roles: ['adminGatheringService'],
+    roles: permitMeAndThoseAbove('GatheringService'),
   },
   {
     path: '/stream/members',

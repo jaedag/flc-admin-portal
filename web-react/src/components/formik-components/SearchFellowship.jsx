@@ -72,7 +72,12 @@ const SearchFellowship = (props) => {
   throwErrorMsg(error)
 
   const whichSearch = (searchString) => {
-    if (isAuthorised(['adminGatheringService'], currentUser.roles)) {
+    if (
+      isAuthorised(
+        ['adminGatheringService', 'leaderGatheringService'],
+        currentUser.roles
+      )
+    ) {
       gatheringServiceSearch({
         variables: {
           id: currentUser.gatheringService,

@@ -50,8 +50,7 @@ const DisplayChurchDetails = (props) => {
       break
   }
 
-  const { setMemberId, theme, setCurrentUser, currentUser } =
-    useContext(MemberContext)
+  const { theme, setCurrentUser, currentUser } = useContext(MemberContext)
   const [submitting, setSubmitting] = useState(false)
   const {
     clickCard,
@@ -229,7 +228,7 @@ const DisplayChurchDetails = (props) => {
         <Link
           to="/member/displaydetails"
           onClick={() => {
-            setMemberId(props.leader?.id)
+            clickCard(props.leader)
           }}
         >
           <DetailsCard

@@ -14,8 +14,8 @@ const MemberTable = (props) => {
   const { memberData, memberError, memberLoading, offset, numberOfRecords } =
     props
 
-  const { setChurch } = useContext(ChurchContext)
-  const { theme, setMemberId } = useContext(MemberContext)
+  const { clickCard } = useContext(ChurchContext)
+  const { theme } = useContext(MemberContext)
   const navigate = useNavigate()
 
   const loading = memberLoading || memberError || !memberData
@@ -69,11 +69,7 @@ const MemberTable = (props) => {
                   <div
                     className="card grid-card fade-in"
                     onClick={() => {
-                      setMemberId(soul.id)
-                      setChurch({
-                        church: soul.stream_name,
-                        subChurch: 'bacenta',
-                      })
+                      clickCard(soul)
                       navigate('/member/displaydetails')
                     }}
                   >
@@ -109,11 +105,7 @@ const MemberTable = (props) => {
                 <div
                   className={`d-flex align-items-center card-border ${theme}`}
                   onClick={() => {
-                    setMemberId(soul.id)
-                    setChurch({
-                      church: soul.stream_name,
-                      subChurch: 'bacenta',
-                    })
+                    clickCard(soul)
                     navigate('/member/displaydetails')
                   }}
                 >

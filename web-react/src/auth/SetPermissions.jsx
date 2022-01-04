@@ -13,7 +13,12 @@ const SetPermissions = ({ children }) => {
     if (isAuthenticated && currentUser.roles[0]) {
       church.setGatheringServiceId(currentUser.gatheringService)
 
-      if (!isAuthorised(['adminGatheringService'], currentUser.roles)) {
+      if (
+        !isAuthorised(
+          ['adminGatheringService', 'leaderGatheringService'],
+          currentUser.roles
+        )
+      ) {
         //if User is not a federal admin
         church.setChurch(currentUser.church)
         church.setStreamId(currentUser.stream)

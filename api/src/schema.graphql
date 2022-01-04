@@ -129,7 +129,10 @@ extend type Bacenta @auth(rules: [{ isAuthenticated: true }])
 extend type Constituency @auth(rules: [{ isAuthenticated: true }])
 extend type Council @auth(rules: [{ isAuthenticated: true }])
 extend type Stream @auth(rules: [{ isAuthenticated: true }])
-extend type GatheringService @auth(rules: [{ isAuthenticated: true }])
+extend type GatheringService
+  @auth(
+    rules: [{ isAuthenticated: true }, { roles: ["adminGatheringService"] }]
+  )
 extend type Sonta @auth(rules: [{ isAuthenticated: true }])
 extend type Ministry @auth(rules: [{ isAuthenticated: true }])
 

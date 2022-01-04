@@ -12,6 +12,17 @@ export const FEDERAL_SEARCH = gql`
         }
       }
     }
+    federalStreamSearch(searchKey: $searchKey) {
+      id
+      name
+      stream_name
+      leader {
+        id
+        firstName
+        lastName
+        fullName
+      }
+    }
     federalCouncilSearch(searchKey: $searchKey) {
       id
       name

@@ -24,6 +24,7 @@ const SearchPageMobile = () => {
       onCompleted: (data) => {
         setCombinedData([
           ...data.federalMemberSearch,
+          ...data.federalStreamSearch,
           ...data.federalCouncilSearch,
           ...data.federalConstituencySearch,
           ...data.federalSontaSearch,

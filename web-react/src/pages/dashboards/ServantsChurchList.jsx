@@ -78,6 +78,13 @@ const ServantsChurchList = () => {
     if (servantLeader?.leadsCouncil?.length) {
       pushIntoChurch(servantLeader?.leadsCouncil)
     }
+    if (servantLeader?.leadsStream?.length) {
+      pushIntoChurch(servantLeader?.leadsStream)
+    }
+    if (servantLeader?.leadsGatheringService?.length) {
+      pushIntoChurch(servantLeader?.leadsGatheringService)
+    }
+    //Administrative
     if (servantAdmin?.isAdminForCouncil?.length) {
       pushIntoChurch(servantAdmin?.isAdminForCouncil)
     }

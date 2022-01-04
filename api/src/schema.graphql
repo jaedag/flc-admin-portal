@@ -1305,6 +1305,16 @@ type Query {
       RETURN council LIMIT 5
       """
     )
+  federalStreamSearch(searchKey: String): [Stream]
+    @auth(rules: [{ roles: ["adminFederal"] }])
+    @cypher(
+      statement: """
+      MATCH (stream:Stream)
+      WHERE toLower(stream.name) STARTS WITH toLower($searchKey)
+      OR toLower(stream.name) CONTAINS toLower($searchKey)
+      RETURN stream LIMIT 5
+      """
+    )
   councilConstituencySearch(searchKey: String, councilId: ID): [Constituency]
     @auth(rules: [{ roles: ["adminCouncil"] }])
     @cypher(

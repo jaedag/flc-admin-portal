@@ -55,7 +55,7 @@ const DisplayAllCouncils = () => {
                 </Link>
               ) : null}
             </Col>
-            <RoleView roles={['adminFederal', 'adminStream']}>
+            <RoleView roles={['adminGatheringService', 'adminStream']}>
               <Col className="col-auto">
                 <Link to="/council/addcouncil" className="btn btn-primary">
                   Add Council

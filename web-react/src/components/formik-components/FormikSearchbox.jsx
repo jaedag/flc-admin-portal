@@ -52,7 +52,7 @@ function FormikSearchbox(props) {
         ...data.federalBacentaSearch,
         ...data.federalFellowshipSearch,
       ]
-      if (currentUser.roles.includes('adminFederal')) {
+      if (currentUser.roles.includes('adminGatheringService')) {
         getSuggestions(combinedData)
       }
     },
@@ -88,7 +88,7 @@ function FormikSearchbox(props) {
   })
 
   const whichSearch = (searchString) => {
-    if (isAuthorised(['adminFederal'], currentUser.roles)) {
+    if (isAuthorised(['adminGatheringService'], currentUser.roles)) {
       federalSearch({
         variables: { searchKey: capitalise(searchString.trim()) },
       })

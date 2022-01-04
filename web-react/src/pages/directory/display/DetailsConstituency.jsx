@@ -32,7 +32,7 @@ const DetailsConstituency = () => {
         buttons={data?.constituencies[0]?.bacentas}
         buttonsSecondRow={data?.constituencies[0]?.sontas}
         editlink="/constituency/editconstituency"
-        editPermitted={['adminCouncil', 'adminFederal']}
+        editPermitted={['adminCouncil', 'adminGatheringService']}
         history={
           data?.constituencies[0]?.history.length !== 0 &&
           data?.constituencies[0]?.history

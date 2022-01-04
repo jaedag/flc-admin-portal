@@ -34,7 +34,7 @@ const DisplayAllFellowships = () => {
             </Col>
             <RoleView
               roles={[
-                'adminFederal',
+                'adminGatheringService',
                 'adminStream',
                 'adminCouncil',
                 'adminConstituency',

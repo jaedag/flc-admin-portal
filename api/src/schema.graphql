@@ -1133,7 +1133,7 @@ type Query {
 
   #Fuzzy Search
   federalMemberSearch(searchKey: String): [Member]
-    @auth(rules: [{ roles: ["adminFederal"] }])
+    @auth(rules: [{ roles: ["adminGatheringService"] }])
     @cypher(
       statement: """
       MATCH (member:Member)
@@ -1205,7 +1205,7 @@ type Query {
       """
     )
   federalFellowshipSearch(searchKey: String): [Fellowship]
-    @auth(rules: [{ roles: ["adminFederal"] }])
+    @auth(rules: [{ roles: ["adminGatheringService"] }])
     @cypher(
       statement: """
       MATCH (fellowship:Fellowship)
@@ -1250,7 +1250,7 @@ type Query {
       """
     )
   federalBacentaSearch(searchKey: String): [Bacenta]
-    @auth(rules: [{ roles: ["adminFederal"] }])
+    @auth(rules: [{ roles: ["adminGatheringService"] }])
     @cypher(
       statement: """
       MATCH (bacenta:Bacenta)
@@ -1286,7 +1286,7 @@ type Query {
       """
     )
   federalConstituencySearch(searchKey: String): [Constituency]
-    @auth(rules: [{ roles: ["adminFederal"] }])
+    @auth(rules: [{ roles: ["adminGatheringService"] }])
     @cypher(
       statement: """
       MATCH (constituency:Constituency)
@@ -1296,7 +1296,7 @@ type Query {
       """
     )
   federalCouncilSearch(searchKey: String): [Council]
-    @auth(rules: [{ roles: ["adminFederal"] }])
+    @auth(rules: [{ roles: ["adminGatheringService"] }])
     @cypher(
       statement: """
       MATCH (council:Council)
@@ -1306,7 +1306,7 @@ type Query {
       """
     )
   federalStreamSearch(searchKey: String): [Stream]
-    @auth(rules: [{ roles: ["adminFederal"] }])
+    @auth(rules: [{ roles: ["adminGatheringService"] }])
     @cypher(
       statement: """
       MATCH (stream:Stream)
@@ -1328,7 +1328,7 @@ type Query {
     )
 
   federalSontaSearch(searchKey: String): [Sonta]
-    @auth(rules: [{ roles: ["adminFederal"] }])
+    @auth(rules: [{ roles: ["adminGatheringService"] }])
     @cypher(
       statement: """
       MATCH (sonta:Sonta)
@@ -1416,7 +1416,7 @@ type Mutation {
     gatheringServiceId: ID!
     councils: [ID]
   ): Stream
-    @auth(rules: [{ roles: ["adminFederal"] }])
+    @auth(rules: [{ roles: ["adminGatheringService"] }])
     @cypher(
       statement: """
       CREATE (stream:Stream {id:apoc.create.uuid(), name:$name})
@@ -1467,7 +1467,7 @@ type Mutation {
     streamId: ID!
     constituencies: [ID]
   ): Council
-    @auth(rules: [{ roles: ["adminFederal", "adminStream"] }])
+    @auth(rules: [{ roles: ["adminGatheringService", "adminStream"] }])
     @cypher(
       statement: """
        CREATE (council:Council {id:apoc.create.uuid(), name:$name})
@@ -1518,7 +1518,11 @@ type Mutation {
     councilId: ID!
     bacentas: [ID]
   ): Constituency
-    @auth(rules: [{ roles: ["adminFederal", "adminStream", "adminCouncil"] }])
+    @auth(
+      rules: [
+        { roles: ["adminGatheringService", "adminStream", "adminCouncil"] }
+      ]
+    )
     @cypher(
       statement: """
        CREATE (constituency:Constituency {name:$name})
@@ -1573,7 +1577,7 @@ type Mutation {
       rules: [
         {
           roles: [
-            "adminFederal"
+            "adminGatheringService"
             "adminStream"
             "adminCouncil"
             "adminConstituency"
@@ -1633,7 +1637,7 @@ type Mutation {
       rules: [
         {
           roles: [
-            "adminFederal"
+            "adminGatheringService"
             "adminStream"
             "adminCouncil"
             "adminConstituency"
@@ -1689,7 +1693,7 @@ type Mutation {
       rules: [
         {
           roles: [
-            "adminFederal"
+            "adminGatheringService"
             "adminStream"
             "adminCouncil"
             "adminConstituency"
@@ -1742,7 +1746,7 @@ type Mutation {
       rules: [
         {
           roles: [
-            "adminFederal"
+            "adminGatheringService"
             "adminCouncil"
             "adminConstituency"
             "leaderFellowship"
@@ -1832,7 +1836,7 @@ type Mutation {
     name: String!
     gatheringServiceId: ID!
   ): Stream
-    @auth(rules: [{ roles: ["adminFederal"] }])
+    @auth(rules: [{ roles: ["adminGatheringService"] }])
     @cypher(
       statement: """
            MATCH (stream:Stream {id: $streamId})
@@ -1853,7 +1857,7 @@ type Mutation {
       """
     )
   UpdateCouncilDetails(councilId: ID!, name: String!, streamId: ID!): Council
-    @auth(rules: [{ roles: ["adminFederal", "adminStream"] }])
+    @auth(rules: [{ roles: ["adminGatheringService", "adminStream"] }])
     @cypher(
       statement: """
            MATCH (council:Council {id: $councilId})
@@ -1879,7 +1883,11 @@ type Mutation {
     constituencyName: String!
     councilId: ID!
   ): Constituency
-    @auth(rules: [{ roles: ["adminFederal", "adminStream", "adminCouncil"] }])
+    @auth(
+      rules: [
+        { roles: ["adminGatheringService", "adminStream", "adminCouncil"] }
+      ]
+    )
     @cypher(
       statement: """
            MATCH (constituency:Constituency {id: $constituencyId})
@@ -1908,7 +1916,7 @@ type Mutation {
       rules: [
         {
           roles: [
-            "adminFederal"
+            "adminGatheringService"
             "adminStream"
             "adminCouncil"
             "adminConstituency"
@@ -1941,7 +1949,7 @@ type Mutation {
       rules: [
         {
           roles: [
-            "adminFederal"
+            "adminGatheringService"
             "adminStream"
             "adminCouncil"
             "adminConstituency"
@@ -1971,7 +1979,7 @@ type Mutation {
       rules: [
         {
           roles: [
-            "adminFederal"
+            "adminGatheringService"
             "adminStream"
             "adminCouncil"
             "adminConstituency"

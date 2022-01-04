@@ -43,7 +43,7 @@ const DetailsSonta = () => {
           'leaderConstituency',
           'adminConstituency',
           'adminCouncil',
-          'adminFederal',
+          'adminGatheringService',
         ]}
         history={
           sontaData?.sontas[0]?.history.length !== 0 &&

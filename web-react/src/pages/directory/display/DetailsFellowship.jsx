@@ -102,7 +102,7 @@ const DetailsFellowship = () => {
       editlink="/fellowship/editfellowship"
       editPermitted={[
         'leaderFellowship',
-        'adminFederal',
+        'adminGatheringService',
         'adminCouncil',
         'adminConstituency',
       ]}

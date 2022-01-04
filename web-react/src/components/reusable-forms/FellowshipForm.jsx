@@ -103,7 +103,7 @@ const FellowshipForm = (props) => {
                     <Row className="form-row">
                       <RoleView
                         roles={[
-                          'adminFederal',
+                          'adminGatheringService',
                           'adminCouncil',
                           'adminConstituency',
                         ]}
@@ -146,7 +146,7 @@ const FellowshipForm = (props) => {
                     <Row className="form-row">
                       <RoleView
                         roles={[
-                          'adminFederal',
+                          'adminGatheringService',
                           'adminCouncil',
                           'adminConstituency',
                         ]}
@@ -184,7 +184,7 @@ const FellowshipForm = (props) => {
                       </RoleView>
                       <RoleView
                         roles={[
-                          'adminFederal',
+                          'adminGatheringService',
                           'adminCouncil',
                           'adminConstituency',
                         ]}

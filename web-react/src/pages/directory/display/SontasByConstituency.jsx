@@ -36,7 +36,7 @@ const DisplaySontasByConstituency = () => {
             </div>
             <RoleView
               roles={[
-                'adminFederal',
+                'adminGatheringService',
                 'adminStream',
                 'adminCouncil',
                 'adminConstituency',

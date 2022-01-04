@@ -60,7 +60,7 @@ const DisplayAllBacentas = () => {
             </Col>
             <RoleView
               roles={[
-                'adminFederal',
+                'adminGatheringService',
                 'adminStream',
                 'adminCouncil',
                 'adminConstituency',

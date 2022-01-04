@@ -35,15 +35,15 @@ const DisplayChurchDetails = (props) => {
   switch (props.churchType) {
     case 'Constituency':
       needsAdmin = true
-      roles = ['adminFederal', 'adminStream', 'adminCouncil']
+      roles = ['adminGatheringService', 'adminStream', 'adminCouncil']
       break
     case 'Council':
       needsAdmin = true
-      roles = ['adminFederal', 'adminStream']
+      roles = ['adminGatheringService', 'adminStream']
       break
     case 'Stream':
       needsAdmin = true
-      roles = ['adminFederal']
+      roles = ['adminGatheringService']
       break
     default:
       needsAdmin = false

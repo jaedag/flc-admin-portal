@@ -28,7 +28,7 @@ export const menuItems = [
       'leaderConstituency',
       'adminConstituency',
       'adminCouncil',
-      'adminFederal',
+      'adminGatheringService',
     ],
   },
   {
@@ -38,7 +38,7 @@ export const menuItems = [
       'leaderConstituency',
       'adminConstituency',
       'adminCouncil',
-      'adminFederal',
+      'adminGatheringService',
     ],
   },
   {
@@ -49,6 +49,6 @@ export const menuItems = [
   {
     name: 'Reconciliation',
     to: '/recon',
-    roles: ['adminFederal'],
+    roles: ['adminGatheringService'],
   },
 ]

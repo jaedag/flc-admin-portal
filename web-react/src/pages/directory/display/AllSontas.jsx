@@ -34,7 +34,7 @@ const DisplayAllSontas = () => {
             {data.sontas.length < 10 && (
               <RoleView
                 roles={[
-                  'adminFederal',
+                  'adminGatheringService',
                   'adminStream',
                   'adminCouncil',
                   'adminConstituency',

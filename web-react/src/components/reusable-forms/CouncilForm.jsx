@@ -60,7 +60,7 @@ const CouncilForm = ({ initialValues, onSubmit, title, newCouncil }) => {
                 <Row className="row-cols-1 row-cols-md-2">
                   {/* <!-- Basic Info Div --> */}
                   <Col className="mb-2">
-                    <RoleView roles={['adminFederal', 'adminStream']}>
+                    <RoleView roles={['adminGatheringService', 'adminStream']}>
                       <Row className="form-row">
                         <Col>
                           <FormikControl
@@ -84,7 +84,9 @@ const CouncilForm = ({ initialValues, onSubmit, title, newCouncil }) => {
                     />
 
                     <Row className="d-flex align-items-center mb-3">
-                      <RoleView roles={['adminFederal', 'adminStream']}>
+                      <RoleView
+                        roles={['adminGatheringService', 'adminStream']}
+                      >
                         <Col>
                           <FormikControl
                             control="memberSearch"

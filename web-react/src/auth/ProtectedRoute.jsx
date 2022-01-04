@@ -43,8 +43,7 @@ const ProtectedRoute = ({ children, roles, placeholder }) => {
   } else if (
     currentUser.roles.includes(
       'leaderGatheringService',
-      'adminGatheringService',
-      'adminFederal'
+      'adminGatheringService'
     )
   ) {
     //If the user does not have permission but is a GatheringService Leader

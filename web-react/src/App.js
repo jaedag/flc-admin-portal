@@ -390,7 +390,7 @@ const PastorsAdmin = () => {
                       element={
                         <ProtectedRouteHome
                           roles={[
-                            'adminFederal',
+                            'adminGatheringService',
                             'adminCouncil',
                             'adminConstituency',
                             'leaderFellowship',
@@ -408,7 +408,7 @@ const PastorsAdmin = () => {
                       element={
                         <ProtectedRoute
                           roles={[
-                            'adminFederal',
+                            'adminGatheringService',
                             'adminCouncil',
                             'adminConstituency',
                             'leaderFellowship',

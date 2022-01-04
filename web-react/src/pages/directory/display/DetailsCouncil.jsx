@@ -47,7 +47,7 @@ const DetailsCouncil = () => {
         details={details}
         churchCount={council?.constituencyCount}
         editlink="/council/editcouncil"
-        editPermitted={['adminFederal']}
+        editPermitted={['adminGatheringService']}
         history={council?.history.length !== 0 && council?.history}
         buttons={council ? council.constituencies : []}
         breadcrumb={breadcrumb && breadcrumb}

@@ -76,7 +76,7 @@ const ConstituencyForm = ({
                   {/* <!-- Basic Info Div --> */}
 
                   <Col className="mb-2">
-                    <RoleView roles={['adminFederal']}>
+                    <RoleView roles={['adminGatheringService']}>
                       <Row className="form-row">
                         <Col>
                           <FormikControl
@@ -102,7 +102,7 @@ const ConstituencyForm = ({
                     <Row className="d-flex align-items-center mb-3">
                       <RoleView
                         roles={[
-                          'adminFederal',
+                          'adminGatheringService',
                           'adminCouncil',
                           'adminConstituency',
                         ]}

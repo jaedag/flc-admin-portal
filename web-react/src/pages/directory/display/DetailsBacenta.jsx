@@ -37,7 +37,7 @@ const DetailsBacenta = () => {
           'leaderConstituency',
           'adminConstituency',
           'adminCouncil',
-          'adminFederal',
+          'adminGatheringService',
         ]}
         history={
           displayBacenta?.history.length !== 0 && displayBacenta?.history

@@ -72,7 +72,12 @@ const ServantsDashboard = () => {
         },
         link: authorisedLink(
           currentUser,
-          ['adminFederal', 'adminStream', 'adminCouncil', 'leaderBishop'],
+          [
+            'adminGatheringService',
+            'adminStream',
+            'adminCouncil',
+            'leaderBishop',
+          ],
           '/dashboard'
         ),
       })
@@ -89,7 +94,7 @@ const ServantsDashboard = () => {
         },
         link: authorisedLink(
           currentUser,
-          ['adminFederal', 'adminStream', 'adminCouncil'],
+          ['adminGatheringService', 'adminStream', 'adminCouncil'],
           '/dashboard'
         ),
       })
@@ -107,7 +112,12 @@ const ServantsDashboard = () => {
         },
         link: authorisedLink(
           currentUser,
-          ['adminFederal', 'adminStream', 'adminCouncil', 'adminConstituency'],
+          [
+            'adminGatheringService',
+            'adminStream',
+            'adminCouncil',
+            'adminConstituency',
+          ],
           adminsOneChurch
             ? `/${churchType.toLowerCase()}/displaydetails`
             : `/servants/${churchType.toLowerCase()}-list`

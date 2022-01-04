@@ -86,7 +86,7 @@ const BacentaForm = ({ initialValues, onSubmit, title, newBacenta }) => {
                     <Row className="d-flex align-items-center mb-3">
                       <RoleView
                         roles={[
-                          'adminFederal',
+                          'adminGatheringService',
                           'adminCouncil',
                           'adminConstituency',
                           'leaderConstituency',

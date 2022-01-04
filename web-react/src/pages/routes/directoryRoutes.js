@@ -52,7 +52,7 @@ export const memberGrids = [
   {
     path: '/gatheringservice/members',
     element: GatheringServiceMembers,
-    roles: ['adminFederal'],
+    roles: ['adminGatheringService'],
   },
   {
     path: '/stream/members',
@@ -62,24 +62,34 @@ export const memberGrids = [
   {
     path: '/council/members',
     element: CouncilMembers,
-    roles: ['adminFederal', 'adminStream', 'adminCouncil'],
+    roles: ['adminGatheringService', 'adminStream', 'adminCouncil'],
   },
   {
     path: '/constituency/members',
     element: ConstituencyMembers,
-    roles: ['adminFederal', 'adminStream', 'adminCouncil', 'adminConstituency'],
+    roles: [
+      'adminGatheringService',
+      'adminStream',
+      'adminCouncil',
+      'adminConstituency',
+    ],
   },
 
   {
     path: '/bacenta/members',
     element: BacentaMembers,
-    roles: ['adminFederal', 'adminStream', 'adminCouncil', 'adminConstituency'],
+    roles: [
+      'adminGatheringService',
+      'adminStream',
+      'adminCouncil',
+      'adminConstituency',
+    ],
   },
   {
     path: '/fellowship/members',
     element: FellowshipMembers,
     roles: [
-      'adminFederal',
+      'adminGatheringService',
       'adminCouncil',
       'adminConstituency',
       'leaderFellowship',
@@ -89,7 +99,7 @@ export const memberGrids = [
     path: '/sonta/members',
     element: SontaMembers,
     roles: [
-      'adminFederal',
+      'adminGatheringService',
       'adminStream',
       'adminCouncil',
       'adminConstituency',
@@ -131,7 +141,7 @@ export const directory = [
     path: '/member/addmember',
     element: CreateMember,
     roles: [
-      'adminFederal',
+      'adminGatheringService',
       'adminCouncil',
       'adminConstituency',
       'leaderConstituency',
@@ -144,7 +154,7 @@ export const directory = [
     path: '/member/editmember',
     element: UpdateMember,
     roles: [
-      'adminFederal',
+      'adminGatheringService',
       'adminCouncil',
       'adminConstituency',
       'leaderBacenta',
@@ -178,7 +188,7 @@ export const directory = [
     path: '/constituency/displaydetails',
     element: DetailsConstituency,
     roles: [
-      'adminFederal',
+      'adminGatheringService',
       'adminCouncil',
       'adminConstituency',
       'leaderCouncil',
@@ -190,25 +200,30 @@ export const directory = [
   {
     path: '/council/displaydetails',
     element: DetailsCouncil,
-    roles: ['adminFederal', 'adminStream', 'adminCouncil', 'leaderCouncil'],
+    roles: [
+      'adminGatheringService',
+      'adminStream',
+      'adminCouncil',
+      'leaderCouncil',
+    ],
     placeholder: true,
   },
   {
     path: '/stream/displaydetails',
     element: DetailsStream,
-    roles: ['adminFederal', 'adminStream'],
+    roles: ['adminGatheringService', 'adminStream'],
     placeholder: false,
   },
   {
     path: '/gatheringservice/displaydetails',
     element: DetailsGatheringService,
-    roles: ['adminFederal'],
+    roles: ['adminGatheringService'],
     placeholder: false,
   },
   {
     path: '/gatheringservice/constituencies',
     element: GatheringServiceConstituencies,
-    roles: ['adminFederal'],
+    roles: ['adminGatheringService'],
     placeholder: false,
   },
   {
@@ -241,7 +256,7 @@ export const directory = [
   {
     path: '/constituency/displayall',
     element: DisplayAllConstituencies,
-    roles: ['adminFederal', 'adminStream', 'adminCouncil'],
+    roles: ['adminGatheringService', 'adminStream', 'adminCouncil'],
     placeholder: false,
   },
 
@@ -254,13 +269,13 @@ export const directory = [
   {
     path: '/council/displayall',
     element: DisplayAllCouncils,
-    roles: ['adminFederal', 'adminStream'],
+    roles: ['adminGatheringService', 'adminStream'],
     placeholder: false,
   },
   {
     path: '/stream/displayall',
     element: DisplayAllStreams,
-    roles: ['adminFederal'],
+    roles: ['adminGatheringService'],
     placeholder: false,
   },
 
@@ -268,37 +283,52 @@ export const directory = [
   {
     path: '/fellowship/addfellowship',
     element: CreateFellowship,
-    roles: ['adminFederal', 'adminStream', 'adminCouncil', 'adminConstituency'],
+    roles: [
+      'adminGatheringService',
+      'adminStream',
+      'adminCouncil',
+      'adminConstituency',
+    ],
     placeholder: false,
   },
   {
     path: '/bacenta/addbacenta',
     element: CreateBacenta,
-    roles: ['adminFederal', 'adminStream', 'adminCouncil', 'adminConstituency'],
+    roles: [
+      'adminGatheringService',
+      'adminStream',
+      'adminCouncil',
+      'adminConstituency',
+    ],
     placeholder: false,
   },
   {
     path: '/sonta/addsonta',
     element: CreateSonta,
-    roles: ['adminFederal', 'adminStream', 'adminCouncil', 'adminConstituency'],
+    roles: [
+      'adminGatheringService',
+      'adminStream',
+      'adminCouncil',
+      'adminConstituency',
+    ],
     placeholder: false,
   },
   {
     path: '/constituency/addconstituency',
     element: CreateConstituency,
-    roles: ['adminFederal', 'adminStream', 'adminCouncil'],
+    roles: ['adminGatheringService', 'adminStream', 'adminCouncil'],
     placeholder: false,
   },
   {
     path: '/council/addcouncil',
     element: CreateCouncil,
-    roles: ['adminFederal', 'adminStream'],
+    roles: ['adminGatheringService', 'adminStream'],
     placeholder: false,
   },
   {
     path: '/stream/addstream',
     element: CreateStream,
-    roles: ['adminFederal'],
+    roles: ['adminGatheringService'],
     placeholder: false,
   },
 
@@ -306,37 +336,52 @@ export const directory = [
   {
     path: '/fellowship/editfellowship',
     element: UpdateFellowship,
-    roles: ['adminFederal', 'adminStream', 'adminCouncil', 'adminConstituency'],
+    roles: [
+      'adminGatheringService',
+      'adminStream',
+      'adminCouncil',
+      'adminConstituency',
+    ],
     placeholder: false,
   },
   {
     path: '/bacenta/editbacenta',
     element: UpdateBacenta,
-    roles: ['adminFederal', 'adminStream', 'adminCouncil', 'adminConstituency'],
+    roles: [
+      'adminGatheringService',
+      'adminStream',
+      'adminCouncil',
+      'adminConstituency',
+    ],
     placeholder: false,
   },
   {
     path: '/sonta/editsonta',
     element: UpdateSonta,
-    roles: ['adminFederal', 'adminStream', 'adminCouncil', 'adminConstituency'],
+    roles: [
+      'adminGatheringService',
+      'adminStream',
+      'adminCouncil',
+      'adminConstituency',
+    ],
     placeholder: false,
   },
   {
     path: '/constituency/editconstituency',
     element: UpdateConstituency,
-    roles: ['adminFederal', 'adminStream', 'adminCouncil'],
+    roles: ['adminGatheringService', 'adminStream', 'adminCouncil'],
     placeholder: false,
   },
   {
     path: '/council/editcouncil',
     element: UpdateCouncil,
-    roles: ['adminFederal', 'adminStream'],
+    roles: ['adminGatheringService', 'adminStream'],
     placeholder: false,
   },
   {
     path: '/stream/editstream',
     element: UpdateStream,
-    roles: ['adminFederal'],
+    roles: ['adminGatheringService'],
     placeholder: false,
   },
 ]

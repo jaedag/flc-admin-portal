@@ -44,7 +44,9 @@ const DisplayAllConstituencies = () => {
                 </Link>
               ) : null}
             </Col>
-            <RoleView roles={['adminFederal', 'adminStream', 'adminCouncil']}>
+            <RoleView
+              roles={['adminGatheringService', 'adminStream', 'adminCouncil']}
+            >
               <Col className="col-auto">
                 <Link
                   to="/constituency/addconstituency"

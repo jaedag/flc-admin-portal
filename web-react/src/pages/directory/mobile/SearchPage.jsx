@@ -99,7 +99,7 @@ const SearchPageMobile = () => {
     fellowshipLoading
 
   const whichSearch = (searchString) => {
-    if (isAuthorised(['adminFederal'], currentUser.roles)) {
+    if (isAuthorised(['adminGatheringService'], currentUser.roles)) {
       federalSearch({
         variables: { searchKey: searchString?.trim() },
       })

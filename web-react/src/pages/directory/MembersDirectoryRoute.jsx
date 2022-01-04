@@ -17,7 +17,10 @@ const MembersDirectoryRoute = ({ children, roles }) => {
     //if the user has permission to access the route
     return children
   } else if (
-    isAuthorised(['adminFederal', 'leaderGatheringService'], currentUser.roles)
+    isAuthorised(
+      ['adminGatheringService', 'leaderGatheringService'],
+      currentUser.roles
+    )
   ) {
     //if the user does not have permission but is a Bishop's Admin
     return <GatheringServiceMembers />

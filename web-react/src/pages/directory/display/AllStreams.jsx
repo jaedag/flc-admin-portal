@@ -57,7 +57,7 @@ const DisplayAllStreams = () => {
                 </Link>
               ) : null}
             </Col>
-            <RoleView roles={['adminFederal', 'adminStream']}>
+            <RoleView roles={['adminGatheringService', 'adminStream']}>
               <Col className="col-auto">
                 <Link to="/stream/addstream" className="btn btn-primary">
                   Add Stream

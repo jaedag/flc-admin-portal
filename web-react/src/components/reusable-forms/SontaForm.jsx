@@ -90,7 +90,7 @@ const SontaForm = ({ initialValues, onSubmit, title, loading, newSonta }) => {
                       <div className="col-10">
                         <RoleView
                           roles={[
-                            'adminFederal',
+                            'adminGatheringService',
                             'adminStream',
                             'adminCouncil',
                           ]}

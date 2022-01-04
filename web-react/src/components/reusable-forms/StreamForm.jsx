@@ -59,7 +59,7 @@ const StreamForm = ({ initialValues, onSubmit, title, newStream }) => {
                 <Row className="row-cols-1 row-cols-md-2">
                   {/* <!-- Basic Info Div --> */}
                   <Col className="mb-2">
-                    <RoleView roles={['adminFederal', 'adminGatheringService']}>
+                    <RoleView roles={['adminGatheringService']}>
                       <Row className="form-row">
                         <Col>
                           <FormikControl
@@ -83,7 +83,7 @@ const StreamForm = ({ initialValues, onSubmit, title, newStream }) => {
                     />
 
                     <Row className="d-flex align-items-center mb-3">
-                      <RoleView roles={['adminFederal']}>
+                      <RoleView roles={['adminGatheringService']}>
                         <Col>
                           <FormikControl
                             control="memberSearch"

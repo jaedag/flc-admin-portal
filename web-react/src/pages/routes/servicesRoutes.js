@@ -55,7 +55,7 @@ export const services = [
       'adminCouncil',
       'adminConstituency',
 
-      'adminFederal',
+      'adminGatheringService',
       'leaderBacenta',
     ],
     placeholder: true,
@@ -66,7 +66,7 @@ export const services = [
     roles: [
       'adminCouncil',
       'adminConstituency',
-      'adminFederal',
+      'adminGatheringService',
       'leaderConstituency',
     ],
     placeholder: true,
@@ -91,7 +91,7 @@ export const reports = [
     path: '/fellowship/reports',
     element: FellowshipReport,
     roles: [
-      'adminFederal',
+      'adminGatheringService',
       'adminCouncil',
       'adminConstituency',
 
@@ -105,7 +105,7 @@ export const reports = [
     path: '/bacenta/reports',
     element: BacentaReport,
     roles: [
-      'adminFederal',
+      'adminGatheringService',
       'adminCouncil',
       'adminConstituency',
 
@@ -119,7 +119,7 @@ export const reports = [
     path: '/sonta/reports',
     element: SontaReport,
     roles: [
-      'adminFederal',
+      'adminGatheringService',
       'adminCouncil',
       'adminConstituency',
       'leaderBacenta',
@@ -132,7 +132,7 @@ export const reports = [
     path: '/constituency/reports',
     element: ConstituencyReport,
     roles: [
-      'adminFederal',
+      'adminGatheringService',
       'adminCouncil',
       'adminConstituency',
       'leaderConstituency',
@@ -143,19 +143,19 @@ export const reports = [
   {
     path: '/council/reports',
     element: CouncilReport,
-    roles: ['adminFederal', 'adminStream', 'adminCouncil'],
+    roles: ['adminGatheringService', 'adminStream', 'adminCouncil'],
     placeholder: true,
   },
   {
     path: '/stream/reports',
     element: StreamReport,
-    roles: ['adminFederal', 'adminStream'],
+    roles: ['adminGatheringService', 'adminStream'],
     placeholder: true,
   },
   {
     path: '/gatheringservice/reports',
     element: GatheringServiceReport,
-    roles: ['adminFederal'],
+    roles: ['adminGatheringService'],
     placeholder: true,
   },
 
@@ -163,20 +163,30 @@ export const reports = [
   {
     path: '/fellowship/service-details',
     element: FellowshipServiceDetails,
-    roles: ['adminFederal', 'adminStream', 'adminCouncil', 'adminConstituency'],
+    roles: [
+      'adminGatheringService',
+      'adminStream',
+      'adminCouncil',
+      'adminConstituency',
+    ],
     placeholder: true,
   },
   {
     path: '/services/fellowship/no-service',
     element: FellowshipServiceCancelled,
-    roles: ['adminFederal', 'adminStream', 'adminCouncil', 'adminConstituency'],
+    roles: [
+      'adminGatheringService',
+      'adminStream',
+      'adminCouncil',
+      'adminConstituency',
+    ],
     placeholder: true,
   },
   {
     path: '/services/fellowship/form',
     element: FellowshipService,
     roles: [
-      'adminFederal',
+      'adminGatheringService',
       'adminCouncil',
       'adminConstituency',
 
@@ -188,7 +198,7 @@ export const reports = [
     path: '/fellowship/record-service',
     element: FellowshipService,
     roles: [
-      'adminFederal',
+      'adminGatheringService',
       'adminCouncil',
       'adminConstituency',
 
@@ -201,7 +211,7 @@ export const reports = [
     path: '/services/constituency-joint/form',
     element: ConstituencyService,
     roles: [
-      'adminFederal',
+      'adminGatheringService',
       'adminCouncil',
       'adminConstituency',
       'leaderConstituency',
@@ -212,7 +222,7 @@ export const reports = [
     path: '/bacenta/record-service',
     element: BacentaService,
     roles: [
-      'adminFederal',
+      'adminGatheringService',
       'adminCouncil',
       'adminConstituency',
 
@@ -226,7 +236,7 @@ export const reports = [
     path: '/sonta/record-service',
     element: SontaService,
     roles: [
-      'adminFederal',
+      'adminGatheringService',
       'adminCouncil',
       'adminConstituency',
 
@@ -240,7 +250,7 @@ export const reports = [
     path: '/sonta/service-details',
     element: SontaServiceDetails,
     roles: [
-      'adminFederal',
+      'adminGatheringService',
       'adminCouncil',
       'adminConstituency',
 
@@ -256,7 +266,7 @@ export const reports = [
     path: '/bacenta/service-details',
     element: BacentaServiceDetails,
     roles: [
-      'adminFederal',
+      'adminGatheringService',
       'adminCouncil',
       'adminConstituency',
 
@@ -272,7 +282,7 @@ export const reports = [
     path: '/constituency/record-service',
     element: ConstituencyService,
     roles: [
-      'adminFederal',
+      'adminGatheringService',
       'adminCouncil',
       'adminConstituency',
       'leaderConstituency',
@@ -283,7 +293,7 @@ export const reports = [
     path: '/constituency/service-details',
     element: ConstituencyServiceDetails,
     roles: [
-      'adminFederal',
+      'adminGatheringService',
       'adminCouncil',
       'adminConstituency',
       'leaderConstituency',
@@ -296,7 +306,7 @@ export const reports = [
     path: '/services/defaulters',
     element: Defaulters,
     roles: [
-      'adminFederal',
+      'adminGatheringService',
       'adminCouncil',
       'adminConstituency',
       'leaderConstituency',
@@ -307,7 +317,7 @@ export const reports = [
     path: '/services/form-defaulters',
     element: FormDefaulters,
     roles: [
-      'adminFederal',
+      'adminGatheringService',
       'adminCouncil',
       'adminConstituency',
       'leaderConstituency',
@@ -318,7 +328,7 @@ export const reports = [
     path: '/services/banking-defaulters',
     element: BankingDefaulters,
     roles: [
-      'adminFederal',
+      'adminGatheringService',
       'adminCouncil',
       'adminConstituency',
       'leaderConstituency',
@@ -329,7 +339,7 @@ export const reports = [
     path: '/services/banked',
     element: Banked,
     roles: [
-      'adminFederal',
+      'adminGatheringService',
       'adminCouncil',
       'adminConstituency',
       'leaderConstituency',
@@ -340,7 +350,7 @@ export const reports = [
     path: '/services/filled-services',
     element: ServicesThisWeek,
     roles: [
-      'adminFederal',
+      'adminGatheringService',
       'adminCouncil',
       'adminConstituency',
       'leaderConstituency',
@@ -351,7 +361,7 @@ export const reports = [
     path: '/services/cancelled-services',
     element: CancelledServicesThisWeek,
     roles: [
-      'adminFederal',
+      'adminGatheringService',
       'adminCouncil',
       'adminConstituency',
       'leaderConstituency',
@@ -363,7 +373,12 @@ export const reports = [
   {
     path: '/services/council-by-constituencies',
     element: CouncilByConstituency,
-    roles: ['adminFederal', 'adminStream', 'adminCouncil', 'leaderCouncil'],
+    roles: [
+      'adminGatheringService',
+      'adminStream',
+      'adminCouncil',
+      'leaderCouncil',
+    ],
     placeholder: true,
   },
 ]

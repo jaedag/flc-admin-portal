@@ -49,7 +49,7 @@ const DetailsStream = () => {
         membership={stream?.memberCount}
         details={details}
         editlink="/stream/editstream"
-        editPermitted={['adminFederal']}
+        editPermitted={['adminGatheringService']}
         history={stream?.history.length !== 0 && stream?.history}
         buttons={stream?.councils ?? []}
         breadcrumb={breadcrumb && breadcrumb}

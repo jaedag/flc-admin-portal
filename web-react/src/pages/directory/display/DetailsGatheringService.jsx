@@ -52,7 +52,7 @@ const DetailsGatheringService = () => {
         details={details}
         churchCount={gathering?.streamCount}
         editlink="/stream/editstream"
-        editPermitted={['adminFederal']}
+        editPermitted={['adminGatheringService']}
         history={gathering?.history.length !== 0 && gathering?.history}
         buttons={gathering?.streams ?? []}
         breadcrumb={breadcrumb && breadcrumb}

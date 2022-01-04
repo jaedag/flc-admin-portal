@@ -66,7 +66,7 @@ export const permitMeAndThoseAbove = (churchType) => {
   switch (churchType) {
     case 'Constituency':
       permittedFor = [
-        'adminFederal',
+        'adminGatheringService',
         'adminStream',
         'adminCouncil',
         'adminConstituency',
@@ -78,7 +78,7 @@ export const permitMeAndThoseAbove = (churchType) => {
       break
     case 'Council':
       permittedFor = [
-        'adminFederal',
+        'adminGatheringService',
         'adminStream',
         'adminCouncil',
         'leaderFederal',
@@ -88,14 +88,14 @@ export const permitMeAndThoseAbove = (churchType) => {
       break
     case 'Stream':
       permittedFor = [
-        'adminFederal',
+        'adminGatheringService',
         'adminStream',
         'leaderFederal',
         'leaderStream',
       ]
       break
     case 'GatheringService':
-      permittedFor = ['adminFederal', 'leaderFederal']
+      permittedFor = ['adminGatheringService', 'leaderFederal']
       break
     default:
       permittedFor = []

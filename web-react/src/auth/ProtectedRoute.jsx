@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom'
 import { useAuth0 } from '@auth0/auth0-react'
 import { MemberContext } from '../contexts/MemberContext'
 import { ChurchContext } from '../contexts/ChurchContext'
-import { isAuthorised } from '../global-utils'
+import { isAuthorised, permitMeAndThoseAbove } from '../global-utils'
 import { UnauthMsg } from './UnauthMsg'
 import LoadingScreen from 'components/base-component/LoadingScreen'
 
@@ -21,33 +21,36 @@ const ProtectedRoute = ({ children, roles, placeholder }) => {
   }
 
   if (placeholder && isAuthenticated) {
-    if (currentUser.roles.includes('leaderFellowship')) {
+    if (isAuthorised(permitMeAndThoseAbove('Fellowship'), currentUser.roles)) {
       //If the user does not have permission but is a Fellowship Leader
       church.setFellowshipId(currentUser.fellowship)
       return children
-    } else if (currentUser.roles.includes('leaderBacenta')) {
+    } else if (
+      isAuthorised(permitMeAndThoseAbove('Bacenta'), currentUser.roles)
+    ) {
       //If the user does not have permission but is a Bacenta Leader
       church.setBacentaId(currentUser.bacenta)
       return children
     } else if (
-      currentUser.roles.includes('leaderConstituency', 'adminConstituency')
+      isAuthorised(permitMeAndThoseAbove('Constituency'), currentUser.roles)
     ) {
       //If the user does not have permission but is a Constituency Leader
       church.setConstituencyId(currentUser.constituency)
       return children
-    } else if (currentUser.roles.includes('leaderCouncil', 'adminCouncil')) {
+    } else if (
+      isAuthorised(permitMeAndThoseAbove('Council'), currentUser.roles)
+    ) {
       //If the user does not have permission but is a Council Leader
       church.setCouncilId(currentUser.council)
       return children
-    } else if (currentUser.roles.includes('leaderStream', 'adminStream')) {
+    } else if (
+      isAuthorised(permitMeAndThoseAbove('Stream'), currentUser.roles)
+    ) {
       //If the user does not have permission but is a Stream Leader
       church.setStreamId(currentUser.stream)
       return children
     } else if (
-      currentUser.roles.includes(
-        'leaderGatheringService',
-        'adminGatheringService'
-      )
+      isAuthorised(permitMeAndThoseAbove('GatheringService'), currentUser.roles)
     ) {
       //If the user does not have permission but is a GatheringService Leader
       church.setGatheringServiceId(currentUser.gatheringService)

@@ -125,6 +125,8 @@ export const COUNCIL_SEARCH = gql`
     }
     councilMemberSearch(searchKey: $searchKey, councilId: $councilId) {
       id
+      firstName
+      lastName
       fullName
       pictureUrl
       stream_name
@@ -180,6 +182,8 @@ export const CONSTITUENCY_SEARCH = gql`
       constituencyId: $constituencyId
     ) {
       id
+      firstName
+      lastName
       fullName
       pictureUrl
       stream_name
@@ -209,6 +213,8 @@ export const BACENTA_SEARCH = gql`
     }
     bacentaMemberSearch(searchKey: $searchKey, bacentaId: $bacentaId) {
       id
+      firstName
+      lastName
       fullName
       pictureUrl
       stream_name
@@ -228,6 +234,8 @@ export const FELLOWSHIP_SEARCH = gql`
   query fellowshipSearch($searchKey: String, $fellowshipId: ID) {
     fellowshipMemberSearch(searchKey: $searchKey, fellowshipId: $fellowshipId) {
       id
+      firstName
+      lastName
       fullName
       pictureUrl
       stream_name

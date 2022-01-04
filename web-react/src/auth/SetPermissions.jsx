@@ -1,7 +1,7 @@
 import { useAuth0 } from '@auth0/auth0-react'
 import { ChurchContext } from 'contexts/ChurchContext'
 import { MemberContext } from 'contexts/MemberContext'
-import { isAuthorised } from 'global-utils'
+import { isAuthorised, permitMeAndThoseAbove } from 'global-utils'
 import React, { useContext, useEffect } from 'react'
 
 const SetPermissions = ({ children }) => {
@@ -15,25 +15,26 @@ const SetPermissions = ({ children }) => {
 
       if (
         !isAuthorised(
-          ['adminGatheringService', 'leaderGatheringService'],
+          permitMeAndThoseAbove('GatheringService'),
           currentUser.roles
         )
       ) {
         //if User is not a federal admin
         church.setChurch(currentUser.church)
         church.setStreamId(currentUser.stream)
-        if (!isAuthorised(['adminStream', 'leaderStream'], currentUser.roles)) {
+
+        if (!isAuthorised(permitMeAndThoseAbove('Stream'), currentUser.roles)) {
           //User is not at the Stream Level
           church.setCouncilId(currentUser.council)
           if (
-            !isAuthorised(['adminCouncil', 'leaderCouncil'], currentUser.roles)
+            !isAuthorised(permitMeAndThoseAbove('Council'), currentUser.roles)
           ) {
             //User is not at the Council Level
             church.setConstituencyId(currentUser.constituency)
 
             if (
               !isAuthorised(
-                ['adminConstituency', 'leaderConstituency'],
+                permitMeAndThoseAbove('Constituency'),
                 currentUser.roles
               )
             ) {
@@ -49,6 +50,7 @@ const SetPermissions = ({ children }) => {
         }
       }
     }
+
     // eslint-disable-next-line
   }, [isAuthenticated, currentUser])
 

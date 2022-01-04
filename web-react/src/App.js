@@ -109,12 +109,12 @@ const PastorsAdmin = () => {
     //Setting the Bacenta for the different levels under Bacenta
     switch (card.__typename) {
       case 'Fellowship':
-        setCouncilId(card?.bacenta?.id)
-        sessionStorage.setItem('councilId', card?.bacenta?.id)
+        setBacentaId(card?.bacenta?.id)
+        sessionStorage.setItem('bacentaId', card?.bacenta?.id)
         break
       case 'Bacenta':
-        setCouncilId(card?.id)
-        sessionStorage.setItem('councilId', card?.id)
+        setBacentaId(card?.id)
+        sessionStorage.setItem('bacentaId', card?.id)
         break
       default:
         break
@@ -123,16 +123,19 @@ const PastorsAdmin = () => {
     //Setting the Constituency for the different levels under Constituency
     switch (card.__typename) {
       case 'Fellowship':
-        setCouncilId(card?.bacenta?.constituency?.id)
-        sessionStorage.setItem('councilId', card?.bacenta?.constituency?.id)
+        setConstituencyId(card?.bacenta?.constituency?.id)
+        sessionStorage.setItem(
+          'constituencyId',
+          card?.bacenta?.constituency?.id
+        )
         break
       case 'Bacenta':
-        setCouncilId(card?.constituency?.id)
-        sessionStorage.setItem('councilId', card?.constituency?.id)
+        setConstituencyId(card?.constituency?.id)
+        sessionStorage.setItem('constituencyId', card?.constituency?.id)
         break
       case 'Constituency':
-        setCouncilId(card?.id)
-        sessionStorage.setItem('councilId', card?.id)
+        setConstituencyId(card?.id)
+        sessionStorage.setItem('constituencyId', card?.id)
         break
       default:
         break
@@ -166,26 +169,26 @@ const PastorsAdmin = () => {
     //Setting the Stream for the different levels under Stream
     switch (card.__typename) {
       case 'Fellowship':
-        setCouncilId(card?.bacenta?.constituency?.council?.stream?.id)
+        setStreamId(card?.bacenta?.constituency?.council?.stream?.id)
         sessionStorage.setItem(
-          'councilId',
+          'streamId',
           card?.bacenta?.constituency?.council?.stream?.id
         )
         break
       case 'Bacenta':
-        setCouncilId(card?.constituency?.council?.stream?.id)
+        setStreamId(card?.constituency?.council?.stream?.id)
         sessionStorage.setItem(
-          'councilId',
+          'streamId',
           card?.constituency?.council?.stream?.id
         )
         break
       case 'Constituency':
-        setCouncilId(card?.council?.stream?.id)
-        sessionStorage.setItem('councilId', card?.council?.stream?.id)
+        setStreamId(card?.council?.stream?.id)
+        sessionStorage.setItem('streamId', card?.council?.stream?.id)
         break
       case 'Council':
-        setCouncilId(card?.stream?.id)
-        sessionStorage.setItem('councilId', card?.stream?.id)
+        setStreamId(card?.stream?.id)
+        sessionStorage.setItem('streamId', card?.stream?.id)
         break
       case 'Stream':
         setStreamId(card.id)
@@ -198,39 +201,44 @@ const PastorsAdmin = () => {
     //Setting the GatheringService for the different levels under GatheringService
     switch (card.__typename) {
       case 'Fellowship':
-        setCouncilId(
+        setGatheringServiceId(
           card?.bacenta?.constituency?.council?.stream?.gatheringService?.id
         )
         sessionStorage.setItem(
-          'councilId',
+          'gatheringServiceId',
           card?.bacenta?.constituency?.council?.stream?.gatheringService?.id
         )
         break
       case 'Bacenta':
-        setCouncilId(card?.constituency?.council?.stream?.gatheringService?.id)
+        setGatheringServiceId(
+          card?.constituency?.council?.stream?.gatheringService?.id
+        )
         sessionStorage.setItem(
-          'councilId',
+          'gatheringServiceId',
           card?.constituency?.council?.stream?.gatheringService?.id
         )
         break
       case 'Constituency':
-        setCouncilId(card?.council?.stream?.gatheringService?.id)
+        setGatheringServiceId(card?.council?.stream?.gatheringService?.id)
         sessionStorage.setItem(
-          'councilId',
+          'gatheringServiceId',
           card?.council?.stream?.gatheringService?.id
         )
         break
       case 'Council':
-        setCouncilId(card?.stream?.gatheringService?.id)
-        sessionStorage.setItem('councilId', card?.stream?.gatheringService?.id)
+        setGatheringServiceId(card?.stream?.gatheringService?.id)
+        sessionStorage.setItem(
+          'gatheringServiceId',
+          card?.stream?.gatheringService?.id
+        )
         break
       case 'Stream':
-        setStreamId(card?.gatheringService?.id)
-        sessionStorage.setItem('streamId', card?.gatheringService?.id)
+        setGatheringServiceId(card?.gatheringService?.id)
+        sessionStorage.setItem('gatheringServiceId', card?.gatheringService?.id)
         break
       case 'GatheringService':
-        setStreamId(card?.id)
-        sessionStorage.setItem('streamId', card?.id)
+        setGatheringServiceId(card?.id)
+        sessionStorage.setItem('gatheringServiceId', card?.id)
         break
       default:
         break

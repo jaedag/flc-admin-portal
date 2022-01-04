@@ -396,6 +396,10 @@ export const DISPLAY_COUNCIL = gql`
         id
         name
         stream_name
+
+        council {
+          id
+        }
       }
 
       admin {
@@ -410,9 +414,6 @@ export const DISPLAY_COUNCIL = gql`
             constituency {
               id
               name
-              bishop {
-                id
-              }
             }
           }
         }

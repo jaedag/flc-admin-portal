@@ -1,10 +1,11 @@
 import { useQuery } from '@apollo/client'
 import { FieldArray, Form, Formik } from 'formik'
 import * as Yup from 'yup'
-import React from 'react'
+import React, { useContext } from 'react'
 import RoleView from '../../auth/RoleView'
 import {
   GENDER_OPTIONS,
+  isAuthorised,
   makeSelectOptions,
   MARITAL_STATUS_OPTIONS,
   permitAdminAndThoseAbove,
@@ -20,10 +21,13 @@ import { HeadingPrimary } from '../HeadingPrimary/HeadingPrimary'
 import { Col, Container, Row } from 'react-bootstrap'
 import LoadingScreen from 'components/base-component/LoadingScreen'
 import SubmitButton from 'components/formik-components/SubmitButton'
+import { MemberContext } from 'contexts/MemberContext'
 
 function MemberForm({ initialValues, onSubmit, title, loading, update }) {
+  const { currentUser } = useContext(MemberContext)
   const { data: ministriesData, loading: ministriesLoading } =
     useQuery(GET_MINISTRIES)
+
   const validationSchema = Yup.object({
     pictureUrl: Yup.string().required('You must upload a picture'),
     firstName: Yup.string().required('First Name is a required field'),
@@ -173,18 +177,23 @@ function MemberForm({ initialValues, onSubmit, title, loading, update }) {
                   </div>
 
                   <div className="form-row justify-content-center">
-                    {!update && (
-                      <Col sm={10}>
-                        <FormikControl
-                          label="Email Address*"
-                          className="form-control"
-                          control="input"
-                          name="email"
-                          placeholder="Enter Email Address"
-                          aria-describedby="emailHelp"
-                        />
-                      </Col>
-                    )}
+                    {!update ||
+                      !formik.initialValues.email ||
+                      (isAuthorised(
+                        permitAdminAndThoseAbove('GatheringService'),
+                        currentUser.roles
+                      ) && (
+                        <Col sm={10}>
+                          <FormikControl
+                            label="Email Address*"
+                            className="form-control"
+                            control="input"
+                            name="email"
+                            placeholder="Enter Email Address"
+                            aria-describedby="emailHelp"
+                          />
+                        </Col>
+                      ))}
 
                     <Col sm={10}>
                       <small htmlFor="dateofbirth" className="form-text ">

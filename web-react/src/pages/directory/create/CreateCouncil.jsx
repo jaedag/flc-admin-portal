@@ -8,8 +8,7 @@ import { NEW_COUNCIL_LEADER } from './MakeLeaderMutations'
 import CouncilForm from 'components/reusable-forms/CouncilForm'
 
 const CreateCouncil = () => {
-  const { clickCard, streamId, setStreamId, setCouncilId } =
-    useContext(ChurchContext)
+  const { clickCard, streamId, setStreamId } = useContext(ChurchContext)
 
   const navigate = useNavigate()
 
@@ -47,7 +46,6 @@ const CreateCouncil = () => {
           throwErrorMsg('There was an error adding leader', error)
         })
 
-        setCouncilId(res.data.CreateCouncil.id)
         navigate(`/council/displaydetails`)
       })
       .catch((error) => {

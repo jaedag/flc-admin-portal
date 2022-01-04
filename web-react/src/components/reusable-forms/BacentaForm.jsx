@@ -27,7 +27,7 @@ const BacentaForm = ({ initialValues, onSubmit, title, newBacenta }) => {
     useContext(ChurchContext)
   const { theme } = useContext(MemberContext)
   const navigate = useNavigate()
-  console.log('id from bacenta form', councilId)
+
   const [CloseDownBacenta] = useMutation(MAKE_BACENTA_INACTIVE)
   const { data, loading, error } = useQuery(GET_COUNCIL_CONSTITUENCIES, {
     variables: { id: councilId },

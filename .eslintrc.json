@@ -24,6 +24,6 @@
   "rules": {
     "prettier/prettier": "warn",
     "react/prop-types": "off",
-    "no-console": "warn"
+    "no-console": "error"
   }
 }

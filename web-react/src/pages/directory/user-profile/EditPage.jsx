@@ -62,6 +62,7 @@ const UserProfileEditPage = () => {
   const [UpdateMember] = useMutation(UPDATE_MEMBER_MUTATION)
 
   const onSubmit = async (values, onSubmitProps) => {
+    onSubmitProps.setSubmitting(true)
     //Variables that are not controlled by formik
 
     UpdateMember({

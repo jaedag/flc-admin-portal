@@ -31,6 +31,7 @@ const CancelledServiceForm = ({ church, churchId, churchType }) => {
   })
 
   const onSubmit = (values, onSubmitProps) => {
+    onSubmitProps.setSubmitting(true)
     RecordCancelledService({
       variables: {
         id: churchId,

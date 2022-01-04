@@ -25,6 +25,7 @@ const CreateCouncil = () => {
 
   //onSubmit receives the form state as argument
   const onSubmit = (values, onSubmitProps) => {
+    onSubmitProps.setSubmitting(true)
     setStreamId(values.streamSelect)
 
     CreateCouncil({

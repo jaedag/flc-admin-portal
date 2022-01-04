@@ -46,6 +46,7 @@ const UpdateSonta = () => {
 
   //onSubmit receives the form state as argument
   const onSubmit = (values, onSubmitProps) => {
+    onSubmitProps.setSubmitting(true)
     setConstituencyId(values.constituency)
 
     //Log if Sonta Name Changes

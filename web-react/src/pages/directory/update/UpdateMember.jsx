@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/client'
 
@@ -27,7 +27,6 @@ const UpdateMember = () => {
   const { data: churchData } = useQuery(DISPLAY_MEMBER_CHURCH, {
     variables: { id: memberId },
   })
-  const [isLoading, setIsLoading] = useState(false)
   const member = memberData?.members[0]
   const memberChurch = churchData?.members[0]
 
@@ -74,8 +73,9 @@ const UpdateMember = () => {
   const [AddMemberTitle] = useMutation(ADD_MEMBER_TITLE_MUTATION)
 
   const onSubmit = async (values, onSubmitProps) => {
-    setIsLoading(true)
     const { setSubmitting, resetForm } = onSubmitProps
+    setSubmitting(true)
+
     //Variables that are not controlled by formik
 
     const pastoralAppointment = filterPastoralTitles(values.pastoralAppointment)
@@ -135,7 +135,7 @@ const UpdateMember = () => {
       title="Edit Member Details"
       initialValues={initialValues}
       onSubmit={onSubmit}
-      loading={memberLoading || isLoading}
+      loading={memberLoading}
       update
     />
   )

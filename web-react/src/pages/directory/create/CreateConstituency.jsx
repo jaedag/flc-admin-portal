@@ -34,6 +34,7 @@ const CreateConstituency = () => {
 
   //onSubmit receives the form state as argument
   const onSubmit = (values, onSubmitProps) => {
+    onSubmitProps.setSubmitting(true)
     setCouncilId(values.councilSelect)
 
     CreateConstituency({

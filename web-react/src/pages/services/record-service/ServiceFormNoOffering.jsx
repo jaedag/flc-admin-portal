@@ -35,6 +35,7 @@ const ServiceFormNoOffering = ({
   })
 
   const onSubmit = (values, onSubmitProps) => {
+    onSubmitProps.setSubmitting(true)
     RecordServiceMutation({
       variables: {
         id: churchId,

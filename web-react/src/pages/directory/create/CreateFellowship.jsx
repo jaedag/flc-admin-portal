@@ -28,6 +28,7 @@ const CreateFellowship = () => {
 
   //onSubmit receives the form state as argument
   const onSubmit = (values, onSubmitProps) => {
+    onSubmitProps.setSubmitting(true)
     CreateFellowship({
       variables: {
         name: values.name,

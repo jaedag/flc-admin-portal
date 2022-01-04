@@ -17,6 +17,7 @@ function CreateSonta() {
 
   //onSubmit receives the form state as argument
   const onSubmit = (values, onSubmitProps) => {
+    onSubmitProps.setSubmitting(true)
     CreateSonta({
       variables: {
         ministryId: values.ministrySelect,

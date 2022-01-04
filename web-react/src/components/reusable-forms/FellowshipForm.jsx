@@ -4,6 +4,7 @@ import * as Yup from 'yup'
 import {
   DECIMAL_NUM_REGEX,
   makeSelectOptions,
+  permitAdminAndThoseAbove,
   SERVICE_DAY_OPTIONS,
   throwErrorMsg,
   VACATION_OPTIONS,
@@ -102,11 +103,7 @@ const FellowshipForm = (props) => {
                   <Col className="mb-2">
                     <Row className="form-row">
                       <RoleView
-                        roles={[
-                          'adminGatheringService',
-                          'adminCouncil',
-                          'adminConstituency',
-                        ]}
+                        roles={permitAdminAndThoseAbove('Constituency')}
                       >
                         <Col>
                           <FormikControl
@@ -145,11 +142,7 @@ const FellowshipForm = (props) => {
 
                     <Row className="form-row">
                       <RoleView
-                        roles={[
-                          'adminGatheringService',
-                          'adminCouncil',
-                          'adminConstituency',
-                        ]}
+                        roles={permitAdminAndThoseAbove('Constituency')}
                       >
                         <Col sm={12}>
                           <FormikControl
@@ -183,11 +176,7 @@ const FellowshipForm = (props) => {
                         </Col>
                       </RoleView>
                       <RoleView
-                        roles={[
-                          'adminGatheringService',
-                          'adminCouncil',
-                          'adminConstituency',
-                        ]}
+                        roles={permitAdminAndThoseAbove('Constituency')}
                       >
                         <Col sm={12}>
                           <FormikControl

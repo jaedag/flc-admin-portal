@@ -6,6 +6,7 @@ import { GET_SONTAS_BY_CONSTITUENCY } from '../../../queries/ListQueries'
 import { ChurchContext } from '../../../contexts/ChurchContext'
 import RoleView from '../../../auth/RoleView'
 import BaseComponent from 'components/base-component/BaseComponent'
+import { permitAdminAndThoseAbove } from 'global-utils'
 
 const DisplaySontasByConstituency = () => {
   const { councilId, setConstituencyId, setSontaId } = useContext(ChurchContext)
@@ -32,14 +33,7 @@ const DisplaySontasByConstituency = () => {
                 <h4>{`${constituencies[0].council?.name}'s Sontas`}</h4>
               </Link>
             </div>
-            <RoleView
-              roles={[
-                'adminGatheringService',
-                'adminStream',
-                'adminCouncil',
-                'adminConstituency',
-              ]}
-            >
+            <RoleView roles={permitAdminAndThoseAbove('Constituency')}>
               <div className="col-auto">
                 <Link
                   to="/bacenta/addbacenta"

@@ -22,6 +22,7 @@ import { campaigns } from 'pages/routes/campaignsRoutes.js'
 import { reconciliation } from 'pages/routes/reconRoutes.js'
 import PageNotFound from 'pages/page-not-found/PageNotFound'
 import SetPermissions from 'auth/SetPermissions'
+import { permitMeAndThoseAbove } from 'global-utils'
 
 const PastorsAdmin = () => {
   const [church, setChurch] = useState(
@@ -389,14 +390,7 @@ const PastorsAdmin = () => {
                       path="/dashboard/servants"
                       element={
                         <ProtectedRouteHome
-                          roles={[
-                            'adminGatheringService',
-                            'adminCouncil',
-                            'adminConstituency',
-                            'leaderFellowship',
-                            'leaderBacenta',
-                            'leaderConstituency',
-                          ]}
+                          roles={permitMeAndThoseAbove('Fellowship')}
                           placeholder
                         >
                           <ServantsDashboard />
@@ -407,14 +401,7 @@ const PastorsAdmin = () => {
                       path="/servants/church-list"
                       element={
                         <ProtectedRoute
-                          roles={[
-                            'adminGatheringService',
-                            'adminCouncil',
-                            'adminConstituency',
-                            'leaderFellowship',
-                            'leaderBacenta',
-                            'leaderConstituency',
-                          ]}
+                          roles={permitMeAndThoseAbove('Fellowship')}
                           placeholder
                         >
                           <ServantsChurchList />

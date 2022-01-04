@@ -7,6 +7,7 @@ import { ChurchContext } from '../../../contexts/ChurchContext'
 import RoleView from '../../../auth/RoleView'
 import BaseComponent from 'components/base-component/BaseComponent'
 import { Container, Row, Col, Button } from 'react-bootstrap'
+import { permitAdminAndThoseAbove } from 'global-utils'
 
 const DisplayAllStreams = () => {
   const { clickCard, gatheringServiceId } = useContext(ChurchContext)
@@ -57,7 +58,7 @@ const DisplayAllStreams = () => {
                 </Link>
               ) : null}
             </Col>
-            <RoleView roles={['adminGatheringService', 'adminStream']}>
+            <RoleView roles={permitAdminAndThoseAbove('GatheringService')}>
               <Col className="col-auto">
                 <Link to="/stream/addstream" className="btn btn-primary">
                   Add Stream

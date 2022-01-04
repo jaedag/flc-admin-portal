@@ -2,7 +2,7 @@ import { useMutation, useQuery } from '@apollo/client'
 import BaseComponent from 'components/base-component/BaseComponent'
 import { FieldArray, Form, Formik } from 'formik'
 import * as Yup from 'yup'
-import { makeSelectOptions } from 'global-utils'
+import { makeSelectOptions, permitAdminAndThoseAbove } from 'global-utils'
 import { GET_COUNCILS } from 'queries/ListQueries'
 import React, { useContext } from 'react'
 import { ChurchContext } from 'contexts/ChurchContext'
@@ -76,7 +76,9 @@ const ConstituencyForm = ({
                   {/* <!-- Basic Info Div --> */}
 
                   <Col className="mb-2">
-                    <RoleView roles={['adminGatheringService']}>
+                    <RoleView
+                      roles={permitAdminAndThoseAbove('GatheringService')}
+                    >
                       <Row className="form-row">
                         <Col>
                           <FormikControl
@@ -100,13 +102,7 @@ const ConstituencyForm = ({
                     />
 
                     <Row className="d-flex align-items-center mb-3">
-                      <RoleView
-                        roles={[
-                          'adminGatheringService',
-                          'adminCouncil',
-                          'adminConstituency',
-                        ]}
-                      >
+                      <RoleView roles={permitAdminAndThoseAbove('Council')}>
                         <Col>
                           <FormikControl
                             control="memberSearch"

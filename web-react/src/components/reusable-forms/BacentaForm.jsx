@@ -2,7 +2,11 @@ import { useMutation, useQuery } from '@apollo/client'
 import BaseComponent from 'components/base-component/BaseComponent'
 import { FieldArray, Form, Formik } from 'formik'
 import * as Yup from 'yup'
-import { makeSelectOptions, throwErrorMsg } from 'global-utils'
+import {
+  makeSelectOptions,
+  permitAdminAndThoseAbove,
+  throwErrorMsg,
+} from 'global-utils'
 import { GET_COUNCIL_CONSTITUENCIES } from 'queries/ListQueries'
 import React, { useContext } from 'react'
 import { ChurchContext } from 'contexts/ChurchContext'
@@ -85,12 +89,7 @@ const BacentaForm = ({ initialValues, onSubmit, title, newBacenta }) => {
 
                     <Row className="d-flex align-items-center mb-3">
                       <RoleView
-                        roles={[
-                          'adminGatheringService',
-                          'adminCouncil',
-                          'adminConstituency',
-                          'leaderConstituency',
-                        ]}
+                        roles={permitAdminAndThoseAbove('Constituency')}
                       >
                         <Col>
                           <FormikControl

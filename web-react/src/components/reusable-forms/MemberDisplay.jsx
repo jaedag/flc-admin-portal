@@ -9,6 +9,7 @@ import {
   transformCloudinaryImg,
   throwErrorMsg,
   getHighestTitle,
+  permitAdminAndThoseAbove,
 } from '../../global-utils'
 import {
   DISPLAY_MEMBER_BIO,
@@ -46,9 +47,7 @@ const MemberDisplay = ({ memberId }) => {
 
   return (
     <Container>
-      <RoleView
-        roles={['adminCouncil', 'adminGatheringService', 'adminConstituency']}
-      >
+      <RoleView roles={permitAdminAndThoseAbove('Constituency')}>
         <EditButton link="/member/editmember" />
       </RoleView>
       <Row>

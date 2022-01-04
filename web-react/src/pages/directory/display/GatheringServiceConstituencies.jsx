@@ -7,6 +7,7 @@ import { ChurchContext } from '../../../contexts/ChurchContext'
 import RoleView from '../../../auth/RoleView'
 import BaseComponent from 'components/base-component/BaseComponent'
 import { Container, Row, Col, Button } from 'react-bootstrap'
+import { permitAdminAndThoseAbove } from 'global-utils'
 
 const GatheringServiceConstituencies = () => {
   const { clickCard, gatheringServiceId } = useContext(ChurchContext)
@@ -60,9 +61,7 @@ const GatheringServiceConstituencies = () => {
                 </Link>
               ) : null}
             </Col>
-            <RoleView
-              roles={['adminGatheringService', 'adminStream', 'adminCouncil']}
-            >
+            <RoleView roles={permitAdminAndThoseAbove('Council')}>
               <Col className="col-auto">
                 <Link
                   to="/constituency/addconstituency"

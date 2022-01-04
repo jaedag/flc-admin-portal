@@ -64,6 +64,20 @@ export const authorisedLink = (currentUser, permittedRoles, link) => {
 export const permitMeAndThoseAbove = (churchType) => {
   let permittedFor = []
   switch (churchType) {
+    case 'Fellowship':
+      permittedFor = [
+        'adminGatheringService',
+        'adminStream',
+        'adminCouncil',
+        'adminConstituency',
+        'leaderGatheringService',
+        'leaderStream',
+        'leaderCouncil',
+        'leaderConstituency',
+        'leaderBacenta',
+        'leaderFellowship',
+      ]
+      break
     case 'Bacenta':
       permittedFor = [
         'adminGatheringService',
@@ -75,6 +89,19 @@ export const permitMeAndThoseAbove = (churchType) => {
         'leaderCouncil',
         'leaderConstituency',
         'leaderBacenta',
+      ]
+      break
+    case 'Sonta':
+      permittedFor = [
+        'adminGatheringService',
+        'adminStream',
+        'adminCouncil',
+        'adminConstituency',
+        'leaderGatheringService',
+        'leaderStream',
+        'leaderCouncil',
+        'leaderConstituency',
+        'leaderSonta',
       ]
       break
     case 'Constituency':
@@ -109,6 +136,42 @@ export const permitMeAndThoseAbove = (churchType) => {
       break
     case 'GatheringService':
       permittedFor = ['adminGatheringService', 'leaderGatheringService']
+      break
+    default:
+      permittedFor = []
+      break
+  }
+
+  return permittedFor
+}
+
+export const permitAdminAndThoseAbove = (churchType) => {
+  let permittedFor = []
+  switch (churchType) {
+    case 'Sonta':
+      permittedFor = [
+        'adminGatheringService',
+        'adminStream',
+        'adminCouncil',
+        'adminConstituency',
+      ]
+      break
+    case 'Constituency':
+      permittedFor = [
+        'adminGatheringService',
+        'adminStream',
+        'adminCouncil',
+        'adminConstituency',
+      ]
+      break
+    case 'Council':
+      permittedFor = ['adminGatheringService', 'adminStream', 'adminCouncil']
+      break
+    case 'Stream':
+      permittedFor = ['adminGatheringService', 'adminStream']
+      break
+    case 'GatheringService':
+      permittedFor = ['adminGatheringService']
       break
     default:
       permittedFor = []

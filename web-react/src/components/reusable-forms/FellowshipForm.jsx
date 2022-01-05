@@ -46,9 +46,7 @@ const FellowshipForm = (props) => {
   }
 
   const validationSchema = Yup.object({
-    fellowshipName: Yup.string().required(
-      'Fellowship Name is a required field'
-    ),
+    name: Yup.string().required('Fellowship Name is a required field'),
     leaderId: Yup.string().required(
       'Please choose a leader from the drop down'
     ),
@@ -76,7 +74,7 @@ const FellowshipForm = (props) => {
 
   let constituencyIdVar = props.initialValues.constituencySelect
 
-  if (!props.initialValues.fellowshipName && !props.newFellowship) {
+  if (!props.initialValues.name && !props.newFellowship) {
     return <LoadingScreen />
   }
 
@@ -84,9 +82,7 @@ const FellowshipForm = (props) => {
     <>
       <Container>
         <HeadingPrimary>{props.title}</HeadingPrimary>
-        <HeadingSecondary>
-          {props.initialValues.fellowshipName}
-        </HeadingSecondary>
+        <HeadingSecondary>{props.initialValues.name}</HeadingSecondary>
       </Container>
       <Formik
         initialValues={props.initialValues}
@@ -148,7 +144,7 @@ const FellowshipForm = (props) => {
                           <FormikControl
                             className="form-control"
                             control="input"
-                            name="fellowshipName"
+                            name="name"
                             label="Name of Fellowship"
                             placeholder="Name of Fellowship"
                           />
@@ -164,16 +160,19 @@ const FellowshipForm = (props) => {
                             defaultOption="Pick a Service Day"
                           />
                         </Col>
-                        <Col sm={12}>
-                          <FormikControl
-                            className="form-control"
-                            control="select"
-                            label="Vacation Status"
-                            name="vacationStatus"
-                            options={VACATION_OPTIONS}
-                            defaultOption="Set Fellowship Mode"
-                          />
-                        </Col>
+
+                        {!props.newFellowship && (
+                          <Col sm={12}>
+                            <FormikControl
+                              className="form-control"
+                              control="select"
+                              label="Vacation Status"
+                              name="vacationStatus"
+                              options={VACATION_OPTIONS}
+                              defaultOption="Set Fellowship Mode"
+                            />
+                          </Col>
+                        )}
                       </RoleView>
                       <RoleView
                         roles={permitAdminAndThoseAbove('Constituency')}

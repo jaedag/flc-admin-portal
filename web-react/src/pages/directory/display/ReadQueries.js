@@ -170,6 +170,7 @@ export const DISPLAY_FELLOWSHIP = gql`
         id
         firstName
         lastName
+        fullName
         pictureUrl
       }
     }
@@ -266,6 +267,13 @@ export const DISPLAY_BACENTA = gql`
           id
           name
           stream_name
+
+          constituency {
+            id
+            council {
+              id
+            }
+          }
         }
       }
 

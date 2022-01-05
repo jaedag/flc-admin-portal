@@ -24,7 +24,7 @@ const CreateBacenta = () => {
 
   //onSubmit receives the form state as argument
   const onSubmit = (values, onSubmitProps) => {
-    onSubmitProps.setSubmitting(false)
+    onSubmitProps.setSubmitting(true)
     setConstituencyId(values.constituencySelect)
 
     CreateBacenta({

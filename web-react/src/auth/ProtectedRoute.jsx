@@ -18,9 +18,7 @@ const ProtectedRoute = ({ children, roles, placeholder }) => {
   if (isAuthorised(roles, currentUser.roles)) {
     //if the user has permission to access the route
     return children
-  }
-
-  if (placeholder && isAuthenticated) {
+  } else if (placeholder && isAuthenticated) {
     if (isAuthorised(permitMeAndThoseAbove('Fellowship'), currentUser.roles)) {
       //If the user does not have permission but is a Fellowship Leader
       church.setFellowshipId(currentUser.fellowship)
@@ -58,14 +56,14 @@ const ProtectedRoute = ({ children, roles, placeholder }) => {
     }
   }
 
-  if (placeholder) {
-    return children
-  } else if (isAuthenticated) {
-    //Authenticated but not allowed to view
-    return <UnauthMsg />
-  } else if (!isAuthenticated && !atHome) {
+  if (!isAuthenticated && !atHome) {
     //Not Authenticated and Not Home means that Authentication is still happening
     return <LoadingScreen />
+  } else if (isAuthenticated || (!isAuthenticated && atHome)) {
+    //Authenticated but not allowed to view
+    return <UnauthMsg />
+  } else if (placeholder) {
+    return children
   }
 
   return <UnauthMsg />

@@ -16,18 +16,13 @@ import { alertMsg, repackDecimals, throwErrorMsg } from 'global-utils'
 import { SET_VACATION_FELLOWSHIP } from './CloseChurchMutations'
 
 const UpdateFellowship = () => {
-  const { setBacentaId, fellowshipId, setChurch } = useContext(ChurchContext)
+  const { setBacentaId, fellowshipId } = useContext(ChurchContext)
   const {
     data: fellowshipData,
     loading: fellowshipLoading,
     // error: fellowshipError,
   } = useQuery(DISPLAY_FELLOWSHIP, {
     variables: { id: fellowshipId },
-    onCompleted: (res) =>
-      setChurch({
-        church: res.fellowships[0].stream_name,
-        subChurch: 'bacenta',
-      }),
   })
 
   const navigate = useNavigate()

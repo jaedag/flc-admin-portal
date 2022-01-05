@@ -19,7 +19,7 @@ import logo from 'assets/flc-logo-red.png'
 import { useAuth0 } from '@auth0/auth0-react'
 import { GET_LOGGED_IN_USER } from 'components/UserProfileIcon/UserQueries'
 import SearchBox from 'components/SearchBox'
-import { Moon, MoonFill } from 'react-bootstrap-icons'
+import { Moon, Sun } from 'react-bootstrap-icons'
 
 const Navigator = () => {
   const { currentUser, theme, setTheme, setUserJobs, setCurrentUser } =
@@ -263,7 +263,7 @@ const Navigator = () => {
                       }}
                     />
                   ) : (
-                    <MoonFill
+                    <Sun
                       size={30}
                       onClick={() => {
                         theme === 'dark' ? setTheme('light') : setTheme('dark')

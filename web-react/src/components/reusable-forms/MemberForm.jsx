@@ -177,23 +177,23 @@ function MemberForm({ initialValues, onSubmit, title, loading, update }) {
                   </div>
 
                   <div className="form-row justify-content-center">
-                    {!update ||
+                    {(!update ||
                       !formik.initialValues.email ||
-                      (isAuthorised(
+                      isAuthorised(
                         permitAdminAndThoseAbove('GatheringService'),
                         currentUser.roles
-                      ) && (
-                        <Col sm={10}>
-                          <FormikControl
-                            label="Email Address*"
-                            className="form-control"
-                            control="input"
-                            name="email"
-                            placeholder="Enter Email Address"
-                            aria-describedby="emailHelp"
-                          />
-                        </Col>
-                      ))}
+                      )) && (
+                      <Col sm={10}>
+                        <FormikControl
+                          label="Email Address*"
+                          className="form-control"
+                          control="input"
+                          name="email"
+                          placeholder="Enter Email Address"
+                          aria-describedby="emailHelp"
+                        />
+                      </Col>
+                    )}
 
                     <Col sm={10}>
                       <small htmlFor="dateofbirth" className="form-text ">

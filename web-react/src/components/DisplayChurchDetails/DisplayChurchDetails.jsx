@@ -277,31 +277,35 @@ const DisplayChurchDetails = (props) => {
 
         <hr />
         <div className="d-grid gap-2">
-          <Button
-            className={`btn-trends ${theme}`}
-            onClick={() => {
-              navigate(`/${props.churchType.toLowerCase()}/reports`)
-            }}
-          >
-            View Trends
-          </Button>
+          <PlaceholderCustom className={`btn-trends ${theme}`} button>
+            <Button
+              className={`btn-trends ${theme}`}
+              onClick={() => {
+                navigate(`/${props.churchType.toLowerCase()}/reports`)
+              }}
+            >
+              View Trends
+            </Button>
+          </PlaceholderCustom>
 
-          <Button
-            className={`btn-trends ${theme}`}
-            onClick={() => {
-              setCurrentUser({
-                ...currentUser,
-                currentChurch: {
-                  id: props.churchId,
-                  name: props.name,
-                  __typename: props.churchType,
-                },
-              })
-              navigate(`/services/${props.churchType.toLowerCase()}`)
-            }}
-          >
-            Service Forms
-          </Button>
+          <PlaceholderCustom className={`btn-trends ${theme}`} button>
+            <Button
+              className={`btn-trends ${theme}`}
+              onClick={() => {
+                setCurrentUser({
+                  ...currentUser,
+                  currentChurch: {
+                    id: props.churchId,
+                    name: props.name,
+                    __typename: props.churchType,
+                  },
+                })
+                navigate(`/services/${props.churchType.toLowerCase()}`)
+              }}
+            >
+              Service Forms
+            </Button>
+          </PlaceholderCustom>
         </div>
 
         {props?.location && props.location?.latitude !== 0 && (
@@ -385,17 +389,19 @@ const DisplayChurchDetails = (props) => {
       ) : null}
       {props.subChurch && !props.buttons?.length ? (
         <Container className="d-grid gap-2 mt-2">
-          <Button
-            className="btn-trends"
-            variant={theme}
-            onClick={() =>
-              navigate(
-                `/${props.subChurch.toLowerCase()}/add${props.subChurch.toLowerCase()}`
-              )
-            }
-          >
-            {`Add New ${props.subChurch}`}
-          </Button>
+          <PlaceholderCustom className="btn-trends" variant={theme} button>
+            <Button
+              className="btn-trends"
+              variant={theme}
+              onClick={() =>
+                navigate(
+                  `/${props.subChurch.toLowerCase()}/add${props.subChurch.toLowerCase()}`
+                )
+              }
+            >
+              {`Add New ${props.subChurch}`}
+            </Button>
+          </PlaceholderCustom>
         </Container>
       ) : null}
       {props.subChurchBasonta === 'Sonta' ? (

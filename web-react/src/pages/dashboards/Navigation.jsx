@@ -257,14 +257,14 @@ const Navigator = () => {
                 <div className="d-flex justify-content-center align-items-center h-100">
                   {theme === 'light' ? (
                     <Moon
-                      size={30}
+                      size={22}
                       onClick={() => {
                         theme === 'light' ? setTheme('dark') : setTheme('light')
                       }}
                     />
                   ) : (
                     <Sun
-                      size={30}
+                      size={22}
                       onClick={() => {
                         theme === 'dark' ? setTheme('light') : setTheme('dark')
                       }}

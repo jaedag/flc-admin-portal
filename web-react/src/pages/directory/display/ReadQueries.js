@@ -286,6 +286,7 @@ export const DISPLAY_BACENTA = gql`
         id
         firstName
         lastName
+        fullName
         pictureUrl
         whatsappNumber
         title {
@@ -354,11 +355,7 @@ export const DISPLAY_CONSTITUENCY = gql`
         id
         name
       }
-      bishop {
-        id
-        firstName
-        lastName
-      }
+
       leader {
         id
         firstName

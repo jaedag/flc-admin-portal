@@ -114,7 +114,7 @@ const MemberRoleList = ({ memberLeader, memberAdmin }) => {
 
   return (
     <PlaceholderCustom>
-      <small>
+      <small className="mb-5">
         <Button
           onClick={() => navigate('/dashboard/servants')}
           className="mb-3 view-trends-button"
@@ -140,7 +140,7 @@ const MemberRoleList = ({ memberLeader, memberAdmin }) => {
                     navigate(place.link)
                   }}
                 >
-                  <p className="mb-5">
+                  <p className="mb-0">
                     <span className=" text-secondary">{`${place.__typename} ${servant} : `}</span>
                     <span>{place.name}</span>
                   </p>

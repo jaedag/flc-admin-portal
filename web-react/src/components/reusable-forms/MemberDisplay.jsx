@@ -55,36 +55,33 @@ const MemberDisplay = ({ memberId }) => {
       <RoleView roles={permitAdminAndThoseAbove('Constituency')}>
         <EditButton link="/member/editmember" />
       </RoleView>
-      <Row>
-        <Col>
-          <PlaceholderCustom
-            as="div"
-            className="profile-img"
-            loading={!member || loading}
-            xs={12}
-          >
-            <div>
-              <img
-                src={
-                  transformCloudinaryImg(member?.pictureUrl, 'large') ||
-                  userIcon
-                }
-                className="profile-img"
-                alt={`${member?.fullName}`}
-              />
-            </div>
-          </PlaceholderCustom>
-        </Col>
-        <Col>
-          <PlaceholderCustom as="h3" loading={!member || loading}>
-            <h3>{nameAndTitle}</h3>
-          </PlaceholderCustom>
-          <MemberRoleList
-            memberLeader={memberLeader}
-            memberAdmin={memberAdmin}
-          />
-        </Col>
-      </Row>
+      <div className="text-center fs-1 pb-4">Profile</div>
+
+      <div className="d-flex justify-content-center pb-4">
+        <PlaceholderCustom
+          as="div"
+          className="profile-img mx-auto"
+          loading={!member || loading}
+          xs={12}
+        >
+          <div>
+            <img
+              src={
+                transformCloudinaryImg(member?.pictureUrl, 'large') || userIcon
+              }
+              className="profile-img"
+              alt={`${member?.fullName}`}
+            />
+          </div>
+        </PlaceholderCustom>
+      </div>
+
+      <div className="text-center">
+        <PlaceholderCustom as="h3" loading={!member || loading}>
+          <h3>{nameAndTitle}</h3>
+        </PlaceholderCustom>
+        <MemberRoleList memberLeader={memberLeader} memberAdmin={memberAdmin} />
+      </div>
       <Row>
         <Col>
           <DetailsCard heading="Gender" detail={member?.gender?.gender} />

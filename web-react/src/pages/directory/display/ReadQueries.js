@@ -359,6 +359,7 @@ export const DISPLAY_CONSTITUENCY = gql`
         id
         firstName
         lastName
+        fullName
         pictureUrl
       }
       history(options: { limit: 10 }) {

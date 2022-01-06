@@ -29,7 +29,7 @@ const UpdateCouncil = () => {
     name: council?.name,
     leaderName: council?.leader?.fullName ?? '',
     leaderId: council?.leader?.id || '',
-    streamSelect: council?.stream?.id ?? '',
+    stream: council?.stream?.id ?? '',
     constituencies: council?.constituencies?.length
       ? council.constituencies
       : [''],
@@ -146,116 +146,122 @@ const UpdateCouncil = () => {
         streamId: values.stream,
       },
     })
+      .then(() => {
+        //Log if Council Name Changes
+        if (values.name !== initialValues.name) {
+          LogCouncilHistory({
+            variables: {
+              councilId: councilId,
+              newLeaderId: '',
+              oldLeaderId: '',
+              oldStreamId: '',
+              newStreamId: '',
+              historyRecord: `Council name has been changed from ${initialValues.name} to ${values.name}`,
+            },
+          })
+        }
 
-    //Log if Council Name Changes
-    if (values.name !== initialValues.name) {
-      LogCouncilHistory({
-        variables: {
-          councilId: councilId,
-          newLeaderId: '',
-          oldLeaderId: '',
-          oldStreamId: '',
-          newStreamId: '',
-          historyRecord: `Council name has been changed from ${initialValues.name} to ${values.name}`,
-        },
-      })
-    }
+        //Log if the Leader Changes
+        if (values.leaderId !== initialValues.leaderId) {
+          return MakeCouncilLeader({
+            variables: {
+              oldLeaderId: initialValues.leaderId || 'old-leader',
+              newLeaderId: values.leaderId,
+              councilId: councilId,
+            },
+          })
+            .then(() => {
+              alertMsg('Leader Changed Successfully')
+              navigate(`/council/displaydetails`)
+            })
+            .catch((err) =>
+              throwErrorMsg('There was a problem changing the Overseer', err)
+            )
+        }
 
-    //Log if the Leader Changes
-    if (values.leaderId !== initialValues.leaderId) {
-      return MakeCouncilLeader({
-        variables: {
-          oldLeaderId: initialValues.leaderId || 'old-leader',
-          newLeaderId: values.leaderId,
-          councilId: councilId,
-        },
-      })
-        .then(() => {
-          alertMsg('Leader Changed Successfully')
-          navigate(`/council/displaydetails`)
-        })
-        .catch((err) =>
-          throwErrorMsg('There was a problem changing the Overseer', err)
+        //Log if Stream Changes
+        if (values.stream !== initialValues.stream) {
+          RemoveCouncilStream({
+            variables: {
+              streamId: initialValues.stream,
+              councilId: councilId,
+            },
+          })
+          AddCouncilStream({
+            variables: {
+              streamId: values.stream,
+              councilId: councilId,
+            },
+          })
+        }
+
+        //For the Adding and Removing of Constituencies
+        const oldConstituencyList = initialValues.constituencies.map(
+          (constituency) => {
+            return constituency.id
+          }
         )
-    }
 
-    //Log if Stream Changes
-    if (values.stream !== initialValues.stream) {
-      RemoveCouncilStream({
-        variables: {
-          streamId: initialValues.stream,
-          councilId: councilId,
-        },
-      })
-      AddCouncilStream({
-        variables: {
-          streamId: values.stream,
-          councilId: councilId,
-        },
-      })
-    }
+        const newConstituencyList = values.constituencies.map(
+          (constituency) => {
+            return constituency.id ? constituency.id : constituency
+          }
+        )
 
-    //For the Adding and Removing of Constituencies
-    const oldConstituencyList = initialValues.constituencies.map(
-      (constituency) => {
-        return constituency.id
-      }
-    )
-
-    const newConstituencyList = values.constituencies.map((constituency) => {
-      return constituency.id ? constituency.id : constituency
-    })
-
-    const removeConstituencies = oldConstituencyList.filter((value) => {
-      return !newConstituencyList.includes(value)
-    })
-
-    const addConstituencies = values.constituencies.filter((value) => {
-      return !oldConstituencyList.includes(value.id)
-    })
-
-    removeConstituencies.forEach((constituency) => {
-      RemoveConstituencyCouncil({
-        variables: {
-          councilId: councilId,
-          constituencyId: constituency,
-        },
-      })
-    })
-
-    addConstituencies.forEach((constituency) => {
-      if (constituency.council) {
-        RemoveConstituencyCouncil({
-          variables: {
-            councilId: constituency.council.id,
-            constituencyId: constituency.id,
-          },
+        const removeConstituencies = oldConstituencyList.filter((value) => {
+          return !newConstituencyList.includes(value)
         })
-      } else {
-        //Constituency has no previous council and is now joining. ie. RemoveConstituencyCouncil won't run
-        LogConstituencyHistory({
-          variables: {
-            constituencyId: constituency.id,
-            newLeaderId: '',
-            oldLeaderId: '',
-            newcouncilId: councilId,
-            oldcouncilId: '',
-            historyRecord: `${constituency.name} Constituency has been started again under ${initialValues.name} Council`,
-          },
+
+        const addConstituencies = values.constituencies.filter((value) => {
+          return !oldConstituencyList.includes(value.id)
         })
-      }
 
-      AddCouncilConstituencies({
-        variables: {
-          councilId: councilId,
-          constituencyId: constituency.id,
-        },
+        removeConstituencies.forEach((constituency) => {
+          RemoveConstituencyCouncil({
+            variables: {
+              councilId: councilId,
+              constituencyId: constituency,
+            },
+          })
+        })
+
+        addConstituencies.forEach((constituency) => {
+          if (constituency.council) {
+            RemoveConstituencyCouncil({
+              variables: {
+                councilId: constituency.council.id,
+                constituencyId: constituency.id,
+              },
+            })
+          } else {
+            //Constituency has no previous council and is now joining. ie. RemoveConstituencyCouncil won't run
+            LogConstituencyHistory({
+              variables: {
+                constituencyId: constituency.id,
+                newLeaderId: '',
+                oldLeaderId: '',
+                newcouncilId: councilId,
+                oldcouncilId: '',
+                historyRecord: `${constituency.name} Constituency has been started again under ${initialValues.name} Council`,
+              },
+            })
+          }
+
+          AddCouncilConstituencies({
+            variables: {
+              councilId: councilId,
+              constituencyId: constituency.id,
+            },
+          })
+        })
+
+        onSubmitProps.setSubmitting(false)
+        onSubmitProps.resetForm()
+        navigate(`/council/displaydetails`)
       })
-    })
-
-    onSubmitProps.setSubmitting(false)
-    onSubmitProps.resetForm()
-    navigate(`/council/displaydetails`)
+      .catch((err) =>
+        throwErrorMsg('There was a problem updating this council', err)
+      )
   }
 
   return (

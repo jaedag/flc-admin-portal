@@ -121,14 +121,13 @@ const FellowshipForm = (props) => {
                           <FormikControl
                             className="form-control"
                             control="selectWithQuery"
-                            name="bacentaSelect"
+                            name="bacenta"
                             label="Bacenta"
                             optionsQuery={GET_CONSTITUENCY_BACENTAS}
                             queryVariable="id"
                             dataset="bacentas"
                             varValue={
-                              constituencyIdVar ||
-                              props.initialValues.bacentaSelect
+                              constituencyIdVar || props.initialValues.bacenta
                             }
                             defaultOption="Select a Bacenta"
                           />

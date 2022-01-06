@@ -17,7 +17,7 @@ const CreateConstituency = () => {
   const initialValues = {
     name: '',
     leaderId: '',
-    councilSelect: councilId,
+    council: councilId,
     bacentas: [''],
   }
 
@@ -35,13 +35,13 @@ const CreateConstituency = () => {
   //onSubmit receives the form state as argument
   const onSubmit = (values, onSubmitProps) => {
     onSubmitProps.setSubmitting(true)
-    setCouncilId(values.councilSelect)
+    setCouncilId(values.council)
 
     CreateConstituency({
       variables: {
         name: values.name,
         leaderId: values.leaderId,
-        councilId: values.councilSelect,
+        councilId: values.council,
         bacentas: values.bacentas,
       },
     })

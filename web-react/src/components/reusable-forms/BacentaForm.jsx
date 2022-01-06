@@ -74,7 +74,7 @@ const BacentaForm = ({ initialValues, onSubmit, title, newBacenta }) => {
                           className="form-control"
                           control="select"
                           label={`Select a Constituency`}
-                          name="constituencySelect"
+                          name="constituency"
                           options={constituencyOptions}
                           defaultOption={`Select a Constituency`}
                         />

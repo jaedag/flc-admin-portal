@@ -34,7 +34,7 @@ const UpdateBacenta = () => {
     name: bacenta?.name,
     leaderName: bacenta?.leader?.fullName ?? '',
     leaderId: bacenta?.leader?.id || '',
-    constituencySelect: bacenta?.constituency?.id,
+    constituency: bacenta?.constituency?.id,
     fellowships: bacenta?.fellowships.length ? bacenta?.fellowships : [''],
   }
 
@@ -49,7 +49,7 @@ const UpdateBacenta = () => {
     refetchQueries: [
       {
         query: GET_CONSTITUENCY_BACENTAS,
-        variables: { id: initialValues.constituencySelect },
+        variables: { id: initialValues.constituency },
       },
     ],
   })
@@ -145,130 +145,134 @@ const UpdateBacenta = () => {
   const onSubmit = (values, onSubmitProps) => {
     onSubmitProps.setSubmitting(true)
 
-    setConstituencyId(values.constituencySelect)
-
-    //Log if Bacenta Name Changes
-    if (values.name !== initialValues.name) {
-      LogBacentaHistory({
-        variables: {
-          bacentaId: bacentaId,
-          newLeaderId: '',
-          oldLeaderId: '',
-          oldConstituencyId: '',
-          newConstituencyId: '',
-          historyRecord: `Bacenta name has been changed from ${initialValues.name} to ${values.name}`,
-        },
-      })
-    }
-
-    //Log if the Leader Changes
-    if (values.leaderId !== initialValues.leaderId) {
-      return MakeBacentaLeader({
-        variables: {
-          oldLeaderId: initialValues.leaderId || 'old-leader',
-          newLeaderId: values.leaderId,
-          bacentaId: bacentaId,
-        },
-      })
-        .then(() => {
-          alertMsg('Leader Changed Successfully')
-          navigate(`/bacenta/displaydetails`)
-        })
-        .catch((error) =>
-          throwErrorMsg('There was an error changing the leader', error)
-        )
-    }
-
-    //Log If The Constituency Changes
-    if (values.constituencySelect !== initialValues.constituencySelect) {
-      RemoveBacentaConstituency({
-        variables: {
-          constituencyId: initialValues.constituencySelect,
-          bacentaId: bacentaId,
-        },
-      })
-      AddBacentaConstituency({
-        variables: {
-          constituencyId: values.constituencySelect,
-          bacentaId: bacentaId,
-        },
-      })
-    }
-
-    //For the adding and removing of fellowships
-    const oldFellowshipList = initialValues.fellowships.map((fellowship) => {
-      return fellowship.id
-    })
-
-    const newFellowshipList = values.fellowships.map((fellowship) => {
-      return fellowship.id ? fellowship.id : fellowship
-    })
-
-    const removeFellowships = oldFellowshipList.filter(function (value) {
-      return !newFellowshipList.includes(value)
-    })
-
-    const addFellowships = values.fellowships.filter(function (value) {
-      return !oldFellowshipList.includes(value.id)
-    })
-
-    if (removeFellowships.length) {
-      removeFellowships.forEach((fellowship) => {
-        CloseDownFellowship({
-          variables: {
-            fellowshipId: fellowship ?? '',
-          },
-        }).catch((error) => throwErrorMsg(error))
-      })
-    }
-
-    if (addFellowships.length) {
-      addFellowships.forEach((fellowship) => {
-        if (fellowship.bacenta) {
-          RemoveFellowshipFromBacenta({
-            variables: {
-              bacentaId: fellowship.bacenta.id,
-              fellowshipIds: [fellowship.id],
-            },
-          })
-        } else {
-          //Fellowship has no previous bacenta and is now joining. ie. CloseDownFellowship won't run
-          LogFellowshipHistory({
-            variables: {
-              fellowshipId: fellowship.id,
-              newLeaderId: '',
-              oldLeaderId: '',
-              newBacentaId: bacentaId,
-              oldBacentaId: '',
-              historyRecord: `${fellowship.name} 
-              Fellowship has been started again under ${initialValues.name} Bacenta`,
-            },
-          })
-        }
-
-        AddBacentaFellowships({
-          variables: {
-            bacentaId: bacentaId,
-            fellowshipId: [fellowship.id],
-          },
-        })
-      })
-    }
+    setConstituencyId(values.constituency)
 
     UpdateBacenta({
       variables: {
         bacentaId: bacentaId,
         name: values.name,
         leaderId: values.leaderId,
-        constituencyId: values.constituencySelect,
+        constituencyId: values.constituency,
       },
-    }).catch((error) =>
-      throwErrorMsg('There was an error updating this bacenta', error)
-    )
+    })
+      .then(() => {
+        //Log if Bacenta Name Changes
+        if (values.name !== initialValues.name) {
+          LogBacentaHistory({
+            variables: {
+              bacentaId: bacentaId,
+              newLeaderId: '',
+              oldLeaderId: '',
+              oldConstituencyId: '',
+              newConstituencyId: '',
+              historyRecord: `Bacenta name has been changed from ${initialValues.name} to ${values.name}`,
+            },
+          })
+        }
 
-    onSubmitProps.setSubmitting(false)
-    onSubmitProps.resetForm()
-    navigate(`/bacenta/displaydetails`)
+        //Log if the Leader Changes
+        if (values.leaderId !== initialValues.leaderId) {
+          return MakeBacentaLeader({
+            variables: {
+              oldLeaderId: initialValues.leaderId || 'old-leader',
+              newLeaderId: values.leaderId,
+              bacentaId: bacentaId,
+            },
+          })
+            .then(() => {
+              alertMsg('Leader Changed Successfully')
+              navigate(`/bacenta/displaydetails`)
+            })
+            .catch((error) =>
+              throwErrorMsg('There was an error changing the leader', error)
+            )
+        }
+
+        //Log If The Constituency Changes
+        if (values.constituency !== initialValues.constituency) {
+          RemoveBacentaConstituency({
+            variables: {
+              constituencyId: initialValues.constituency,
+              bacentaId: bacentaId,
+            },
+          })
+          AddBacentaConstituency({
+            variables: {
+              constituencyId: values.constituency,
+              bacentaId: bacentaId,
+            },
+          })
+        }
+
+        //For the adding and removing of fellowships
+        const oldFellowshipList = initialValues.fellowships.map(
+          (fellowship) => {
+            return fellowship.id
+          }
+        )
+
+        const newFellowshipList = values.fellowships.map((fellowship) => {
+          return fellowship.id ? fellowship.id : fellowship
+        })
+
+        const removeFellowships = oldFellowshipList.filter(function (value) {
+          return !newFellowshipList.includes(value)
+        })
+
+        const addFellowships = values.fellowships.filter(function (value) {
+          return !oldFellowshipList.includes(value.id)
+        })
+
+        if (removeFellowships.length) {
+          removeFellowships.forEach((fellowship) => {
+            CloseDownFellowship({
+              variables: {
+                fellowshipId: fellowship ?? '',
+              },
+            }).catch((error) => throwErrorMsg(error))
+          })
+        }
+
+        if (addFellowships.length) {
+          addFellowships.forEach((fellowship) => {
+            if (fellowship.bacenta) {
+              RemoveFellowshipFromBacenta({
+                variables: {
+                  bacentaId: fellowship.bacenta.id,
+                  fellowshipIds: [fellowship.id],
+                },
+              })
+            } else {
+              //Fellowship has no previous bacenta and is now joining. ie. CloseDownFellowship won't run
+              LogFellowshipHistory({
+                variables: {
+                  fellowshipId: fellowship.id,
+                  newLeaderId: '',
+                  oldLeaderId: '',
+                  newBacentaId: bacentaId,
+                  oldBacentaId: '',
+                  historyRecord: `${fellowship.name} 
+              Fellowship has been started again under ${initialValues.name} Bacenta`,
+                },
+              })
+            }
+
+            AddBacentaFellowships({
+              variables: {
+                bacentaId: bacentaId,
+                fellowshipId: [fellowship.id],
+              },
+            })
+          })
+        }
+
+        onSubmitProps.setSubmitting(false)
+        onSubmitProps.resetForm()
+        navigate(`/bacenta/displaydetails`)
+      })
+      .catch((error) =>
+        throwErrorMsg('There was an error updating this bacenta', error)
+      )
   }
 
   return (

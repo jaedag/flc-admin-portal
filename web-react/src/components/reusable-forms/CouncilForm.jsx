@@ -69,7 +69,7 @@ const CouncilForm = ({ initialValues, onSubmit, title, newCouncil }) => {
                           <FormikControl
                             className="form-control"
                             control="select"
-                            name="streamSelect"
+                            name="stream"
                             label="Select a Stream"
                             options={streamOptions}
                             defaultOption="Select a Stream"

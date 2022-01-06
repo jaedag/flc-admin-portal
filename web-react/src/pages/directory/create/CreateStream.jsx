@@ -16,7 +16,7 @@ const CreateStream = () => {
   const initialValues = {
     name: '',
     leaderId: '',
-    gatheringServiceSelect: gatheringServiceId,
+    gatheringService: gatheringServiceId,
     councils: [''],
   }
 
@@ -26,13 +26,13 @@ const CreateStream = () => {
   //onSubmit receives the form state as argument
   const onSubmit = (values, onSubmitProps) => {
     onSubmitProps.setSubmitting(true)
-    setGatheringServiceId(values.gatheringServiceSelect)
+    setGatheringServiceId(values.gatheringService)
 
     CreateStream({
       variables: {
         name: values.name,
         leaderId: values.leaderId,
-        gatheringServiceId: values.gatheringServiceSelect,
+        gatheringServiceId: values.gatheringService,
         councils: values.councils,
       },
     })

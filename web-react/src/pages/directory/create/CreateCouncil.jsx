@@ -15,7 +15,7 @@ const CreateCouncil = () => {
   const initialValues = {
     name: '',
     leaderId: '',
-    streamSelect: streamId,
+    stream: streamId,
     constituencies: [''],
   }
 
@@ -25,13 +25,13 @@ const CreateCouncil = () => {
   //onSubmit receives the form state as argument
   const onSubmit = (values, onSubmitProps) => {
     onSubmitProps.setSubmitting(true)
-    setStreamId(values.streamSelect)
+    setStreamId(values.stream)
 
     CreateCouncil({
       variables: {
         name: values.name,
         leaderId: values.leaderId,
-        streamId: values.streamSelect,
+        streamId: values.stream,
         constituencies: values.constituencies,
       },
     })

@@ -16,7 +16,7 @@ const CreateFellowship = () => {
     name: '',
     leaderId: '',
     constituencySelect: constituencyId ?? '',
-    bacentaSelect: bacentaId ?? '',
+    bacenta: bacentaId ?? '',
     meetingDay: '',
     vacationStatus: '',
     venueLatitude: '',
@@ -32,7 +32,7 @@ const CreateFellowship = () => {
     CreateFellowship({
       variables: {
         name: values.name,
-        bacentaId: values.bacentaSelect,
+        bacentaId: values.bacenta,
         meetingDay: values.meetingDay,
         leaderId: values.leaderId,
         venueLongitude: parseFloat(values.venueLongitude),

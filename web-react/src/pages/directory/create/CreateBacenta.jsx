@@ -15,7 +15,7 @@ const CreateBacenta = () => {
   const initialValues = {
     name: '',
     leaderId: '',
-    constituencySelect: constituencyId ?? '',
+    constituency: constituencyId ?? '',
     fellowships: [''],
   }
 
@@ -25,12 +25,12 @@ const CreateBacenta = () => {
   //onSubmit receives the form state as argument
   const onSubmit = (values, onSubmitProps) => {
     onSubmitProps.setSubmitting(true)
-    setConstituencyId(values.constituencySelect)
+    setConstituencyId(values.constituency)
 
     CreateBacenta({
       variables: {
         name: values.name,
-        constituencyId: values.constituencySelect,
+        constituencyId: values.constituency,
         leaderId: values.leaderId,
         fellowships: values.fellowships,
       },

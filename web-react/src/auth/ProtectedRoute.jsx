@@ -6,6 +6,7 @@ import { ChurchContext } from '../contexts/ChurchContext'
 import { isAuthorised, permitMeAndThoseAbove } from '../global-utils'
 import { UnauthMsg } from './UnauthMsg'
 import LoadingScreen from 'components/base-component/LoadingScreen'
+import Login from 'components/Login'
 
 const ProtectedRoute = ({ children, roles, placeholder }) => {
   const { currentUser } = useContext(MemberContext)
@@ -19,6 +20,7 @@ const ProtectedRoute = ({ children, roles, placeholder }) => {
     //if the user has permission to access the route
     return children
   } else if (placeholder && isAuthenticated) {
+    //User has no permission but there is a placeholder, and he's authenticated so let's load the screen
     if (isAuthorised(permitMeAndThoseAbove('Fellowship'), currentUser.roles)) {
       //If the user does not have permission but is a Fellowship Leader
       church.setFellowshipId(currentUser.fellowship)
@@ -54,16 +56,19 @@ const ProtectedRoute = ({ children, roles, placeholder }) => {
       church.setGatheringServiceId(currentUser.gatheringService)
       return children
     }
-  }
 
-  if (!isAuthenticated && !atHome) {
-    //Not Authenticated and Not Home means that Authentication is still happening
+    return children
+  } else if (placeholder && !isAuthenticated) {
+    return children
+  } else if (!isAuthenticated) {
+    //Not Authenticated means that Authentication is still happening
     return <LoadingScreen />
-  } else if (isAuthenticated || (!isAuthenticated && atHome)) {
+  } else if (atHome) {
+    //Unauthenticated and home
+    return <Login />
+  } else if (isAuthenticated) {
     //Authenticated but not allowed to view
     return <UnauthMsg />
-  } else if (placeholder) {
-    return children
   }
 
   return <UnauthMsg />

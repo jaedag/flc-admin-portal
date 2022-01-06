@@ -85,7 +85,7 @@ const ConstituencyForm = ({
                           <FormikControl
                             className="form-control"
                             control="select"
-                            name="councilSelect"
+                            name="council"
                             label="Select a Council"
                             options={constituencyCouncilOptions}
                             defaultOption="Select a Council"

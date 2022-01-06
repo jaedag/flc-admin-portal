@@ -68,7 +68,7 @@ const StreamForm = ({ initialValues, onSubmit, title, newStream }) => {
                           <FormikControl
                             className="form-control"
                             control="select"
-                            name="gatheringServiceSelect"
+                            name="gatheringService"
                             label="Select a Gathering Service"
                             options={gatheringServiceOptions}
                             defaultOption="Select a Gathering Service"

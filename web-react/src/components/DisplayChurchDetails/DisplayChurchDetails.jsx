@@ -280,7 +280,11 @@ const DisplayChurchDetails = (props) => {
 
         <hr />
         <div className="d-grid gap-2">
-          <PlaceholderCustom className={`btn-trends ${theme}`} button>
+          <PlaceholderCustom
+            loading={props.loading}
+            className={`btn-trends ${theme}`}
+            button
+          >
             <Button
               className={`btn-trends ${theme}`}
               onClick={() => {
@@ -291,7 +295,11 @@ const DisplayChurchDetails = (props) => {
             </Button>
           </PlaceholderCustom>
 
-          <PlaceholderCustom className={`btn-trends ${theme}`} button>
+          <PlaceholderCustom
+            loading={props.loading}
+            className={`btn-trends ${theme}`}
+            button
+          >
             <Button
               className={`btn-trends ${theme}`}
               onClick={() => {
@@ -392,7 +400,12 @@ const DisplayChurchDetails = (props) => {
       ) : null}
       {props.subChurch && !props.buttons?.length ? (
         <Container className="d-grid gap-2 mt-2">
-          <PlaceholderCustom className="btn-trends" variant={theme} button>
+          <PlaceholderCustom
+            loading={props.loading}
+            className="btn-trends"
+            variant={theme}
+            button
+          >
             <Button
               className="btn-trends"
               variant={theme}

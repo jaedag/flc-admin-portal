@@ -16,6 +16,7 @@ const DetailsConstituency = () => {
   return (
     <BaseComponent loading={loading} error={error} data={data} placeholder>
       <DisplayChurchDetails
+        loading={loading}
         name={data?.constituencies[0]?.name}
         leaderTitle={'Constituency Overseer'}
         membership={data?.constituencies[0]?.memberCount}

@@ -28,6 +28,7 @@ const DetailsSonta = () => {
   return (
     <BaseComponent loading={sontaLoading} error={sontaError} data={sontaData}>
       <DisplayChurchDetails
+        loading={sontaLoading}
         name={sontaData?.sontas[0]?.name}
         leaderTitle="Sonta Leader"
         leaderName={sontaData?.sontas[0]?.leader?.fullName}

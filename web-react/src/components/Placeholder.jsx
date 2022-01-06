@@ -6,6 +6,7 @@ import '../pages/services/reports/Report.css'
 const PlaceholderCustom = (props) => {
   const { isAuthenticated } = useAuth0()
   const { loading, children, as, size, xs, ...rest } = props
+
   if (loading || !isAuthenticated) {
     if (props.button) {
       return (

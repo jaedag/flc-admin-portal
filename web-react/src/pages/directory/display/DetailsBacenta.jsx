@@ -23,6 +23,7 @@ const DetailsBacenta = () => {
   return (
     <BaseComponent loading={loading} error={error} data={data} placeholder>
       <DisplayChurchDetails
+        loading={loading}
         name={displayBacenta?.name}
         leaderTitle="Bacenta Leader"
         leader={displayBacenta?.leader}

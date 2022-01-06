@@ -35,6 +35,7 @@ const DetailsCouncil = () => {
   return (
     <BaseComponent loading={loading} error={error} data={data} placeholder>
       <DisplayChurchDetails
+        loading={loading}
         name={council?.name}
         leaderTitle="Council Overseer"
         churchId={councilId}
@@ -51,7 +52,6 @@ const DetailsCouncil = () => {
         history={council?.history.length !== 0 && council?.history}
         buttons={council ? council.constituencies : []}
         breadcrumb={breadcrumb && breadcrumb}
-        loading={loading}
       />
     </BaseComponent>
   )

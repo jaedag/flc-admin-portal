@@ -324,7 +324,7 @@ export const DISPLAY_CONSTITUENCY = gql`
         constituency {
           id
           name
-          bishop {
+          council {
             id
           }
         }

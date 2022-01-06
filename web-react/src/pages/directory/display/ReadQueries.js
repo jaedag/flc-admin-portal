@@ -224,10 +224,9 @@ export const DISPLAY_SONTA = gql`
       constituency {
         id
         name
-        bishop {
+        council {
           id
-          firstName
-          lastName
+          name
         }
       }
       history(options: { limit: 10 }) {
@@ -344,7 +343,7 @@ export const DISPLAY_CONSTITUENCY = gql`
             constituency {
               id
               name
-              bishop {
+              council {
                 id
               }
             }

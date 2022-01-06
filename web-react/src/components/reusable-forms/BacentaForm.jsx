@@ -17,10 +17,11 @@ import { useNavigate } from 'react-router'
 import { MAKE_BACENTA_INACTIVE } from 'pages/directory/update/CloseChurchMutations'
 import Popup from 'components/Popup/Popup'
 import RoleView from 'auth/RoleView'
-import { Container, Row, Col, Button, Spinner } from 'react-bootstrap'
+import { Container, Row, Col, Button } from 'react-bootstrap'
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import HeadingSecondary from 'components/HeadingSecondary'
 import { MemberContext } from 'contexts/MemberContext'
+import SubmitButton from 'components/formik-components/SubmitButton'
 
 const BacentaForm = ({ initialValues, onSubmit, title, newBacenta }) => {
   const { togglePopup, isOpen, clickCard, bacentaId, councilId } =
@@ -151,22 +152,7 @@ const BacentaForm = ({ initialValues, onSubmit, title, newBacenta }) => {
                 </Row>
               </div>
 
-              <Button
-                variant="primary"
-                size="lg"
-                type="submit"
-                className={`btn-main ${theme}`}
-                disabled={!formik.isValid || formik.isSubmitting}
-              >
-                {formik.isSubmitting ? (
-                  <>
-                    <Spinner animation="grow" size="sm" />
-                    <span> Submitting</span>
-                  </>
-                ) : (
-                  'Submit'
-                )}
-              </Button>
+              <SubmitButton formik={formik} />
             </Form>
             {isOpen && (
               <Popup handleClose={togglePopup}>

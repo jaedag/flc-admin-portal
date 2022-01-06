@@ -161,18 +161,16 @@ const FellowshipForm = (props) => {
                           />
                         </Col>
 
-                        {!props.newFellowship && (
-                          <Col sm={12}>
-                            <FormikControl
-                              className="form-control"
-                              control="select"
-                              label="Vacation Status"
-                              name="vacationStatus"
-                              options={VACATION_OPTIONS}
-                              defaultOption="Set Fellowship Mode"
-                            />
-                          </Col>
-                        )}
+                        <Col sm={12}>
+                          <FormikControl
+                            className="form-control"
+                            control="select"
+                            label="Vacation Status"
+                            name="vacationStatus"
+                            options={VACATION_OPTIONS}
+                            defaultOption="Select Vacation Status"
+                          />
+                        </Col>
                       </RoleView>
                       <RoleView
                         roles={permitAdminAndThoseAbove('Constituency')}

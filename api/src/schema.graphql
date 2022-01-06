@@ -1868,7 +1868,7 @@ type Mutation {
 
            WITH council
               CALL {
-              	WITH streamId
+              	WITH council
 
                   MATCH (stream:Stream {id: $streamId})
                   OPTIONAL MATCH (council)<-[r:HAS]-()

@@ -13,10 +13,11 @@ import { MAKE_STREAM_INACTIVE } from 'pages/directory/update/CloseChurchMutation
 import { useNavigate } from 'react-router'
 import Popup from 'components/Popup/Popup'
 import RoleView from 'auth/RoleView'
-import { Spinner, Button, Container, Row, Col } from 'react-bootstrap'
+import { Button, Container, Row, Col } from 'react-bootstrap'
 import { MemberContext } from 'contexts/MemberContext'
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import HeadingSecondary from 'components/HeadingSecondary'
+import SubmitButton from 'components/formik-components/SubmitButton'
 
 const StreamForm = ({ initialValues, onSubmit, title, newStream }) => {
   const { togglePopup, isOpen, clickCard, streamId } = useContext(ChurchContext)
@@ -155,22 +156,7 @@ const StreamForm = ({ initialValues, onSubmit, title, newStream }) => {
                 </Row>
               </div>
 
-              <Button
-                variant="primary"
-                size="lg"
-                type="submit"
-                className={`btn-main ${theme}`}
-                disabled={!formik.isValid || formik.isSubmitting}
-              >
-                {formik.isSubmitting ? (
-                  <>
-                    <Spinner animation="grow" size="sm" />
-                    <span> Submitting</span>
-                  </>
-                ) : (
-                  'Submit'
-                )}
-              </Button>
+              <SubmitButton formik={formik} />
             </Form>
 
             {isOpen && (

@@ -1883,7 +1883,7 @@ type Mutation {
 
   UpdateConstituencyDetails(
     constituencyId: ID!
-    constituencyName: String!
+    name: String!
     councilId: ID!
   ): Constituency
     @auth(
@@ -1894,7 +1894,7 @@ type Mutation {
     @cypher(
       statement: """
            MATCH (constituency:Constituency {id: $constituencyId})
-           	SET constituency.name = $constituencyName
+           	SET constituency.name = $name
 
            WITH constituency
               CALL {

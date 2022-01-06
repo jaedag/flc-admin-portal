@@ -117,7 +117,7 @@ const MemberRoleList = ({ memberLeader, memberAdmin }) => {
       <small>
         <Button
           onClick={() => navigate('/dashboard/servants')}
-          className="mb-3 button"
+          className="mb-3 view-trends-button"
         >
           View Trends
         </Button>

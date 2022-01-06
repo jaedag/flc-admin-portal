@@ -35,7 +35,7 @@ const SearchMember = (props) => {
     STREAM_MEMBER_SEARCH,
     {
       onCompleted: (data) => {
-        setSuggestions(data.streamSearch[0].memberSearch)
+        setSuggestions(data.streams[0].memberSearch)
         return
       },
     }
@@ -44,7 +44,7 @@ const SearchMember = (props) => {
     COUNCIL_MEMBER_SEARCH,
     {
       onCompleted: (data) => {
-        setSuggestions(data.councilSearch[0].memberSearch)
+        setSuggestions(data.councils[0].memberSearch)
         return
       },
     }
@@ -54,7 +54,7 @@ const SearchMember = (props) => {
     CONSTITUENCY_MEMBER_SEARCH,
     {
       onCompleted: (data) => {
-        setSuggestions(data.constituencySearch[0].memberSearch)
+        setSuggestions(data.constituencies[0].memberSearch)
         return
       },
     }
@@ -63,7 +63,7 @@ const SearchMember = (props) => {
     BACENTA_MEMBER_SEARCH,
     {
       onCompleted: (data) => {
-        setSuggestions(data.bacentaSearch[0].memberSearch)
+        setSuggestions(data.bacentas[0].memberSearch)
         return
       },
     }
@@ -72,7 +72,7 @@ const SearchMember = (props) => {
     FELLOWSHIP_MEMBER_SEARCH,
     {
       onCompleted: (data) => {
-        setSuggestions(data.fellowshipSearch[0].memberSearch)
+        setSuggestions(data.fellowships[0].memberSearch)
         return
       },
     }

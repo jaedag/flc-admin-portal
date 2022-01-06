@@ -10,7 +10,7 @@ const SetPermissions = ({ children }) => {
   const { isAuthenticated } = useAuth0()
 
   useEffect(() => {
-    if (isAuthenticated && currentUser.roles[0]) {
+    if (isAuthenticated && currentUser.roles.length) {
       church.setGatheringServiceId(currentUser.gatheringService)
 
       if (

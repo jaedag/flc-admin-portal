@@ -76,7 +76,7 @@ const PastorsAdmin = () => {
     church: {},
     email: '',
     constituency: '',
-    roles: [''],
+    roles: [],
   })
   const [userJobs, setUserJobs] = useState()
 

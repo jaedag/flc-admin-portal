@@ -60,13 +60,13 @@ const ProtectedRoute = ({ children, roles, placeholder }) => {
     return children
   } else if (placeholder && !isAuthenticated) {
     return children
-  } else if (!isAuthenticated) {
+  } else if (!isAuthenticated || !currentUser.roles.length) {
     //Not Authenticated means that Authentication is still happening
     return <LoadingScreen />
   } else if (atHome) {
     //Unauthenticated and home
     return <Login />
-  } else if (isAuthenticated) {
+  } else if (isAuthenticated && currentUser.roles.length) {
     //Authenticated but not allowed to view
     return <UnauthMsg />
   }

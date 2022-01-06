@@ -6,8 +6,7 @@ import { MemberContext } from 'contexts/MemberContext'
 import RoleCard from './RoleCard'
 import { getMonthlyStatAverage } from '../services/reports/report-utils'
 import StatDisplay from 'pages/services/reports/CompStatDisplay'
-import Container from 'react-bootstrap/Container'
-import { Col, Row } from 'react-bootstrap'
+import { Col, Row, Table, Container } from 'react-bootstrap'
 import Placeholder from '../../components/Placeholder'
 
 const UserDashboard = () => {
@@ -25,13 +24,13 @@ const UserDashboard = () => {
         </Placeholder>
 
         <div className="card-button-row">
-          <table>
+          <Table>
             <tbody>
               <tr>
                 {userJobs?.assessmentData ? (
                   userJobs?.jobs.map((role, i) => (
                     <td
-                      className="col-auto pl-0"
+                      className="col-auto p-0"
                       key={i}
                       onClick={() => {
                         setMemberId(currentUser.id)
@@ -49,7 +48,7 @@ const UserDashboard = () => {
                 )}
               </tr>
             </tbody>
-          </table>
+          </Table>
         </div>
         <>
           <Row className="mt-3">

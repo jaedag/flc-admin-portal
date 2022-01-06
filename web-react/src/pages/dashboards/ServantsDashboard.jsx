@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { useNavigate, useLocation } from 'react-router'
+import { useNavigate } from 'react-router'
 import ChurchGraph from 'components/ChurchGraph/ChurchGraph'
 import './Dashboards.css'
 import { MemberContext } from 'contexts/MemberContext'
@@ -16,34 +16,40 @@ import {
 } from '../services/reports/report-utils'
 import { ChurchContext } from 'contexts/ChurchContext'
 import StatDisplay from 'pages/services/reports/CompStatDisplay'
-import { authorisedLink, plural } from 'global-utils'
+import {
+  authorisedLink,
+  isAuthorised,
+  permitMeAndThoseAbove,
+  plural,
+} from 'global-utils'
 import BaseComponent from 'components/base-component/BaseComponent'
-import Container from 'react-bootstrap/Container'
-import { Col, Row, Table } from 'react-bootstrap'
+import { Col, Row, Table, Container } from 'react-bootstrap'
 import Placeholder from '../../components/Placeholder'
 
 const ServantsDashboard = () => {
-  const { memberId, currentUser } = useContext(MemberContext)
+  const { memberId, setMemberId, currentUser } = useContext(MemberContext)
   const { clickCard } = useContext(ChurchContext)
   const navigate = useNavigate()
-  const location = useLocation()
-  const atHome = location.pathname === '/'
+  let servantId = currentUser.id
 
-  const { data, loading, error } = useQuery(SERVANTS_DASHBOARD, {
-    variables: { id: atHome ? currentUser.id : memberId },
+  if (isAuthorised(permitMeAndThoseAbove('Constituency'), currentUser.roles)) {
+    servantId = memberId
+  }
+
+  const { data, error } = useQuery(SERVANTS_DASHBOARD, {
+    variables: { id: servantId },
   })
   const { data: adminData } = useQuery(SERVANTS_ADMIN, {
-    variables: { id: atHome ? currentUser.id : memberId },
+    variables: { id: servantId },
   })
   const { data: leaderData } = useQuery(SERVANTS_LEADERSHIP, {
-    variables: { id: atHome ? currentUser.id : memberId },
+    variables: { id: servantId },
   })
 
   const servant = data?.members[0]
   const servantAdmin = adminData?.members[0]
   const servantLeader = leaderData?.members[0]
 
-  // What leadership roles does this person play?
   let roles = []
   let assessmentChurchData, assessmentChurch
 
@@ -57,87 +63,48 @@ const ServantsDashboard = () => {
       case 'Admin':
         verb = `isAdminFor${churchType}`
         break
-
       default:
         break
     }
 
-    if (servantType === 'Bishop') {
-      roles.push({
-        name: 'Bishop',
-        church: servant[`${verb}`][0],
-        number: `${churchType} Bishop`,
-        clickCard: () => {
-          clickCard(servant[`${verb}`][0])
-        },
-        link: authorisedLink(
-          currentUser,
-          [
-            'adminGatheringService',
-            'adminStream',
-            'adminCouncil',
-            'leaderBishop',
-          ],
-          '/dashboard'
-        ),
-      })
-      return
-    }
-
-    if (churchType === 'Bishop' && servantType === 'Admin') {
-      roles.push({
-        name: 'Admin',
-        church: servant[`${verb}`][0],
-        number: 'Bishop Admin',
-        clickCard: () => {
-          clickCard(servant[`${verb}`][0])
-        },
-        link: authorisedLink(
-          currentUser,
-          ['adminGatheringService', 'adminStream', 'adminCouncil'],
-          '/dashboard'
-        ),
-      })
-      return
-    }
+    const permittedForLink = permitMeAndThoseAbove(churchType)
 
     if (servantType === 'Admin') {
       const adminsOneChurch = servant[`${verb}`].length === 1 ?? false
       roles.push({
-        name: 'Admin',
-        church: servant[`${verb}`][0],
-        number: `${churchType} Admin`,
+        name: adminsOneChurch
+          ? churchType + ' Admin'
+          : plural(churchType) + ' Admin',
+        church: servant[`${verb}`],
+        number: servant[`${verb}`].length,
         clickCard: () => {
           clickCard(servant[`${verb}`][0])
         },
         link: authorisedLink(
           currentUser,
-          [
-            'adminGatheringService',
-            'adminStream',
-            'adminCouncil',
-            'adminConstituency',
-          ],
+          permittedForLink,
           adminsOneChurch
             ? `/${churchType.toLowerCase()}/displaydetails`
-            : `/servants/${churchType.toLowerCase()}-list`
+            : `/servants/church-list`
         ),
       })
+
       assessmentChurch = servant[`${verb}`][0]
       return
     }
 
     const leadsOneChurch = servant[`${verb}`].length === 1 ?? false
+
     roles.push({
       name: leadsOneChurch ? churchType : plural(churchType),
-      church: servant[`${verb}`][0],
+      church: servant[`${verb}`],
       number: servant[`${verb}`]?.length,
       clickCard: () => {
         clickCard(servant[`${verb}`][0])
       },
       link: leadsOneChurch
         ? `/${churchType.toLowerCase()}/displaydetails`
-        : `/servants/${churchType.toLowerCase()}-list`,
+        : `/servants/church-list`,
     })
 
     assessmentChurch = servant[`${verb}`][0]
@@ -150,33 +117,42 @@ const ServantsDashboard = () => {
     if (servant?.leadsBacenta?.length) {
       setServantRoles(servant, 'Leader', 'Bacenta')
     }
-    if (servantLeader?.leadsConstituency?.length) {
-      setServantRoles(servantLeader, 'Leader', 'Constituency')
-    }
     if (servantLeader?.leadsSonta?.length) {
       setServantRoles(servantLeader, 'Leader', 'Sonta')
     }
-    if (servant?.leadsBasonta?.length) {
-      setServantRoles(servant, 'Leader', 'Basonta')
+    if (servantLeader?.leadsConstituency?.length) {
+      setServantRoles(servantLeader, 'Leader', 'Constituency')
+    }
+    if (servantAdmin?.isAdminForConstituency?.length) {
+      setServantRoles(servantAdmin, 'Admin', 'Constituency')
+    }
+    if (servantLeader?.leadsCouncil?.length) {
+      setServantRoles(servantLeader, 'Leader', 'Council')
+    }
+    if (servantAdmin?.isAdminForCouncil?.length) {
+      setServantRoles(servantAdmin, 'Admin', 'Council')
     }
     if (servantLeader?.leadsMinistry?.length) {
       setServantRoles(servantLeader, 'Leader', 'Ministry')
     }
-    if (servantLeader?.leadsCouncil?.length) {
-      setServantRoles(servant, 'Leader', 'Council')
+    if (servantLeader?.leadsStream?.length) {
+      setServantRoles(servantLeader, 'Leader', 'Stream')
     }
-
-    if (servantAdmin?.isAdminForCouncil?.length) {
-      setServantRoles(servantAdmin, 'Admin', 'Council')
+    if (servantLeader?.leadsGatheringService?.length) {
+      setServantRoles(servantLeader, 'Leader', 'GatheringService')
     }
-    if (servantAdmin?.isAdminForConstituency?.length) {
-      setServantRoles(servantAdmin, 'Admin', 'Constituency')
+    if (servantAdmin?.isAdminForGatheringService?.length) {
+      setServantRoles(servantAdmin, 'Admin', 'GatheringService')
+    }
+    if (servantLeader?.leadsBasonta?.length) {
+      setServantRoles(servantLeader, 'Leader', 'Basonta')
     }
 
     //run the get graph function after all checking is done to avoid multiple unnecessary runs
     if (assessmentChurch) {
       return getServiceGraphData(assessmentChurch)
     }
+
     return
   }
 
@@ -188,7 +164,7 @@ const ServantsDashboard = () => {
         <Placeholder loading={!servant?.fullName} as="p">
           <p className="mb-0">{`Welcome to`}</p>
         </Placeholder>
-        <Placeholder loading={loading} as="h5">
+        <Placeholder loading={!servant?.fullName} as="h5">
           <h5 className="font-weight-bold roboto">{`${servant?.fullName}'s Dashboard`}</h5>
         </Placeholder>
 
@@ -196,13 +172,14 @@ const ServantsDashboard = () => {
           <Table>
             <tbody>
               <tr>
-                {roles &&
+                {roles ? (
                   roles.map((role, i) => {
                     return (
                       <td
-                        className="col-auto"
+                        className="col-auto p-0"
                         key={i}
                         onClick={() => {
+                          setMemberId(servantId)
                           role.clickCard()
                           navigate(role.link)
                         }}
@@ -210,46 +187,49 @@ const ServantsDashboard = () => {
                         <RoleCard number={role.number} role={role.name} />
                       </td>
                     )
-                  })}
+                  })
+                ) : (
+                  <td className="col-auto pl-0">
+                    <RoleCard loading={!assessmentChurchData} />
+                  </td>
+                )}
               </tr>
             </tbody>
           </Table>
         </div>
 
-        {assessmentChurchData && (
-          <>
-            <Row className="mt-3">
-              <Col>
-                <StatDisplay
-                  title="Avg Attendance"
-                  loading={loading}
-                  statistic={getMonthlyStatAverage(
-                    assessmentChurchData,
-                    'attendance'
-                  )}
-                />
-              </Col>
+        <>
+          <Row className="mt-3">
+            <Col>
+              <StatDisplay
+                title="Avg Attendance"
+                loading={!assessmentChurchData}
+                statistic={getMonthlyStatAverage(
+                  assessmentChurchData,
+                  'attendance'
+                )}
+              />
+            </Col>
 
-              <Col>
-                <StatDisplay
-                  title="Avg Income (in GH₵)"
-                  loading={loading}
-                  statistic={getMonthlyStatAverage(
-                    assessmentChurchData,
-                    'income'
-                  )}
-                />
-              </Col>
-            </Row>
-            <ChurchGraph
-              loading={loading}
-              stat1="attendance"
-              stat2="income"
-              churchData={assessmentChurchData}
-              secondaryTitle={`${assessmentChurch.name} ${assessmentChurch.__typename}`}
-            />
-          </>
-        )}
+            <Col>
+              <StatDisplay
+                title="Avg Income (in GH₵)"
+                loading={!assessmentChurchData}
+                statistic={getMonthlyStatAverage(
+                  assessmentChurchData,
+                  'income'
+                )}
+              />
+            </Col>
+          </Row>
+          <ChurchGraph
+            loading={!assessmentChurchData}
+            stat1="attendance"
+            stat2="income"
+            churchData={assessmentChurchData}
+            secondaryTitle={`${assessmentChurch?.name} ${assessmentChurch?.__typename}`}
+          />
+        </>
       </Container>
     </BaseComponent>
   )

@@ -66,23 +66,42 @@ export const DISPLAY_MEMBER_LEADERSHIP = gql`
         name
         stream_name
       }
+      leadsStream {
+        id
+        name
+      }
+      leadsGatheringService {
+        id
+        name
+      }
       leadsSonta {
         id
         name
         stream_name
       }
-      leadsBasonta {
-        id
-        name
-        sonta {
-          id
-        }
-      }
+
       leadsMinistry {
         id
         name
       }
+    }
+  }
+`
 
+export const DISPLAY_MEMBER_ADMIN = gql`
+  query ($id: ID!) {
+    members(where: { id: $id }) {
+      id
+
+      #Admin Information
+      isAdminForGatheringService {
+        id
+        name
+      }
+      isAdminForStream {
+        id
+        name
+      }
       isAdminForCouncil {
         id
         name

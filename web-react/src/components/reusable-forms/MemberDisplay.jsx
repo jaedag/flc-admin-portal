@@ -12,6 +12,7 @@ import {
   permitAdminAndThoseAbove,
 } from '../../global-utils'
 import {
+  DISPLAY_MEMBER_ADMIN,
   DISPLAY_MEMBER_BIO,
   DISPLAY_MEMBER_CHURCH,
   DISPLAY_MEMBER_LEADERSHIP,
@@ -37,11 +38,15 @@ const MemberDisplay = ({ memberId }) => {
   const { data: leaderData } = useQuery(DISPLAY_MEMBER_LEADERSHIP, {
     variables: { id: memberId },
   })
+  const { data: adminData } = useQuery(DISPLAY_MEMBER_ADMIN, {
+    variables: { id: memberId },
+  })
   throwErrorMsg(error)
 
   const member = bioData?.members[0]
   const memberChurch = churchData?.members[0]
   const memberLeader = leaderData?.members[0]
+  const memberAdmin = adminData?.members[0]
   const memberBirthday = getMemberDob(member)
   const nameAndTitle = getNameWithTitle(member)
 
@@ -74,7 +79,10 @@ const MemberDisplay = ({ memberId }) => {
           <PlaceholderCustom as="h3" loading={!member || loading}>
             <h3>{nameAndTitle}</h3>
           </PlaceholderCustom>
-          <MemberRoleList member={memberLeader} />
+          <MemberRoleList
+            memberLeader={memberLeader}
+            memberAdmin={memberAdmin}
+          />
         </Col>
       </Row>
       <Row>

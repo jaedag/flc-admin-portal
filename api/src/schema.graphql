@@ -127,8 +127,20 @@ extend type Member @auth(rules: [{ isAuthenticated: true }])
 extend type Fellowship @auth(rules: [{ isAuthenticated: true }])
 extend type Bacenta @auth(rules: [{ isAuthenticated: true }])
 extend type Constituency @auth(rules: [{ isAuthenticated: true }])
-extend type Council @auth(rules: [{ isAuthenticated: true }])
-extend type Stream @auth(rules: [{ isAuthenticated: true }])
+extend type Council
+  @auth(
+    rules: [
+      { isAuthenticated: true }
+      { roles: ["adminGatheringService", "adminStream", "adminCouncil"] }
+    ]
+  )
+extend type Stream
+  @auth(
+    rules: [
+      { isAuthenticated: true }
+      { roles: ["adminGatheringService", "adminStream"] }
+    ]
+  )
 extend type GatheringService
   @auth(
     rules: [{ isAuthenticated: true }, { roles: ["adminGatheringService"] }]
@@ -321,6 +333,10 @@ type GatheringService {
       RETURN DISTINCT fellowship LIMIT $limit
       """
     )
+  activeFellowshipCount: Int
+    @cypher(
+      statement: "MATCH (this)-[:HAS*5]->(fellowships:ActiveFellowship) RETURN COUNT(DISTINCT fellowships)"
+    )
   bacentaSearch(key: String!, limit: Int!): [Fellowship]
     @cypher(
       statement: """
@@ -341,6 +357,112 @@ type GatheringService {
       RETURN services ORDER BY date.date DESC LIMIT $limit
       """
     )
+  servicesThisWeek: [Fellowship]
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*5]->(fellowships:ActiveFellowship)
+      WHERE EXISTS {
+        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week
+        }
+      RETURN fellowships
+      """
+    )
+  servicesThisWeekCount: Int
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*5]->(fellowships:ActiveFellowship)
+      WHERE EXISTS {
+        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week
+        }
+      RETURN COUNT(DISTINCT fellowships)
+      """
+    )
+  cancelledServicesThisWeek: [Fellowship]
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*5]->(fellowships:ActiveFellowship)
+      WHERE EXISTS {
+        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week AND record.noServiceReason IS NOT NULL
+        }
+      RETURN fellowships
+      """
+    )
+  cancelledServicesThisWeekCount: Int
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*5]->(fellowships:ActiveFellowship)
+      WHERE EXISTS {
+        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week AND record.noServiceReason IS NOT NULL AND record.attendance IS NULL
+        }
+      RETURN COUNT(fellowships)
+      """
+    )
+  formDefaultersThisWeek: [Fellowship]
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*5]->(fellowships:ActiveFellowship)
+      WHERE EXISTS {
+        MATCH (fellowships)-[:MEETS_ON]->(day:ServiceDay)
+        WHERE day.dayNumber < date().dayOfWeek OR  time() > time('20:30')
+         }
+        AND NOT EXISTS {MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date.date.week = date().week}
+      RETURN DISTINCT fellowships
+      """
+    )
+  formDefaultersThisWeekCount: Int
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*5]->(fellowships:ActiveFellowship)
+      WHERE EXISTS {
+        MATCH (fellowships)-[:MEETS_ON]->(day:ServiceDay)
+        WHERE day.dayNumber < date().dayOfWeek OR  time() > time('20:30')
+         }
+        AND NOT EXISTS {MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date.date.week = date().week}
+
+      RETURN COUNT(DISTINCT fellowships)
+      """
+    )
+  bankingDefaultersThisWeek: [Fellowship]
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*5]->(fellowships) WHERE fellowships:ActiveFellowship OR fellowships:ClosedFellowship
+      MATCH (fellowships) WHERE EXISTS {
+        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week AND record.noServiceReason IS NULL AND record.bankingSlip IS NULL
+        }
+      RETURN fellowships
+      """
+    )
+  bankingDefaultersThisWeekCount: Int
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*5]->(fellowships) WHERE fellowships:ActiveFellowship OR fellowships:ClosedFellowship
+      MATCH (fellowships) WHERE EXISTS {
+        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week AND record.noServiceReason IS NULL AND record.bankingSlip IS NULL
+        }
+      RETURN COUNT(fellowships)
+      """
+    )
+  bankedThisWeek: [Fellowship]
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*5]->(fellowships) WHERE fellowships:ActiveFellowship OR fellowships:ClosedFellowship
+      MATCH (fellowships) WHERE EXISTS {
+        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week AND record.noServiceReason IS NULL AND record.bankingSlip IS NOT NULL
+        }
+      RETURN fellowships
+      """
+    )
+  bankedThisWeekCount: Int
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*5]->(fellowships) WHERE fellowships:ActiveFellowship OR fellowships:ClosedFellowship
+      MATCH (fellowships) WHERE EXISTS {
+        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week AND record.noServiceReason IS NULL AND record.bankingSlip IS NOT NULL
+        }
+      RETURN COUNT(fellowships)
+      """
+    )
+
   componentServiceAggregate: [ComponentServiceAggregate] @ignore
 }
 
@@ -423,6 +545,10 @@ type Stream {
       RETURN DISTINCT fellowship LIMIT $limit
       """
     )
+  activeFellowshipCount: Int
+    @cypher(
+      statement: "MATCH (this)-[:HAS*4]->(fellowships:ActiveFellowship) RETURN COUNT(DISTINCT fellowships)"
+    )
   admin: Member @relationship(type: "IS_ADMIN_FOR", direction: IN)
   history: [HistoryLog] @relationship(type: "HAS_HISTORY", direction: OUT)
   serviceRecord: [ServiceRecord]
@@ -435,6 +561,112 @@ type Stream {
       RETURN services ORDER BY date.date DESC LIMIT $limit
       """
     )
+  servicesThisWeek: [Fellowship]
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*4]->(fellowships:ActiveFellowship)
+      WHERE EXISTS {
+        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week
+        }
+      RETURN fellowships
+      """
+    )
+  servicesThisWeekCount: Int
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*4]->(fellowships:ActiveFellowship)
+      WHERE EXISTS {
+        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week
+        }
+      RETURN COUNT(DISTINCT fellowships)
+      """
+    )
+  cancelledServicesThisWeek: [Fellowship]
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*4]->(fellowships:ActiveFellowship)
+      WHERE EXISTS {
+        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week AND record.noServiceReason IS NOT NULL
+        }
+      RETURN fellowships
+      """
+    )
+  cancelledServicesThisWeekCount: Int
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*4]->(fellowships:ActiveFellowship)
+      WHERE EXISTS {
+        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week AND record.noServiceReason IS NOT NULL AND record.attendance IS NULL
+        }
+      RETURN COUNT(fellowships)
+      """
+    )
+  formDefaultersThisWeek: [Fellowship]
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*4]->(fellowships:ActiveFellowship)
+      WHERE EXISTS {
+        MATCH (fellowships)-[:MEETS_ON]->(day:ServiceDay)
+        WHERE day.dayNumber < date().dayOfWeek OR  time() > time('20:30')
+         }
+        AND NOT EXISTS {MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date.date.week = date().week}
+      RETURN DISTINCT fellowships
+      """
+    )
+  formDefaultersThisWeekCount: Int
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*4]->(fellowships:ActiveFellowship)
+      WHERE EXISTS {
+        MATCH (fellowships)-[:MEETS_ON]->(day:ServiceDay)
+        WHERE day.dayNumber < date().dayOfWeek OR  time() > time('20:30')
+         }
+        AND NOT EXISTS {MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date.date.week = date().week}
+
+      RETURN COUNT(DISTINCT fellowships)
+      """
+    )
+  bankingDefaultersThisWeek: [Fellowship]
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*4]->(fellowships) WHERE fellowships:ActiveFellowship OR fellowships:ClosedFellowship
+      MATCH (fellowships) WHERE EXISTS {
+        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week AND record.noServiceReason IS NULL AND record.bankingSlip IS NULL
+        }
+      RETURN fellowships
+      """
+    )
+  bankingDefaultersThisWeekCount: Int
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*4]->(fellowships) WHERE fellowships:ActiveFellowship OR fellowships:ClosedFellowship
+      MATCH (fellowships) WHERE EXISTS {
+        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week AND record.noServiceReason IS NULL AND record.bankingSlip IS NULL
+        }
+      RETURN COUNT(fellowships)
+      """
+    )
+  bankedThisWeek: [Fellowship]
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*4]->(fellowships) WHERE fellowships:ActiveFellowship OR fellowships:ClosedFellowship
+      MATCH (fellowships) WHERE EXISTS {
+        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week AND record.noServiceReason IS NULL AND record.bankingSlip IS NOT NULL
+        }
+      RETURN fellowships
+      """
+    )
+  bankedThisWeekCount: Int
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*4]->(fellowships) WHERE fellowships:ActiveFellowship OR fellowships:ClosedFellowship
+      MATCH (fellowships) WHERE EXISTS {
+        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_RECORD]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week AND record.noServiceReason IS NULL AND record.bankingSlip IS NOT NULL
+        }
+      RETURN COUNT(fellowships)
+      """
+    )
+
   componentServiceAggregate: [ComponentServiceAggregate] @ignore
 }
 

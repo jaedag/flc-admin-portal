@@ -2,7 +2,7 @@ import RoleView from 'auth/RoleView'
 import MenuButton from 'components/buttons/MenuButton'
 import PlaceholderCustom from 'components/Placeholder'
 import { MemberContext } from 'contexts/MemberContext'
-import { parseMemberCount } from 'global-utils'
+import { parseMemberCount, permitMeAndThoseAbove } from 'global-utils'
 import React, { useContext } from 'react'
 import { Container } from 'react-bootstrap'
 import { EmojiFrown } from 'react-bootstrap-icons'
@@ -54,9 +54,7 @@ const ServicesChurchList = () => {
             </>
           )}
 
-          <RoleView
-            roles={['adminCouncil', 'adminConstituency', 'leaderConstituency']}
-          >
+          <RoleView roles={permitMeAndThoseAbove('Constituency')}>
             <MenuButton
               title="Defaulters"
               color="danger"

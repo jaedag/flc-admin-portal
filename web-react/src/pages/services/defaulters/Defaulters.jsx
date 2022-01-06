@@ -2,12 +2,14 @@ import { useLazyQuery } from '@apollo/client'
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import HeadingSecondary from 'components/HeadingSecondary'
 import { MemberContext } from 'contexts/MemberContext'
-import { isAuthorised } from 'global-utils'
+import { isAuthorised, permitMeAndThoseAbove, plural } from 'global-utils'
 import React, { useContext, useEffect, useState } from 'react'
 import { Col, Container, Row } from 'react-bootstrap'
 import {
   CONSTITUENCY_DEFAULTERS,
   COUNCIL_DEFAULTERS,
+  STREAM_DEFAULTERS,
+  GATHERINGSERVICE_DEFAULTERS,
 } from './DefaultersQueries'
 import './Defaulters.css'
 import PlaceholderCustom from 'components/Placeholder'
@@ -21,8 +23,12 @@ const Defaulters = () => {
   )
   const [councilDefaulters, { data: councilData }] =
     useLazyQuery(COUNCIL_DEFAULTERS)
+  const [streamDefaulters, { data: streamData }] =
+    useLazyQuery(STREAM_DEFAULTERS)
+  const [gatheringServiceDefaulters, { data: gatheringServiceData }] =
+    useLazyQuery(GATHERINGSERVICE_DEFAULTERS)
   const [church, setChurch] = useState(null)
-
+  const [subChurch, setSubChurch] = useState(null)
   useEffect(() => {
     if (
       isAuthorised(
@@ -44,8 +50,40 @@ const Defaulters = () => {
         },
       })
       setChurch(councilData?.councils[0])
+      setSubChurch('Constituency')
     }
-  }, [currentUser.constituency, constituencyData, councilData])
+
+    if (isAuthorised(['adminStream', 'leaderStream'], currentUser.roles)) {
+      streamDefaulters({
+        variables: {
+          id: currentUser.stream,
+        },
+      })
+      setChurch(streamData?.streams[0])
+      setSubChurch('Council')
+    }
+
+    if (
+      isAuthorised(
+        ['adminGatheringService', 'leaderGatheringService'],
+        currentUser.roles
+      )
+    ) {
+      gatheringServiceDefaulters({
+        variables: {
+          id: currentUser.gatheringService,
+        },
+      })
+      setChurch(gatheringServiceData?.gatheringServices[0])
+      setSubChurch('Stream')
+    }
+  }, [
+    currentUser,
+    constituencyData,
+    councilData,
+    streamData,
+    gatheringServiceData,
+  ])
 
   const defaulters = [
     {
@@ -86,11 +124,13 @@ const Defaulters = () => {
     },
   ]
 
-  const councilByConstituency = {
-    title: 'Constituencies',
-    data: church?.constituencyCount,
+  const aggregates = {
+    title: plural(subChurch),
+    data: church && church[`${subChurch.toLowerCase()}Count`],
     // color: church?.cancelledServicesThisWeekCount ? 'bad' : 'good',
-    link: '/services/council-by-constituencies',
+    link: `/services/${church?.__typename.toLowerCase()}-by-${plural(
+      subChurch.toLowerCase()
+    )}'`,
   }
 
   return (
@@ -105,9 +145,9 @@ const Defaulters = () => {
       </PlaceholderCustom>
 
       <Row>
-        <RoleView roles={['adminCouncil', 'leaderCouncil']}>
+        <RoleView roles={permitMeAndThoseAbove('Council')}>
           <Col xs={12} className="mb-3">
-            <DefaulterInfoCard defaulter={councilByConstituency} />
+            <DefaulterInfoCard defaulter={aggregates} />
           </Col>
         </RoleView>
         {defaulters.map((defaulter, i) => (

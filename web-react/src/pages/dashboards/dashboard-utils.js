@@ -1,3 +1,5 @@
+import { permitMeAndThoseAbove } from 'global-utils'
+
 export const menuItems = [
   { name: 'Home', to: '/', roles: ['all'] },
   {
@@ -19,6 +21,7 @@ export const menuItems = [
       'leaderConstituency',
       'adminConstituency',
       'adminCouncil',
+      'adminGatheringService',
     ],
   },
   {
@@ -28,23 +31,19 @@ export const menuItems = [
       'leaderConstituency',
       'adminConstituency',
       'adminCouncil',
+      'adminStrem',
       'adminGatheringService',
     ],
   },
   {
     name: 'Campaigns',
     to: '/campaigns',
-    roles: [
-      'leaderConstituency',
-      'adminConstituency',
-      'adminCouncil',
-      'adminGatheringService',
-    ],
+    roles: permitMeAndThoseAbove('Constituency'),
   },
   {
     name: 'Maps',
     to: '/maps',
-    roles: ['all'],
+    roles: ['adminGatheringService'],
   },
   {
     name: 'Reconciliation',

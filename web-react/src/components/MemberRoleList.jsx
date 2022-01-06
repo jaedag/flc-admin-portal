@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router'
 import { ChurchContext } from '../contexts/ChurchContext'
 import { capitalise } from '../global-utils'
 import PlaceholderCustom from './Placeholder'
+import './MemberRoleList.css'
 
 const MemberRoleList = ({ memberLeader, memberAdmin }) => {
   if (!memberLeader || !memberAdmin) {
@@ -114,8 +115,11 @@ const MemberRoleList = ({ memberLeader, memberAdmin }) => {
   return (
     <PlaceholderCustom>
       <small>
-        <Button onClick={() => navigate('/dashboard/servants')}>
-          View Records
+        <Button
+          onClick={() => navigate('/dashboard/servants')}
+          className="mb-3 button"
+        >
+          View Trends
         </Button>
 
         {
@@ -136,8 +140,10 @@ const MemberRoleList = ({ memberLeader, memberAdmin }) => {
                     navigate(place.link)
                   }}
                 >
-                  <p className="font-weight-bold text-secondary mb-0">{`${place.__typename} ${servant}:`}</p>
-                  <p>{place.name}</p>
+                  <p className="mb-5">
+                    <span className=" text-secondary">{`${place.__typename} ${servant} : `}</span>
+                    <span>{place.name}</span>
+                  </p>
                 </span>
               )
             })

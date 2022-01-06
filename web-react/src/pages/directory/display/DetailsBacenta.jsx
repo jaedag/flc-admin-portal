@@ -5,6 +5,7 @@ import DisplayChurchDetails from '../../../components/DisplayChurchDetails/Displ
 import { DISPLAY_BACENTA } from './ReadQueries'
 import { ChurchContext } from '../../../contexts/ChurchContext'
 import BaseComponent from 'components/base-component/BaseComponent'
+import { permitAdminAndThoseAbove } from 'global-utils'
 
 const DetailsBacenta = () => {
   const { bacentaId } = useContext(ChurchContext)
@@ -34,12 +35,7 @@ const DetailsBacenta = () => {
         membership={displayBacenta?.memberCount}
         churchCount={displayBacenta?.fellowships.length}
         editlink="/bacenta/editbacenta"
-        editPermitted={[
-          'leaderConstituency',
-          'adminConstituency',
-          'adminCouncil',
-          'adminGatheringService',
-        ]}
+        editPermitted={permitAdminAndThoseAbove('Constituency')}
         history={
           displayBacenta?.history.length !== 0 && displayBacenta?.history
         }

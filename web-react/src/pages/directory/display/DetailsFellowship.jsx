@@ -3,7 +3,12 @@ import { useQuery } from '@apollo/client'
 import DisplayChurchDetails from '../../../components/DisplayChurchDetails/DisplayChurchDetails'
 import { DISPLAY_FELLOWSHIP, DISPLAY_FELLOWSHIP_HISTORY } from './ReadQueries'
 import { ChurchContext } from '../../../contexts/ChurchContext'
-import { getWeekNumber, last3Weeks, throwErrorMsg } from 'global-utils'
+import {
+  getWeekNumber,
+  last3Weeks,
+  permitAdminAndThoseAbove,
+  throwErrorMsg,
+} from 'global-utils'
 
 const DetailsFellowship = () => {
   const { fellowshipId } = useContext(ChurchContext)
@@ -100,12 +105,7 @@ const DetailsFellowship = () => {
       churchType="Fellowship"
       buttons={['']}
       editlink="/fellowship/editfellowship"
-      editPermitted={[
-        'leaderFellowship',
-        'adminGatheringService',
-        'adminCouncil',
-        'adminConstituency',
-      ]}
+      editPermitted={permitAdminAndThoseAbove('Constituency')}
       weekNumber={getWeekNumber()}
       last3Weeks={fellowship && check}
       history={history?.history.length && history?.history}

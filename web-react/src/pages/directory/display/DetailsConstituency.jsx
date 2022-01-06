@@ -5,6 +5,7 @@ import DisplayChurchDetails from '../../../components/DisplayChurchDetails/Displ
 import { DISPLAY_CONSTITUENCY } from './ReadQueries'
 import { ChurchContext } from '../../../contexts/ChurchContext'
 import BaseComponent from 'components/base-component/BaseComponent'
+import { permitAdminAndThoseAbove } from 'global-utils'
 
 const DetailsConstituency = () => {
   const { constituencyId } = useContext(ChurchContext)
@@ -33,7 +34,7 @@ const DetailsConstituency = () => {
         buttons={data?.constituencies[0]?.bacentas}
         buttonsSecondRow={data?.constituencies[0]?.sontas}
         editlink="/constituency/editconstituency"
-        editPermitted={['adminCouncil', 'adminGatheringService']}
+        editPermitted={permitAdminAndThoseAbove('Council')}
         history={
           data?.constituencies[0]?.history.length !== 0 &&
           data?.constituencies[0]?.history

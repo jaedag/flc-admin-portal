@@ -400,24 +400,26 @@ const DisplayChurchDetails = (props) => {
       ) : null}
       {props.subChurch && !props.buttons?.length ? (
         <Container className="d-grid gap-2 mt-2">
-          <PlaceholderCustom
-            loading={props.loading}
-            className="btn-trends"
-            variant={theme}
-            button
-          >
-            <Button
+          <RoleView roles={props.editPermitted}>
+            <PlaceholderCustom
+              loading={props.loading}
               className="btn-trends"
               variant={theme}
-              onClick={() =>
-                navigate(
-                  `/${props.subChurch.toLowerCase()}/add${props.subChurch.toLowerCase()}`
-                )
-              }
+              button
             >
-              {`Add New ${props.subChurch}`}
-            </Button>
-          </PlaceholderCustom>
+              <Button
+                className="btn-trends"
+                variant={theme}
+                onClick={() =>
+                  navigate(
+                    `/${props.subChurch.toLowerCase()}/add${props.subChurch.toLowerCase()}`
+                  )
+                }
+              >
+                {`Add New ${props.subChurch}`}
+              </Button>
+            </PlaceholderCustom>
+          </RoleView>
         </Container>
       ) : null}
       {props.subChurchBasonta === 'Sonta' ? (

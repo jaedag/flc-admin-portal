@@ -24,7 +24,7 @@ const UserDashboard = () => {
         </Placeholder>
 
         <div className="card-button-row">
-          <Table>
+          <Table className="border-bottom-0">
             <tbody>
               <tr>
                 {userJobs?.assessmentData ? (

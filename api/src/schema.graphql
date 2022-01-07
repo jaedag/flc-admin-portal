@@ -1674,10 +1674,12 @@ type Mutation {
       MERGE (date:TimeGraph {date: date()})
       MERGE (log)-[:LOGGED_BY]->(currentUser)
       MERGE (log)-[:RECORDED_ON]->(date)
-      MERGE (stream)-[:HAS_HISTORY]->(log)
-
-      MERGE (leader)-[r:HAS_HISTORY]->(log)
-        SET r.current = true
+      MERGE (stream)-[r1:HAS_HISTORY]->(log)
+      MERGE (gatheringService)-[r2:HAS_HISTORY]->(log)
+      MERGE (leader)-[r3:HAS_HISTORY]->(log)
+        SET r1.current = true,
+        r2.current = true,
+        r3.current = true
 
       WITH stream, gatheringService
       CALL {
@@ -1725,10 +1727,12 @@ type Mutation {
       MERGE (date:TimeGraph {date: date()})
       MERGE (log)-[:LOGGED_BY]->(currentUser)
       MERGE (log)-[:RECORDED_ON]->(date)
-      MERGE (council)-[:HAS_HISTORY]->(log)
-
-      MERGE (leader)-[r:HAS_HISTORY]->(log)
-        SET r.current = true
+      MERGE (council)-[r1:HAS_HISTORY]->(log)
+      MERGE (stream)-[r2:HAS_HISTORY]->(log)
+      MERGE (leader)-[r3:HAS_HISTORY]->(log)
+        SET r1.current = true,
+        r2.current = true,
+        r3.current = true
 
       WITH council, stream
       CALL {
@@ -1780,10 +1784,12 @@ type Mutation {
       MERGE (date:TimeGraph {date: date()})
       MERGE (log)-[:LOGGED_BY]->(currentUser)
       MERGE (log)-[:RECORDED_ON]->(date)
-      MERGE (council)-[:HAS_HISTORY]->(log)
-      MERGE (constituency)-[:HAS_HISTORY]->(log)
-      MERGE (leader)-[r:HAS_HISTORY]->(log)
-        SET r.current = true
+      MERGE (council)-[r1:HAS_HISTORY]->(log)
+      MERGE (constituency)-[r2:HAS_HISTORY]->(log)
+      MERGE (leader)-[r3:HAS_HISTORY]->(log)
+        SET r1.current = true,
+        r2.current = true,
+        r3.current = true
 
       WITH constituency, council
       CALL {
@@ -1842,10 +1848,12 @@ type Mutation {
        MERGE (date:TimeGraph {date: date()})
        MERGE (log)-[:LOGGED_BY]->(currentUser)
        MERGE (log)-[:RECORDED_ON]->(date)
-       MERGE (constituency)-[:HAS_HISTORY]->(log)
-       MERGE (bacenta)-[:HAS_HISTORY]->(log)
-       MERGE (leader)-[r:HAS_HISTORY]->(log)
-        SET r.current = true
+       MERGE (constituency)-[r1:HAS_HISTORY]->(log)
+       MERGE (bacenta)-[r2:HAS_HISTORY]->(log)
+       MERGE (leader)-[r3:HAS_HISTORY]->(log)
+         SET r1.current = true,
+        r2.current = true,
+        r3.current = true
 
        WITH bacenta
       CALL {
@@ -1908,10 +1916,14 @@ type Mutation {
       MERGE (date:TimeGraph {date: date()})
       MERGE (log)-[:LOGGED_BY]->(currentUser)
        MERGE (log)-[:RECORDED_ON]->(date)
-       MERGE (constituency)-[:HAS_HISTORY]->(log)
-       MERGE (sonta)-[:HAS_HISTORY]->(log)
-       MERGE (leader)-[r:HAS_HISTORY]->(log)
-        SET r.current = true
+       MERGE (constituency)-[r1:HAS_HISTORY]->(log)
+       MERGE (sonta)-[r2:HAS_HISTORY]->(log)
+       MERGE (leader)-[r3:HAS_HISTORY]->(log)
+         SET r1.current = true,
+        r2.current = true,
+        r3.current = true SET r1.current = true,
+        r2.current = true,
+        r3.current = true
 
       RETURN constituency
       """

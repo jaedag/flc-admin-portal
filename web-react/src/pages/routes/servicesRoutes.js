@@ -28,6 +28,8 @@ import ServicesChurchList from 'pages/services/ServicesChurchList'
 import Services from 'pages/services/ServicesMenu'
 import StreamReport from 'pages/services/reports/StreamReport'
 import GatheringServiceReport from 'pages/services/reports/GatheringServiceReport'
+import StreamByCouncil from 'pages/services/defaulters/StreamByCouncil'
+import GatheringServiceByStream from 'pages/services/defaulters/GatheringServiceByStream'
 
 export const services = [
   {
@@ -372,6 +374,30 @@ export const reports = [
   {
     path: '/services/council-by-constituencies',
     element: CouncilByConstituency,
+    roles: [
+      'adminGatheringService',
+      'adminStream',
+      'adminCouncil',
+      'leaderCouncil',
+    ],
+    placeholder: true,
+  },
+  //Stream By Council
+  {
+    path: '/services/stream-by-council',
+    element: StreamByCouncil,
+    roles: [
+      'adminGatheringService',
+      'adminStream',
+      'adminCouncil',
+      'leaderCouncil',
+    ],
+    placeholder: true,
+  },
+  //Gathering Service By Stream
+  {
+    path: '/services/gathering-service-by-stream',
+    element: GatheringServiceByStream,
     roles: [
       'adminGatheringService',
       'adminStream',

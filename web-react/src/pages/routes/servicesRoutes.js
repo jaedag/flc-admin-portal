@@ -309,4 +309,28 @@ export const reports = [
     roles: permitMeAndThoseAbove('GatheringService'),
     placeholder: true,
   },
+  //Stream By Council
+  {
+    path: '/services/stream-by-council',
+    element: StreamByCouncil,
+    roles: [
+      'adminGatheringService',
+      'adminStream',
+      'adminCouncil',
+      'leaderCouncil',
+    ],
+    placeholder: true,
+  },
+  //Gathering Service By Stream
+  {
+    path: '/services/gathering-service-by-stream',
+    element: GatheringServiceByStream,
+    roles: [
+      'adminGatheringService',
+      'adminStream',
+      'adminCouncil',
+      'leaderCouncil',
+    ],
+    placeholder: true,
+  },
 ]

@@ -2156,7 +2156,7 @@ type Mutation {
     )
   UpdateBacentaDetails(
     bacentaId: ID!
-    bacentaName: String!
+    name: String!
     constituencyId: ID!
   ): Bacenta
     @auth(
@@ -2174,7 +2174,7 @@ type Mutation {
     @cypher(
       statement: """
       MATCH (bacenta:Bacenta {id: $bacentaId})
-      	SET bacenta.name = $bacentaName
+      	SET bacenta.name = $name
 
       WITH bacenta
          CALL {

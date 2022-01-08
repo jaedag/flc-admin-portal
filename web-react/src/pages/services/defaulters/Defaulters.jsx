@@ -126,10 +126,10 @@ const Defaulters = () => {
 
   const aggregates = {
     title: plural(subChurch),
-    data: church && church[`${subChurch.toLowerCase()}Count`],
+    data: church && church[`${subChurch?.toLowerCase()}Count`],
     // color: church?.cancelledServicesThisWeekCount ? 'bad' : 'good',
-    link: `/services/${church?.__typename.toLowerCase()}-by-${plural(
-      subChurch.toLowerCase()
+    link: `/services/${church?.__typename?.toLowerCase()}-by-${plural(
+      subChurch?.toLowerCase()
     )}'`,
   }
 

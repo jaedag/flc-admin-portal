@@ -60,7 +60,7 @@ const Services = () => {
             noCaption
             onClick={() =>
               navigate(
-                `${currentUser.currentChurch?.__typename.toLowerCase()}/reports`
+                `/${currentUser.currentChurch?.__typename.toLowerCase()}/reports`
               )
             }
           />

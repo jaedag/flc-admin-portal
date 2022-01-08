@@ -130,7 +130,7 @@ const Defaulters = () => {
     // color: church?.cancelledServicesThisWeekCount ? 'bad' : 'good',
     link: `/services/${church?.__typename?.toLowerCase()}-by-${plural(
       subChurch?.toLowerCase()
-    )}'`,
+    )}`,
   }
 
   return (

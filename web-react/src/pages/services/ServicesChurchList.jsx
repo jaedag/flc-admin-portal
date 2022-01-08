@@ -1,6 +1,7 @@
 import RoleView from 'auth/RoleView'
 import MenuButton from 'components/buttons/MenuButton'
 import PlaceholderCustom from 'components/Placeholder'
+import { ChurchContext } from 'contexts/ChurchContext'
 import { MemberContext } from 'contexts/MemberContext'
 import { parseMemberCount, permitMeAndThoseAbove } from 'global-utils'
 import React, { useContext } from 'react'
@@ -12,6 +13,7 @@ import MemberIcon from '../../assets/people-svgrepo-com-2.svg'
 const ServicesChurchList = () => {
   const { currentUser, setCurrentUser, userJobs, theme } =
     useContext(MemberContext)
+  const { clickCard } = useContext(ChurchContext)
 
   const navigate = useNavigate()
   return (
@@ -36,7 +38,7 @@ const ServicesChurchList = () => {
                   iconBg={true}
                   iconCaption={church.__typename}
                   onClick={() => {
-                    church.clickCard()
+                    clickCard(church)
                     setCurrentUser({
                       ...currentUser,
                       currentChurch: church,

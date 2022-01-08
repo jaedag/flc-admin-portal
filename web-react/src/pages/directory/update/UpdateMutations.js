@@ -272,7 +272,7 @@ export const UPDATE_BACENTA_MUTATION = gql`
         bacenta {
           id
           name
-          constituencies {
+          constituency {
             id
             council {
               id
@@ -280,7 +280,7 @@ export const UPDATE_BACENTA_MUTATION = gql`
           }
         }
       }
-      constituencies {
+      constituency {
         id
         name
         bacentas {

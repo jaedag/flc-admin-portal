@@ -34,7 +34,7 @@ const FellowshipForm = (props) => {
 
   const { theme } = useContext(MemberContext)
   const navigate = useNavigate()
-
+  console.log('councilId', councilId)
   const { data, error } = useQuery(GET_COUNCIL_CONSTITUENCIES, {
     variables: { id: councilId },
   })

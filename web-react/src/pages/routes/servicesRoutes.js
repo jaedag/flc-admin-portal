@@ -30,6 +30,7 @@ import StreamReport from 'pages/services/reports/StreamReport'
 import GatheringServiceReport from 'pages/services/reports/GatheringServiceReport'
 import StreamByCouncil from 'pages/services/defaulters/StreamByCouncil'
 import GatheringServiceByStream from 'pages/services/defaulters/GatheringServiceByStream'
+import { permitMeAndThoseAbove } from 'global-utils'
 
 export const services = [
   {
@@ -56,7 +57,6 @@ export const services = [
     roles: [
       'adminCouncil',
       'adminConstituency',
-
       'adminGatheringService',
       'leaderBacenta',
     ],
@@ -92,72 +92,44 @@ export const reports = [
   {
     path: '/fellowship/reports',
     element: FellowshipReport,
-    roles: [
-      'adminGatheringService',
-      'adminCouncil',
-      'adminConstituency',
-
-      'leaderFellowship',
-      'leaderBacenta',
-      'leaderConstituency',
-    ],
+    roles: permitMeAndThoseAbove('Fellowship'),
     placeholder: true,
   },
   {
     path: '/bacenta/reports',
     element: BacentaReport,
-    roles: [
-      'adminGatheringService',
-      'adminCouncil',
-      'adminConstituency',
-
-      'leaderFellowship',
-      'leaderBacenta',
-      'leaderConstituency',
-    ],
+    roles: permitMeAndThoseAbove('Bacenta'),
     placeholder: true,
   },
   {
     path: '/sonta/reports',
     element: SontaReport,
-    roles: [
-      'adminGatheringService',
-      'adminCouncil',
-      'adminConstituency',
-      'leaderBacenta',
-      'leaderSonta',
-      'leaderConstituency',
-    ],
+    roles: permitMeAndThoseAbove('Sonta'),
     placeholder: true,
   },
   {
     path: '/constituency/reports',
     element: ConstituencyReport,
-    roles: [
-      'adminGatheringService',
-      'adminCouncil',
-      'adminConstituency',
-      'leaderConstituency',
-    ],
+    roles: permitMeAndThoseAbove('Constituency'),
     placeholder: true,
   },
 
   {
     path: '/council/reports',
     element: CouncilReport,
-    roles: ['adminGatheringService', 'adminStream', 'adminCouncil'],
+    roles: permitMeAndThoseAbove('Council'),
     placeholder: true,
   },
   {
     path: '/stream/reports',
     element: StreamReport,
-    roles: ['adminGatheringService', 'adminStream'],
+    roles: permitMeAndThoseAbove('Stream'),
     placeholder: true,
   },
   {
     path: '/gatheringservice/reports',
     element: GatheringServiceReport,
-    roles: ['adminGatheringService'],
+    roles: permitMeAndThoseAbove('GatheringService'),
     placeholder: true,
   },
 
@@ -165,23 +137,13 @@ export const reports = [
   {
     path: '/fellowship/service-details',
     element: FellowshipServiceDetails,
-    roles: [
-      'adminGatheringService',
-      'adminStream',
-      'adminCouncil',
-      'adminConstituency',
-    ],
+    roles: permitMeAndThoseAbove('Fellowship'),
     placeholder: true,
   },
   {
     path: '/services/fellowship/no-service',
     element: FellowshipServiceCancelled,
-    roles: [
-      'adminGatheringService',
-      'adminStream',
-      'adminCouncil',
-      'adminConstituency',
-    ],
+    roles: permitMeAndThoseAbove('Fellowship'),
     placeholder: true,
   },
   {
@@ -191,7 +153,6 @@ export const reports = [
       'adminGatheringService',
       'adminCouncil',
       'adminConstituency',
-
       'leaderFellowship',
     ],
     placeholder: false,
@@ -203,7 +164,6 @@ export const reports = [
       'adminGatheringService',
       'adminCouncil',
       'adminConstituency',
-
       'leaderFellowship',
     ],
     placeholder: false,
@@ -227,7 +187,6 @@ export const reports = [
       'adminGatheringService',
       'adminCouncil',
       'adminConstituency',
-
       'leaderBacenta',
     ],
     placeholder: false,
@@ -267,15 +226,7 @@ export const reports = [
   {
     path: '/bacenta/service-details',
     element: BacentaServiceDetails,
-    roles: [
-      'adminGatheringService',
-      'adminCouncil',
-      'adminConstituency',
-
-      'leaderConstituency',
-
-      'leaderBacenta',
-    ],
+    roles: permitMeAndThoseAbove('Bacenta'),
     placeholder: false,
   },
 
@@ -294,12 +245,7 @@ export const reports = [
   {
     path: '/constituency/service-details',
     element: ConstituencyServiceDetails,
-    roles: [
-      'adminGatheringService',
-      'adminCouncil',
-      'adminConstituency',
-      'leaderConstituency',
-    ],
+    roles: permitMeAndThoseAbove('Constituency'),
     placeholder: false,
   },
 
@@ -307,67 +253,37 @@ export const reports = [
   {
     path: '/services/defaulters',
     element: Defaulters,
-    roles: [
-      'adminGatheringService',
-      'adminCouncil',
-      'adminConstituency',
-      'leaderConstituency',
-    ],
+    roles: permitMeAndThoseAbove('Constituency'),
     placeholder: true,
   },
   {
     path: '/services/form-defaulters',
     element: FormDefaulters,
-    roles: [
-      'adminGatheringService',
-      'adminCouncil',
-      'adminConstituency',
-      'leaderConstituency',
-    ],
+    roles: permitMeAndThoseAbove('Constituency'),
     placeholder: true,
   },
   {
     path: '/services/banking-defaulters',
     element: BankingDefaulters,
-    roles: [
-      'adminGatheringService',
-      'adminCouncil',
-      'adminConstituency',
-      'leaderConstituency',
-    ],
+    roles: permitMeAndThoseAbove('Constituency'),
     placeholder: true,
   },
   {
     path: '/services/banked',
     element: Banked,
-    roles: [
-      'adminGatheringService',
-      'adminCouncil',
-      'adminConstituency',
-      'leaderConstituency',
-    ],
+    roles: permitMeAndThoseAbove('Constituency'),
     placeholder: true,
   },
   {
     path: '/services/filled-services',
     element: ServicesThisWeek,
-    roles: [
-      'adminGatheringService',
-      'adminCouncil',
-      'adminConstituency',
-      'leaderConstituency',
-    ],
+    roles: permitMeAndThoseAbove('Constituency'),
     placeholder: true,
   },
   {
     path: '/services/cancelled-services',
     element: CancelledServicesThisWeek,
-    roles: [
-      'adminGatheringService',
-      'adminCouncil',
-      'adminConstituency',
-      'leaderConstituency',
-    ],
+    roles: permitMeAndThoseAbove('Constituency'),
     placeholder: true,
   },
 
@@ -375,36 +291,21 @@ export const reports = [
   {
     path: '/services/council-by-constituencies',
     element: CouncilByConstituency,
-    roles: [
-      'adminGatheringService',
-      'adminStream',
-      'adminCouncil',
-      'leaderCouncil',
-    ],
+    roles: permitMeAndThoseAbove('Council'),
     placeholder: true,
   },
   //Stream By Council
   {
     path: '/services/stream-by-council',
     element: StreamByCouncil,
-    roles: [
-      'adminGatheringService',
-      'adminStream',
-      'adminCouncil',
-      'leaderCouncil',
-    ],
+    roles: permitMeAndThoseAbove('Stream'),
     placeholder: true,
   },
   //Gathering Service By Stream
   {
     path: '/services/gathering-service-by-stream',
     element: GatheringServiceByStream,
-    roles: [
-      'adminGatheringService',
-      'adminStream',
-      'adminCouncil',
-      'leaderCouncil',
-    ],
+    roles: permitMeAndThoseAbove('GatheringService'),
     placeholder: true,
   },
 ]

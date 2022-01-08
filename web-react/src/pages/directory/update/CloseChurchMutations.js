@@ -71,13 +71,12 @@ export const MAKE_CONSTITUENCY_INACTIVE = gql`
       id
       name
       stream_name
-
-      constituency {
+      council {
         id
-        council {
+        constituencies {
           id
-          constituencies
         }
+
         history(options: { limit: 10 }) {
           id
           timeStamp

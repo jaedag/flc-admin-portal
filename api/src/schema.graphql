@@ -1666,7 +1666,7 @@ type Mutation {
         SET
         log.id =  apoc.create.uuid(),
         log.timeStamp = datetime(),
-        log.historyRecord = leader.firstName + ' ' +leader.lastName + ' started ' + $name +' Stream under '+ gatheringService.name+ ' Gathering Service'
+        log.historyRecord =  $name +' Stream History Begins'
 
       MERGE (gatheringService)-[:HAS]->(stream)
       MERGE (leader)-[:LEADS]->(stream)
@@ -1719,7 +1719,7 @@ type Mutation {
         SET
         log.id =  apoc.create.uuid(),
         log.timeStamp = datetime(),
-        log.historyRecord = leader.firstName + ' ' +leader.lastName + ' started ' + $name +' Council under '+ stream.name+ ' Stream'
+        log.historyRecord = $name +' Council History Begins'
 
       MERGE (stream)-[:HAS]->(council)
       MERGE (leader)-[:LEADS]->(council)
@@ -1776,7 +1776,7 @@ type Mutation {
         SET
         log.id =  apoc.create.uuid(),
         log.timeStamp = datetime(),
-        log.historyRecord = leader.firstName + ' ' +leader.lastName + ' started ' + $name +' Constituency under '+ council.name+ ' Council'
+        log.historyRecord = $name +' Constituency History Begins'
 
       MERGE (council)-[:HAS]->(constituency)
       MERGE (leader)-[:LEADS]->(constituency)
@@ -1840,7 +1840,7 @@ type Mutation {
       CREATE (log:HistoryLog:ServiceLog)
       SET log.id = apoc.create.uuid(),
        log.timeStamp = datetime(),
-       log.historyRecord = leader.firstName + ' ' +leader.lastName + ' started ' + bacenta.name +' Bacenta under '+ constituency.name + ' ' + stream
+       log.historyRecord = bacenta.name +' Bacenta History Begins'
 
        MERGE (constituency)-[:HAS]->(bacenta)
        MERGE (leader)-[:LEADS]->(bacenta)

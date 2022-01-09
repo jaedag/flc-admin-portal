@@ -313,7 +313,7 @@ CREATE (log:HistoryLog:ServiceLog)
   SET leader.auth_id = $auth_id,
    log.id = apoc.create.uuid(),
    log.timeStamp = datetime(),
-   log.historyRecord = leader.firstName + ' ' +leader.lastName + ' started ' + $name +' Constituency under '+ council.name+ ' Council'
+   log.historyRecord = leader.firstName + ' ' +leader.lastName + ' started ' + constituency.name +' Constituency under '+ council.name+ ' Council'
 WITH leader,constituency, log
 OPTIONAL MATCH (constituency)<-[oldLeads:LEADS]-(oldLeader:Member)
 OPTIONAL MATCH (constituency)-[oldHistory:HAS_HISTORY]->()-[oldLeaderHistory:HAS_HISTORY]-(oldLeader)

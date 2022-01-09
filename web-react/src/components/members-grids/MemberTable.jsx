@@ -86,7 +86,7 @@ const MemberTable = (props) => {
                       alt={soul?.firstName + ' ' + soul?.lastName}
                     />
 
-                    <p className="card-title text-center pt-2">
+                    <p className="text-center pt-2">
                       {soul?.firstName + ' ' + soul?.lastName}
                     </p>
                   </div>

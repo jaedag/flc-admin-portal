@@ -127,24 +127,9 @@ extend type Member @auth(rules: [{ isAuthenticated: true }])
 extend type Fellowship @auth(rules: [{ isAuthenticated: true }])
 extend type Bacenta @auth(rules: [{ isAuthenticated: true }])
 extend type Constituency @auth(rules: [{ isAuthenticated: true }])
-extend type Council
-  @auth(
-    rules: [
-      { isAuthenticated: true }
-      { roles: ["adminGatheringService", "adminStream", "adminCouncil"] }
-    ]
-  )
-extend type Stream
-  @auth(
-    rules: [
-      { isAuthenticated: true }
-      { roles: ["adminGatheringService", "adminStream"] }
-    ]
-  )
-extend type GatheringService
-  @auth(
-    rules: [{ isAuthenticated: true }, { roles: ["adminGatheringService"] }]
-  )
+extend type Council @auth(rules: [{ isAuthenticated: true }])
+extend type Stream @auth(rules: [{ isAuthenticated: true }])
+extend type GatheringService @auth(rules: [{ isAuthenticated: true }])
 extend type Sonta @auth(rules: [{ isAuthenticated: true }])
 extend type Ministry @auth(rules: [{ isAuthenticated: true }])
 
@@ -2759,6 +2744,31 @@ type Mutation {
 
       SET fellowship:Vacation
       REMOVE fellowship:ActiveFellowship
+
+      RETURN fellowship
+      """
+    )
+
+     #Set Fellowship to be 'Actvie
+  SetActiveFellowship(fellowshipId: ID!): Fellowship
+    @cypher(
+      statement: """
+      MATCH (fellowship:Fellowship {id:$fellowshipId})
+
+      CREATE (log:HistoryLog {id:apoc.create.uuid()})
+        SET log.timeStamp = datetime(),
+        log.historyRecord = fellowship.name + ' Fellowship was made active again'
+
+      WITH log,fellowship
+      MATCH (admin:Member {auth_id: $auth.jwt.sub})
+      MERGE (date:TimeGraph {date:date()})
+      MERGE (log)-[:LOGGED_BY]->(admin)
+      MERGE (log)-[:RECORDED_ON]->(date)
+      MERGE (fellowship)-[:HAS_HISTORY]->(log)
+      MERGE (bacenta)-[:HAS_HISTORY]->(log)
+
+      SET fellowship:ActiveFellowship
+      REMOVE fellowship:Vacation
 
       RETURN fellowship
       """

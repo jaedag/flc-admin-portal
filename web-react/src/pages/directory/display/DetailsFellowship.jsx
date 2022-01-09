@@ -45,14 +45,14 @@ const DetailsFellowship = () => {
   const check = last3Weeks()?.map((week, i) => {
     if (lastFilledServices?.includes(week)) {
       return {
-        number: week,
+        number: week + 1,
         filled: true,
         banked:
           lastFilledBanking?.length && (lastFilledBanking[i] ? true : false),
       }
     } else {
       return {
-        number: week,
+        number: week + 1,
         filled: false,
         banked: null,
       }

@@ -4,13 +4,13 @@ import { ChurchContext } from 'contexts/ChurchContext'
 import React, { useContext } from 'react'
 import { Card, Col, Container, Row, Button } from 'react-bootstrap'
 import { TelephoneFill, Whatsapp } from 'react-bootstrap-icons'
-import { COUNCIL_BY_CONSTITUENCY } from './DefaultersQueries'
+import { STREAM_BY_COUNCIL } from './DefaultersQueries'
 
-const StreamByCouncil = () => {
-  const { councilId } = useContext(ChurchContext)
-  const { data, loading, error } = useQuery(COUNCIL_BY_CONSTITUENCY, {
+const StreamByStream = () => {
+  const { streamId } = useContext(ChurchContext)
+  const { data, loading, error } = useQuery(STREAM_BY_COUNCIL, {
     variables: {
-      id: councilId,
+      id: streamId,
     },
   })
 
@@ -18,65 +18,58 @@ const StreamByCouncil = () => {
     <BaseComponent data={data} loading={loading} error={error}>
       <Container
         className={`fw-bold large-number pb-3`}
-      >{`${data?.councils[0].name} Council By Constituency`}</Container>
+      >{`${data?.streams[0].name} Stream By Council`}</Container>
       <Row>
-        {data?.councils[0].constituencies.map((constituency, i) => (
+        {data?.streams[0].councils.map((council, i) => (
           <Col key={i} xs={12} className="mb-3">
             <Card>
-              <Card.Header className="fw-bold">{`${constituency.name} Constituency`}</Card.Header>
+              <Card.Header className="fw-bold">{`${council.name} Council`}</Card.Header>
               <Card.Body>
-                <div>
-                  Active Fellowships {constituency.activeFellowshipCount}
-                </div>
-                <div>
-                  Services This Week {constituency.servicesThisWeekCount}
-                </div>
+                <div>Active Fellowships {council.activeFellowshipCount}</div>
+                <div>Services This Week {council.servicesThisWeekCount}</div>
                 <div
                   className={
-                    constituency.formDefaultersThisWeekCount ? 'bad' : 'good'
+                    council.formDefaultersThisWeekCount ? 'bad' : 'good'
                   }
                 >
                   Form Not Filled This Week{' '}
-                  {constituency.formDefaultersThisWeekCount}
+                  {council.formDefaultersThisWeekCount}
                 </div>
                 <div
                   className={
-                    constituency.bankedThisWeekCount ===
-                    constituency.servicesThisWeekCount
+                    council.bankedThisWeekCount ===
+                    council.servicesThisWeekCount
                       ? 'good'
                       : 'bad'
                   }
                 >
-                  Banked This Week {constituency.bankedThisWeekCount}
+                  Banked This Week {council.bankedThisWeekCount}
                 </div>
                 <div
                   className={
-                    constituency.bankingDefaultersThisWeekCount ? 'bad' : 'good'
+                    council.bankingDefaultersThisWeekCount ? 'bad' : 'good'
                   }
                 >
-                  Not Banked This Week{' '}
-                  {constituency.bankingDefaultersThisWeekCount}
+                  Not Banked This Week {council.bankingDefaultersThisWeekCount}
                 </div>
                 <div
-                  className={
-                    constituency.cancelledServicesThisWeekCount && 'bad'
-                  }
+                  className={council.cancelledServicesThisWeekCount && 'bad'}
                 >
                   Cancelled Services This Week{' '}
-                  {constituency.cancelledServicesThisWeekCount}
+                  {council.cancelledServicesThisWeekCount}
                 </div>
               </Card.Body>
               <Card.Footer>
                 <div className="mb-2">
-                  Contact Admin: {constituency?.admin?.fullName}
+                  Contact Admin: {council?.admin?.fullName}
                 </div>
-                <a href={`tel:${constituency?.admin?.phoneNumber}`}>
+                <a href={`tel:${council?.admin?.phoneNumber}`}>
                   <Button variant="primary">
                     <TelephoneFill /> Call
                   </Button>
                 </a>
                 <a
-                  href={`https://wa.me/${constituency?.admin?.whatsappNumber}`}
+                  href={`https://wa.me/${council?.admin?.whatsappNumber}`}
                   className="ms-3"
                 >
                   <Button variant="success">
@@ -92,4 +85,4 @@ const StreamByCouncil = () => {
   )
 }
 
-export default StreamByCouncil
+export default StreamByStream

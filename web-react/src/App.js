@@ -233,6 +233,7 @@ const PastorsAdmin = () => {
         if (
           card?.bacenta?.constituency?.council?.stream?.gatheringService?.id
         ) {
+          console.log('setting gathering service')
           setGatheringServiceId(
             card?.bacenta?.constituency?.council?.stream?.gatheringService?.id
           )
@@ -244,6 +245,7 @@ const PastorsAdmin = () => {
         break
       case 'Bacenta':
         if (card?.constituency?.council?.stream?.gatheringService?.id) {
+          console.log('setting gathering service')
           setGatheringServiceId(
             card?.constituency?.council?.stream?.gatheringService?.id
           )
@@ -255,6 +257,7 @@ const PastorsAdmin = () => {
         break
       case 'Constituency':
         if (card?.council?.stream?.gatheringService?.id) {
+          console.log('setting gathering service')
           setGatheringServiceId(card?.council?.stream?.gatheringService?.id)
           sessionStorage.setItem(
             'gatheringServiceId',
@@ -264,6 +267,7 @@ const PastorsAdmin = () => {
         break
       case 'Council':
         if (card?.stream?.gatheringService?.id) {
+          console.log('setting gathering service')
           setGatheringServiceId(card?.stream?.gatheringService?.id)
           sessionStorage.setItem(
             'gatheringServiceId',
@@ -273,6 +277,7 @@ const PastorsAdmin = () => {
         break
       case 'Stream':
         if (card?.gatheringService?.id) {
+          console.log('setting gathering service')
           setGatheringServiceId(card?.gatheringService?.id)
           sessionStorage.setItem(
             'gatheringServiceId',
@@ -282,6 +287,7 @@ const PastorsAdmin = () => {
         break
       case 'GatheringService':
         if (card.id) {
+          console.log('setting gathering service')
           setGatheringServiceId(card?.id)
           sessionStorage.setItem('gatheringServiceId', card?.id)
         }

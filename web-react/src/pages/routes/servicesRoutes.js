@@ -371,39 +371,25 @@ export const reports = [
   },
 
   //Council By Constituency
+
   {
     path: '/services/council-by-constituencies',
     element: CouncilByConstituency,
-    roles: [
-      'adminGatheringService',
-      'adminStream',
-      'adminCouncil',
-      'leaderCouncil',
-    ],
-    placeholder: true,
+    roles: ['leaderFellowship'],
+    placeholder: false,
   },
   //Stream By Council
   {
-    path: '/services/stream-by-council',
+    path: '/services/stream-by-councils',
     element: StreamByCouncil,
-    roles: [
-      'adminGatheringService',
-      'adminStream',
-      'adminCouncil',
-      'leaderCouncil',
-    ],
+    roles: ['leaderFellowship'],
     placeholder: true,
   },
   //Gathering Service By Stream
   {
-    path: '/services/gathering-service-by-stream',
+    path: '/services/gatheringservice-by-streams',
     element: GatheringServiceByStream,
-    roles: [
-      'adminGatheringService',
-      'adminStream',
-      'adminCouncil',
-      'leaderCouncil',
-    ],
+    roles: ['leaderFellowship'],
     placeholder: true,
   },
 ]

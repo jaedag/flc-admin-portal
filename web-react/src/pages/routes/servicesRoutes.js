@@ -313,24 +313,14 @@ export const reports = [
   {
     path: '/services/stream-by-council',
     element: StreamByCouncil,
-    roles: [
-      'adminGatheringService',
-      'adminStream',
-      'adminCouncil',
-      'leaderCouncil',
-    ],
+    roles: ['leaderFellowship'],
     placeholder: true,
   },
   //Gathering Service By Stream
   {
-    path: '/services/gathering-service-by-stream',
+    path: '/services/gatheringservice-by-streams',
     element: GatheringServiceByStream,
-    roles: [
-      'adminGatheringService',
-      'adminStream',
-      'adminCouncil',
-      'leaderCouncil',
-    ],
+    roles: ['leaderFellowship'],
     placeholder: true,
   },
 ]

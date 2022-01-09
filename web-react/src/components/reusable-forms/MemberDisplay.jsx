@@ -55,7 +55,6 @@ const MemberDisplay = ({ memberId }) => {
       <RoleView roles={permitAdminAndThoseAbove('Constituency')}>
         <EditButton link="/member/editmember" />
       </RoleView>
-      <div className="text-center fs-1 pb-4">Profile</div>
 
       <div className="d-flex justify-content-center pb-4">
         <PlaceholderCustom

@@ -13,7 +13,7 @@ const ServiceDetails = ({ service, church, loading }) => {
   const navigate = useNavigate()
 
   if (!service) {
-    history.goBack()
+    navigate(-1)
   }
 
   if (loading) {

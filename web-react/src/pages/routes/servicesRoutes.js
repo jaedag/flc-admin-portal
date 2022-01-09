@@ -94,7 +94,6 @@ export const reports = [
       'adminGatheringService',
       'adminCouncil',
       'adminConstituency',
-
       'leaderFellowship',
       'leaderBacenta',
       'leaderConstituency',

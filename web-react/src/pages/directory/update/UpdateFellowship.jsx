@@ -13,7 +13,10 @@ import { LOG_FELLOWSHIP_HISTORY } from './LogMutations'
 import { MAKE_FELLOWSHIP_LEADER } from './ChangeLeaderMutations'
 import FellowshipForm from 'components/reusable-forms/FellowshipForm'
 import { alertMsg, repackDecimals, throwErrorMsg } from 'global-utils'
-import { SET_VACATION_FELLOWSHIP } from './CloseChurchMutations'
+import {
+  SET_VACATION_FELLOWSHIP,
+  SET_ACTIVE_FELLOWSHIP,
+} from './CloseChurchMutations'
 
 const UpdateFellowship = () => {
   const { setBacentaId, fellowshipId } = useContext(ChurchContext)
@@ -54,6 +57,7 @@ const UpdateFellowship = () => {
     ],
   })
   const [SetFellowshipOnVacation] = useMutation(SET_VACATION_FELLOWSHIP)
+  const [SetFellowshipActive] = useMutation(SET_ACTIVE_FELLOWSHIP)
   const [RemoveFellowshipFromBacenta] = useMutation(REMOVE_FELLOWSHIP_BACENTA)
 
   const [AddFellowshipBacenta] = useMutation(ADD_FELLOWSHIP_BACENTA, {
@@ -142,11 +146,20 @@ const UpdateFellowship = () => {
 
         // Log if the Meeting Day Changes
         if (values.vacationStatus !== initialValues.vacationStatus) {
-          SetFellowshipOnVacation({
-            variables: {
-              fellowshipId: fellowshipId,
-            },
-          })
+          if (values.vacationStatus === 'Vacation') {
+            SetFellowshipOnVacation({
+              variables: {
+                fellowshipId: fellowshipId,
+              },
+            })
+          }
+          if (values.vacationStatus === 'Active') {
+            SetFellowshipActive({
+              variables: {
+                fellowshipId: fellowshipId,
+              },
+            })
+          }
         }
 
         //Log if the Venue Changes

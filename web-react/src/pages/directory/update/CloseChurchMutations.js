@@ -167,3 +167,17 @@ export const SET_VACATION_FELLOWSHIP = gql`
     }
   }
 `
+
+export const SET_ACTIVE_FELLOWSHIP = gql`
+  mutation SetActiveFellowship($fellowshipId: ID!) {
+    SetActiveFellowship(fellowshipId: $fellowshipId) {
+      id
+      name
+      labels
+      history {
+        id
+        historyRecord
+      }
+    }
+  }
+`

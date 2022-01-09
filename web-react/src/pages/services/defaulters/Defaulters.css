@@ -1,3 +1,18 @@
 .large-number {
   font-size: 30px;
 }
+
+.btn-whatsapp {
+  height: 36px;
+  width: 119.609px;
+  padding: 6px 12px;
+  font-size: 20px;
+}
+
+.btn-call {
+  height: 36px;
+  width: 71.313px;
+  padding: 6px 12px;
+  font-size: 20px;
+  margin-right: 10px;
+}

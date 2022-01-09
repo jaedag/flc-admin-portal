@@ -288,8 +288,9 @@ export const reports = [
   },
 
   //Council By Constituency
+
   {
-    path: '/services/council-by-constituencies',
+    path: '/services/council-by-constituency',
     element: CouncilByConstituency,
     roles: permitMeAndThoseAbove('Council'),
     placeholder: true,

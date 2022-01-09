@@ -15,6 +15,7 @@ const PlaceholderCustom = (props) => {
           className={props.className}
           variant={props.variant}
           animation="glow"
+          {...rest}
         />
       )
     }

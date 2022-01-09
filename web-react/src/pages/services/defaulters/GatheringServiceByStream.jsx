@@ -37,7 +37,7 @@ const GatheringServiceByStream = () => {
                   <Card.Body
                     onClick={() => {
                       clickCard(stream)
-                      navigate('/services/stream-by-councils')
+                      navigate('/services/stream-by-council')
                     }}
                   >
                     <div>Active Fellowships {stream.activeFellowshipCount}</div>

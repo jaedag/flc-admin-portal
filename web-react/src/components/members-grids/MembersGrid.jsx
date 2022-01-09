@@ -48,7 +48,7 @@ const MembersGrid = (props) => {
     }, 500)
 
     window.addEventListener('resize', debouncedHandleResize)
-    // console.log(dimensions)
+
     return () => {
       window.removeEventListener('resize', debouncedHandleResize)
     }

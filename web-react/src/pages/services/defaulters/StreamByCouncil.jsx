@@ -37,7 +37,7 @@ const StreamByStream = () => {
                   <Card.Body
                     onClick={() => {
                       clickCard(council)
-                      navigate('/services/council-by-constituencies')
+                      navigate('/services/council-by-constituency')
                     }}
                   >
                     <div>

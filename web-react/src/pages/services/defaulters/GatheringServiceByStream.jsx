@@ -101,7 +101,7 @@ const GatheringServiceByStream = () => {
                 <Card>
                   <Card.Header className="fw-bold">
                     <PlaceholderCustom
-                      loading={!loading}
+                      loading={loading}
                       className="fw-bold"
                     ></PlaceholderCustom>
                   </Card.Header>

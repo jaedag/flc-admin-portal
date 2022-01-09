@@ -2749,7 +2749,7 @@ type Mutation {
       """
     )
 
-  #Set Fellowship to be 'Actvie
+  #Set Fellowship to be 'Active
   SetActiveFellowship(fellowshipId: ID!): Fellowship
     @cypher(
       statement: """

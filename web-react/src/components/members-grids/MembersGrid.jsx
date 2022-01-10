@@ -31,11 +31,11 @@ const MembersGrid = (props) => {
       (160 * 126)
   )
   const memberDataLoaded = data ? memberFilter(data, filters) : null
-  const [memberData, setMemberData] = useState(memberDataLoaded)
+  const [memberData, setMemberData] = useState([])
 
   useEffect(() => {
     setMemberData(memberDataLoaded)
-  }, [memberDataLoaded])
+  }, [data, filters])
 
   //NavBar takes 70px of the height and side bar takes 25% of the width
 
@@ -74,7 +74,7 @@ const MembersGrid = (props) => {
       memberDataLoaded.filter((member) =>
         (member.firstName + member.lastName)
           .toLowerCase()
-          .includes(values.memberSearch)
+          .includes(values.memberSearch.toLowerCase())
       )
     )
 
@@ -92,7 +92,7 @@ const MembersGrid = (props) => {
         <div className="justify-content-center flex-wrap flex-md-nowrap align-items-center">
           <PlaceholderCustom loading={!data || loading} element="h5">
             <h5 className="data-number">{`${
-              memberDataLoaded?.length || 0
+              memberData?.length || 0
             } Members`}</h5>
           </PlaceholderCustom>
         </div>

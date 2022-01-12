@@ -15,6 +15,7 @@ import {
   STREAM_FELLOWSHIP_SEARCH,
   CONSTITUENCY_FELLOWSHIP_SEARCH,
   BACENTA_FELLOWSHIP_SEARCH,
+  FELLOWSHIP_SEARCH,
 } from './SearchFellowshipQueries'
 import TextError from './TextError'
 
@@ -67,13 +68,16 @@ const SearchFellowship = (props) => {
       },
     }
   )
+  const [fellowshipSearch, { error: fellowshipError }] =
+    useLazyQuery(FELLOWSHIP_SEARCH)
 
   const error =
     gatheringServiceError ||
     streamError ||
     councilError ||
     constituencyError ||
-    bacentaError
+    bacentaError ||
+    fellowshipError
   throwErrorMsg(error)
 
   const whichSearch = (searchString) => {
@@ -118,10 +122,18 @@ const SearchFellowship = (props) => {
     ) {
       bacentaSearch({
         variables: {
-          id: currentUser.fellowship.bacenta.id,
+          id: currentUser.bacenta,
           key: searchString?.trim(),
         },
       })
+    } else if (
+      isAuthorised(permitMeAndThoseAbove('Fellowship'), currentUser.roles)
+    ) {
+      fellowshipSearch({
+        variables: {
+          id: currentUser.id,
+        },
+      }).then((res) => setSuggestions(res.data?.members[0].leadsFellowship))
     }
   }
 

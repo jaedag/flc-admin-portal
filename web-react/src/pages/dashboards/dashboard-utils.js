@@ -27,13 +27,7 @@ export const menuItems = [
   {
     name: 'Arrivals',
     to: '/arrivals',
-    roles: [
-      'leaderConstituency',
-      'adminConstituency',
-      'adminCouncil',
-      'adminStrem',
-      'adminGatheringService',
-    ],
+    roles: permitMeAndThoseAbove('Bacenta'),
   },
   {
     name: 'Campaigns',

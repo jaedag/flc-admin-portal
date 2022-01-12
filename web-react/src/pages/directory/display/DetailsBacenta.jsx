@@ -13,34 +13,48 @@ const DetailsBacenta = () => {
     variables: { id: bacentaId },
   })
 
-  const displayBacenta = data?.bacentas[0]
+  const bacenta = data?.bacentas[0]
 
   let breadcrumb = [
-    displayBacenta?.constituency.council,
-    displayBacenta?.constituency,
-    displayBacenta,
+    bacenta?.constituency.council,
+    bacenta?.constituency,
+    bacenta,
+  ]
+
+  let bacentaStatus = data && 'Graduated'
+
+  if (bacenta?.labels.includes('IC')) {
+    bacentaStatus = 'IC'
+  }
+
+  const details = [
+    {
+      title: 'Type',
+      number: bacentaStatus,
+      link: `#`,
+      width: 'auto',
+    },
   ]
 
   return (
     <BaseComponent loading={loading} error={error} data={data} placeholder>
       <DisplayChurchDetails
+        details={details}
         loading={loading}
-        name={displayBacenta?.name}
+        name={bacenta?.name}
         leaderTitle="Bacenta Leader"
-        leader={displayBacenta?.leader}
+        leader={bacenta?.leader}
         churchId={bacentaId}
         churchHeading="Fellowships"
         churchType="Bacenta"
         subChurch="Fellowship"
-        membership={displayBacenta?.memberCount}
-        churchCount={displayBacenta?.fellowships.length}
+        membership={bacenta?.memberCount}
+        churchCount={bacenta?.fellowships.length}
         editlink="/bacenta/editbacenta"
         editPermitted={permitAdminAndThoseAbove('Constituency')}
-        history={
-          displayBacenta?.history.length !== 0 && displayBacenta?.history
-        }
+        history={bacenta?.history.length !== 0 && bacenta?.history}
         breadcrumb={breadcrumb && breadcrumb}
-        buttons={displayBacenta ? displayBacenta?.fellowships : []}
+        buttons={bacenta ? bacenta?.fellowships : []}
       />
     </BaseComponent>
   )

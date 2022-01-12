@@ -36,11 +36,11 @@ const MembersDirectoryRoute = ({ children, roles }) => {
     isAuthorised(['adminConstituency', 'leaderConstituency'], currentUser.roles)
   ) {
     //If the user does not have permission but is a CO or CO Admin
-    church.setConstituencyId(currentUser.fellowship.bacenta.constituency.id)
+    church.setConstituencyId(currentUser.constituency)
     return <ConstituencyMembers />
   } else if (isAuthorised(['leaderBacenta'], currentUser.roles)) {
     //If the user does not have permission but is a Bacenta Leader
-    church.setBacentaId(currentUser.fellowship.bacenta.id)
+    church.setBacentaId(currentUser.bacenta)
     return <BacentaMembers />
   } else if (isAuthorised(['leaderFellowship'], currentUser.roles)) {
     //If the user does not have permission but is a Fellowship Leader

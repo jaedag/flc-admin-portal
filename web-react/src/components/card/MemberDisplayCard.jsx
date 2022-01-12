@@ -4,17 +4,19 @@ import { ChurchContext } from '../../contexts/ChurchContext'
 import user from '../../assets/user.png'
 import bussolid from '../../assets/bus-solid.svg'
 import { transformCloudinaryImg } from 'global-utils'
-import { Card } from 'react-bootstrap'
+import { Button, Card } from 'react-bootstrap'
 import { MemberContext } from 'contexts/MemberContext'
 import '../../components/members-grids/MemberTable.css'
 import './MemberDisplayCard.css'
+import { TelephoneFill, Whatsapp } from 'react-bootstrap-icons'
 
 const MemberDisplayCard = (props) => {
-  const { member, ...rest } = props
+  const { member, leader, ...rest } = props
   const { setChurch, clickCard } = useContext(ChurchContext)
   const { theme } = useContext(MemberContext)
   const navigate = useNavigate()
   let icon, name, details
+  let picture = member?.pictureUrl || leader?.pictureUrl
 
   switch (member.__typename) {
     case 'Member':
@@ -78,12 +80,8 @@ const MemberDisplayCard = (props) => {
       <div className="d-flex align-items-center">
         <div className="flex-shrink-0">
           <img
-            className={`${member.pictureUrl && 'rounded-circle'} img-search`}
-            src={
-              member.pictureUrl
-                ? transformCloudinaryImg(member.pictureUrl)
-                : icon
-            }
+            className={`${picture && 'rounded-circle'} img-search`}
+            src={picture ? transformCloudinaryImg(picture) : icon}
             alt={member.fullName}
           />
         </div>
@@ -98,6 +96,23 @@ const MemberDisplayCard = (props) => {
                 </>
               ))}
           </p>
+          {props.contact && (
+            <div>
+              <a href={`tel:${leader?.phoneNumber}`}>
+                <Button variant="primary">
+                  <TelephoneFill /> Call
+                </Button>
+              </a>
+              <a
+                href={`https://wa.me/${leader?.whatsappNumber}`}
+                className="ms-3"
+              >
+                <Button variant="success">
+                  <Whatsapp /> WhatsApp
+                </Button>
+              </a>
+            </div>
+          )}
         </div>
       </div>
     </Card>

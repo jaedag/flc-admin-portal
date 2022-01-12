@@ -59,12 +59,8 @@ const DetailsFellowship = () => {
     }
   })
 
-  let fellowshipType = fellowshipData && 'Fellowship',
-    vacation = fellowshipData && 'Active'
+  let vacation = fellowshipData && 'Active'
 
-  if (fellowship?.labels.includes('ChurchPlanter')) {
-    fellowshipType = 'IC'
-  }
   if (fellowship?.labels.includes('Vacation')) {
     vacation = 'Vacation'
   }
@@ -75,12 +71,6 @@ const DetailsFellowship = () => {
       number: vacation,
       link: '#',
       width: '',
-    },
-    {
-      title: 'Type',
-      number: fellowshipType,
-      link: `#`,
-      width: 'auto',
     },
     {
       title: 'Code',

@@ -125,7 +125,7 @@ const SearchPageMobile = () => {
     } else if (isAuthorised(['leaderBacenta'], currentUser.roles)) {
       bacentaSearch({
         variables: {
-          bacentaId: currentUser.fellowship.bacenta.id,
+          bacentaId: currentUser.bacenta,
           searchKey: searchString?.trim(),
         },
       })

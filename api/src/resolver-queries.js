@@ -452,7 +452,7 @@ export const getComponentServiceAggregates = `
   
   MATCH (church)-[:HAS_HISTORY]->(log:ServiceLog)
   MATCH (log)-[:HAS*1..5]->(componentServices:ServiceLog)
-  MATCH (componentServices)-[:HAS_RECORD]->(componentRecords:ServiceRecord)
+  MATCH (componentServices)-[:HAS_SERVICE]->(componentRecords:ServiceRecord)
    
      
   MATCH (componentRecords)-[:SERVICE_HELD_ON]->(date:TimeGraph)

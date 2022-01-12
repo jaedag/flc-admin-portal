@@ -29,6 +29,7 @@ const Defaulters = () => {
     useLazyQuery(GATHERINGSERVICE_DEFAULTERS)
   const [church, setChurch] = useState(null)
   const [subChurch, setSubChurch] = useState(null)
+
   useEffect(() => {
     if (
       isAuthorised(

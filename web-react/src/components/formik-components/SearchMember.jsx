@@ -129,7 +129,7 @@ const SearchMember = (props) => {
     ) {
       bacentaSearch({
         variables: {
-          id: currentUser.fellowship.bacenta.id,
+          id: currentUser.bacenta,
           key: searchString?.trim(),
         },
       })

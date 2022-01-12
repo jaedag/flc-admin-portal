@@ -49,6 +49,7 @@ const Navigator = () => {
           data.memberByEmail.firstName + ' ' + data.memberByEmail.lastName,
         picture: data.memberByEmail?.pictureUrl ?? null,
         fellowship: data.memberByEmail?.fellowship.id,
+        bacenta: data.memberByEmail?.fellowship?.bacenta?.id,
         council:
           data.memberByEmail?.fellowship?.bacenta.constituency?.council.id,
         constituency: data.memberByEmail?.fellowship?.bacenta.constituency?.id,
@@ -170,6 +171,9 @@ const Navigator = () => {
     }
     if (servantLeader?.leadsStream?.length) {
       setServantRoles(servantLeader, 'Leader', 'Stream')
+    }
+    if (servantAdmin?.isAdminForStream?.length) {
+      setServantRoles(servantAdmin, 'Admin', 'Stream')
     }
     if (servantLeader?.leadsGatheringService?.length) {
       setServantRoles(servantLeader, 'Leader', 'GatheringService')

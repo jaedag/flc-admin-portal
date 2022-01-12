@@ -27,7 +27,7 @@ const ProtectedReports = ({ component, roles, ...args }) => {
     return <Route component={ConstituencyReport} />
   } else if (isAuthorised(['leaderBacenta'], currentUser.roles)) {
     //If the user does not have permission but is a Bacenta Leader
-    church.setBacentaId(currentUser.fellowship.bacenta.id)
+    church.setBacentaId(currentUser.bacenta)
     return <Route component={BacentaReport} />
   } else if (isAuthorised(['leaderFellowship'], currentUser.roles)) {
     //If the user does not have permission but is a Fellowship Leader

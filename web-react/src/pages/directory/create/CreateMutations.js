@@ -42,7 +42,7 @@ export const CREATE_MEMBER_MUTATION = gql`
 
           constituency {
             id
-            bishop {
+            council {
               id
             }
           }

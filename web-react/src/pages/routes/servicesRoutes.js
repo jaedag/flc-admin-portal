@@ -304,7 +304,7 @@ export const reports = [
   },
   //Gathering Service By Stream
   {
-    path: '/services/gathering-service-by-stream',
+    path: '/services/gatheringservice-by-stream',
     element: GatheringServiceByStream,
     roles: permitMeAndThoseAbove('GatheringService'),
     placeholder: true,

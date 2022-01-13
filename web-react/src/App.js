@@ -55,6 +55,9 @@ const PastorsAdmin = () => {
   const [serviceRecordId, setServiceRecordId] = useState(
     sessionStorage.getItem('serviceRecordsId') ?? ''
   )
+  const [bussingRecordId, setBussingRecordId] = useState(
+    sessionStorage.getItem('bussingRecordsId') ?? ''
+  )
 
   const [sontaId, setSontaId] = useState(
     sessionStorage.getItem('sontaId') ?? ''
@@ -137,7 +140,7 @@ const PastorsAdmin = () => {
         }
         break
       case 'Bacenta':
-        if (card.constituency.id) {
+        if (card?.constituency?.id) {
           setConstituencyId(card?.constituency?.id)
           sessionStorage.setItem('constituencyId', card?.constituency?.id)
         }
@@ -391,7 +394,12 @@ const PastorsAdmin = () => {
         >
           <SearchContext.Provider value={{ searchKey, setSearchKey }}>
             <ServiceContext.Provider
-              value={{ setServiceRecordId, serviceRecordId }}
+              value={{
+                serviceRecordId,
+                setServiceRecordId,
+                bussingRecordId,
+                setBussingRecordId,
+              }}
             >
               <SetPermissions>
                 <Navigation />

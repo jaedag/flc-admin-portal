@@ -1,21 +1,21 @@
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
-// import { MemberContext } from 'contexts/MemberContext'
-// import { isAuthorised, permitMeAndThoseAbove } from 'global-utils'
-import React from 'react'
+import { MemberContext } from 'contexts/MemberContext'
+import { isAuthorised, permitMeAndThoseAbove } from 'global-utils'
+import React, { useContext } from 'react'
 import { Container } from 'react-bootstrap'
-// import BacentaArrivals from './BacentaArrivals'
-// import ConstituencyHomePage from './ConstituencyArrivals'
+import BacentaArrivals from './BacentaArrivals'
+import ConstituencyHomePage from './ConstituencyArrivals'
 
 const Arrivals = () => {
-  // const { currentUser } = useContext(MemberContext)
+  const { currentUser } = useContext(MemberContext)
 
-  // if (isAuthorised(['adminConstituency'], currentUser.roles)) {
-  //   return <ConstituencyHomePage />
-  // } else if (
-  //   isAuthorised(permitMeAndThoseAbove('Bacenta'), currentUser.roles)
-  // ) {
-  //   return <BacentaArrivals />
-  // }
+  if (isAuthorised(['adminConstituency'], currentUser.roles)) {
+    return <ConstituencyHomePage />
+  } else if (
+    isAuthorised(permitMeAndThoseAbove('Bacenta'), currentUser.roles)
+  ) {
+    return <BacentaArrivals />
+  }
 
   return (
     <Container>

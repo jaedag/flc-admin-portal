@@ -1,7 +1,7 @@
 import { permitMeAndThoseAbove } from 'global-utils'
 import Arrivals from 'pages/arrivals/Arrivals'
 import BacentasNotArrived from 'pages/arrivals/BacentasNotArrived'
-import BusPictureSubmit from 'pages/arrivals/BusPictureSubmit'
+import BusFormSubmission from 'pages/arrivals/BusFormSubmission'
 
 export const arrivals = [
   {
@@ -25,7 +25,7 @@ export const arrivals = [
   {
     path: '/arrivals/submit-bus-picture',
     roles: ['leaderBacenta'],
-    element: BusPictureSubmit,
-    placeholder: true,
+    element: BusFormSubmission,
+    placeholder: false,
   },
 ]

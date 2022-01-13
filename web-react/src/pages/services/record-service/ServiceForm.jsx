@@ -114,7 +114,7 @@ const ServiceForm = ({
                     <FormikControl
                       control="input"
                       name="attendance"
-                      label="Attendance"
+                      label="Attendance*"
                       className="form-control"
                     />
                     <FormikControl
@@ -165,12 +165,12 @@ const ServiceForm = ({
                                   />
                                 </Col>
 
-                                <div className="col-auto d-flex">
+                                <Col className="col-auto d-flex">
                                   <PlusSign onClick={() => push()} />
                                   {index > 0 && (
                                     <MinusSign onClick={() => remove(index)} />
                                   )}
-                                </div>
+                                </Col>
                               </Row>
                             ))}
                           </>

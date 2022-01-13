@@ -177,7 +177,7 @@ type TimeGraph @auth(rules: [{ isAuthenticated: true }]) {
 }
 
 type BussingRecord @auth(rules: [{ isAuthenticated: true }]) {
-  id: ID!
+  id: ID! @id
   created_at: Date
   created_by: Member @relationship(type: "LOGGED_BY", direction: OUT)
   serviceDate: TimeGraph @relationship(type: "BUSSED_ON", direction: OUT)
@@ -1183,6 +1183,13 @@ type Fellowship {
       statement: """
       MATCH (this)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(services:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph)
       RETURN services ORDER BY date.date DESC LIMIT $limit
+      """
+    )
+  bussing(limit: Int!): [BussingRecord]
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
+      RETURN bussing ORDER BY date.date DESC LIMIT $limit
       """
     )
   labels: [String]
@@ -2698,7 +2705,7 @@ type Mutation {
         serviceRecord.servicePicture = $servicePicture
       WITH serviceRecord
       MATCH (church {id:$id}) WHERE church:Fellowship OR church:Bacenta OR church:Constituency
-      MATCH (church)-[has_history:HAS_HISTORY]->(log:HistoryLog) WHERE has_history.current = true
+      MATCH (church)-[has_history:HAS_HISTORY]->(log:ServiceLog) WHERE has_history.current = true
       MATCH (leader:Member {auth_id: $auth.jwt.sub})
 
       MERGE (serviceRecord)-[:LOGGED_BY]->(leader)
@@ -2727,7 +2734,7 @@ type Mutation {
         serviceRecord.noServiceReason = $noServiceReason
 
       WITH serviceRecord
-      MATCH (church {id:$id}) WHERE church:Fellowship OR church:Bacenta OR church:Constituency
+      MATCH (church {id:$id}) WHERE church:Fellowship OR church:Bacenta OR church:Constituency OR church:Council
       MATCH (church)-[has_history:HAS_HISTORY]->(log:HistoryLog) WHERE has_history.current = true
       MATCH (leader:Member {auth_id: $auth.jwt.sub})
 
@@ -2763,6 +2770,41 @@ type Mutation {
       MERGE (log)-[:HAS_SERVICE]->(serviceRecord)
 
       RETURN serviceRecord
+      """
+    )
+
+  #Bussing Records Entries
+  RecordBussingFromBacenta(
+    id: ID!
+    serviceDate: String!
+    bussingPicture: String!
+    bussingCost: Float!
+    offeringRaised: Float!
+    numberOfBusses: Int!
+    numberOfCars: Int
+  ): BussingRecord
+    @cypher(
+      statement: """
+      CREATE (bussingRecord:BussingRecord {created_at:datetime()})
+        SET bussingRecord.id = apoc.create.uuid(),
+        bussingRecord.bussingPicture = $bussingPicture,
+        bussingRecord.bussingCost = $bussingCost,
+        bussingRecord.offeringRaised = $offeringRaised
+        bussingRecord.numberOfBusses = $numberOfBusses,
+        bussingRecord.numberOfCars = $numberOfCars
+
+
+         WITH bussing
+          MATCH (bacenta:Bacenta {id:$id})
+          MATCH (bacenta)-[has_history:HAS_HISTORY]->(log:ServiceLog) WHERE has_history.current = true
+          MATCH (leader:Member {auth_id: $auth.jwt.sub})
+
+          MERGE (bussingRecord)-[:LOGGED_BY]->(leader)
+          MERGE (serviceDate:TimeGraph {date:date($serviceDate)})
+          MERGE (bussingRecord)-[:BUSSED_ON]->(serviceDate)
+          MERGE (log)-[:HAS_BUSSING]->(bussingRecord)
+
+          RETURN bussingRecord
       """
     )
 

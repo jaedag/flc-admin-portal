@@ -178,9 +178,9 @@ type TimeGraph @auth(rules: [{ isAuthenticated: true }]) {
 
 type BussingRecord @auth(rules: [{ isAuthenticated: true }]) {
   id: ID! @id
-  created_at: Date
-  created_by: Member @relationship(type: "LOGGED_BY", direction: OUT)
-  serviceDate: TimeGraph @relationship(type: "BUSSED_ON", direction: OUT)
+  created_at: Date!
+  created_by: Member! @relationship(type: "LOGGED_BY", direction: OUT)
+  serviceDate: TimeGraph! @relationship(type: "BUSSED_ON", direction: OUT)
   week: Int
     @cypher(
       statement: """

@@ -69,35 +69,29 @@ export const BACENTA_LEADER_ARRIVALS = gql`
   }
 `
 
-export const BUSSING_RECORDS_FROM_BACENTA_LEADER = gql`
-  mutation RecordBussingFromBacenta(
-    $d: ID!
-    $erviceDate: String!
-    $ussingPicture: String!
-    $ussingCost: Float!
-    $fferingRaised: Float!
-    $umberOfBusses: Int!
-    $umberOfCars: Int
-  ) {
-    RecordBussingFromBacenta(
-      id: $id
-      serviceDate: $serviceDate
-      bussingPicture: $bussingPicture
-      bussingCost: $bussingCost
-      offeringRaised: $offeringRaised
-      numberOfBusses: $numberOfBusses
-      numberOfCars: $numberOfCars
-    ) {
+export const DISPLAY_BUSSING_RECORDS = gql`
+  query DisplayBussingRecords($bussingRecordId: ID!, $bacentaId: ID!) {
+    bussingRecords(where: { id: $bussingRecordId }) {
       id
-      serviceLog {
-        bacenta {
-          id
-          bussing(limit: 4) {
-            id
-            week
-          }
-        }
+      created_at
+      created_by {
+        id
+        firstName
+        lastName
+        fullName
       }
+      serviceDate {
+        date
+      }
+      bussingPictures
+      bussingCost
+      offeringRaised
+      numberOfBusses
+      numberOfCars
+    }
+    bacentas(where: { id: $bacentaId }) {
+      id
+      name
     }
   }
 `

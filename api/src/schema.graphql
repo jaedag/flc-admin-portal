@@ -190,11 +190,11 @@ type BussingRecord @auth(rules: [{ isAuthenticated: true }]) {
     )
   attendance: Int
   numberOfBusses: Int
-  numberOfOtherVehicles: Int
+  numberOfCars: Int
   offeringRaised: Float
   bussingCost: Float
   bussingTopUp: Float
-  bussingPicture: String
+  bussingPictures: [String]!
   serviceLog: ServiceLog @relationship(type: "HAS_BUSSING", direction: IN)
 }
 
@@ -1130,7 +1130,7 @@ type Bacenta {
   bussing(limit: Int!): [BussingRecord]
     @cypher(
       statement: """
-      MATCH (this)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph)
+      MATCH (this)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
       RETURN bussing ORDER BY date.date DESC LIMIT $limit
       """
     )
@@ -2777,7 +2777,7 @@ type Mutation {
   RecordBussingFromBacenta(
     id: ID!
     serviceDate: String!
-    bussingPicture: String!
+    bussingPictures: [String]!
     bussingCost: Float!
     offeringRaised: Float!
     numberOfBusses: Int!
@@ -2787,14 +2787,14 @@ type Mutation {
       statement: """
       CREATE (bussingRecord:BussingRecord {created_at:datetime()})
         SET bussingRecord.id = apoc.create.uuid(),
-        bussingRecord.bussingPicture = $bussingPicture,
+        bussingRecord.bussingPictures = $bussingPictures,
         bussingRecord.bussingCost = $bussingCost,
-        bussingRecord.offeringRaised = $offeringRaised
+        bussingRecord.offeringRaised = $offeringRaised,
         bussingRecord.numberOfBusses = $numberOfBusses,
         bussingRecord.numberOfCars = $numberOfCars
 
 
-         WITH bussing
+         WITH bussingRecord
           MATCH (bacenta:Bacenta {id:$id})
           MATCH (bacenta)-[has_history:HAS_HISTORY]->(log:ServiceLog) WHERE has_history.current = true
           MATCH (leader:Member {auth_id: $auth.jwt.sub})

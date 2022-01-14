@@ -8,18 +8,18 @@ import React, { useContext } from 'react'
 import * as Yup from 'yup'
 import { Col, Container, Row } from 'react-bootstrap'
 import { useNavigate } from 'react-router'
-import {
-  BACENTA_ARRIVALS,
-  BUSSING_RECORDS_FROM_BACENTA_LEADER,
-} from './arrivalsHome'
+import { BACENTA_ARRIVALS } from './arrivalsQueries'
 import { ChurchContext } from 'contexts/ChurchContext'
 import BaseComponent from 'components/base-component/BaseComponent'
 import PlusSign from 'components/buttons/PlusMinusSign/PlusSign'
 import MinusSign from 'components/buttons/PlusMinusSign/MinusSign'
+import { BUSSING_RECORDS_FROM_BACENTA_LEADER } from './arrivalsMutations'
+import { ServiceContext } from 'contexts/ServiceContext'
 
 const BusFormSubmission = () => {
   const navigate = useNavigate()
   const { bacentaId } = useContext(ChurchContext)
+  const { setBussingRecordId } = useContext(ServiceContext)
   const initialValues = {
     serviceDate: new Date().toISOString().slice(0, 10),
     bussingPictures: [''],
@@ -68,15 +68,16 @@ const BusFormSubmission = () => {
       variables: {
         id: bacentaId,
         serviceDate: values.serviceDate,
-        bussingPicture: values.bussingPicture,
-        bussingCost: values.bussingCost,
-        offeringRaised: values.offeringRaised,
-        numberOfBusses: values.numberOfBusses,
-        numberOfCars: values.numberOfCars,
+        bussingPictures: values.bussingPictures,
+        bussingCost: parseFloat(values.bussingCost),
+        offeringRaised: parseFloat(values.offeringRaised),
+        numberOfBusses: parseInt(values.numberOfBusses),
+        numberOfCars: parseInt(values.numberOfCars),
       },
-    }).then(() => {
+    }).then((res) => {
       onSubmitProps.setSubmitting(false)
       onSubmitProps.resetForm()
+      setBussingRecordId(res.data.RecordBussingFromBacenta.id)
       navigate(`/bacenta/bussing-details`)
     })
   }
@@ -149,7 +150,7 @@ const BusFormSubmission = () => {
                                 <FormikControl
                                   label="Upload A Bussing Picture"
                                   control="imageUpload"
-                                  name="bussingPicture"
+                                  name={`bussingPictures[${index}]`}
                                   uploadPreset={
                                     process.env.REACT_APP_CLOUDINARY_BUSSING
                                   }

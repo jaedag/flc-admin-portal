@@ -7,7 +7,7 @@ import { ChurchContext } from 'contexts/ChurchContext'
 import React from 'react'
 import { useContext } from 'react'
 import { Container } from 'react-bootstrap'
-import { CONSTITUENCY_BACENTAS_NOT_ARRIVED } from './arrivalsHome'
+import { CONSTITUENCY_BACENTAS_NOT_ARRIVED } from './arrivalsQueries'
 
 const BacentasNotArrived = () => {
   const { constituencyId } = useContext(ChurchContext)

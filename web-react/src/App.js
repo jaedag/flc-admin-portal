@@ -53,10 +53,10 @@ const PastorsAdmin = () => {
     sessionStorage.getItem('fellowshipId') ?? ''
   )
   const [serviceRecordId, setServiceRecordId] = useState(
-    sessionStorage.getItem('serviceRecordsId') ?? ''
+    sessionStorage.getItem('serviceRecordId') ?? ''
   )
   const [bussingRecordId, setBussingRecordId] = useState(
-    sessionStorage.getItem('bussingRecordsId') ?? ''
+    sessionStorage.getItem('bussingRecordId') ?? ''
   )
 
   const [sontaId, setSontaId] = useState(

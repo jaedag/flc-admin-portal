@@ -33,7 +33,7 @@ const ServiceDetails = ({ service, church, loading }) => {
         <Col>
           {service?.attendance && (
             <Row className="d-flex justify-content-center">
-              <Table variant={theme} striperd bordered>
+              <Table variant={theme} striped bordered>
                 <tbody>
                   <tr>
                     <td>Date of Service</td>

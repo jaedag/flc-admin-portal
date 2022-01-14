@@ -10,7 +10,7 @@ import * as Yup from 'yup'
 import React from 'react'
 import { useContext } from 'react'
 import { Button, Col, Container, Row } from 'react-bootstrap'
-import { CONSTIUENCY_ARRIVALS_DASHBOARD } from './arrivalsHome'
+import { CONSTIUENCY_ARRIVALS_DASHBOARD } from './arrivalsQueries'
 import { useNavigate } from 'react-router'
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 

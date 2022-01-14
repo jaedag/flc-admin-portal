@@ -79,6 +79,10 @@ const DisplayChurchDetails = (props) => {
   })
 
   const onSubmit = (values, onSubmitProps) => {
+    if (initialValues.adminSelect === values.adminSelect) {
+      return
+    }
+
     setSubmitting(true)
 
     if (props.churchType === 'Stream') {

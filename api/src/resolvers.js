@@ -1,6 +1,7 @@
 const dotenv = require('dotenv')
 const axios = require('axios').default
 const cypher = require('./resolver-queries')
+const texts = require('./texts.json')
 
 dotenv.config()
 
@@ -390,7 +391,7 @@ const MakeServant = async (
       notifyMember(
         servant,
         'Your Account Has Been Created On The FL Admin Portal',
-        `Hi ${servant.firstName} ${servant.lastName},\n\nCongratulations on being made a ${churchType} ${servantType} for ${churchInEmail}. Your account has just been created on the First Love Church Administrative Portal. Please set up your password by clicking ${passwordTicketResponse.data.ticket}. If you feel this is a mistake please contact your bishops admin.\n\nAfterwards, you can login by clicking https://flcadmin.netlify.app/\n\nRegards\nThe Administrator\nFirst Love Center\nAccra`,
+        `Hi ${servant.firstName} ${servant.lastName},\n\nCongratulations on being made the ${churchType} ${servantType} for ${churchInEmail}.\n\nYour account has just been created on the First Love Church Administrative Portal. Please set up your password by clicking ${passwordTicketResponse.data.ticket}. After setting up your password, you can log in by clicking https://flcadmin.netlify.app/\n\nPlease go through this website to find guidelines and instructions on how to use it as well as answers to questions you may have https://reports.firstlovecenter.com/helpdesk.${texts.email.subscription}`,
         'servant_account_created',
         [servant.firstName, passwordTicketResponse?.data?.ticket]
       )
@@ -435,8 +436,8 @@ const MakeServant = async (
     //Send Email Using Mailgun
     notifyMember(
       servant,
-      'Servanthood Status Update',
-      `Hi ${servant.firstName} ${servant.lastName},\nCongratulations! You have just been made a ${churchType} ${servantType} for ${churchInEmail}. If you feel this is a mistake, please contact your bishop's admin\n\nRegards,\nThe Administrator,\nFirst Love Church,\nAccra.`,
+      'FL Servanthood Status Update',
+      `Hi ${servant.firstName} ${servant.lastName},\n\nCongratulations on your new position as the ${churchType} ${servantType} for ${churchInEmail}.\n\nOnce again we are reminding you to go through this website to find guidelines and instructions as well as answers to questions you may have https://reports.firstlovecenter.com/helpdesk${texts.email.subscription}`,
       'servant_status_update',
       [
         servant.firstName,
@@ -509,7 +510,7 @@ const RemoveServant = async (
     notifyMember(
       servant,
       'You Have Been Removed!',
-      `Hi ${servant.firstName} ${servant.lastName},\nYou have lost your position as a ${churchType} ${servantType} for ${churchInEmail}.\nIf you feel that this is a mistake, please contact your bishops admin.\nThank you\n\nRegards\nThe Administrator\nFirst Love Center\nAccra`,
+      `Hi ${servant.firstName} ${servant.lastName},\n\nWe regret to inform you that you have been removed as the ${churchType} ${servantType} for ${churchInEmail}.\n\nWe however encourage you to strive to serve the Lord faithfully in your other roles. Do not be discouraged by this removal; as you work hard we hope and pray that you will soon be restored to your service to him.${texts.email.subscription}`,
       'servant_account_deleted',
       [servant.firstName, churchType, servantType, church.name, church.type[0]]
     )
@@ -539,7 +540,7 @@ const RemoveServant = async (
     notifyMember(
       servant,
       'Your Servant Account Has Been Deleted',
-      `Hi ${servant.firstName} ${servant.lastName},\nYour account has been deleted from our portal. You will no longer have access to any data.\nThis is due to the fact that you have been removed as a ${churchType} ${servantType} for ${churchInEmail}.\nIf you feel that this is a mistake, please contact your bishops admin.\nThank you\n\nRegards\nThe Administrator\nFirst Love Center\nAccra`,
+      `Hi ${servant.firstName} ${servant.lastName},\n\nThis is to inform you that your servant account has been deleted from the First Love Admin Portal. You will no longer have access to any data\n\nThis is due to the fact that you have been removed as a ${churchType} ${servantType} for ${churchInEmail}.\n\nWe however encourage you to strive to serve the Lord faithfully. Do not be discouraged from loving God by this removal; we hope it is just temporary.${texts.email.subscription}`,
       'servant_account_deleted',
       [servant.firstName, churchType, servantType, church.name, church.type[0]]
     )
@@ -553,7 +554,7 @@ const RemoveServant = async (
     notifyMember(
       servant,
       'You Have Been Removed!',
-      `Hi ${servant.firstName} ${servant.lastName},\nUnfortunately You have just been removed as a ${churchType} ${servantType} for ${churchInEmail}.\n\nRegards,\nThe Administrator,\nFirst Love Bacenta,\nAccra.`
+      `Hi ${servant.firstName} ${servant.lastName},\n\nWe regret to inform you that you have been removed as the ${churchType} ${servantType} for ${churchInEmail}.\n\nWe however encourage you to strive to serve the Lord faithfully in your other roles. Do not be discouraged by this removal; as you work hard we hope and pray that you will soon be restored to your service to him.${texts.email.subscription}`
     )
   }
 

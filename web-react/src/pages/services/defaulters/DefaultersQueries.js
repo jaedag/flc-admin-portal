@@ -645,7 +645,7 @@ export const GATHERINGSERVICE_SERVICES_LIST = gql`
         }
         bacenta {
           id
-          stream {
+          constituency {
             id
             name
           }
@@ -680,7 +680,7 @@ export const GATHERINGSERVICE_CANCELLED_SERVICES_LIST = gql`
         }
         bacenta {
           id
-          stream {
+          constituency {
             id
             name
           }
@@ -716,7 +716,7 @@ export const GATHERINGSERVICE_FORM_DEFAULTERS_LIST = gql`
         }
         bacenta {
           id
-          stream {
+          constituency {
             id
             name
           }
@@ -748,7 +748,7 @@ export const GATHERINGSERVICE_BANKING_DEFAULTERS_LIST = gql`
         }
         bacenta {
           id
-          stream {
+          constituency {
             id
             name
           }
@@ -785,7 +785,7 @@ export const GATHERINGSERVICE_BANKED_LIST = gql`
         }
         bacenta {
           id
-          stream {
+          constituency {
             id
             name
           }

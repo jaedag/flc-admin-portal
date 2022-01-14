@@ -9,6 +9,8 @@ import { Col, Container, Row } from 'react-bootstrap'
 import {
   CONSTITUENCY_FORM_DEFAULTERS_LIST,
   COUNCIL_FORM_DEFAULTERS_LIST,
+  STREAM_FORM_DEFAULTERS_LIST,
+  GATHERINGSERVICE_FORM_DEFAULTERS_LIST,
 } from './DefaultersQueries'
 import DefaulterCard from './DefaulterCard'
 import PlaceholderDefaulter from './PlaceholderDefaulter'
@@ -22,6 +24,11 @@ const FormDefaulters = () => {
   const [councilFormDefaulters, { data: councilData }] = useLazyQuery(
     COUNCIL_FORM_DEFAULTERS_LIST
   )
+  const [streamFormDefaulters, { data: streamData }] = useLazyQuery(
+    STREAM_FORM_DEFAULTERS_LIST
+  )
+  const [gatheringServiceFormDefaulters, { data: gatheringServiceData }] =
+    useLazyQuery(GATHERINGSERVICE_FORM_DEFAULTERS_LIST)
 
   useEffect(() => {
     if (
@@ -45,7 +52,34 @@ const FormDefaulters = () => {
       })
       setChurch(councilData?.councils[0])
     }
-  }, [currentUser.constituency, constituencyData, councilData])
+    if (isAuthorised(['adminStream', 'leaderStream'], currentUser.roles)) {
+      streamFormDefaulters({
+        variables: {
+          id: currentUser.stream,
+        },
+      })
+      setChurch(streamData?.streams[0])
+    }
+    if (
+      isAuthorised(
+        ['adminGatheringService', 'leaderGatheringService'],
+        currentUser.roles
+      )
+    ) {
+      gatheringServiceFormDefaulters({
+        variables: {
+          id: currentUser.gatheringService,
+        },
+      })
+      setChurch(gatheringServiceData?.gatheringServices[0])
+    }
+  }, [
+    currentUser.constituency,
+    constituencyData,
+    councilData,
+    streamData,
+    gatheringServiceData,
+  ])
 
   return (
     <Container>

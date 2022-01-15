@@ -10,6 +10,8 @@ import DefaulterCard from './DefaulterCard'
 import {
   CONSTITUENCY_BANKING_DEFAULTERS_LIST,
   COUNCIL_BANKING_DEFAULTERS_LIST,
+  STREAM_BANKING_DEFAULTERS_LIST,
+  GATHERINGSERVICE_BANKING_DEFAULTERS_LIST,
 } from './DefaultersQueries'
 import PlaceholderDefaulter from './PlaceholderDefaulter'
 
@@ -21,6 +23,11 @@ const BankingDefaulters = () => {
   const [councilBankingDefaulters, { data: councilData }] = useLazyQuery(
     COUNCIL_BANKING_DEFAULTERS_LIST
   )
+  const [streamBankingDefaulters, { data: streamData }] = useLazyQuery(
+    STREAM_BANKING_DEFAULTERS_LIST
+  )
+  const [gatheringServiceBankingDefaulters, { data: gatheringServiceData }] =
+    useLazyQuery(GATHERINGSERVICE_BANKING_DEFAULTERS_LIST)
 
   useEffect(() => {
     if (
@@ -44,7 +51,34 @@ const BankingDefaulters = () => {
       })
       setChurch(councilData?.councils[0])
     }
-  }, [currentUser.constituency, constituencyData, councilData])
+    if (isAuthorised(['adminStream', 'leaderStream'], currentUser.roles)) {
+      streamBankingDefaulters({
+        variables: {
+          id: currentUser.stream,
+        },
+      })
+      setChurch(streamData?.streams[0])
+    }
+    if (
+      isAuthorised(
+        ['adminGatheringService', 'leaderGatheringService'],
+        currentUser.roles
+      )
+    ) {
+      gatheringServiceBankingDefaulters({
+        variables: {
+          id: currentUser.gatheringService,
+        },
+      })
+      setChurch(gatheringServiceData?.gatheringServices[0])
+    }
+  }, [
+    currentUser.constituency,
+    constituencyData,
+    councilData,
+    streamData,
+    gatheringServiceData,
+  ])
 
   return (
     <Container>

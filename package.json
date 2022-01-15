@@ -42,7 +42,7 @@
     "url": "git://github.com/jaedag/fl-admin-portal.git"
   },
   "license": "Apache-2.0",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "dependencies": {
     "@neo4j/graphql": "^2.5.4"
   }

@@ -13,6 +13,8 @@ import { Button, Col, Container, Row } from 'react-bootstrap'
 import { CONSTIUENCY_ARRIVALS_DASHBOARD } from './arrivalsQueries'
 import { useNavigate } from 'react-router'
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
+import RoleView from 'auth/RoleView'
+import { permitAdminAndThoseAbove } from 'global-utils'
 
 const ConstituencyArrivals = () => {
   const { isOpen, togglePopup, constituencyId } = useContext(ChurchContext)
@@ -82,16 +84,25 @@ const ConstituencyArrivals = () => {
         )}
 
         <div className="d-grid gap-2">
-          <Button
-            variant="outline-secondary"
-            size="lg"
-            onClick={() => togglePopup()}
-          >
-            Change Arrivals Admin
-          </Button>
+          <RoleView roles={permitAdminAndThoseAbove('Constituency')}>
+            <Button
+              variant="outline-secondary"
+              size="lg"
+              onClick={() => togglePopup()}
+            >
+              Change Arrivals Admin
+            </Button>
+          </RoleView>
           <MenuButton
-            title="Bacentas Yet to Arrive"
+            title="Bacentas Yet to Submit"
             onClick={() => navigate('/arrivals/bacentas-not-arrived')}
+            icon
+            iconBg
+            noCaption
+          />
+          <MenuButton
+            title="Bacentas That Have Submitted"
+            onClick={() => navigate('/arrivals/bacentas-that-submitted')}
             icon
             iconBg
             noCaption

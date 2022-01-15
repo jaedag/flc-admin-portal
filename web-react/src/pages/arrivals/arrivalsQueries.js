@@ -45,6 +45,33 @@ export const CONSTITUENCY_BACENTAS_NOT_ARRIVED = gql`
   }
 `
 
+export const CONSTITUENCY_BACENTAS_THAT_SUBMITTED = gql`
+  query ($id: ID) {
+    constituencies(where: { id: $id }, options: { limit: 1 }) {
+      id
+      name
+
+      bacentas {
+        id
+        name
+        leader {
+          id
+          firstName
+          lastName
+          fullName
+          pictureUrl
+          phoneNumber
+          whatsappNumber
+        }
+        bussing(limit: 4) {
+          id
+          week
+        }
+      }
+    }
+  }
+`
+
 export const BACENTA_ARRIVALS = gql`
   query ($id: ID) {
     bacentas(where: { id: $id }, options: { limit: 1 }) {

@@ -4,16 +4,20 @@ import { isAuthorised, permitMeAndThoseAbove } from 'global-utils'
 import React, { useContext } from 'react'
 import { Container } from 'react-bootstrap'
 import BacentaArrivals from './BacentaArrivals'
-import ConstituencyHomePage from './ConstituencyArrivals'
+import ConstituencyArrivalss from './ConstituencyArrivals'
 
 const Arrivals = () => {
   const { currentUser } = useContext(MemberContext)
 
-  if (isAuthorised(['adminConstituency'], currentUser.roles)) {
-    return <ConstituencyHomePage />
-  } else if (
-    isAuthorised(permitMeAndThoseAbove('Bacenta'), currentUser.roles)
+  if (
+    isAuthorised(
+      ['adminConstituency', 'adminConstituencyArrivals'],
+      currentUser.roles
+    )
   ) {
+    return <ConstituencyArrivalss />
+  }
+  if (isAuthorised(permitMeAndThoseAbove('Bacenta'), currentUser.roles)) {
     return <BacentaArrivals />
   }
 

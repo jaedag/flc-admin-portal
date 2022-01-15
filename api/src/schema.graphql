@@ -495,7 +495,7 @@ type Stream {
     )
   constituencies: [Constituency]
     @cypher(
-      statement: "MATCH (this)-[:HAS*3]->(constituencies:Constituency) RETURN constituencies"
+      statement: "MATCH (this)-[:HAS*2]->(constituencies:Constituency) RETURN constituencies"
     )
   bacentas: [Bacenta]
     @cypher(
@@ -1130,8 +1130,16 @@ type Bacenta {
   bussing(limit: Int!): [BussingRecord]
     @cypher(
       statement: """
-      MATCH (this)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
+      MATCH (this)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph) 
       RETURN bussing ORDER BY date.date DESC LIMIT $limit
+      """
+    )
+  bussingThisWeek: BussingRecord
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
+      WHERE date(date.date).week = date().week
+      RETURN bussing ORDER BY date.date  
       """
     )
   council: Council
@@ -1183,13 +1191,6 @@ type Fellowship {
       statement: """
       MATCH (this)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(services:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph)
       RETURN services ORDER BY date.date DESC LIMIT $limit
-      """
-    )
-  bussing(limit: Int!): [BussingRecord]
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
-      RETURN bussing ORDER BY date.date DESC LIMIT $limit
       """
     )
   labels: [String]

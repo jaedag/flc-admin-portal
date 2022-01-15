@@ -1,6 +1,7 @@
-import { permitMeAndThoseAbove } from 'global-utils'
+import { permitArrivalsAndThoseAbove } from 'global-utils'
 import Arrivals from 'pages/arrivals/Arrivals'
 import BacentasNotArrived from 'pages/arrivals/BacentasNotArrived'
+import BacentasThatSubmitted from 'pages/arrivals/BacentasThatSubmitted'
 import BusFormDetails from 'pages/arrivals/BusFormDetails'
 import BusFormSubmission from 'pages/arrivals/BusFormSubmission'
 
@@ -13,14 +14,14 @@ export const arrivals = [
 
   {
     path: '/arrivals/bacentas-not-arrived',
-    roles: permitMeAndThoseAbove('Constituency'),
+    roles: permitArrivalsAndThoseAbove('Constituency'),
     element: BacentasNotArrived,
     placeholder: true,
   },
   {
-    path: '/arrivals/bacentas-not-arrived',
-    roles: permitMeAndThoseAbove('Constituency'),
-    element: BacentasNotArrived,
+    path: '/arrivals/bacentas-that-submitted',
+    roles: permitArrivalsAndThoseAbove('Constituency'),
+    element: BacentasThatSubmitted,
     placeholder: true,
   },
   {

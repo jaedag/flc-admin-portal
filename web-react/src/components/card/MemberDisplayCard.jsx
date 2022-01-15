@@ -3,6 +3,11 @@ import { useNavigate } from 'react-router-dom'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import user from '../../assets/user.png'
 import bussolid from '../../assets/bus-solid.svg'
+import fellowship from '../../assets/fellowship.svg'
+import stream from '../../assets/stream.svg'
+import council from '../../assets/council.svg'
+import bacenta from '../../assets/bacenta.svg'
+import constituency from '../../assets/constituency-location.svg'
 import { transformCloudinaryImg } from 'global-utils'
 import { Button, Card } from 'react-bootstrap'
 import { MemberContext } from 'contexts/MemberContext'
@@ -28,28 +33,28 @@ const MemberDisplayCard = (props) => {
       ]
       break
     case 'Fellowship':
-      icon = bussolid
+      icon = fellowship
       name = member.name + ' Fellowship'
       details = [member?.leader?.fullName]
       break
     case 'Bacenta':
-      icon = bussolid
+      icon = bacenta
       name = member.name + ' Bacenta'
       details = [member?.leader?.fullName]
       break
 
     case 'Constituency':
-      icon = bussolid
+      icon = constituency
       name = member.name + ' Constituency'
       details = [member?.leader?.fullName]
       break
     case 'Council':
-      icon = bussolid
+      icon = council
       name = member.name + ' Council'
       details = [member?.leader?.fullName]
       break
     case 'Stream':
-      icon = bussolid
+      icon = stream
       name = member.name + ' Stream'
       details = [member?.leader?.fullName]
       break

@@ -49,6 +49,7 @@ const MemberDisplay = ({ memberId }) => {
   const memberAdmin = adminData?.members[0]
   const memberBirthday = getMemberDob(member)
   const nameAndTitle = getNameWithTitle(member)
+  console.log(member)
 
   return (
     <Container>
@@ -81,6 +82,23 @@ const MemberDisplay = ({ memberId }) => {
         </PlaceholderCustom>
         <MemberRoleList memberLeader={memberLeader} memberAdmin={memberAdmin} />
       </div>
+      <Row>
+        <Col>
+          <DetailsCard heading="First Name" detail={member?.firstName} />
+        </Col>
+        <Col>
+          <DetailsCard
+            heading="Middle Name"
+            detail={member?.middleName || 'None'}
+          />
+        </Col>
+        <Col sm={1} md="auto">
+          <DetailsCard
+            heading="Last Name"
+            detail={member?.lastName || 'None'}
+          />
+        </Col>
+      </Row>
       <Row>
         <Col>
           <DetailsCard heading="Gender" detail={member?.gender?.gender} />

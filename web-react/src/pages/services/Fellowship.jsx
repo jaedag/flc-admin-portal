@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router'
 const Fellowship = () => {
   const { currentUser, theme } = useContext(MemberContext)
   const navigate = useNavigate()
+
   return (
     <div className="d-flex align-items-center justify-content-center ">
       <Container>

@@ -188,11 +188,11 @@ type BussingRecord @auth(rules: [{ isAuthenticated: true }]) {
       RETURN date(date.date).week
       """
     )
-  attendance: Int
-  numberOfBusses: Int
+  attendance: Int!
+  numberOfBusses: Int!
   numberOfCars: Int
   offeringRaised: Float
-  bussingCost: Float
+  bussingCost: Float!
   bussingTopUp: Float
   bussingPictures: [String]!
   serviceLog: ServiceLog @relationship(type: "HAS_BUSSING", direction: IN)

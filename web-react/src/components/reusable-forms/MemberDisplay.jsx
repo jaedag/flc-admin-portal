@@ -49,7 +49,6 @@ const MemberDisplay = ({ memberId }) => {
   const memberAdmin = adminData?.members[0]
   const memberBirthday = getMemberDob(member)
   const nameAndTitle = getNameWithTitle(member)
-  console.log(member)
 
   return (
     <Container>
@@ -87,17 +86,16 @@ const MemberDisplay = ({ memberId }) => {
           <DetailsCard heading="First Name" detail={member?.firstName} />
         </Col>
         <Col>
-          <DetailsCard
-            heading="Middle Name"
-            detail={member?.middleName || 'None'}
-          />
+          <DetailsCard heading="Last Name" detail={member?.lastName || ''} />
         </Col>
-        <Col sm={1} md="auto">
-          <DetailsCard
-            heading="Last Name"
-            detail={member?.lastName || 'None'}
-          />
-        </Col>
+        {member?.middleName && (
+          <Col sm={1} md="auto">
+            <DetailsCard
+              heading="Middle Name"
+              detail={member?.middleName || ' '}
+            />
+          </Col>
+        )}
       </Row>
       <Row>
         <Col>
@@ -135,12 +133,14 @@ const MemberDisplay = ({ memberId }) => {
         </Col>
       </Row>
       <Row>
-        <Col sm={1} md="auto">
-          <DetailsCard
-            heading="Occupation"
-            detail={member?.occupation?.occupation || 'None'}
-          />
-        </Col>
+        {member?.occupation?.occupation && (
+          <Col sm={1} md="auto">
+            <DetailsCard
+              heading="Occupation"
+              detail={member?.occupation?.occupation || ''}
+            />
+          </Col>
+        )}
         <Col sm={1} md="auto">
           <DetailsCard heading="Email Address" detail={member?.email} />
         </Col>

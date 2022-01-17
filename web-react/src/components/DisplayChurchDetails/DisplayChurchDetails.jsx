@@ -19,7 +19,7 @@ import {
   MAKE_STREAM_ADMIN,
 } from './AdminMutations'
 import FormikControl from '../formik-components/FormikControl'
-import { plural, throwErrorMsg } from '../../global-utils'
+import { getWeekNumber, plural, throwErrorMsg } from '../../global-utils'
 import Breadcrumb from './Breadcrumb'
 import { Button, Col, Container, Row, Spinner } from 'react-bootstrap'
 import PlaceholderCustom from 'components/Placeholder'
@@ -298,29 +298,31 @@ const DisplayChurchDetails = (props) => {
               View Trends
             </Button>
           </PlaceholderCustom>
-
-          <PlaceholderCustom
-            loading={props.loading}
-            className={`btn-trends ${theme}`}
-            button
-          >
-            <Button
-              className={`btn-trends ${theme}`}
-              onClick={() => {
-                setCurrentUser({
-                  ...currentUser,
-                  currentChurch: {
-                    id: props.churchId,
-                    name: props.name,
-                    __typename: props.churchType,
-                  },
-                })
-                navigate(`/services/${props.churchType.toLowerCase()}`)
-              }}
-            >
-              Service Forms
-            </Button>
-          </PlaceholderCustom>
+          {props.last3Weeks?.length &&
+            props.last3Weeks[0].number !== getWeekNumber() && (
+              <PlaceholderCustom
+                loading={props.loading}
+                className={`btn-trends ${theme}`}
+                button
+              >
+                <Button
+                  className={`btn-trends ${theme}`}
+                  onClick={() => {
+                    setCurrentUser({
+                      ...currentUser,
+                      currentChurch: {
+                        id: props.churchId,
+                        name: props.name,
+                        __typename: props.churchType,
+                      },
+                    })
+                    navigate(`/services/${props.churchType.toLowerCase()}`)
+                  }}
+                >
+                  Service Forms
+                </Button>
+              </PlaceholderCustom>
+            )}
         </div>
 
         {props?.location && props.location?.latitude !== 0 && (

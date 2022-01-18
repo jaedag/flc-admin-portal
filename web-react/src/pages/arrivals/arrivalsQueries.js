@@ -10,6 +10,12 @@ export const CONSTIUENCY_ARRIVALS_DASHBOARD = gql`
         firstName
         lastName
       }
+      arrivalsAdmin {
+        id
+        firstName
+        lastName
+        pictureUrl
+      }
       bacentas {
         id
         name
@@ -18,7 +24,7 @@ export const CONSTIUENCY_ARRIVALS_DASHBOARD = gql`
   }
 `
 
-export const CONSTITUENCY_BACENTAS_NOT_ARRIVED = gql`
+export const CONSTITUENCY_BUSSING_DATA = gql`
   query ($id: ID) {
     constituencies(where: { id: $id }, options: { limit: 1 }) {
       id
@@ -39,33 +45,7 @@ export const CONSTITUENCY_BACENTAS_NOT_ARRIVED = gql`
         bussing(limit: 4) {
           id
           week
-        }
-      }
-    }
-  }
-`
-
-export const CONSTITUENCY_BACENTAS_THAT_SUBMITTED = gql`
-  query ($id: ID) {
-    constituencies(where: { id: $id }, options: { limit: 1 }) {
-      id
-      name
-
-      bacentas {
-        id
-        name
-        leader {
-          id
-          firstName
-          lastName
-          fullName
-          pictureUrl
-          phoneNumber
-          whatsappNumber
-        }
-        bussing(limit: 4) {
-          id
-          week
+          bussingPictures
         }
       }
     }

@@ -4,14 +4,15 @@ import MemberDisplayCard from 'components/card/MemberDisplayCard'
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import HeadingSecondary from 'components/HeadingSecondary'
 import { ChurchContext } from 'contexts/ChurchContext'
+import { getWeekNumber } from 'global-utils'
 import React from 'react'
 import { useContext } from 'react'
 import { Container } from 'react-bootstrap'
-import { CONSTITUENCY_BACENTAS_NOT_ARRIVED } from './arrivalsQueries'
+import { CONSTITUENCY_BUSSING_DATA } from './arrivalsQueries'
 
 const BacentasNotArrived = () => {
   const { constituencyId } = useContext(ChurchContext)
-  const { data, loading, error } = useQuery(CONSTITUENCY_BACENTAS_NOT_ARRIVED, {
+  const { data, loading, error } = useQuery(CONSTITUENCY_BUSSING_DATA, {
     variables: { id: constituencyId },
   })
   const constituency = data?.constituencies[0]
@@ -27,7 +28,7 @@ const BacentasNotArrived = () => {
         </HeadingSecondary>
 
         {constituency?.bacentas.map((bacenta, i) => {
-          if (!bacenta.bussing.length) {
+          if (bacenta.bussing[0]?.week !== getWeekNumber()) {
             return (
               <MemberDisplayCard
                 key={i}

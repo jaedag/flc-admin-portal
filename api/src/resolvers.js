@@ -63,7 +63,10 @@ const notifyMember = (
   mg.messages
     .create('mg.firstlovecenter.com', {
       from: 'FL Accra Admin <no-reply@firstlovecenter.org>',
-      to: [member.email, 'admin@firstlovecenter.com'],
+      to: process.env.TEST_EMAIL_ADDRESS || [
+        member.email,
+        'admin@firstlovecenter.com',
+      ],
       subject: subject,
       text: body,
       html: html || null, //HTML Version of the Message for Better Styling
@@ -140,12 +143,12 @@ const parseForCache = (servant, church, verb, role) => {
 
 const getTokenConfig = {
   method: 'post',
-  url: 'https://flcadmin.us.auth0.com/oauth/token',
+  url: `${process.env.AUTH0_BASE_URL}oauth/token`,
   headers: { 'content-type': 'application/json' },
   data: {
-    client_id: '4LofGKzEk2nFCbVRgG9YScD5AaT7WFFF',
-    client_secret: process.env.AUTH_CLIENT_SECRET,
-    audience: 'https://flcadmin.us.auth0.com/api/v2/',
+    client_id: process.env.AUTH0_MGMT_CLIENT_ID,
+    client_secret: process.env.AUTH0_CLIENT_SECRET,
+    audience: `${process.env.AUTH0_BASE_URL}api/v2/`,
     grant_type: 'client_credentials',
   },
 }
@@ -190,7 +193,7 @@ const createAuthUserConfig = (member) => ({
     Authorization: `Bearer ${authToken}`,
   },
   data: {
-    connection: 'flcadmin',
+    connection: `flcadmin${process.env.TEST_ENV && '-test'}`,
     email: member.email,
     given_name: member.firstName,
     family_name: member.lastName,
@@ -212,7 +215,7 @@ const updateAuthUserConfig = (member) => ({
     Authorization: `Bearer ${authToken}`,
   },
   data: {
-    connection: 'flcadmin',
+    connection: `flcadmin${process.env.TEST_ENV && '-test'}`,
     email: member.email,
     given_name: member.firstName,
     family_name: member.lastName,
@@ -233,7 +236,7 @@ const changePasswordConfig = (member) => ({
   },
 
   data: {
-    connection_id: 'con_dxnSvYK6VptkEBL0',
+    connection_id: process.env.AUTH0_DB_CONNECTION_ID,
     email: member.email,
     mark_email_as_verified: true,
   },
@@ -349,7 +352,7 @@ const MakeServant = async (
   //Set Up
   const churchLower = churchType.toLowerCase()
   const servantLower = servantType.toLowerCase()
-  isAuth(permittedRoles, context.auth.roles)
+  // isAuth(permittedRoles, context.auth.roles)
   noEmptyArgsValidation([
     `${churchLower}Id`,
     args[`${churchLower}Id`],

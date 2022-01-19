@@ -17,7 +17,7 @@ import { TelephoneFill, Whatsapp } from 'react-bootstrap-icons'
 
 const MemberDisplayCard = (props) => {
   const { member, leader, ...rest } = props
-  const { setChurch, clickCard } = useContext(ChurchContext)
+  const { clickCard } = useContext(ChurchContext)
   const { theme } = useContext(MemberContext)
   const navigate = useNavigate()
   let icon, name, details
@@ -72,15 +72,16 @@ const MemberDisplayCard = (props) => {
       break
   }
 
+  const clickFunction = () => {
+    clickCard(member)
+    navigate(`/${member.__typename.toLowerCase()}/displaydetails`)
+  }
+
   return (
     <Card
       {...rest}
       className="mobile-search-card"
-      onClick={() => {
-        clickCard(member)
-        setChurch({ church: member?.stream_name, subChurch: 'bacenta' })
-        navigate(`/${member.__typename.toLowerCase()}/displaydetails`)
-      }}
+      onClick={props.onClick || clickFunction}
     >
       <div className="d-flex align-items-center">
         <div className="flex-shrink-0">

@@ -1,4 +1,4 @@
-import { useQuery } from '@apollo/client'
+import { useMutation, useQuery } from '@apollo/client'
 import BaseComponent from 'components/base-component/BaseComponent'
 import MenuButton from 'components/buttons/MenuButton'
 import FormikControl from 'components/formik-components/FormikControl'
@@ -14,7 +14,8 @@ import { CONSTIUENCY_ARRIVALS_DASHBOARD } from './arrivalsQueries'
 import { useNavigate } from 'react-router'
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import RoleView from 'auth/RoleView'
-import { permitAdminAndThoseAbove } from 'global-utils'
+import { permitAdminAndThoseAbove, throwErrorMsg } from 'global-utils'
+import { MAKE_CONSTITUENCYARRIVALS_ADMIN } from './arrivalsMutations'
 
 const ConstituencyArrivals = () => {
   const { isOpen, togglePopup, constituencyId } = useContext(ChurchContext)
@@ -22,14 +23,16 @@ const ConstituencyArrivals = () => {
   const { data, loading, error } = useQuery(CONSTIUENCY_ARRIVALS_DASHBOARD, {
     variables: { id: constituencyId },
   })
-
+  const [MakeConstituencyArrivalsAdmin] = useMutation(
+    MAKE_CONSTITUENCYARRIVALS_ADMIN
+  )
   const constituency = data?.constituencies[0]
 
   const initialValues = {
-    adminName: constituency?.admin
-      ? `${constituency?.admin?.firstName} ${constituency?.admin?.lastName}`
+    adminName: constituency?.arrivvalsAdmin
+      ? `${constituency?.arrivvalsAdmin?.firstName} ${constituency?.arrivvalsAdmin?.lastName}`
       : '',
-    adminSelect: constituency?.admin?.id ?? '',
+    adminSelect: constituency?.arrivvalsAdmin?.id ?? '',
   }
   const validationSchema = Yup.object({
     adminSelect: Yup.string().required(
@@ -37,10 +40,22 @@ const ConstituencyArrivals = () => {
     ),
   })
 
-  const onSubmit = (onSubmitProps) => {
+  const onSubmit = (values, onSubmitProps) => {
     onSubmitProps.setSubmitting(true)
-    // console.log(values)
-    onSubmitProps.setSubmitting(false)
+
+    MakeConstituencyArrivalsAdmin({
+      variables: {
+        constituencyId: constituencyId,
+        newAdminId: values.adminSelect,
+        oldAdminId: initialValues.adminSelect || 'no-old-admin',
+      },
+    })
+      .then(() => {
+        togglePopup()
+        onSubmitProps.setSubmitting(false)
+        alert('Constituency Arrivals Admin has been changed successfully')
+      })
+      .catch((e) => throwErrorMsg(e))
   }
 
   return (
@@ -103,6 +118,13 @@ const ConstituencyArrivals = () => {
           <MenuButton
             title="Bacentas That Have Submitted"
             onClick={() => navigate('/arrivals/bacentas-that-submitted')}
+            icon
+            iconBg
+            noCaption
+          />
+          <MenuButton
+            title="Bacentas That Have Been Counted"
+            onClick={() => navigate('/arrivals/bacentas-have-been-counted')}
             icon
             iconBg
             noCaption

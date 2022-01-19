@@ -118,9 +118,9 @@ type Member {
   isAdminForConstituency: [Constituency]
     @relationship(type: "IS_ADMIN_FOR", direction: OUT)
 
-  isArrivalsAdminForCouncil: [Council]
+  isAdminForCouncilArrivals: [Council]
     @relationship(type: "IS_ARRIVALS_FOR", direction: OUT)
-  isArrivalsAdminForConstituency: [Constituency]
+  isAdminForConstituencyArrivals: [Constituency]
     @relationship(type: "IS_ARRIVALS_FOR", direction: OUT)
 
   #OTHER WORKS
@@ -180,6 +180,7 @@ type BussingRecord @auth(rules: [{ isAuthenticated: true }]) {
   id: ID! @id
   created_at: Date!
   created_by: Member! @relationship(type: "LOGGED_BY", direction: OUT)
+  confirmed_by: Member! @relationship(type: "CONFIRMED_BY", direction: OUT)
   serviceDate: TimeGraph! @relationship(type: "BUSSED_ON", direction: OUT)
   week: Int
     @cypher(
@@ -188,7 +189,7 @@ type BussingRecord @auth(rules: [{ isAuthenticated: true }]) {
       RETURN date(date.date).week
       """
     )
-  attendance: Int!
+  attendance: Int
   numberOfBusses: Int!
   numberOfCars: Int
   offeringRaised: Float
@@ -1130,7 +1131,7 @@ type Bacenta {
   bussing(limit: Int!): [BussingRecord]
     @cypher(
       statement: """
-      MATCH (this)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph) 
+      MATCH (this)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
       RETURN bussing ORDER BY date.date DESC LIMIT $limit
       """
     )
@@ -1139,7 +1140,7 @@ type Bacenta {
       statement: """
       MATCH (this)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
       WHERE date(date.date).week = date().week
-      RETURN bussing ORDER BY date.date  
+      RETURN bussing ORDER BY date.date
       """
     )
   council: Council
@@ -1647,6 +1648,12 @@ type Mutation {
   RemoveCouncilAdmin(adminId: ID!, councilId: ID!): Member
   MakeConstituencyAdmin(adminId: ID!, constituencyId: ID!): Member
   RemoveConstituencyAdmin(adminId: ID!, constituencyId: ID!): Member
+
+  #Arrivals Roles
+  MakeConstituencyArrivalsAdmin(adminId: ID!, constituencyId: ID!): Member
+  RemoveConstituencyArrivalsAdmin(adminId: ID!, constituencyId: ID!): Member
+
+  #Pastoral Roles
   MakeFellowshipLeader(leaderId: ID!, fellowshipId: ID!): Member
   RemoveFellowshipLeader(leaderId: ID!, fellowshipId: ID!): Member
   MakeBacentaLeader(leaderId: ID!, bacentaId: ID!): Member
@@ -2804,6 +2811,25 @@ type Mutation {
           MERGE (serviceDate:TimeGraph {date:date($serviceDate)})
           MERGE (bussingRecord)-[:BUSSED_ON]->(serviceDate)
           MERGE (log)-[:HAS_BUSSING]->(bussingRecord)
+
+          RETURN bussingRecord
+      """
+    )
+
+  ConfirmBussingByAdmin(
+    bussingRecordId: ID!
+    attendance: Int!
+    bussingTopUp: Float!
+  ): BussingRecord
+    @cypher(
+      statement: """
+      MATCH (bussingRecord:BussingRecord {id: $bussingRecordId})
+        SET bussingRecord.attendance = $attendance,
+        bussingRecord.bussingTopUp = $bussingTopUp
+
+         WITH bussingRecord
+          MATCH (admin:Member {auth_id: $auth.jwt.sub})
+          MERGE (bussingRecord)-[:CONFIRMED_BY]->(admin)
 
           RETURN bussingRecord
       """

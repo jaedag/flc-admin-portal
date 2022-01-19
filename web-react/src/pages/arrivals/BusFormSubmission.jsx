@@ -13,13 +13,11 @@ import { ChurchContext } from 'contexts/ChurchContext'
 import BaseComponent from 'components/base-component/BaseComponent'
 import PlusSign from 'components/buttons/PlusMinusSign/PlusSign'
 import MinusSign from 'components/buttons/PlusMinusSign/MinusSign'
-import { BUSSING_RECORDS_FROM_BACENTA_LEADER } from './arrivalsMutations'
-import { ServiceContext } from 'contexts/ServiceContext'
+import { RECORD_BUSSING_FROM_BACENTA } from './arrivalsMutations'
 
 const BusFormSubmission = () => {
   const navigate = useNavigate()
-  const { bacentaId } = useContext(ChurchContext)
-  const { setBussingRecordId } = useContext(ServiceContext)
+  const { bacentaId, clickCard } = useContext(ChurchContext)
   const initialValues = {
     serviceDate: new Date().toISOString().slice(0, 10),
     bussingPictures: [''],
@@ -32,9 +30,7 @@ const BusFormSubmission = () => {
   const { data, loading, error } = useQuery(BACENTA_ARRIVALS, {
     variables: { id: bacentaId },
   })
-  const [RecordBussingFromBacenta] = useMutation(
-    BUSSING_RECORDS_FROM_BACENTA_LEADER
-  )
+  const [RecordBussingFromBacenta] = useMutation(RECORD_BUSSING_FROM_BACENTA)
 
   const validationSchema = Yup.object({
     serviceDate: Yup.date()
@@ -75,9 +71,9 @@ const BusFormSubmission = () => {
         numberOfCars: parseInt(values.numberOfCars),
       },
     }).then((res) => {
-      onSubmitProps.setSubmitting(false)
+      clickCard(res.data.RecordBussingFromBacenta)
       onSubmitProps.resetForm()
-      setBussingRecordId(res.data.RecordBussingFromBacenta.id)
+      onSubmitProps.setSubmitting(false)
       navigate(`/bacenta/bussing-details`)
     })
   }

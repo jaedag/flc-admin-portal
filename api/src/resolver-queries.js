@@ -22,7 +22,9 @@ WITH apoc.cypher.runFirstColumn(
   isAdminForCouncil: [ member_adminCouncils IN apoc.cypher.runFirstColumn("MATCH (this)-[:IS_ADMIN_FOR]-(adminCouncil:Member)
   RETURN adminCouncil", {this: member}, true) | member_adminCouncils { .id,.name}],
    isAdminForStream: [ member_adminStreams IN apoc.cypher.runFirstColumn("MATCH (this)-[:IS_ADMIN_FOR]-(adminStream:Member)
-  RETURN adminStream", {this: member}, true) | member_adminStreams { .id,.name}] } AS member
+  RETURN adminStream", {this: member}, true) | member_adminStreams { .id,.name}],
+  isAdminForConstituencyArrivals: [ member_adminConstituencyArrivals IN apoc.cypher.runFirstColumn("MATCH (this)-[:IS_ARRIVALS_FOR]-(adminConstituencyArrivals:Constituency)
+  RETURN adminConstituencyArrivals", {this: member}, true) | member_adminConstituencyArrivals { .id,.name }] } AS member
   `
 
 export const matchChurchQuery = `
@@ -159,6 +161,46 @@ WITH log,constituency,oldAdmin,admin
    MATCH (currentUser:Member {auth_id:$auth.jwt.sub}) 
    WITH currentUser, admin, constituency, log
    MERGE (admin)-[:IS_ADMIN_FOR]->(constituency)
+   MERGE (log)-[:LOGGED_BY]->(currentUser)
+   MERGE (date:TimeGraph {date: date()})
+   MERGE (log)-[:RECORDED_ON]->(date)
+   MERGE (admin)-[r1:HAS_HISTORY]->(log)
+   MERGE (constituency)-[r2:HAS_HISTORY]->(log)
+   SET r1.current = true,
+   r2.current = true
+   
+   RETURN admin.id AS id, admin.auth_id AS auth_id, admin.firstName AS firstName, admin.lastName AS lastName
+`
+
+//Arrivals Stuff
+export const makeConstituencyArrivalsAdmin = `
+MATCH (admin:Member {id:$adminId})
+MATCH (constituency:Constituency {id:$constituencyId})
+CREATE (log:HistoryLog:ServiceLog)
+  SET admin.auth_id = $auth_id,
+   log.id = apoc.create.uuid(),
+   log.timeStamp = datetime(),
+   log.historyRecord = admin.firstName + ' ' +admin.lastName + ' became arrivals rep for ' + constituency.name
+WITH admin,constituency, log
+OPTIONAL MATCH (constituency)<-[oldAdmins:IS_ARRIVALS_FOR]-(oldAdmin:Member)
+OPTIONAL MATCH (constituency)-[oldHistory:HAS_HISTORY]->()-[oldAdminHistory:HAS_HISTORY]-(oldAdmin)
+SET oldHistory.current = false, oldAdminHistory.current = false //nullify old history relationship
+   DELETE oldAdmins //Delete old relationship
+WITH log,constituency,oldAdmin,admin
+       CALL{
+         WITH log,constituency,oldAdmin, admin
+         WITH log,constituency,oldAdmin, admin 
+         WHERE EXISTS (oldAdmin.firstName) AND oldAdmin.id <> $adminId
+        
+       MERGE (oldAdmin)-[hasHistory:HAS_HISTORY]->(log)
+       SET hasHistory.neverAdmin = true,
+       log.historyRecord = admin.firstName + ' ' +admin.lastName + ' became the arrivals rep for ' + constituency.name + " Constituency replacing " + oldAdmin.firstName +" "+oldAdmin.lastName
+       RETURN COUNT(log)
+       }
+  
+   MATCH (currentUser:Member {auth_id:$auth.jwt.sub}) 
+   WITH currentUser, admin, constituency, log
+   MERGE (admin)-[:IS_ARRIVALS_FOR]->(constituency)
    MERGE (log)-[:LOGGED_BY]->(currentUser)
    MERGE (date:TimeGraph {date: date()})
    MERGE (log)-[:RECORDED_ON]->(date)

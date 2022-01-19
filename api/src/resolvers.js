@@ -350,7 +350,8 @@ const MakeServant = async (
   servantType
 ) => {
   //Set Up
-  const churchLower = churchType.toLowerCase()
+  let churchLower = churchType.toLowerCase().replace('arrivals', '')
+
   const servantLower = servantType.toLowerCase()
   isAuth(permittedRoles, context.auth.roles)
   noEmptyArgsValidation([
@@ -371,9 +372,7 @@ const MakeServant = async (
     id: args[`${churchLower}Id`],
   })
   const church = rearrangeCypherObject(churchResponse)
-  const churchInEmail = church.name
-    ? `${church.name} ${church.type[0]}`
-    : `Bishop ${church.firstName} ${church.lastName}`
+  const churchInEmail = `${church.name} ${church.type[0]}`
 
   const servantResponse = await session.run(cypher.matchMemberQuery, {
     id: args[`${servantLower}Id`],
@@ -467,7 +466,8 @@ const RemoveServant = async (
   servantType
 ) => {
   //Set Up
-  const churchLower = churchType.toLowerCase()
+  let churchLower = churchType.toLowerCase().replace('arrivals', '')
+
   const servantLower = servantType.toLowerCase()
   isAuth(permittedRoles, context.auth.roles)
   noEmptyArgsValidation([
@@ -488,9 +488,7 @@ const RemoveServant = async (
     id: args[`${churchLower}Id`],
   })
   const church = rearrangeCypherObject(churchResponse)
-  const churchInEmail = church.name
-    ? `${church.name} ${church.type[0]}`
-    : `Bishop ${church.firstName} ${church.lastName}`
+  const churchInEmail = `${church.name} ${church.type[0]}`
 
   const servantResponse = await session.run(cypher.matchMemberQuery, {
     id: args[`${servantLower}Id`],
@@ -784,6 +782,8 @@ export const resolvers = {
         throwErrorMsg(error)
       }
     },
+
+    //Administrative Mutations
     MakeStreamAdmin: async (object, args, context) => {
       return MakeServant(
         context,
@@ -838,6 +838,8 @@ export const resolvers = {
         'Admin'
       )
     },
+
+    //Pastoral Mutations
     MakeFellowshipLeader: async (object, args, context) => {
       return MakeServant(
         context,
@@ -992,6 +994,21 @@ export const resolvers = {
         ['adminGatheringService'],
         'GatheringService',
         'Leader'
+      )
+    },
+    //Arrivals Mutations
+    MakeConstituencyArrivalsAdmin: async (object, args, context) => {
+      return MakeServant(
+        context,
+        args,
+        [
+          'adminGatheringService',
+          'adminStream',
+          'adminCouncil',
+          'adminConstituency',
+        ],
+        'ConstituencyArrivals',
+        'Admin'
       )
     },
   },

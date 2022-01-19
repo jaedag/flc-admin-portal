@@ -4,6 +4,19 @@ export const PHONE_NUM_REGEX_VALIDATION =
 export const DECIMAL_NUM_REGEX = /^-?\d*\.{1}\d*$/
 export const DECIMAL_NUM_REGEX_POSITIVE_ONLY = /^\d*\.{1}\d*$/
 export const DEBOUNCE_TIMER = 500
+export const ARRIVALS_CUTOFF = [14, 30, 0]
+
+export const getTime = (time) => {
+  return time.getHours() + ':' + time.getMinutes() + ':' + time.getSeconds()
+}
+export const setTime = (timeArray) => {
+  let now = new Date()
+  now.setHours(timeArray[0])
+  now.setMinutes(timeArray[1])
+  now.setMilliseconds(timeArray[2])
+
+  return now
+}
 
 export const GENDER_OPTIONS = [
   { key: 'Male', value: 'Male' },
@@ -422,6 +435,7 @@ export const permitMeAndThoseAbove = (churchType) => {
         'adminStream',
         'adminCouncil',
         'adminConstituency',
+        'adminConstituencyArrivals',
         'leaderGatheringService',
         'leaderStream',
         'leaderCouncil',
@@ -436,6 +450,7 @@ export const permitMeAndThoseAbove = (churchType) => {
         'adminStream',
         'adminCouncil',
         'adminConstituency',
+        'adminConstituencyArrivals',
         'leaderGatheringService',
         'leaderStream',
         'leaderCouncil',
@@ -449,6 +464,7 @@ export const permitMeAndThoseAbove = (churchType) => {
         'adminStream',
         'adminCouncil',
         'adminConstituency',
+        'adminConstituencyArrivals',
         'leaderGatheringService',
         'leaderStream',
         'leaderCouncil',
@@ -462,6 +478,7 @@ export const permitMeAndThoseAbove = (churchType) => {
         'adminStream',
         'adminCouncil',
         'adminConstituency',
+        'adminConstituencyArrivals',
         'leaderGatheringService',
         'leaderStream',
         'leaderCouncil',

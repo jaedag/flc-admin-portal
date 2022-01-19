@@ -332,6 +332,14 @@ const PastorsAdmin = () => {
         setSontaId(card.sonta.id)
         sessionStorage.setItem('sontaId', card.sonta.id)
         break
+      case 'ServiceRecord':
+        setServiceRecordId(card.id)
+        sessionStorage.setItem('serviceRecordId', card.id)
+        break
+      case 'BussingRecord':
+        setBussingRecordId(card.id)
+        sessionStorage.setItem('bussingRecordId', card.id)
+        break
       default:
         break
     }

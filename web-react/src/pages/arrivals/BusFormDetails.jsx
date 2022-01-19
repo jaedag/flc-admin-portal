@@ -11,8 +11,14 @@ import { useContext } from 'react'
 import { Container, Row, Col, Table, Button } from 'react-bootstrap'
 import { DISPLAY_BUSSING_RECORDS } from './arrivalsQueries'
 import '../services/record-service/ServiceDetails.css'
-import { transformCloudinaryImg } from 'global-utils'
+import {
+  ARRIVALS_CUTOFF,
+  parseDate,
+  setTime,
+  transformCloudinaryImg,
+} from 'global-utils'
 import { useNavigate } from 'react-router'
+import RoleView from 'auth/RoleView'
 
 const BusFormDetails = () => {
   const { bacentaId } = useContext(ChurchContext)
@@ -25,6 +31,17 @@ const BusFormDetails = () => {
   const bussing = data?.bussingRecords[0]
   const church = data?.bacentas[0]
 
+  const changeCondition = () => {
+    const today = new Date()
+    const arrivalsCutoff = setTime(ARRIVALS_CUTOFF)
+
+    if (parseDate(bussing?.created_at) === 'Today' && today < arrivalsCutoff) {
+      //If the record was created today
+      //And if the time is less than the arrivals cutoff time
+      return true
+    }
+    return false
+  }
   return (
     <BaseComponent loading={loading} error={error} data={data} placeholder>
       <Container>
@@ -34,6 +51,14 @@ const BusFormDetails = () => {
         <PlaceholderCustom as="h6" loading={loading}>
           <HeadingSecondary>{`${church?.name} ${church?.__typename}`}</HeadingSecondary>
           <p>{`Recorded by ${bussing?.created_by.fullName}`}</p>
+          {bussing?.confirmed_by && (
+            <p>
+              {`Confirmed by `}
+              <span className="fw-bold good">
+                {bussing?.confirmed_by.fullName}
+              </span>
+            </p>
+          )}
         </PlaceholderCustom>
 
         <Row>
@@ -55,10 +80,27 @@ const BusFormDetails = () => {
                     </PlaceholderCustom>
                   </tr>
                   <tr>
+                    <td>Attendance</td>
+                    <td>
+                      <PlaceholderCustom loading={loading}>
+                        {bussing?.attendance}
+                      </PlaceholderCustom>
+                    </td>
+                  </tr>
+                  <tr>
                     <td>Bussing Cost</td>
                     <td>
                       <PlaceholderCustom loading={loading}>
                         {bussing?.bussingCost}
+                      </PlaceholderCustom>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td>Bussing Top Up</td>
+                    <td>
+                      <PlaceholderCustom loading={loading}>
+                        {bussing?.bussingTopUp}
                       </PlaceholderCustom>
                     </td>
                   </tr>
@@ -104,6 +146,15 @@ const BusFormDetails = () => {
           </Col>
         </Row>
         <div className="d-grid gap-2">
+          <RoleView roles={['adminConstituencyArrivals']}>
+            {changeCondition() && (
+              <Button
+                onClick={() => navigate('/arrivals/submit-bus-attendance')}
+              >
+                Enter Attendance
+              </Button>
+            )}
+          </RoleView>
           <Button onClick={() => navigate('/arrivals')}>
             Back to Arrivals Home
           </Button>

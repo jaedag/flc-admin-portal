@@ -6,7 +6,8 @@ export const getMonthlyStatAverage = (data, stat) => {
     return
   }
 
-  const statArray = data.map((service) => parseFloat(service[`${stat}`]))
+  let statArray = data.map((service) => parseFloat(service[`${stat}`]))
+  // statArray = statArray.filter((stat) => stat !== 0.0)
   //Calculate average of the last four weeks of service
   return average(statArray.slice(-numberOfWeeks))?.toFixed(2)
 }

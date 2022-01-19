@@ -45,6 +45,7 @@ export const CONSTITUENCY_BUSSING_DATA = gql`
         bussing(limit: 4) {
           id
           week
+          attendance
           bussingPictures
         }
       }
@@ -87,11 +88,20 @@ export const DISPLAY_BUSSING_RECORDS = gql`
         lastName
         fullName
       }
+      confirmed_by {
+        id
+        firstName
+        lastName
+        fullName
+      }
       serviceDate {
         date
       }
+      week
+      attendance
       bussingPictures
       bussingCost
+      bussingTopUp
       offeringRaised
       numberOfBusses
       numberOfCars

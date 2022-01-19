@@ -193,7 +193,7 @@ const createAuthUserConfig = (member) => ({
     Authorization: `Bearer ${authToken}`,
   },
   data: {
-    connection: `flcadmin${process.env.TEST_ENV && '-test'}`,
+    connection: `flcadmin${process.env.TEST_ENV ? '-test' : ''}`,
     email: member.email,
     given_name: member.firstName,
     family_name: member.lastName,
@@ -215,7 +215,7 @@ const updateAuthUserConfig = (member) => ({
     Authorization: `Bearer ${authToken}`,
   },
   data: {
-    connection: `flcadmin${process.env.TEST_ENV && '-test'}`,
+    connection: `flcadmin${process.env.TEST_ENV ? '-test' : ''}`,
     email: member.email,
     given_name: member.firstName,
     family_name: member.lastName,
@@ -352,7 +352,7 @@ const MakeServant = async (
   //Set Up
   const churchLower = churchType.toLowerCase()
   const servantLower = servantType.toLowerCase()
-  // isAuth(permittedRoles, context.auth.roles)
+  isAuth(permittedRoles, context.auth.roles)
   noEmptyArgsValidation([
     `${churchLower}Id`,
     args[`${churchLower}Id`],
@@ -396,7 +396,7 @@ const MakeServant = async (
         servant,
         'Your Account Has Been Created On The FL Admin Portal',
         null,
-        `<p>Hi ${servant.firstName} ${servant.lastName},<br/><br/>Congratulations on being made the ${churchType} ${servantType} for ${churchInEmail}.<br/><br/>Your account has just been created on the First Love Church Administrative Portal. Please set up your password by clicking <b><a href=${passwordTicketResponse.data.ticket}>this link</a></b>. After setting up your password, you can log in by clicking https://flcadmin.netlify.app/<br/><br/>Please go through ${texts.html.helpdesk} to find guidelines and instructions on how to use it as well as answers to questions you may have.</p>${texts.html.subscription}`,
+        `<p>Hi ${servant.firstName} ${servant.lastName},<br/><br/>Congratulations on being made the <b>${churchType} ${servantType}</b> for <b>${churchInEmail}</b>.<br/><br/>Your account has just been created on the First Love Church Administrative Portal. Please set up your password by clicking <b><a href=${passwordTicketResponse.data.ticket}>this link</a></b>. After setting up your password, you can log in by clicking <b>https://flcadmin.netlify.app/</b><br/><br/>Please go through ${texts.html.helpdesk} to find guidelines and instructions on how to use it as well as answers to questions you may have.</p>${texts.html.subscription}`,
         'servant_account_created',
         [servant.firstName, passwordTicketResponse?.data?.ticket]
       )
@@ -443,7 +443,7 @@ const MakeServant = async (
       servant,
       'FL Servanthood Status Update',
       null,
-      `<p>Hi ${servant.firstName} ${servant.lastName},<br/><br/>Congratulations on your new position as the ${churchType} ${servantType} for ${churchInEmail}.<br/><br/>Once again we are reminding you to go through ${texts.html.helpdesk} to find guidelines and instructions as well as answers to questions you may have</p>${texts.html.subscription}`,
+      `<p>Hi ${servant.firstName} ${servant.lastName},<br/><br/>Congratulations on your new position as the <b>${churchType} ${servantType}</b> for <b>${churchInEmail}</b>.<br/><br/>Once again we are reminding you to go through ${texts.html.helpdesk} to find guidelines and instructions as well as answers to questions you may have</p>${texts.html.subscription}`,
       'servant_status_update',
       [
         servant.firstName,

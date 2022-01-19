@@ -536,6 +536,18 @@ export const permitAdminAndThoseAbove = (churchType) => {
 export const permitArrivalsAndThoseAbove = (churchType) => {
   let permittedFor = []
   switch (churchType) {
+    case 'Bacenta':
+      permittedFor = [
+        'adminGatheringService',
+        'adminStream',
+        'adminStreamArrivals',
+        'adminCouncil',
+        'adminCouncilArrivals',
+        'adminConstituency',
+        'adminConstituencyArrivals',
+        'leaderBacenta',
+      ]
+      break
     case 'Constituency':
       permittedFor = [
         'adminGatheringService',

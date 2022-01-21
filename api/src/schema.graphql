@@ -532,6 +532,10 @@ type Stream {
       RETURN COUNT(DISTINCT pastors)
       """
     )
+  councilCount: Int
+    @cypher(
+      statement: "MATCH (this)-[:HAS]->(council:Council) RETURN COUNT(council)"
+    )
   constituencyCount: Int
     @cypher(
       statement: "MATCH (this)-[:HAS*2]->(constituency:Constituency) RETURN COUNT(constituency)"

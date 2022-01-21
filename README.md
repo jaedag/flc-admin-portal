@@ -31,7 +31,7 @@ All Contributors welcome. Make your changes in a separate branch before submitti
 4.  Display registration numbers at all levels (Constituency, Bacenta, Basonta)
 5.  Be able to import data in a csv file, and export data in a csv file.
 6.  An extensive transaction log of leadership histories.
-7.  Database Backups implementation.
+7.  Database Backups to occur every day or twice a day.
     <br/>
 
 ## PHASE 2: Attendance and Income Records (State of the Flock Part 2)

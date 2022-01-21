@@ -56,6 +56,7 @@ export const RECORD_BUSSING_FROM_BACENTA = gql`
       serviceLog {
         bacenta {
           id
+          stream_name
           bussing(limit: 4) {
             id
             week

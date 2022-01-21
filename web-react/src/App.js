@@ -100,7 +100,7 @@ const PastorsAdmin = () => {
   }
 
   const determineStream = (card) => {
-    setChurch({ church: card.stream_name, subChurch: 'bacenta' })
+    setChurch({ church: card?.stream_name, subChurch: 'bacenta' })
     sessionStorage.setItem(
       'church',
       JSON.stringify({

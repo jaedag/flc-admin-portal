@@ -10,7 +10,7 @@ const Arrivals = () => {
   return (
     <Container>
       <HeadingPrimary>Arrivals</HeadingPrimary>
-
+      {/* This Page will require a redesign. Possibly by Basoah */}
       <div>
         The Arrivals Feature is still being worked on. Will update soon!
       </div>

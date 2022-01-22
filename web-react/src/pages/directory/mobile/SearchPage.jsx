@@ -135,7 +135,7 @@ const SearchPageMobile = () => {
     ) {
       councilSearch({
         variables: {
-          councilId: currentUser.stream,
+          councilId: currentUser.council,
           searchKey: searchString?.trim(),
         },
       })

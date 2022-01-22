@@ -87,7 +87,7 @@ export const FEDERAL_SEARCH = gql`
 `
 
 export const STREAM_SEARCH = gql`
-  query streamSearch($searchKey: String, $streamId: ID) {
+  query streamSearch($searchKey: String, $streamId: ID!) {
     streamSontaSearch(searchKey: $searchKey, streamId: $streamId) {
       id
       name
@@ -161,7 +161,7 @@ export const STREAM_SEARCH = gql`
 `
 
 export const COUNCIL_SEARCH = gql`
-  query councilSearch($searchKey: String, $councilId: ID) {
+  query councilSearch($searchKey: String, $councilId: ID!) {
     councilSontaSearch(searchKey: $searchKey, councilId: $councilId) {
       id
       name
@@ -217,7 +217,7 @@ export const COUNCIL_SEARCH = gql`
 `
 
 export const CONSTITUENCY_SEARCH = gql`
-  query constituencySearch($searchKey: String, $constituencyId: ID) {
+  query constituencySearch($searchKey: String, $constituencyId: ID!) {
     constituencySontaSearch(
       searchKey: $searchKey
       constituencyId: $constituencyId
@@ -274,7 +274,7 @@ export const CONSTITUENCY_SEARCH = gql`
 `
 
 export const BACENTA_SEARCH = gql`
-  query bacentaSearch($searchKey: String, $bacentaId: ID) {
+  query bacentaSearch($searchKey: String, $bacentaId: ID!) {
     bacentaFellowshipSearch(searchKey: $searchKey, bacentaId: $bacentaId) {
       id
       name
@@ -305,7 +305,7 @@ export const BACENTA_SEARCH = gql`
 `
 
 export const FELLOWSHIP_SEARCH = gql`
-  query fellowshipSearch($searchKey: String, $fellowshipId: ID) {
+  query fellowshipSearch($searchKey: String, $fellowshipId: ID!) {
     fellowshipMemberSearch(searchKey: $searchKey, fellowshipId: $fellowshipId) {
       id
       firstName

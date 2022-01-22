@@ -6,6 +6,7 @@ import { ErrorMessage } from 'formik'
 import TextError from './TextError'
 import { useNavigate } from 'react-router-dom'
 import {
+  STREAM_SEARCH,
   COUNCIL_SEARCH,
   CONSTITUENCY_SEARCH,
   FEDERAL_SEARCH,
@@ -57,6 +58,21 @@ function FormikSearchbox(props) {
       }
     },
   })
+  const [streamSearch] = useLazyQuery(STREAM_SEARCH, {
+    onCompleted: (data) => {
+      const combinedData = [
+        ...data.streamMemberSearch,
+        ...data.streamCouncilSearch,
+        ...data.streamConstituencySearch,
+        ...data.streamSontaSearch,
+        ...data.streamBacentaSearch,
+        ...data.streamFellowshipSearch,
+      ]
+      if (currentUser.roles.includes('adminStream')) {
+        getSuggestions(combinedData)
+      }
+    },
+  })
   const [councilSearch] = useLazyQuery(COUNCIL_SEARCH, {
     onCompleted: (data) => {
       const combinedData = [
@@ -92,10 +108,21 @@ function FormikSearchbox(props) {
       federalSearch({
         variables: { searchKey: capitalise(searchString.trim()) },
       })
-    } else if (isAuthorised(['adminCouncil', 'bishop'], currentUser.roles)) {
+    } else if (
+      isAuthorised(['adminStream', 'leaderStream'], currentUser.roles)
+    ) {
+      streamSearch({
+        variables: {
+          streamId: currentUser.stream,
+          searchKey: capitalise(searchString.trim()),
+        },
+      })
+    } else if (
+      isAuthorised(['adminCouncil', 'leaderCouncil'], currentUser.roles)
+    ) {
       councilSearch({
         variables: {
-          bishopId: currentUser.bishop,
+          councilId: currentUser.council,
           searchKey: capitalise(searchString.trim()),
         },
       })

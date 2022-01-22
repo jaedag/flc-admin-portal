@@ -1409,6 +1409,20 @@ type Query {
       RETURN member LIMIT 5
       """
     )
+  streamMemberSearch(searchKey: String, streamId: ID): [Member]
+    @auth(rules: [{ roles: ["adminStream"] }])
+    @cypher(
+      statement: """
+      MATCH (stream:Stream {id: $streamId})-[:HAS]->(:Council)-[:HAS]->(:Constituency)-[:HAS]->(:Bacenta)-[:HAS]->(:Fellowship)<-[:BELONGS_TO]-(member:Member)
+      WHERE toLower(member.firstName) = toLower($searchKey)
+      OR toLower(member.lastName) = toLower($searchKey)
+      OR toLower(member.firstName) STARTS WITH toLower($searchKey)
+      OR toLower(member.lastName) STARTS WITH toLower($searchKey)
+      OR toLower(member.firstName + ' ' + member.middleName+ ' '+ member.lastName) CONTAINS toLower($searchKey)
+      WITH member WHERE member IS NOT NULL
+      RETURN DISTINCT(member) LIMIT 5
+      """
+    )
   councilMemberSearch(searchKey: String, councilId: ID): [Member]
     @auth(rules: [{ roles: ["adminCouncil"] }])
     @cypher(
@@ -1476,6 +1490,19 @@ type Query {
       RETURN DISTINCT fellowship LIMIT 5
       """
     )
+
+  streamFellowshipSearch(searchKey: String, streamId: ID): [Fellowship]
+    @auth(rules: [{ roles: ["adminStream"] }])
+    @cypher(
+      statement: """
+      MATCH (stream:Stream {id: $streamId})-[:HAS*4]->(fellowship:Fellowship)
+
+      WHERE toLower(fellowship.name) STARTS WITH toLower($searchKey)
+      OR toLower(fellowship.name) CONTAINS toLower($searchKey)
+      RETURN DISTINCT fellowship LIMIT 5
+      """
+    )
+
   councilFellowshipSearch(searchKey: String, councilId: ID): [Fellowship]
     @auth(rules: [{ roles: ["adminCouncil"] }])
     @cypher(
@@ -1516,6 +1543,17 @@ type Query {
     @cypher(
       statement: """
       MATCH (bacenta:Bacenta)
+      WHERE toLower(bacenta.name) STARTS WITH toLower($searchKey)
+      OR toLower(bacenta.name) CONTAINS toLower($searchKey)
+      RETURN bacenta LIMIT 5
+      """
+    )
+  streamBacentaSearch(searchKey: String, streamId: ID): [Bacenta]
+    @auth(rules: [{ roles: ["adminStream"] }])
+    @cypher(
+      statement: """
+      MATCH (stream:Stream {id: $streamId})-[:HAS*3]->(bacenta)
+
       WHERE toLower(bacenta.name) STARTS WITH toLower($searchKey)
       OR toLower(bacenta.name) CONTAINS toLower($searchKey)
       RETURN bacenta LIMIT 5
@@ -1567,6 +1605,17 @@ type Query {
       RETURN council LIMIT 5
       """
     )
+  streamCouncilSearch(searchKey: String, streamId: ID): [Council]
+    @auth(rules: [{ roles: ["adminStream"] }])
+    @cypher(
+      statement: """
+      MATCH (stream:Stream {id: $streamId})-[:HAS]->(council)
+      MATCH (council:Council)
+      WHERE toLower(council.name) STARTS WITH toLower($searchKey)
+      OR toLower(council.name) CONTAINS toLower($searchKey)
+      RETURN council LIMIT 5
+      """
+    )
   federalStreamSearch(searchKey: String): [Stream]
     @auth(rules: [{ roles: ["adminGatheringService"] }])
     @cypher(
@@ -1575,6 +1624,17 @@ type Query {
       WHERE toLower(stream.name) STARTS WITH toLower($searchKey)
       OR toLower(stream.name) CONTAINS toLower($searchKey)
       RETURN stream LIMIT 5
+      """
+    )
+  streamConstituencySearch(searchKey: String, streamId: ID): [Constituency]
+    @auth(rules: [{ roles: ["adminStream"] }])
+    @cypher(
+      statement: """
+      MATCH (stream:Stream {id: $streamId})-[:HAS]->(council:Council)-[:HAS]->(constituency)
+
+      WHERE toLower(constituency.name) STARTS WITH toLower($searchKey)
+      OR toLower(constituency.name) CONTAINS toLower($searchKey)
+      RETURN constituency LIMIT 5
       """
     )
   councilConstituencySearch(searchKey: String, councilId: ID): [Constituency]
@@ -1594,6 +1654,17 @@ type Query {
     @cypher(
       statement: """
       MATCH (sonta:Sonta)
+      WHERE toLower(sonta.name) STARTS WITH toLower($searchKey)
+      OR toLower(sonta.name) CONTAINS toLower($searchKey)
+      RETURN sonta LIMIT 5
+      """
+    )
+  streamSontaSearch(searchKey: String, streamId: ID): [Sonta]
+    @auth(rules: [{ roles: ["adminStream"] }])
+    @cypher(
+      statement: """
+      MATCH (stream:Stream {id: $streamId})-[:HAS]->(council:Council)-[:HAS]->(constituency:Constituency)-[:HAS]->(sonta:Sonta)
+
       WHERE toLower(sonta.name) STARTS WITH toLower($searchKey)
       OR toLower(sonta.name) CONTAINS toLower($searchKey)
       RETURN sonta LIMIT 5

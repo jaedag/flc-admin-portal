@@ -86,6 +86,80 @@ export const FEDERAL_SEARCH = gql`
   }
 `
 
+export const STREAM_SEARCH = gql`
+  query streamSearch($searchKey: String, $streamId: ID) {
+    streamSontaSearch(searchKey: $searchKey, streamId: $streamId) {
+      id
+      name
+      stream_name
+      constituency {
+        council {
+          id
+        }
+      }
+    }
+    streamCouncilSearch(searchKey: $searchKey, streamId: $streamId) {
+      id
+      name
+      stream_name
+      leader {
+        id
+        firstName
+        lastName
+        fullName
+      }
+    }
+    streamConstituencySearch(searchKey: $searchKey, streamId: $streamId) {
+      id
+      name
+      stream_name
+      leader {
+        id
+        firstName
+        lastName
+        fullName
+      }
+    }
+    streamBacentaSearch(searchKey: $searchKey, streamId: $streamId) {
+      id
+      name
+      stream_name
+      leader {
+        id
+        firstName
+        lastName
+        fullName
+      }
+    }
+    streamFellowshipSearch(searchKey: $searchKey, streamId: $streamId) {
+      id
+      name
+      stream_name
+      leader {
+        id
+        firstName
+        lastName
+        fullName
+      }
+    }
+    streamMemberSearch(searchKey: $searchKey, streamId: $streamId) {
+      id
+      firstName
+      lastName
+      pictureUrl
+      stream_name
+      fellowship {
+        id
+        name
+      }
+      ministry {
+        id
+        name
+      }
+    }
+  }
+`
+
 export const COUNCIL_SEARCH = gql`
   query councilSearch($searchKey: String, $councilId: ID) {
     councilSontaSearch(searchKey: $searchKey, councilId: $councilId) {

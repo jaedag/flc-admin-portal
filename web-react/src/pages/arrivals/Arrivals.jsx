@@ -4,7 +4,7 @@ import { permitMeAndThoseAbove } from 'global-utils'
 import React from 'react'
 import { Container } from 'react-bootstrap'
 import BacentaArrivals from './BacentaArrivals'
-import ConstituencyArrivalss from './ConstituencyArrivals'
+import ConstituencyArrivals from './ConstituencyArrivals'
 
 const Arrivals = () => {
   return (
@@ -15,7 +15,7 @@ const Arrivals = () => {
         The Arrivals Feature is still being worked on. Will update soon!
       </div>
       <RoleView roles={['adminConstituency', 'adminConstituencyArrivals']}>
-        <ConstituencyArrivalss />
+        <ConstituencyArrivals />
       </RoleView>
       <RoleView roles={permitMeAndThoseAbove('Bacenta')}>
         <BacentaArrivals />

@@ -40,7 +40,8 @@ const BusFormDetails = () => {
       //And if the time is less than the arrivals cutoff time
       return true
     }
-    return false
+    // return false
+    return true
   }
   return (
     <BaseComponent loading={loading} error={error} data={data} placeholder>

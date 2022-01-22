@@ -18,14 +18,7 @@ export const menuItems = [
   {
     name: 'Services',
     to: '/services/church-list',
-    roles: [
-      'leaderFellowship',
-      'leaderBacenta',
-      'leaderConstituency',
-      'adminConstituency',
-      'adminCouncil',
-      'adminGatheringService',
-    ],
+    roles: permitMeAndThoseAbove('Fellowship'),
   },
   {
     name: 'Arrivals',

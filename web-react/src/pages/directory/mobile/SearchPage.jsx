@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { useLazyQuery } from '@apollo/client'
 import MobileSearchNav from '../../../components/MobileSearchNav.jsx'
 import {
+  STREAM_SEARCH,
   COUNCIL_SEARCH,
   CONSTITUENCY_SEARCH,
   FEDERAL_SEARCH,
@@ -30,6 +31,21 @@ const SearchPageMobile = () => {
           ...data.federalSontaSearch,
           ...data.federalBacentaSearch,
           ...data.federalFellowshipSearch,
+        ])
+        return
+      },
+    })
+
+  const [streamSearch, { loading: streamLoading, error: streamError }] =
+    useLazyQuery(STREAM_SEARCH, {
+      onCompleted: (data) => {
+        setCombinedData([
+          ...data.streamMemberSearch,
+          ...data.streamCouncilSearch,
+          ...data.streamConstituencySearch,
+          ...data.streamSontaSearch,
+          ...data.streamBacentaSearch,
+          ...data.streamFellowshipSearch,
         ])
         return
       },
@@ -85,6 +101,7 @@ const SearchPageMobile = () => {
   })
   const error =
     federalError ||
+    streamError ||
     councilError ||
     constituencyError ||
     bacentaError ||
@@ -93,6 +110,7 @@ const SearchPageMobile = () => {
 
   const loading =
     federalLoading ||
+    streamLoading ||
     councilLoading ||
     constituencyLoading ||
     bacentaLoading ||
@@ -103,7 +121,18 @@ const SearchPageMobile = () => {
       federalSearch({
         variables: { searchKey: searchString?.trim() },
       })
-    } else if (isAuthorised(['adminCouncil', 'bishop'], currentUser.roles)) {
+    } else if (
+      isAuthorised(['adminStream', 'leaderStream'], currentUser.roles)
+    ) {
+      streamSearch({
+        variables: {
+          streamId: currentUser.stream,
+          searchKey: searchString?.trim(),
+        },
+      })
+    } else if (
+      isAuthorised(['adminCouncil', 'leaderCouncil'], currentUser.roles)
+    ) {
       councilSearch({
         variables: {
           councilId: currentUser.council,

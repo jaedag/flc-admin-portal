@@ -137,7 +137,7 @@ const PastorsAdmin = () => {
         }
         break
       case 'Bacenta':
-        if (card.constituency?.id) {
+        if (card?.constituency?.id) {
           setConstituencyId(card?.constituency?.id)
           sessionStorage.setItem('constituencyId', card?.constituency?.id)
         }

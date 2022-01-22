@@ -69,12 +69,13 @@ const UpdateMember = () => {
 
   const navigate = useNavigate()
 
-  const [UpdateMember] = useMutation(UPDATE_MEMBER_MUTATION)
+  const [UpdateMember] = useMutation(UPDATE_MEMBER_MUTATION, {
+    refetchQueries: [{ query: DISPLAY_MEMBER_CHURCH }],
+  })
   const [AddMemberTitle] = useMutation(ADD_MEMBER_TITLE_MUTATION)
 
   const onSubmit = async (values, onSubmitProps) => {
-    const { setSubmitting, resetForm } = onSubmitProps
-    setSubmitting(true)
+    onSubmitProps.setSubmitting(true)
 
     //Variables that are not controlled by formik
 
@@ -117,8 +118,8 @@ const UpdateMember = () => {
           )
         })
 
-        setSubmitting(false)
-        resetForm()
+        onSubmitProps.setSubmitting(false)
+        onSubmitProps.resetForm()
         navigate('/member/displaydetails')
       })
       .catch((err) =>

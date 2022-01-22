@@ -5,6 +5,7 @@ export const MAKE_FELLOWSHIP_INACTIVE = gql`
     CloseDownFellowship(fellowshipId: $fellowshipId) {
       id
       name
+      stream_name
       bacenta {
         id
         stream_name

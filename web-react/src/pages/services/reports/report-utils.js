@@ -7,8 +7,14 @@ export const getMonthlyStatAverage = (data, stat) => {
   }
 
   const statArray = data.map((service) => parseFloat(service[`${stat}`]))
+
+  //filter and remove all zeros
+  const nonZeroArray = statArray.filter((value) => {
+    return value > 0
+  })
+
   //Calculate average of the last four weeks of service
-  return average(statArray.slice(-numberOfWeeks))?.toFixed(2)
+  return average(nonZeroArray.slice(-numberOfWeeks))?.toFixed(2)
 }
 
 export const sortingFunction = (key, order = 'asc') => {

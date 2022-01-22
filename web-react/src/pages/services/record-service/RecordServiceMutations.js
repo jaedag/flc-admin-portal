@@ -28,7 +28,7 @@ export const RECORD_SERVICE = gql`
         id
         fellowship {
           id
-          services(limit: 4) {
+          services(limit: 5) {
             id
             week
             bankingSlip

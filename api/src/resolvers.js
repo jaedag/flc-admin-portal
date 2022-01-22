@@ -63,7 +63,10 @@ const notifyMember = (
   mg.messages
     .create('mg.firstlovecenter.com', {
       from: 'FL Accra Admin <no-reply@firstlovecenter.org>',
-      to: [member.email, 'admin@firstlovecenter.com'],
+      to: process.env.TEST_EMAIL_ADDRESS || [
+        member.email,
+        'admin@firstlovecenter.com',
+      ],
       subject: subject,
       text: body,
       html: html || null, //HTML Version of the Message for Better Styling
@@ -140,12 +143,12 @@ const parseForCache = (servant, church, verb, role) => {
 
 const getTokenConfig = {
   method: 'post',
-  url: 'https://flcadmin.us.auth0.com/oauth/token',
+  url: `${process.env.AUTH0_BASE_URL}oauth/token`,
   headers: { 'content-type': 'application/json' },
   data: {
-    client_id: '4LofGKzEk2nFCbVRgG9YScD5AaT7WFFF',
-    client_secret: process.env.AUTH_CLIENT_SECRET,
-    audience: 'https://flcadmin.us.auth0.com/api/v2/',
+    client_id: process.env.AUTH0_MGMT_CLIENT_ID,
+    client_secret: process.env.AUTH0_CLIENT_SECRET,
+    audience: `${process.env.AUTH0_BASE_URL}api/v2/`,
     grant_type: 'client_credentials',
   },
 }
@@ -190,7 +193,7 @@ const createAuthUserConfig = (member) => ({
     Authorization: `Bearer ${authToken}`,
   },
   data: {
-    connection: 'flcadmin',
+    connection: `flcadmin${process.env.TEST_ENV ? '-test' : ''}`,
     email: member.email,
     given_name: member.firstName,
     family_name: member.lastName,
@@ -212,7 +215,7 @@ const updateAuthUserConfig = (member) => ({
     Authorization: `Bearer ${authToken}`,
   },
   data: {
-    connection: 'flcadmin',
+    connection: `flcadmin${process.env.TEST_ENV ? '-test' : ''}`,
     email: member.email,
     given_name: member.firstName,
     family_name: member.lastName,
@@ -233,7 +236,7 @@ const changePasswordConfig = (member) => ({
   },
 
   data: {
-    connection_id: 'con_dxnSvYK6VptkEBL0',
+    connection_id: process.env.AUTH0_DB_CONNECTION_ID,
     email: member.email,
     mark_email_as_verified: true,
   },
@@ -393,7 +396,7 @@ const MakeServant = async (
         servant,
         'Your Account Has Been Created On The FL Admin Portal',
         null,
-        `<p>Hi ${servant.firstName} ${servant.lastName},<br/><br/>Congratulations on being made the ${churchType} ${servantType} for ${churchInEmail}.<br/><br/>Your account has just been created on the First Love Church Administrative Portal. Please set up your password by clicking <b><a href=${passwordTicketResponse.data.ticket}>this link</a></b>. After setting up your password, you can log in by clicking https://flcadmin.netlify.app/<br/><br/>Please go through ${texts.html.helpdesk} to find guidelines and instructions on how to use it as well as answers to questions you may have.</p>${texts.html.subscription}`,
+        `<p>Hi ${servant.firstName} ${servant.lastName},<br/><br/>Congratulations on being made the <b>${churchType} ${servantType}</b> for <b>${churchInEmail}</b>.<br/><br/>Your account has just been created on the First Love Church Administrative Portal. Please set up your password by clicking <b><a href=${passwordTicketResponse.data.ticket}>this link</a></b>. After setting up your password, you can log in by clicking <b>https://flcadmin.netlify.app/</b><br/><br/>Please go through ${texts.html.helpdesk} to find guidelines and instructions on how to use it as well as answers to questions you may have.</p>${texts.html.subscription}`,
         'servant_account_created',
         [servant.firstName, passwordTicketResponse?.data?.ticket]
       )
@@ -440,7 +443,7 @@ const MakeServant = async (
       servant,
       'FL Servanthood Status Update',
       null,
-      `<p>Hi ${servant.firstName} ${servant.lastName},<br/><br/>Congratulations on your new position as the ${churchType} ${servantType} for ${churchInEmail}.<br/><br/>Once again we are reminding you to go through ${texts.html.helpdesk} to find guidelines and instructions as well as answers to questions you may have</p>${texts.html.subscription}`,
+      `<p>Hi ${servant.firstName} ${servant.lastName},<br/><br/>Congratulations on your new position as the <b>${churchType} ${servantType}</b> for <b>${churchInEmail}</b>.<br/><br/>Once again we are reminding you to go through ${texts.html.helpdesk} to find guidelines and instructions as well as answers to questions you may have</p>${texts.html.subscription}`,
       'servant_status_update',
       [
         servant.firstName,

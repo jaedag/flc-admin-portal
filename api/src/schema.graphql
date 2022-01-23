@@ -2096,6 +2096,7 @@ type Mutation {
         {
           roles: [
             "adminGatheringService"
+            "adminStream"
             "adminCouncil"
             "adminConstituency"
             "leaderFellowship"
@@ -2116,11 +2117,20 @@ type Mutation {
       	member.phoneNumber = $phoneNumber,
         member.whatsappNumber = $whatsappNumber,
       	member.pictureUrl = $pictureUrl
+      
+       CREATE (log:HistoryLog)<-[:HAS_HISTORY]-(b)
+        SET
+        log.id =  apoc.create.uuid(),
+        log.timeStamp = datetime(),
+        log.historyRecord = $firstName +' ' +$lastName+' Details were updated on"
+
 
       WITH member
-
+      MATCH (currentUser:Member {auth_id:$auth_id})
       MATCH (gender:Gender {gender: $gender})
       MERGE (member)-[:HAS_GENDER]-> (gender)
+      MERGE (log)-[:RECORDED_ON]->(today)
+      MERGE (log)-[:LOGGED_BY]->(currentUser)
 
 
       WITH member

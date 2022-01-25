@@ -9,6 +9,7 @@ import BusFormDetails from 'pages/arrivals/BusFormDetails'
 import BusFormSubmission from 'pages/arrivals/BusFormSubmission'
 import ConstituencyArrivals from 'pages/arrivals/ConstituencyArrivals'
 import ConstituencyDashboard from 'pages/arrivals/ConstituencyDashboard'
+import CouncilArrivals from 'pages/arrivals/CouncilArrivals'
 
 export const arrivals = [
   {
@@ -36,6 +37,20 @@ export const arrivals = [
     element: ConstituencyDashboard,
     placeholder: true,
   },
+  {
+    path: '/arrivals/councils',
+    roles: permitArrivalsAndThoseAbove('Council'),
+    element: CouncilArrivals,
+    placeholder: true,
+  },
+  {
+    path: '/arrivals/council/dashboard',
+    roles: permitArrivalsAndThoseAbove('Council'),
+    element: ConstituencyDashboard,
+    placeholder: true,
+  },
+
+  //Forms that need to be Filled
 
   {
     path: '/arrivals/bacentas-not-arrived',

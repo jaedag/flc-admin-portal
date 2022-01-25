@@ -96,6 +96,63 @@ export const CONSTITUENCY_LEADER_ARRIVALS = gql`
   }
 `
 
+export const COUNCIL_LEADER_ARRIVALS = gql`
+  query ($id: ID) {
+    members(where: { id: $id }, options: { limit: 1 }) {
+      id
+      firstName
+      lastName
+      fullName
+      leadsCouncil {
+        id
+        name
+      }
+      isAdminForCouncil {
+        id
+        name
+      }
+    }
+  }
+`
+
+export const STREAM_LEADER_ARRIVALS = gql`
+  query ($id: ID) {
+    members(where: { id: $id }, options: { limit: 1 }) {
+      id
+      firstName
+      lastName
+      fullName
+      leadsStream {
+        id
+        name
+      }
+      isAdminForStream {
+        id
+        name
+      }
+    }
+  }
+`
+
+export const GATHERINGSERVICE_LEADER_ARRIVALS = gql`
+  query ($id: ID) {
+    members(where: { id: $id }, options: { limit: 1 }) {
+      id
+      firstName
+      lastName
+      fullName
+      leadsGatheringService {
+        id
+        name
+      }
+      isAdminForGatheringService {
+        id
+        name
+      }
+    }
+  }
+`
+
 export const DISPLAY_BUSSING_RECORDS = gql`
   query DisplayBussingRecords($bussingRecordId: ID!, $bacentaId: ID!) {
     bussingRecords(where: { id: $bussingRecordId }) {

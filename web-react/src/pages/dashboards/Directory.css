@@ -2,6 +2,9 @@
   color: var(--churches-accent);
 }
 
+.arrivals.dark {
+  color: var(--arrivals-accent);
+}
 .members.dark {
   color: var(--members-accent);
 }

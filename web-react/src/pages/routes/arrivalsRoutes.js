@@ -1,16 +1,39 @@
 import { permitArrivalsAndThoseAbove } from 'global-utils'
 import Arrivals from 'pages/arrivals/Arrivals'
+import BacentaArrivals from 'pages/arrivals/BacentaArrivals'
 import BacentasHaveBeenCounted from 'pages/arrivals/BacentasHaveBeenCounted'
 import BacentasNotArrived from 'pages/arrivals/BacentasNotArrived'
 import BacentasThatSubmitted from 'pages/arrivals/BacentasThatSubmitted'
 import BusFormAttendanceSubmission from 'pages/arrivals/BusFormAttendanceSubmission'
 import BusFormDetails from 'pages/arrivals/BusFormDetails'
 import BusFormSubmission from 'pages/arrivals/BusFormSubmission'
+import ConstituencyArrivals from 'pages/arrivals/ConstituencyArrivals'
+import ConstituencyDashboard from 'pages/arrivals/ConstituencyDashboard'
 
 export const arrivals = [
   {
     path: '/arrivals',
     element: Arrivals,
+    placeholder: true,
+  },
+
+  //Main Arrivals Pages for the Different Churches
+  {
+    path: '/arrivals/bacentas',
+    roles: permitArrivalsAndThoseAbove('Bacenta'),
+    element: BacentaArrivals,
+    placeholder: true,
+  },
+  {
+    path: '/arrivals/constituencies',
+    roles: permitArrivalsAndThoseAbove('Constituency'),
+    element: ConstituencyArrivals,
+    placeholder: true,
+  },
+  {
+    path: '/arrivals/constituency/dashboard',
+    roles: permitArrivalsAndThoseAbove('Constituency'),
+    element: ConstituencyDashboard,
     placeholder: true,
   },
 

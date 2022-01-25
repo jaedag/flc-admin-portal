@@ -77,6 +77,25 @@ export const BACENTA_LEADER_ARRIVALS = gql`
   }
 `
 
+export const CONSTITUENCY_LEADER_ARRIVALS = gql`
+  query ($id: ID) {
+    members(where: { id: $id }, options: { limit: 1 }) {
+      id
+      firstName
+      lastName
+      fullName
+      leadsConstituency {
+        id
+        name
+      }
+      isAdminForConstituency {
+        id
+        name
+      }
+    }
+  }
+`
+
 export const DISPLAY_BUSSING_RECORDS = gql`
   query DisplayBussingRecords($bussingRecordId: ID!, $bacentaId: ID!) {
     bussingRecords(where: { id: $bussingRecordId }) {

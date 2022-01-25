@@ -5,17 +5,17 @@ import { ChurchContext } from 'contexts/ChurchContext'
 import React from 'react'
 import { useContext } from 'react'
 import { Container } from 'react-bootstrap'
-import { CONSTITUENCY_LEADER_ARRIVALS } from './arrivalsQueries'
+import { COUNCIL_LEADER_ARRIVALS } from './arrivalsQueries'
 import { useNavigate } from 'react-router'
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import { MemberContext } from 'contexts/MemberContext'
 import MemberIcon from '../../assets/people-svgrepo-com-2.svg'
 
-const ConstituencyArrivals = () => {
+const CouncilArrivals = () => {
   const { currentUser } = useContext(MemberContext)
   const { clickCard } = useContext(ChurchContext)
   const navigate = useNavigate()
-  const { data, loading, error } = useQuery(CONSTITUENCY_LEADER_ARRIVALS, {
+  const { data, loading, error } = useQuery(COUNCIL_LEADER_ARRIVALS, {
     variables: { id: currentUser.id },
   })
 
@@ -25,20 +25,20 @@ const ConstituencyArrivals = () => {
     <BaseComponent data={data} loading={loading} error={error}>
       <Container>
         <HeadingPrimary loading={loading}>
-          {member?.fullName} Constituency Arrivals
+          {member?.fullName} Council Arrivals
         </HeadingPrimary>
 
         <div className="d-grid gap-2">
-          {member?.leadsConstituency.map((constituency, i) => (
+          {member?.leadsCouncil.map((council, i) => (
             <MenuButton
               key={i}
-              title={`${constituency.name}`}
+              title={`${council.name}`}
               onClick={() => {
-                clickCard(constituency)
-                navigate('/arrivals/constituency/dashboard')
+                clickCard(council)
+                navigate('/arrivals/council/dashboard')
               }}
               icon={MemberIcon}
-              iconCaption="Constituency"
+              iconCaption="Council"
               iconBg
               color="arrivals"
               noCaption
@@ -50,4 +50,4 @@ const ConstituencyArrivals = () => {
   )
 }
 
-export default ConstituencyArrivals
+export default CouncilArrivals

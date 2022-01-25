@@ -10,7 +10,7 @@ import * as Yup from 'yup'
 import React from 'react'
 import { useContext } from 'react'
 import { Button, Col, Container, Row } from 'react-bootstrap'
-import { CONSTITUENCY_ARRIVALS_DASHBOARD } from './arrivalsQueries'
+import { COUNCIL_ARRIVALS_DASHBOARD } from './arrivalsQueries'
 import { useNavigate } from 'react-router'
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import RoleView from 'auth/RoleView'
@@ -20,11 +20,11 @@ import { MAKE_COUNCILARRIVALS_ADMIN } from './arrivalsMutations'
 const CouncilDashboard = () => {
   const { isOpen, togglePopup, councilId } = useContext(ChurchContext)
   const navigate = useNavigate()
-  const { data, loading, error } = useQuery(CONSTITUENCY_ARRIVALS_DASHBOARD, {
+  const { data, loading, error } = useQuery(COUNCIL_ARRIVALS_DASHBOARD, {
     variables: { id: councilId },
   })
   const [MakeCouncilArrivalsAdmin] = useMutation(MAKE_COUNCILARRIVALS_ADMIN)
-  const council = data?.constituencies[0]
+  const council = data?.councils[0]
 
   const initialValues = {
     adminName: council?.arrivvalsAdmin
@@ -65,7 +65,7 @@ const CouncilDashboard = () => {
         {isOpen && (
           <Popup handleClose={togglePopup}>
             <b>Change Arrivals Admin</b>
-            <p>Please enter the name of the new administrator</p>
+            <p>Please enter the name of the new arrivals rep</p>
 
             <Formik
               initialValues={initialValues}

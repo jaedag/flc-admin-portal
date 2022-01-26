@@ -70,7 +70,9 @@ const UpdateMember = () => {
   const navigate = useNavigate()
 
   const [UpdateMember] = useMutation(UPDATE_MEMBER_MUTATION, {
-    refetchQueries: [{ query: DISPLAY_MEMBER_CHURCH }],
+    refetchQueries: [
+      { query: DISPLAY_MEMBER_CHURCH, variables: { id: memberId } },
+    ],
   })
   const [AddMemberTitle] = useMutation(ADD_MEMBER_TITLE_MUTATION)
 
@@ -123,7 +125,7 @@ const UpdateMember = () => {
         navigate('/member/displaydetails')
       })
       .catch((err) =>
-        throwErrorMsg('There was an error creating the member profile\n', err)
+        throwErrorMsg('There was an error updating the member profile\n', err)
       )
   }
 

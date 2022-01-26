@@ -2117,18 +2117,19 @@ type Mutation {
       	member.phoneNumber = $phoneNumber,
         member.whatsappNumber = $whatsappNumber,
       	member.pictureUrl = $pictureUrl
-      
-       CREATE (log:HistoryLog)<-[:HAS_HISTORY]-(b)
+
+       CREATE (log:HistoryLog)
         SET
         log.id =  apoc.create.uuid(),
         log.timeStamp = datetime(),
-        log.historyRecord = $firstName +' ' +$lastName+' Details were updated on"
+        log.historyRecord = $firstName +' ' +$lastName+' Details were updated'
 
-
-      WITH member
-      MATCH (currentUser:Member {auth_id:$auth_id})
+      WITH member, log
+      MATCH (currentUser:Member {auth_id:$auth.jwt.sub})
       MATCH (gender:Gender {gender: $gender})
       MERGE (member)-[:HAS_GENDER]-> (gender)
+      MERGE (member)-[:HAS_HISTORY]->(log)
+      MERGE (today:TimeGraph {date: date()})
       MERGE (log)-[:RECORDED_ON]->(today)
       MERGE (log)-[:LOGGED_BY]->(currentUser)
 

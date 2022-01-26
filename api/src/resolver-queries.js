@@ -478,13 +478,12 @@ CREATE (member:Member {whatsappNumber:$whatsappNumber})
       	member.email = $email,
       	member.phoneNumber = $phoneNumber,
       	member.pictureUrl = $pictureUrl
-      CREATE (log:HistoryLog)<-[:HAS_HISTORY]-(b)
+
+      CREATE (log:HistoryLog)
         SET
         log.id =  apoc.create.uuid(),
         log.timeStamp = datetime(),
         log.historyRecord = $firstName +' ' +$lastName+' was registered on '+apoc.date.convertFormat(toString(date()), 'date', 'dd MMMM yyyy')
-
-
 
       WITH member, log
       MATCH (currentUser:Member {auth_id:$auth_id})

@@ -41,7 +41,12 @@ const FellowshipForm = (props) => {
   })
 
   const [CloseDownFellowship] = useMutation(MAKE_FELLOWSHIP_INACTIVE, {
-    refetchQueries: [{ query: DISPLAY_BACENTA }],
+    refetchQueries: [
+      {
+        query: DISPLAY_BACENTA,
+        variables: { id: props.initialValues.bacenta },
+      },
+    ],
   })
 
   if (error) {

@@ -31,7 +31,12 @@ const BacentaForm = ({ initialValues, onSubmit, title, newBacenta }) => {
   const navigate = useNavigate()
 
   const [CloseDownBacenta] = useMutation(MAKE_BACENTA_INACTIVE, {
-    refetchQueries: [{ query: DISPLAY_CONSTITUENCY }],
+    refetchQueries: [
+      {
+        query: DISPLAY_CONSTITUENCY,
+        variables: { id: initialValues.constituency },
+      },
+    ],
   })
   const { data, loading, error } = useQuery(GET_COUNCIL_CONSTITUENCIES, {
     variables: { id: councilId },

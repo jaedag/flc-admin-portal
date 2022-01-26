@@ -64,15 +64,20 @@ const Services = () => {
               )
             }
           />
-          {currentUser.currentChurch?.__typename === 'Fellowship' && (
-            <MenuButton
-              iconComponent={FileEarmarkArrowUpFill}
-              title="Banking Slips"
-              color="members"
-              noCaption
-              onClick={() => navigate(`/services/banking-slips`)}
-            />
-          )}
+          {currentUser.currentChurch?.__typename === 'Fellowship' ||
+            (currentUser.currentChurch?.__typename === 'Constituency' && (
+              <MenuButton
+                iconComponent={FileEarmarkArrowUpFill}
+                title="Banking Slips"
+                color="members"
+                noCaption
+                onClick={() =>
+                  navigate(
+                    `/services/${currentUser.currentChurch?.__typename.toLowerCase()}/banking-slips`
+                  )
+                }
+              />
+            ))}
         </div>
       </Container>
     </div>

@@ -681,6 +681,7 @@ export const resolvers = {
       isAuth(
         [
           'adminGatheringService',
+          'adminStream',
           'adminCouncil',
           'adminConstituency',
           'leaderConstituency',

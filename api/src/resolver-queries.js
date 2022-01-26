@@ -529,7 +529,7 @@ CREATE (member:Member {whatsappNumber:$whatsappNumber})
 
 export const checkFellowshipHasNoMembers = `
 MATCH (fellowship:Fellowship {id:$fellowshipId})
-MATCH (fellowship)<-[:BELONGS_TO]-(member)
+MATCH (fellowship)<-[:BELONGS_TO]-(member:Member)
 RETURN fellowship.name AS name, COUNT(member) AS memberCount
 `
 
@@ -543,8 +543,6 @@ RETURN bacenta.name AS name, COUNT(member) AS memberCount, COUNT(fellowships) AS
 export const closeDownFellowship = `
 MATCH (fellowship:Fellowship {id:$fellowshipId})<-[:HAS]-(bacenta)
 MATCH (bacenta)-[:HAS]->(fellowships)
-MATCH (bacenta)-[:HAS_HISTORY]->(history:HistoryLog)-[:RECORDED_ON]->(createdAt:TimeGraph)
-MATCH (history)-[:LOGGED_BY]->(loggedBy:Member)
 MATCH (admin:Member {auth_id: $auth.jwt.sub})
 
 CREATE (log:HistoryLog {id:apoc.create.uuid()})
@@ -564,21 +562,15 @@ REMOVE fellowship:ActiveFellowship
 
 RETURN bacenta {
   .id, .name, 
-  fellowships:[fellowships {.id}], 
-  history:[history {.id,.timeStamp, .historyRecord,
-      created_at:createdAt {.date},
-      loggedBy:loggedBy {.id,.firstName,.lastName}
-      }]
+  fellowships:[fellowships {.id}]
     }
 `
 
 export const closeDownBacenta = `
-MATCH (bacenta:Bacenta {id:$bacentaId})<-[:HAS]-(constituency)
-MATCH (constituency)-[:HAS]->(bacentas:Bacenta)
-MATCH (constituency)-[:HAS_HISTORY]->(history:HistoryLog)-[:RECORDED_ON]->(createdAt:TimeGraph)
-MATCH (history)-[:LOGGED_BY]->(loggedBy:Member)      
+MATCH (bacenta:Bacenta {id:$bacentaId})<-[:HAS]-(constituency:Constituency)
+MATCH (constituency)-[:HAS]->(bacentas:Bacenta)   
 MATCH (admin:Member {auth_id: $auth.jwt.sub})
-OPTIONAL MATCH (bacenta)-[:HAS]->(fellowships)
+OPTIONAL MATCH (bacenta)-[:HAS]->(fellowships:Fellowship)
 UNWIND labels(constituency) AS stream
 
 CREATE (log:HistoryLog {id:apoc.create.uuid()})
@@ -597,10 +589,6 @@ REMOVE bacenta:Bacenta,  fellowships:Fellowship:ActiveFellowship
 
 RETURN constituency {
   .id, .name, 
-  bacentas:[bacentas {.id}], 
-  history:[history {.id,.timeStamp, .historyRecord,
-      created_at:createdAt {.date},
-      loggedBy:loggedBy {.id,.firstName,.lastName}
-      }]
+  bacentas:[bacentas {.id}]
     }
 `

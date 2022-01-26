@@ -3,34 +3,13 @@ import { gql } from '@apollo/client'
 export const MAKE_FELLOWSHIP_INACTIVE = gql`
   mutation CloseDownFellowship($fellowshipId: ID!) {
     CloseDownFellowship(fellowshipId: $fellowshipId) {
+      #Returns Bacenta
       id
       name
-      stream_name
-      bacenta {
-        id
-        stream_name
-        fellowships {
-          id
-          name
-        }
-        constituency {
-          id
-          stream_name
-        }
 
-        history(options: { limit: 10 }) {
-          id
-          timeStamp
-          created_at {
-            date
-          }
-          loggedBy {
-            id
-            firstName
-            lastName
-          }
-          historyRecord
-        }
+      fellowships {
+        id
+        name
       }
     }
   }
@@ -39,28 +18,13 @@ export const MAKE_FELLOWSHIP_INACTIVE = gql`
 export const MAKE_BACENTA_INACTIVE = gql`
   mutation CloseDownBacenta($bacentaId: ID!) {
     CloseDownBacenta(bacentaId: $bacentaId) {
+      # Returns Constituency
       id
       name
-      stream_name
-      constituency {
-        id
-        bacentas {
-          id
-        }
 
-        history(options: { limit: 10 }) {
-          id
-          timeStamp
-          created_at {
-            date
-          }
-          loggedBy {
-            id
-            firstName
-            lastName
-          }
-          historyRecord
-        }
+      bacentas {
+        id
+        name
       }
     }
   }

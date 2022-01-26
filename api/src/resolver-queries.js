@@ -562,7 +562,7 @@ REMOVE fellowship:ActiveFellowship
 
 RETURN bacenta {
   .id, .name, 
-  fellowships:[fellowships {.id}]
+  fellowships:[fellowships {.id,.name}]
     }
 `
 
@@ -589,6 +589,6 @@ REMOVE bacenta:Bacenta,  fellowships:Fellowship:ActiveFellowship
 
 RETURN constituency {
   .id, .name, 
-  bacentas:[bacentas {.id}]
+  bacentas:[bacentas {.id, .name}]
     }
 `

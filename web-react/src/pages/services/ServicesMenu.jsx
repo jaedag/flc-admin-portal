@@ -49,7 +49,7 @@ const Services = () => {
               title="Constituency Joint Service"
               color="members"
               noCaption
-              onClick={() => navigate(`/services/constituency-joint`)}
+              onClick={() => navigate(`/constituency/record-service`)}
             />
           )}
 

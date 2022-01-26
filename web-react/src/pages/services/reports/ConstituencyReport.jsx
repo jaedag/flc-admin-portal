@@ -57,7 +57,7 @@ export const ConstituencyReport = () => {
           stat1="attendance"
           stat2="income"
           churchData={churchData}
-          church="campus"
+          church="constituency"
         />
       </div>
     </BaseComponent>

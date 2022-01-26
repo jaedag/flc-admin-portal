@@ -98,6 +98,7 @@ const DetailsFellowship = () => {
       editPermitted={permitAdminAndThoseAbove('Constituency')}
       weekNumber={getWeekNumber()}
       last3Weeks={fellowship && check}
+      vacation={vacation}
       history={history?.history.length && history?.history}
       breadcrumb={breadcrumb && breadcrumb}
     />

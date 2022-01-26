@@ -2782,7 +2782,7 @@ type Mutation {
         serviceRecord.treasurerSelfie = $treasurerSelfie,
         serviceRecord.servicePicture = $servicePicture
       WITH serviceRecord
-      MATCH (church {id:$id}) WHERE church:Fellowship OR church:Bacenta OR church:Constituency
+      MATCH (church {id:$id}) WHERE church:Fellowship OR church:Bacenta OR church:Constituency OR church:Council OR church:Stream
       MATCH (church)-[has_history:HAS_HISTORY]->(log:HistoryLog) WHERE has_history.current = true
       MATCH (leader:Member {auth_id: $auth.jwt.sub})
 

@@ -8,13 +8,13 @@ import React, { useContext } from 'react'
 import { Card, Col, Container, Row } from 'react-bootstrap'
 import { CheckCircleFill, XCircleFill } from 'react-bootstrap-icons'
 import { useNavigate } from 'react-router'
-import { BANKING_SLIP_QUERIES } from './ServicesQueries'
+import { FELLOWSHIP_BANKING_SLIP_QUERIES } from './ServicesQueries'
 
 const BankingSlipView = () => {
   const { fellowshipId } = useContext(ChurchContext)
   const { setServiceRecordId } = useContext(ServiceContext)
   const navigate = useNavigate()
-  const { data, loading, error } = useQuery(BANKING_SLIP_QUERIES, {
+  const { data, loading, error } = useQuery(FELLOWSHIP_BANKING_SLIP_QUERIES, {
     variables: { fellowshipId: fellowshipId },
   })
   const fellowship = data?.fellowships[0]

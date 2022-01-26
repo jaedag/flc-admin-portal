@@ -7,16 +7,6 @@ import { Container } from 'react-bootstrap'
 // import ConstituencyHomePage from './ConstituencyArrivals'
 
 const Arrivals = () => {
-  // const { currentUser } = useContext(MemberContext)
-
-  // if (isAuthorised(['adminConstituency'], currentUser.roles)) {
-  //   return <ConstituencyHomePage />
-  // } else if (
-  //   isAuthorised(permitMeAndThoseAbove('Bacenta'), currentUser.roles)
-  // ) {
-  //   return <BacentaArrivals />
-  // }
-
   return (
     <Container>
       <HeadingPrimary>Arrivals</HeadingPrimary>

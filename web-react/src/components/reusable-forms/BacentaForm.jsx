@@ -22,6 +22,7 @@ import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import HeadingSecondary from 'components/HeadingSecondary'
 import { MemberContext } from 'contexts/MemberContext'
 import SubmitButton from 'components/formik-components/SubmitButton'
+import { DISPLAY_CONSTITUENCY } from 'pages/directory/display/ReadQueries'
 
 const BacentaForm = ({ initialValues, onSubmit, title, newBacenta }) => {
   const { togglePopup, isOpen, clickCard, bacentaId, councilId } =
@@ -29,7 +30,9 @@ const BacentaForm = ({ initialValues, onSubmit, title, newBacenta }) => {
   const { theme } = useContext(MemberContext)
   const navigate = useNavigate()
 
-  const [CloseDownBacenta] = useMutation(MAKE_BACENTA_INACTIVE)
+  const [CloseDownBacenta] = useMutation(MAKE_BACENTA_INACTIVE, {
+    refetchQueries: [{ query: DISPLAY_CONSTITUENCY }],
+  })
   const { data, loading, error } = useQuery(GET_COUNCIL_CONSTITUENCIES, {
     variables: { id: councilId },
   })

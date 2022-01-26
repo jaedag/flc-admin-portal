@@ -299,7 +299,8 @@ const DisplayChurchDetails = (props) => {
             </Button>
           </PlaceholderCustom>
           {props.last3Weeks?.length &&
-            props.last3Weeks[0].number !== getWeekNumber() && (
+            props.last3Weeks[0].number !== getWeekNumber() &&
+            !props.vacation && (
               <PlaceholderCustom
                 loading={props.loading}
                 className={`btn-trends ${theme}`}

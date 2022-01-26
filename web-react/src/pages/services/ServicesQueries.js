@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client'
 
-export const BANKING_SLIP_QUERIES = gql`
+export const FELLOWSHIP_BANKING_SLIP_QUERIES = gql`
   query fellowshipServices($fellowshipId: ID) {
     fellowships(where: { id: $fellowshipId }) {
       id

@@ -891,9 +891,16 @@ type Council {
 extend type Council {
   graduatedBacentas: [Bacenta]
   icBacentas: [Bacenta]
-  bacentasYetToSubmit: Int!  @cypher(
+  bacentasThatSubmittedCount: Int!
+    @cypher(
       statement: """
+      MATCH (this)
+      MATCH (council)-[:HAS*2]->(bacentas:Bacenta)
+      MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
+      WHERE date(date.date) <> date()
+      RETURN bacentas
       """
+    )
 }
 
 type Constituency {

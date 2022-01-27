@@ -166,7 +166,10 @@ const BacentaForm = ({ initialValues, onSubmit, title, newBacenta }) => {
               <Popup handleClose={togglePopup}>
                 Are you sure you want to close down this bacenta?
                 <SubmitButton
-                  formik={formik}
+                  variant="primary"
+                  size="lg"
+                  type="submit"
+                  className={`btn-main ${theme}`}
                   onClick={() => {
                     CloseDownBacenta({
                       variables: {

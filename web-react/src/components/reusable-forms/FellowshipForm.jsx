@@ -273,6 +273,7 @@ const FellowshipForm = (props) => {
                 <Button
                   variant="primary"
                   type="submit"
+                  size="lg"
                   className={`btn-main ${theme}`}
                   onClick={() => {
                     CloseDownFellowship({

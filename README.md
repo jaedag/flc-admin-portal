@@ -17,7 +17,7 @@ The aim is to build a Church Management Portal for Managing the [First Love Chur
 All Contributors welcome. Go ahead and fork the project and submit a PR. Read the [Contributor Guide](./CONTRIBUTING.md) for guidelines.
 
 - [PHASE 1: Directory (State of the Flock Part 1) ✅](#phase-1-directory-state-of-the-flock-part-1-)
-- [PHASE 2: Attendance and Income Records (State of the Flock Part 2)](#phase-2-attendance-and-income-records-state-of-the-flock-part-2)
+- [PHASE 2: Attendance and Income Records (State of the Flock Part 2) ✅](#phase-2-attendance-and-income-records-state-of-the-flock-part-2-)
 - [PHASE 3: Records of the Campaigns (SSMG)](#phase-3-records-of-the-campaigns-ssmg)
 - [PHASE 4: Geolocation (Google Earth Replacement) (Sheep Seeking)](#phase-4-geolocation-google-earth-replacement-sheep-seeking)
 - [PHASE 5: Bussing Registration and Monitoring (Bacenta Proliferation)](#phase-5-bussing-registration-and-monitoring-bacenta-proliferation)
@@ -34,7 +34,7 @@ All Contributors welcome. Go ahead and fork the project and submit a PR. Read th
 7.  Database Backups to occur every day or twice a day.
     <br/>
 
-## PHASE 2: Attendance and Income Records (State of the Flock Part 2)
+## PHASE 2: Attendance and Income Records (State of the Flock Part 2) ✅
 
 1.  Replacing all current forms for accepting income and attendance for all services and Basonta Meetings (treasurers & picture uploads)
 2.  Accepting all data from all services weekly.

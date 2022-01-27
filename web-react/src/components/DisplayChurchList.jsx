@@ -39,7 +39,7 @@ const DisplayChurchList = (props) => {
                         <p className="text-muted">{`Admin: ${church.admin.firstName} ${church.admin.lastName}`}</p>
                       )}
                       {churchType === 'GatheringService'
-                        ? `${capitalise(church.stream_name)}`
+                        ? `${capitalise(church?.stream_name)}`
                         : null}
                     </Card.Text>
                   </Card.Body>

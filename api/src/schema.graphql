@@ -2904,8 +2904,8 @@ type Mutation {
 
   #DELETE OPERATIONS
   # In the context of church data we never delete, we only render inactive
-  CloseDownFellowship(fellowshipId: ID!): Bacenta
-  CloseDownBacenta(bacentaId: ID!): Constituency
+  CloseDownFellowship(fellowshipId: ID!, leaderId: ID!): Bacenta
+  CloseDownBacenta(bacentaId: ID!, leaderId: ID!): Constituency
 
   CloseDownConstituency(constituencyId: ID!): Constituency
     @cypher(

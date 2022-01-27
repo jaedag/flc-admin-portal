@@ -278,10 +278,11 @@ const FellowshipForm = (props) => {
                     CloseDownFellowship({
                       variables: {
                         fellowshipId: fellowshipId,
+                        leaderId: props.initialValues.leaderId,
                       },
                     })
                       .then((res) => {
-                        clickCard(res.data.CloseDownFellowship.bacenta)
+                        clickCard(res.data.CloseDownFellowship)
                         togglePopup()
                         navigate('/bacenta/displaydetails')
                       })

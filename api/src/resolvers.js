@@ -548,9 +548,7 @@ const RemoveServant = async (
       servant,
       'Your Servant Account Has Been Deleted',
       `Hi ${servant.firstName} ${servant.lastName},\n\nThis is to inform you that your servant account has been deleted from the First Love Admin Portal. You will no longer have access to any data\n\nThis is due to the fact that you have been removed as a ${churchType} ${servantType} for ${churchInEmail}.\n\nWe however encourage you to strive to serve the Lord faithfully. Do not be discouraged from loving God by this removal; we hope it is just temporary.${texts.string.subscription}`,
-      null,
-      'servant_account_deleted',
-      [servant.firstName, churchType, servantType, church.name, church.type[0]]
+      null
     )
     return
   }
@@ -725,8 +723,11 @@ export const resolvers = {
           'Fellowship',
           'Leader'
         )
-        const fellowship = rearrangeCypherObject(closeFellowshipResponse)
-        return fellowship
+        const fellowshipResponse = rearrangeCypherObject(
+          closeFellowshipResponse
+        ) //Returns a Bacenta
+
+        return fellowshipResponse.bacenta
       } catch (error) {
         throwErrorMsg(error)
       }
@@ -779,8 +780,8 @@ export const resolvers = {
           'Bacenta',
           'Leader'
         )
-        const bacenta = rearrangeCypherObject(closeBacentaResponse)
-        return bacenta
+        const bacentaResponse = rearrangeCypherObject(closeBacentaResponse)
+        return bacentaResponse.constituency
       } catch (error) {
         throwErrorMsg(error)
       }

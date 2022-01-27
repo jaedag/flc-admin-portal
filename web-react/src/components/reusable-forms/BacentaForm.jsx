@@ -165,18 +165,17 @@ const BacentaForm = ({ initialValues, onSubmit, title, newBacenta }) => {
             {isOpen && (
               <Popup handleClose={togglePopup}>
                 Are you sure you want to close down this bacenta?
-                <Button
-                  variant="primary"
-                  type="submit"
-                  className={`btn-main ${theme}`}
+                <SubmitButton
+                  formik={formik}
                   onClick={() => {
                     CloseDownBacenta({
                       variables: {
                         bacentaId: bacentaId,
+                        leaderId: initialValues.leaderId,
                       },
                     })
                       .then((res) => {
-                        clickCard(res.data.CloseDownBacenta.constituency)
+                        clickCard(res.data.CloseDownBacenta)
                         togglePopup()
                         navigate(`/constituency/displaydetails`)
                       })
@@ -191,7 +190,7 @@ const BacentaForm = ({ initialValues, onSubmit, title, newBacenta }) => {
                   }}
                 >
                   {`Yes, I'm sure`}
-                </Button>
+                </SubmitButton>
                 <Button
                   variant="primary"
                   className={`btn-secondary mt-2 ${theme}`}

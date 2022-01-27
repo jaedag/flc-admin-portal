@@ -165,7 +165,7 @@ const BacentaForm = ({ initialValues, onSubmit, title, newBacenta }) => {
             {isOpen && (
               <Popup handleClose={togglePopup}>
                 Are you sure you want to close down this bacenta?
-                <SubmitButton
+                <Button
                   variant="primary"
                   size="lg"
                   type="submit"
@@ -193,7 +193,7 @@ const BacentaForm = ({ initialValues, onSubmit, title, newBacenta }) => {
                   }}
                 >
                   {`Yes, I'm sure`}
-                </SubmitButton>
+                </Button>
                 <Button
                   variant="primary"
                   className={`btn-secondary mt-2 ${theme}`}

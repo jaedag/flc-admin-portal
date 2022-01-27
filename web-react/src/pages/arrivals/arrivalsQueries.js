@@ -24,6 +24,27 @@ export const CONSTIUENCY_ARRIVALS_DASHBOARD = gql`
   }
 `
 
+export const COUNCIL_ARRIVALS_DASHBOARD = gql`
+  query ($id: ID) {
+    councils(where: { id: $id }, options: { limit: 1 }) {
+      id
+      name
+      admin {
+        id
+        firstName
+        lastName
+      }
+      arrivalsAdmin {
+        id
+        firstName
+        lastName
+        pictureUrl
+      }
+      bacentaCount
+    }
+  }
+`
+
 export const CONSTITUENCY_BUSSING_DATA = gql`
   query ($id: ID) {
     constituencies(where: { id: $id }, options: { limit: 1 }) {
@@ -58,6 +79,7 @@ export const BACENTA_ARRIVALS = gql`
     bacentas(where: { id: $id }, options: { limit: 1 }) {
       id
       name
+      arrivalsCodeOfTheDay
     }
   }
 `

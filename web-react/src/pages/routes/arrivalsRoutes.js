@@ -20,13 +20,13 @@ export const arrivals = [
 
   //Main Arrivals Pages for the Different Churches
   {
-    path: '/arrivals/bacentas',
+    path: '/arrivals/bacenta',
     roles: permitArrivalsAndThoseAbove('Bacenta'),
     element: BacentaArrivals,
     placeholder: true,
   },
   {
-    path: '/arrivals/constituencies',
+    path: '/arrivals/constituency',
     roles: permitArrivalsAndThoseAbove('Constituency'),
     element: ConstituencyArrivals,
     placeholder: true,

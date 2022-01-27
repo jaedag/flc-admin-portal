@@ -88,12 +88,21 @@ const BusFormSubmission = () => {
       >
         {(formik) => (
           <Container>
-            <HeadingPrimary>Record Bussing Data</HeadingPrimary>
+            <HeadingPrimary loading={loading}>
+              Record Bussing Data
+            </HeadingPrimary>
             <HeadingSecondary loading={loading}>
               {data?.bacentas[0].name} Bacenta
             </HeadingSecondary>
+            <HeadingSecondary loading={loading}>
+              Code of The Day:{' '}
+            </HeadingSecondary>
+            <HeadingPrimary className="fw-bold">
+              {data?.bacentas[0]?.arrivalsCodeOfTheDay}
+            </HeadingPrimary>
+
             <Form>
-              <Row className="row-cols-1 row-cols-md-2 mt-5">
+              <Row className="row-cols-1 row-cols-md-2 mt-2">
                 <Col className="mb-2">
                   <small htmlFor="dateofservice" className="form-text label">
                     Date of Service*

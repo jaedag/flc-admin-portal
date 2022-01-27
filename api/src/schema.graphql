@@ -888,6 +888,14 @@ type Council {
   componentServiceAggregate: [ComponentServiceAggregate] @ignore
 }
 
+extend type Council {
+  graduatedBacentas: [Bacenta]
+  icBacentas: [Bacenta]
+  bacentasYetToSubmit: Int!  @cypher(
+      statement: """
+      """
+}
+
 type Constituency {
   id: ID @id
   name: String
@@ -1131,6 +1139,12 @@ type Bacenta {
       MATCH (this)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(services:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph)
       RETURN services ORDER BY date.date DESC LIMIT $limit
       """
+    )
+
+  #ARrivals Data
+  arrivalsCodeOfTheDay: String!
+    @cypher(
+      statement: "MATCH (arrivals:ArrivalsCodeOfTheDay) RETURN arrivals.code"
     )
   bussing(limit: Int!): [BussingRecord]
     @cypher(

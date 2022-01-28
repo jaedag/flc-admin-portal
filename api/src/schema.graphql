@@ -216,7 +216,7 @@ type ServiceRecord implements Record @auth(rules: [{ isAuthenticated: true }]) {
       RETURN date(date.date).week
       """
     )
-  attendance: Int!
+  attendance: Int
   income: Float
   foreignCurrency: String
   servicePicture: String

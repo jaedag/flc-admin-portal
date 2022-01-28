@@ -176,10 +176,16 @@ type TimeGraph @auth(rules: [{ isAuthenticated: true }]) {
     @relationship(type: "SERVICE_HELD_ON", direction: IN)
 }
 
-type BussingRecord @auth(rules: [{ isAuthenticated: true }]) {
+interface Record {
   id: ID!
   created_at: Date!
   created_by: Member! @relationship(type: "LOGGED_BY", direction: OUT)
+}
+
+type BussingRecord implements Record @auth(rules: [{ isAuthenticated: true }]) {
+  id: ID!
+  created_at: Date!
+  created_by: Member!
   serviceDate: TimeGraph! @relationship(type: "BUSSED_ON", direction: OUT)
   week: Int!
     @cypher(
@@ -198,10 +204,10 @@ type BussingRecord @auth(rules: [{ isAuthenticated: true }]) {
   serviceLog: ServiceLog @relationship(type: "HAS_BUSSING", direction: IN)
 }
 
-type ServiceRecord @auth(rules: [{ isAuthenticated: true }]) {
+type ServiceRecord implements Record @auth(rules: [{ isAuthenticated: true }]) {
   id: ID!
-  created_at: Date
-  created_by: Member @relationship(type: "LOGGED_BY", direction: OUT)
+  created_at: Date!
+  created_by: Member!
   serviceDate: TimeGraph @relationship(type: "SERVICE_HELD_ON", direction: OUT)
   week: Int
     @cypher(
@@ -210,7 +216,7 @@ type ServiceRecord @auth(rules: [{ isAuthenticated: true }]) {
       RETURN date(date.date).week
       """
     )
-  attendance: Int
+  attendance: Int!
   income: Float
   foreignCurrency: String
   servicePicture: String
@@ -221,10 +227,10 @@ type ServiceRecord @auth(rules: [{ isAuthenticated: true }]) {
   noServiceReason: String
 }
 
-type NoService @auth(rules: [{ isAuthenticated: true }]) {
+type NoService implements Record @auth(rules: [{ isAuthenticated: true }]) {
   id: ID!
-  created_at: Date
-  created_by: Member @relationship(type: "LOGGED_BY", direction: OUT)
+  created_at: Date!
+  created_by: Member!
   serviceDate: TimeGraph @relationship(type: "SERVICE_HELD_ON", direction: OUT)
   week: Int
     @cypher(
@@ -273,7 +279,20 @@ type HistoryLog @auth(rules: [{ isAuthenticated: true }]) {
   sonta: [Sonta] @relationship(type: "HAS_HISTORY", direction: IN)
 }
 
-type GatheringService {
+interface Church {
+  id: ID @id
+  name: String!
+  leader: Member @relationship(type: "LEADS", direction: IN)
+  members: [Member]
+  memberSearch(key: String!, limit: Int!): [Member]
+  memberCount: Int
+  pastorCount: Int
+  history: [HistoryLog] @relationship(type: "HAS_HISTORY", direction: OUT)
+  serviceLogs: [ServiceLog] @relationship(type: "HAS_HISTORY", direction: OUT)
+  services(limit: Int!): [ServiceRecord]
+}
+
+type GatheringService implements Church {
   id: ID @id
   name: String!
   leader: Member @relationship(type: "LEADS", direction: IN)
@@ -361,8 +380,6 @@ type GatheringService {
     )
   admin: Member @relationship(type: "IS_ADMIN_FOR", direction: IN)
   history: [HistoryLog] @relationship(type: "HAS_HISTORY", direction: OUT)
-  serviceRecord: [ServiceRecord]
-    @relationship(type: "HAS_SERVICE", direction: OUT)
   serviceLogs: [ServiceLog] @relationship(type: "HAS_HISTORY", direction: OUT)
   services(limit: Int!): [ServiceRecord]
     @cypher(
@@ -480,7 +497,7 @@ type GatheringService {
   componentServiceAggregate: [ComponentServiceAggregate] @ignore
 }
 
-type Stream {
+type Stream implements Church {
   id: ID @id
   name: String!
   leader: Member @relationship(type: "LEADS", direction: IN)
@@ -688,7 +705,7 @@ type Stream {
   componentServiceAggregate: [ComponentServiceAggregate] @ignore
 }
 
-type Council {
+type Council implements Church {
   id: ID @id
   name: String!
   leader: Member @relationship(type: "LEADS", direction: IN)
@@ -887,9 +904,9 @@ type Council {
   componentServiceAggregate: [ComponentServiceAggregate] @ignore
 }
 
-type Constituency {
+type Constituency implements Church {
   id: ID @id
-  name: String
+  name: String!
   stream_name: String
     @cypher(
       statement: """
@@ -917,6 +934,13 @@ type Constituency {
       statement: """
       MATCH (this)-[:HAS*2]->(fellowship:Fellowship)<-[:BELONGS_TO]-(members:Member)
       RETURN COUNT(DISTINCT members)
+      """
+    )
+  pastorCount: Int
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*2]->(:Fellowship)<-[:BELONGS_TO]-(pastors:Member)-[:HAS_TITLE]->(:Title)
+      RETURN COUNT(DISTINCT pastors)
       """
     )
   fellowshipCount: Int
@@ -1071,9 +1095,9 @@ type Constituency {
   componentServiceAggregate: [ComponentServiceAggregate] @ignore
 }
 
-type Bacenta {
+type Bacenta implements Church {
   id: ID @id
-  name: String
+  name: String!
   stream_name: String
     @cypher(
       statement: """
@@ -1108,6 +1132,13 @@ type Bacenta {
       statement: """
       MATCH (this)-[:HAS]->(fellowship:Fellowship)<-[:BELONGS_TO]-(members:Member)
       RETURN COUNT(DISTINCT members)
+      """
+    )
+  pastorCount: Int
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*2]->(:Fellowship)<-[:BELONGS_TO]-(pastors:Member)-[:HAS_TITLE]->(:Title)
+      RETURN COUNT(DISTINCT pastors)
       """
     )
   leader: Member @relationship(type: "LEADS", direction: IN)
@@ -1149,10 +1180,10 @@ type Bacenta {
 }
 
 # Shared Units: Fellowship, Fellowship, Sonta
-type Fellowship {
+type Fellowship implements Church {
   id: ID @id
   bankingCode: Int
-  name: String
+  name: String!
   location: Point
   stream_name: String
     @cypher(
@@ -1177,6 +1208,13 @@ type Fellowship {
       statement: """
       MATCH (this)<-[:BELONGS_TO]-(members:Member)
       RETURN COUNT(DISTINCT members)
+      """
+    )
+  pastorCount: Int
+    @cypher(
+      statement: """
+      MATCH (this)<-[:BELONGS_TO]-(pastors:Member)-[:HAS_TITLE]->(:Title)
+      RETURN COUNT(DISTINCT pastors)
       """
     )
   meetingDay: ServiceDay @relationship(type: "MEETS_ON", direction: OUT)
@@ -1219,21 +1257,6 @@ type ClosedFellowship {
   bacenta: Bacenta @relationship(type: "HAS", direction: IN)
   leader: Member @relationship(type: "LEADS", direction: IN)
   members: [Member] @relationship(type: "BELONGS_TO", direction: IN)
-  memberSearch(key: String!, limit: Int!): [Member]
-    @cypher(
-      statement: """
-      MATCH (this)<-[:BELONGS_TO]-(members:Member)
-      WHERE toLower(members.firstName+ ' ' + members.lastName) CONTAINS toLower($key)
-      RETURN DISTINCT members LIMIT $limit
-      """
-    )
-  memberCount: Int
-    @cypher(
-      statement: """
-      MATCH (this)<-[:BELONGS_TO]-(members:Member)
-      RETURN COUNT(DISTINCT members)
-      """
-    )
   meetingDay: ServiceDay @relationship(type: "MEETS_ON", direction: OUT)
   history: [HistoryLog] @relationship(type: "HAS_HISTORY", direction: OUT)
   serviceLogs: [ServiceLog] @relationship(type: "HAS_HISTORY", direction: OUT)

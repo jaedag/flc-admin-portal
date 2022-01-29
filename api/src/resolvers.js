@@ -589,6 +589,25 @@ const RemoveServant = async (
   return parseForCache(servant, church, verb, servantLower)
 }
 
+const getComponentServiceAggregates = async (obj, context) => {
+  let serviceAggregates = []
+
+  const session = context.driver.session()
+  const serviceAggregateResponse = await session.run(
+    cypher.getComponentServiceAggregates,
+    obj
+  )
+
+  serviceAggregateResponse.records.map((record) => {
+    let serviceAggregate = {}
+
+    record.keys.forEach((key, i) => (serviceAggregate[key] = record._fields[i]))
+    serviceAggregates.push(serviceAggregate)
+  })
+
+  return serviceAggregates
+}
+
 export const resolvers = {
   // Resolver Parameters
   // Object: the parent result of a previous resolver

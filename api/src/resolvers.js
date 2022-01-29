@@ -525,11 +525,7 @@ const RemoveServant = async (
     notifyMember(
       servant,
       'You Have Been Removed!',
-      `Hi ${servant.firstName} ${
-        servant.lastName
-      },\n\nWe regret to inform you that you have been removed as the ${churchType} ${servantType} for ${churchInEmail()}.\n\nWe however encourage you to strive to serve the Lord faithfully in your other roles. Do not be discouraged by this removal; as you work hard we hope and pray that you will soon be restored to your service to him.${
-        texts.string.subscription
-      }`,
+      `Hi ${servant.firstName} ${servant.lastName},\n\nWe regret to inform you that you have been removed as the ${churchType} ${servantType} for ${churchInEmail}.\n\nWe however encourage you to strive to serve the Lord faithfully in your other roles. Do not be discouraged by this removal; as you work hard we hope and pray that you will soon be restored to your service to him.${texts.string.subscription}`,
       null,
       'servant_account_deleted',
       [servant.firstName, churchType, servantType, church.name, church.type[0]]
@@ -579,4 +575,418 @@ const RemoveServant = async (
 
   //Relationship in Neo4j will be removed when the replacement leader is being added
   return parseForCache(servant, church, verb, servantLower)
+}
+
+export const resolvers = {
+  // Resolver Parameters
+  // Object: the parent result of a previous resolver
+  // Args: Field Arguments
+  // Context: Context object, database connection, API, etc
+  // GraphQLResolveInfo
+  Member: {
+    fullName: (obj) => {
+      return `${obj.firstName} ${obj.lastName}`
+    },
+  },
+  Bacenta: {
+    componentServiceAggregate: async (obj, args, context) => {
+      return getComponentServiceAggregates(obj, context)
+    },
+  },
+  Constituency: {
+    componentServiceAggregate: (obj, args, context) => {
+      return getComponentServiceAggregates(obj, context)
+    },
+  },
+  Council: {
+    componentServiceAggregate: (obj, args, context) => {
+      return getComponentServiceAggregates(obj, context)
+    },
+  },
+  Stream: {
+    componentServiceAggregate: (obj, args, context) => {
+      return getComponentServiceAggregates(obj, context)
+    },
+  },
+  GatheringService: {
+    componentServiceAggregate: (obj, args, context) => {
+      return getComponentServiceAggregates(obj, context)
+    },
+  },
+
+  Mutation: {
+    CreateMember: async (object, args, context) => {
+      isAuth(
+        [
+          'adminGatheringService',
+          'adminCouncil',
+          'adminConstituency',
+          'leaderFellowship',
+          'leaderBacenta',
+
+          'leaderConstituency',
+        ],
+        context.auth.roles
+      )
+
+      const session = context.driver.session()
+      const memberResponse = await session.run(
+        cypher.checkMemberEmailExists,
+        args
+      )
+
+      const memberCheck = rearrangeCypherObject(memberResponse)
+
+      if (memberCheck.email || memberCheck.whatsappNumber) {
+        throwErrorMsg(
+          'A member with this email address/whatsapp number already exists in the database',
+          ''
+        )
+      }
+
+      const createMemberResponse = await session.run(cypher.createMember, {
+        firstName: args?.firstName ?? '',
+        middleName: args?.middleName ?? '',
+        lastName: args?.lastName ?? '',
+        email: args?.email ?? '',
+        phoneNumber: args?.phoneNumber ?? '',
+        whatsappNumber: args?.whatsappNumber ?? '',
+        dob: args?.dob ?? '',
+        maritalStatus: args?.maritalStatus ?? '',
+        gender: args?.gender ?? '',
+        occupation: args?.occupation ?? '',
+        fellowship: args?.fellowship ?? '',
+        ministry: args?.ministry ?? '',
+        pictureUrl: args?.pictureUrl ?? '',
+        auth_id: context.auth.jwt.sub ?? '',
+      })
+
+      const member = rearrangeCypherObject(createMemberResponse)
+
+      return member
+    },
+    CloseDownFellowship: async (object, args, context) => {
+      isAuth(
+        [
+          'adminGatheringService',
+          'adminStream',
+          'adminCouncil',
+          'adminConstituency',
+          'leaderConstituency',
+        ],
+        context.auth.roles
+      )
+
+      const session = context.driver.session()
+
+      try {
+        const fellowshipCheckResponse = await session.run(
+          cypher.checkFellowshipHasNoMembers,
+          args
+        )
+        const fellowshipCheck = rearrangeCypherObject(fellowshipCheckResponse)
+
+        if (fellowshipCheck.memberCount) {
+          throwErrorMsg(
+            `${fellowshipCheck?.name} Fellowship has ${fellowshipCheck?.memberCount} members. Please transfer all members and try again.`
+          )
+        }
+
+        //Fellowship Leader must be removed since the fellowship is being closed down
+        await RemoveServant(
+          context,
+          args,
+          [
+            'adminGatheringService',
+            'adminStream',
+            'adminCouncil',
+            'adminConstituency',
+          ],
+          'Fellowship',
+          'Leader'
+        )
+
+        const closeFellowshipResponse = await session.run(
+          cypher.closeDownFellowship,
+          {
+            auth: context.auth,
+            fellowshipId: args.fellowshipId,
+          }
+        )
+
+        const fellowshipResponse = rearrangeCypherObject(
+          closeFellowshipResponse
+        ) //Returns a Bacenta
+
+        return fellowshipResponse.bacenta
+      } catch (error) {
+        throwErrorMsg(error)
+      }
+    },
+
+    CloseDownBacenta: async (object, args, context) => {
+      isAuth(
+        [
+          'adminGatheringService',
+          'adminStream',
+          'adminCouncil',
+          'adminConstituency',
+        ],
+        context.auth.roles
+      )
+
+      const session = context.driver.session()
+
+      try {
+        const bacentaCheckResponse = await session.run(
+          cypher.checkBacentaHasNoMembers,
+          args
+        )
+        const bacentaCheck = rearrangeCypherObject(bacentaCheckResponse)
+
+        if (bacentaCheck.memberCount) {
+          throwErrorMsg(
+            `${bacentaCheck?.name} Bacenta has ${bacentaCheck?.fellowshipCount} active fellowships. Please close down all fellowships and try again.`
+          )
+        }
+
+        //Bacenta Leader must be removed since the Bacenta is being closed down
+        await RemoveServant(
+          context,
+          args,
+          [
+            'adminGatheringService',
+            'adminStream',
+            'adminCouncil',
+            'adminConstituency',
+          ],
+          'Bacenta',
+          'Leader'
+        )
+
+        const closeBacentaResponse = await session.run(
+          cypher.closeDownBacenta,
+          {
+            auth: context.auth,
+            bacentaId: args.bacentaId,
+          }
+        )
+
+        const bacentaResponse = rearrangeCypherObject(closeBacentaResponse)
+        return bacentaResponse.constituency
+      } catch (error) {
+        throwErrorMsg(error)
+      }
+    },
+    MakeStreamAdmin: async (object, args, context) => {
+      return MakeServant(
+        context,
+        args,
+        ['adminGatheringService'],
+        'Stream',
+        'Admin'
+      )
+    },
+    RemoveStreamAdmin: async (object, args, context) => {
+      return RemoveServant(
+        context,
+        args,
+        ['adminGatheringService'],
+        'Stream',
+        'Admin'
+      )
+    },
+    MakeCouncilAdmin: async (object, args, context) => {
+      return MakeServant(
+        context,
+        args,
+        ['adminGatheringService', 'adminStream'],
+        'Council',
+        'Admin'
+      )
+    },
+    RemoveCouncilAdmin: async (object, args, context) => {
+      return RemoveServant(
+        context,
+        args,
+        ['adminGatheringService', 'adminStream'],
+        'Council',
+        'Admin'
+      )
+    },
+    MakeConstituencyAdmin: async (object, args, context) => {
+      return MakeServant(
+        context,
+        args,
+        ['adminGatheringService', 'adminStream', 'adminStream', 'adminCouncil'],
+        'Constituency',
+        'Admin'
+      )
+    },
+    RemoveConstituencyAdmin: async (object, args, context) => {
+      return RemoveServant(
+        context,
+        args,
+        ['adminGatheringService', 'adminStream', 'adminCouncil'],
+        'Constituency',
+        'Admin'
+      )
+    },
+    MakeFellowshipLeader: async (object, args, context) => {
+      return MakeServant(
+        context,
+        args,
+        [
+          'adminGatheringService',
+          'adminStream',
+          'adminCouncil',
+          'adminConstituency',
+        ],
+        'Fellowship',
+        'Leader'
+      )
+    },
+    RemoveFellowshipLeader: async (object, args, context) => {
+      return RemoveServant(
+        context,
+        args,
+        [
+          'adminGatheringService',
+          'adminStream',
+          'adminCouncil',
+          'adminConstituency',
+        ],
+        'Fellowship',
+        'Leader'
+      )
+    },
+    MakeSontaLeader: async (object, args, context) => {
+      return MakeServant(
+        context,
+        args,
+        [
+          'adminGatheringService',
+          'adminStream',
+          'adminCouncil',
+          'adminConstituency',
+        ],
+        'Sonta',
+        'Leader'
+      )
+    },
+    RemoveSontaLeader: (object, args, context) => {
+      return RemoveServant(
+        context,
+        args,
+        [
+          'adminGatheringService',
+          'adminStream',
+          'adminCouncil',
+          'adminConstituency',
+        ],
+        'Sonta',
+        'Leader'
+      )
+    },
+    MakeBacentaLeader: async (object, args, context) => {
+      return MakeServant(
+        context,
+        args,
+        [
+          'adminGatheringService',
+          'adminStream',
+          'adminCouncil',
+          'adminConstituency',
+        ],
+        'Bacenta',
+        'Leader'
+      )
+    },
+    RemoveBacentaLeader: async (object, args, context) => {
+      return RemoveServant(
+        context,
+        args,
+        [
+          'adminGatheringService',
+          'adminStream',
+          'adminCouncil',
+          'adminConstituency',
+        ],
+        'Bacenta',
+        'Leader'
+      )
+    },
+    MakeConstituencyLeader: async (object, args, context) => {
+      return MakeServant(
+        context,
+        args,
+        ['adminGatheringService', 'adminStream', 'adminCouncil'],
+        'Constituency',
+        'Leader'
+      )
+    },
+    RemoveConstituencyLeader: async (object, args, context) => {
+      return RemoveServant(
+        context,
+        args,
+        ['adminGatheringService', 'adminStream', 'adminCouncil'],
+        'Constituency',
+        'Leader'
+      )
+    },
+    MakeCouncilLeader: async (object, args, context) => {
+      return MakeServant(
+        context,
+        args,
+        ['adminGatheringService', 'adminStream'],
+        'Council',
+        'Leader'
+      )
+    },
+    RemoveCouncilLeader: async (object, args, context) => {
+      return RemoveServant(
+        context,
+        args,
+        ['adminGatheringService', 'adminStream'],
+        'Council',
+        'Leader'
+      )
+    },
+    MakeStreamLeader: async (object, args, context) => {
+      return MakeServant(
+        context,
+        args,
+        ['adminGatheringService'],
+        'Stream',
+        'Leader'
+      )
+    },
+    RemoveStreamLeader: async (object, args, context) => {
+      return RemoveServant(
+        context,
+        args,
+        ['adminGatheringService'],
+        'Stream',
+        'Leader'
+      )
+    },
+    MakeGatheringServiceLeader: async (object, args, context) => {
+      return MakeServant(
+        context,
+        args,
+        ['adminGatheringService'],
+        'GatheringService',
+        'Leader'
+      )
+    },
+    RemoveGatheringServiceLeader: async (object, args, context) => {
+      return RemoveServant(
+        context,
+        args,
+        ['adminGatheringService'],
+        'GatheringService',
+        'Leader'
+      )
+    },
+  },
 }

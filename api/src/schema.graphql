@@ -1426,12 +1426,10 @@ type Query {
     @cypher(
       statement: """
       MATCH (member:Member)
-      WHERE toLower(member.firstName) = toLower($searchKey)
-      OR toLower(member.middleName) = toLower($searchKey)
-      OR toLower(member.lastName) = toLower($searchKey)
-      OR toLower(member.firstName) STARTS WITH toLower($searchKey)
+      WHERE toLower(member.firstName) STARTS WITH toLower($searchKey)
       OR toLower(member.middleName) STARTS WITH toLower($searchKey)
       OR toLower(member.lastName) STARTS WITH toLower($searchKey)
+      OR toLower(member.firstName + ' ' + member.lastName) CONTAINS toLower($searchKey)
       OR toLower(member.firstName + ' ' + member.middleName+ ' '+ member.lastName) CONTAINS toLower($searchKey)
       RETURN member LIMIT 5
       """
@@ -1441,10 +1439,10 @@ type Query {
     @cypher(
       statement: """
       MATCH (stream:Stream {id: $streamId})-[:HAS]->(:Council)-[:HAS]->(:Constituency)-[:HAS]->(:Bacenta)-[:HAS]->(:Fellowship)<-[:BELONGS_TO]-(member:Member)
-      WHERE toLower(member.firstName) = toLower($searchKey)
-      OR toLower(member.lastName) = toLower($searchKey)
-      OR toLower(member.firstName) STARTS WITH toLower($searchKey)
+      WHERE toLower(member.firstName) STARTS WITH toLower($searchKey)
+      OR toLower(member.middleName) STARTS WITH toLower($searchKey)
       OR toLower(member.lastName) STARTS WITH toLower($searchKey)
+      OR toLower(member.firstName + ' ' + member.lastName) CONTAINS toLower($searchKey)
       OR toLower(member.firstName + ' ' + member.middleName+ ' '+ member.lastName) CONTAINS toLower($searchKey)
       WITH member WHERE member IS NOT NULL
       RETURN DISTINCT(member) LIMIT 5
@@ -1455,10 +1453,10 @@ type Query {
     @cypher(
       statement: """
       MATCH (council:Council {id: $councilId})-[:HAS]->(:Constituency)-[:HAS]->(:Bacenta)-[:HAS]->(:Fellowship)<-[:BELONGS_TO*]-(member:Member)
-      WHERE toLower(member.firstName) = toLower($searchKey)
-      OR toLower(member.lastName) = toLower($searchKey)
-      OR toLower(member.firstName) STARTS WITH toLower($searchKey)
+      WHERE toLower(member.firstName) STARTS WITH toLower($searchKey)
+      OR toLower(member.middleName) STARTS WITH toLower($searchKey)
       OR toLower(member.lastName) STARTS WITH toLower($searchKey)
+      OR toLower(member.firstName + ' ' + member.lastName) CONTAINS toLower($searchKey)
       OR toLower(member.firstName + ' ' + member.middleName+ ' '+ member.lastName) CONTAINS toLower($searchKey)
       WITH member WHERE member IS NOT NULL
       RETURN DISTINCT(member) LIMIT 5
@@ -1470,10 +1468,10 @@ type Query {
       statement: """
       MATCH (constituency:Constituency {id:$constituencyId})
       MATCH (constituency)-[:HAS]->(:Bacenta)-[:HAS]->(fellowship:Fellowship)<-[:BELONGS_TO]-(member:Member)
-      WHERE toLower(member.firstName) = toLower($searchKey)
-      OR toLower(member.lastName) = toLower($searchKey)
-      OR toLower(member.firstName) STARTS WITH toLower($searchKey)
+      WHERE toLower(member.firstName) STARTS WITH toLower($searchKey)
+      OR toLower(member.middleName) STARTS WITH toLower($searchKey)
       OR toLower(member.lastName) STARTS WITH toLower($searchKey)
+      OR toLower(member.firstName + ' ' + member.lastName) CONTAINS toLower($searchKey)
       OR toLower(member.firstName + ' ' + member.middleName+ ' '+ member.lastName) CONTAINS toLower($searchKey)
 
       RETURN member LIMIT 5
@@ -1484,10 +1482,10 @@ type Query {
     @cypher(
       statement: """
       MATCH (bacenta:Bacenta {id: $bacentaId})-[:HAS]->(:Fellowship)<-[:BELONGS_TO]-(member:Member)
-      WHERE toLower(member.firstName) = toLower($searchKey)
-      OR toLower(member.lastName) = toLower($searchKey)
-      OR toLower(member.firstName) STARTS WITH toLower($searchKey)
+      WHERE toLower(member.firstName) STARTS WITH toLower($searchKey)
+      OR toLower(member.middleName) STARTS WITH toLower($searchKey)
       OR toLower(member.lastName) STARTS WITH toLower($searchKey)
+      OR toLower(member.firstName + ' ' + member.lastName) CONTAINS toLower($searchKey)
       OR toLower(member.firstName + ' ' + member.middleName+ ' '+ member.lastName) CONTAINS toLower($searchKey)
 
       RETURN member LIMIT 5
@@ -1498,10 +1496,10 @@ type Query {
     @cypher(
       statement: """
       MATCH (fellowship:Fellowship {id: $fellowshipId})<-[:BELONGS_TO]-(member:Member)
-      WHERE toLower(member.firstName) = toLower($searchKey)
-      OR toLower(member.lastName) = toLower($searchKey)
-      OR toLower(member.firstName) STARTS WITH toLower($searchKey)
+      WHERE toLower(member.firstName) STARTS WITH toLower($searchKey)
+      OR toLower(member.middleName) STARTS WITH toLower($searchKey)
       OR toLower(member.lastName) STARTS WITH toLower($searchKey)
+      OR toLower(member.firstName + ' ' + member.lastName) CONTAINS toLower($searchKey)
       OR toLower(member.firstName + ' ' + member.middleName+ ' '+ member.lastName) CONTAINS toLower($searchKey)
 
       RETURN member LIMIT 5

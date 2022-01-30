@@ -304,7 +304,7 @@ type GatheringService implements Church {
   constituencies: [Constituency]
     @cypher(
       statement: "MATCH (this)-[:HAS*3]->(constituencies:Constituency) RETURN constituencies"
-    )
+    )Ex
   bacentas: [Bacenta]
     @cypher(
       statement: "MATCH (this)-[:HAS*4]->(bacenta:Bacenta) RETURN bacenta"
@@ -2106,7 +2106,7 @@ type Mutation {
     whatsappNumber: String
     dob: String
     maritalStatus: String!
-    gender: String!
+    d: String!
     occupation: String
     fellowship: String!
     ministry: String
@@ -2153,7 +2153,7 @@ type Mutation {
       MERGE (today:TimeGraph {date: date()})
       MERGE (log)-[:RECORDED_ON]->(today)
       MERGE (log)-[:LOGGED_BY]->(currentUser)
-
+ 
 
       WITH member
          CALL {

@@ -8,7 +8,7 @@ import { UnauthMsg } from './UnauthMsg'
 import LoadingScreen from 'components/base-component/LoadingScreen'
 import Login from 'components/Login'
 
-const ProtectedRoute = ({ children, roles, placeholder }) => {
+const ProtectedRoute = ({ children, roles, roleBased, placeholder }) => {
   const { currentUser } = useContext(MemberContext)
   const { isAuthenticated } = useAuth0()
   const church = useContext(ChurchContext)
@@ -16,10 +16,15 @@ const ProtectedRoute = ({ children, roles, placeholder }) => {
   const location = useLocation()
   const atHome = location?.pathname === '/'
 
+  if (atHome && !isAuthenticated) {
+    //Unauthenticated and home
+    return <Login />
+  }
+
   if (isAuthorised(roles, currentUser.roles)) {
     //if the user has permission to access the route
     return children
-  } else if (placeholder && isAuthenticated) {
+  } else if (placeholder && !isAuthenticated && roleBased) {
     //User has no permission but there is a placeholder, and he's authenticated so let's load the screen
     if (isAuthorised(permitMeAndThoseAbove('Fellowship'), currentUser.roles)) {
       //If the user does not have permission but is a Fellowship Leader
@@ -58,9 +63,6 @@ const ProtectedRoute = ({ children, roles, placeholder }) => {
     }
 
     return children
-  } else if (atHome) {
-    //Unauthenticated and home
-    return <Login />
   } else if (placeholder && !isAuthenticated) {
     return children
   } else if (!isAuthenticated || !currentUser.roles.length) {

@@ -47,6 +47,7 @@ export const memberDirectory = [
   {
     path: '/directory/members',
     element: MembersGrid,
+    roles: ['all'],
   },
 ]
 export const memberGrids = [
@@ -93,6 +94,7 @@ export const directory = [
     path: '/directory',
     element: Directory,
     placeholder: true,
+    roles: ['all'],
   },
   {
     path: '/directory/churches',

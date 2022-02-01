@@ -65,6 +65,7 @@ const Navigator = () => {
       })
     },
   })
+
   // What leadership roles does this person play?
   let roles = []
   let assessmentChurchData, assessmentChurch
@@ -136,9 +137,13 @@ const Navigator = () => {
       clickCard: () => {
         clickCard(servant[`${verb}`][0])
       },
-      link: leadsOneChurch
-        ? `/${churchType.toLowerCase()}/displaydetails`
-        : `/servants/church-list`,
+      link: authorisedLink(
+        currentUser,
+        permittedForLink,
+        leadsOneChurch
+          ? `/${churchType.toLowerCase()}/displaydetails`
+          : `/servants/church-list`
+      ),
     })
 
     assessmentChurch = servant[`${verb}`][0]

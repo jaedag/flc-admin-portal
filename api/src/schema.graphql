@@ -2393,7 +2393,7 @@ type Mutation {
     @cypher(
       statement: """
       MATCH (church {id: $churchId})
-      WHERE church:Bacenta OR church:Constituency OR church:Sonta
+      WHERE church:Bacenta OR church:Constituency OR church:Council OR church:Stream OR church:Sonta
       MATCH (church)-[r:HAS_HISTORY]->(churchHistory:ServiceLog) WHERE r.current=true
       MATCH (church)-[:HAS]->(downRelatedChurch)
       MATCH (upRelatedChurch)-[:HAS]->(church)

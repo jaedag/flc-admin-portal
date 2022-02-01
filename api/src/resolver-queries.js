@@ -260,7 +260,7 @@ WITH log,bacenta,oldLeader,leader, constituency
    MERGE (constituencyHistory)-[r3:HAS]->(log)
    SET r1.current = true,
    r2.current = true,
-   r3.currennt = true
+   r3.current = true
    REMOVE oldBacentaHistory.current
 
    RETURN leader.id AS id, leader.auth_id AS auth_id, leader.firstName AS firstName, leader.lastName AS lastName
@@ -451,10 +451,8 @@ WITH log,stream,oldLeader,leader
 export const getComponentServiceAggregates = `
   MATCH (church {id:$id}) WHERE church:Bacenta OR church:Constituency OR church:Council OR church:Stream OR church:GatheringService
   
-  MATCH (church)-[:HAS_HISTORY]->(log:ServiceLog)
-  MATCH (log)-[:HAS*1..5]->(componentServices:ServiceLog)
+  MATCH (church)-[:HAS*1..5]->()-[:HAS_HISTORY]->(componentServices:ServiceLog)
   MATCH (componentServices)-[:HAS_SERVICE]->(componentRecords:ServiceRecord)
-   
      
   MATCH (componentRecords)-[:SERVICE_HELD_ON]->(date:TimeGraph)
   WITH DISTINCT componentServices,componentRecords, date(date.date).week AS week

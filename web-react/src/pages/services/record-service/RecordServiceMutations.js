@@ -122,14 +122,22 @@ export const DISPLAY_BACENTA_SERVICE = gql`
     serviceRecords(where: { id: $serviceId }) {
       id
       created_at
+      created_by {
+        id
+        firstName
+        lastName
+        fullName
+      }
       serviceDate {
         date
       }
+      noServiceReason
       attendance
       income
       foreignCurrency
       treasurerSelfie
       servicePicture
+      bankingSlip
       treasurers {
         id
         firstName
@@ -176,14 +184,22 @@ export const DISPLAY_CONSTITUENCY_SERVICE = gql`
     serviceRecords(where: { id: $serviceId }) {
       id
       created_at
+      created_by {
+        id
+        firstName
+        lastName
+        fullName
+      }
       serviceDate {
         date
       }
+      noServiceReason
       attendance
       income
       foreignCurrency
       treasurerSelfie
       servicePicture
+      bankingSlip
       treasurers {
         id
         firstName

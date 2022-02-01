@@ -488,7 +488,18 @@ const RemoveServant = async (
     id: args[`${churchLower}Id`],
   })
   const church = rearrangeCypherObject(churchResponse)
-  const churchInEmail = `${church.name} ${church.type[0]}`
+
+  const churchInEmail = () => {
+    if (church.type[0] === 'ClosedFellowship') {
+      return `${church.name} Fellowship which has been closed`
+    }
+
+    if (church.type[0] === 'ClosedBacenta') {
+      return `${church.name} Bacenta which has been closed`
+    }
+
+    return `${church.name} ${church.type[0]}`
+  }
 
   const servantResponse = await session.run(cypher.matchMemberQuery, {
     id: args[`${servantLower}Id`],
@@ -514,7 +525,11 @@ const RemoveServant = async (
     notifyMember(
       servant,
       'You Have Been Removed!',
-      `Hi ${servant.firstName} ${servant.lastName},\n\nWe regret to inform you that you have been removed as the ${churchType} ${servantType} for ${churchInEmail}.\n\nWe however encourage you to strive to serve the Lord faithfully in your other roles. Do not be discouraged by this removal; as you work hard we hope and pray that you will soon be restored to your service to him.${texts.string.subscription}`,
+      `Hi ${servant.firstName} ${
+        servant.lastName
+      },\n\nWe regret to inform you that you have been removed as the ${churchType} ${servantType} for ${churchInEmail()}.\n\nWe however encourage you to strive to serve the Lord faithfully in your other roles. Do not be discouraged by this removal; as you work hard we hope and pray that you will soon be restored to your service to him.${
+        texts.string.subscription
+      }`,
       null,
       'servant_account_deleted',
       [servant.firstName, churchType, servantType, church.name, church.type[0]]
@@ -545,10 +560,12 @@ const RemoveServant = async (
     notifyMember(
       servant,
       'Your Servant Account Has Been Deleted',
-      `Hi ${servant.firstName} ${servant.lastName},\n\nThis is to inform you that your servant account has been deleted from the First Love Admin Portal. You will no longer have access to any data\n\nThis is due to the fact that you have been removed as a ${churchType} ${servantType} for ${churchInEmail}.\n\nWe however encourage you to strive to serve the Lord faithfully. Do not be discouraged from loving God by this removal; we hope it is just temporary.${texts.string.subscription}`,
-      null,
-      'servant_account_deleted',
-      [servant.firstName, churchType, servantType, church.name, church.type[0]]
+      `Hi ${servant.firstName} ${
+        servant.lastName
+      },\n\nThis is to inform you that your servant account has been deleted from the First Love Admin Portal. You will no longer have access to any data\n\nThis is due to the fact that you have been removed as a ${churchType} ${servantType} for ${churchInEmail()}.\n\nWe however encourage you to strive to serve the Lord faithfully. Do not be discouraged from loving God by this removal; we hope it is just temporary.${
+        texts.string.subscription
+      }`,
+      null
     )
     return
   }
@@ -560,7 +577,11 @@ const RemoveServant = async (
     notifyMember(
       servant,
       'You Have Been Removed!',
-      `Hi ${servant.firstName} ${servant.lastName},\n\nWe regret to inform you that you have been removed as the ${churchType} ${servantType} for ${churchInEmail}.\n\nWe however encourage you to strive to serve the Lord faithfully in your other roles. Do not be discouraged by this removal; as you work hard we hope and pray that you will soon be restored to your service to him.${texts.string.subscription}`
+      `Hi ${servant.firstName} ${
+        servant.lastName
+      },\n\nWe regret to inform you that you have been removed as the ${churchType} ${servantType} for ${churchInEmail()}.\n\nWe however encourage you to strive to serve the Lord faithfully in your other roles. Do not be discouraged by this removal; as you work hard we hope and pray that you will soon be restored to your service to him.${
+        texts.string.subscription
+      }`
     )
   }
 
@@ -679,6 +700,7 @@ export const resolvers = {
       isAuth(
         [
           'adminGatheringService',
+          'adminStream',
           'adminCouncil',
           'adminConstituency',
           'leaderConstituency',
@@ -701,16 +723,8 @@ export const resolvers = {
           )
         }
 
-        const closeFellowshipResponse = await session.run(
-          cypher.closeDownFellowship,
-          {
-            auth: context.auth,
-            fellowshipId: args.fellowshipId,
-          }
-        )
-
         //Fellowship Leader must be removed since the fellowship is being closed down
-        RemoveServant(
+        await RemoveServant(
           context,
           args,
           [
@@ -722,8 +736,20 @@ export const resolvers = {
           'Fellowship',
           'Leader'
         )
-        const fellowship = rearrangeCypherObject(closeFellowshipResponse)
-        return fellowship
+
+        const closeFellowshipResponse = await session.run(
+          cypher.closeDownFellowship,
+          {
+            auth: context.auth,
+            fellowshipId: args.fellowshipId,
+          }
+        )
+
+        const fellowshipResponse = rearrangeCypherObject(
+          closeFellowshipResponse
+        ) //Returns a Bacenta
+
+        return fellowshipResponse.bacenta
       } catch (error) {
         throwErrorMsg(error)
       }
@@ -755,16 +781,8 @@ export const resolvers = {
           )
         }
 
-        const closeBacentaResponse = await session.run(
-          cypher.closeDownBacenta,
-          {
-            auth: context.auth,
-            bacentaId: args.bacentaId,
-          }
-        )
-
         //Bacenta Leader must be removed since the Bacenta is being closed down
-        RemoveServant(
+        await RemoveServant(
           context,
           args,
           [
@@ -776,8 +794,17 @@ export const resolvers = {
           'Bacenta',
           'Leader'
         )
-        const bacenta = rearrangeCypherObject(closeBacentaResponse)
-        return bacenta
+
+        const closeBacentaResponse = await session.run(
+          cypher.closeDownBacenta,
+          {
+            auth: context.auth,
+            bacentaId: args.bacentaId,
+          }
+        )
+
+        const bacentaResponse = rearrangeCypherObject(closeBacentaResponse)
+        return bacentaResponse.constituency
       } catch (error) {
         throwErrorMsg(error)
       }

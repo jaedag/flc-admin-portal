@@ -27,6 +27,7 @@ import LoadingScreen from 'components/base-component/LoadingScreen'
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import HeadingSecondary from 'components/HeadingSecondary'
 import SubmitButton from 'components/formik-components/SubmitButton'
+import { DISPLAY_BACENTA } from 'pages/directory/display/ReadQueries'
 
 const FellowshipForm = (props) => {
   const { clickCard, isOpen, togglePopup, fellowshipId, councilId } =
@@ -39,7 +40,14 @@ const FellowshipForm = (props) => {
     variables: { id: councilId },
   })
 
-  const [CloseDownFellowship] = useMutation(MAKE_FELLOWSHIP_INACTIVE)
+  const [CloseDownFellowship] = useMutation(MAKE_FELLOWSHIP_INACTIVE, {
+    refetchQueries: [
+      {
+        query: DISPLAY_BACENTA,
+        variables: { id: props.initialValues.bacenta },
+      },
+    ],
+  })
 
   if (error) {
     throwErrorMsg(error)
@@ -265,15 +273,17 @@ const FellowshipForm = (props) => {
                 <Button
                   variant="primary"
                   type="submit"
+                  size="lg"
                   className={`btn-main ${theme}`}
                   onClick={() => {
                     CloseDownFellowship({
                       variables: {
                         fellowshipId: fellowshipId,
+                        leaderId: props.initialValues.leaderId,
                       },
                     })
                       .then((res) => {
-                        clickCard(res.data.CloseDownFellowship.bacenta)
+                        clickCard(res.data.CloseDownFellowship)
                         togglePopup()
                         navigate('/bacenta/displaydetails')
                       })

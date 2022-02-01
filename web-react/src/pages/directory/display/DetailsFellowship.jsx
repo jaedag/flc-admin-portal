@@ -45,14 +45,14 @@ const DetailsFellowship = () => {
   const check = last3Weeks()?.map((week, i) => {
     if (lastFilledServices?.includes(week)) {
       return {
-        number: week + 1,
+        number: week,
         filled: true,
         banked:
           lastFilledBanking?.length && (lastFilledBanking[i] ? true : false),
       }
     } else {
       return {
-        number: week + 1,
+        number: week,
         filled: false,
         banked: null,
       }
@@ -98,6 +98,7 @@ const DetailsFellowship = () => {
       editPermitted={permitAdminAndThoseAbove('Constituency')}
       weekNumber={getWeekNumber()}
       last3Weeks={fellowship && check}
+      vacation={vacation}
       history={history?.history.length && history?.history}
       breadcrumb={breadcrumb && breadcrumb}
     />

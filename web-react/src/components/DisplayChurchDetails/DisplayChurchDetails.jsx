@@ -137,6 +137,25 @@ const DisplayChurchDetails = (props) => {
   }
   //End of Admin Change
 
+  const shouldFill = () => {
+    let shouldFill = true
+
+    // If the have filled their form this week, they shouldn't fill again
+    const filledThisWeek = props.last3Weeks?.filter(
+      (week) => week.number === getWeekNumber()
+    )
+    if (filledThisWeek?.length && filledThisWeek[0].filled === true) {
+      shouldFill = false
+    }
+
+    //If the church is on vacation, they shouldn't fill
+    if (props.vacation === 'Vacation') {
+      shouldFill = false
+    }
+
+    return shouldFill
+  }
+
   return (
     <>
       <div className="py-2 top-heading title-bar">
@@ -298,31 +317,30 @@ const DisplayChurchDetails = (props) => {
               View Trends
             </Button>
           </PlaceholderCustom>
-          {props.last3Weeks?.length &&
-            props.last3Weeks[0].number !== getWeekNumber() && (
-              <PlaceholderCustom
-                loading={props.loading}
+          {shouldFill() && (
+            <PlaceholderCustom
+              loading={props.loading}
+              className={`btn-trends ${theme}`}
+              button
+            >
+              <Button
                 className={`btn-trends ${theme}`}
-                button
+                onClick={() => {
+                  setCurrentUser({
+                    ...currentUser,
+                    currentChurch: {
+                      id: props.churchId,
+                      name: props.name,
+                      __typename: props.churchType,
+                    },
+                  })
+                  navigate(`/services/${props.churchType.toLowerCase()}`)
+                }}
               >
-                <Button
-                  className={`btn-trends ${theme}`}
-                  onClick={() => {
-                    setCurrentUser({
-                      ...currentUser,
-                      currentChurch: {
-                        id: props.churchId,
-                        name: props.name,
-                        __typename: props.churchType,
-                      },
-                    })
-                    navigate(`/services/${props.churchType.toLowerCase()}`)
-                  }}
-                >
-                  Service Forms
-                </Button>
-              </PlaceholderCustom>
-            )}
+                Service Forms
+              </Button>
+            </PlaceholderCustom>
+          )}
         </div>
 
         {props?.location && props.location?.latitude !== 0 && (

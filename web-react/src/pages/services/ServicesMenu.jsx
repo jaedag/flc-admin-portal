@@ -49,7 +49,7 @@ const Services = () => {
               title="Constituency Joint Service"
               color="members"
               noCaption
-              onClick={() => navigate(`/services/constituency-joint`)}
+              onClick={() => navigate(`/constituency/record-service`)}
             />
           )}
 
@@ -64,13 +64,18 @@ const Services = () => {
               )
             }
           />
-          {currentUser.currentChurch?.__typename === 'Fellowship' && (
+          {(currentUser.currentChurch?.__typename === 'Fellowship' ||
+            currentUser.currentChurch?.__typename === 'Constituency') && (
             <MenuButton
               iconComponent={FileEarmarkArrowUpFill}
               title="Banking Slips"
               color="members"
               noCaption
-              onClick={() => navigate(`/services/banking-slips`)}
+              onClick={() =>
+                navigate(
+                  `/services/${currentUser.currentChurch?.__typename.toLowerCase()}/banking-slips`
+                )
+              }
             />
           )}
         </div>

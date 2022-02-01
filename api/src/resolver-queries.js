@@ -29,7 +29,8 @@ WITH apoc.cypher.runFirstColumn(
 
 export const matchChurchQuery = `
   MATCH (church {id:$id}) 
-  WHERE church:Fellowship OR church:Bacenta OR church:Constituency OR church:Council OR church:Stream OR church:GatheringService OR church:Sonta OR church:Ministry OR church:Member
+  WHERE church:Fellowship OR church:Bacenta OR church:Constituency OR church:Council OR church:Stream OR church:GatheringService OR church:Sonta OR church:Ministry OR church:Member 
+  OR church:ClosedFellowship OR church:ClosedBacenta
   RETURN church.id AS id, church.name AS name, church.firstName AS firstName, church.lastName AS lastName, labels(church) AS type
   `
 
@@ -301,7 +302,7 @@ WITH log,bacenta,oldLeader,leader, constituency
    MERGE (constituencyHistory)-[r3:HAS]->(log)
    SET r1.current = true,
    r2.current = true,
-   r3.currennt = true
+   r3.current = true
    REMOVE oldBacentaHistory.current
 
    RETURN leader.id AS id, leader.auth_id AS auth_id, leader.firstName AS firstName, leader.lastName AS lastName
@@ -492,11 +493,9 @@ WITH log,stream,oldLeader,leader
 export const getComponentServiceAggregates = `
   MATCH (church {id:$id}) WHERE church:Bacenta OR church:Constituency OR church:Council OR church:Stream OR church:GatheringService
   
-  MATCH (church)-[:HAS_HISTORY]->(log:ServiceLog)
-  MATCH (log)-[:HAS*1..5]->(componentServices:ServiceLog)
+  MATCH (church)-[:HAS*1..5]->()-[:HAS_HISTORY]->(componentServices:ServiceLog)
   MATCH (componentServices)-[:HAS_SERVICE]->(componentRecords:ServiceRecord)
-   
-     
+
   MATCH (componentRecords)-[:SERVICE_HELD_ON]->(date:TimeGraph)
   WITH DISTINCT componentServices,componentRecords, date(date.date).week AS week
 
@@ -520,13 +519,12 @@ CREATE (member:Member {whatsappNumber:$whatsappNumber})
       	member.email = $email,
       	member.phoneNumber = $phoneNumber,
       	member.pictureUrl = $pictureUrl
-      CREATE (log:HistoryLog)<-[:HAS_HISTORY]-(b)
+
+      CREATE (log:HistoryLog)
         SET
         log.id =  apoc.create.uuid(),
         log.timeStamp = datetime(),
         log.historyRecord = $firstName +' ' +$lastName+' was registered on '+apoc.date.convertFormat(toString(date()), 'date', 'dd MMMM yyyy')
-
-
 
       WITH member, log
       MATCH (currentUser:Member {auth_id:$auth_id})
@@ -571,7 +569,7 @@ CREATE (member:Member {whatsappNumber:$whatsappNumber})
 
 export const checkFellowshipHasNoMembers = `
 MATCH (fellowship:Fellowship {id:$fellowshipId})
-MATCH (fellowship)<-[:BELONGS_TO]-(member)
+MATCH (fellowship)<-[:BELONGS_TO]-(member:Member)
 RETURN fellowship.name AS name, COUNT(member) AS memberCount
 `
 
@@ -585,8 +583,6 @@ RETURN bacenta.name AS name, COUNT(member) AS memberCount, COUNT(fellowships) AS
 export const closeDownFellowship = `
 MATCH (fellowship:Fellowship {id:$fellowshipId})<-[:HAS]-(bacenta)
 MATCH (bacenta)-[:HAS]->(fellowships)
-MATCH (bacenta)-[:HAS_HISTORY]->(history:HistoryLog)-[:RECORDED_ON]->(createdAt:TimeGraph)
-MATCH (history)-[:LOGGED_BY]->(loggedBy:Member)
 MATCH (admin:Member {auth_id: $auth.jwt.sub})
 
 CREATE (log:HistoryLog {id:apoc.create.uuid()})
@@ -606,21 +602,15 @@ REMOVE fellowship:ActiveFellowship
 
 RETURN bacenta {
   .id, .name, 
-  fellowships:[fellowships {.id}], 
-  history:[history {.id,.timeStamp, .historyRecord,
-      created_at:createdAt {.date},
-      loggedBy:loggedBy {.id,.firstName,.lastName}
-      }]
+  fellowships:[fellowships {.id,.name}]
     }
 `
 
 export const closeDownBacenta = `
-MATCH (bacenta:Bacenta {id:$bacentaId})<-[:HAS]-(constituency)
-MATCH (constituency)-[:HAS]->(bacentas:Bacenta)
-MATCH (constituency)-[:HAS_HISTORY]->(history:HistoryLog)-[:RECORDED_ON]->(createdAt:TimeGraph)
-MATCH (history)-[:LOGGED_BY]->(loggedBy:Member)      
+MATCH (bacenta:Bacenta {id:$bacentaId})<-[:HAS]-(constituency:Constituency)
+MATCH (constituency)-[:HAS]->(bacentas:Bacenta)   
 MATCH (admin:Member {auth_id: $auth.jwt.sub})
-OPTIONAL MATCH (bacenta)-[:HAS]->(fellowships)
+OPTIONAL MATCH (bacenta)-[:HAS]->(fellowships:Fellowship)
 UNWIND labels(constituency) AS stream
 
 CREATE (log:HistoryLog {id:apoc.create.uuid()})
@@ -639,10 +629,6 @@ REMOVE bacenta:Bacenta,  fellowships:Fellowship:ActiveFellowship
 
 RETURN constituency {
   .id, .name, 
-  bacentas:[bacentas {.id}], 
-  history:[history {.id,.timeStamp, .historyRecord,
-      created_at:createdAt {.date},
-      loggedBy:loggedBy {.id,.firstName,.lastName}
-      }]
+  bacentas:[bacentas {.id, .name}]
     }
 `

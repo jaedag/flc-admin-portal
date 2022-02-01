@@ -10,14 +10,14 @@ import StatDisplay from './CompStatDisplay'
 import BaseComponent from 'components/base-component/BaseComponent'
 import { Col, Container, Row } from 'react-bootstrap'
 import PlaceholderCustom from 'components/Placeholder'
-import { MemberContext } from 'contexts/MemberContext'
+import { ChurchContext } from 'contexts/ChurchContext'
 
 const CouncilReport = () => {
   // const { councilId } = useContext(ChurchContext)
-  const { currentUser } = useContext(MemberContext)
+  const { councilId } = useContext(ChurchContext)
 
   const { data, loading, error } = useQuery(COUNCIL_REPORT, {
-    variables: { councilId: currentUser.council },
+    variables: { councilId: councilId },
   })
 
   const churchData = getServiceGraphData(data?.councils[0])

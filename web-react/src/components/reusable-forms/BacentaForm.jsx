@@ -22,6 +22,7 @@ import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import HeadingSecondary from 'components/HeadingSecondary'
 import { MemberContext } from 'contexts/MemberContext'
 import SubmitButton from 'components/formik-components/SubmitButton'
+import { DISPLAY_CONSTITUENCY } from 'pages/directory/display/ReadQueries'
 
 const BacentaForm = ({ initialValues, onSubmit, title, newBacenta }) => {
   const { togglePopup, isOpen, clickCard, bacentaId, councilId } =
@@ -29,7 +30,14 @@ const BacentaForm = ({ initialValues, onSubmit, title, newBacenta }) => {
   const { theme } = useContext(MemberContext)
   const navigate = useNavigate()
 
-  const [CloseDownBacenta] = useMutation(MAKE_BACENTA_INACTIVE)
+  const [CloseDownBacenta] = useMutation(MAKE_BACENTA_INACTIVE, {
+    refetchQueries: [
+      {
+        query: DISPLAY_CONSTITUENCY,
+        variables: { id: initialValues.constituency },
+      },
+    ],
+  })
   const { data, loading, error } = useQuery(GET_COUNCIL_CONSTITUENCIES, {
     variables: { id: councilId },
   })
@@ -159,16 +167,18 @@ const BacentaForm = ({ initialValues, onSubmit, title, newBacenta }) => {
                 Are you sure you want to close down this bacenta?
                 <Button
                   variant="primary"
+                  size="lg"
                   type="submit"
                   className={`btn-main ${theme}`}
                   onClick={() => {
                     CloseDownBacenta({
                       variables: {
                         bacentaId: bacentaId,
+                        leaderId: initialValues.leaderId,
                       },
                     })
                       .then((res) => {
-                        clickCard(res.data.CloseDownBacenta.constituency)
+                        clickCard(res.data.CloseDownBacenta)
                         togglePopup()
                         navigate(`/constituency/displaydetails`)
                       })

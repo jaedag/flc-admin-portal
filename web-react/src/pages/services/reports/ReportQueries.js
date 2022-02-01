@@ -38,6 +38,7 @@ export const BACENTA_REPORT = gql`
         fullName
       }
       services(limit: 4) {
+        id
         created_at
         attendance
         income
@@ -69,6 +70,7 @@ export const SONTA_REPORT = gql`
         fullName
       }
       services(limit: 4) {
+        id
         created_at
         attendance
         income
@@ -95,6 +97,7 @@ export const CONSTITUENCY_REPORT = gql`
         fullName
       }
       services(limit: 4) {
+        id
         created_at
         attendance
         income
@@ -126,6 +129,7 @@ export const COUNCIL_REPORT = gql`
         fullName
       }
       services(limit: 4) {
+        id
         created_at
         attendance
         income
@@ -157,6 +161,7 @@ export const STREAM_REPORT = gql`
         fullName
       }
       services(limit: 4) {
+        id
         created_at
         attendance
         income
@@ -188,6 +193,7 @@ export const GATHERINGSERVICE_REPORT = gql`
         fullName
       }
       services(limit: 4) {
+        id
         created_at
         attendance
         income

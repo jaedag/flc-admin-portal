@@ -453,7 +453,7 @@ export const getComponentServiceAggregates = `
   
   MATCH (church)-[:HAS*1..5]->()-[:HAS_HISTORY]->(componentServices:ServiceLog)
   MATCH (componentServices)-[:HAS_SERVICE]->(componentRecords:ServiceRecord)
-     
+
   MATCH (componentRecords)-[:SERVICE_HELD_ON]->(date:TimeGraph)
   WITH DISTINCT componentServices,componentRecords, date(date.date).week AS week
 

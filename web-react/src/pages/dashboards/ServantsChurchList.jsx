@@ -11,7 +11,7 @@ import {
 import {
   getMonthlyStatAverage,
   getServiceGraphData,
-} from 'pages/reports/report-utils'
+} from 'pages/services/reports/report-utils'
 import { plural, transformCloudinaryImg } from 'global-utils'
 import MenuButton from 'components/buttons/MenuButton'
 import { Container } from 'react-bootstrap'
@@ -51,7 +51,7 @@ const ServantsChurchList = () => {
         clickCard: () => {
           clickCard(church)
         },
-        link: `/${church.__typename}/displaydetails`,
+        link: `/${church.__typename.toLowerCase()}/displaydetails`,
       })
     })
   }
@@ -74,16 +74,26 @@ const ServantsChurchList = () => {
     if (servantLeader?.leadsMinistry?.length) {
       pushIntoChurch(servantLeader?.leadsMinistry)
     }
-    if (servant?.leadsCouncil?.length) {
-      churches.push({ name: 'Bishop', number: 'Bishop' })
+
+    if (servantLeader?.leadsCouncil?.length) {
+      pushIntoChurch(servantLeader?.leadsCouncil)
     }
+    if (servantLeader?.leadsStream?.length) {
+      pushIntoChurch(servantLeader?.leadsStream)
+    }
+    if (servantLeader?.leadsGatheringService?.length) {
+      pushIntoChurch(servantLeader?.leadsGatheringService)
+    }
+    //Administrative
     if (servantAdmin?.isAdminForCouncil?.length) {
       pushIntoChurch(servantAdmin?.isAdminForCouncil)
     }
     if (servantAdmin?.isAdminForConstituency?.length) {
       pushIntoChurch(servantAdmin?.isAdminForConstituency)
     }
-
+    if (servantAdmin?.isAdminForGatheringService?.length) {
+      pushIntoChurch(servantAdmin?.isAdminForGatheringService)
+    }
     //run the get graph function after all checking is done to avoid multiple unnecessary runs
     return
   }

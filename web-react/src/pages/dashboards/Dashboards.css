@@ -23,7 +23,16 @@
 .colour-admin {
   background-image: linear-gradient(#3c096f, #2c0b53, #1b0e36);
 }
-.colour-bishop {
+.colour-council,
+.colour-councils {
+  background-image: linear-gradient(#3c096f, #2c0b53, #1b0e36);
+}
+.colour-stream,
+.colour-streams {
+  background-image: linear-gradient(#3c096f, #2c0b53, #1b0e36);
+}
+.colour-gatheringservice,
+.colour-gatheringservices {
   background-image: linear-gradient(#3c096f, #2c0b53, #1b0e36);
 }
 

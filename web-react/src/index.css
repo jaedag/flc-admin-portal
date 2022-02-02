@@ -11,6 +11,7 @@
   --full-black: #000000;
   --members-accent: #68e0d7;
   --churches-accent: #a9e631;
+  --arrivals-accent: #e63167;
   --btn-submit: #136e02;
   --border: #1d1d1d;
   --good: #4de531;
@@ -260,18 +261,24 @@ a {
 }
 
 .accordion-button {
-  background-color: #1d1d1d;
-  color: white;
-  border-radius: 0px !important;
+  border-radius: 0px;
+}
+
+.dark .accordion-button {
+  background-color: var(--body-bg);
+  color: var(--text-primary);
+}
+
+.light .accordion-button {
+  color: var(--text-primary);
 }
 
 .accordion-button[aria-expanded='true'] {
-  background-color: #1d1d1d !important;
   color: rgb(148, 139, 139);
 }
 
-.accordion-item {
-  border-color: #1d1d1d;
+.dark .accordion-item {
+  border-color: var(--body-bg);
 }
 
 .accordion-button::after {

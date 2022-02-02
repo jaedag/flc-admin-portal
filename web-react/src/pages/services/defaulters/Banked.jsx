@@ -10,6 +10,8 @@ import DefaulterCard from './DefaulterCard'
 import {
   CONSTITUENCY_BANKED_LIST,
   COUNCIL_BANKED_LIST,
+  STREAM_BANKED_LIST,
+  GATHERINGSERVICE_BANKED_LIST,
 } from './DefaultersQueries'
 import PlaceholderDefaulter from './PlaceholderDefaulter'
 
@@ -21,6 +23,10 @@ const Banked = () => {
   )
   const [councilBanked, { data: councilData }] =
     useLazyQuery(COUNCIL_BANKED_LIST)
+  const [streamBanked, { data: streamData }] = useLazyQuery(STREAM_BANKED_LIST)
+  const [gatheringServiceBanked, { data: gatheringServiceData }] = useLazyQuery(
+    GATHERINGSERVICE_BANKED_LIST
+  )
 
   useEffect(() => {
     if (
@@ -44,7 +50,34 @@ const Banked = () => {
       })
       setChurch(councilData?.councils[0])
     }
-  }, [currentUser.constituency, constituencyData, councilData])
+    if (isAuthorised(['adminStream', 'leaderStream'], currentUser.roles)) {
+      streamBanked({
+        variables: {
+          id: currentUser.stream,
+        },
+      })
+      setChurch(streamData?.streams[0])
+    }
+    if (
+      isAuthorised(
+        ['adminGatheringService', 'leaderGatheringService'],
+        currentUser.roles
+      )
+    ) {
+      gatheringServiceBanked({
+        variables: {
+          id: currentUser.gatheringService,
+        },
+      })
+      setChurch(gatheringServiceData?.gatheringServices[0])
+    }
+  }, [
+    currentUser.constituency,
+    constituencyData,
+    councilData,
+    streamData,
+    gatheringServiceData,
+  ])
 
   return (
     <Container>

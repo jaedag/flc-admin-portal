@@ -2,7 +2,11 @@ import { useMutation, useQuery } from '@apollo/client'
 import BaseComponent from 'components/base-component/BaseComponent'
 import { FieldArray, Form, Formik } from 'formik'
 import * as Yup from 'yup'
-import { makeSelectOptions, throwErrorMsg } from 'global-utils'
+import {
+  makeSelectOptions,
+  permitAdminAndThoseAbove,
+  throwErrorMsg,
+} from 'global-utils'
 import { GET_COUNCIL_CONSTITUENCIES } from 'queries/ListQueries'
 import React, { useContext } from 'react'
 import { ChurchContext } from 'contexts/ChurchContext'
@@ -10,13 +14,15 @@ import FormikControl from 'components/formik-components/FormikControl'
 import PlusSign from 'components/buttons/PlusMinusSign/PlusSign'
 import MinusSign from 'components/buttons/PlusMinusSign/MinusSign'
 import { useNavigate } from 'react-router'
-import { MAKE_BACENTA_INACTIVE } from 'pages/update/CloseChurchMutations'
+import { MAKE_BACENTA_INACTIVE } from 'pages/directory/update/CloseChurchMutations'
 import Popup from 'components/Popup/Popup'
 import RoleView from 'auth/RoleView'
-import { Container, Row, Col, Button, Spinner } from 'react-bootstrap'
+import { Container, Row, Col, Button } from 'react-bootstrap'
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import HeadingSecondary from 'components/HeadingSecondary'
 import { MemberContext } from 'contexts/MemberContext'
+import SubmitButton from 'components/formik-components/SubmitButton'
+import { DISPLAY_CONSTITUENCY } from 'pages/directory/display/ReadQueries'
 
 const BacentaForm = ({ initialValues, onSubmit, title, newBacenta }) => {
   const { togglePopup, isOpen, clickCard, bacentaId, councilId } =
@@ -24,7 +30,14 @@ const BacentaForm = ({ initialValues, onSubmit, title, newBacenta }) => {
   const { theme } = useContext(MemberContext)
   const navigate = useNavigate()
 
-  const [CloseDownBacenta] = useMutation(MAKE_BACENTA_INACTIVE)
+  const [CloseDownBacenta] = useMutation(MAKE_BACENTA_INACTIVE, {
+    refetchQueries: [
+      {
+        query: DISPLAY_CONSTITUENCY,
+        variables: { id: initialValues.constituency },
+      },
+    ],
+  })
   const { data, loading, error } = useQuery(GET_COUNCIL_CONSTITUENCIES, {
     variables: { id: councilId },
   })
@@ -61,6 +74,7 @@ const BacentaForm = ({ initialValues, onSubmit, title, newBacenta }) => {
               <div className="form-group">
                 <Row className="row-cols-1 row-cols-md-2">
                   {/* <!-- Basic Info Div --> */}
+
                   <Col className="mb-2">
                     <Row className="form-row">
                       <Col>
@@ -68,7 +82,7 @@ const BacentaForm = ({ initialValues, onSubmit, title, newBacenta }) => {
                           className="form-control"
                           control="select"
                           label={`Select a Constituency`}
-                          name="constituencySelect"
+                          name="constituency"
                           options={constituencyOptions}
                           defaultOption={`Select a Constituency`}
                         />
@@ -84,12 +98,7 @@ const BacentaForm = ({ initialValues, onSubmit, title, newBacenta }) => {
 
                     <Row className="d-flex align-items-center mb-3">
                       <RoleView
-                        roles={[
-                          'adminFederal',
-                          'adminCouncil',
-                          'adminConstituency',
-                          'leaderConstituency',
-                        ]}
+                        roles={permitAdminAndThoseAbove('Constituency')}
                       >
                         <Col>
                           <FormikControl
@@ -151,38 +160,25 @@ const BacentaForm = ({ initialValues, onSubmit, title, newBacenta }) => {
                 </Row>
               </div>
 
-              <Button
-                variant="primary"
-                size="lg"
-                type="submit"
-                className={`btn-main ${theme}`}
-                disabled={!formik.isValid || formik.isSubmitting}
-              >
-                {formik.isSubmitting ? (
-                  <>
-                    <Spinner animation="grow" size="sm" />
-                    <span> Submitting</span>
-                  </>
-                ) : (
-                  'Submit'
-                )}
-              </Button>
+              <SubmitButton formik={formik} />
             </Form>
             {isOpen && (
               <Popup handleClose={togglePopup}>
                 Are you sure you want to close down this bacenta?
                 <Button
                   variant="primary"
+                  size="lg"
                   type="submit"
                   className={`btn-main ${theme}`}
                   onClick={() => {
                     CloseDownBacenta({
                       variables: {
                         bacentaId: bacentaId,
+                        leaderId: initialValues.leaderId,
                       },
                     })
                       .then((res) => {
-                        clickCard(res.data.CloseDownBacenta.constituency)
+                        clickCard(res.data.CloseDownBacenta)
                         togglePopup()
                         navigate(`/constituency/displaydetails`)
                       })

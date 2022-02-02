@@ -3,51 +3,58 @@ import { useNavigate } from 'react-router-dom'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import user from '../../assets/user.png'
 import bussolid from '../../assets/bus-solid.svg'
+import fellowship from '../../assets/fellowship.svg'
+import stream from '../../assets/stream.svg'
+import council from '../../assets/council.svg'
+import bacenta from '../../assets/bacenta.svg'
+import constituency from '../../assets/constituency-location.svg'
 import { transformCloudinaryImg } from 'global-utils'
-import { Card } from 'react-bootstrap'
+import { Button, Card } from 'react-bootstrap'
 import { MemberContext } from 'contexts/MemberContext'
 import '../../components/members-grids/MemberTable.css'
 import './MemberDisplayCard.css'
+import { TelephoneFill, Whatsapp } from 'react-bootstrap-icons'
 
 const MemberDisplayCard = (props) => {
-  const { member, ...rest } = props
-  const { setChurch, clickCard } = useContext(ChurchContext)
+  const { member, leader, ...rest } = props
+  const { clickCard } = useContext(ChurchContext)
   const { theme } = useContext(MemberContext)
   const navigate = useNavigate()
   let icon, name, details
+  let picture = member?.pictureUrl || leader?.pictureUrl
 
   switch (member.__typename) {
     case 'Member':
       icon = user
-      name = member.firstName + ' ' + member.lastName
+      name = member?.fullName || member.firstName + ' ' + member.lastName
       details = [
         member.fellowship && member.fellowship.name + ' Fellowship',
         member.ministry && member.ministry.name,
       ]
       break
     case 'Fellowship':
-      icon = bussolid
+      icon = fellowship
       name = member.name + ' Fellowship'
       details = [member?.leader?.fullName]
       break
     case 'Bacenta':
-      icon = bussolid
+      icon = bacenta
       name = member.name + ' Bacenta'
       details = [member?.leader?.fullName]
       break
 
     case 'Constituency':
-      icon = bussolid
+      icon = constituency
       name = member.name + ' Constituency'
       details = [member?.leader?.fullName]
       break
     case 'Council':
-      icon = bussolid
+      icon = council
       name = member.name + ' Council'
       details = [member?.leader?.fullName]
       break
     case 'Stream':
-      icon = bussolid
+      icon = stream
       name = member.name + ' Stream'
       details = [member?.leader?.fullName]
       break
@@ -65,25 +72,22 @@ const MemberDisplayCard = (props) => {
       break
   }
 
+  const clickFunction = () => {
+    clickCard(member)
+    navigate(`/${member.__typename.toLowerCase()}/displaydetails`)
+  }
+
   return (
     <Card
       {...rest}
       className="mobile-search-card"
-      onClick={() => {
-        clickCard(member)
-        setChurch({ church: member?.stream_name, subChurch: 'bacenta' })
-        navigate(`/${member.__typename.toLowerCase()}/displaydetails`)
-      }}
+      onClick={props.onClick || clickFunction}
     >
       <div className="d-flex align-items-center">
         <div className="flex-shrink-0">
           <img
-            className={`${member.pictureUrl && 'rounded-circle'} img-search`}
-            src={
-              member.pictureUrl
-                ? transformCloudinaryImg(member.pictureUrl)
-                : icon
-            }
+            className={`${picture && 'rounded-circle'} img-search`}
+            src={picture ? transformCloudinaryImg(picture) : icon}
             alt={member.fullName}
           />
         </div>
@@ -98,6 +102,23 @@ const MemberDisplayCard = (props) => {
                 </>
               ))}
           </p>
+          {props.contact && (
+            <div>
+              <a href={`tel:${leader?.phoneNumber}`}>
+                <Button variant="primary">
+                  <TelephoneFill /> Call
+                </Button>
+              </a>
+              <a
+                href={`https://wa.me/${leader?.whatsappNumber}`}
+                className="ms-3"
+              >
+                <Button variant="success">
+                  <Whatsapp /> WhatsApp
+                </Button>
+              </a>
+            </div>
+          )}
         </div>
       </div>
     </Card>

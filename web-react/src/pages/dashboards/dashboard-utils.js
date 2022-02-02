@@ -1,14 +1,10 @@
 import {
-  BookFill,
-  FlagFill,
-  JournalCheck,
-  PencilSquare,
-  Speedometer2,
-  Truck,
-} from 'react-bootstrap-icons'
+  permitArrivalsAndThoseAbove,
+  permitMeAndThoseAbove,
+} from 'global-utils'
 
 export const menuItems = [
-  { name: 'Home', to: '/', Icon: Speedometer2, exact: true, roles: ['all'] },
+  { name: 'Home', to: '/', roles: ['all'] },
   {
     name: 'Directory',
     exact: true,
@@ -17,47 +13,31 @@ export const menuItems = [
       { name: 'Members', to: '/directory/members' },
       { name: 'Churches', to: '/directory/churches' },
     ],
-    Icon: BookFill,
     roles: ['all'],
   },
   {
     name: 'Services',
     to: '/services/church-list',
-    Icon: PencilSquare,
-    roles: [
-      'leaderFellowship',
-      'leaderBacenta',
-      'leaderConstituency',
-      'adminConstituency',
-      'adminCouncil',
-    ],
+    roles: permitMeAndThoseAbove('Fellowship'),
   },
   {
     name: 'Arrivals',
     to: '/arrivals',
-    Icon: Truck,
-    roles: [
-      'leaderConstituency',
-      'adminConstituency',
-      'adminCouncil',
-      'adminFederal',
-    ],
+    roles: permitArrivalsAndThoseAbove('Bacenta'),
   },
   {
     name: 'Campaigns',
     to: '/campaigns',
-    Icon: FlagFill,
-    roles: [
-      'leaderConstituency',
-      'adminConstituency',
-      'adminCouncil',
-      'adminFederal',
-    ],
+    roles: permitMeAndThoseAbove('Constituency'),
+  },
+  {
+    name: 'Maps',
+    to: '/maps',
+    roles: ['adminGatheringService'],
   },
   {
     name: 'Reconciliation',
     to: '/recon',
-    Icon: JournalCheck,
-    roles: ['adminFederal'],
+    roles: ['adminGatheringService'],
   },
 ]

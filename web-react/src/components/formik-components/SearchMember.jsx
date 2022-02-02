@@ -1,7 +1,12 @@
 import { useLazyQuery } from '@apollo/client'
 import { MemberContext } from 'contexts/MemberContext'
 import { ErrorMessage } from 'formik'
-import { DEBOUNCE_TIMER, isAuthorised, throwErrorMsg } from 'global-utils'
+import {
+  DEBOUNCE_TIMER,
+  isAuthorised,
+  permitMeAndThoseAbove,
+  throwErrorMsg,
+} from 'global-utils'
 import React, { useContext, useEffect, useState } from 'react'
 import Autosuggest from 'react-autosuggest'
 import {
@@ -30,7 +35,7 @@ const SearchMember = (props) => {
     STREAM_MEMBER_SEARCH,
     {
       onCompleted: (data) => {
-        setSuggestions(data.streamSearch[0].memberSearch)
+        setSuggestions(data.streams[0].memberSearch)
         return
       },
     }
@@ -39,7 +44,7 @@ const SearchMember = (props) => {
     COUNCIL_MEMBER_SEARCH,
     {
       onCompleted: (data) => {
-        setSuggestions(data.councilSearch[0].memberSearch)
+        setSuggestions(data.councils[0].memberSearch)
         return
       },
     }
@@ -49,7 +54,7 @@ const SearchMember = (props) => {
     CONSTITUENCY_MEMBER_SEARCH,
     {
       onCompleted: (data) => {
-        setSuggestions(data.constituencySearch[0].memberSearch)
+        setSuggestions(data.constituencies[0].memberSearch)
         return
       },
     }
@@ -58,7 +63,7 @@ const SearchMember = (props) => {
     BACENTA_MEMBER_SEARCH,
     {
       onCompleted: (data) => {
-        setSuggestions(data.bacentaSearch[0].memberSearch)
+        setSuggestions(data.bacentas[0].memberSearch)
         return
       },
     }
@@ -67,7 +72,7 @@ const SearchMember = (props) => {
     FELLOWSHIP_MEMBER_SEARCH,
     {
       onCompleted: (data) => {
-        setSuggestions(data.fellowshipSearch[0].memberSearch)
+        setSuggestions(data.fellowships[0].memberSearch)
         return
       },
     }
@@ -83,7 +88,9 @@ const SearchMember = (props) => {
   throwErrorMsg(error)
 
   const whichSearch = (searchString) => {
-    if (isAuthorised(['adminFederal'], currentUser.roles)) {
+    if (
+      isAuthorised(permitMeAndThoseAbove('GatheringService'), currentUser.roles)
+    ) {
       gatheringServiceSearch({
         variables: {
           id: currentUser.gatheringService,
@@ -91,7 +98,7 @@ const SearchMember = (props) => {
         },
       })
     } else if (
-      isAuthorised(['adminStream', 'leaderStream'], currentUser.roles)
+      isAuthorised(permitMeAndThoseAbove('Stream'), currentUser.roles)
     ) {
       streamSearch({
         variables: {
@@ -100,7 +107,7 @@ const SearchMember = (props) => {
         },
       })
     } else if (
-      isAuthorised(['adminCouncil', 'leaderCouncil'], currentUser.roles)
+      isAuthorised(permitMeAndThoseAbove('Council'), currentUser.roles)
     ) {
       councilSearch({
         variables: {
@@ -109,10 +116,7 @@ const SearchMember = (props) => {
         },
       })
     } else if (
-      isAuthorised(
-        ['adminConstituency', 'leaderConstituency'],
-        currentUser.roles
-      )
+      isAuthorised(permitMeAndThoseAbove('Constituency'), currentUser.roles)
     ) {
       constituencySearch({
         variables: {
@@ -120,17 +124,21 @@ const SearchMember = (props) => {
           key: searchString?.trim(),
         },
       })
-    } else if (isAuthorised(['leaderBacenta'], currentUser.roles)) {
+    } else if (
+      isAuthorised(permitMeAndThoseAbove('Bacenta'), currentUser.roles)
+    ) {
       bacentaSearch({
         variables: {
-          id: currentUser.fellowship.bacenta.id,
+          id: currentUser.bacenta,
           key: searchString?.trim(),
         },
       })
-    } else if (isAuthorised(['leaderFellowship'], currentUser.roles)) {
+    } else if (
+      isAuthorised(permitMeAndThoseAbove('Fellowship'), currentUser.roles)
+    ) {
       fellowshipSearch({
         variables: {
-          id: currentUser.fellowship.id,
+          id: currentUser.fellowship,
           key: searchString?.trim(),
         },
       })

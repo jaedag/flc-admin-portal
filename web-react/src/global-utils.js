@@ -4,6 +4,19 @@ export const PHONE_NUM_REGEX_VALIDATION =
 export const DECIMAL_NUM_REGEX = /^-?\d*\.{1}\d*$/
 export const DECIMAL_NUM_REGEX_POSITIVE_ONLY = /^\d*\.{1}\d*$/
 export const DEBOUNCE_TIMER = 500
+export const ARRIVALS_CUTOFF = [14, 30, 0]
+
+export const getTime = (time) => {
+  return time.getHours() + ':' + time.getMinutes() + ':' + time.getSeconds()
+}
+export const setTime = (timeArray) => {
+  let now = new Date()
+  now.setHours(timeArray[0])
+  now.setMinutes(timeArray[1])
+  now.setMilliseconds(timeArray[2])
+
+  return now
+}
 
 export const GENDER_OPTIONS = [
   { key: 'Male', value: 'Male' },
@@ -36,8 +49,9 @@ export const throwErrorMsg = (message, error) => {
   if (!message && !error) {
     return
   }
+
   // eslint-disable-next-line no-console
-  console.error(error || message)
+  console.error(message, ' ', error)
   alert(message + ' ' + error)
 }
 
@@ -49,6 +63,7 @@ export const isAuthorised = (permittedRoles, userRoles) => {
   if (permittedRoles?.includes('all')) {
     return true
   }
+
   return permittedRoles?.some((r) => userRoles.includes(r))
 }
 
@@ -95,6 +110,8 @@ export const plural = (church) => {
       return 'Campuses'
     case 'Constituency':
       return 'Constituencies'
+    case 'constituency':
+      return 'constituencies'
     case 'senior high school':
       return 'senior high schools'
     case 'Senior High School':
@@ -137,7 +154,7 @@ export const makeSelectOptions = (data) => {
 
   return data.map((data) => ({
     value: data.id,
-    key: data.name ? data.name : data.firstName + ' ' + data.lastName,
+    key: data.name ? data.name : data.fullName,
   }))
 }
 
@@ -198,34 +215,53 @@ export function debounce(func, wait) {
   }
 }
 
+export const getHighestTitle = (member) => {
+  if (!member.titleConnection.edges?.length) {
+    return
+  }
+  let highestTitle
+
+  member.titleConnection.edges.map((title) => {
+    //Male Titles
+    if (member.gender.gender === 'Male') {
+      if (title.node.title === 'Pastor') {
+        highestTitle = 'Pastor'
+      }
+      if (title.node.title === 'Reverend') {
+        highestTitle = 'Reverend'
+      }
+      if (title.node.title === 'Bishop') {
+        highestTitle = 'Bishop'
+      }
+    }
+
+    //Female Titles
+    if (member.gender.gender === 'Female') {
+      if (title.node.title === 'Pastor') {
+        highestTitle = 'Lady Pastor'
+      }
+      if (title.node.title === 'Reverend') {
+        highestTitle = 'Lady Reverend'
+      }
+      if (title.node.title === 'Bishop') {
+        highestTitle = 'Elect Mother'
+      }
+    }
+  })
+
+  return highestTitle
+}
+
 export const getNameWithTitle = (member) => {
   if (!member) {
     return null
   }
-  let displayName = {
+  const displayName = {
     name: `${member.fullName}`,
-    title: '',
+    title: getHighestTitle(member),
   }
 
   if (member.titleConnection.edges?.length) {
-    if (member.gender.gender === 'Female') {
-      switch (member.titleConnection.edges[0].node.title) {
-        case 'Pastor':
-          displayName.title = 'Lady Pastor'
-          break
-        case 'Reverend':
-          displayName.title = 'Lady Reverend'
-          break
-        case 'Bishop':
-          displayName.title = 'Elect Mother'
-          break
-        default:
-          break
-      }
-    } else {
-      displayName.title = member.titleConnection.edges[0].node.title
-    }
-
     return `${displayName.title} ${displayName.name}`
   } else {
     return displayName.name
@@ -300,9 +336,11 @@ export const getChurchCount = (servant) => {
     }
 
     if (servant.leadsCouncilCount === 1) {
-      churchesCount = servant.leadsCouncilCount + ' Council'
+      churchesCount =
+        churchesCount + ' ' + servant.leadsCouncilCount + ' Council'
     } else {
-      churchesCount = servant.leadsCouncilCount + ' Councils'
+      churchesCount =
+        churchesCount + ' ' + servant.leadsCouncilCount + ' Councils'
     }
   }
 
@@ -378,4 +416,189 @@ export const getWeekNumber = (date) => {
   const result = Math.ceil(numberOfDays / 7)
 
   return result
+}
+
+export const last3Weeks = () => {
+  const lastWeek = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
+  const last2Weeks = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000)
+
+  return [getWeekNumber(), getWeekNumber(lastWeek), getWeekNumber(last2Weeks)]
+}
+
+//Permissions Things
+export const permitMeAndThoseAbove = (churchType) => {
+  let permittedFor = []
+  switch (churchType) {
+    case 'Fellowship':
+      permittedFor = [
+        'adminGatheringService',
+        'adminStream',
+        'adminCouncil',
+        'adminConstituency',
+        'adminConstituencyArrivals',
+        'leaderGatheringService',
+        'leaderStream',
+        'leaderCouncil',
+        'leaderConstituency',
+        'leaderBacenta',
+        'leaderFellowship',
+      ]
+      break
+    case 'Bacenta':
+      permittedFor = [
+        'adminGatheringService',
+        'adminStream',
+        'adminCouncil',
+        'adminConstituency',
+        'adminConstituencyArrivals',
+        'leaderGatheringService',
+        'leaderStream',
+        'leaderCouncil',
+        'leaderConstituency',
+        'leaderBacenta',
+      ]
+      break
+    case 'Sonta':
+      permittedFor = [
+        'adminGatheringService',
+        'adminStream',
+        'adminCouncil',
+        'adminConstituency',
+        'adminConstituencyArrivals',
+        'leaderGatheringService',
+        'leaderStream',
+        'leaderCouncil',
+        'leaderConstituency',
+        'leaderSonta',
+      ]
+      break
+    case 'Constituency':
+      permittedFor = [
+        'adminGatheringService',
+        'adminStream',
+        'adminCouncil',
+        'adminConstituency',
+        'adminConstituencyArrivals',
+        'leaderGatheringService',
+        'leaderStream',
+        'leaderCouncil',
+        'leaderConstituency',
+      ]
+      break
+    case 'Council':
+      permittedFor = [
+        'adminGatheringService',
+        'adminStream',
+        'adminCouncil',
+        'leaderGatheringService',
+        'leaderStream',
+        'leaderCouncil',
+      ]
+      break
+    case 'Stream':
+      permittedFor = [
+        'adminGatheringService',
+        'adminStream',
+        'leaderGatheringService',
+        'leaderStream',
+      ]
+      break
+    case 'GatheringService':
+      permittedFor = ['adminGatheringService', 'leaderGatheringService']
+      break
+    default:
+      permittedFor = []
+      break
+  }
+
+  return permittedFor
+}
+
+export const permitAdminAndThoseAbove = (churchType) => {
+  let permittedFor = []
+  switch (churchType) {
+    case 'Sonta':
+      permittedFor = [
+        'adminGatheringService',
+        'adminStream',
+        'adminCouncil',
+        'adminConstituency',
+      ]
+      break
+    case 'Constituency':
+      permittedFor = [
+        'adminGatheringService',
+        'adminStream',
+        'adminCouncil',
+        'adminConstituency',
+      ]
+      break
+    case 'Council':
+      permittedFor = ['adminGatheringService', 'adminStream', 'adminCouncil']
+      break
+    case 'Stream':
+      permittedFor = ['adminGatheringService', 'adminStream']
+      break
+    case 'GatheringService':
+      permittedFor = ['adminGatheringService']
+      break
+    default:
+      permittedFor = []
+      break
+  }
+
+  return permittedFor
+}
+
+export const permitArrivalsAndThoseAbove = (churchType) => {
+  let permittedFor = []
+  switch (churchType) {
+    case 'Bacenta':
+      permittedFor = [
+        'adminGatheringService',
+        'adminStream',
+        'adminStreamArrivals',
+        'adminCouncil',
+        'adminCouncilArrivals',
+        'adminConstituency',
+        'adminConstituencyArrivals',
+        'leaderBacenta',
+      ]
+      break
+    case 'Constituency':
+      permittedFor = [
+        'adminGatheringService',
+        'adminStream',
+        'adminStreamArrivals',
+        'adminCouncil',
+        'adminCouncilArrivals',
+        'adminConstituency',
+        'adminConstituencyArrivals',
+      ]
+      break
+    case 'Council':
+      permittedFor = [
+        'adminGatheringService',
+        'adminStream',
+        'adminStreamArrivals',
+        'adminCouncil',
+        'adminCouncilArrivals',
+      ]
+      break
+    case 'Stream':
+      permittedFor = [
+        'adminGatheringService',
+        'adminStream',
+        'adminStreamArrivals',
+      ]
+      break
+    case 'GatheringService':
+      permittedFor = ['adminGatheringService']
+      break
+    default:
+      permittedFor = []
+      break
+  }
+
+  return permittedFor
 }

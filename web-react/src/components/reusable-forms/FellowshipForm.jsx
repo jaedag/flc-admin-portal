@@ -4,6 +4,7 @@ import * as Yup from 'yup'
 import {
   DECIMAL_NUM_REGEX,
   makeSelectOptions,
+  permitAdminAndThoseAbove,
   SERVICE_DAY_OPTIONS,
   throwErrorMsg,
   VACATION_OPTIONS,
@@ -15,7 +16,7 @@ import {
 import React, { useContext, useState } from 'react'
 import { ChurchContext } from 'contexts/ChurchContext'
 import FormikControl from 'components/formik-components/FormikControl'
-import { MAKE_FELLOWSHIP_INACTIVE } from 'pages/update/CloseChurchMutations'
+import { MAKE_FELLOWSHIP_INACTIVE } from 'pages/directory/update/CloseChurchMutations'
 import { useNavigate } from 'react-router'
 import Popup from 'components/Popup/Popup'
 import RoleView from 'auth/RoleView'
@@ -26,6 +27,7 @@ import LoadingScreen from 'components/base-component/LoadingScreen'
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import HeadingSecondary from 'components/HeadingSecondary'
 import SubmitButton from 'components/formik-components/SubmitButton'
+import { DISPLAY_BACENTA } from 'pages/directory/display/ReadQueries'
 
 const FellowshipForm = (props) => {
   const { clickCard, isOpen, togglePopup, fellowshipId, councilId } =
@@ -38,16 +40,21 @@ const FellowshipForm = (props) => {
     variables: { id: councilId },
   })
 
-  const [CloseDownFellowship] = useMutation(MAKE_FELLOWSHIP_INACTIVE)
+  const [CloseDownFellowship] = useMutation(MAKE_FELLOWSHIP_INACTIVE, {
+    refetchQueries: [
+      {
+        query: DISPLAY_BACENTA,
+        variables: { id: props.initialValues.bacenta },
+      },
+    ],
+  })
 
   if (error) {
     throwErrorMsg(error)
   }
 
   const validationSchema = Yup.object({
-    fellowshipName: Yup.string().required(
-      'Fellowship Name is a required field'
-    ),
+    name: Yup.string().required('Fellowship Name is a required field'),
     leaderId: Yup.string().required(
       'Please choose a leader from the drop down'
     ),
@@ -75,7 +82,7 @@ const FellowshipForm = (props) => {
 
   let constituencyIdVar = props.initialValues.constituencySelect
 
-  if (!props.initialValues.fellowshipName && !props.newFellowship) {
+  if (!props.initialValues.name && !props.newFellowship) {
     return <LoadingScreen />
   }
 
@@ -83,9 +90,7 @@ const FellowshipForm = (props) => {
     <>
       <Container>
         <HeadingPrimary>{props.title}</HeadingPrimary>
-        <HeadingSecondary>
-          {props.initialValues.fellowshipName}
-        </HeadingSecondary>
+        <HeadingSecondary>{props.initialValues.name}</HeadingSecondary>
       </Container>
       <Formik
         initialValues={props.initialValues}
@@ -102,11 +107,7 @@ const FellowshipForm = (props) => {
                   <Col className="mb-2">
                     <Row className="form-row">
                       <RoleView
-                        roles={[
-                          'adminFederal',
-                          'adminCouncil',
-                          'adminConstituency',
-                        ]}
+                        roles={permitAdminAndThoseAbove('Constituency')}
                       >
                         <Col>
                           <FormikControl
@@ -124,17 +125,17 @@ const FellowshipForm = (props) => {
                             }}
                             defaultOption={`Select a Constituency`}
                           />
+
                           <FormikControl
                             className="form-control"
                             control="selectWithQuery"
-                            name="bacentaSelect"
+                            name="bacenta"
                             label="Bacenta"
                             optionsQuery={GET_CONSTITUENCY_BACENTAS}
                             queryVariable="id"
                             dataset="bacentas"
                             varValue={
-                              constituencyIdVar ||
-                              props.initialValues.constituencySelect
+                              constituencyIdVar || props.initialValues.bacenta
                             }
                             defaultOption="Select a Bacenta"
                           />
@@ -144,17 +145,13 @@ const FellowshipForm = (props) => {
 
                     <Row className="form-row">
                       <RoleView
-                        roles={[
-                          'adminFederal',
-                          'adminCouncil',
-                          'adminConstituency',
-                        ]}
+                        roles={permitAdminAndThoseAbove('Constituency')}
                       >
                         <Col sm={12}>
                           <FormikControl
                             className="form-control"
                             control="input"
-                            name="fellowshipName"
+                            name="name"
                             label="Name of Fellowship"
                             placeholder="Name of Fellowship"
                           />
@@ -170,6 +167,7 @@ const FellowshipForm = (props) => {
                             defaultOption="Pick a Service Day"
                           />
                         </Col>
+
                         <Col sm={12}>
                           <FormikControl
                             className="form-control"
@@ -177,16 +175,12 @@ const FellowshipForm = (props) => {
                             label="Vacation Status"
                             name="vacationStatus"
                             options={VACATION_OPTIONS}
-                            defaultOption="Set Fellowship Mode"
+                            defaultOption="Select Vacation Status"
                           />
                         </Col>
                       </RoleView>
                       <RoleView
-                        roles={[
-                          'adminFederal',
-                          'adminCouncil',
-                          'adminConstituency',
-                        ]}
+                        roles={permitAdminAndThoseAbove('Constituency')}
                       >
                         <Col sm={12}>
                           <FormikControl
@@ -279,15 +273,17 @@ const FellowshipForm = (props) => {
                 <Button
                   variant="primary"
                   type="submit"
+                  size="lg"
                   className={`btn-main ${theme}`}
                   onClick={() => {
                     CloseDownFellowship({
                       variables: {
                         fellowshipId: fellowshipId,
+                        leaderId: props.initialValues.leaderId,
                       },
                     })
                       .then((res) => {
-                        clickCard(res.data.CloseDownFellowship.bacenta)
+                        clickCard(res.data.CloseDownFellowship)
                         togglePopup()
                         navigate('/bacenta/displaydetails')
                       })

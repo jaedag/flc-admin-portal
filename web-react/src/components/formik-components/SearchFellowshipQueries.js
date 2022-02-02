@@ -59,3 +59,15 @@ export const BACENTA_FELLOWSHIP_SEARCH = gql`
     }
   }
 `
+
+export const FELLOWSHIP_SEARCH = gql`
+  query ($id: ID!) {
+    members(where: { id: $id }) {
+      id
+      leadsFellowship {
+        id
+        name
+      }
+    }
+  }
+`

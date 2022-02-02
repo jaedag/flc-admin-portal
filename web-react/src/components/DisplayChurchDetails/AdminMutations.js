@@ -1,16 +1,5 @@
 import { gql } from '@apollo/client'
 
-export const REMOVE_CONSTITUENCY_ADMIN = gql`
-  mutation RemoveConstituencyAdmin($constituencyId: ID!, $adminId: ID!) {
-    RemoveConstituencyAdmin(
-      adminId: $adminId
-      constituencyId: $constituencyId
-    ) {
-      id
-    }
-  }
-`
-
 export const MAKE_CONSTITUENCY_ADMIN = gql`
   mutation MakeConstituencyAdmin(
     $constituencyId: ID!
@@ -44,13 +33,22 @@ export const MAKE_CONSTITUENCY_ADMIN = gql`
   }
 `
 
-export const NEW_CONSTITUENCY_ADMIN = gql`
-  mutation MakeConstituencyAdmin($constituencyId: ID!, $adminId: ID!) {
-    MakeConstituencyAdmin(constituencyId: $constituencyId, adminId: $adminId) {
+export const MAKE_COUNCIL_ADMIN = gql`
+  mutation MakeCouncilAdmin(
+    $councilId: ID!
+    $newAdminId: ID!
+    $oldAdminId: ID!
+  ) {
+    RemoveCouncilAdmin(councilId: $councilId, adminId: $oldAdminId) {
       id
       firstName
       lastName
-      isAdminForConstituency {
+    }
+    MakeCouncilAdmin(councilId: $councilId, adminId: $newAdminId) {
+      id
+      firstName
+      lastName
+      isAdminForCouncil {
         id
         admin {
           id
@@ -62,13 +60,18 @@ export const NEW_CONSTITUENCY_ADMIN = gql`
   }
 `
 
-export const NEW_COUNCIL_ADMIN = gql`
-  mutation MakeCouncilAdmin($councilId: ID!, $adminId: ID!) {
-    MakeCouncilAdmin(councilId: $councilId, adminId: $adminId) {
+export const MAKE_STREAM_ADMIN = gql`
+  mutation MakeStreamAdmin($streamId: ID!, $newAdminId: ID!, $oldAdminId: ID!) {
+    RemoveStreamAdmin(streamId: $streamId, adminId: $oldAdminId) {
       id
       firstName
       lastName
-      isAdminForCouncil {
+    }
+    MakeStreamAdmin(streamId: $streamId, adminId: $newAdminId) {
+      id
+      firstName
+      lastName
+      isAdminForStream {
         id
         admin {
           id

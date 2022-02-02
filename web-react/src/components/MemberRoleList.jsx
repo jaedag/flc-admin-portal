@@ -1,80 +1,56 @@
 import React, { useContext } from 'react'
+import { Button } from 'react-bootstrap'
 import { useNavigate } from 'react-router'
 import { ChurchContext } from '../contexts/ChurchContext'
 import { capitalise } from '../global-utils'
 import PlaceholderCustom from './Placeholder'
+import './MemberRoleList.css'
 
-const MemberRoleList = ({ member }) => {
-  if (!member) {
+const MemberRoleList = ({ memberLeader, memberAdmin }) => {
+  if (!memberLeader || !memberAdmin) {
     return null
   }
-
   const { clickCard } = useContext(ChurchContext)
   const navigate = useNavigate()
 
   //To Display Ranks on the Member Card
   let rank = {
+    gatheringserviceLeader: [],
+    streamLeader: [],
     councilLeader: [],
     constituencyLeader: [],
-    sontaLeader: [],
-    basontaLeader: [],
     bacentaLeader: [],
     fellowshipLeader: [],
-    adminCouncil: [],
-    adminConstituency: [],
+    gatheringserviceAdmin: [],
+    streamAdmin: [],
+    councilAdmin: [],
+    constituencyAdmin: [],
+    sontaLeader: [],
+    basontaLeader: [],
   }
   let isServant = false
 
   const updateRank = (member, churchType) => {
     isServant = true
-    if (churchType === 'bishop') {
-      if (member.leadsCouncil[0]) {
-        member.leadsCouncil.map((church) => {
-          rank.councilLeader.push({
-            name: church.name,
-            church: church,
-            link: '/council/displaydetails',
-            id: church.id,
-            stream_name: church.stream_name,
-            __typename: church.__typename,
-          })
-          return null
-        })
-        return
-      }
-    }
 
-    if (churchType === 'adminCouncil') {
-      member.isAdminForCouncil.map((adminFor) => {
-        rank.adminCouncil.push({
-          admin: true,
-          name: `${adminFor.name}`,
-          stream_name: adminFor.stream_name,
-          id: adminFor.id,
-          __typename: adminFor.__typename,
-        })
-        return null
+    member[`isAdminFor${capitalise(churchType)}`]?.map((church) => {
+      let ch = church.__typename.toLowerCase()
+
+      rank[`${ch}Admin`].push({
+        name: church.name,
+        stream_name: church.stream_name,
+        bacenta: church.bacenta,
+        sonta: church.sonta,
+        constituency: church.constituency,
+        id: church.id,
+        admin: true,
+        link: '',
+        __typename: church.__typename,
       })
-      return
-    }
+      return null
+    })
 
-    if (churchType === 'adminConstituency') {
-      if (member.isAdminForConstituency[0]) {
-        member.isAdminForConstituency.map((adminFor) => {
-          rank.adminConstituency.push({
-            stream_name: adminFor.stream_name,
-            constituency: true,
-            name: `${adminFor.name}`,
-            id: adminFor.id,
-            __typename: adminFor.__typename,
-          })
-          return null
-        })
-        return
-      }
-    }
-
-    member[`leads${capitalise(churchType)}`].map((church) => {
+    member[`leads${capitalise(churchType)}`]?.map((church) => {
       let ch = church.__typename.toLowerCase()
 
       rank[`${ch}Leader`].push({
@@ -92,33 +68,44 @@ const MemberRoleList = ({ member }) => {
     return null
   }
 
-  if (member.leadsFellowship[0]) {
-    updateRank(member, 'fellowship')
+  if (memberLeader.leadsFellowship[0]) {
+    updateRank(memberLeader, 'fellowship')
   }
-  if (member.leadsBacenta[0]) {
-    updateRank(member, 'bacenta')
+  if (memberLeader.leadsBacenta[0]) {
+    updateRank(memberLeader, 'bacenta')
   }
-  if (member.leadsConstituency[0]) {
-    updateRank(member, 'constituency')
+  if (memberLeader.leadsConstituency[0]) {
+    updateRank(memberLeader, 'constituency')
   }
-  if (member.leadsSonta[0]) {
-    updateRank(member, 'sonta')
+  if (memberLeader?.leadsCouncil[0]) {
+    updateRank(memberLeader, 'council')
   }
-  if (member.leadsBasonta[0]) {
-    updateRank(member, 'basonta')
+  if (memberLeader?.leadsStream[0]) {
+    updateRank(memberLeader, 'stream')
   }
-  if (member?.leadsMinistry[0]) {
-    updateRank(member, 'ministry')
-  }
-  if (member?.leadsCouncil[0]) {
-    updateRank(member, 'bishop')
+  if (memberLeader?.leadsGatheringService[0]) {
+    updateRank(memberLeader, 'gatheringService')
   }
 
-  if (member?.isAdminForCouncil[0]) {
-    updateRank(member, 'adminCouncil')
+  if (memberAdmin.isAdminForConstituency[0]) {
+    updateRank(memberAdmin, 'constituency')
   }
-  if (member?.isAdminForConstituency[0]) {
-    updateRank(member, 'adminConstituency')
+  if (memberAdmin.isAdminForCouncil[0]) {
+    updateRank(memberAdmin, 'council')
+  }
+  if (memberAdmin.isAdminForStream[0]) {
+    updateRank(memberAdmin, 'stream')
+  }
+  if (memberAdmin.isAdminForGatheringService[0]) {
+    updateRank(memberAdmin, 'gatheringService')
+  }
+
+  if (memberLeader.leadsSonta[0]) {
+    updateRank(memberLeader, 'sonta')
+  }
+
+  if (memberLeader?.leadsMinistry[0]) {
+    updateRank(memberLeader, 'ministry')
   }
 
   if (!isServant) {
@@ -127,28 +114,22 @@ const MemberRoleList = ({ member }) => {
 
   return (
     <PlaceholderCustom>
-      <small>
-        {/* <DashboardButton btnLink="/dashboard/servants">
-        View Records
-      </DashboardButton> */}
+      <small className="mb-5">
+        <Button
+          onClick={() => navigate('/dashboard/servants')}
+          className="mb-3 view-trends-button"
+        >
+          View Trends
+        </Button>
 
         {
           //Rank Discussions */}
           Object.entries(rank).map((rank) => {
             return rank[1].map((place, i) => {
-              let leader
+              let servant = 'Leader'
 
-              if (place.__typename === 'Constituency') {
-                if (member.leadsCouncil[0]) {
-                  return
-                }
-                leader = 'CO'
-              } else {
-                leader = 'Leader'
-              }
-
-              if (place.admin || place.constituency) {
-                leader = 'Admin'
+              if (place.admin) {
+                servant = 'Admin'
               }
 
               return (
@@ -159,8 +140,10 @@ const MemberRoleList = ({ member }) => {
                     navigate(place.link)
                   }}
                 >
-                  <p className="font-weight-bold text-secondary mb-0">{`${place.__typename} ${leader}:`}</p>
-                  <p>{place.name}</p>
+                  <p className="mb-0">
+                    <span className=" text-secondary">{`${place.__typename} ${servant} : `}</span>
+                    <span>{place.name}</span>
+                  </p>
                 </span>
               )
             })

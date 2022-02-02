@@ -1,11 +1,14 @@
 import React from 'react'
+import PlaceholderCustom from './Placeholder'
 
 const HeadingSecondary = (props) => {
-  const { children, ...rest } = props
+  const { children, loading, ...rest } = props
   return (
-    <h6 className="text-secondary" {...rest}>
-      {children}
-    </h6>
+    <PlaceholderCustom as="h6" loading={loading}>
+      <h6 className="text-secondary" {...rest}>
+        {children}
+      </h6>
+    </PlaceholderCustom>
   )
 }
 

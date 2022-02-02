@@ -13,9 +13,13 @@ import { Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import Popup from '../Popup/Popup'
 import { useMutation } from '@apollo/client'
-import { MAKE_CONSTITUENCY_ADMIN } from './AdminMutations'
+import {
+  MAKE_CONSTITUENCY_ADMIN,
+  MAKE_COUNCIL_ADMIN,
+  MAKE_STREAM_ADMIN,
+} from './AdminMutations'
 import FormikControl from '../formik-components/FormikControl'
-import { plural, throwErrorMsg } from '../../global-utils'
+import { getWeekNumber, plural, throwErrorMsg } from '../../global-utils'
 import Breadcrumb from './Breadcrumb'
 import { Button, Col, Container, Row, Spinner } from 'react-bootstrap'
 import PlaceholderCustom from 'components/Placeholder'
@@ -24,20 +28,47 @@ import ViewAll from 'components/buttons/ViewAll'
 
 const DisplayChurchDetails = (props) => {
   const navigate = useNavigate()
-  const isConstituency = props.churchType === 'Constituency'
-  const { setMemberId, theme, setCurrentUser, currentUser } =
-    useContext(MemberContext)
+  let needsAdmin
+
+  let roles = []
+
+  switch (props.churchType) {
+    case 'Constituency':
+      needsAdmin = true
+      roles = ['adminGatheringService', 'adminStream', 'adminCouncil']
+      break
+    case 'Council':
+      needsAdmin = true
+      roles = ['adminGatheringService', 'adminStream']
+      break
+    case 'Stream':
+      needsAdmin = true
+      roles = ['adminGatheringService']
+      break
+    default:
+      needsAdmin = false
+      break
+  }
+
+  const { theme, setCurrentUser, currentUser } = useContext(MemberContext)
   const [submitting, setSubmitting] = useState(false)
-  const { clickCard, togglePopup, isOpen, constituencyId } =
-    useContext(ChurchContext)
+  const {
+    clickCard,
+    togglePopup,
+    isOpen,
+    constituencyId,
+    councilId,
+    streamId,
+  } = useContext(ChurchContext)
 
   //Change Admin Initialised
-
   const [MakeConstituencyAdmin] = useMutation(MAKE_CONSTITUENCY_ADMIN)
+  const [MakeCouncilAdmin] = useMutation(MAKE_COUNCIL_ADMIN)
+  const [MakeStreamAdmin] = useMutation(MAKE_STREAM_ADMIN)
 
   const initialValues = {
     adminName: props.admin
-      ? `${props.admin?.firstName} ${props.admin.lastName}`
+      ? `${props.admin?.firstName} ${props.admin?.lastName}`
       : '',
     adminSelect: props.admin?.id ?? '',
   }
@@ -46,26 +77,84 @@ const DisplayChurchDetails = (props) => {
       'Please select an Admin from the dropdown'
     ),
   })
+
   const onSubmit = (values, onSubmitProps) => {
+    if (initialValues.adminSelect === values.adminSelect) {
+      return
+    }
+
     setSubmitting(true)
 
-    MakeConstituencyAdmin({
-      variables: {
-        constituencyId: constituencyId,
-        newAdminId: values.adminSelect,
-        oldAdminId: initialValues.adminSelect ?? 'no-old-admin',
-      },
-    })
-      .then(() => {
-        togglePopup()
-        setSubmitting(false)
-        alert('Constituency Admin has been changed successfully')
+    if (props.churchType === 'Stream') {
+      MakeStreamAdmin({
+        variables: {
+          streamId: streamId,
+          newAdminId: values.adminSelect,
+          oldAdminId: initialValues.adminSelect || 'no-old-admin',
+        },
       })
-      .catch((e) => throwErrorMsg(e))
+        .then(() => {
+          togglePopup()
+          setSubmitting(false)
+          alert('Stream Admin has been changed successfully')
+        })
+        .catch((e) => throwErrorMsg(e))
+    }
+
+    if (props.churchType === 'Council') {
+      MakeCouncilAdmin({
+        variables: {
+          councilId: councilId,
+          newAdminId: values.adminSelect,
+          oldAdminId: initialValues.adminSelect || 'no-old-admin',
+        },
+      })
+        .then(() => {
+          togglePopup()
+          setSubmitting(false)
+          alert('Council Admin has been changed successfully')
+        })
+        .catch((e) => throwErrorMsg(e))
+    }
+
+    if (props.churchType === 'Constituency') {
+      MakeConstituencyAdmin({
+        variables: {
+          constituencyId: constituencyId,
+          newAdminId: values.adminSelect,
+          oldAdminId: initialValues.adminSelect || 'no-old-admin',
+        },
+      })
+        .then(() => {
+          togglePopup()
+          setSubmitting(false)
+          alert('Constituency Admin has been changed successfully')
+        })
+        .catch((e) => throwErrorMsg(e))
+    }
 
     onSubmitProps.resetForm()
   }
   //End of Admin Change
+
+  const shouldFill = () => {
+    let shouldFill = true
+
+    // If the have filled their form this week, they shouldn't fill again
+    const filledThisWeek = props.last3Weeks?.filter(
+      (week) => week.number === getWeekNumber()
+    )
+    if (filledThisWeek?.length && filledThisWeek[0].filled === true) {
+      shouldFill = false
+    }
+
+    //If the church is on vacation, they shouldn't fill
+    if (props.vacation === 'Vacation') {
+      shouldFill = false
+    }
+
+    return shouldFill
+  }
 
   return (
     <>
@@ -90,12 +179,12 @@ const DisplayChurchDetails = (props) => {
               }}
               className="mx-3 mb-2 text-muted font-weight-bold"
             >
-              {`Admin:`} {props.admin.firstName} {props.admin.lastName}
+              {`Admin: ${props.admin.firstName} ${props.admin.lastName}`}
             </Link>
           )}
 
-          {isConstituency && (
-            <RoleView roles={['adminFederal', 'adminCouncil']}>
+          {needsAdmin && (
+            <RoleView roles={roles}>
               <span
                 className={`text-nowrap`}
                 value="Change Admin"
@@ -158,18 +247,20 @@ const DisplayChurchDetails = (props) => {
           )}
         </Container>
       </div>
-
       <Container>
         <Link
           to="/member/displaydetails"
           onClick={() => {
-            setMemberId(props.leader?.id)
+            clickCard(props.leader)
           }}
         >
           <DetailsCard
             loading={props.loading}
             heading={props.leaderTitle}
-            detail={props.leader?.fullName}
+            detail={
+              props.leader &&
+              props.leader?.firstName + ' ' + props.leader?.lastName
+            }
             img={props.leader?.pictureUrl}
             bgNone
           />
@@ -188,7 +279,7 @@ const DisplayChurchDetails = (props) => {
           <Col className={!props.loading && `col-auto`}>
             <DetailsCard
               onClick={() =>
-                navigate(`/${props.churchType.toLowerCase()}/members`)
+                navigate(`/${props.churchType?.toLowerCase()}/members`)
               }
               heading="Members"
               detail={!props.loading && (props.membership || '0')}
@@ -212,31 +303,44 @@ const DisplayChurchDetails = (props) => {
 
         <hr />
         <div className="d-grid gap-2">
-          <Button
+          <PlaceholderCustom
+            loading={props.loading}
             className={`btn-trends ${theme}`}
-            onClick={() => {
-              navigate(`/${props.churchType.toLowerCase()}/reports`)
-            }}
+            button
           >
-            View Trends
-          </Button>
-
-          <Button
-            className={`btn-trends ${theme}`}
-            onClick={() => {
-              setCurrentUser({
-                ...currentUser,
-                currentChurch: {
-                  id: props.churchId,
-                  name: props.name,
-                  __typename: props.churchType,
-                },
-              })
-              navigate(`/services/${props.churchType.toLowerCase()}`)
-            }}
-          >
-            Service Forms
-          </Button>
+            <Button
+              className={`btn-trends ${theme}`}
+              onClick={() => {
+                navigate(`/${props.churchType.toLowerCase()}/reports`)
+              }}
+            >
+              View Trends
+            </Button>
+          </PlaceholderCustom>
+          {shouldFill() && (
+            <PlaceholderCustom
+              loading={props.loading}
+              className={`btn-trends ${theme}`}
+              button
+            >
+              <Button
+                className={`btn-trends ${theme}`}
+                onClick={() => {
+                  setCurrentUser({
+                    ...currentUser,
+                    currentChurch: {
+                      id: props.churchId,
+                      name: props.name,
+                      __typename: props.churchType,
+                    },
+                  })
+                  navigate(`/services/${props.churchType.toLowerCase()}`)
+                }}
+              >
+                Service Forms
+              </Button>
+            </PlaceholderCustom>
+          )}
         </div>
 
         {props?.location && props.location?.latitude !== 0 && (
@@ -318,7 +422,30 @@ const DisplayChurchDetails = (props) => {
           </div>
         </>
       ) : null}
-
+      {props.subChurch && !props.buttons?.length ? (
+        <Container className="d-grid gap-2 mt-2">
+          <RoleView roles={props.editPermitted}>
+            <PlaceholderCustom
+              loading={props.loading}
+              className="btn-trends"
+              variant={theme}
+              button
+            >
+              <Button
+                className="btn-trends"
+                variant={theme}
+                onClick={() =>
+                  navigate(
+                    `/${props.subChurch.toLowerCase()}/add${props.subChurch.toLowerCase()}`
+                  )
+                }
+              >
+                {`Add New ${props.subChurch}`}
+              </Button>
+            </PlaceholderCustom>
+          </RoleView>
+        </Container>
+      ) : null}
       {props.subChurchBasonta === 'Sonta' ? (
         <>
           <div className="container">
@@ -359,7 +486,6 @@ const DisplayChurchDetails = (props) => {
           </div>
         </>
       ) : null}
-
       {props.subChurch && props.basontaLeaders?.length ? (
         <>
           <div className="container">
@@ -397,7 +523,6 @@ const DisplayChurchDetails = (props) => {
           </div>
         </>
       ) : null}
-
       {props.history?.length && (
         <Container className="mt-5">
           <Row>

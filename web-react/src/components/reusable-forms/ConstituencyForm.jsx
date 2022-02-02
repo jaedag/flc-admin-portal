@@ -2,21 +2,22 @@ import { useMutation, useQuery } from '@apollo/client'
 import BaseComponent from 'components/base-component/BaseComponent'
 import { FieldArray, Form, Formik } from 'formik'
 import * as Yup from 'yup'
-import { makeSelectOptions } from 'global-utils'
+import { makeSelectOptions, permitAdminAndThoseAbove } from 'global-utils'
 import { GET_COUNCILS } from 'queries/ListQueries'
 import React, { useContext } from 'react'
 import { ChurchContext } from 'contexts/ChurchContext'
 import FormikControl from 'components/formik-components/FormikControl'
 import PlusSign from 'components/buttons/PlusMinusSign/PlusSign'
 import MinusSign from 'components/buttons/PlusMinusSign/MinusSign'
-import { MAKE_CONSTITUENCY_INACTIVE } from 'pages/update/CloseChurchMutations'
+import { MAKE_CONSTITUENCY_INACTIVE } from 'pages/directory/update/CloseChurchMutations'
 import { useNavigate } from 'react-router'
 import Popup from 'components/Popup/Popup'
 import RoleView from 'auth/RoleView'
-import { Spinner, Button, Container, Row, Col } from 'react-bootstrap'
+import { Button, Container, Row, Col } from 'react-bootstrap'
 import { MemberContext } from 'contexts/MemberContext'
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import HeadingSecondary from 'components/HeadingSecondary'
+import SubmitButton from 'components/formik-components/SubmitButton'
 
 const ConstituencyForm = ({
   initialValues,
@@ -36,11 +37,7 @@ const ConstituencyForm = ({
   } = useQuery(GET_COUNCILS)
   const [CloseDownConstituency] = useMutation(MAKE_CONSTITUENCY_INACTIVE)
 
-  const constituencyCouncilOptions = makeSelectOptions(
-    councilData?.councils.filter(
-      (council) => council.constituencies.length > 0 && council
-    )
-  )
+  const constituencyCouncilOptions = makeSelectOptions(councilData?.councils)
 
   const validationSchema = Yup.object({
     name: Yup.string().required(`Constituency Name is a required field`),
@@ -78,14 +75,17 @@ const ConstituencyForm = ({
               <div className="form-group">
                 <Row className="row-cols-1 row-cols-md-2">
                   {/* <!-- Basic Info Div --> */}
+
                   <Col className="mb-2">
-                    <RoleView roles={['adminFederal']}>
+                    <RoleView
+                      roles={permitAdminAndThoseAbove('GatheringService')}
+                    >
                       <Row className="form-row">
                         <Col>
                           <FormikControl
                             className="form-control"
                             control="select"
-                            name="councilSelect"
+                            name="council"
                             label="Select a Council"
                             options={constituencyCouncilOptions}
                             defaultOption="Select a Council"
@@ -103,13 +103,7 @@ const ConstituencyForm = ({
                     />
 
                     <Row className="d-flex align-items-center mb-3">
-                      <RoleView
-                        roles={[
-                          'adminFederal',
-                          'adminCouncil',
-                          'adminConstituency',
-                        ]}
-                      >
+                      <RoleView roles={permitAdminAndThoseAbove('Council')}>
                         <Col>
                           <FormikControl
                             control="memberSearch"
@@ -170,22 +164,7 @@ const ConstituencyForm = ({
                 </Row>
               </div>
 
-              <Button
-                variant="primary"
-                size="lg"
-                type="submit"
-                className={`btn-main ${theme}`}
-                disabled={!formik.isValid || formik.isSubmitting}
-              >
-                {formik.isSubmitting ? (
-                  <>
-                    <Spinner animation="grow" size="sm" />
-                    <span> Submitting</span>
-                  </>
-                ) : (
-                  'Submit'
-                )}
-              </Button>
+              <SubmitButton formik={formik} />
             </Form>
 
             {isOpen && (

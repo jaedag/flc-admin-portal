@@ -70,6 +70,16 @@ export const CONSTITUENCY_DROPDOWN = gql`
   }
 `
 
+export const COUNCIL_DROPDOWN = gql`
+  query ($nameSearch: String!) {
+    councilDropdown(nameSearch: $nameSearch) {
+      id
+      name
+      stream_name
+    }
+  }
+`
+
 export const GET_CONSTITUENCY_BACENTAS = gql`
   query ($id: ID) {
     constituencies(where: { id: $id }) {
@@ -180,6 +190,44 @@ export const GET_COUNCIL_CONSTITUENCIES = gql`
     }
   }
 `
+export const GET_GATHERING_SERVICE_CONSTITUENCIES = gql`
+  query ($id: ID) {
+    gatheringServices(where: { id: $id }) {
+      id
+      name
+      leader {
+        id
+        firstName
+        lastName
+        fullName
+      }
+      memberCount
+      admin {
+        id
+        firstName
+        lastName
+        stream_name
+      }
+      constituencies {
+        name
+        id
+        stream_name
+        leader {
+          id
+          firstName
+          lastName
+          stream_name
+        }
+        admin {
+          id
+          firstName
+          lastName
+          stream_name
+        }
+      }
+    }
+  }
+`
 
 export const GET_STREAM_COUNCILS = gql`
   query ($id: ID) {
@@ -197,6 +245,7 @@ export const GET_STREAM_COUNCILS = gql`
         id
         firstName
         lastName
+        fullName
         stream_name
       }
       councils {
@@ -220,7 +269,7 @@ export const GET_STREAM_COUNCILS = gql`
   }
 `
 
-export const GET_GATHERING_SERVICE_STREAMS = gql`
+export const GET_GATHERINGSERVICE_STREAMS = gql`
   query ($id: ID) {
     gatheringServices(where: { id: $id }) {
       id
@@ -236,6 +285,7 @@ export const GET_GATHERING_SERVICE_STREAMS = gql`
         id
         firstName
         lastName
+        fullName
         stream_name
       }
       streams {
@@ -277,6 +327,18 @@ export const GET_STREAMS = gql`
       id
       name
       councils {
+        id
+      }
+    }
+  }
+`
+
+export const GET_GATHERINGSERVICES = gql`
+  {
+    gatheringServices {
+      id
+      name
+      streams {
         id
       }
     }

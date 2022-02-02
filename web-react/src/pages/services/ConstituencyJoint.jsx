@@ -26,7 +26,7 @@ const ConstituencyJoint = () => {
             title="Fill Joint Service Form"
             color="members"
             noCaption
-            onClick={() => navigate(`/services/constituency-joint/form`)}
+            onClick={() => navigate(`/constituency/record-service`)}
           />
         </div>
       </Container>

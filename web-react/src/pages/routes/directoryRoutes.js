@@ -1,92 +1,91 @@
 import Directory from 'pages/dashboards/Directory'
 import Churches from 'pages/directory/Churches'
-import UserDisplayPage from 'pages/user-profile/DisplayPage'
-import DisplayMember from 'pages/display/DetailsMember'
-import UserProfileEditPage from 'pages/user-profile/EditPage'
-import CreateMember from 'pages/create/CreateMember'
-import UpdateMember from 'pages/update/UpdateMember'
-import SearchPageMobile from 'pages/mobile/SearchPage'
+import UserDisplayPage from 'pages/directory/user-profile/DisplayPage'
+import DisplayMember from 'pages/directory/display/DetailsMember'
+import UserProfileEditPage from 'pages/directory/user-profile/EditPage'
+import CreateMember from 'pages/directory/create/CreateMember'
+import UpdateMember from 'pages/directory/update/UpdateMember'
+import SearchPageMobile from 'pages/directory/mobile/SearchPage'
 import MembersGrid from 'components/members-grids/MembersGrid'
-import CouncilMembers from 'pages/grids/CouncilMembers'
-import ConstituencyMembers from 'pages/grids/ConstituencyMembers'
-import BacentaMembers from 'pages/grids/BacentaMembers'
-import FellowshipMembers from 'pages/grids/FellowshipMembers'
-import SontaMembers from 'pages/grids/SontaMembers'
-import DetailsFellowship from 'pages/display/DetailsFellowship'
-import DetailsBacenta from 'pages/display/DetailsBacenta'
-import DetailsConstituency from 'pages/display/DetailsConstituency'
-import DetailsCouncil from 'pages/display/DetailsCouncil'
-import DetailsStream from 'pages/display/DetailsStream'
-import DetailsSonta from 'pages/display/DetailsSonta'
-import DisplayAllBacentas from 'pages/display/AllBacentas'
-import DisplayAllSontas from 'pages/display/AllSontas'
-import DisplaySontasByConstituency from 'pages/display/SontasByConstituency'
-import DisplayAllConstituencies from 'pages/display/AllConstituencies'
-import DisplayAllFellowships from 'pages/display/AllFellowships'
-import CreateConstituency from 'pages/create/CreateConstituency'
-import CreateBacenta from 'pages/create/CreateBacenta'
-import CreateFellowship from 'pages/create/CreateFellowship'
-import CreateSonta from 'pages/create/CreateSonta'
-import UpdateFellowship from 'pages/update/UpdateFellowship'
-import UpdateBacenta from 'pages/update/UpdateBacenta'
-import UpdateSonta from 'pages/update/UpdateSonta'
-import UpdateConstituency from 'pages/update/UpdateConstituency'
-import DetailsGatheringService from 'pages/display/DetailsGatheringService.jsx'
-import DisplayAllCouncils from 'pages/display/AllCouncils'
-import DisplayAllStreams from 'pages/display/AllStreams'
-import CreateCouncil from 'pages/create/CreateCouncil'
-
-export const churchDirectory = [
-  {
-    path: '/directory/churches',
-    element: Churches,
-    exact: true,
-  },
-]
+import CouncilMembers from 'pages/directory/grids/CouncilMembers'
+import ConstituencyMembers from 'pages/directory/grids/ConstituencyMembers'
+import BacentaMembers from 'pages/directory/grids/BacentaMembers'
+import FellowshipMembers from 'pages/directory/grids/FellowshipMembers'
+import SontaMembers from 'pages/directory/grids/SontaMembers'
+import DetailsFellowship from 'pages/directory/display/DetailsFellowship'
+import DetailsBacenta from 'pages/directory/display/DetailsBacenta'
+import DetailsConstituency from 'pages/directory/display/DetailsConstituency'
+import DetailsCouncil from 'pages/directory/display/DetailsCouncil'
+import DetailsStream from 'pages/directory/display/DetailsStream'
+import DetailsSonta from 'pages/directory/display/DetailsSonta'
+import DisplayAllBacentas from 'pages/directory/display/AllBacentas'
+import DisplayAllSontas from 'pages/directory/display/AllSontas'
+import DisplaySontasByConstituency from 'pages/directory/display/SontasByConstituency'
+import DisplayAllConstituencies from 'pages/directory/display/AllConstituencies'
+import DisplayAllFellowships from 'pages/directory/display/AllFellowships'
+import CreateConstituency from 'pages/directory/create/CreateConstituency'
+import CreateBacenta from 'pages/directory/create/CreateBacenta'
+import CreateFellowship from 'pages/directory/create/CreateFellowship'
+import CreateSonta from 'pages/directory/create/CreateSonta'
+import UpdateFellowship from 'pages/directory/update/UpdateFellowship'
+import UpdateBacenta from 'pages/directory/update/UpdateBacenta'
+import UpdateSonta from 'pages/directory/update/UpdateSonta'
+import UpdateConstituency from 'pages/directory/update/UpdateConstituency'
+import DetailsGatheringService from 'pages/directory/display/DetailsGatheringService.jsx'
+import DisplayAllCouncils from 'pages/directory/display/AllCouncils'
+import DisplayAllStreams from 'pages/directory/display/AllStreams'
+import CreateCouncil from 'pages/directory/create/CreateCouncil'
+import GatheringServiceConstituencies from 'pages/directory/display/GatheringServiceConstituencies'
+import UpdateCouncil from 'pages/directory/update/UpdateCouncil'
+import CreateStream from 'pages/directory/create/CreateStream'
+import UpdateStream from 'pages/directory/update/UpdateStream'
+import GatheringServiceMembers from 'pages/directory/grids/GatheringServiceMembers'
+import StreamMembers from 'pages/directory/grids/StreamMembers'
+import { permitAdminAndThoseAbove, permitMeAndThoseAbove } from 'global-utils'
 
 export const memberDirectory = [
   {
     path: '/directory/members',
     element: MembersGrid,
-    exact: true,
+    roles: ['all'],
   },
 ]
 export const memberGrids = [
   {
+    path: '/gatheringservice/members',
+    element: GatheringServiceMembers,
+    roles: permitMeAndThoseAbove('GatheringService'),
+  },
+  {
+    path: '/stream/members',
+    element: StreamMembers,
+    roles: permitMeAndThoseAbove('Stream'),
+  },
+  {
     path: '/council/members',
     element: CouncilMembers,
-    roles: ['adminFederal', 'adminCouncil'],
-    exact: true,
+    roles: permitMeAndThoseAbove('Council'),
   },
   {
     path: '/constituency/members',
     element: ConstituencyMembers,
-    roles: ['adminFederal', 'adminCouncil', 'adminConstituency'],
-    exact: true,
+    roles: permitMeAndThoseAbove('Constituency'),
   },
 
   {
     path: '/bacenta/members',
     element: BacentaMembers,
-    roles: ['adminFederal', 'adminCouncil', 'adminConstituency'],
-    exact: true,
+    roles: permitMeAndThoseAbove('Bacenta'),
   },
   {
     path: '/fellowship/members',
     element: FellowshipMembers,
-    roles: [
-      'adminFederal',
-      'adminCouncil',
-      'adminConstituency',
-      'leaderFellowship',
-    ],
-    exact: true,
+    roles: permitMeAndThoseAbove('Fellowship'),
   },
   {
     path: '/sonta/members',
     element: SontaMembers,
-    roles: ['adminFederal', 'adminCouncil', 'adminConstituency', 'leaderSonta'],
-    exact: true,
+    roles: permitMeAndThoseAbove('Sonta'),
   },
 ]
 
@@ -95,7 +94,12 @@ export const directory = [
     path: '/directory',
     element: Directory,
     placeholder: true,
-    exact: true,
+    roles: ['all'],
+  },
+  {
+    path: '/directory/churches',
+    element: Churches,
+    roles: permitMeAndThoseAbove('Fellowship'),
   },
   // Member Display and Edit Pages
   {
@@ -103,48 +107,30 @@ export const directory = [
     element: UserDisplayPage,
     roles: ['all'],
     placeholder: true,
-    exact: true,
   },
   {
     path: '/member/displaydetails',
     element: DisplayMember,
-    roles: ['all'],
+    roles: permitMeAndThoseAbove('Fellowship'),
     placeholder: true,
-    exact: true,
   },
   {
     path: '/user-profile/edit',
     element: UserProfileEditPage,
     roles: ['all'],
     placeholder: true,
-    exact: true,
   },
   {
     path: '/member/addmember',
     element: CreateMember,
-    roles: [
-      'adminFederal',
-      'adminCouncil',
-      'adminConstituency',
-      'leaderConstituency',
-      'leaderBacenta',
-      'leaderFellowship',
-    ],
+    roles: permitMeAndThoseAbove('Fellowship'),
     placeholder: true,
-    exact: true,
   },
   {
     path: '/member/editmember',
     element: UpdateMember,
-    roles: [
-      'adminFederal',
-      'adminCouncil',
-      'adminConstituency',
-      'leaderBacenta',
-      'leaderConstituency',
-    ],
+    roles: permitMeAndThoseAbove('Constituency'),
     placeholder: true,
-    exact: true,
   },
 
   //Search Routes
@@ -153,185 +139,178 @@ export const directory = [
     element: SearchPageMobile,
     roles: ['all'],
     placeholder: true,
-    exact: true,
   },
 
   //Display Church Details
   {
     path: '/fellowship/displaydetails',
     element: DetailsFellowship,
-    roles: ['all'],
+    roles: permitMeAndThoseAbove('Fellowship'),
     placeholder: true,
-    exact: true,
   },
   {
     path: '/bacenta/displaydetails',
     element: DetailsBacenta,
-    roles: ['all'],
+    roles: permitMeAndThoseAbove('Bacenta'),
     placeholder: true,
-    exact: true,
   },
   {
     path: '/constituency/displaydetails',
     element: DetailsConstituency,
-    roles: [
-      'adminFederal',
-      'adminCouncil',
-      'adminConstituency',
-      'leaderCouncil',
-      'leaderConstituency',
-    ],
+    roles: permitMeAndThoseAbove('Constituency'),
     placeholder: true,
-    exact: true,
   },
 
   {
     path: '/council/displaydetails',
     element: DetailsCouncil,
-    roles: ['adminFederal', 'adminCouncil', 'leaderCouncil'],
+    roles: permitMeAndThoseAbove('Council'),
     placeholder: true,
-    exact: true,
   },
   {
     path: '/stream/displaydetails',
     element: DetailsStream,
-    roles: ['adminFederal', 'adminStream'],
+    roles: permitAdminAndThoseAbove('Stream'),
     placeholder: false,
-    exact: true,
   },
   {
     path: '/gatheringservice/displaydetails',
     element: DetailsGatheringService,
-    roles: ['adminFederal'],
+    roles: permitMeAndThoseAbove('GatheringService'),
     placeholder: false,
-    exact: true,
+  },
+  {
+    path: '/gatheringservice/constituencies',
+    element: GatheringServiceConstituencies,
+    roles: permitMeAndThoseAbove('GatheringService'),
+    placeholder: false,
   },
   {
     path: '/sonta/displaydetails',
     element: DetailsSonta,
-    roles: ['all'],
+    roles: permitMeAndThoseAbove('Sonta'),
     placeholder: true,
-    exact: true,
   },
 
   //Display Lists in the Directory
   {
     path: '/bacenta/displayall',
     element: DisplayAllBacentas,
-    roles: ['all'],
+    roles: permitMeAndThoseAbove('Constituency'),
     placeholder: false,
-    exact: true,
   },
   {
     path: '/sonta/displayall',
     element: DisplayAllSontas,
-    roles: ['all'],
+    roles: permitMeAndThoseAbove('Constituency'),
     placeholder: false,
-    exact: true,
   },
   {
     path: '/constituency/display-sontas',
     element: DisplaySontasByConstituency,
-    roles: ['all'],
+    roles: permitMeAndThoseAbove('Council'),
     placeholder: false,
-    exact: true,
   },
 
   {
     path: '/constituency/displayall',
     element: DisplayAllConstituencies,
-    roles: ['adminFederal', 'adminCouncil'],
+    roles: permitAdminAndThoseAbove('Council'),
     placeholder: false,
-    exact: true,
   },
 
   {
     path: '/fellowship/displayall',
     element: DisplayAllFellowships,
-    roles: ['all'],
+    roles: permitMeAndThoseAbove('Bacenta'),
     placeholder: false,
-    exact: true,
   },
   {
     path: '/council/displayall',
     element: DisplayAllCouncils,
-    roles: ['adminFederal', 'adminStream'],
+    roles: permitMeAndThoseAbove('Stream'),
     placeholder: false,
-    exact: true,
   },
   {
     path: '/stream/displayall',
     element: DisplayAllStreams,
-    roles: ['adminFederal'],
+    roles: permitMeAndThoseAbove('GatheringService'),
     placeholder: false,
-    exact: true,
   },
 
   //Creation Pages
   {
     path: '/fellowship/addfellowship',
     element: CreateFellowship,
-    roles: ['adminFederal', 'adminCouncil', 'adminConstituency'],
+    roles: permitAdminAndThoseAbove('Constituency'),
     placeholder: false,
-    exact: true,
   },
   {
     path: '/bacenta/addbacenta',
     element: CreateBacenta,
-    roles: ['adminFederal', 'adminCouncil', 'adminConstituency'],
+    roles: permitAdminAndThoseAbove('Constituency'),
     placeholder: false,
-    exact: true,
   },
   {
     path: '/sonta/addsonta',
     element: CreateSonta,
-    roles: ['adminFederal', 'adminCouncil', 'adminConstituency'],
+    roles: permitAdminAndThoseAbove('Constituency'),
     placeholder: false,
-    exact: true,
   },
   {
     path: '/constituency/addconstituency',
     element: CreateConstituency,
-    roles: ['adminFederal', 'adminCouncil'],
+    roles: permitAdminAndThoseAbove('Council'),
     placeholder: false,
-    exact: true,
   },
-
   {
     path: '/council/addcouncil',
     element: CreateCouncil,
-    roles: ['adminFederal', 'adminStream'],
+    roles: permitAdminAndThoseAbove('Stream'),
     placeholder: false,
-    exact: true,
+  },
+  {
+    path: '/stream/addstream',
+    element: CreateStream,
+    roles: permitAdminAndThoseAbove('GatheringService'),
+    placeholder: false,
   },
 
   //Pages to Update the Directory
   {
     path: '/fellowship/editfellowship',
     element: UpdateFellowship,
-    roles: ['adminFederal', 'adminCouncil', 'adminConstituency'],
+    roles: permitAdminAndThoseAbove('Constituency'),
     placeholder: false,
-    exact: true,
   },
   {
     path: '/bacenta/editbacenta',
     element: UpdateBacenta,
-    roles: ['adminFederal', 'adminCouncil', 'adminConstituency'],
+    roles: permitAdminAndThoseAbove('Constituency'),
     placeholder: false,
-    exact: true,
   },
   {
     path: '/sonta/editsonta',
     element: UpdateSonta,
-    roles: ['adminFederal', 'adminCouncil', 'adminConstituency'],
+    roles: permitAdminAndThoseAbove('Constituency'),
     placeholder: false,
-    exact: true,
   },
   {
     path: '/constituency/editconstituency',
     element: UpdateConstituency,
-    roles: ['adminFederal', 'adminCouncil'],
+    roles: permitAdminAndThoseAbove('Council'),
     placeholder: false,
-    exact: true,
+  },
+  {
+    path: '/council/editcouncil',
+    element: UpdateCouncil,
+    roles: permitAdminAndThoseAbove('Stream'),
+    placeholder: false,
+  },
+  {
+    path: '/stream/editstream',
+    element: UpdateStream,
+    roles: permitAdminAndThoseAbove('GatheringService'),
+    placeholder: false,
   },
 ]

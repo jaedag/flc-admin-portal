@@ -12,8 +12,16 @@
   color: var(--text-primary);
 }
 
-.nav-btn {
+.dark .nav-btn {
   background-color: #302f2f;
+  padding: 20px 0px;
+  margin: 5px 0px;
+  padding-left: 30px;
+  text-align: center;
+}
+
+.light .nav-btn {
+  background-color: #e6dfdfe0 ;
   padding: 20px 0px;
   margin: 5px 0px;
   padding-left: 30px;
@@ -23,6 +31,11 @@
 .footer {
   padding: 10px;
   background-color: #000000;
+}
+
+.light .footer {
+  padding: 10px;
+  background-color: #e6dfdfe0;
 }
 
 .offcanvas-header.dark .btn-close {

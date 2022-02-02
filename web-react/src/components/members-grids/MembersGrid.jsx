@@ -15,9 +15,11 @@ import {
 import { CaretDownFill } from 'react-bootstrap-icons'
 import './MembersGrid.css'
 import Filters from './Filters'
+import { Form, Formik } from 'formik'
+import FormikControl from 'components/formik-components/FormikControl'
 
 const MembersGrid = (props) => {
-  const { memberData, memberError, memberLoading, title } = props
+  const { data, error, loading, title } = props
   const { filters } = useContext(ChurchContext)
   const [dimensions, setDimensions] = useState({
     height: window.innerHeight,
@@ -28,9 +30,14 @@ const MembersGrid = (props) => {
     ((dimensions.height - 96 - 30) * (0.75 * dimensions.width - 46)) /
       (160 * 126)
   )
+  const memberDataLoaded = data ? memberFilter(data, filters) : null
+  const [memberData, setMemberData] = useState([])
+
+  useEffect(() => {
+    setMemberData(memberDataLoaded)
+  }, [data, filters])
 
   //NavBar takes 70px of the height and side bar takes 25% of the width
-  const memberDataLoaded = memberData ? memberFilter(memberData, filters) : null
 
   useEffect(() => {
     const debouncedHandleResize = debounce(function handleResize() {
@@ -41,7 +48,7 @@ const MembersGrid = (props) => {
     }, 500)
 
     window.addEventListener('resize', debouncedHandleResize)
-    // console.log(dimensions)
+
     return () => {
       window.removeEventListener('resize', debouncedHandleResize)
     }
@@ -57,30 +64,53 @@ const MembersGrid = (props) => {
     )
   }
 
+  const initialValues = {
+    memberSearch: '',
+  }
+
+  const onSubmit = (values, onSubmitProps) => {
+    onSubmitProps.setSubmitting(true)
+    setMemberData(
+      memberDataLoaded.filter((member) =>
+        (member.firstName + member.lastName)
+          .toLowerCase()
+          .includes(values.memberSearch.toLowerCase())
+      )
+    )
+
+    onSubmitProps.setSubmitting(false)
+  }
+
   return (
     <>
       <div className="col col-md-9 p-0 text-center">
-        <PlaceholderCustom loading={!memberData || memberLoading} xs={10}>
+        <PlaceholderCustom loading={!data || loading} xs={10}>
           <Container>
             <h3 className="page-header">{title}</h3>
           </Container>
         </PlaceholderCustom>
         <div className="justify-content-center flex-wrap flex-md-nowrap align-items-center">
-          <PlaceholderCustom
-            loading={!memberData || memberLoading}
-            element="h5"
-          >
+          <PlaceholderCustom loading={!data || loading} element="h5">
             <h5 className="data-number">{`${
-              memberDataLoaded?.length || 0
+              memberData?.length || 0
             } Members`}</h5>
           </PlaceholderCustom>
         </div>
-        <div className="align-middle">
-          <input
-            className="form-control member-search"
-            placeholder="Search Members"
-          />
-        </div>
+        <Formik initialValues={initialValues} onSubmit={onSubmit}>
+          {() => (
+            <Form>
+              <div className="align-middle">
+                <FormikControl
+                  className="form-control member-search"
+                  control="input"
+                  name="memberSearch"
+                  placeholder="Search Members"
+                  aria-describedby="Member Search"
+                />
+              </div>
+            </Form>
+          )}
+        </Formik>
 
         <Accordion>
           <Row className="justify-content-between py-2">
@@ -104,9 +134,9 @@ const MembersGrid = (props) => {
         </Accordion>
       </div>
       <MemberTable
-        memberData={memberDataLoaded}
-        memberError={memberError}
-        memberLoading={!memberData || memberLoading}
+        data={memberData}
+        error={error}
+        loading={!data || loading}
         numberOfRecords={numberOfRecords}
       />
     </>

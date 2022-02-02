@@ -1,20 +1,20 @@
-import BacentaService from 'pages/record-service/BacentaService'
-import BacentaServiceDetails from 'pages/record-service/BacentaServiceDetails'
-import ConstituencyService from 'pages/record-service/ConstituencyService'
-import ConstituencyServiceDetails from 'pages/record-service/ConstituencyServiceDetails'
-import FellowshipService from 'pages/record-service/FellowshipService'
-import FellowshipServiceCancelled from 'pages/record-service/FellowshipServiceCancelled'
-import FellowshipServiceDetails from 'pages/record-service/FellowshipServiceDetails'
-import SontaService from 'pages/record-service/SontaService'
-import SontaServiceDetails from 'pages/record-service/SontaServiceDetails'
-import BacentaReport from 'pages/reports/BacentaReport'
-import ConstituencyReport from 'pages/reports/ConstituencyReport'
-import CouncilReport from 'pages/reports/CouncilReport'
-import FellowshipReport from 'pages/reports/FellowshipReport'
-import SontaReport from 'pages/reports/SontaReport'
+import BacentaService from 'pages/services/record-service/BacentaService'
+import BacentaServiceDetails from 'pages/services/record-service/BacentaServiceDetails'
+import ConstituencyService from 'pages/services/record-service/ConstituencyService'
+import ConstituencyServiceDetails from 'pages/services/record-service/ConstituencyServiceDetails'
+import FellowshipService from 'pages/services/record-service/FellowshipService'
+import FellowshipServiceCancelled from 'pages/services/record-service/FellowshipServiceCancelled'
+import FellowshipServiceDetails from 'pages/services/record-service/FellowshipServiceDetails'
+import SontaService from 'pages/services/record-service/SontaService'
+import SontaServiceDetails from 'pages/services/record-service/SontaServiceDetails'
+import BacentaReport from 'pages/services/reports/BacentaReport'
+import ConstituencyReport from 'pages/services/reports/ConstituencyReport'
+import CouncilReport from 'pages/services/reports/CouncilReport'
+import FellowshipReport from 'pages/services/reports/FellowshipReport'
+import SontaReport from 'pages/services/reports/SontaReport'
 import BacentaJoint from 'pages/services/BacentaJoint'
 import BankingSlipSubmission from 'pages/services/BankingSlipSubmission'
-import BankingSlipView from 'pages/services/BankingSlipView'
+import FellowshipBankingSlipView from 'pages/services/FellowshipBankingSlipView'
 import ConstituencyJoint from 'pages/services/ConstituencyJoint'
 import Banked from 'pages/services/defaulters/Banked'
 import BankingDefaulters from 'pages/services/defaulters/BankingDefaulters'
@@ -26,6 +26,12 @@ import ServicesThisWeek from 'pages/services/defaulters/ServicesThisWeek'
 import Fellowship from 'pages/services/Fellowship'
 import ServicesChurchList from 'pages/services/ServicesChurchList'
 import Services from 'pages/services/ServicesMenu'
+import StreamReport from 'pages/services/reports/StreamReport'
+import GatheringServiceReport from 'pages/services/reports/GatheringServiceReport'
+import StreamByCouncil from 'pages/services/defaulters/StreamByCouncil'
+import GatheringServiceByStream from 'pages/services/defaulters/GatheringServiceByStream'
+import { permitMeAndThoseAbove } from 'global-utils'
+import ConstituencyBankingSlipView from 'pages/services/ConstituencyBankingSlip'
 
 export const services = [
   {
@@ -33,21 +39,18 @@ export const services = [
     element: Services,
     roles: ['all'],
     placeholder: true,
-    exact: true,
   },
   {
     path: '/services/church-list',
     element: ServicesChurchList,
     roles: ['all'],
     placeholder: true,
-    exact: true,
   },
   {
     path: '/services/fellowship',
     element: Fellowship,
     roles: ['all'],
     placeholder: true,
-    exact: true,
   },
   {
     path: '/services/bacenta',
@@ -55,12 +58,10 @@ export const services = [
     roles: [
       'adminCouncil',
       'adminConstituency',
-
-      'adminFederal',
+      'adminGatheringService',
       'leaderBacenta',
     ],
     placeholder: true,
-    exact: true,
   },
   {
     path: '/services/constituency',
@@ -68,26 +69,29 @@ export const services = [
     roles: [
       'adminCouncil',
       'adminConstituency',
-      'adminFederal',
+      'adminGatheringService',
       'leaderConstituency',
     ],
     placeholder: true,
-    exact: true,
   },
 
   {
-    path: '/services/banking-slips',
-    element: BankingSlipView,
+    path: '/services/fellowship/banking-slips',
+    element: FellowshipBankingSlipView,
     roles: ['all'],
     placeholder: true,
-    exact: true,
+  },
+  {
+    path: '/services/constituency/banking-slips',
+    element: ConstituencyBankingSlipView,
+    roles: permitMeAndThoseAbove('Constituency'),
+    placeholder: true,
   },
   {
     path: '/services/banking-slip/submission',
     element: BankingSlipSubmission,
     roles: ['all'],
     placeholder: true,
-    exact: true,
   },
 ]
 
@@ -95,291 +99,205 @@ export const reports = [
   {
     path: '/fellowship/reports',
     element: FellowshipReport,
-    roles: [
-      'adminFederal',
-      'adminCouncil',
-      'adminConstituency',
-
-      'leaderFellowship',
-      'leaderBacenta',
-      'leaderConstituency',
-    ],
+    roles: permitMeAndThoseAbove('Fellowship'),
     placeholder: true,
-    exact: true,
   },
   {
     path: '/bacenta/reports',
     element: BacentaReport,
-    roles: [
-      'adminFederal',
-      'adminCouncil',
-      'adminConstituency',
-
-      'leaderFellowship',
-      'leaderBacenta',
-      'leaderConstituency',
-    ],
+    roles: permitMeAndThoseAbove('Bacenta'),
     placeholder: true,
-    exact: true,
   },
   {
     path: '/sonta/reports',
     element: SontaReport,
-    roles: [
-      'adminFederal',
-      'adminCouncil',
-      'adminConstituency',
-      'leaderBacenta',
-      'leaderSonta',
-      'leaderConstituency',
-    ],
+    roles: permitMeAndThoseAbove('Sonta'),
     placeholder: true,
-    exact: true,
   },
   {
     path: '/constituency/reports',
     element: ConstituencyReport,
-    roles: [
-      'adminFederal',
-      'adminCouncil',
-      'adminConstituency',
-      'leaderConstituency',
-    ],
+    roles: permitMeAndThoseAbove('Constituency'),
     placeholder: true,
-    exact: true,
   },
 
   {
     path: '/council/reports',
     element: CouncilReport,
-    roles: ['adminFederal', 'adminCouncil'],
+    roles: permitMeAndThoseAbove('Council'),
     placeholder: true,
-    exact: true,
+  },
+  {
+    path: '/stream/reports',
+    element: StreamReport,
+    roles: permitMeAndThoseAbove('Stream'),
+    placeholder: true,
+  },
+  {
+    path: '/gatheringservice/reports',
+    element: GatheringServiceReport,
+    roles: permitMeAndThoseAbove('GatheringService'),
+    placeholder: true,
   },
 
   //Fellowship Services
   {
     path: '/fellowship/service-details',
     element: FellowshipServiceDetails,
-    roles: ['adminFederal', 'adminCouncil', 'adminConstituency'],
+    roles: permitMeAndThoseAbove('Fellowship'),
     placeholder: true,
-    exact: true,
   },
   {
     path: '/services/fellowship/no-service',
     element: FellowshipServiceCancelled,
-    roles: ['adminFederal', 'adminCouncil', 'adminConstituency'],
+    roles: permitMeAndThoseAbove('Fellowship'),
     placeholder: true,
-    exact: true,
   },
   {
     path: '/services/fellowship/form',
     element: FellowshipService,
     roles: [
-      'adminFederal',
+      'adminGatheringService',
       'adminCouncil',
       'adminConstituency',
-
       'leaderFellowship',
     ],
     placeholder: false,
-    exact: true,
   },
   {
     path: '/fellowship/record-service',
     element: FellowshipService,
     roles: [
-      'adminFederal',
+      'adminGatheringService',
+      'adminStream',
       'adminCouncil',
       'adminConstituency',
-
       'leaderFellowship',
     ],
     placeholder: false,
-    exact: true,
   },
 
-  {
-    path: '/services/constituency-joint/form',
-    element: ConstituencyService,
-    roles: [
-      'adminFederal',
-      'adminCouncil',
-      'adminConstituency',
-      'leaderConstituency',
-    ],
-    placeholder: false,
-    exact: true,
-  },
   {
     path: '/bacenta/record-service',
     element: BacentaService,
     roles: [
-      'adminFederal',
+      'adminGatheringService',
+      'adminStream',
       'adminCouncil',
       'adminConstituency',
-
       'leaderBacenta',
     ],
     placeholder: false,
-    exact: true,
   },
 
   //Sonta Service Details
   {
     path: '/sonta/record-service',
     element: SontaService,
-    roles: [
-      'adminFederal',
-      'adminCouncil',
-      'adminConstituency',
-
-      'leaderConstituency',
-
-      'leaderSonta',
-    ],
+    roles: permitMeAndThoseAbove('Sonta'),
     placeholder: false,
-    exact: true,
   },
   {
     path: '/sonta/service-details',
     element: SontaServiceDetails,
-    roles: [
-      'adminFederal',
-      'adminCouncil',
-      'adminConstituency',
-
-      'leaderConstituency',
-
-      'leaderBacenta',
-    ],
+    roles: permitMeAndThoseAbove('Sonta'),
     placeholder: false,
-    exact: true,
   },
 
   //Bacenta Service Things
   {
     path: '/bacenta/service-details',
     element: BacentaServiceDetails,
-    roles: [
-      'adminFederal',
-      'adminCouncil',
-      'adminConstituency',
-
-      'leaderConstituency',
-
-      'leaderBacenta',
-    ],
+    roles: permitMeAndThoseAbove('Bacenta'),
     placeholder: false,
-    exact: true,
   },
 
   //Constituency Services
   {
     path: '/constituency/record-service',
     element: ConstituencyService,
-    roles: [
-      'adminFederal',
-      'adminCouncil',
-      'adminConstituency',
-      'leaderConstituency',
-    ],
+    roles: permitMeAndThoseAbove('Constituency'),
     placeholder: false,
-    exact: true,
   },
   {
     path: '/constituency/service-details',
     element: ConstituencyServiceDetails,
-    roles: [
-      'adminFederal',
-      'adminCouncil',
-      'adminConstituency',
-      'leaderConstituency',
-    ],
+    roles: permitMeAndThoseAbove('Constituency'),
     placeholder: false,
-    exact: true,
   },
 
   //Defaulters Flow
   {
     path: '/services/defaulters',
     element: Defaulters,
-    roles: [
-      'adminFederal',
-      'adminCouncil',
-      'adminConstituency',
-      'leaderConstituency',
-    ],
+    roles: permitMeAndThoseAbove('Constituency'),
     placeholder: true,
-    exact: true,
   },
   {
     path: '/services/form-defaulters',
     element: FormDefaulters,
-    roles: [
-      'adminFederal',
-      'adminCouncil',
-      'adminConstituency',
-      'leaderConstituency',
-    ],
+    roles: permitMeAndThoseAbove('Constituency'),
     placeholder: true,
-    exact: true,
   },
   {
     path: '/services/banking-defaulters',
     element: BankingDefaulters,
-    roles: [
-      'adminFederal',
-      'adminCouncil',
-      'adminConstituency',
-      'leaderConstituency',
-    ],
+    roles: permitMeAndThoseAbove('Constituency'),
     placeholder: true,
-    exact: true,
   },
   {
     path: '/services/banked',
     element: Banked,
-    roles: [
-      'adminFederal',
-      'adminCouncil',
-      'adminConstituency',
-      'leaderConstituency',
-    ],
+    roles: permitMeAndThoseAbove('Constituency'),
     placeholder: true,
-    exact: true,
   },
   {
     path: '/services/filled-services',
     element: ServicesThisWeek,
-    roles: [
-      'adminFederal',
-      'adminCouncil',
-      'adminConstituency',
-      'leaderConstituency',
-    ],
+    roles: permitMeAndThoseAbove('Constituency'),
     placeholder: true,
-    exact: true,
   },
   {
     path: '/services/cancelled-services',
     element: CancelledServicesThisWeek,
-    roles: [
-      'adminFederal',
-      'adminCouncil',
-      'adminConstituency',
-      'leaderConstituency',
-    ],
+    roles: permitMeAndThoseAbove('Constituency'),
     placeholder: true,
-    exact: true,
   },
 
   //Council By Constituency
+
   {
-    path: '/services/council-by-constituencies',
+    path: '/services/council-by-constituency',
     element: CouncilByConstituency,
-    roles: ['adminFederal', 'adminCouncil', 'leaderCouncil'],
+    roles: permitMeAndThoseAbove('Council'),
     placeholder: true,
-    exact: true,
+  },
+  //Stream By Council
+  {
+    path: '/services/stream-by-council',
+    element: StreamByCouncil,
+    roles: permitMeAndThoseAbove('Stream'),
+    placeholder: true,
+  },
+  //Gathering Service By Stream
+  {
+    path: '/services/gatheringservice-by-stream',
+    element: GatheringServiceByStream,
+    roles: permitMeAndThoseAbove('GatheringService'),
+    placeholder: true,
+  },
+  //Stream By Council
+  {
+    path: '/services/stream-by-council',
+    element: StreamByCouncil,
+    roles: ['leaderFellowship'],
+    placeholder: true,
+  },
+  //Gathering Service By Stream
+  {
+    path: '/services/gatheringservice-by-streams',
+    element: GatheringServiceByStream,
+    roles: ['leaderFellowship'],
+    placeholder: true,
   },
 ]

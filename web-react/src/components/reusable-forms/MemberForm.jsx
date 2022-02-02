@@ -1,12 +1,14 @@
 import { useQuery } from '@apollo/client'
 import { FieldArray, Form, Formik } from 'formik'
 import * as Yup from 'yup'
-import React from 'react'
+import React, { useContext } from 'react'
 import RoleView from '../../auth/RoleView'
 import {
   GENDER_OPTIONS,
+  isAuthorised,
   makeSelectOptions,
   MARITAL_STATUS_OPTIONS,
+  permitAdminAndThoseAbove,
   PHONE_NUM_REGEX_VALIDATION,
   TITLE_OPTIONS,
 } from '../../global-utils'
@@ -19,10 +21,13 @@ import { HeadingPrimary } from '../HeadingPrimary/HeadingPrimary'
 import { Col, Container, Row } from 'react-bootstrap'
 import LoadingScreen from 'components/base-component/LoadingScreen'
 import SubmitButton from 'components/formik-components/SubmitButton'
+import { MemberContext } from 'contexts/MemberContext'
 
 function MemberForm({ initialValues, onSubmit, title, loading, update }) {
+  const { currentUser } = useContext(MemberContext)
   const { data: ministriesData, loading: ministriesLoading } =
     useQuery(GET_MINISTRIES)
+
   const validationSchema = Yup.object({
     pictureUrl: Yup.string().required('You must upload a picture'),
     firstName: Yup.string().required('First Name is a required field'),
@@ -46,7 +51,6 @@ function MemberForm({ initialValues, onSubmit, title, loading, update }) {
     fellowship: Yup.string().required(
       'Please pick a fellowship from the dropdown'
     ),
-    ministry: Yup.string().required('Ministry is a required field'),
   })
 
   if (ministriesLoading || loading) {
@@ -173,7 +177,12 @@ function MemberForm({ initialValues, onSubmit, title, loading, update }) {
                   </div>
 
                   <div className="form-row justify-content-center">
-                    {!update && (
+                    {(!update ||
+                      !formik.initialValues.email ||
+                      isAuthorised(
+                        permitAdminAndThoseAbove('GatheringService'),
+                        currentUser.roles
+                      )) && (
                       <Col sm={10}>
                         <FormikControl
                           label="Email Address*"
@@ -227,7 +236,7 @@ function MemberForm({ initialValues, onSubmit, title, loading, update }) {
                     <Col sm={10}>
                       <FormikControl
                         className="form-control"
-                        label="Ministry*"
+                        label="Ministry"
                         control="select"
                         name="ministry"
                         options={ministryOptions}
@@ -239,7 +248,7 @@ function MemberForm({ initialValues, onSubmit, title, loading, update }) {
                 {/* <!-- End of Church Info Section--> */}
 
                 {/* <!-- Beginning of Pastoral Appointments Section--> */}
-                <RoleView roles={['adminFederal']}>
+                <RoleView roles={permitAdminAndThoseAbove('GatheringService')}>
                   <Col className="my-4">
                     <HeadingPrimary>
                       Pastoral Appointments (if any)
@@ -290,7 +299,7 @@ function MemberForm({ initialValues, onSubmit, title, loading, update }) {
                 {/* <!--End of Pastoral Appointments Section--> */}
 
                 {/* <!--Beginning of Pastoral History Section--> */}
-                <RoleView roles={['adminFederal']}>
+                <RoleView roles={permitAdminAndThoseAbove('GatheringService')}>
                   <Col className="my-4">
                     <HeadingPrimary>Pastoral History</HeadingPrimary>
                     <FieldArray name="pastoralHistory">

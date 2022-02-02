@@ -10,7 +10,7 @@ function LeaderPictureIcon({ member }) {
     <img
       className="mr-3 rounded-circle img-search"
       src={transformCloudinaryImg(member?.pictureUrl)}
-      alt={`${member.firstName} ${member.lastName}`}
+      alt={member.fullName}
     />
   )
 }

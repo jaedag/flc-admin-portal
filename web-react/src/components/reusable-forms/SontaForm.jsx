@@ -1,13 +1,13 @@
 import BaseComponent from 'components/base-component/BaseComponent'
 import { Form, Formik } from 'formik'
 import * as Yup from 'yup'
-import { makeSelectOptions } from 'global-utils'
+import { makeSelectOptions, permitAdminAndThoseAbove } from 'global-utils'
 import { GET_COUNCIL_CONSTITUENCIES, GET_MINISTRIES } from 'queries/ListQueries'
 import React, { useContext } from 'react'
 import FormikControl from 'components/formik-components/FormikControl'
 import { ChurchContext } from 'contexts/ChurchContext'
 import { useQuery } from '@apollo/client'
-import { DISPLAY_CONSTITUENCY } from 'pages/display/ReadQueries'
+import { DISPLAY_CONSTITUENCY } from 'pages/directory/display/ReadQueries'
 import RoleView from 'auth/RoleView'
 
 const SontaForm = ({ initialValues, onSubmit, title, loading, newSonta }) => {
@@ -88,7 +88,7 @@ const SontaForm = ({ initialValues, onSubmit, title, loading, newSonta }) => {
                   <div className="col mb-2">
                     <div className="form-row row-cols-2">
                       <div className="col-10">
-                        <RoleView roles={['adminFederal', 'adminCouncil']}>
+                        <RoleView roles={permitAdminAndThoseAbove('Council')}>
                           <FormikControl
                             className="form-control"
                             control="select"
@@ -98,7 +98,9 @@ const SontaForm = ({ initialValues, onSubmit, title, loading, newSonta }) => {
                             defaultOption={`Select a Constituency`}
                           />
                         </RoleView>
-                        <RoleView roles={['adminConstituency']}>
+                        <RoleView
+                          roles={permitAdminAndThoseAbove('Constituency')}
+                        >
                           <label className="label">{`Constituency:`}</label>
                           <div className="pl-2">
                             <p>{`${constituency?.name} Constituency`}</p>

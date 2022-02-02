@@ -6,10 +6,11 @@ import { ErrorMessage } from 'formik'
 import TextError from './TextError'
 import { useNavigate } from 'react-router-dom'
 import {
+  STREAM_SEARCH,
   COUNCIL_SEARCH,
   CONSTITUENCY_SEARCH,
   FEDERAL_SEARCH,
-} from '../../pages/mobile/SearchQuery.js'
+} from '../../pages/directory/mobile/SearchQuery.js'
 import { ChurchContext } from '../../contexts/ChurchContext'
 import { capitalise, isAuthorised } from '../../global-utils'
 import { MemberContext } from '../../contexts/MemberContext'
@@ -52,7 +53,22 @@ function FormikSearchbox(props) {
         ...data.federalBacentaSearch,
         ...data.federalFellowshipSearch,
       ]
-      if (currentUser.roles.includes('adminFederal')) {
+      if (currentUser.roles.includes('adminGatheringService')) {
+        getSuggestions(combinedData)
+      }
+    },
+  })
+  const [streamSearch] = useLazyQuery(STREAM_SEARCH, {
+    onCompleted: (data) => {
+      const combinedData = [
+        ...data.streamMemberSearch,
+        ...data.streamCouncilSearch,
+        ...data.streamConstituencySearch,
+        ...data.streamSontaSearch,
+        ...data.streamBacentaSearch,
+        ...data.streamFellowshipSearch,
+      ]
+      if (currentUser.roles.includes('adminStream')) {
         getSuggestions(combinedData)
       }
     },
@@ -88,14 +104,25 @@ function FormikSearchbox(props) {
   })
 
   const whichSearch = (searchString) => {
-    if (isAuthorised(['adminFederal'], currentUser.roles)) {
+    if (isAuthorised(['adminGatheringService'], currentUser.roles)) {
       federalSearch({
         variables: { searchKey: capitalise(searchString.trim()) },
       })
-    } else if (isAuthorised(['adminCouncil', 'bishop'], currentUser.roles)) {
+    } else if (
+      isAuthorised(['adminStream', 'leaderStream'], currentUser.roles)
+    ) {
+      streamSearch({
+        variables: {
+          streamId: currentUser.stream,
+          searchKey: capitalise(searchString.trim()),
+        },
+      })
+    } else if (
+      isAuthorised(['adminCouncil', 'leaderCouncil'], currentUser.roles)
+    ) {
       councilSearch({
         variables: {
-          bishopId: currentUser.bishop,
+          councilId: currentUser.council,
           searchKey: capitalise(searchString.trim()),
         },
       })

@@ -37,6 +37,7 @@ const BankingSlipSubmission = () => {
   })
 
   const onSubmit = (values, onSubmitProps) => {
+    onSubmitProps.setSubmitting(true)
     SubmitBankingSlip({
       variables: {
         serviceRecordId: serviceRecordId,

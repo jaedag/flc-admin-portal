@@ -1,7 +1,12 @@
 import { useLazyQuery } from '@apollo/client'
 import { MemberContext } from 'contexts/MemberContext'
 import { ErrorMessage } from 'formik'
-import { DEBOUNCE_TIMER, isAuthorised, throwErrorMsg } from 'global-utils'
+import {
+  DEBOUNCE_TIMER,
+  isAuthorised,
+  permitMeAndThoseAbove,
+  throwErrorMsg,
+} from 'global-utils'
 import React, { useContext, useEffect, useState } from 'react'
 import Autosuggest from 'react-autosuggest'
 import {
@@ -28,7 +33,7 @@ const SearchBacenta = (props) => {
     STREAM_BACENTA_SEARCH,
     {
       onCompleted: (data) => {
-        setSuggestions(data.streamSearch[0].bacentaSearch)
+        setSuggestions(data.streams[0].bacentaSearch)
         return
       },
     }
@@ -37,7 +42,7 @@ const SearchBacenta = (props) => {
     COUNCIL_BACENTA_SEARCH,
     {
       onCompleted: (data) => {
-        setSuggestions(data.councilSearch[0].bacentaSearch)
+        setSuggestions(data.councils[0].bacentaSearch)
         return
       },
     }
@@ -47,7 +52,7 @@ const SearchBacenta = (props) => {
     CONSTITUENCY_BACENTA_SEARCH,
     {
       onCompleted: (data) => {
-        setSuggestions(data.constituencySearch[0].bacentaSearch)
+        setSuggestions(data.constituencies[0].bacentaSearch)
         return
       },
     }
@@ -58,7 +63,9 @@ const SearchBacenta = (props) => {
   throwErrorMsg(error)
 
   const whichSearch = (searchString) => {
-    if (isAuthorised(['adminFederal'], currentUser.roles)) {
+    if (
+      isAuthorised(permitMeAndThoseAbove('GatheringService'), currentUser.roles)
+    ) {
       gatheringServiceSearch({
         variables: {
           id: currentUser.gatheringService,
@@ -66,7 +73,7 @@ const SearchBacenta = (props) => {
         },
       })
     } else if (
-      isAuthorised(['adminStream', 'leaderStream'], currentUser.roles)
+      isAuthorised(permitMeAndThoseAbove('Stream'), currentUser.roles)
     ) {
       streamSearch({
         variables: {
@@ -75,7 +82,7 @@ const SearchBacenta = (props) => {
         },
       })
     } else if (
-      isAuthorised(['adminCouncil', 'leaderCouncil'], currentUser.roles)
+      isAuthorised(permitMeAndThoseAbove('Council'), currentUser.roles)
     ) {
       councilSearch({
         variables: {
@@ -84,10 +91,7 @@ const SearchBacenta = (props) => {
         },
       })
     } else if (
-      isAuthorised(
-        ['adminConstituency', 'leaderConstituency'],
-        currentUser.roles
-      )
+      isAuthorised(permitMeAndThoseAbove('Constituency'), currentUser.roles)
     ) {
       constituencySearch({
         variables: {

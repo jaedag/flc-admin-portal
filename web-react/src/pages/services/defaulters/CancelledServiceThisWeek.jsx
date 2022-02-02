@@ -9,6 +9,8 @@ import { Col, Container, Row } from 'react-bootstrap'
 import {
   CONSTITUENCY_CANCELLED_SERVICES_LIST,
   COUNCIL_CANCELLED_SERVICES_LIST,
+  STREAM_CANCELLED_SERVICES_LIST,
+  GATHERINGSERVICE_CANCELLED_SERVICES_LIST,
 } from './DefaultersQueries'
 import DefaulterCard from './DefaulterCard'
 import PlaceholderDefaulter from './PlaceholderDefaulter'
@@ -21,6 +23,11 @@ const CancelledServicesThisWeek = () => {
   const [councilCancelledServices, { data: councilData }] = useLazyQuery(
     COUNCIL_CANCELLED_SERVICES_LIST
   )
+  const [streamCancelledServices, { data: streamData }] = useLazyQuery(
+    STREAM_CANCELLED_SERVICES_LIST
+  )
+  const [gatheringServiceCancelledServices, { data: gatheringServiceData }] =
+    useLazyQuery(GATHERINGSERVICE_CANCELLED_SERVICES_LIST)
 
   useEffect(() => {
     if (
@@ -44,7 +51,34 @@ const CancelledServicesThisWeek = () => {
       })
       setChurch(councilData?.councils[0])
     }
-  }, [currentUser.constituency, constituencyData, councilData])
+    if (isAuthorised(['adminStream', 'leaderStream'], currentUser.roles)) {
+      streamCancelledServices({
+        variables: {
+          id: currentUser.stream,
+        },
+      })
+      setChurch(streamData?.streams[0])
+    }
+    if (
+      isAuthorised(
+        ['adminGatheringService', 'leaderGatheringService'],
+        currentUser.roles
+      )
+    ) {
+      gatheringServiceCancelledServices({
+        variables: {
+          id: currentUser.gatheringService,
+        },
+      })
+      setChurch(gatheringServiceData?.gatheringServices[0])
+    }
+  }, [
+    currentUser.constituency,
+    constituencyData,
+    councilData,
+    streamData,
+    gatheringServiceData,
+  ])
 
   return (
     <Container>

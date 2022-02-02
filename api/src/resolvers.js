@@ -1,6 +1,7 @@
 const dotenv = require('dotenv')
 const axios = require('axios').default
 const cypher = require('./resolver-queries')
+const texts = require('./texts.json')
 
 dotenv.config()
 
@@ -16,6 +17,7 @@ const notifyMember = (
   member,
   subject,
   body,
+  html,
   whatsapp_template,
   whatsapp_placeholders
 ) => {
@@ -61,10 +63,13 @@ const notifyMember = (
   mg.messages
     .create('mg.firstlovecenter.com', {
       from: 'FL Accra Admin <no-reply@firstlovecenter.org>',
-      to: [member.email, 'admin@firstlovecenter.com'],
+      to: process.env.TEST_EMAIL_ADDRESS || [
+        member.email,
+        'admin@firstlovecenter.com',
+      ],
       subject: subject,
       text: body,
-      // html: '<h1>Testing some Mailgun awesomness!</h1>', //HTML Version of the Message for Better Styling
+      html: html || null, //HTML Version of the Message for Better Styling
     })
     .then((msg) => console.log('Mailgun API response', msg)) // logs response data
     .catch((err) => console.log('Mailgun API error', err)) // logs any error
@@ -138,12 +143,12 @@ const parseForCache = (servant, church, verb, role) => {
 
 const getTokenConfig = {
   method: 'post',
-  url: 'https://flcadmin.us.auth0.com/oauth/token',
+  url: `${process.env.AUTH0_BASE_URL}oauth/token`,
   headers: { 'content-type': 'application/json' },
   data: {
-    client_id: '4LofGKzEk2nFCbVRgG9YScD5AaT7WFFF',
-    client_secret: process.env.AUTH_CLIENT_SECRET,
-    audience: 'https://flcadmin.us.auth0.com/api/v2/',
+    client_id: process.env.AUTH0_MGMT_CLIENT_ID,
+    client_secret: process.env.AUTH0_CLIENT_SECRET,
+    audience: `${process.env.AUTH0_BASE_URL}api/v2/`,
     grant_type: 'client_credentials',
   },
 }
@@ -188,7 +193,7 @@ const createAuthUserConfig = (member) => ({
     Authorization: `Bearer ${authToken}`,
   },
   data: {
-    connection: 'flcadmin',
+    connection: `flcadmin${process.env.TEST_ENV ? '-test' : ''}`,
     email: member.email,
     given_name: member.firstName,
     family_name: member.lastName,
@@ -210,7 +215,7 @@ const updateAuthUserConfig = (member) => ({
     Authorization: `Bearer ${authToken}`,
   },
   data: {
-    connection: 'flcadmin',
+    connection: `flcadmin${process.env.TEST_ENV ? '-test' : ''}`,
     email: member.email,
     given_name: member.firstName,
     family_name: member.lastName,
@@ -231,7 +236,7 @@ const changePasswordConfig = (member) => ({
   },
 
   data: {
-    connection_id: 'con_dxnSvYK6VptkEBL0',
+    connection_id: process.env.AUTH0_DB_CONNECTION_ID,
     email: member.email,
     mark_email_as_verified: true,
   },
@@ -345,7 +350,8 @@ const MakeServant = async (
   servantType
 ) => {
   //Set Up
-  const churchLower = churchType.toLowerCase()
+  let churchLower = churchType.toLowerCase().replace('arrivals', '')
+
   const servantLower = servantType.toLowerCase()
   isAuth(permittedRoles, context.auth.roles)
   noEmptyArgsValidation([
@@ -366,14 +372,13 @@ const MakeServant = async (
     id: args[`${churchLower}Id`],
   })
   const church = rearrangeCypherObject(churchResponse)
-  const churchInEmail = church.name
-    ? `${church.name} ${church.type[0]}`
-    : `Bishop ${church.firstName} ${church.lastName}`
+  const churchInEmail = `${church.name} ${church.type[0]}`
 
   const servantResponse = await session.run(cypher.matchMemberQuery, {
     id: args[`${servantLower}Id`],
   })
   let servant = rearrangeCypherObject(servantResponse)
+
   errorHandling(servant)
 
   //Check for AuthID of servant
@@ -389,7 +394,8 @@ const MakeServant = async (
       notifyMember(
         servant,
         'Your Account Has Been Created On The FL Admin Portal',
-        `Hi ${servant.firstName} ${servant.lastName},\n\nCongratulations on being made a ${churchType} ${servantType} for ${churchInEmail}. Your account has just been created on the First Love Church Administrative Portal. Please set up your password by clicking ${passwordTicketResponse.data.ticket}. If you feel this is a mistake please contact your bishops admin.\n\nAfterwards, you can login by clicking https://flcadmin.netlify.app/\n\nRegards\nThe Administrator\nFirst Love Center\nAccra`,
+        null,
+        `<p>Hi ${servant.firstName} ${servant.lastName},<br/><br/>Congratulations on being made the <b>${churchType} ${servantType}</b> for <b>${churchInEmail}</b>.<br/><br/>Your account has just been created on the First Love Church Administrative Portal. Please set up your password by clicking <b><a href=${passwordTicketResponse.data.ticket}>this link</a></b>. After setting up your password, you can log in by clicking <b>https://flcadmin.netlify.app/</b><br/><br/>Please go through ${texts.html.helpdesk} to find guidelines and instructions on how to use it as well as answers to questions you may have.</p>${texts.html.subscription}`,
         'servant_account_created',
         [servant.firstName, passwordTicketResponse?.data?.ticket]
       )
@@ -434,8 +440,9 @@ const MakeServant = async (
     //Send Email Using Mailgun
     notifyMember(
       servant,
-      'Servanthood Status Update',
-      `Hi ${servant.firstName} ${servant.lastName},\nCongratulations! You have just been made a ${churchType} ${servantType} for ${churchInEmail}. If you feel this is a mistake, please contact your bishop's admin\n\nRegards,\nThe Administrator,\nFirst Love Bacenta,\nAccra.`,
+      'FL Servanthood Status Update',
+      null,
+      `<p>Hi ${servant.firstName} ${servant.lastName},<br/><br/>Congratulations on your new position as the <b>${churchType} ${servantType}</b> for <b>${churchInEmail}</b>.<br/><br/>Once again we are reminding you to go through ${texts.html.helpdesk} to find guidelines and instructions as well as answers to questions you may have</p>${texts.html.subscription}`,
       'servant_status_update',
       [
         servant.firstName,
@@ -459,7 +466,8 @@ const RemoveServant = async (
   servantType
 ) => {
   //Set Up
-  const churchLower = churchType.toLowerCase()
+  let churchLower = churchType.toLowerCase().replace('arrivals', '')
+
   const servantLower = servantType.toLowerCase()
   isAuth(permittedRoles, context.auth.roles)
   noEmptyArgsValidation([
@@ -480,14 +488,27 @@ const RemoveServant = async (
     id: args[`${churchLower}Id`],
   })
   const church = rearrangeCypherObject(churchResponse)
-  const churchInEmail = church.name
-    ? `${church.name} ${church.type[0]}`
-    : `Bishop ${church.firstName} ${church.lastName}`
+
+  const churchInEmail = () => {
+    if (church.type[0] === 'ClosedFellowship') {
+      return `${church.name} Fellowship which has been closed`
+    }
+
+    if (church.type[0] === 'ClosedBacenta') {
+      return `${church.name} Bacenta which has been closed`
+    }
+
+    return `${church.name} ${church.type[0]}`
+  }
 
   const servantResponse = await session.run(cypher.matchMemberQuery, {
     id: args[`${servantLower}Id`],
   })
   const servant = rearrangeCypherObject(servantResponse)
+
+  if (Object.keys(servant).length === 0) {
+    return
+  }
   errorHandling(servant)
 
   if (!servant.auth_id) {
@@ -504,7 +525,12 @@ const RemoveServant = async (
     notifyMember(
       servant,
       'You Have Been Removed!',
-      `Hi ${servant.firstName} ${servant.lastName},\nYou have lost your position as a ${churchType} ${servantType} for ${churchInEmail}.\nIf you feel that this is a mistake, please contact your bishops admin.\nThank you\n\nRegards\nThe Administrator\nFirst Love Center\nAccra`,
+      `Hi ${servant.firstName} ${
+        servant.lastName
+      },\n\nWe regret to inform you that you have been removed as the ${churchType} ${servantType} for ${churchInEmail()}.\n\nWe however encourage you to strive to serve the Lord faithfully in your other roles. Do not be discouraged by this removal; as you work hard we hope and pray that you will soon be restored to your service to him.${
+        texts.string.subscription
+      }`,
+      null,
       'servant_account_deleted',
       [servant.firstName, churchType, servantType, church.name, church.type[0]]
     )
@@ -534,9 +560,12 @@ const RemoveServant = async (
     notifyMember(
       servant,
       'Your Servant Account Has Been Deleted',
-      `Hi ${servant.firstName} ${servant.lastName},\nYour account has been deleted from our portal. You will no longer have access to any data.\nThis is due to the fact that you have been removed as a ${churchType} ${servantType} for ${churchInEmail}.\nIf you feel that this is a mistake, please contact your bishops admin.\nThank you\n\nRegards\nThe Administrator\nFirst Love Center\nAccra`,
-      'servant_account_deleted',
-      [servant.firstName, churchType, servantType, church.name, church.type[0]]
+      `Hi ${servant.firstName} ${
+        servant.lastName
+      },\n\nThis is to inform you that your servant account has been deleted from the First Love Admin Portal. You will no longer have access to any data\n\nThis is due to the fact that you have been removed as a ${churchType} ${servantType} for ${churchInEmail()}.\n\nWe however encourage you to strive to serve the Lord faithfully. Do not be discouraged from loving God by this removal; we hope it is just temporary.${
+        texts.string.subscription
+      }`,
+      null
     )
     return
   }
@@ -548,12 +577,35 @@ const RemoveServant = async (
     notifyMember(
       servant,
       'You Have Been Removed!',
-      `Hi ${servant.firstName} ${servant.lastName},\nUnfortunately You have just been removed as a ${churchType} ${servantType} for ${churchInEmail}.\n\nRegards,\nThe Administrator,\nFirst Love Bacenta,\nAccra.`
+      `Hi ${servant.firstName} ${
+        servant.lastName
+      },\n\nWe regret to inform you that you have been removed as the ${churchType} ${servantType} for ${churchInEmail()}.\n\nWe however encourage you to strive to serve the Lord faithfully in your other roles. Do not be discouraged by this removal; as you work hard we hope and pray that you will soon be restored to your service to him.${
+        texts.string.subscription
+      }`
     )
   }
 
   //Relationship in Neo4j will be removed when the replacement leader is being added
   return parseForCache(servant, church, verb, servantLower)
+}
+
+const getComponentServiceAggregates = async (obj, context) => {
+  let serviceAggregates = []
+
+  const session = context.driver.session()
+  const serviceAggregateResponse = await session.run(
+    cypher.getComponentServiceAggregates,
+    obj
+  )
+
+  serviceAggregateResponse.records.map((record) => {
+    let serviceAggregate = {}
+
+    record.keys.forEach((key, i) => (serviceAggregate[key] = record._fields[i]))
+    serviceAggregates.push(serviceAggregate)
+  })
+
+  return serviceAggregates
 }
 
 export const resolvers = {
@@ -562,56 +614,34 @@ export const resolvers = {
   // Args: Field Arguments
   // Context: Context object, database connection, API, etc
   // GraphQLResolveInfo
-
   Member: {
     fullName: (obj) => {
       return `${obj.firstName} ${obj.lastName}`
     },
   },
   Bacenta: {
-    fellowshipServiceAggregate: async (obj, args, context) => {
-      let serviceAggregates = []
-
-      const session = context.driver.session()
-
-      const serviceAggregateResponse = await session.run(
-        cypher.getBacentaFellowshipServiceAggregates,
-        obj
-      )
-
-      serviceAggregateResponse.records.map((record) => {
-        let serviceAggregate = {}
-
-        record.keys.forEach(
-          (key, i) => (serviceAggregate[key] = record._fields[i])
-        )
-
-        serviceAggregates.push(serviceAggregate)
-      })
-
-      return serviceAggregates
+    componentServiceAggregate: async (obj, args, context) => {
+      return getComponentServiceAggregates(obj, context)
     },
   },
   Constituency: {
-    componentServiceAggregate: async (obj, args, context) => {
-      let serviceAggregates = []
-
-      const session = context.driver.session()
-      const serviceAggregateResponse = await session.run(
-        cypher.getConstituencyServiceAggregates,
-        obj
-      )
-
-      serviceAggregateResponse.records.map((record) => {
-        let serviceAggregate = {}
-
-        record.keys.forEach(
-          (key, i) => (serviceAggregate[key] = record._fields[i])
-        )
-        serviceAggregates.push(serviceAggregate)
-      })
-
-      return serviceAggregates
+    componentServiceAggregate: (obj, args, context) => {
+      return getComponentServiceAggregates(obj, context)
+    },
+  },
+  Council: {
+    componentServiceAggregate: (obj, args, context) => {
+      return getComponentServiceAggregates(obj, context)
+    },
+  },
+  Stream: {
+    componentServiceAggregate: (obj, args, context) => {
+      return getComponentServiceAggregates(obj, context)
+    },
+  },
+  GatheringService: {
+    componentServiceAggregate: (obj, args, context) => {
+      return getComponentServiceAggregates(obj, context)
     },
   },
 
@@ -619,7 +649,7 @@ export const resolvers = {
     CreateMember: async (object, args, context) => {
       isAuth(
         [
-          'adminFederal',
+          'adminGatheringService',
           'adminCouncil',
           'adminConstituency',
           'leaderFellowship',
@@ -669,7 +699,8 @@ export const resolvers = {
     CloseDownFellowship: async (object, args, context) => {
       isAuth(
         [
-          'adminFederal',
+          'adminGatheringService',
+          'adminStream',
           'adminCouncil',
           'adminConstituency',
           'leaderConstituency',
@@ -692,6 +723,20 @@ export const resolvers = {
           )
         }
 
+        //Fellowship Leader must be removed since the fellowship is being closed down
+        await RemoveServant(
+          context,
+          args,
+          [
+            'adminGatheringService',
+            'adminStream',
+            'adminCouncil',
+            'adminConstituency',
+          ],
+          'Fellowship',
+          'Leader'
+        )
+
         const closeFellowshipResponse = await session.run(
           cypher.closeDownFellowship,
           {
@@ -700,16 +745,11 @@ export const resolvers = {
           }
         )
 
-        //Fellowship Leader must be removed since the fellowship is being closed down
-        RemoveServant(
-          context,
-          args,
-          ['adminFederal', 'adminCouncil', 'adminConstituency'],
-          'Fellowship',
-          'Leader'
-        )
-        const fellowship = rearrangeCypherObject(closeFellowshipResponse)
-        return fellowship
+        const fellowshipResponse = rearrangeCypherObject(
+          closeFellowshipResponse
+        ) //Returns a Bacenta
+
+        return fellowshipResponse.bacenta
       } catch (error) {
         throwErrorMsg(error)
       }
@@ -717,7 +757,12 @@ export const resolvers = {
 
     CloseDownBacenta: async (object, args, context) => {
       isAuth(
-        ['adminFederal', 'adminCouncil', 'adminConstituency'],
+        [
+          'adminGatheringService',
+          'adminStream',
+          'adminCouncil',
+          'adminConstituency',
+        ],
         context.auth.roles
       )
 
@@ -736,6 +781,20 @@ export const resolvers = {
           )
         }
 
+        //Bacenta Leader must be removed since the Bacenta is being closed down
+        await RemoveServant(
+          context,
+          args,
+          [
+            'adminGatheringService',
+            'adminStream',
+            'adminCouncil',
+            'adminConstituency',
+          ],
+          'Bacenta',
+          'Leader'
+        )
+
         const closeBacentaResponse = await session.run(
           cypher.closeDownBacenta,
           {
@@ -744,25 +803,19 @@ export const resolvers = {
           }
         )
 
-        //Bacenta Leader must be removed since the Bacenta is being closed down
-        RemoveServant(
-          context,
-          args,
-          ['adminFederal', 'adminCouncil', 'adminConstituency'],
-          'Bacenta',
-          'Leader'
-        )
-        const bacenta = rearrangeCypherObject(closeBacentaResponse)
-        return bacenta
+        const bacentaResponse = rearrangeCypherObject(closeBacentaResponse)
+        return bacentaResponse.constituency
       } catch (error) {
         throwErrorMsg(error)
       }
     },
+
+    //Administrative Mutations
     MakeStreamAdmin: async (object, args, context) => {
       return MakeServant(
         context,
         args,
-        ['adminFederal', 'adminStream'],
+        ['adminGatheringService'],
         'Stream',
         'Admin'
       )
@@ -771,7 +824,7 @@ export const resolvers = {
       return RemoveServant(
         context,
         args,
-        ['adminFederal', 'adminStream'],
+        ['adminGatheringService'],
         'Stream',
         'Admin'
       )
@@ -780,7 +833,7 @@ export const resolvers = {
       return MakeServant(
         context,
         args,
-        ['adminFederal', 'adminStream'],
+        ['adminGatheringService', 'adminStream'],
         'Council',
         'Admin'
       )
@@ -789,7 +842,7 @@ export const resolvers = {
       return RemoveServant(
         context,
         args,
-        ['adminFederal', 'adminStream'],
+        ['adminGatheringService', 'adminStream'],
         'Council',
         'Admin'
       )
@@ -798,7 +851,7 @@ export const resolvers = {
       return MakeServant(
         context,
         args,
-        ['adminFederal', 'adminStream', 'adminStream', 'adminCouncil'],
+        ['adminGatheringService', 'adminStream', 'adminStream', 'adminCouncil'],
         'Constituency',
         'Admin'
       )
@@ -807,16 +860,23 @@ export const resolvers = {
       return RemoveServant(
         context,
         args,
-        ['adminFederal', 'adminStream', 'adminCouncil'],
+        ['adminGatheringService', 'adminStream', 'adminCouncil'],
         'Constituency',
         'Admin'
       )
     },
+
+    //Pastoral Mutations
     MakeFellowshipLeader: async (object, args, context) => {
       return MakeServant(
         context,
         args,
-        ['adminFederal', 'adminStream', 'adminCouncil', 'adminConstituency'],
+        [
+          'adminGatheringService',
+          'adminStream',
+          'adminCouncil',
+          'adminConstituency',
+        ],
         'Fellowship',
         'Leader'
       )
@@ -825,7 +885,12 @@ export const resolvers = {
       return RemoveServant(
         context,
         args,
-        ['adminFederal', 'adminStream', 'adminCouncil', 'adminConstituency'],
+        [
+          'adminGatheringService',
+          'adminStream',
+          'adminCouncil',
+          'adminConstituency',
+        ],
         'Fellowship',
         'Leader'
       )
@@ -834,7 +899,12 @@ export const resolvers = {
       return MakeServant(
         context,
         args,
-        ['adminFederal', 'adminStream', 'adminCouncil', 'adminConstituency'],
+        [
+          'adminGatheringService',
+          'adminStream',
+          'adminCouncil',
+          'adminConstituency',
+        ],
         'Sonta',
         'Leader'
       )
@@ -843,7 +913,12 @@ export const resolvers = {
       return RemoveServant(
         context,
         args,
-        ['adminFederal', 'adminStream', 'adminCouncil', 'adminConstituency'],
+        [
+          'adminGatheringService',
+          'adminStream',
+          'adminCouncil',
+          'adminConstituency',
+        ],
         'Sonta',
         'Leader'
       )
@@ -852,7 +927,12 @@ export const resolvers = {
       return MakeServant(
         context,
         args,
-        ['adminFederal', 'adminStream', 'adminCouncil', 'adminConstituency'],
+        [
+          'adminGatheringService',
+          'adminStream',
+          'adminCouncil',
+          'adminConstituency',
+        ],
         'Bacenta',
         'Leader'
       )
@@ -861,7 +941,12 @@ export const resolvers = {
       return RemoveServant(
         context,
         args,
-        ['adminFederal', 'adminStream', 'adminCouncil', 'adminConstituency'],
+        [
+          'adminGatheringService',
+          'adminStream',
+          'adminCouncil',
+          'adminConstituency',
+        ],
         'Bacenta',
         'Leader'
       )
@@ -870,7 +955,7 @@ export const resolvers = {
       return MakeServant(
         context,
         args,
-        ['adminFederal', 'adminStream', 'adminCouncil'],
+        ['adminGatheringService', 'adminStream', 'adminCouncil'],
         'Constituency',
         'Leader'
       )
@@ -879,7 +964,7 @@ export const resolvers = {
       return RemoveServant(
         context,
         args,
-        ['adminFederal', 'adminStream', 'adminCouncil'],
+        ['adminGatheringService', 'adminStream', 'adminCouncil'],
         'Constituency',
         'Leader'
       )
@@ -888,7 +973,7 @@ export const resolvers = {
       return MakeServant(
         context,
         args,
-        ['adminFederal', 'adminStream'],
+        ['adminGatheringService', 'adminStream'],
         'Council',
         'Leader'
       )
@@ -897,22 +982,34 @@ export const resolvers = {
       return RemoveServant(
         context,
         args,
-        ['adminFederal', 'adminStream'],
+        ['adminGatheringService', 'adminStream'],
         'Council',
         'Leader'
       )
     },
     MakeStreamLeader: async (object, args, context) => {
-      return MakeServant(context, args, ['adminFederal'], 'Stream', 'Leader')
+      return MakeServant(
+        context,
+        args,
+        ['adminGatheringService'],
+        'Stream',
+        'Leader'
+      )
     },
     RemoveStreamLeader: async (object, args, context) => {
-      return RemoveServant(context, args, ['adminFederal'], 'Stream', 'Leader')
+      return RemoveServant(
+        context,
+        args,
+        ['adminGatheringService'],
+        'Stream',
+        'Leader'
+      )
     },
     MakeGatheringServiceLeader: async (object, args, context) => {
       return MakeServant(
         context,
         args,
-        ['adminFederal'],
+        ['adminGatheringService'],
         'GatheringService',
         'Leader'
       )
@@ -921,9 +1018,24 @@ export const resolvers = {
       return RemoveServant(
         context,
         args,
-        ['adminFederal'],
+        ['adminGatheringService'],
         'GatheringService',
         'Leader'
+      )
+    },
+    //Arrivals Mutations
+    MakeConstituencyArrivalsAdmin: async (object, args, context) => {
+      return MakeServant(
+        context,
+        args,
+        [
+          'adminGatheringService',
+          'adminStream',
+          'adminCouncil',
+          'adminConstituency',
+        ],
+        'ConstituencyArrivals',
+        'Admin'
       )
     },
   },

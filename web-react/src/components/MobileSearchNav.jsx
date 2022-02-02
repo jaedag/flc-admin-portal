@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 import { Formik, Form } from 'formik'
 import FormikControl from './formik-components/FormikControl'
 import { SearchContext } from '../contexts/MemberContext'
-import './MobileSearchNav.css'
+import './SearchBox.css'
 import { Col, Button, Container } from 'react-bootstrap'
 
 const MobileSearchNav = () => {
@@ -23,10 +23,10 @@ const MobileSearchNav = () => {
       <Formik initialValues={initialValues} onSubmit={onSubmit}>
         {() => (
           <Form>
-            <div className="form-row ">
-              <Col className="col-auto px-0 d-flex align-items-center">
+            <div className="form-row">
+              <Col className="col px-0 d-flex align-items-center">
                 <FormikControl
-                  className="nav-search-box"
+                  className="nav-search-box w-100"
                   control="input"
                   name="searchKeyVal"
                   placeholder="Search for anything..."

@@ -1,6 +1,6 @@
 [![Netlify Status](https://api.netlify.com/api/v1/badges/3fc1e26f-bccb-4196-ba57-705d3b09bb82/deploy-status)](https://app.netlify.com/sites/flcadmin/deploys)
 
-This project is a starter for building a [GRANDstack](https://grandstack.io) (GraphQL, React, Apollo, Neo4j Database) application. There are two components to the starter, the web frontend application (in React and Angular flavors) and the API app (GraphQL server).
+This project was built using [GRANDstack](https://grandstack.io) (GraphQL, React, Apollo, Neo4j Database) application.
 <br/><br/>
 
 # [![First Love Logo](/img/fl-logo.png)](https://www.firstlovecenter.com) Where Are We Going?
@@ -14,13 +14,10 @@ This project is a starter for building a [GRANDstack](https://grandstack.io) (Gr
 <br/>
 
 The aim is to build a Church Management Portal for Managing the [First Love Church](https://www.firstlovecenter.com) in Accra.
-All Contributors welcome. Make your changes in a separate branch before submitting a PR. Read the [Contributor Guide](./CONTRIBUTING.md) for guidelines.
-
-
-You can find the UX designs by clicking [this link](https://xd.adobe.com/view/3d9789d7-2694-4135-95e6-6fc538304e51-68c4/).
+All Contributors welcome. Go ahead and fork the project and submit a PR. Read the [Contributor Guide](./CONTRIBUTING.md) for guidelines.
 
 - [PHASE 1: Directory (State of the Flock Part 1) ✅](#phase-1-directory-state-of-the-flock-part-1-)
-- [PHASE 2: Attendance and Income Records (State of the Flock Part 2)](#phase-2-attendance-and-income-records-state-of-the-flock-part-2)
+- [PHASE 2: Attendance and Income Records (State of the Flock Part 2) ✅](#phase-2-attendance-and-income-records-state-of-the-flock-part-2-)
 - [PHASE 3: Records of the Campaigns (SSMG)](#phase-3-records-of-the-campaigns-ssmg)
 - [PHASE 4: Geolocation (Google Earth Replacement) (Sheep Seeking)](#phase-4-geolocation-google-earth-replacement-sheep-seeking)
 - [PHASE 5: Bussing Registration and Monitoring (Bacenta Proliferation)](#phase-5-bussing-registration-and-monitoring-bacenta-proliferation)
@@ -34,10 +31,10 @@ You can find the UX designs by clicking [this link](https://xd.adobe.com/view/3d
 4.  Display registration numbers at all levels (Constituency, Bacenta, Basonta)
 5.  Be able to import data in a csv file, and export data in a csv file.
 6.  An extensive transaction log of leadership histories.
-7.  Database Backups implementation.
+7.  Database Backups to occur every day or twice a day.
     <br/>
 
-## PHASE 2: Attendance and Income Records (State of the Flock Part 2)
+## PHASE 2: Attendance and Income Records (State of the Flock Part 2) ✅
 
 1.  Replacing all current forms for accepting income and attendance for all services and Basonta Meetings (treasurers & picture uploads)
 2.  Accepting all data from all services weekly.
@@ -65,8 +62,8 @@ You can find the UX designs by clicking [this link](https://xd.adobe.com/view/3d
 
 ## PHASE 4: Geolocation (Google Earth Replacement) (Sheep Seeking)
 
-1. Plot centres on a map
-2. Plot leaders and members on a map
+1. Plot fellowships, bacentas, and centres on a map
+2. Plot all members on a map
 3. Plot outreach venues on a map with information on area populations, cost of bussing, etc
    <br/>
 

@@ -1,5 +1,6 @@
 import MenuButton from 'components/buttons/MenuButton'
 import PlaceholderCustom from 'components/Placeholder'
+import { ChurchContext } from 'contexts/ChurchContext'
 import { MemberContext } from 'contexts/MemberContext'
 import { parseMemberCount } from 'global-utils'
 import React, { useContext } from 'react'
@@ -9,6 +10,7 @@ import MemberIcon from '../../assets/people-svgrepo-com-2.svg'
 
 const Churches = () => {
   const { currentUser, userJobs } = useContext(MemberContext)
+  const { clickCard } = useContext(ChurchContext)
   const navigate = useNavigate()
 
   return (
@@ -25,24 +27,26 @@ const Churches = () => {
         </div>
 
         <div className="d-grid gap-2 mt-5 text-left">
-          {userJobs?.jobs[0] ? (
-            userJobs.jobs.map((job, index) => (
-              <MenuButton
-                key={index}
-                title={job.church.name}
-                caption={parseMemberCount(job.church.memberCount)}
-                icon={MemberIcon}
-                iconBg
-                iconCaption={job.church.__typename}
-                onClick={() => {
-                  job.clickCard()
-                  navigate(
-                    `/${job.church.__typename.toLowerCase()}/displaydetails`
-                  )
-                }}
-                color="churches"
-              />
-            ))
+          {userJobs?.jobs.length ? (
+            userJobs.jobs.map((job) =>
+              job.church.map((church, index) => (
+                <MenuButton
+                  key={index}
+                  title={church.name}
+                  caption={parseMemberCount(church.memberCount)}
+                  icon={MemberIcon}
+                  iconBg
+                  iconCaption={church.__typename}
+                  onClick={() => {
+                    clickCard(church)
+                    navigate(
+                      `/${church.__typename.toLowerCase()}/displaydetails`
+                    )
+                  }}
+                  color="churches"
+                />
+              ))
+            )
           ) : (
             <>
               <MenuButton color="churches" />

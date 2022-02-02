@@ -1,3 +1,4 @@
+import { capitalise } from 'global-utils'
 import React, { useContext } from 'react'
 import { Card, Col, Container, Row } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
@@ -12,13 +13,13 @@ const DisplayChurchList = (props) => {
 
   return (
     <Container>
-      <h5 className="text-muted">{`${churchType} Locations:`}</h5>
+      <h5 className="text-muted">{`${data[0].__typename} Locations:`}</h5>
       <Row>
         {data.map((church, index) => {
           return (
             <Link
               key={index}
-              to={`/${churchType.toLowerCase()}/displaydetails`}
+              to={`/${church.__typename.toLowerCase()}/displaydetails`}
             >
               <Col
                 sm={8}
@@ -37,6 +38,9 @@ const DisplayChurchList = (props) => {
                       {church.admin && (
                         <p className="text-muted">{`Admin: ${church.admin.firstName} ${church.admin.lastName}`}</p>
                       )}
+                      {churchType === 'GatheringService'
+                        ? `${capitalise(church?.stream_name)}`
+                        : null}
                     </Card.Text>
                   </Card.Body>
                 </Card>

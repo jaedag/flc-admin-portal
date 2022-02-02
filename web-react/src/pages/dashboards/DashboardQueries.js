@@ -30,8 +30,6 @@ export const FELLOWSHIP_LEADER_DASHBOARD = gql`
       name
       leader {
         id
-        firstName
-        lastName
         fullName
       }
       serviceLogs {
@@ -81,6 +79,13 @@ export const SERVANTS_DASHBOARD = gql`
         stream_name
         memberCount
 
+        constituency {
+          id
+          council {
+            id
+          }
+        }
+
         services(limit: 4) {
           created_at
           attendance
@@ -91,7 +96,7 @@ export const SERVANTS_DASHBOARD = gql`
           }
         }
 
-        fellowshipServiceAggregate {
+        componentServiceAggregate {
           week
           attendance
           income
@@ -123,6 +128,77 @@ export const SERVANTS_LEADERSHIP = gql`
           lastName
           fullName
         }
+        council {
+          id
+        }
+        services(limit: 4) {
+          created_at
+          attendance
+          income
+          week
+          serviceDate {
+            date
+          }
+        }
+
+        componentServiceAggregate {
+          week
+          attendance
+          income
+        }
+      }
+
+      leadsCouncil {
+        id
+        name
+        stream_name
+        memberCount
+
+        services(limit: 4) {
+          created_at
+          attendance
+          income
+          week
+          serviceDate {
+            date
+          }
+        }
+
+        componentServiceAggregate {
+          week
+          attendance
+          income
+        }
+      }
+
+      leadsStream {
+        id
+        name
+
+        memberCount
+
+        services(limit: 4) {
+          created_at
+          attendance
+          income
+          week
+          serviceDate {
+            date
+          }
+        }
+
+        componentServiceAggregate {
+          week
+          attendance
+          income
+        }
+      }
+
+      leadsGatheringService {
+        id
+        name
+        memberCount
+
         services(limit: 4) {
           created_at
           attendance
@@ -169,6 +245,9 @@ export const SERVANTS_ADMIN = gql`
           lastName
           fullName
         }
+        council {
+          id
+        }
         services(limit: 4) {
           created_at
           attendance
@@ -212,9 +291,10 @@ export const SERVANTS_ADMIN = gql`
           income
         }
       }
-      isAdminForGatheringService {
+      isAdminForStream {
         id
         name
+
         memberCount
         leader {
           id
@@ -230,6 +310,33 @@ export const SERVANTS_ADMIN = gql`
           serviceDate {
             date
           }
+        }
+
+        componentServiceAggregate {
+          week
+          attendance
+          income
+        }
+      }
+      isAdminForGatheringService {
+        id
+        name
+        memberCount
+
+        services(limit: 4) {
+          created_at
+          attendance
+          income
+          week
+          serviceDate {
+            date
+          }
+        }
+
+        componentServiceAggregate {
+          week
+          attendance
+          income
         }
       }
     }

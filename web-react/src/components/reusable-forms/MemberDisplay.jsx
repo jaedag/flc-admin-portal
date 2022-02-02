@@ -8,12 +8,15 @@ import {
   getMemberDob,
   transformCloudinaryImg,
   throwErrorMsg,
+  getHighestTitle,
+  permitAdminAndThoseAbove,
 } from '../../global-utils'
 import {
+  DISPLAY_MEMBER_ADMIN,
   DISPLAY_MEMBER_BIO,
   DISPLAY_MEMBER_CHURCH,
   DISPLAY_MEMBER_LEADERSHIP,
-} from 'pages/display/ReadQueries'
+} from 'pages/directory/display/ReadQueries'
 import { Col, Container, Row } from 'react-bootstrap'
 import PlaceholderCustom from 'components/Placeholder'
 import DetailsCard from 'components/card/DetailsCard'
@@ -35,45 +38,64 @@ const MemberDisplay = ({ memberId }) => {
   const { data: leaderData } = useQuery(DISPLAY_MEMBER_LEADERSHIP, {
     variables: { id: memberId },
   })
+  const { data: adminData } = useQuery(DISPLAY_MEMBER_ADMIN, {
+    variables: { id: memberId },
+  })
   throwErrorMsg(error)
 
   const member = bioData?.members[0]
   const memberChurch = churchData?.members[0]
   const memberLeader = leaderData?.members[0]
+  const memberAdmin = adminData?.members[0]
   const memberBirthday = getMemberDob(member)
   const nameAndTitle = getNameWithTitle(member)
 
   return (
     <Container>
-      <RoleView roles={['adminCouncil', 'adminFederal', 'adminConstituency']}>
+      <RoleView roles={permitAdminAndThoseAbove('Constituency')}>
         <EditButton link="/member/editmember" />
       </RoleView>
+
+      <div className="d-flex justify-content-center pb-4">
+        <PlaceholderCustom
+          as="div"
+          className="profile-img mx-auto"
+          loading={!member || loading}
+          xs={12}
+        >
+          <div>
+            <img
+              src={
+                transformCloudinaryImg(member?.pictureUrl, 'large') || userIcon
+              }
+              className="profile-img"
+              alt={`${member?.fullName}`}
+            />
+          </div>
+        </PlaceholderCustom>
+      </div>
+
+      <div className="text-center">
+        <PlaceholderCustom as="h3" loading={!member || loading}>
+          <h3>{nameAndTitle}</h3>
+        </PlaceholderCustom>
+        <MemberRoleList memberLeader={memberLeader} memberAdmin={memberAdmin} />
+      </div>
       <Row>
         <Col>
-          <PlaceholderCustom
-            as="div"
-            className="profile-img"
-            loading={!member || loading}
-            xs={12}
-          >
-            <div>
-              <img
-                src={
-                  transformCloudinaryImg(member?.pictureUrl, 'large') ||
-                  userIcon
-                }
-                className="profile-img"
-                alt={`${member?.fullName}`}
-              />
-            </div>
-          </PlaceholderCustom>
+          <DetailsCard heading="First Name" detail={member?.firstName} />
         </Col>
         <Col>
-          <PlaceholderCustom as="h3" loading={!member || loading}>
-            <h3>{nameAndTitle}</h3>
-          </PlaceholderCustom>
-          <MemberRoleList member={memberLeader} />
+          <DetailsCard heading="Last Name" detail={member?.lastName || ''} />
         </Col>
+        {member?.middleName && (
+          <Col sm={1} md="auto">
+            <DetailsCard
+              heading="Middle Name"
+              detail={member?.middleName || ' '}
+            />
+          </Col>
+        )}
       </Row>
       <Row>
         <Col>
@@ -88,7 +110,7 @@ const MemberDisplay = ({ memberId }) => {
       </Row>
       <Row>
         <Col sm={1} md="auto">
-          <DetailsCard heading="Date of Birth" detail={memberBirthday} />
+          <DetailsCard heading="Date of Birth" detail={memberBirthday || ''} />
         </Col>
         <Col sm={1} md="auto">
           <a href={`tel:${member?.phoneNumber}`}>
@@ -111,12 +133,14 @@ const MemberDisplay = ({ memberId }) => {
         </Col>
       </Row>
       <Row>
-        <Col sm={1} md="auto">
-          <DetailsCard
-            heading="Occupation"
-            detail={member?.occupation?.occupation || 'None'}
-          />
-        </Col>
+        {member?.occupation?.occupation && (
+          <Col sm={1} md="auto">
+            <DetailsCard
+              heading="Occupation"
+              detail={member?.occupation?.occupation || ''}
+            />
+          </Col>
+        )}
         <Col sm={1} md="auto">
           <DetailsCard heading="Email Address" detail={member?.email} />
         </Col>
@@ -126,18 +150,20 @@ const MemberDisplay = ({ memberId }) => {
             detail={memberChurch?.fellowship?.name}
           />
         </Col>
-        <Col>
-          <DetailsCard
-            heading="Ministry"
-            detail={memberChurch?.ministry?.name}
-          />
-        </Col>
+        {memberChurch?.ministry && (
+          <Col>
+            <DetailsCard
+              heading="Ministry"
+              detail={memberChurch?.ministry?.name}
+            />
+          </Col>
+        )}
 
         {member?.titleConnection?.edges[0]?.node.title && (
           <Col sm={1} md="auto">
             <DetailsCard
               heading="Pastoral Rank"
-              detail={member?.titleConnection?.edges[0]?.node.title}
+              detail={getHighestTitle(member)}
             />
           </Col>
         )}

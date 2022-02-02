@@ -2839,13 +2839,10 @@ type Mutation {
               serviceRecord.treasurerSelfie = $treasurerSelfie,
               serviceRecord.servicePicture = $servicePicture
             WITH serviceRecord
-      <<<<<<< HEAD
-            MATCH (church {id:$id}) WHERE church:Fellowship OR church:Bacenta OR church:Constituency
-            MATCH (church)-[has_history:HAS_HISTORY]->(log:ServiceLog) WHERE has_history.current = true
-      =======
+  
             MATCH (church {id:$id}) WHERE church:Fellowship OR church:Bacenta OR church:Constituency OR church:Council OR church:Stream
             MATCH (church)-[has_history:HAS_HISTORY]->(log:HistoryLog) WHERE has_history.current = true
-      >>>>>>> deploy
+  
             MATCH (leader:Member {auth_id: $auth.jwt.sub})
 
             MERGE (serviceRecord)-[:LOGGED_BY]->(leader)

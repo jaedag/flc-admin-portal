@@ -71,6 +71,7 @@ const UpdateMember = () => {
 
   const [UpdateMember] = useMutation(UPDATE_MEMBER_MUTATION, {
     refetchQueries: [
+      { query: DISPLAY_MEMBER_BIO, variables: { id: memberId } },
       { query: DISPLAY_MEMBER_CHURCH, variables: { id: memberId } },
     ],
   })

@@ -5,7 +5,7 @@ import { Button, Spinner } from 'react-bootstrap'
 const SubmitButton = (props) => {
   const { formik, ...rest } = props
   const { theme } = useContext(MemberContext)
-
+  console.log(formik.isSubmitting)
   return (
     <Button
       variant="primary"

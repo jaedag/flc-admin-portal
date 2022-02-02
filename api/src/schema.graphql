@@ -2106,7 +2106,7 @@ type Mutation {
     whatsappNumber: String
     dob: String
     maritalStatus: String!
-    d: String!
+    gender: String!
     occupation: String
     fellowship: String!
     ministry: String
@@ -2148,6 +2148,8 @@ type Mutation {
       WITH member, log
       MATCH (currentUser:Member {auth_id:$auth.jwt.sub})
       MATCH (gender:Gender {gender: $gender})
+      OPTIONAL MATCH (member)-[gen_rel:HAS_GENDER]-> ()
+      DELETE gen_rel
       MERGE (member)-[:HAS_GENDER]-> (gender)
       MERGE (member)-[:HAS_HISTORY]->(log)
       MERGE (today:TimeGraph {date: date()})

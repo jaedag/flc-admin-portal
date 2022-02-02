@@ -19,7 +19,12 @@ import {
   MAKE_STREAM_ADMIN,
 } from './AdminMutations'
 import FormikControl from '../formik-components/FormikControl'
-import { getWeekNumber, plural, throwErrorMsg } from '../../global-utils'
+import {
+  getWeekNumber,
+  permitAdminAndThoseAbove,
+  plural,
+  throwErrorMsg,
+} from '../../global-utils'
 import Breadcrumb from './Breadcrumb'
 import { Button, Col, Container, Row, Spinner } from 'react-bootstrap'
 import PlaceholderCustom from 'components/Placeholder'
@@ -35,15 +40,15 @@ const DisplayChurchDetails = (props) => {
   switch (props.churchType) {
     case 'Constituency':
       needsAdmin = true
-      roles = ['adminGatheringService', 'adminStream', 'adminCouncil']
+      roles = permitAdminAndThoseAbove('Constituency')
       break
     case 'Council':
       needsAdmin = true
-      roles = ['adminGatheringService', 'adminStream']
+      roles = permitAdminAndThoseAbove('Council')
       break
     case 'Stream':
       needsAdmin = true
-      roles = ['adminGatheringService']
+      roles = permitAdminAndThoseAbove('Stream')
       break
     default:
       needsAdmin = false

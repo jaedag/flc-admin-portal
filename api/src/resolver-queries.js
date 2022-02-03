@@ -497,9 +497,10 @@ export const getComponentServiceAggregates = `
   MATCH (componentServices)-[:HAS_SERVICE]->(componentRecords:ServiceRecord)
 
   MATCH (componentRecords)-[:SERVICE_HELD_ON]->(date:TimeGraph)
+  WHERE date.date > date() - duration({months: 2})
   WITH DISTINCT componentServices,componentRecords, date(date.date).week AS week
 
-RETURN week AS week,SUM(componentRecords.attendance) AS attendance, SUM(componentRecords.income) AS income ORDER BY week DESC LIMIT 12
+RETURN week AS week,SUM(componentRecords.attendance) AS attendance, SUM(componentRecords.income) AS income LIMIT 12
 `
 
 export const checkMemberEmailExists = `

@@ -19,6 +19,14 @@ const ChurchGraph = (props) => {
   const { setServiceRecordId } = useContext(ServiceContext)
   const navigate = useNavigate()
 
+  let sortedData = churchData?.sort((a, b) => {
+    if (a.week - b.week < -1 || a.week - b.week > 1) {
+      return -1 * a.week - b.week
+    }
+
+    return a.week - b.week
+  })
+
   return (
     <>
       <div className="row mt-2">
@@ -37,7 +45,7 @@ const ChurchGraph = (props) => {
           )}
           {!loading && (
             <ResponsiveContainer width="100%" height={330}>
-              <BarChart data={churchData} margin={{ top: 20 }}>
+              <BarChart data={sortedData} margin={{ top: 20 }}>
                 <defs>
                   <linearGradient
                     id="colorPrimary"

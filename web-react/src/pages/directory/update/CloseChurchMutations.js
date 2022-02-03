@@ -95,7 +95,7 @@ export const MAKE_COUNCIL_INACTIVE = gql`
 
 export const MAKE_STREAM_INACTIVE = gql`
   mutation CloseDownStream($streamId: ID!, $leaderId: ID!) {
-    CloseDownStream(streamId: $streamId, leaderId, $leaderId) {
+    CloseDownStream(streamId: $streamId, leaderId: $leaderId) {
       id
       name
 

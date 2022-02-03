@@ -20,8 +20,8 @@ import FormikControl from '../formik-components/FormikControl'
 import { HeadingPrimary } from '../HeadingPrimary/HeadingPrimary'
 import { Col, Container, Row } from 'react-bootstrap'
 import LoadingScreen from 'components/base-component/LoadingScreen'
-import SubmitButton from 'components/formik-components/SubmitButton'
 import { MemberContext } from 'contexts/MemberContext'
+import SubmitButton from 'components/formik-components/SubmitButton'
 
 function MemberForm({ initialValues, onSubmit, title, loading, update }) {
   const { currentUser } = useContext(MemberContext)

@@ -1,10 +1,12 @@
-import { typeDefs } from './graphql-schema'
+import { typeDefs } from './schema/graphql-schema'
 import { ApolloServer } from 'apollo-server-express'
+import { merge } from 'lodash'
 import express from 'express'
 import neo4j from 'neo4j-driver'
 import { Neo4jGraphQL } from '@neo4j/graphql'
 import dotenv from 'dotenv'
-import { resolvers } from './resolvers'
+import { resolvers } from './resolvers/resolvers'
+import { serviceResolvers } from './resolvers/service-resolvers'
 
 // set environment variables from .env
 dotenv.config()
@@ -24,7 +26,7 @@ const driver = neo4j.driver(
 
 const neoSchema = new Neo4jGraphQL({
   typeDefs,
-  resolvers,
+  resolvers: merge(resolvers, serviceResolvers),
   driver,
   config: {
     jwt: {

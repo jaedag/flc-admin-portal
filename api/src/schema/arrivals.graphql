@@ -13,6 +13,34 @@ extend type Council {
     )
 }
 
+extend type Constituency {
+  #Arrivals in the Constituency
+  arrivalsAdmin: Member @relationship(type: "IS_ARRIVALS_FOR", direction: IN)
+}
+
+extend type Bacenta {
+  #ARrivals Data
+  arrivalsCodeOfTheDay: String!
+    @cypher(
+      statement: "MATCH (arrivals:ArrivalsCodeOfTheDay) RETURN arrivals.code"
+    )
+  bussing(limit: Int!): [BussingRecord]
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
+      RETURN bussing ORDER BY date.date DESC LIMIT $limit
+      """
+    )
+  bussingThisWeek: BussingRecord
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
+      WHERE date(date.date).week = date().week
+      RETURN bussing ORDER BY date.date
+      """
+    )
+}
+
 type BussingRecord implements Record @auth(rules: [{ isAuthenticated: true }]) {
   id: ID!
   created_at: Date!

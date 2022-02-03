@@ -806,8 +806,6 @@ type Council implements Church {
   componentServiceAggregate: [ComponentServiceAggregate] @ignore
 }
 
-
-
 type Constituency implements Church {
   id: ID @id
   name: String!
@@ -875,9 +873,6 @@ type Constituency implements Church {
   sontas: [Sonta] @relationship(type: "HAS_SONTA", direction: OUT)
   bacentas: [Bacenta] @relationship(type: "HAS", direction: OUT)
   council: Council @relationship(type: "HAS", direction: IN)
-
-  #Arrivals in the Constituency
-  arrivalsAdmin: Member @relationship(type: "IS_ARRIVALS_FOR", direction: IN)
 
   admin: Member @relationship(type: "IS_ADMIN_FOR", direction: IN)
   history: [HistoryLog] @relationship(type: "HAS_HISTORY", direction: OUT)
@@ -1067,26 +1062,6 @@ type Bacenta implements Church {
       """
     )
 
-  #ARrivals Data
-  arrivalsCodeOfTheDay: String!
-    @cypher(
-      statement: "MATCH (arrivals:ArrivalsCodeOfTheDay) RETURN arrivals.code"
-    )
-  bussing(limit: Int!): [BussingRecord]
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
-      RETURN bussing ORDER BY date.date DESC LIMIT $limit
-      """
-    )
-  bussingThisWeek: BussingRecord
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
-      WHERE date(date.date).week = date().week
-      RETURN bussing ORDER BY date.date
-      """
-    )
   council: Council
     @cypher(
       statement: """
@@ -1227,6 +1202,7 @@ type Sonta {
   constituency: Constituency @relationship(type: "HAS_SONTA", direction: IN)
   serviceLogs: [ServiceLog] @relationship(type: "HAS_HISTORY", direction: OUT)
 }
+
 type Basonta {
   id: ID @id
   name: String

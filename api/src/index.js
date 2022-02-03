@@ -4,7 +4,7 @@ import express from 'express'
 import neo4j from 'neo4j-driver'
 import { Neo4jGraphQL } from '@neo4j/graphql'
 import dotenv from 'dotenv'
-import { resolvers } from './resolvers'
+import { resolvers } from './resolvers/resolvers'
 
 // set environment variables from .env
 dotenv.config()

@@ -1,4 +1,4 @@
-import { typeDefs } from './graphql-schema'
+import { typeDefs } from './schema/graphql-schema'
 import { ApolloServer } from 'apollo-server-express'
 import express from 'express'
 import neo4j from 'neo4j-driver'

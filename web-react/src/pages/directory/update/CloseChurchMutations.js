@@ -32,7 +32,10 @@ export const MAKE_BACENTA_INACTIVE = gql`
 
 export const MAKE_CONSTITUENCY_INACTIVE = gql`
   mutation CloseDownConstituency($constituencyId: ID!, $leaderId: ID!) {
-    CloseDownConstituency(constituencyId: $constituencyId) {
+    CloseDownConstituency(
+      constituencyId: $constituencyId
+      leaderId: $leaderId
+    ) {
       id
       name
       stream_name
@@ -62,7 +65,7 @@ export const MAKE_CONSTITUENCY_INACTIVE = gql`
 
 export const MAKE_COUNCIL_INACTIVE = gql`
   mutation CloseDownCouncil($councilId: ID!, $leaderId: ID!) {
-    CloseDownCouncil(councilId: $councilId) {
+    CloseDownCouncil(councilId: $councilId, leaderId: $leaderId) {
       id
       name
       stream_name
@@ -92,7 +95,7 @@ export const MAKE_COUNCIL_INACTIVE = gql`
 
 export const MAKE_STREAM_INACTIVE = gql`
   mutation CloseDownStream($streamId: ID!, $leaderId: ID!) {
-    CloseDownStream(streamId: $streamId) {
+    CloseDownStream(streamId: $streamId, leaderId, $leaderId) {
       id
       name
 

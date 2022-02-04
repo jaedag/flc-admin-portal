@@ -16,16 +16,3 @@ export const COUNCIL_FELLOWSHIP_DROPDOWN = gql`
     }
   }
 `
-
-export const COUNCIL_BACENTA_DROPDOWN = gql`
-  query ($id: ID!, $nameSearch: String!) {
-    councilBacentaDropdown(id: $id, nameSearch: $nameSearch) {
-      id
-      name
-      constituency {
-        id
-        name
-      }
-    }
-  }
-`

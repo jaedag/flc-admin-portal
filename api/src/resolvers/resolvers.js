@@ -1,6 +1,18 @@
 const dotenv = require('dotenv')
 const axios = require('axios').default
-const cypher = require('./resolver-queries')
+const cypher = require('./cypher/resolver-cypher')
+const closeChurchCypher = require('./cypher/close-church-cypher')
+const servantCypher = require('./cypher/servant-cypher')
+const {
+  isAuth,
+  throwErrorMsg,
+  noEmptyArgsValidation,
+  errorHandling,
+  rearrangeCypherObject,
+  parseForCache,
+} = require('./resolver-utils')
+
+const auth0 = require('./auth0-utils')
 const texts = require('./texts.json')
 
 dotenv.config()
@@ -75,72 +87,6 @@ const notifyMember = (
     .catch((err) => console.log('Mailgun API error', err)) // logs any error
 }
 
-const isAuth = (permittedRoles, userRoles) => {
-  if (!permittedRoles.some((r) => userRoles.includes(r))) {
-    throw 'You are not permitted to run this mutation'
-  }
-}
-const noEmptyArgsValidation = (args) => {
-  if (!args.length) {
-    throwErrorMsg('args must be passed in array')
-  }
-
-  args.map((argument, index) => {
-    if (!argument) {
-      throwErrorMsg(`${args[index - 1]} Argument Cannot Be Empty`)
-    }
-  })
-}
-const throwErrorMsg = (message, error) => {
-  let errorVar = ''
-
-  if (error) {
-    errorVar = error
-  }
-  if (error?.response?.data?.message) {
-    errorVar = error?.response?.data?.message
-  }
-
-  console.error(message, errorVar)
-  throw `${message} ${errorVar}`
-}
-const errorHandling = (member) => {
-  if (!member.email) {
-    throw `${member.firstName} ${member.lastName} does not have a valid email address. Please add an email address and then try again`
-  }
-  return
-}
-const rearrangeCypherObject = (response) => {
-  let member = {}
-
-  response.records[0]?.keys.forEach(
-    (key, i) => (member[key] = response.records[0]._fields[i])
-  )
-
-  return member?.member || member
-}
-const parseForCache = (servant, church, verb, role) => {
-  //Returning the data such that it can update apollo cache
-  servant[`${verb}`].push({
-    id: church.id,
-    [`${role}`]: {
-      id: servant.id,
-      firstName: servant.firstName,
-      lastName: servant.lastName,
-    },
-  })
-
-  servant[`${verb}`].map((church) => {
-    church[`${role}`] = {
-      id: servant.id,
-      firstName: servant.firstName,
-      lastName: servant.lastName,
-    }
-  })
-
-  return servant
-}
-
 const getTokenConfig = {
   method: 'post',
   url: `${process.env.AUTH0_BASE_URL}oauth/token`,
@@ -184,117 +130,6 @@ axios(getTokenConfig)
     console.error('There was an error obtaining auth token', err?.data ?? err)
   )
 
-const createAuthUserConfig = (member) => ({
-  method: 'post',
-  baseURL: process.env.AUTH0_BASE_URL,
-  url: `/api/v2/users`,
-  headers: {
-    autho: '',
-    Authorization: `Bearer ${authToken}`,
-  },
-  data: {
-    connection: `flcadmin${process.env.TEST_ENV ? '-test' : ''}`,
-    email: member.email,
-    given_name: member.firstName,
-    family_name: member.lastName,
-    name: `${member.firstName} ${member.lastName}`,
-    picture:
-      member.pictureUrl ||
-      'https://res.cloudinary.com/firstlovecenter/image/upload/v1627893621/user_qvwhs7.png',
-    user_id: member.id,
-    password: 'rAndoMLetteRs',
-  },
-})
-
-const updateAuthUserConfig = (member) => ({
-  method: 'patch',
-  baseURL: process.env.AUTH0_BASE_URL,
-  url: `/api/v2/users/${member.auth_id}`,
-  headers: {
-    autho: '',
-    Authorization: `Bearer ${authToken}`,
-  },
-  data: {
-    connection: `flcadmin${process.env.TEST_ENV ? '-test' : ''}`,
-    email: member.email,
-    given_name: member.firstName,
-    family_name: member.lastName,
-    name: `${member.firstName} ${member.lastName}`,
-    picture:
-      member.pictureUrl ||
-      'https://raw.githubusercontent.com/jaedag/fl-admin-portal/deploy/web-react/src/assets/user.png',
-  },
-})
-
-const changePasswordConfig = (member) => ({
-  method: 'post',
-  baseURL: process.env.AUTH0_BASE_URL,
-  url: `/api/v2/tickets/password-change`,
-  headers: {
-    autho: '',
-    Authorization: `Bearer ${authToken}`,
-  },
-
-  data: {
-    connection_id: process.env.AUTH0_DB_CONNECTION_ID,
-    email: member.email,
-    mark_email_as_verified: true,
-  },
-})
-
-const deleteAuthUserConfig = (memberId) => ({
-  method: 'delete',
-  baseURL: process.env.AUTH0_BASE_URL,
-  url: `/api/v2/users/${memberId}`,
-  headers: {
-    autho: '',
-    Authorization: `Bearer ${authToken}`,
-  },
-})
-
-const getAuthIdConfig = (member) => ({
-  method: 'get',
-  baseURL: process.env.AUTH0_BASE_URL,
-  url: `/api/v2/users-by-email?email=${member.email}`,
-  headers: {
-    autho: '',
-    Authorization: `Bearer ${authToken}`,
-  },
-})
-const getUserRoles = (memberId) => ({
-  method: 'get',
-  baseURL: process.env.AUTH0_BASE_URL,
-  url: `/api/v2/users/${memberId}/roles`,
-  headers: {
-    autho: '',
-    Authorization: `Bearer ${authToken}`,
-  },
-})
-const setUserRoles = (memberId, roles) => ({
-  method: 'post',
-  baseURL: process.env.AUTH0_BASE_URL,
-  url: `/api/v2/users/${memberId}/roles`,
-  headers: {
-    autho: '',
-    Authorization: `Bearer ${authToken}`,
-  },
-  data: {
-    roles: roles,
-  },
-})
-const deleteUserRoles = (memberId, roles) => ({
-  method: 'delete',
-  baseURL: process.env.AUTH0_BASE_URL,
-  url: `/api/v2/users/${memberId}/roles`,
-  headers: {
-    autho: '',
-    Authorization: `Bearer ${authToken}`,
-  },
-  data: {
-    roles: roles,
-  },
-})
-
 const assignRoles = (servant, userRoles, rolesToAssign) => {
   const userRoleIds = userRoles.map((role) => authRoles[role].id)
   const nameOfRoles = Object.entries(authRoles)
@@ -315,7 +150,7 @@ const assignRoles = (servant, userRoles, rolesToAssign) => {
 
   //An assign roles function to simplify assigning roles with an axios request
   if (!userRoleIds.includes(rolesToAssign[0])) {
-    return axios(setUserRoles(servant.auth_id, rolesToAssign))
+    return axios(auth0.setUserRoles(servant.auth_id, rolesToAssign, authToken))
       .then(() =>
         console.log(
           nameOfRoles[0],
@@ -331,7 +166,9 @@ const removeRoles = (servant, userRoles, rolesToRemove) => {
 
   //A remove roles function to simplify removing roles with an axios request
   if (userRoleIds.includes(rolesToRemove)) {
-    return axios(deleteUserRoles(servant.auth_id, [rolesToRemove]))
+    return axios(
+      auth0.deleteUserRoles(servant.auth_id, [rolesToRemove], authToken)
+    )
       .then(() =>
         console.log(
           `Role successfully removed for ${servant.firstName} ${servant.lastName}`
@@ -350,7 +187,8 @@ const MakeServant = async (
   servantType
 ) => {
   //Set Up
-  const churchLower = churchType.toLowerCase()
+  let churchLower = churchType.toLowerCase().replace('arrivals', '')
+
   const servantLower = servantType.toLowerCase()
   isAuth(permittedRoles, context.auth.roles)
   noEmptyArgsValidation([
@@ -371,9 +209,7 @@ const MakeServant = async (
     id: args[`${churchLower}Id`],
   })
   const church = rearrangeCypherObject(churchResponse)
-  const churchInEmail = church.name
-    ? `${church.name} ${church.type[0]}`
-    : `Bishop ${church.firstName} ${church.lastName}`
+  const churchInEmail = `${church.name} ${church.type[0]}`
 
   const servantResponse = await session.run(cypher.matchMemberQuery, {
     id: args[`${servantLower}Id`],
@@ -383,14 +219,18 @@ const MakeServant = async (
   errorHandling(servant)
 
   //Check for AuthID of servant
-  const authIdResponse = await axios(getAuthIdConfig(servant))
+  const authIdResponse = await axios(auth0.getAuthIdConfig(servant, authToken))
   servant.auth_id = authIdResponse.data[0]?.user_id
 
   if (!servant.auth_id) {
     try {
       //If servant Does Not Have Auth0 Profile, Create One
-      const authProfileResponse = await axios(createAuthUserConfig(servant))
-      const passwordTicketResponse = await axios(changePasswordConfig(servant))
+      const authProfileResponse = await axios(
+        auth0.createAuthUserConfig(servant, authToken)
+      )
+      const passwordTicketResponse = await axios(
+        auth0.changePasswordConfig(servant, authToken)
+      )
       // Send Mail to the Person after Password Change Ticket has been generated
       notifyMember(
         servant,
@@ -412,7 +252,7 @@ const MakeServant = async (
       )
 
       //Write Auth0 ID of Leader to Neo4j DB
-      await session.run(cypher[`make${churchType}${servantType}`], {
+      await session.run(servantCypher[`make${churchType}${servantType}`], {
         [`${servantLower}Id`]: servant.id,
         [`${churchLower}Id`]: church.id,
         auth_id: servant.auth_id,
@@ -423,15 +263,17 @@ const MakeServant = async (
     }
   } else if (servant.auth_id) {
     //Update a user's Auth Profile with Picture and Name Details
-    await axios(updateAuthUserConfig(servant))
+    await axios(auth0.updateAuthUserConfig(servant, authToken))
 
     //Check auth0 roles and add roles 'leaderBacenta'
-    const userRoleResponse = await axios(getUserRoles(servant.auth_id))
+    const userRoleResponse = await axios(
+      auth0.getUserRoles(servant.auth_id, authToken)
+    )
     const roles = userRoleResponse.data.map((role) => role.name)
 
     assignRoles(servant, roles, [authRoles[`${servantLower}${churchType}`].id])
     //Write Auth0 ID of Admin to Neo4j DB
-    await session.run(cypher[`make${churchType}${servantType}`], {
+    await session.run(servantCypher[`make${churchType}${servantType}`], {
       [`${servantLower}Id`]: servant.id,
       [`${churchLower}Id`]: church.id,
       auth_id: servant.auth_id,
@@ -467,7 +309,8 @@ const RemoveServant = async (
   servantType
 ) => {
   //Set Up
-  const churchLower = churchType.toLowerCase()
+  let churchLower = churchType.toLowerCase().replace('arrivals', '')
+
   const servantLower = servantType.toLowerCase()
   isAuth(permittedRoles, context.auth.roles)
   noEmptyArgsValidation([
@@ -539,12 +382,14 @@ const RemoveServant = async (
   }
 
   //Check auth0 roles and remove roles 'leaderBacenta'
-  const userRoleResponse = await axios(getUserRoles(servant.auth_id))
+  const userRoleResponse = await axios(
+    auth0.getUserRoles(servant.auth_id, authToken)
+  )
   const roles = userRoleResponse.data.map((role) => role.name)
 
   //If the person is only a constituency Admin, delete auth0 profile
   if (roles.includes(`${servantLower}${churchType}`) && roles.length === 1) {
-    await axios(deleteAuthUserConfig(servant.auth_id))
+    await axios(auth0.deleteAuthUserConfig(servant.auth_id, authToken))
 
     console.log(
       `Auth0 Account successfully deleted for ${servant.firstName} ${servant.lastName}`
@@ -589,25 +434,6 @@ const RemoveServant = async (
   return parseForCache(servant, church, verb, servantLower)
 }
 
-const getComponentServiceAggregates = async (obj, context) => {
-  let serviceAggregates = []
-
-  const session = context.driver.session()
-  const serviceAggregateResponse = await session.run(
-    cypher.getComponentServiceAggregates,
-    obj
-  )
-
-  serviceAggregateResponse.records.map((record) => {
-    let serviceAggregate = {}
-
-    record.keys.forEach((key, i) => (serviceAggregate[key] = record._fields[i]))
-    serviceAggregates.push(serviceAggregate)
-  })
-
-  return serviceAggregates
-}
-
 export const resolvers = {
   // Resolver Parameters
   // Object: the parent result of a previous resolver
@@ -617,31 +443,6 @@ export const resolvers = {
   Member: {
     fullName: (obj) => {
       return `${obj.firstName} ${obj.lastName}`
-    },
-  },
-  Bacenta: {
-    componentServiceAggregate: async (obj, args, context) => {
-      return getComponentServiceAggregates(obj, context)
-    },
-  },
-  Constituency: {
-    componentServiceAggregate: (obj, args, context) => {
-      return getComponentServiceAggregates(obj, context)
-    },
-  },
-  Council: {
-    componentServiceAggregate: (obj, args, context) => {
-      return getComponentServiceAggregates(obj, context)
-    },
-  },
-  Stream: {
-    componentServiceAggregate: (obj, args, context) => {
-      return getComponentServiceAggregates(obj, context)
-    },
-  },
-  GatheringService: {
-    componentServiceAggregate: (obj, args, context) => {
-      return getComponentServiceAggregates(obj, context)
     },
   },
 
@@ -712,7 +513,7 @@ export const resolvers = {
 
       try {
         const fellowshipCheckResponse = await session.run(
-          cypher.checkFellowshipHasNoMembers,
+          closeChurchCypher.checkFellowshipHasNoMembers,
           args
         )
         const fellowshipCheck = rearrangeCypherObject(fellowshipCheckResponse)
@@ -738,7 +539,7 @@ export const resolvers = {
         )
 
         const closeFellowshipResponse = await session.run(
-          cypher.closeDownFellowship,
+          closeChurchCypher.closeDownFellowship,
           {
             auth: context.auth,
             fellowshipId: args.fellowshipId,
@@ -770,7 +571,7 @@ export const resolvers = {
 
       try {
         const bacentaCheckResponse = await session.run(
-          cypher.checkBacentaHasNoMembers,
+          closeChurchCypher.checkBacentaHasNoMembers,
           args
         )
         const bacentaCheck = rearrangeCypherObject(bacentaCheckResponse)
@@ -796,7 +597,7 @@ export const resolvers = {
         )
 
         const closeBacentaResponse = await session.run(
-          cypher.closeDownBacenta,
+          closeChurchCypher.closeDownBacenta,
           {
             auth: context.auth,
             bacentaId: args.bacentaId,
@@ -809,6 +610,8 @@ export const resolvers = {
         throwErrorMsg(error)
       }
     },
+
+    //Administrative Mutations
     MakeStreamAdmin: async (object, args, context) => {
       return MakeServant(
         context,
@@ -863,6 +666,8 @@ export const resolvers = {
         'Admin'
       )
     },
+
+    //Pastoral Mutations
     MakeFellowshipLeader: async (object, args, context) => {
       return MakeServant(
         context,
@@ -1017,6 +822,21 @@ export const resolvers = {
         ['adminGatheringService'],
         'GatheringService',
         'Leader'
+      )
+    },
+    //Arrivals Mutations
+    MakeConstituencyArrivalsAdmin: async (object, args, context) => {
+      return MakeServant(
+        context,
+        args,
+        [
+          'adminGatheringService',
+          'adminStream',
+          'adminCouncil',
+          'adminConstituency',
+        ],
+        'ConstituencyArrivals',
+        'Admin'
       )
     },
   },

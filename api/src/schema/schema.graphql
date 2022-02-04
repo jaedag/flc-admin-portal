@@ -1,0 +1,56 @@
+#Query Definitions
+type Query {
+  currentUser(id: ID): Member
+    @cypher(
+      statement: "MATCH (member:Member {auth_id: $auth.jwt.sub}) RETURN member"
+    )
+    @auth(rules: [{ isAuthenticated: true }])
+
+  memberByEmail(email: String!): Member
+    @cypher(
+      statement: "MATCH (member:Member {email:$email}) RETURN member LIMIT 1"
+    )
+}
+
+#Mutation Definitions
+type Mutation {
+  #CHURCH CONVERSIONS
+  MakeFellowshipIntoBacenta(fellowshipId: ID!): Bacenta
+    @cypher(
+      statement: """
+      MATCH (fellowship:Fellowship {id:$fellowshipId})
+      MATCH (admin:Member {auth_id: $auth.jwt.sub})
+      CREATE (newFellowship:Fellowship {id:apoc.create.uuid()})
+       SET newFellowship.name = fellowship.name,
+       newFellowship.location = fellowship.location
+      CREATE (log:HistoryLog {id:apoc.create.uuid()})
+        SET log.timeStamp = datetime(),
+        log.historyRecord = fellowship.name + ' was made into a Bacenta with '+ newFellowship.name+' as a fellowship under it.'
+
+      WITH newFellowship, log, fellowship
+      MATCH (fellowship)<-[hasFellowship:HAS]-(:Bacenta)<-[:HAS]-(constituency)
+      MATCH (fellowship)-[meetsOnDay:MEETS_ON]->(meetingDay)
+      MATCH (fellowship)<-[belongsTo:BELONGS_TO]-(member:Member)
+      MATCH (fellowship)<-[:LEADS]-(leader:Member)
+
+      MERGE (date:TimeGraph {date:date()})
+      MERGE (constituency)-[:HAS]->(fellowship)
+      MERGE (newFellowship)-[:MEETS_ON]->(meetingDay)
+      MERGE (newFellowship)<-[:LEADS]-(leader)
+      MERGE (member)-[:BELONGS_TO]->(newFellowship)
+      MERGE (fellowship)-[:HAS]->(newFellowship)
+
+      DELETE hasFellowship,meetsOnDay,belongsTo
+
+      MERGE (log)-[:RECORDED_ON]->(date)
+      MERGE (log)-[:LOGGED_BY]->(admin)
+      MERGE (fellowship)-[:HAS_HISTORY]->(log)
+      MERGE (newFellowship)-[:HAS_HISTORY]->(log)
+
+      SET fellowship:Bacenta
+      REMOVE fellowship.location
+      REMOVE fellowship:Fellowship
+      RETURN fellowship
+      """
+    )
+}

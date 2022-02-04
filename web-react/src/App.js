@@ -53,7 +53,10 @@ const PastorsAdmin = () => {
     sessionStorage.getItem('fellowshipId') ?? ''
   )
   const [serviceRecordId, setServiceRecordId] = useState(
-    sessionStorage.getItem('serviceRecordsId') ?? ''
+    sessionStorage.getItem('serviceRecordId') ?? ''
+  )
+  const [bussingRecordId, setBussingRecordId] = useState(
+    sessionStorage.getItem('bussingRecordId') ?? ''
   )
 
   const [sontaId, setSontaId] = useState(
@@ -97,7 +100,7 @@ const PastorsAdmin = () => {
   }
 
   const determineStream = (card) => {
-    setChurch({ church: card.stream_name, subChurch: 'bacenta' })
+    setChurch({ church: card?.stream_name, subChurch: 'bacenta' })
     sessionStorage.setItem(
       'church',
       JSON.stringify({
@@ -329,6 +332,14 @@ const PastorsAdmin = () => {
         setSontaId(card.sonta.id)
         sessionStorage.setItem('sontaId', card.sonta.id)
         break
+      case 'ServiceRecord':
+        setServiceRecordId(card.id)
+        sessionStorage.setItem('serviceRecordId', card.id)
+        break
+      case 'BussingRecord':
+        setBussingRecordId(card.id)
+        sessionStorage.setItem('bussingRecordId', card.id)
+        break
       default:
         break
     }
@@ -391,7 +402,12 @@ const PastorsAdmin = () => {
         >
           <SearchContext.Provider value={{ searchKey, setSearchKey }}>
             <ServiceContext.Provider
-              value={{ setServiceRecordId, serviceRecordId }}
+              value={{
+                serviceRecordId,
+                setServiceRecordId,
+                bussingRecordId,
+                setBussingRecordId,
+              }}
             >
               <SetPermissions>
                 <Navigation />

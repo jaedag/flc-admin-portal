@@ -4,6 +4,19 @@ export const PHONE_NUM_REGEX_VALIDATION =
 export const DECIMAL_NUM_REGEX = /^-?\d*\.{1}\d*$/
 export const DECIMAL_NUM_REGEX_POSITIVE_ONLY = /^\d*\.{1}\d*$/
 export const DEBOUNCE_TIMER = 500
+export const ARRIVALS_CUTOFF = [14, 30, 0]
+
+export const getTime = (time) => {
+  return time.getHours() + ':' + time.getMinutes() + ':' + time.getSeconds()
+}
+export const setTime = (timeArray) => {
+  let now = new Date()
+  now.setHours(timeArray[0])
+  now.setMinutes(timeArray[1])
+  now.setMilliseconds(timeArray[2])
+
+  return now
+}
 
 export const GENDER_OPTIONS = [
   { key: 'Male', value: 'Male' },
@@ -59,126 +72,6 @@ export const authorisedLink = (currentUser, permittedRoles, link) => {
     return link
   }
   return '#'
-}
-
-export const permitMeAndThoseAbove = (churchType) => {
-  let permittedFor = []
-  switch (churchType) {
-    case 'Fellowship':
-      permittedFor = [
-        'adminGatheringService',
-        'adminStream',
-        'adminCouncil',
-        'adminConstituency',
-        'leaderGatheringService',
-        'leaderStream',
-        'leaderCouncil',
-        'leaderConstituency',
-        'leaderBacenta',
-        'leaderFellowship',
-      ]
-      break
-    case 'Bacenta':
-      permittedFor = [
-        'adminGatheringService',
-        'adminStream',
-        'adminCouncil',
-        'adminConstituency',
-        'leaderGatheringService',
-        'leaderStream',
-        'leaderCouncil',
-        'leaderConstituency',
-        'leaderBacenta',
-      ]
-      break
-    case 'Sonta':
-      permittedFor = [
-        'adminGatheringService',
-        'adminStream',
-        'adminCouncil',
-        'adminConstituency',
-        'leaderGatheringService',
-        'leaderStream',
-        'leaderCouncil',
-        'leaderConstituency',
-        'leaderSonta',
-      ]
-      break
-    case 'Constituency':
-      permittedFor = [
-        'adminGatheringService',
-        'adminStream',
-        'adminCouncil',
-        'adminConstituency',
-        'leaderGatheringService',
-        'leaderStream',
-        'leaderCouncil',
-        'leaderConstituency',
-      ]
-      break
-    case 'Council':
-      permittedFor = [
-        'adminGatheringService',
-        'adminStream',
-        'adminCouncil',
-        'leaderGatheringService',
-        'leaderStream',
-        'leaderCouncil',
-      ]
-      break
-    case 'Stream':
-      permittedFor = [
-        'adminGatheringService',
-        'adminStream',
-        'leaderGatheringService',
-        'leaderStream',
-      ]
-      break
-    case 'GatheringService':
-      permittedFor = ['adminGatheringService', 'leaderGatheringService']
-      break
-    default:
-      permittedFor = []
-      break
-  }
-
-  return permittedFor
-}
-
-export const permitAdminAndThoseAbove = (churchType) => {
-  let permittedFor = []
-  switch (churchType) {
-    case 'Sonta':
-      permittedFor = [
-        'adminGatheringService',
-        'adminStream',
-        'adminCouncil',
-        'adminConstituency',
-      ]
-      break
-    case 'Constituency':
-      permittedFor = [
-        'adminGatheringService',
-        'adminStream',
-        'adminCouncil',
-        'adminConstituency',
-      ]
-      break
-    case 'Council':
-      permittedFor = ['adminGatheringService', 'adminStream', 'adminCouncil']
-      break
-    case 'Stream':
-      permittedFor = ['adminGatheringService', 'adminStream']
-      break
-    case 'GatheringService':
-      permittedFor = ['adminGatheringService']
-      break
-    default:
-      permittedFor = []
-      break
-  }
-
-  return permittedFor
 }
 
 export const transformCloudinaryImg = (url, size) => {
@@ -530,4 +423,182 @@ export const last3Weeks = () => {
   const last2Weeks = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000)
 
   return [getWeekNumber(), getWeekNumber(lastWeek), getWeekNumber(last2Weeks)]
+}
+
+//Permissions Things
+export const permitMeAndThoseAbove = (churchType) => {
+  let permittedFor = []
+  switch (churchType) {
+    case 'Fellowship':
+      permittedFor = [
+        'adminGatheringService',
+        'adminStream',
+        'adminCouncil',
+        'adminConstituency',
+        'adminConstituencyArrivals',
+        'leaderGatheringService',
+        'leaderStream',
+        'leaderCouncil',
+        'leaderConstituency',
+        'leaderBacenta',
+        'leaderFellowship',
+      ]
+      break
+    case 'Bacenta':
+      permittedFor = [
+        'adminGatheringService',
+        'adminStream',
+        'adminCouncil',
+        'adminConstituency',
+        'adminConstituencyArrivals',
+        'leaderGatheringService',
+        'leaderStream',
+        'leaderCouncil',
+        'leaderConstituency',
+        'leaderBacenta',
+      ]
+      break
+    case 'Sonta':
+      permittedFor = [
+        'adminGatheringService',
+        'adminStream',
+        'adminCouncil',
+        'adminConstituency',
+        'adminConstituencyArrivals',
+        'leaderGatheringService',
+        'leaderStream',
+        'leaderCouncil',
+        'leaderConstituency',
+        'leaderSonta',
+      ]
+      break
+    case 'Constituency':
+      permittedFor = [
+        'adminGatheringService',
+        'adminStream',
+        'adminCouncil',
+        'adminConstituency',
+        'adminConstituencyArrivals',
+        'leaderGatheringService',
+        'leaderStream',
+        'leaderCouncil',
+        'leaderConstituency',
+      ]
+      break
+    case 'Council':
+      permittedFor = [
+        'adminGatheringService',
+        'adminStream',
+        'adminCouncil',
+        'leaderGatheringService',
+        'leaderStream',
+        'leaderCouncil',
+      ]
+      break
+    case 'Stream':
+      permittedFor = [
+        'adminGatheringService',
+        'adminStream',
+        'leaderGatheringService',
+        'leaderStream',
+      ]
+      break
+    case 'GatheringService':
+      permittedFor = ['adminGatheringService', 'leaderGatheringService']
+      break
+    default:
+      permittedFor = []
+      break
+  }
+
+  return permittedFor
+}
+
+export const permitAdminAndThoseAbove = (churchType) => {
+  let permittedFor = []
+  switch (churchType) {
+    case 'Sonta':
+      permittedFor = [
+        'adminGatheringService',
+        'adminStream',
+        'adminCouncil',
+        'adminConstituency',
+      ]
+      break
+    case 'Constituency':
+      permittedFor = [
+        'adminGatheringService',
+        'adminStream',
+        'adminCouncil',
+        'adminConstituency',
+      ]
+      break
+    case 'Council':
+      permittedFor = ['adminGatheringService', 'adminStream', 'adminCouncil']
+      break
+    case 'Stream':
+      permittedFor = ['adminGatheringService', 'adminStream']
+      break
+    case 'GatheringService':
+      permittedFor = ['adminGatheringService']
+      break
+    default:
+      permittedFor = []
+      break
+  }
+
+  return permittedFor
+}
+
+export const permitArrivalsAndThoseAbove = (churchType) => {
+  let permittedFor = []
+  switch (churchType) {
+    case 'Bacenta':
+      permittedFor = [
+        'adminGatheringService',
+        'adminStream',
+        'adminStreamArrivals',
+        'adminCouncil',
+        'adminCouncilArrivals',
+        'adminConstituency',
+        'adminConstituencyArrivals',
+        'leaderBacenta',
+      ]
+      break
+    case 'Constituency':
+      permittedFor = [
+        'adminGatheringService',
+        'adminStream',
+        'adminStreamArrivals',
+        'adminCouncil',
+        'adminCouncilArrivals',
+        'adminConstituency',
+        'adminConstituencyArrivals',
+      ]
+      break
+    case 'Council':
+      permittedFor = [
+        'adminGatheringService',
+        'adminStream',
+        'adminStreamArrivals',
+        'adminCouncil',
+        'adminCouncilArrivals',
+      ]
+      break
+    case 'Stream':
+      permittedFor = [
+        'adminGatheringService',
+        'adminStream',
+        'adminStreamArrivals',
+      ]
+      break
+    case 'GatheringService':
+      permittedFor = ['adminGatheringService']
+      break
+    default:
+      permittedFor = []
+      break
+  }
+
+  return permittedFor
 }

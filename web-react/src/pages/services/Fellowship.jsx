@@ -25,7 +25,7 @@ const Fellowship = () => {
             iconComponent={PencilSquare}
             title="Fill Service Form"
             color="members"
-            onClick={() => navigate(`/services/fellowship/form`)}
+            onClick={() => navigate(`/fellowship/record-service`)}
             noCaption
           />
           <MenuButton

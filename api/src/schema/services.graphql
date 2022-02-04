@@ -1,0 +1,169 @@
+type ServiceDay @auth(rules: [{ isAuthenticated: true }]) {
+  day: String!
+  dayNumber: Int
+  fellowship: Fellowship @relationship(type: "MEETS_ON", direction: IN)
+}
+
+interface Record {
+  id: ID!
+  created_at: Date!
+  created_by: Member! @relationship(type: "LOGGED_BY", direction: OUT)
+}
+
+type ServiceRecord implements Record @auth(rules: [{ isAuthenticated: true }]) {
+  id: ID!
+  created_at: Date!
+  created_by: Member!
+  serviceDate: TimeGraph @relationship(type: "SERVICE_HELD_ON", direction: OUT)
+  week: Int
+    @cypher(
+      statement: """
+      MATCH (this)-[:SERVICE_HELD_ON]->(date:TimeGraph)
+      RETURN date(date.date).week
+      """
+    )
+  attendance: Int
+  income: Float
+  foreignCurrency: String
+  servicePicture: String
+  treasurerSelfie: String
+  bankingSlip: String
+  treasurers: [Member]! @relationship(type: "WAS_TREASURER_FOR", direction: IN)
+  serviceLog: ServiceLog @relationship(type: "HAS_SERVICE", direction: IN)
+  noServiceReason: String
+}
+
+type NoService implements Record @auth(rules: [{ isAuthenticated: true }]) {
+  id: ID!
+  created_at: Date!
+  created_by: Member!
+  serviceDate: TimeGraph @relationship(type: "SERVICE_HELD_ON", direction: OUT)
+  week: Int
+    @cypher(
+      statement: """
+      MATCH (this)-[:SERVICE_HELD_ON]->(date:TimeGraph)
+      RETURN date(date.date).week
+      """
+    )
+  serviceLog: ServiceLog @relationship(type: "HAS_SERVICE", direction: IN)
+  noServiceReason: String
+}
+
+type ServiceLog @auth(rules: [{ isAuthenticated: true }]) {
+  id: ID
+  historyRecord: String #leader was transferred to
+  created_at: TimeGraph @relationship(type: "RECORDED_ON", direction: OUT)
+  loggedBy: Member @relationship(type: "LOGGED_BY", direction: OUT)
+  serviceRecords: [ServiceRecord]
+    @relationship(type: "HAS_SERVICE", direction: OUT)
+  bussingRecords: [BussingRecord]
+    @relationship(type: "HAS_BUSSING", direction: OUT)
+  leaders: [Member] @relationship(type: "HAS_HISTORY", direction: IN)
+  fellowship: [Fellowship] @relationship(type: "HAS_HISTORY", direction: IN)
+  bacenta: [Bacenta] @relationship(type: "HAS_HISTORY", direction: IN)
+  # bacentaFellowshipRecords(bacentaId: ID!): [BacentaFellowshipServiceRecords]
+  constituency: [Constituency] @relationship(type: "HAS_HISTORY", direction: IN)
+  council: [Council] @relationship(type: "HAS_HISTORY", direction: IN)
+  sonta: [Sonta] @relationship(type: "HAS_HISTORY", direction: IN)
+}
+
+type ComponentServiceAggregate {
+  week: Int!
+  attendance: Int!
+  income: Float!
+}
+
+extend type Mutation {
+  RecordService(
+    id: ID!
+    serviceDate: String!
+    attendance: Int!
+    income: Float!
+    foreignCurrency: String
+    numberOfTithers: Int
+    treasurers: [ID]!
+    treasurerSelfie: String!
+    servicePicture: String!
+  ): ServiceRecord
+    @cypher(
+      statement: """
+      CREATE (serviceRecord:ServiceRecord {created_at:datetime()})
+        SET serviceRecord.id = apoc.create.uuid(),
+        serviceRecord.attendance = $attendance,
+        serviceRecord.income = $income,
+        serviceRecord.foreignCurrency = $foreignCurrency,
+        serviceRecord.numberOfTithers = $numberOfTithers,
+        serviceRecord.treasurerSelfie = $treasurerSelfie,
+        serviceRecord.servicePicture = $servicePicture
+      WITH serviceRecord
+
+      MATCH (church {id:$id}) WHERE church:Fellowship OR church:Bacenta OR church:Constituency OR church:Council OR church:Stream
+      MATCH (church)-[has_history:HAS_HISTORY]->(log:HistoryLog) WHERE has_history.current = true
+
+      MATCH (leader:Member {auth_id: $auth.jwt.sub})
+
+      MERGE (serviceRecord)-[:LOGGED_BY]->(leader)
+      MERGE (serviceDate:TimeGraph {date:date($serviceDate)})
+      MERGE (serviceRecord)-[:SERVICE_HELD_ON]->(serviceDate)
+      MERGE (log)-[:HAS_SERVICE]->(serviceRecord)
+
+      WITH serviceRecord
+      UNWIND $treasurers AS treasurerId WITH treasurerId, serviceRecord
+      MATCH (treasurer:Member {id: treasurerId})
+      MERGE (treasurer)-[:WAS_TREASURER_FOR]->(serviceRecord)
+
+      RETURN serviceRecord
+      """
+    )
+
+  RecordCancelledService(
+    id: ID!
+    serviceDate: String!
+    noServiceReason: String!
+  ): NoService
+    @cypher(
+      statement: """
+      CREATE (serviceRecord:ServiceRecord:NoService {created_at:datetime()})
+        SET serviceRecord.id = apoc.create.uuid(),
+        serviceRecord.noServiceReason = $noServiceReason
+
+      WITH serviceRecord
+      MATCH (church {id:$id}) WHERE church:Fellowship OR church:Bacenta OR church:Constituency OR church:Council
+      MATCH (church)-[has_history:HAS_HISTORY]->(log:HistoryLog) WHERE has_history.current = true
+      MATCH (leader:Member {auth_id: $auth.jwt.sub})
+
+      MERGE (serviceRecord)-[:LOGGED_BY]->(leader)
+      MERGE (serviceDate:TimeGraph {date:date($serviceDate)})
+      MERGE (serviceRecord)-[:SERVICE_HELD_ON]->(serviceDate)
+      MERGE (log)-[:HAS_SERVICE]->(serviceRecord)
+
+      RETURN serviceRecord
+      """
+    )
+
+  RecordServiceNoOffering(
+    id: ID!
+    serviceDate: String!
+    attendance: Int!
+    servicePicture: String!
+  ): ServiceRecord
+    @cypher(
+      statement: """
+      CREATE (serviceRecord:ServiceRecord {created_at:datetime()})
+        SET serviceRecord.id = apoc.create.uuid(),
+        serviceRecord.attendance = $attendance,
+        serviceRecord.servicePicture = $servicePicture
+      WITH serviceRecord
+      MATCH (church {id:$id}) WHERE church:Fellowship OR church:Bacenta OR church:Sonta OR church:Constituency
+      MATCH (church)-[has_history:HAS_HISTORY]->(log:HistoryLog) WHERE has_history.current = true
+      MATCH (leader:Member {auth_id: $auth.jwt.sub})
+
+      MERGE (serviceRecord)-[:LOGGED_BY]->(leader)
+      MERGE (serviceDate:TimeGraph {date:date($serviceDate)})
+      MERGE (serviceRecord)-[:SERVICE_HELD_ON]->(serviceDate)
+      MERGE (log)-[:HAS_SERVICE]->(serviceRecord)
+
+      RETURN serviceRecord
+      """
+    )
+}

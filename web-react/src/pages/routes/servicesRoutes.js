@@ -13,8 +13,8 @@ import CouncilReport from 'pages/services/reports/CouncilReport'
 import FellowshipReport from 'pages/services/reports/FellowshipReport'
 import SontaReport from 'pages/services/reports/SontaReport'
 import BacentaJoint from 'pages/services/BacentaJoint'
-import BankingSlipSubmission from 'pages/services/BankingSlipSubmission'
-import FellowshipBankingSlipView from 'pages/services/FellowshipBankingSlipView'
+import FellowshipBankingSlipSubmission from 'pages/services/banking-slip/FellowshipSubmission'
+import FellowshipBankingSlipView from 'pages/services/banking-slip/FellowshipView'
 import ConstituencyJoint from 'pages/services/ConstituencyJoint'
 import Banked from 'pages/services/defaulters/Banked'
 import BankingDefaulters from 'pages/services/defaulters/BankingDefaulters'
@@ -31,7 +31,12 @@ import GatheringServiceReport from 'pages/services/reports/GatheringServiceRepor
 import StreamByCouncil from 'pages/services/defaulters/StreamByCouncil'
 import GatheringServiceByStream from 'pages/services/defaulters/GatheringServiceByStream'
 import { permitMeAndThoseAbove } from 'global-utils'
-import ConstituencyBankingSlipView from 'pages/services/ConstituencyBankingSlip'
+import ConstituencyBankingSlipView from 'pages/services/banking-slip/ConstituencyView'
+import ConstituencyBankingSlipSubmission from 'pages/services/banking-slip/ConstituencySubmission'
+import CouncilService from 'pages/services/record-service/CouncilService'
+import CouncilServiceDetails from 'pages/services/record-service/CouncilServiceDetails'
+import CouncilBankingSlipView from 'pages/services/banking-slip/CouncilView'
+import CouncilBankingSlipSubmission from 'pages/services/banking-slip/CouncilSubmission'
 
 export const services = [
   {
@@ -47,38 +52,28 @@ export const services = [
     placeholder: true,
   },
   {
-    path: '/services/fellowship',
+    path: '/fellowship/record-service',
     element: Fellowship,
-    roles: ['all'],
+    roles: permitMeAndThoseAbove('Fellowship'),
     placeholder: true,
   },
   {
     path: '/services/bacenta',
     element: BacentaJoint,
-    roles: [
-      'adminCouncil',
-      'adminConstituency',
-      'adminGatheringService',
-      'leaderBacenta',
-    ],
+    roles: permitMeAndThoseAbove('Bacenta'),
     placeholder: true,
   },
   {
     path: '/services/constituency',
     element: ConstituencyJoint,
-    roles: [
-      'adminCouncil',
-      'adminConstituency',
-      'adminGatheringService',
-      'leaderConstituency',
-    ],
+    roles: permitMeAndThoseAbove('Constituency'),
     placeholder: true,
   },
 
   {
     path: '/services/fellowship/banking-slips',
     element: FellowshipBankingSlipView,
-    roles: ['all'],
+    roles: ['leaderFellowship'],
     placeholder: true,
   },
   {
@@ -88,9 +83,27 @@ export const services = [
     placeholder: true,
   },
   {
-    path: '/services/banking-slip/submission',
-    element: BankingSlipSubmission,
-    roles: ['all'],
+    path: '/services/council/banking-slips',
+    element: CouncilBankingSlipView,
+    roles: permitMeAndThoseAbove('Council'),
+    placeholder: true,
+  },
+  {
+    path: '/fellowship/banking-slip/submission',
+    element: FellowshipBankingSlipSubmission,
+    roles: ['leaderFellowship'],
+    placeholder: true,
+  },
+  {
+    path: '/constituency/banking-slip/submission',
+    element: ConstituencyBankingSlipSubmission,
+    roles: ['leaderConstituency', 'adminConstituency'],
+    placeholder: true,
+  },
+  {
+    path: '/council/banking-slip/submission',
+    element: CouncilBankingSlipSubmission,
+    roles: ['leaderCouncil', 'adminCouncil', 'adminGatheringService'],
     placeholder: true,
   },
 ]
@@ -154,39 +167,9 @@ export const reports = [
     placeholder: true,
   },
   {
-    path: '/services/fellowship/form',
-    element: FellowshipService,
-    roles: [
-      'adminGatheringService',
-      'adminCouncil',
-      'adminConstituency',
-      'leaderFellowship',
-    ],
-    placeholder: false,
-  },
-  {
     path: '/fellowship/record-service',
     element: FellowshipService,
-    roles: [
-      'adminGatheringService',
-      'adminStream',
-      'adminCouncil',
-      'adminConstituency',
-      'leaderFellowship',
-    ],
-    placeholder: false,
-  },
-
-  {
-    path: '/bacenta/record-service',
-    element: BacentaService,
-    roles: [
-      'adminGatheringService',
-      'adminStream',
-      'adminCouncil',
-      'adminConstituency',
-      'leaderBacenta',
-    ],
+    roles: permitMeAndThoseAbove('Fellowship'),
     placeholder: false,
   },
 
@@ -206,6 +189,12 @@ export const reports = [
 
   //Bacenta Service Things
   {
+    path: '/bacenta/record-service',
+    element: BacentaService,
+    roles: permitMeAndThoseAbove('Bacenta'),
+    placeholder: false,
+  },
+  {
     path: '/bacenta/service-details',
     element: BacentaServiceDetails,
     roles: permitMeAndThoseAbove('Bacenta'),
@@ -223,6 +212,20 @@ export const reports = [
     path: '/constituency/service-details',
     element: ConstituencyServiceDetails,
     roles: permitMeAndThoseAbove('Constituency'),
+    placeholder: false,
+  },
+
+  //Council Services
+  {
+    path: '/council/record-service',
+    element: CouncilService,
+    roles: permitMeAndThoseAbove('Council'),
+    placeholder: false,
+  },
+  {
+    path: '/council/service-details',
+    element: CouncilServiceDetails,
+    roles: permitMeAndThoseAbove('Council'),
     placeholder: false,
   },
 

@@ -1,4 +1,7 @@
-import { permitMeAndThoseAbove } from 'global-utils'
+import {
+  permitArrivalsAndThoseAbove,
+  permitMeAndThoseAbove,
+} from 'global-utils'
 
 export const menuItems = [
   { name: 'Home', to: '/', roles: ['all'] },
@@ -20,7 +23,7 @@ export const menuItems = [
   {
     name: 'Arrivals',
     to: '/arrivals',
-    roles: permitMeAndThoseAbove('Bacenta'),
+    roles: permitArrivalsAndThoseAbove('Bacenta'),
   },
   {
     name: 'Campaigns',

@@ -22,7 +22,8 @@ const PageNotFound = () => {
         <h1 className="text-center text-secondary fw-bolder">404</h1>
         <h3 className="text-center text-secondary">Page Not Found</h3>
         <div className="text-center text-secondary px-2">
-          The page you are looking for does not exist.
+          The page you are looking for does not exist. It may be under
+          maintenance, or there may be some other problem.
         </div>
         <div className="text-center fixed-bottom pb-5">
           <Link to="/">Go back to the dashboard</Link>

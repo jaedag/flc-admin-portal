@@ -63,6 +63,7 @@ const CouncilReport = () => {
           stat1="attendance"
           stat2="income"
           churchData={churchData}
+          church="council"
         />
       </Container>
     </BaseComponent>

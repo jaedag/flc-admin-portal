@@ -51,6 +51,32 @@ export const CONSTITUENCY_BANKING_SLIP_QUERIES = gql`
   }
 `
 
+export const COUNCIL_BANKING_SLIP_QUERIES = gql`
+  query councilServices($councilId: ID) {
+    councils(where: { id: $councilId }) {
+      id
+
+      name
+      services(limit: 20) {
+        id
+        noServiceReason
+        created_at
+        serviceDate {
+          date
+        }
+        created_by {
+          id
+          firstName
+          lastName
+          fullName
+        }
+        bankingSlip
+        income
+      }
+    }
+  }
+`
+
 export const BANKING_SLIP_SUBMISSION = gql`
   mutation SubmitBankingSlip($serviceRecordId: ID!, $bankingSlip: String!) {
     updateServiceRecords(
@@ -104,6 +130,33 @@ export const CONSTITUENCY_SERVICE_RECORDS = gql`
       id
       serviceLog {
         constituency {
+          id
+          name
+        }
+      }
+      created_at
+      created_by {
+        id
+        firstName
+        lastName
+        fullName
+      }
+      serviceDate {
+        date
+      }
+      attendance
+      income
+      foreignCurrency
+    }
+  }
+`
+
+export const COUNCIL_SERVICE_RECORDS = gql`
+  query CouncilServiceRecords($serviceId: ID!) {
+    serviceRecords(where: { id: $serviceId }) {
+      id
+      serviceLog {
+        council {
           id
           name
         }

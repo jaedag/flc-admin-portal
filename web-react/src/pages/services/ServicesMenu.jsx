@@ -14,18 +14,21 @@ const Services = () => {
   const { currentUser, theme } = useContext(MemberContext)
   const navigate = useNavigate()
 
+  const church = currentUser.currentChurch
+  const churchType = currentUser.currentChurch?.__typename
+
   return (
     <div className="d-flex align-items-center justify-content-center ">
       <Container>
         <PlaceholderCustom xs={12} as="h1">
           <div className="text-center">
-            <h1 className="mb-0  page-header">{`${currentUser.currentChurch?.name} ${currentUser.currentChurch?.__typename}`}</h1>
+            <h1 className="mb-0  page-header">{`${church?.name} ${churchType}`}</h1>
             <p className={`${theme} menu-subheading`}>Services</p>
           </div>
         </PlaceholderCustom>
 
         <div className="d-grid gap-2 mt-5 text-left">
-          {currentUser.currentChurch?.__typename === 'Fellowship' && (
+          {churchType === 'Fellowship' && (
             <MenuButton
               iconComponent={Book}
               title="Fellowship Service"
@@ -34,7 +37,7 @@ const Services = () => {
               noCaption
             />
           )}
-          {currentUser.currentChurch?.__typename === 'Bacenta' && (
+          {churchType === 'Bacenta' && (
             <MenuButton
               iconComponent={Book}
               title="Bacenta Service"
@@ -43,13 +46,15 @@ const Services = () => {
               noCaption
             />
           )}
-          {currentUser.currentChurch?.__typename === 'Constituency' && (
+          {['Constituency', 'Council'].includes(churchType) && (
             <MenuButton
               iconComponent={Book}
-              title="Constituency Joint Service"
+              title={`${churchType} Joint Service`}
               color="members"
               noCaption
-              onClick={() => navigate(`/constituency/record-service`)}
+              onClick={() =>
+                navigate(`/${churchType.toLowerCase()}/record-service`)
+              }
             />
           )}
 
@@ -58,23 +63,16 @@ const Services = () => {
             title="Trends"
             color="members"
             noCaption
-            onClick={() =>
-              navigate(
-                `/${currentUser.currentChurch?.__typename.toLowerCase()}/reports`
-              )
-            }
+            onClick={() => navigate(`/${churchType.toLowerCase()}/reports`)}
           />
-          {(currentUser.currentChurch?.__typename === 'Fellowship' ||
-            currentUser.currentChurch?.__typename === 'Constituency') && (
+          {['Council', 'Constituency', 'Fellowship'].includes(churchType) && (
             <MenuButton
               iconComponent={FileEarmarkArrowUpFill}
               title="Banking Slips"
               color="members"
               noCaption
               onClick={() =>
-                navigate(
-                  `/services/${currentUser.currentChurch?.__typename.toLowerCase()}/banking-slips`
-                )
+                navigate(`/services/${churchType.toLowerCase()}/banking-slips`)
               }
             />
           )}

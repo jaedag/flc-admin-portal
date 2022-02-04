@@ -7,8 +7,8 @@ import React, { useContext } from 'react'
 import { Col, Container, Row, Button } from 'react-bootstrap'
 import {
   BANKING_SLIP_SUBMISSION,
-  CONSTITUENCY_SERVICE_RECORDS,
-} from './ServicesQueries'
+  COUNCIL_SERVICE_RECORDS,
+} from '../ServicesQueries'
 import { MemberContext } from 'contexts/MemberContext'
 import { useMutation, useQuery } from '@apollo/client'
 import HeadingSecondary from 'components/HeadingSecondary'
@@ -17,17 +17,17 @@ import { useNavigate } from 'react-router'
 import { ChurchContext } from 'contexts/ChurchContext'
 import { getHumanReadableDate } from 'global-utils'
 
-const ConstituencyBankingSlipSubmission = () => {
+const CouncilBankingSlipSubmission = () => {
   const { serviceRecordId } = useContext(ServiceContext)
   const { theme } = useContext(MemberContext)
-  const { setConstituencyId } = useContext(ChurchContext)
+  const { setCouncilId } = useContext(ChurchContext)
   const navigate = useNavigate()
 
-  const { data, loading, error } = useQuery(CONSTITUENCY_SERVICE_RECORDS, {
+  const { data, loading, error } = useQuery(COUNCIL_SERVICE_RECORDS, {
     variables: { serviceId: serviceRecordId },
   })
-  const constituency = data?.serviceRecords[0]?.serviceLog?.constituency[0]
-  setConstituencyId(constituency?.id)
+  const council = data?.serviceRecords[0]?.serviceLog?.council[0]
+  setCouncilId(council?.id)
   const initialValues = {
     bankingSlip: '',
   }
@@ -48,12 +48,12 @@ const ConstituencyBankingSlipSubmission = () => {
       onSubmitProps.setSubmitting(false)
       onSubmitProps.resetForm()
 
-      navigate(`/constituency/service-details`)
+      navigate(`/council/service-details`)
     })
   }
 
   return (
-    <BaseComponent loading={loading} error={error} data={data && constituency}>
+    <BaseComponent loading={loading} error={error} data={data && council}>
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
@@ -63,7 +63,7 @@ const ConstituencyBankingSlipSubmission = () => {
         {(formik) => (
           <Container>
             <HeadingPrimary>Banking Slip Submission</HeadingPrimary>
-            <HeadingSecondary>{constituency?.name}</HeadingSecondary>
+            <HeadingSecondary>{council?.name}</HeadingSecondary>
             <p>
               Date of Joint Service Code:{' '}
               {getHumanReadableDate(data.serviceRecords[0].serviceDate.date)}
@@ -103,4 +103,4 @@ const ConstituencyBankingSlipSubmission = () => {
   )
 }
 
-export default ConstituencyBankingSlipSubmission
+export default CouncilBankingSlipSubmission

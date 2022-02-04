@@ -8,7 +8,7 @@ import { Col, Container, Row, Button } from 'react-bootstrap'
 import {
   BANKING_SLIP_SUBMISSION,
   FELLOWSHIP_SERVICE_RECORDS,
-} from './ServicesQueries'
+} from '../ServicesQueries'
 import { MemberContext } from 'contexts/MemberContext'
 import { useMutation, useQuery } from '@apollo/client'
 import HeadingSecondary from 'components/HeadingSecondary'

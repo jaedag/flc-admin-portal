@@ -8,24 +8,24 @@ import React, { useContext } from 'react'
 import { Card, Col, Container, Row } from 'react-bootstrap'
 import { CheckCircleFill, XCircleFill } from 'react-bootstrap-icons'
 import { useNavigate } from 'react-router'
-import { CONSTITUENCY_BANKING_SLIP_QUERIES } from './ServicesQueries'
+import { COUNCIL_BANKING_SLIP_QUERIES } from '../ServicesQueries'
 
-const ConstituencyBankingSlipView = () => {
-  const { constituencyId } = useContext(ChurchContext)
+const CouncilBankingSlipView = () => {
+  const { councilId } = useContext(ChurchContext)
   const { setServiceRecordId } = useContext(ServiceContext)
   const navigate = useNavigate()
-  const { data, loading, error } = useQuery(CONSTITUENCY_BANKING_SLIP_QUERIES, {
-    variables: { constituencyId: constituencyId },
+  const { data, loading, error } = useQuery(COUNCIL_BANKING_SLIP_QUERIES, {
+    variables: { councilId: councilId },
   })
-  const constituency = data?.constituencies[0]
+  const council = data?.councils[0]
   const placeholder = ['', '', '']
   throwErrorMsg(error)
 
   return (
     <Container>
-      <HeadingPrimary loading={loading}>{constituency?.name}</HeadingPrimary>
+      <HeadingPrimary loading={loading}>{council?.name}</HeadingPrimary>
 
-      {data?.constituencies[0].services.map((service, index) => {
+      {data?.councils[0].services.map((service, index) => {
         if (service.noServiceReason) {
           return null
         }
@@ -37,7 +37,7 @@ const ConstituencyBankingSlipView = () => {
             onClick={() => {
               setServiceRecordId(service.id)
               !service.bankingSlip &&
-                navigate('/constituency/banking-slip/submission')
+                navigate('/council/banking-slip/submission')
             }}
           >
             <Card.Header>
@@ -89,4 +89,4 @@ const ConstituencyBankingSlipView = () => {
   )
 }
 
-export default ConstituencyBankingSlipView
+export default CouncilBankingSlipView

@@ -396,8 +396,6 @@ type GatheringService implements Church {
       RETURN COUNT(fellowships)
       """
     )
-
-  componentServiceAggregate: [ComponentServiceAggregate] @ignore
 }
 
 type Stream implements Church {
@@ -605,8 +603,6 @@ type Stream implements Church {
       RETURN COUNT(fellowships)
       """
     )
-
-  componentServiceAggregate: [ComponentServiceAggregate] @ignore
 }
 
 type Council implements Church {
@@ -805,8 +801,6 @@ type Council implements Church {
       RETURN COUNT(fellowships)
       """
     )
-
-  componentServiceAggregate: [ComponentServiceAggregate] @ignore
 }
 
 type Constituency implements Church {
@@ -997,8 +991,6 @@ type Constituency implements Church {
       RETURN COUNT(fellowships)
       """
     )
-
-  componentServiceAggregate: [ComponentServiceAggregate] @ignore
 }
 
 type Bacenta implements Church {
@@ -1098,7 +1090,6 @@ type Bacenta implements Church {
       RETURN council
       """
     )
-  componentServiceAggregate: [ComponentServiceAggregate] @ignore
 }
 
 # Shared Units: Fellowship, Fellowship, Sonta

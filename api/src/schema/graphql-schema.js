@@ -39,7 +39,7 @@ const campaigns = fs
   .readFileSync(path.join(__dirname, 'campaigns.graphql'))
   .toString('utf-8')
 
-export const typeDefs =
+exports.typeDefs =
   schema +
   ' ' +
   directory +

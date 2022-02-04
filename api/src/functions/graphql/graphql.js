@@ -2,8 +2,8 @@
 // as a lambda function
 
 const { ApolloServer } = require('apollo-server-lambda')
-import { Neo4jGraphQL } from '@neo4j/graphql'
-import { merge } from 'lodash'
+const { Neo4jGraphQL } = require('@neo4j/graphql')
+const { merge } = require('lodash')
 const neo4j = require('neo4j-driver')
 
 // This module is copied during the build step

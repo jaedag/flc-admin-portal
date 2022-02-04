@@ -1,6 +1,5 @@
 import { typeDefs } from './schema/graphql-schema'
 import { ApolloServer } from 'apollo-server-express'
-import { merge } from 'lodash'
 import express from 'express'
 import neo4j from 'neo4j-driver'
 import { Neo4jGraphQL } from '@neo4j/graphql'
@@ -26,7 +25,7 @@ const driver = neo4j.driver(
 
 const neoSchema = new Neo4jGraphQL({
   typeDefs,
-  resolvers: merge(resolvers, serviceResolvers),
+  resolvers: { ...resolvers, ...serviceResolvers },
   driver,
   config: {
     jwt: {

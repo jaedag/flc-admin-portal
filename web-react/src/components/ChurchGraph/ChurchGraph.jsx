@@ -26,7 +26,7 @@ const ChurchGraph = (props) => {
   useEffect(() => {
     setSortedData(
       churchData?.sort((a, b) => {
-        if (a.week - b.week < -1 || a.week - b.week > 1) {
+        if (a.week - b.week < -4 || a.week - b.week > 4) {
           return -1 * a.week - b.week
         }
 

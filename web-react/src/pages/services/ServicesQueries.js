@@ -31,7 +31,7 @@ export const CONSTITUENCY_BANKING_SLIP_QUERIES = gql`
       id
 
       name
-      services(limit: 12) {
+      services(limit: 20) {
         id
         noServiceReason
         created_at
@@ -70,8 +70,8 @@ export const BANKING_SLIP_SUBMISSION = gql`
   }
 `
 
-export const DISPLAY_SERVICE_RECORDS = gql`
-  query DisplayServiceRecords($serviceId: ID!) {
+export const FELLOWSHIP_SERVICE_RECORDS = gql`
+  query FellowshipServiceRecords($serviceId: ID!) {
     serviceRecords(where: { id: $serviceId }) {
       id
       serviceLog {
@@ -79,6 +79,33 @@ export const DISPLAY_SERVICE_RECORDS = gql`
           id
           name
           bankingCode
+        }
+      }
+      created_at
+      created_by {
+        id
+        firstName
+        lastName
+        fullName
+      }
+      serviceDate {
+        date
+      }
+      attendance
+      income
+      foreignCurrency
+    }
+  }
+`
+
+export const CONSTITUENCY_SERVICE_RECORDS = gql`
+  query ConstituencyServiceRecords($serviceId: ID!) {
+    serviceRecords(where: { id: $serviceId }) {
+      id
+      serviceLog {
+        constituency {
+          id
+          name
         }
       }
       created_at

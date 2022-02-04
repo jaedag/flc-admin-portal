@@ -37,7 +37,7 @@ const ConstituencyBankingSlipView = () => {
             onClick={() => {
               setServiceRecordId(service.id)
               !service.bankingSlip &&
-                navigate('/services/banking-slip/submission')
+                navigate('/constituency/banking-slip/submission')
             }}
           >
             <Card.Header>

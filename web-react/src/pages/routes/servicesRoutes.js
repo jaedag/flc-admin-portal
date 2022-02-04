@@ -13,7 +13,7 @@ import CouncilReport from 'pages/services/reports/CouncilReport'
 import FellowshipReport from 'pages/services/reports/FellowshipReport'
 import SontaReport from 'pages/services/reports/SontaReport'
 import BacentaJoint from 'pages/services/BacentaJoint'
-import BankingSlipSubmission from 'pages/services/BankingSlipSubmission'
+import FellowshipBankingSlipSubmission from 'pages/services/FellowshipBankingSlipSubmission'
 import FellowshipBankingSlipView from 'pages/services/FellowshipBankingSlipView'
 import ConstituencyJoint from 'pages/services/ConstituencyJoint'
 import Banked from 'pages/services/defaulters/Banked'
@@ -31,7 +31,8 @@ import GatheringServiceReport from 'pages/services/reports/GatheringServiceRepor
 import StreamByCouncil from 'pages/services/defaulters/StreamByCouncil'
 import GatheringServiceByStream from 'pages/services/defaulters/GatheringServiceByStream'
 import { permitMeAndThoseAbove } from 'global-utils'
-import ConstituencyBankingSlipView from 'pages/services/ConstituencyBankingSlip'
+import ConstituencyBankingSlipView from 'pages/services/ConstituencyBankingSlipView'
+import ConstituencyBankingSlipSubmission from 'pages/services/ConstituencyBankingSlipSubmission'
 
 export const services = [
   {
@@ -78,7 +79,7 @@ export const services = [
   {
     path: '/services/fellowship/banking-slips',
     element: FellowshipBankingSlipView,
-    roles: ['all'],
+    roles: ['leaderFellowship'],
     placeholder: true,
   },
   {
@@ -88,9 +89,15 @@ export const services = [
     placeholder: true,
   },
   {
-    path: '/services/banking-slip/submission',
-    element: BankingSlipSubmission,
-    roles: ['all'],
+    path: '/fellowship/banking-slip/submission',
+    element: FellowshipBankingSlipSubmission,
+    roles: ['leaderFellowship'],
+    placeholder: true,
+  },
+  {
+    path: '/constituency/banking-slip/submission',
+    element: ConstituencyBankingSlipSubmission,
+    roles: ['leaderConstituency', 'adminConstituency'],
     placeholder: true,
   },
 ]

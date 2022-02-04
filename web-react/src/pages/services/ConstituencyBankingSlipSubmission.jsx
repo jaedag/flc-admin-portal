@@ -7,7 +7,7 @@ import React, { useContext } from 'react'
 import { Col, Container, Row, Button } from 'react-bootstrap'
 import {
   BANKING_SLIP_SUBMISSION,
-  DISPLAY_SERVICE_RECORDS,
+  CONSTITUENCY_SERVICE_RECORDS,
 } from './ServicesQueries'
 import { MemberContext } from 'contexts/MemberContext'
 import { useMutation, useQuery } from '@apollo/client'
@@ -15,18 +15,19 @@ import HeadingSecondary from 'components/HeadingSecondary'
 import BaseComponent from 'components/base-component/BaseComponent'
 import { useNavigate } from 'react-router'
 import { ChurchContext } from 'contexts/ChurchContext'
+import { getHumanReadableDate } from 'global-utils'
 
-const BankingSlipSubmission = () => {
+const ConstituencyBankingSlipSubmission = () => {
   const { serviceRecordId } = useContext(ServiceContext)
   const { theme } = useContext(MemberContext)
-  const { setFellowshipId } = useContext(ChurchContext)
+  const { setConstituencyId } = useContext(ChurchContext)
   const navigate = useNavigate()
 
-  const { data, loading, error } = useQuery(DISPLAY_SERVICE_RECORDS, {
+  const { data, loading, error } = useQuery(CONSTITUENCY_SERVICE_RECORDS, {
     variables: { serviceId: serviceRecordId },
   })
-  const fellowship = data?.serviceRecords[0]?.serviceLog?.fellowship[0]
-  setFellowshipId(fellowship?.id)
+  const constituency = data?.serviceRecords[0]?.serviceLog?.constituency[0]
+  setConstituencyId(constituency?.id)
   const initialValues = {
     bankingSlip: '',
   }
@@ -47,12 +48,12 @@ const BankingSlipSubmission = () => {
       onSubmitProps.setSubmitting(false)
       onSubmitProps.resetForm()
 
-      navigate(`/fellowship/service-details`)
+      navigate(`/constituency/service-details`)
     })
   }
 
   return (
-    <BaseComponent loading={loading} error={error} data={data && fellowship}>
+    <BaseComponent loading={loading} error={error} data={data && constituency}>
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
@@ -62,8 +63,11 @@ const BankingSlipSubmission = () => {
         {(formik) => (
           <Container>
             <HeadingPrimary>Banking Slip Submission</HeadingPrimary>
-            <HeadingSecondary>{fellowship?.name}</HeadingSecondary>
-            <p>Banking Code: {fellowship?.bankingCode}</p>
+            <HeadingSecondary>{constituency?.name}</HeadingSecondary>
+            <p>
+              Date of Joint Service Code:{' '}
+              {getHumanReadableDate(data.serviceRecords[0].serviceDate.date)}
+            </p>
             <p>Expected Income: {data.serviceRecords[0].income}</p>
             <Form>
               <Row className="row-cols-1 row-cols-md-2 mt-5">
@@ -99,4 +103,4 @@ const BankingSlipSubmission = () => {
   )
 }
 
-export default BankingSlipSubmission
+export default ConstituencyBankingSlipSubmission

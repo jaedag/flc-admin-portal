@@ -41,14 +41,14 @@ const ChurchGraph = (props) => {
           churchData?.map((max) => {
             return max.attendance
           })
-        ) + 150,
+        ) * 1.2,
       income:
         Math.max.apply(
           Math,
           churchData?.map((max) => {
             return max.income
           })
-        ) + 1000,
+        ) + 1.2,
     })
   }, [churchData])
 

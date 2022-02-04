@@ -40,7 +40,7 @@ const FellowshipBankingSlipView = () => {
             onClick={() => {
               setServiceRecordId(service.id)
               !service.bankingSlip &&
-                navigate('/services/banking-slip/submission')
+                navigate('/fellowship/banking-slip/submission')
             }}
           >
             <Card.Header>

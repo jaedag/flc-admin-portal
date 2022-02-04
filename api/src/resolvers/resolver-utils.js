@@ -51,6 +51,7 @@ export const parseForCache = (servant, church, verb, role) => {
   //Returning the data such that it can update apollo cache
   servant[`${verb}`].push({
     id: church.id,
+    name: church.name,
     [`${role}`]: {
       id: servant.id,
       firstName: servant.firstName,
@@ -59,13 +60,11 @@ export const parseForCache = (servant, church, verb, role) => {
   })
 
   servant[`${verb}`].map((church) => {
-    church[`${role}`] = [
-      {
-        id: servant.id,
-        firstName: servant.firstName,
-        lastName: servant.lastName,
-      },
-    ]
+    church[`${role}`] = {
+      id: servant.id,
+      firstName: servant.firstName,
+      lastName: servant.lastName,
+    }
   })
 
   return servant

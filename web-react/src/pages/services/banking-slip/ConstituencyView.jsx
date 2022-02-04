@@ -8,27 +8,24 @@ import React, { useContext } from 'react'
 import { Card, Col, Container, Row } from 'react-bootstrap'
 import { CheckCircleFill, XCircleFill } from 'react-bootstrap-icons'
 import { useNavigate } from 'react-router'
-import { FELLOWSHIP_BANKING_SLIP_QUERIES } from './ServicesQueries'
+import { CONSTITUENCY_BANKING_SLIP_QUERIES } from '../ServicesQueries'
 
-const FellowshipBankingSlipView = () => {
-  const { fellowshipId } = useContext(ChurchContext)
+const ConstituencyBankingSlipView = () => {
+  const { constituencyId } = useContext(ChurchContext)
   const { setServiceRecordId } = useContext(ServiceContext)
   const navigate = useNavigate()
-  const { data, loading, error } = useQuery(FELLOWSHIP_BANKING_SLIP_QUERIES, {
-    variables: { fellowshipId: fellowshipId },
+  const { data, loading, error } = useQuery(CONSTITUENCY_BANKING_SLIP_QUERIES, {
+    variables: { constituencyId: constituencyId },
   })
-  const fellowship = data?.fellowships[0]
+  const constituency = data?.constituencies[0]
   const placeholder = ['', '', '']
   throwErrorMsg(error)
 
   return (
     <Container>
-      <HeadingPrimary loading={loading}>{fellowship?.name}</HeadingPrimary>
-      <PlaceholderCustom as="p" loading={loading}>
-        <p>Banking Code: {fellowship?.bankingCode}</p>
-      </PlaceholderCustom>
+      <HeadingPrimary loading={loading}>{constituency?.name}</HeadingPrimary>
 
-      {data?.fellowships[0].services.map((service, index) => {
+      {data?.constituencies[0].services.map((service, index) => {
         if (service.noServiceReason) {
           return null
         }
@@ -40,7 +37,7 @@ const FellowshipBankingSlipView = () => {
             onClick={() => {
               setServiceRecordId(service.id)
               !service.bankingSlip &&
-                navigate('/services/banking-slip/submission')
+                navigate('/constituency/banking-slip/submission')
             }}
           >
             <Card.Header>
@@ -92,4 +89,4 @@ const FellowshipBankingSlipView = () => {
   )
 }
 
-export default FellowshipBankingSlipView
+export default ConstituencyBankingSlipView

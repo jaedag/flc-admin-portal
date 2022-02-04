@@ -61,6 +61,7 @@ const GatheringServiceReport = () => {
           stat1="attendance"
           stat2="income"
           churchData={churchData}
+          church="gatheringservice"
         />
       </Container>
     </BaseComponent>

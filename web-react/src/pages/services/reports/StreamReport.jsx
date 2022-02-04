@@ -61,6 +61,7 @@ const StreamReport = () => {
           stat1="attendance"
           stat2="income"
           churchData={churchData}
+          church="stream"
         />
       </Container>
     </BaseComponent>

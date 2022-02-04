@@ -63,6 +63,7 @@ type ServiceLog @auth(rules: [{ isAuthenticated: true }]) {
   bacenta: [Bacenta] @relationship(type: "HAS_HISTORY", direction: IN)
   # bacentaFellowshipRecords(bacentaId: ID!): [BacentaFellowshipServiceRecords]
   constituency: [Constituency] @relationship(type: "HAS_HISTORY", direction: IN)
+  council: [Council] @relationship(type: "HAS_HISTORY", direction: IN)
   sonta: [Sonta] @relationship(type: "HAS_HISTORY", direction: IN)
 }
 

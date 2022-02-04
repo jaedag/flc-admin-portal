@@ -109,7 +109,7 @@ export const componentServiceAggregates = `
   WHERE date.date > date() - duration({months: 2})
   WITH DISTINCT componentServices,componentRecords, date(date.date).week AS week
 
-RETURN week AS week,SUM(componentRecords.attendance) AS attendance, SUM(componentRecords.income) AS income LIMIT 12
+RETURN week AS week,SUM(componentRecords.attendance) AS attendance, SUM(componentRecords.income) AS income LIMIT toInteger($limit)
 `
 
 export const checkMemberEmailExists = `

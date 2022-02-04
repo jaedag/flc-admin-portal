@@ -1,6 +1,5 @@
-import fs from 'fs'
-import path from 'path'
-
+const fs = require('fs')
+const path = require('path')
 /*
  * Check for GRAPHQL_SCHEMA environment variable to specify schema file
  * fallback to schema.graphql if GRAPHQL_SCHEMA environment variable is not set
@@ -40,7 +39,7 @@ const campaigns = fs
   .readFileSync(path.join(__dirname, 'campaigns.graphql'))
   .toString('utf-8')
 
-export const typeDefs =
+exports.typeDefs =
   schema +
   ' ' +
   directory +

@@ -4,6 +4,22 @@ type ServiceDay @auth(rules: [{ isAuthenticated: true }]) {
   fellowship: Fellowship @relationship(type: "MEETS_ON", direction: IN)
 }
 
+extend type GatheringService {
+  componentServiceAggregate(limit: Int = 4): [ComponentServiceAggregate] @ignore
+}
+extend type Stream {
+  componentServiceAggregate(limit: Int = 4): [ComponentServiceAggregate] @ignore
+}
+extend type Council {
+  componentServiceAggregate(limit: Int = 4): [ComponentServiceAggregate] @ignore
+}
+extend type Constituency {
+  componentServiceAggregate(limit: Int = 4): [ComponentServiceAggregate] @ignore
+}
+extend type Bacenta {
+  componentServiceAggregate(limit: Int = 4): [ComponentServiceAggregate] @ignore
+}
+
 interface Record {
   id: ID!
   created_at: Date!

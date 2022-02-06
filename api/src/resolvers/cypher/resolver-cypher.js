@@ -100,9 +100,9 @@ WITH log,sonta,oldLeader,leader
 
 // Adding the records of the services underneath so that we can have the total attendances and incomes
 export const componentServiceAggregates = `
-  MATCH (church {id:$id}) WHERE church:Bacenta OR church:Constituency OR church:Council OR church:Stream OR church:GatheringService
+ MATCH (church {id:$id}) WHERE church:Bacenta OR church:Constituency OR church:Council OR church:Stream OR church:GatheringService
   
-  MATCH (church)-[:HAS*1..5]->()-[:HAS_HISTORY]->(componentServices:ServiceLog)
+  MATCH (church)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS*1..5]->(componentServices:ServiceLog)
   MATCH (componentServices)-[:HAS_SERVICE]->(componentRecords:ServiceRecord)
 
   MATCH (componentRecords)-[:SERVICE_HELD_ON]->(date:TimeGraph)

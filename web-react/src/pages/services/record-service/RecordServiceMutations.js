@@ -213,3 +213,38 @@ export const DISPLAY_CONSTITUENCY_SERVICE = gql`
     }
   }
 `
+
+export const DISPLAY_COUNCIL_SERVICE = gql`
+  query DisplayServiceRecords($serviceId: ID!, $councilId: ID!) {
+    serviceRecords(where: { id: $serviceId }) {
+      id
+      created_at
+      created_by {
+        id
+        firstName
+        lastName
+        fullName
+      }
+      serviceDate {
+        date
+      }
+      noServiceReason
+      attendance
+      income
+      foreignCurrency
+      treasurerSelfie
+      servicePicture
+      bankingSlip
+      treasurers {
+        id
+        firstName
+        lastName
+        fullName
+      }
+    }
+    councils(where: { id: $councilId }) {
+      id
+      name
+    }
+  }
+`

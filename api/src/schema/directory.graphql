@@ -286,8 +286,9 @@ type GatheringService implements Church {
   services(limit: Int!): [ServiceRecord]
     @cypher(
       statement: """
-      MATCH (this)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(services:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph)
-      RETURN services ORDER BY date.date DESC LIMIT $limit
+      MATCH (this)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(records:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph)
+      WITH DISTINCT records, date
+      RETURN records ORDER BY date.date DESC LIMIT $limit
       """
     )
   servicesThisWeek: [Fellowship]
@@ -395,8 +396,6 @@ type GatheringService implements Church {
       RETURN COUNT(fellowships)
       """
     )
-
-  componentServiceAggregate: [ComponentServiceAggregate] @ignore
 }
 
 type Stream implements Church {
@@ -494,8 +493,9 @@ type Stream implements Church {
   services(limit: Int!): [ServiceRecord]
     @cypher(
       statement: """
-      MATCH (this)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(services:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph)
-      RETURN services ORDER BY date.date DESC LIMIT $limit
+      MATCH (this)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(records:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph)
+      WITH DISTINCT records, date
+      RETURN records ORDER BY date.date DESC LIMIT $limit
       """
     )
   servicesThisWeek: [Fellowship]
@@ -603,8 +603,6 @@ type Stream implements Church {
       RETURN COUNT(fellowships)
       """
     )
-
-  componentServiceAggregate: [ComponentServiceAggregate] @ignore
 }
 
 type Council implements Church {
@@ -693,8 +691,9 @@ type Council implements Church {
   services(limit: Int!): [ServiceRecord]
     @cypher(
       statement: """
-      MATCH (this)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(services:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph)
-      RETURN services ORDER BY date.date DESC LIMIT $limit
+      MATCH (this)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(records:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph)
+      WITH DISTINCT records, date
+      RETURN records ORDER BY date.date DESC LIMIT $limit
       """
     )
   servicesThisWeek: [Fellowship]
@@ -802,8 +801,6 @@ type Council implements Church {
       RETURN COUNT(fellowships)
       """
     )
-
-  componentServiceAggregate: [ComponentServiceAggregate] @ignore
 }
 
 type Constituency implements Church {
@@ -879,10 +876,11 @@ type Constituency implements Church {
   serviceRecord: [ServiceRecord]
     @relationship(type: "HAS_SERVICE", direction: OUT)
   serviceLogs: [ServiceLog] @relationship(type: "HAS_HISTORY", direction: OUT)
-  services(limit: Int!): [ServiceRecord]
+  services(limit: Int! = 12): [ServiceRecord]
     @cypher(
       statement: """
       MATCH (this)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(records:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph)
+      WITH DISTINCT records, date
       RETURN records ORDER BY date.date DESC LIMIT $limit
       """
     )
@@ -990,8 +988,6 @@ type Constituency implements Church {
       RETURN COUNT(fellowships)
       """
     )
-
-  componentServiceAggregate: [ComponentServiceAggregate] @ignore
 }
 
 type Bacenta implements Church {
@@ -1054,10 +1050,11 @@ type Bacenta implements Church {
   constituency: Constituency @relationship(type: "HAS", direction: IN)
   history: [HistoryLog] @relationship(type: "HAS_HISTORY", direction: OUT)
   serviceLogs: [ServiceLog] @relationship(type: "HAS_HISTORY", direction: OUT)
-  services(limit: Int!): [ServiceRecord]
+  services(limit: Int! = 4): [ServiceRecord]
     @cypher(
       statement: """
       MATCH (this)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(services:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph)
+      WITH DISTINCT services, date
       RETURN services ORDER BY date.date DESC LIMIT $limit
       """
     )
@@ -1069,7 +1066,6 @@ type Bacenta implements Church {
       RETURN council
       """
     )
-  componentServiceAggregate: [ComponentServiceAggregate] @ignore
 }
 
 # Shared Units: Fellowship, Fellowship, Sonta
@@ -1116,8 +1112,9 @@ type Fellowship implements Church {
   services(limit: Int!): [ServiceRecord]
     @cypher(
       statement: """
-      MATCH (this)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(services:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph)
-      RETURN services ORDER BY date.date DESC LIMIT $limit
+      MATCH (this)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(records:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph)
+      WITH DISTINCT records,date
+      RETURN records ORDER BY date.date DESC LIMIT $limit
       """
     )
   labels: [String]
@@ -1156,8 +1153,9 @@ type ClosedFellowship {
   services(limit: Int!): [ServiceRecord]
     @cypher(
       statement: """
-      MATCH (this)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(services:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph)
-      RETURN services ORDER BY date.date DESC LIMIT $limit
+      MATCH (this)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(records:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph)
+      WITH DISTINCT records, date
+      RETURN records ORDER BY date.date DESC LIMIT $limit
       """
     )
   labels: [String]
@@ -1175,6 +1173,8 @@ type ClosedFellowship {
       """
     )
 }
+
+# union ChurchWithServices = Fellowship | Constituency | Council
 
 ###Basonta Church Types####
 type Ministry {

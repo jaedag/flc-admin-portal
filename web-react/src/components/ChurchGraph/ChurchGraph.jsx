@@ -26,7 +26,7 @@ const ChurchGraph = (props) => {
   useEffect(() => {
     setSortedData(
       churchData?.sort((a, b) => {
-        if (a.week - b.week < -1 || a.week - b.week > 1) {
+        if (a.week - b.week < -4 || a.week - b.week > 4) {
           return -1 * a.week - b.week
         }
 
@@ -41,14 +41,14 @@ const ChurchGraph = (props) => {
           churchData?.map((max) => {
             return max.attendance
           })
-        ) + 150,
+        ) * 1.2,
       income:
         Math.max.apply(
           Math,
           churchData?.map((max) => {
             return max.income
           })
-        ) + 1000,
+        ) + 1.2,
     })
   }, [churchData])
 

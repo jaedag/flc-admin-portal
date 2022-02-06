@@ -31,9 +31,8 @@
   "lint-staged": {
     "*.{js,jsx}": [
       "prettier --write",
-      "eslint --fix"
-    ],
-    "*.js": "eslint --cache --fix"
+      "eslint --cache --fix"
+    ]
   },
   "eslintIgnore": [
     "resolvers.js",

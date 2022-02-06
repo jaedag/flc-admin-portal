@@ -315,7 +315,7 @@ WITH log,council,oldAdmin,admin
 export const makeConstituencyAdmin = `
 MATCH (admin:Member {id:$adminId})
 MATCH (constituency:Constituency {id:$constituencyId})
-CREATE (log:HistoryLog:ServiceLog)
+CREATE (log:HistoryLog)
   SET admin.auth_id = $auth_id,
    log.id = apoc.create.uuid(),
    log.timeStamp = datetime(),
@@ -357,7 +357,7 @@ WITH log,constituency,oldAdmin,admin
 export const makeConstituencyArrivalsAdmin = `
 MATCH (admin:Member {id:$adminId})
 MATCH (constituency:Constituency {id:$constituencyId})
-CREATE (log:HistoryLog:ServiceLog)
+CREATE (log:HistoryLog)
   SET admin.auth_id = $auth_id,
    log.id = apoc.create.uuid(),
    log.timeStamp = datetime(),

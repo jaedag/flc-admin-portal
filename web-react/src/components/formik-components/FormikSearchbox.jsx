@@ -49,7 +49,6 @@ function FormikSearchbox(props) {
       const combinedData = [
         ...data.federalMemberSearch,
         ...data.federalConstituencySearch,
-        ...data.federalSontaSearch,
         ...data.federalBacentaSearch,
         ...data.federalFellowshipSearch,
       ]

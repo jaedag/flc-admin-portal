@@ -155,7 +155,7 @@ interface HasTitle @relationshipProperties {
 
 type TimeGraph @auth(rules: [{ isAuthenticated: true }]) {
   date: Date
-  memberDo: Member @relationship(type: "WAS_BORN_ON", direction: IN)
+  memberDob: Member @relationship(type: "WAS_BORN_ON", direction: IN)
   # titleAppointmentDate: Member @relationship(type: "APPOINTED_ON", direction: IN)
   leaderHistoryStartDate: Member
     @relationship(type: "LEADER_STARTED_ON", direction: OUT)

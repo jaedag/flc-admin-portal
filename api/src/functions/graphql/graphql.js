@@ -8,7 +8,7 @@ const neo4j = require('neo4j-driver')
 // This module is copied during the build step
 // Be sure to run `npm run build`
 const { typeDefs } = require('./schema/graphql-schema')
-const { resolvers } = require('../../resolvers/resolvers')
+const { resolvers } = require('../../resolvers/resolvers.js')
 const { serviceResolvers } = require('../../resolvers/service-resolvers')
 
 const driver = neo4j.driver(

@@ -28,7 +28,6 @@ const SearchPageMobile = () => {
           ...data.federalStreamSearch,
           ...data.federalCouncilSearch,
           ...data.federalConstituencySearch,
-          ...data.federalSontaSearch,
           ...data.federalBacentaSearch,
           ...data.federalFellowshipSearch,
         ])

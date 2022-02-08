@@ -35,7 +35,6 @@
     ]
   },
   "eslintIgnore": [
-    "resolvers.js",
     "*.test.js",
     "*.test.jsx"
   ],

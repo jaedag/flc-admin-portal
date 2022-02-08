@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const dotenv = require('dotenv')
 const axios = require('axios').default
 const cypher = require('./cypher/resolver-cypher')

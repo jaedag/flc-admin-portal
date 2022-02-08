@@ -4,7 +4,7 @@ export const isAuth = (permittedRoles, userRoles) => {
   }
 }
 
-const throwErrorMsg = (message, error) => {
+export const throwErrorMsg = (message, error) => {
   let errorVar = ''
 
   if (error) {

@@ -2,16 +2,6 @@ import { gql } from '@apollo/client'
 
 export const FEDERAL_SEARCH = gql`
   query federalSearch($searchKey: String) {
-    federalSontaSearch(searchKey: $searchKey) {
-      id
-      name
-      stream_name
-      constituency {
-        council {
-          id
-        }
-      }
-    }
     federalStreamSearch(searchKey: $searchKey) {
       id
       name

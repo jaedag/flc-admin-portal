@@ -51,7 +51,7 @@ const StreamReport = () => {
 
           <Col>
             <StatDisplay
-              title="Avg Income"
+              title="Avg Weekly Income"
               statistic={getMonthlyStatAverage(churchData, 'income')}
             />
           </Col>

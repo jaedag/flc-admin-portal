@@ -41,7 +41,7 @@ export const BacentaReport = () => {
         <div className="row mt-3">
           <div className="col">
             <StatDisplay
-              title="Avg Attendance"
+              title="Avg Weekly Attendance"
               statistic={getMonthlyStatAverage(churchData, 'attendance')}
             />
           </div>

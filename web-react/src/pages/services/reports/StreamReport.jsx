@@ -44,7 +44,7 @@ const StreamReport = () => {
         <Row className="mt-3">
           <Col>
             <StatDisplay
-              title="Avg Attendance"
+              title="Avg Weekly Attendance"
               statistic={getMonthlyStatAverage(churchData, 'attendance')}
             />
           </Col>

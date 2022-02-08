@@ -41,7 +41,7 @@ export const FellowshipReport = () => {
         <div className="row mt-3">
           <div className="col">
             <StatDisplay
-              title="Avg Attendance"
+              title="Avg Weekly Attendance"
               statistic={getMonthlyStatAverage(serviceData, 'attendance')}
             />
           </div>

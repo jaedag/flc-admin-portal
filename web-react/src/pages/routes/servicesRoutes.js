@@ -65,6 +65,12 @@ export const services = [
     placeholder: true,
   },
   {
+    path: '/services/fellowship',
+    element: Fellowship,
+    roles: permitMeAndThoseAbove('Fellowship'),
+    placeholder: true,
+  },
+  {
     path: '/services/bacenta',
     element: BacentaJoint,
     roles: permitMeAndThoseAbove('Bacenta'),

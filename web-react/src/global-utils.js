@@ -7,10 +7,10 @@ export const DEBOUNCE_TIMER = 500
 export const ARRIVALS_CUTOFF = [14, 30, 0]
 
 export const getTime = (time) => {
-  return time.getHours() + ':' + time.getMinutes() + ':' + time.getSeconds()
+  return `${time.getHours()}:${time.getMinutes()}:${time.getSeconds()}`
 }
 export const setTime = (timeArray) => {
-  let now = new Date()
+  const now = new Date()
   now.setHours(timeArray[0])
   now.setMinutes(timeArray[1])
   now.setMilliseconds(timeArray[2])
@@ -52,10 +52,12 @@ export const throwErrorMsg = (message, error) => {
 
   // eslint-disable-next-line no-console
   console.error(message, ' ', error)
-  alert(message + ' ' + error)
+  // eslint-disable-next-line no-alert
+  alert(`${message} ${error}`)
 }
 
 export const alertMsg = (message) => {
+  // eslint-disable-next-line no-alert
   alert(message)
 }
 
@@ -144,15 +146,16 @@ export const parsePhoneNum = (phoneNumber) => {
 export const repackDecimals = (decimal) => {
   if (decimal === 0) {
     return '0.0'
-  } else return parseFloat(decimal)
+  }
+  return parseFloat(decimal)
 }
 
-export const makeSelectOptions = (data) => {
-  if (!data) {
+export const makeSelectOptions = (initialArray) => {
+  if (!initialArray) {
     return null
   }
 
-  return data.map((data) => ({
+  return initialArray.map((data) => ({
     value: data.id,
     key: data.name ? data.name : data.fullName,
   }))
@@ -162,23 +165,23 @@ export const parseNeoTime = (time) => {
   if (!time) {
     return
   }
-  let data = new Date(time)
+  const data = new Date(time)
   let hrs = data.getHours()
   let mins = data.getMinutes()
-  if (hrs <= 9) hrs = '0' + hrs
-  if (mins < 10) mins = '0' + mins
-  const postTime = hrs + ':' + mins
+  if (hrs <= 9) hrs = `0${hrs}`
+  if (mins < 10) mins = `0${mins}`
+  const postTime = `${hrs}:${mins}`
   return postTime
 }
 
 export const parseDate = (date) => {
-  //Receives the current date and returns text "Today, Yesterday,etc"
+  // Receives the current date and returns text "Today, Yesterday,etc"
 
   // Get today's date
-  let todaysDate = new Date()
+  const todaysDate = new Date()
 
   // Create date from input value
-  let inputDate = new Date(date)
+  const inputDate = new Date(date)
 
   // To calculate the time difference of two dates
   const differenceInTime = todaysDate.getTime() - inputDate.getTime()
@@ -190,27 +193,29 @@ export const parseDate = (date) => {
   if (inputDate.toDateString() === todaysDate.toDateString()) {
     // Date equals today's date
     return 'Today'
-  } else if (Math.floor(differenceInDays) === 1) {
+  }
+  if (Math.floor(differenceInDays) === 1) {
     // Date equals yesterday's date
     return 'Yesterday'
-  } else if (Math.floor(differenceInDays) < 7) {
+  }
+  if (Math.floor(differenceInDays) < 7) {
     // Date equals yesterday's date
-    return Math.floor(differenceInDays) + ' days ago'
+    return `${Math.floor(differenceInDays)} days ago`
   }
 
   return inputDate.toDateString()
 }
 
-//debouncing function
+// debouncing function
 export function debounce(func, wait) {
   let timerId
   return () => {
     clearTimeout(timerId)
-    //Clears timer if code has not yet executed
+    // Clears timer if code has not yet executed
 
     timerId = setTimeout(() => {
-      timerId = null //Nullifies timer ID Not sure why?
-      func.apply(this, arguments) //pass in the arguments to the function and the scope
+      timerId = null // Nullifies timer ID Not sure why?
+      func.apply(this, arguments) // pass in the arguments to the function and the scope
     }, wait)
   }
 }
@@ -222,7 +227,7 @@ export const getHighestTitle = (member) => {
   let highestTitle
 
   member.titleConnection.edges.map((title) => {
-    //Male Titles
+    // Male Titles
     if (member.gender.gender === 'Male') {
       if (title.node.title === 'Pastor') {
         highestTitle = 'Pastor'
@@ -235,7 +240,7 @@ export const getHighestTitle = (member) => {
       }
     }
 
-    //Female Titles
+    // Female Titles
     if (member.gender.gender === 'Female') {
       if (title.node.title === 'Pastor') {
         highestTitle = 'Lady Pastor'
@@ -263,9 +268,8 @@ export const getNameWithTitle = (member) => {
 
   if (member.titleConnection.edges?.length) {
     return `${displayName.title} ${displayName.name}`
-  } else {
-    return displayName.name
   }
+  return displayName.name
 }
 
 export const getHumanReadableDate = (date) => {
@@ -285,119 +289,106 @@ export const getMemberDob = (displayMember) => {
   }
   if (displayMember.dob?.date) {
     return getHumanReadableDate(displayMember.dob?.date)
-  } else return null
+  }
+  return null
 }
 
 export const average = (array) => {
-  var i = 0,
-    sum = 0,
-    len = array.length
+  let i = 0
+  let sum = 0
+  const len = array.length
   while (i < len) {
-    sum = sum + array[i++]
+    sum += array[i++]
   }
   return sum / len
 }
 
 export const parseMemberCount = (number) => {
   if (number === 1) {
-    return number + ' Member'
+    return `${number} Member`
   }
-  return number + ' Members'
+  return `${number} Members`
 }
 export const getMemberCount = (servant) => {
   if (!servant?.memberCount) {
     return
   }
-  return (
-    parseMemberCount(servant?.memberCount) +
-    ', ' +
-    servant?.basontaMembershipCount +
-    ' in Ministries'
-  )
+  return `${parseMemberCount(servant?.memberCount)}, ${
+    servant?.basontaMembershipCount
+  } in Ministries`
 }
 export const getChurchCount = (servant) => {
   let churchesCount = ''
 
   if (servant?.leadsGatheringServiceCount) {
     if (churchesCount) {
-      churchesCount = churchesCount + ','
+      churchesCount += ','
     }
 
     if (servant.leadsGatheringServiceCount === 1) {
-      churchesCount = servant.leadsGatheringServiceCount + ' Gathering Service'
+      churchesCount = `${servant.leadsGatheringServiceCount} Gathering Service`
     } else {
-      churchesCount = servant.leadsGatheringServiceCount + ' Gathering Services'
+      churchesCount = `${servant.leadsGatheringServiceCount} Gathering Services`
     }
   }
 
   if (servant?.leadsCouncilCount) {
     if (churchesCount) {
-      churchesCount = churchesCount + ','
+      churchesCount += ','
     }
 
     if (servant.leadsCouncilCount === 1) {
-      churchesCount =
-        churchesCount + ' ' + servant.leadsCouncilCount + ' Council'
+      churchesCount = `${churchesCount} ${servant.leadsCouncilCount} Council`
     } else {
-      churchesCount =
-        churchesCount + ' ' + servant.leadsCouncilCount + ' Councils'
+      churchesCount = `${churchesCount} ${servant.leadsCouncilCount} Councils`
     }
   }
 
   if (servant?.leadsConstituencyCount) {
     if (churchesCount) {
-      churchesCount = churchesCount + ','
+      churchesCount += ','
 
       if (servant.leadsConstituencyCount === 1) {
-        churchesCount =
-          churchesCount + ' ' + servant.leadsConstituencyCount + ' Constituency'
+        churchesCount = `${churchesCount} ${servant.leadsConstituencyCount} Constituency`
       } else {
-        churchesCount =
-          churchesCount +
-          ' ' +
-          servant.leadsConstituencyCount +
-          ' Constituencies'
+        churchesCount = `${churchesCount} ${servant.leadsConstituencyCount} Constituencies`
       }
     } else if (servant.leadsConstituencyCount === 1) {
-      churchesCount = servant.leadsConstituencyCount + ' Constituency'
+      churchesCount = `${servant.leadsConstituencyCount} Constituency`
     } else {
-      churchesCount = servant.leadsConstituencyCount + ' Constituencies'
+      churchesCount = `${servant.leadsConstituencyCount} Constituencies`
     }
   }
 
   if (servant?.leadsBacentaCount) {
     if (churchesCount) {
-      churchesCount = churchesCount + ','
+      churchesCount += ','
 
       if (servant.leadsBacentaCount === 1) {
-        churchesCount =
-          churchesCount + ' ' + servant.leadsBacentaCount + ' Bacenta'
+        churchesCount = `${churchesCount} ${servant.leadsBacentaCount} Bacenta`
       } else {
-        churchesCount =
-          churchesCount + ' ' + servant.leadsBacentaCount + ' Bacentas'
+        churchesCount = `${churchesCount} ${servant.leadsBacentaCount} Bacentas`
       }
     } else if (servant.leadsBacentaCount === 1) {
-      churchesCount = servant.leadsBacentaCount + ' Bacenta'
+      churchesCount = `${servant.leadsBacentaCount} Bacenta`
     } else {
-      churchesCount = servant.leadsBacentaCount + ' Bacentas'
+      churchesCount = `${servant.leadsBacentaCount} Bacentas`
     }
   }
 
   if (servant?.leadsFellowshipCount) {
     if (churchesCount) {
-      churchesCount = churchesCount + ','
+      churchesCount += ','
 
       if (servant.leadsFellowshipCount === 1) {
-        churchesCount =
-          churchesCount + ' ' + servant.leadsFellowshipCount + ' Fellowship'
+        churchesCount = `${churchesCount} ${servant.leadsFellowshipCount} Fellowship`
       } else {
-        churchesCount =
-          churchesCount + ' ' + servant.leadsFellowshipCount + ' Fellowships'
+        churchesCount = `${churchesCount} ${servant.leadsFellowshipCount} Fellowships`
       }
     } else if (servant.leadsFellowshipCount === 1) {
-      churchesCount = servant.leadsFellowshipCount + ' Fellowship'
+      churchesCount = `${servant.leadsFellowshipCount} Fellowship`
     } else {
-      churchesCount = servant.leadsFellowshipCount + ' Fellowships'
+      churchesCount = `${servant.leadsFellowshipCount} Fellowships`
     }
   }
 
@@ -407,7 +398,7 @@ export const getChurchCount = (servant) => {
 export const getWeekNumber = (date) => {
   const currentdate = date ? new Date(date) : new Date()
   const oneJan = new Date(currentdate.getFullYear(), 0, 1)
-  const adjustedForMonday = 8 - oneJan.getDay() //Checking the number of days till Monday when the week starts
+  const adjustedForMonday = 8 - oneJan.getDay() // Checking the number of days till Monday when the week starts
   oneJan.setDate(oneJan.getDate() + adjustedForMonday)
   const numberOfDays = Math.floor(
     (currentdate - oneJan) / (24 * 60 * 60 * 1000)
@@ -425,11 +416,11 @@ export const last3Weeks = () => {
   return [getWeekNumber(), getWeekNumber(lastWeek), getWeekNumber(last2Weeks)]
 }
 
-//Permissions Things
+// Permissions Things
 export const permitMeAndThoseAbove = (churchType) => {
   let permittedFor = []
-  switch (churchType) {
-    case 'Fellowship':
+  switch (churchType.toLowerCase()) {
+    case 'fellowship':
       permittedFor = [
         'adminGatheringService',
         'adminStream',
@@ -444,7 +435,7 @@ export const permitMeAndThoseAbove = (churchType) => {
         'leaderFellowship',
       ]
       break
-    case 'Bacenta':
+    case 'bacenta':
       permittedFor = [
         'adminGatheringService',
         'adminStream',
@@ -458,7 +449,7 @@ export const permitMeAndThoseAbove = (churchType) => {
         'leaderBacenta',
       ]
       break
-    case 'Sonta':
+    case 'sonta':
       permittedFor = [
         'adminGatheringService',
         'adminStream',
@@ -472,7 +463,7 @@ export const permitMeAndThoseAbove = (churchType) => {
         'leaderSonta',
       ]
       break
-    case 'Constituency':
+    case 'constituency':
       permittedFor = [
         'adminGatheringService',
         'adminStream',
@@ -485,7 +476,7 @@ export const permitMeAndThoseAbove = (churchType) => {
         'leaderConstituency',
       ]
       break
-    case 'Council':
+    case 'council':
       permittedFor = [
         'adminGatheringService',
         'adminStream',
@@ -495,7 +486,7 @@ export const permitMeAndThoseAbove = (churchType) => {
         'leaderCouncil',
       ]
       break
-    case 'Stream':
+    case 'stream':
       permittedFor = [
         'adminGatheringService',
         'adminStream',
@@ -503,7 +494,7 @@ export const permitMeAndThoseAbove = (churchType) => {
         'leaderStream',
       ]
       break
-    case 'GatheringService':
+    case 'gatheringservice':
       permittedFor = ['adminGatheringService', 'leaderGatheringService']
       break
     default:

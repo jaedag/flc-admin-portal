@@ -519,7 +519,7 @@ export const DISPLAY_STREAM = gql`
   }
 `
 
-export const DISPLAY_GATHERING = gql`
+export const DISPLAY_GATHERINGSERVICE = gql`
   query ($id: ID) {
     gatheringServices(where: { id: $id }, options: { limit: 1 }) {
       id

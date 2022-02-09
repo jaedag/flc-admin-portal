@@ -46,14 +46,14 @@ const CouncilReport = () => {
         <Row className="mt-3">
           <Col>
             <StatDisplay
-              title="Avg Attendance"
+              title="Avg Weekly Attendance"
               statistic={getMonthlyStatAverage(churchData, 'attendance')}
             />
           </Col>
 
           <Col>
             <StatDisplay
-              title="Avg Income"
+              title="Avg Weekly Income"
               statistic={getMonthlyStatAverage(churchData, 'income')}
             />
           </Col>

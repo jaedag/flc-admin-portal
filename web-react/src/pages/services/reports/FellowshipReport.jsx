@@ -41,14 +41,14 @@ export const FellowshipReport = () => {
         <div className="row mt-3">
           <div className="col">
             <StatDisplay
-              title="Avg Attendance"
+              title="Avg Weekly Attendance"
               statistic={getMonthlyStatAverage(serviceData, 'attendance')}
             />
           </div>
 
           <div className="col">
             <StatDisplay
-              title="Avg Income"
+              title="Avg Weekly Income"
               statistic={getMonthlyStatAverage(serviceData, 'income')}
             />
           </div>

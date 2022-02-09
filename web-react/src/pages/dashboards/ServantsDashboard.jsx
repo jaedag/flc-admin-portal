@@ -202,7 +202,7 @@ const ServantsDashboard = () => {
           <Row className="mt-3">
             <Col>
               <StatDisplay
-                title="Avg Attendance"
+                title="Avg Weekly Attendance"
                 loading={!assessmentChurchData}
                 statistic={getMonthlyStatAverage(
                   assessmentChurchData,
@@ -213,7 +213,7 @@ const ServantsDashboard = () => {
 
             <Col>
               <StatDisplay
-                title="Avg Income (in GH₵)"
+                title="Avg Weekly Income (in GH₵)"
                 loading={!assessmentChurchData}
                 statistic={getMonthlyStatAverage(
                   assessmentChurchData,

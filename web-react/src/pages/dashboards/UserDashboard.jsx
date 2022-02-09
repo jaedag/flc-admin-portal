@@ -54,7 +54,7 @@ const UserDashboard = () => {
           <Row className="mt-3">
             <Col>
               <StatDisplay
-                title="Avg Attendance"
+                title="Avg Weekly Attendance"
                 loading={!userJobs?.assessmentData}
                 statistic={getMonthlyStatAverage(
                   userJobs?.assessmentData,
@@ -65,7 +65,7 @@ const UserDashboard = () => {
 
             <Col>
               <StatDisplay
-                title="Avg Income (in GH₵)"
+                title="Avg Weekly Income (in GH₵)"
                 loading={!userJobs?.assessmentData}
                 statistic={getMonthlyStatAverage(
                   userJobs?.assessmentData,

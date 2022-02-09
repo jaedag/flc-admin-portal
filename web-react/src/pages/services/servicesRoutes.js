@@ -37,6 +37,13 @@ import CouncilService from 'pages/services/record-service/CouncilService'
 import CouncilServiceDetails from 'pages/services/record-service/CouncilServiceDetails'
 import CouncilBankingSlipView from 'pages/services/banking-slip/CouncilView'
 import CouncilBankingSlipSubmission from 'pages/services/banking-slip/CouncilSubmission'
+import CouncilJoint from 'pages/services/CouncilJoint'
+import StreamJoint from 'pages/services/StreamJoint'
+import GatheringServiceJoint from 'pages/services/GatheringServiceJoint'
+import StreamService from 'pages/services/record-service/StreamService'
+import StreamServiceDetails from 'pages/services/record-service/StreamServiceDetails'
+import GatheringServiceService from 'pages/services/record-service/GatheringServiceService'
+import GatheringServiceServiceDetails from 'pages/services/record-service/GatheringServiceServiceDetails'
 
 export const services = [
   {
@@ -67,6 +74,24 @@ export const services = [
     path: '/services/constituency',
     element: ConstituencyJoint,
     roles: permitMeAndThoseAbove('Constituency'),
+    placeholder: true,
+  },
+  {
+    path: '/services/council',
+    element: CouncilJoint,
+    roles: permitMeAndThoseAbove('Council'),
+    placeholder: true,
+  },
+  {
+    path: '/services/stream',
+    element: StreamJoint,
+    roles: permitMeAndThoseAbove('Stream'),
+    placeholder: true,
+  },
+  {
+    path: '/services/gatheringservice',
+    element: GatheringServiceJoint,
+    roles: permitMeAndThoseAbove('GatheringService'),
     placeholder: true,
   },
 
@@ -226,6 +251,34 @@ export const reports = [
     path: '/council/service-details',
     element: CouncilServiceDetails,
     roles: permitMeAndThoseAbove('Council'),
+    placeholder: false,
+  },
+
+  //Stream Services
+  {
+    path: '/stream/record-service',
+    element: StreamService,
+    roles: permitMeAndThoseAbove('Stream'),
+    placeholder: false,
+  },
+  {
+    path: '/stream/service-details',
+    element: StreamServiceDetails,
+    roles: permitMeAndThoseAbove('Stream'),
+    placeholder: false,
+  },
+
+  //Gathering Service Services
+  {
+    path: '/gatheringservice/record-service',
+    element: GatheringServiceService,
+    roles: permitMeAndThoseAbove('GatheringService'),
+    placeholder: false,
+  },
+  {
+    path: '/gatheringservice/service-details',
+    element: GatheringServiceServiceDetails,
+    roles: permitMeAndThoseAbove('GatheringService'),
     placeholder: false,
   },
 

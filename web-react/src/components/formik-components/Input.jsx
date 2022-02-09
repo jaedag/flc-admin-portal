@@ -19,7 +19,7 @@ function Input(props) {
           </label>
         </PlaceholderCustom>
       ) : null}
-      <Field id={name} name={name} {...rest} />
+      <Field id={name} name={name} className="form-control" {...rest} />
       <ErrorMessage name={name} component={TextError} />
     </div>
   )

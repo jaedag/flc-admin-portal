@@ -90,7 +90,6 @@ const SontaForm = ({ initialValues, onSubmit, title, loading, newSonta }) => {
                       <div className="col-10">
                         <RoleView roles={permitAdminAndThoseAbove('Council')}>
                           <FormikControl
-                            className="form-control"
                             control="select"
                             label={`Select a Constituency`}
                             name="constituency"
@@ -112,7 +111,6 @@ const SontaForm = ({ initialValues, onSubmit, title, loading, newSonta }) => {
                     <div className="form-row row-cols-3">
                       <div className="col-10">
                         <FormikControl
-                          className="form-control"
                           label="Ministry*"
                           control="select"
                           name="ministrySelect"
@@ -133,7 +131,6 @@ const SontaForm = ({ initialValues, onSubmit, title, loading, newSonta }) => {
                           placeholder="Select a Leader"
                           setFieldValue={formik.setFieldValue}
                           aria-describedby="Member Search Box"
-                          className="form-control"
                           error={formik.errors.leaderId}
                         />
                       </div>

@@ -4,7 +4,7 @@ import BacentaArrivals from 'pages/arrivals/BacentaArrivals'
 import BacentasHaveBeenCounted from 'pages/arrivals/BacentasHaveBeenCounted'
 import BacentasNotArrived from 'pages/arrivals/BacentasNotArrived'
 import BacentasThatSubmitted from 'pages/arrivals/BacentasThatSubmitted'
-import BusFormAttendanceSubmission from 'pages/arrivals/BusFormAttendanceSubmission'
+import BusFormConfirmation from 'pages/arrivals/BusFormConfirmation'
 import BusFormDetails from 'pages/arrivals/BusFormDetails'
 import BusFormSubmission from 'pages/arrivals/BusFormSubmission'
 import ConstituencyArrivals from 'pages/arrivals/ConstituencyArrivals'
@@ -79,7 +79,7 @@ export const arrivals = [
   {
     path: '/arrivals/submit-bus-attendance',
     roles: ['adminConstituencyArrivals'],
-    element: BusFormAttendanceSubmission,
+    element: BusFormConfirmation,
     placeholder: false,
   },
   {

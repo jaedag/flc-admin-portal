@@ -79,7 +79,6 @@ const BacentaForm = ({ initialValues, onSubmit, title, newBacenta }) => {
                     <Row className="form-row">
                       <Col>
                         <FormikControl
-                          className="form-control"
                           control="select"
                           label={`Select a Constituency`}
                           name="constituency"
@@ -87,11 +86,15 @@ const BacentaForm = ({ initialValues, onSubmit, title, newBacenta }) => {
                           defaultOption={`Select a Constituency`}
                         />
                         <FormikControl
-                          className="form-control"
                           control="input"
                           name="name"
                           label="Name of Bacenta"
                           placeholder="Enter Name Here"
+                        />
+                        <FormikControl
+                          control="select"
+                          name="zone"
+                          label="Bussing Zone"
                         />
                       </Col>
                     </Row>
@@ -109,7 +112,6 @@ const BacentaForm = ({ initialValues, onSubmit, title, newBacenta }) => {
                             label="Select a Leader"
                             setFieldValue={formik.setFieldValue}
                             aria-describedby="Member Search Box"
-                            className="form-control"
                             error={formik.errors.leaderId}
                           />
                         </Col>
@@ -137,7 +139,6 @@ const BacentaForm = ({ initialValues, onSubmit, title, newBacenta }) => {
                                     placeholder="Enter Fellowship Name"
                                     setFieldValue={formik.setFieldValue}
                                     aria-describedby="Fellowship Name"
-                                    className="form-control"
                                     error={
                                       formik.errors.fellowships &&
                                       formik.errors.fellowships[index]

@@ -44,6 +44,13 @@ export const SERVICE_DAY_OPTIONS = [
   { key: 'Friday', value: 'Friday' },
   { key: 'Saturday', value: 'Saturday' },
 ]
+export const BUSSING_ZONE_OPTIONS = [
+  { key: '1', value: '1' },
+  { key: '2', value: '2' },
+  { key: '3', value: '3' },
+  { key: '4', value: '4' },
+  { key: '5', value: '5' },
+]
 
 export const throwErrorMsg = (message, error) => {
   if (!message && !error) {

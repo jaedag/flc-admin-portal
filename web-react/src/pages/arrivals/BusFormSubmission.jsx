@@ -79,7 +79,7 @@ const BusFormSubmission = () => {
         bussingCost: parseFloat(values.bussingCost),
         offeringRaised: parseFloat(values.offeringRaised),
         numberOfBusses: parseInt(values.numberOfBusses),
-        numberOfCars: parseInt(values.numberOfCars),
+        numberOfCars: parseInt(values.numberOfCars || 0),
         momoName: values.momoName,
         momoNumber: values.momoNumber,
       },
@@ -122,7 +122,6 @@ const BusFormSubmission = () => {
                     <i className="text-secondary">(Day/Month/Year)</i>
                   </small>
                   <FormikControl
-                    className="form-control"
                     control="input"
                     name="serviceDate"
                     type="date"
@@ -133,37 +132,31 @@ const BusFormSubmission = () => {
                     control="input"
                     name="bussingCost"
                     label="Bussing Cost (in Cedis)*"
-                    className="form-control"
                   />
                   <FormikControl
                     control="input"
                     name="offeringRaised"
                     label="Offering Raised (in Cedis)*"
-                    className="form-control"
                   />
                   <FormikControl
                     control="input"
                     name="numberOfBusses"
                     label="Number of Busses *"
-                    className="form-control"
                   />
                   <FormikControl
                     control="input"
                     name="numberOfCars"
                     label="Number of Cars"
-                    className="form-control"
                   />
                   <FormikControl
                     control="input"
                     name="momoNumber"
                     label="MoMo Number"
-                    className="form-control"
                   />
                   <FormikControl
                     control="input"
                     name="momoName"
                     label="MoMo Name"
-                    className="form-control"
                   />
                   <FieldArray name="bussingPictures">
                     {(fieldArrayProps) => {

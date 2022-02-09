@@ -104,7 +104,6 @@ const ServiceForm = ({
                       <i className="text-secondary">(Day/Month/Year)</i>
                     </small>
                     <FormikControl
-                      className="form-control"
                       control="input"
                       name="serviceDate"
                       type="date"
@@ -115,25 +114,21 @@ const ServiceForm = ({
                       control="input"
                       name="attendance"
                       label="Attendance*"
-                      className="form-control"
                     />
                     <FormikControl
                       control="input"
                       name="cediIncome"
                       label="Income (in Cedis)*"
-                      className="form-control"
                     />
                     <FormikControl
                       control="input"
                       name="foreignCurrency"
                       label="Foreign Currency (if any)*"
-                      className="form-control"
                     />
                     <FormikControl
                       control="input"
                       name="numberOfTithers"
                       label="Number of Tithers*"
-                      className="form-control"
                     />
                     <small className="label">Treasurers (minimum of 2)</small>
                     <FieldArray name="treasurers">
@@ -155,7 +150,6 @@ const ServiceForm = ({
                                     placeholder="Start typing"
                                     setFieldValue={formik.setFieldValue}
                                     aria-describedby="Member List"
-                                    className="form-control"
                                     error={
                                       !Array.isArray(formik.errors.treasurers)
                                         ? formik.errors.treasurers

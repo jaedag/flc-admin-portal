@@ -34,6 +34,12 @@ const DetailsBacenta = () => {
       link: `#`,
       width: 'auto',
     },
+    {
+      title: 'Zone',
+      number: bacenta?.zone.number,
+      link: `#`,
+      width: 'auto',
+    },
   ]
 
   return (

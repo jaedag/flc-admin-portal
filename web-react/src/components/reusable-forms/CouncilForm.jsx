@@ -67,7 +67,6 @@ const CouncilForm = ({ initialValues, onSubmit, title, newCouncil }) => {
                       <Row className="form-row">
                         <Col>
                           <FormikControl
-                            className="form-control"
                             control="select"
                             name="stream"
                             label="Select a Stream"
@@ -79,7 +78,6 @@ const CouncilForm = ({ initialValues, onSubmit, title, newCouncil }) => {
                     </RoleView>
 
                     <FormikControl
-                      className="form-control"
                       control="input"
                       name="name"
                       label={`Name of Council`}
@@ -97,7 +95,6 @@ const CouncilForm = ({ initialValues, onSubmit, title, newCouncil }) => {
                             initialValue={initialValues?.leaderName}
                             setFieldValue={formik.setFieldValue}
                             aria-describedby="Member Search Box"
-                            className="form-control"
                             error={formik.errors.leaderId}
                           />
                         </Col>
@@ -132,7 +129,6 @@ const CouncilForm = ({ initialValues, onSubmit, title, newCouncil }) => {
                                     church="bacenta"
                                     returnObject={!newCouncil && true}
                                     aria-describedby="Bacenta Name"
-                                    className="form-control"
                                     error={
                                       formik.errors.constituencies &&
                                       formik.errors.constituencies[index]

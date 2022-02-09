@@ -279,6 +279,9 @@ export const DISPLAY_BACENTA = gql`
       id
       name
       labels
+      zone {
+        number
+      }
       stream_name
       fellowships {
         id

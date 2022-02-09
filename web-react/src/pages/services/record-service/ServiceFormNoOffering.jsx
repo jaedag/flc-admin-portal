@@ -72,7 +72,6 @@ const ServiceFormNoOffering = ({
                       <i className="text-secondary">(Day/Month/Year)</i>
                     </small>
                     <FormikControl
-                      className="form-control"
                       control="input"
                       name="serviceDate"
                       type="date"
@@ -83,7 +82,6 @@ const ServiceFormNoOffering = ({
                       control="input"
                       name="attendance"
                       label="Attendance"
-                      className="form-control"
                     />
                     <FormikControl
                       control="imageUpload"

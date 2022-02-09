@@ -203,10 +203,15 @@ export const DISPLAY_BUSSING_RECORDS = gql`
       offeringRaised
       numberOfBusses
       numberOfCars
+      comments
     }
     bacentas(where: { id: $bacentaId }) {
       id
       name
+      zone {
+        number
+        bussingTopUp
+      }
     }
   }
 `

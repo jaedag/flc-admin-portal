@@ -66,7 +66,6 @@ const StreamForm = ({ initialValues, onSubmit, title, newStream }) => {
                       <Row className="form-row">
                         <Col>
                           <FormikControl
-                            className="form-control"
                             control="select"
                             name="gatheringService"
                             label="Select a Gathering Service"
@@ -78,7 +77,6 @@ const StreamForm = ({ initialValues, onSubmit, title, newStream }) => {
                     </RoleView>
 
                     <FormikControl
-                      className="form-control"
                       control="input"
                       name="name"
                       label={`Name of Stream`}
@@ -98,7 +96,6 @@ const StreamForm = ({ initialValues, onSubmit, title, newStream }) => {
                             initialValue={initialValues?.leaderName}
                             setFieldValue={formik.setFieldValue}
                             aria-describedby="Member Search Box"
-                            className="form-control"
                             error={formik.errors.leaderId}
                           />
                         </Col>
@@ -133,7 +130,6 @@ const StreamForm = ({ initialValues, onSubmit, title, newStream }) => {
                                     church="bacenta"
                                     returnObject={!newStream && true}
                                     aria-describedby="Bacenta Name"
-                                    className="form-control"
                                     error={
                                       formik.errors.councils &&
                                       formik.errors.councils[index]

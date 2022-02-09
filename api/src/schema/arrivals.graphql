@@ -19,6 +19,7 @@ extend type Constituency {
 }
 
 extend type Bacenta {
+  zone: BussingZone @relationship(type: "BUSSES_FROM", direction: OUT)
   #ARrivals Data
   arrivalsCodeOfTheDay: String!
     @cypher(
@@ -39,6 +40,11 @@ extend type Bacenta {
       RETURN bussing ORDER BY date.date
       """
     )
+}
+
+type BussingZone {
+  number: Int!
+  bussingTopUp: Float!
 }
 
 type BussingRecord implements Record @auth(rules: [{ isAuthenticated: true }]) {
@@ -62,6 +68,7 @@ type BussingRecord implements Record @auth(rules: [{ isAuthenticated: true }]) {
   bussingTopUp: Float
   momoName: String
   momoNumber: String
+  comments: String
   bussingPictures: [String]!
   serviceLog: ServiceLog @relationship(type: "HAS_BUSSING", direction: IN)
 }
@@ -106,7 +113,6 @@ extend type Mutation {
         bussingRecord.momoNumber = $momoNumber,
         bussingRecord.momoName = $momoName
 
-
          WITH bussingRecord
           MATCH (bacenta:Bacenta {id:$id})
           MATCH (bacenta)-[has_history:HAS_HISTORY]->(log:ServiceLog) WHERE has_history.current = true
@@ -125,12 +131,14 @@ extend type Mutation {
     bussingRecordId: ID!
     attendance: Int!
     bussingTopUp: Float!
+    comments: String
   ): BussingRecord
     @cypher(
       statement: """
       MATCH (bussingRecord:BussingRecord {id: $bussingRecordId})
         SET bussingRecord.attendance = $attendance,
-        bussingRecord.bussingTopUp = $bussingTopUp
+        bussingRecord.bussingTopUp = $bussingTopUp,
+        bussingRecord.comments = $comments
 
          WITH bussingRecord
           MATCH (admin:Member {auth_id: $auth.jwt.sub})

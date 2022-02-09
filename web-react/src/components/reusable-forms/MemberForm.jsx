@@ -92,7 +92,6 @@ function MemberForm({ initialValues, onSubmit, title, loading, update }) {
                     <Col sm={10}>
                       <FormikControl
                         label="First Name*"
-                        className="form-control"
                         control="input"
                         name="firstName"
                         placeholder="First Name"
@@ -102,7 +101,6 @@ function MemberForm({ initialValues, onSubmit, title, loading, update }) {
                     <Col sm={10}>
                       <FormikControl
                         label="Middle Name"
-                        className="form-control"
                         control="input"
                         name="middleName"
                         placeholder="Other Names"
@@ -112,7 +110,6 @@ function MemberForm({ initialValues, onSubmit, title, loading, update }) {
                     <Col sm={10}>
                       <FormikControl
                         label="Last Name*"
-                        className="form-control"
                         control="input"
                         name="lastName"
                         placeholder="Last Name"
@@ -122,7 +119,6 @@ function MemberForm({ initialValues, onSubmit, title, loading, update }) {
                     <Col sm={10}>
                       <FormikControl
                         label="Gender*"
-                        className="form-control"
                         control="select"
                         name="gender"
                         placeholder="Gender"
@@ -133,7 +129,6 @@ function MemberForm({ initialValues, onSubmit, title, loading, update }) {
                     <Col sm={10}>
                       <FormikControl
                         label="Phone Number*"
-                        className="form-control"
                         control="input"
                         placeholder="Eg. +233 241 23 456"
                         id="phoneNumber"
@@ -143,7 +138,6 @@ function MemberForm({ initialValues, onSubmit, title, loading, update }) {
                     <Col sm={10}>
                       <FormikControl
                         label="WhatsApp Number*"
-                        className="form-control"
                         control="input"
                         placeholder="Eg. +233 241 23 456"
                         id="whatsappNumber"
@@ -156,7 +150,6 @@ function MemberForm({ initialValues, onSubmit, title, loading, update }) {
                     <Col sm={10}>
                       <FormikControl
                         label="Marital Status*"
-                        className="form-control"
                         control="select"
                         name="maritalStatus"
                         placeholder="Marital Status"
@@ -167,7 +160,6 @@ function MemberForm({ initialValues, onSubmit, title, loading, update }) {
                     <Col sm={10}>
                       <FormikControl
                         label="Occupation"
-                        className="form-control"
                         control="input"
                         name="occupation"
                         placeholder="Occupation"
@@ -186,7 +178,6 @@ function MemberForm({ initialValues, onSubmit, title, loading, update }) {
                       <Col sm={10}>
                         <FormikControl
                           label="Email Address*"
-                          className="form-control"
                           control="input"
                           name="email"
                           placeholder="Enter Email Address"
@@ -201,7 +192,6 @@ function MemberForm({ initialValues, onSubmit, title, loading, update }) {
                         <i className="text-secondary">(Day/Month/Year)</i>
                       </small>
                       <FormikControl
-                        className="form-control"
                         control="input"
                         name="dob"
                         type="date"
@@ -226,7 +216,6 @@ function MemberForm({ initialValues, onSubmit, title, loading, update }) {
                         placeholder="Start Typing"
                         setFieldValue={formik.setFieldValue}
                         aria-describedby="Fellowship Name"
-                        className="form-control"
                         initialValue={initialValues?.fellowship || null}
                         error={
                           formik.errors.fellowship && formik.errors.fellowship
@@ -235,7 +224,6 @@ function MemberForm({ initialValues, onSubmit, title, loading, update }) {
                     </Col>
                     <Col sm={10}>
                       <FormikControl
-                        className="form-control"
                         label="Ministry"
                         control="select"
                         name="ministry"
@@ -266,7 +254,6 @@ function MemberForm({ initialValues, onSubmit, title, loading, update }) {
                                 <Row key={index} className="form-row">
                                   <Col className="col-auto">
                                     <FormikControl
-                                      className="form-control"
                                       control="select"
                                       options={TITLE_OPTIONS}
                                       defaultOption="Title"
@@ -275,7 +262,6 @@ function MemberForm({ initialValues, onSubmit, title, loading, update }) {
                                   </Col>
                                   <Col>
                                     <FormikControl
-                                      className="form-control"
                                       placeholder="Date"
                                       control="input"
                                       type="date"
@@ -314,7 +300,6 @@ function MemberForm({ initialValues, onSubmit, title, loading, update }) {
                               <Row key={index} className="form-row">
                                 <Col className="col-7">
                                   <FormikControl
-                                    className="form-control"
                                     placeholder="History Entry"
                                     control="input"
                                     name={`pastoralHistory[${index}].historyRecord`}
@@ -322,7 +307,6 @@ function MemberForm({ initialValues, onSubmit, title, loading, update }) {
                                 </Col>
                                 <Col>
                                   <FormikControl
-                                    className="form-control"
                                     placeholder="Year"
                                     control="input"
                                     name={`pastoralHistory[${index}].historyDate`}

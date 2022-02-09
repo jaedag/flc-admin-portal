@@ -42,7 +42,13 @@ function SelectWithQuery(props) {
           </label>
         </PlaceholderCustom>
       ) : null}
-      <Field as="select" id={name} name={name} {...rest}>
+      <Field
+        as="select"
+        id={name}
+        name={name}
+        className="form-control"
+        {...rest}
+      >
         <option value="" disabled defaultValue>
           {defaultOption}
         </option>

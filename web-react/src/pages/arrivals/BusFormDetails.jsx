@@ -149,6 +149,16 @@ const BusFormDetails = () => {
                       </PlaceholderCustom>
                     </td>
                   </tr>
+                  {bussing?.comments && (
+                    <tr>
+                      <td>Comments</td>
+                      <td>
+                        <PlaceholderCustom loading={loading}>
+                          {bussing?.comments}
+                        </PlaceholderCustom>
+                      </td>
+                    </tr>
+                  )}
                 </tbody>
               </Table>
               <div className="text-center">

@@ -83,7 +83,6 @@ const ConstituencyForm = ({
                       <Row className="form-row">
                         <Col>
                           <FormikControl
-                            className="form-control"
                             control="select"
                             name="council"
                             label="Select a Council"
@@ -95,7 +94,6 @@ const ConstituencyForm = ({
                     </RoleView>
 
                     <FormikControl
-                      className="form-control"
                       control="input"
                       name="name"
                       label={`Name of Constituency`}
@@ -113,7 +111,6 @@ const ConstituencyForm = ({
                             initialValue={initialValues?.leaderName}
                             setFieldValue={formik.setFieldValue}
                             aria-describedby="Member Search Box"
-                            className="form-control"
                             error={formik.errors.leaderId}
                           />
                         </Col>
@@ -141,7 +138,6 @@ const ConstituencyForm = ({
                                     initialValue={bacenta?.name}
                                     setFieldValue={formik.setFieldValue}
                                     aria-describedby="Bacenta Name"
-                                    className="form-control"
                                     error={
                                       formik.errors.bacentas &&
                                       formik.errors.bacentas[index]

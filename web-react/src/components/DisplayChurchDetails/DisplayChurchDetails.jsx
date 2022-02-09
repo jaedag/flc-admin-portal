@@ -221,7 +221,6 @@ const DisplayChurchDetails = (props) => {
                           placeholder="Select an Admin"
                           setFieldValue={formik.setFieldValue}
                           aria-describedby="Member Search"
-                          className="form-control"
                           error={formik.errors.admin}
                         />
                       </Col>

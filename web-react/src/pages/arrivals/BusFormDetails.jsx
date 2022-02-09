@@ -96,6 +96,26 @@ const BusFormDetails = () => {
                       </PlaceholderCustom>
                     </td>
                   </tr>
+                  {bussing?.momoNumber && (
+                    <tr>
+                      <td>Momo Number</td>
+                      <td>
+                        <PlaceholderCustom loading={loading}>
+                          {bussing?.momoNumber}
+                        </PlaceholderCustom>
+                      </td>
+                    </tr>
+                  )}
+                  {bussing?.momoName && (
+                    <tr>
+                      <td>Momo Name</td>
+                      <td>
+                        <PlaceholderCustom loading={loading}>
+                          {bussing?.momoName}
+                        </PlaceholderCustom>
+                      </td>
+                    </tr>
+                  )}
 
                   <tr>
                     <td>Bussing Top Up</td>

@@ -10,16 +10,16 @@ import { ServiceContext } from 'contexts/ServiceContext'
 import MembersDirectoryRoute from './pages/directory/MembersDirectoryRoute.jsx'
 import Navigation from 'pages/dashboards/Navigation.jsx'
 import ProtectedReports from 'pages/services/reports/ProtectedReports.jsx'
-import { dashboards } from 'pages/routes/dashboardRoutes.js'
+import { dashboards } from 'pages/dashboards/dashboardRoutes.js'
 import {
   directory,
   memberDirectory,
   memberGrids,
-} from 'pages/routes/directoryRoutes.js'
-import { reports, services } from 'pages/routes/servicesRoutes.js'
-import { arrivals } from 'pages/routes/arrivalsRoutes.js'
-import { campaigns } from 'pages/routes/campaignsRoutes.js'
-import { reconciliation } from 'pages/routes/reconRoutes.js'
+} from 'pages/directory/directoryRoutes.js'
+import { reports, services } from 'pages/services/servicesRoutes.js'
+import { arrivals } from 'pages/arrivals/arrivalsRoutes.js'
+import { campaigns } from 'pages/campaigns/campaignsRoutes.js'
+import { reconciliation } from 'pages/reconciliation/reconRoutes.js'
 import PageNotFound from 'pages/page-not-found/PageNotFound'
 import SetPermissions from 'auth/SetPermissions'
 import { permitMeAndThoseAbove } from 'global-utils'
@@ -427,7 +427,7 @@ const PastorsAdmin = () => {
                         path={route.path}
                         element={
                           <ProtectedRoute
-                            roles={route.roles}
+                            roles={route.roles ?? ['all']}
                             placeholder={route.placeholder}
                           >
                             <route.element />

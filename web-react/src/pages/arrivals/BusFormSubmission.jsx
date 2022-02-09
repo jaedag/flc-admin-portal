@@ -14,6 +14,7 @@ import BaseComponent from 'components/base-component/BaseComponent'
 import PlusSign from 'components/buttons/PlusMinusSign/PlusSign'
 import MinusSign from 'components/buttons/PlusMinusSign/MinusSign'
 import { RECORD_BUSSING_FROM_BACENTA } from './arrivalsMutations'
+import { MOMO_NUM_REGEX } from 'global-utils'
 
 const BusFormSubmission = () => {
   const navigate = useNavigate()
@@ -25,6 +26,8 @@ const BusFormSubmission = () => {
     offeringRaised: '',
     numberOfBusses: '',
     numberOfCars: '',
+    momoName: '',
+    momoNumber: '',
   }
 
   const { data, loading, error } = useQuery(BACENTA_ARRIVALS, {
@@ -56,6 +59,14 @@ const BusFormSubmission = () => {
       .typeError('Please enter a valid number')
       .positive()
       .integer('You cannot have busses with decimals!'),
+    momoNumber: Yup.string().matches(
+      MOMO_NUM_REGEX,
+      `Enter a valid MoMo Number without spaces. eg. (02XXXXXXXX)`
+    ),
+    momoName: Yup.string().when('momoNumber', {
+      is: (momoNumber) => momoNumber && momoNumber.length > 0,
+      then: Yup.string().required('Please enter the Momo Name'),
+    }),
   })
 
   const onSubmit = (values, onSubmitProps) => {
@@ -69,6 +80,8 @@ const BusFormSubmission = () => {
         offeringRaised: parseFloat(values.offeringRaised),
         numberOfBusses: parseInt(values.numberOfBusses),
         numberOfCars: parseInt(values.numberOfCars),
+        momoName: values.momoName,
+        momoNumber: values.momoNumber,
       },
     }).then((res) => {
       clickCard(res.data.RecordBussingFromBacenta)
@@ -138,6 +151,18 @@ const BusFormSubmission = () => {
                     control="input"
                     name="numberOfCars"
                     label="Number of Cars"
+                    className="form-control"
+                  />
+                  <FormikControl
+                    control="input"
+                    name="momoNumber"
+                    label="MoMo Number"
+                    className="form-control"
+                  />
+                  <FormikControl
+                    control="input"
+                    name="momoName"
+                    label="MoMo Name"
                     className="form-control"
                   />
                   <FieldArray name="bussingPictures">

@@ -7,6 +7,7 @@ import { Container } from 'react-bootstrap'
 import { useNavigate } from 'react-router'
 import MemberIcon from '../../assets/people-svgrepo-com-2.svg'
 import HeadingSecondary from 'components/HeadingSecondary'
+import { plural } from 'global-utils'
 
 const Arrivals = () => {
   const { userJobs } = useContext(MemberContext)
@@ -38,12 +39,16 @@ const Arrivals = () => {
                 icon={MemberIcon}
                 iconBg={true}
                 color="arrivals"
-                onClick={() => navigate(`/arrivals/${role.name.toLowerCase()}`)}
+                onClick={() =>
+                  navigate(`/arrivals/${plural(role.name.toLowerCase())}`)
+                }
               />
             )
           })
         ) : (
           <>
+            <MenuButton color="arrivals" />
+            <MenuButton color="arrivals" />
             <MenuButton color="arrivals" />
             <MenuButton color="arrivals" />
           </>

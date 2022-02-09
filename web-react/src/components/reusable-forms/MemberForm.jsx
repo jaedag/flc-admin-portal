@@ -9,7 +9,7 @@ import {
   makeSelectOptions,
   MARITAL_STATUS_OPTIONS,
   permitAdminAndThoseAbove,
-  PHONE_NUM_REGEX_VALIDATION,
+  PHONE_NUM_REGEX,
   TITLE_OPTIONS,
 } from '../../global-utils'
 import { GET_MINISTRIES } from '../../queries/ListQueries'
@@ -40,12 +40,12 @@ function MemberForm({ initialValues, onSubmit, title, loading, update }) {
       .required('Date of Birth is a required field'),
     phoneNumber: Yup.string()
       .matches(
-        PHONE_NUM_REGEX_VALIDATION,
+        PHONE_NUM_REGEX,
         `Phone Number must start with + and country code (eg. '+233')`
       )
       .required('Phone Number is required'),
     whatsappNumber: Yup.string().matches(
-      PHONE_NUM_REGEX_VALIDATION,
+      PHONE_NUM_REGEX,
       `Phone Number must start with + and country code (eg. '+233')`
     ),
     fellowship: Yup.string().required(

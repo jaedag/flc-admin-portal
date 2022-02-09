@@ -44,7 +44,8 @@ extend type Bacenta {
 type BussingRecord implements Record @auth(rules: [{ isAuthenticated: true }]) {
   id: ID!
   created_at: Date!
-  created_by: Member!
+  created_by: Member! @relationship(type: "LOGGED_BY", direction: OUT)
+  confirmed_by: Member @relationship(type: "CONFIRMED_BY", direction: OUT)
   serviceDate: TimeGraph! @relationship(type: "BUSSED_ON", direction: OUT)
   week: Int
     @cypher(
@@ -59,6 +60,8 @@ type BussingRecord implements Record @auth(rules: [{ isAuthenticated: true }]) {
   offeringRaised: Float
   bussingCost: Float!
   bussingTopUp: Float
+  momoName: String
+  momoNumber: String
   bussingPictures: [String]!
   serviceLog: ServiceLog @relationship(type: "HAS_BUSSING", direction: IN)
 }
@@ -68,6 +71,17 @@ extend type Mutation {
   MakeConstituencyArrivalsAdmin(adminId: ID!, constituencyId: ID!): Member
   RemoveConstituencyArrivalsAdmin(adminId: ID!, constituencyId: ID!): Member
 
+  ## GENERATE CODE OF THE DAY
+  GenerateCodeOfTheDay: String!
+    @auth(rules: [{ roles: ["adminStream"] }])
+    @cypher(
+      statement: """
+      MERGE (arr:ArrivalsCodeOfTheDay)
+      SET arr.code = apoc.text.random(5, 'A-Z0-9')
+      RETURN arr.code
+      """
+    )
+
   #Bussing Records Entries
   RecordBussingFromBacenta(
     id: ID!
@@ -76,7 +90,9 @@ extend type Mutation {
     bussingCost: Float!
     offeringRaised: Float!
     numberOfBusses: Int!
-    numberOfCars: Int
+    numberOfCars: Int!
+    momoName: String!
+    momoNumber: String!
   ): BussingRecord
     @cypher(
       statement: """
@@ -86,7 +102,9 @@ extend type Mutation {
         bussingRecord.bussingCost = $bussingCost,
         bussingRecord.offeringRaised = $offeringRaised,
         bussingRecord.numberOfBusses = $numberOfBusses,
-        bussingRecord.numberOfCars = $numberOfCars
+        bussingRecord.numberOfCars = $numberOfCars,
+        bussingRecord.momoNumber = $momoNumber,
+        bussingRecord.momoName = $momoName
 
 
          WITH bussingRecord

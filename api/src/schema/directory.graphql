@@ -990,9 +990,12 @@ type Constituency implements Church {
     )
 }
 
+
+
 type Bacenta implements Church {
   id: ID @id
   name: String!
+  zone: Int!
   stream_name: String
     @cypher(
       statement: """

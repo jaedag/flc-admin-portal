@@ -23,7 +23,7 @@ import CouncilByConstituency from 'pages/services/defaulters/CouncilByConstituen
 import Defaulters from 'pages/services/defaulters/Defaulters'
 import FormDefaulters from 'pages/services/defaulters/FormDefaulters'
 import ServicesThisWeek from 'pages/services/defaulters/ServicesThisWeek'
-import Fellowship from 'pages/services/Fellowship'
+import FellowshipServiceMenu from 'pages/services/Fellowship'
 import ServicesChurchList from 'pages/services/ServicesChurchList'
 import Services from 'pages/services/ServicesMenu'
 import StreamReport from 'pages/services/reports/StreamReport'
@@ -60,13 +60,13 @@ export const services = [
   },
   {
     path: '/fellowship/record-service',
-    element: Fellowship,
+    element: FellowshipService,
     roles: permitMeAndThoseAbove('Fellowship'),
     placeholder: true,
   },
   {
     path: '/services/fellowship',
-    element: Fellowship,
+    element: FellowshipServiceMenu,
     roles: permitMeAndThoseAbove('Fellowship'),
     placeholder: true,
   },

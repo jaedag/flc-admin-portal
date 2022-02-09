@@ -248,3 +248,73 @@ export const DISPLAY_COUNCIL_SERVICE = gql`
     }
   }
 `
+
+export const DISPLAY_STREAM_SERVICE = gql`
+  query DisplayServiceRecords($serviceId: ID!, $streamId: ID!) {
+    serviceRecords(where: { id: $serviceId }) {
+      id
+      created_at
+      created_by {
+        id
+        firstName
+        lastName
+        fullName
+      }
+      serviceDate {
+        date
+      }
+      noServiceReason
+      attendance
+      income
+      foreignCurrency
+      treasurerSelfie
+      servicePicture
+      bankingSlip
+      treasurers {
+        id
+        firstName
+        lastName
+        fullName
+      }
+    }
+    streams(where: { id: $streamId }) {
+      id
+      name
+    }
+  }
+`
+
+export const DISPLAY_GATHERINGSERVICE_SERVICE = gql`
+  query DisplayServiceRecords($serviceId: ID!, $gatheringServiceId: ID!) {
+    serviceRecords(where: { id: $serviceId }) {
+      id
+      created_at
+      created_by {
+        id
+        firstName
+        lastName
+        fullName
+      }
+      serviceDate {
+        date
+      }
+      noServiceReason
+      attendance
+      income
+      foreignCurrency
+      treasurerSelfie
+      servicePicture
+      bankingSlip
+      treasurers {
+        id
+        firstName
+        lastName
+        fullName
+      }
+    }
+    gatheringServices(where: { id: $gatheringServiceId }) {
+      id
+      name
+    }
+  }
+`

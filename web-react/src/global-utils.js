@@ -419,8 +419,8 @@ export const last3Weeks = () => {
 // Permissions Things
 export const permitMeAndThoseAbove = (churchType) => {
   let permittedFor = []
-  switch (churchType) {
-    case 'Fellowship':
+  switch (churchType.toLowerCase()) {
+    case 'fellowship':
       permittedFor = [
         'adminGatheringService',
         'adminStream',
@@ -435,7 +435,7 @@ export const permitMeAndThoseAbove = (churchType) => {
         'leaderFellowship',
       ]
       break
-    case 'Bacenta':
+    case 'bacenta':
       permittedFor = [
         'adminGatheringService',
         'adminStream',
@@ -449,7 +449,7 @@ export const permitMeAndThoseAbove = (churchType) => {
         'leaderBacenta',
       ]
       break
-    case 'Sonta':
+    case 'sonta':
       permittedFor = [
         'adminGatheringService',
         'adminStream',
@@ -463,7 +463,7 @@ export const permitMeAndThoseAbove = (churchType) => {
         'leaderSonta',
       ]
       break
-    case 'Constituency':
+    case 'constituency':
       permittedFor = [
         'adminGatheringService',
         'adminStream',
@@ -476,7 +476,7 @@ export const permitMeAndThoseAbove = (churchType) => {
         'leaderConstituency',
       ]
       break
-    case 'Council':
+    case 'council':
       permittedFor = [
         'adminGatheringService',
         'adminStream',
@@ -486,7 +486,7 @@ export const permitMeAndThoseAbove = (churchType) => {
         'leaderCouncil',
       ]
       break
-    case 'Stream':
+    case 'stream':
       permittedFor = [
         'adminGatheringService',
         'adminStream',
@@ -494,7 +494,7 @@ export const permitMeAndThoseAbove = (churchType) => {
         'leaderStream',
       ]
       break
-    case 'GatheringService':
+    case 'gatheringservice':
       permittedFor = ['adminGatheringService', 'leaderGatheringService']
       break
     default:

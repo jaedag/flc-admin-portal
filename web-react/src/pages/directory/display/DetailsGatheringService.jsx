@@ -3,12 +3,12 @@ import BaseComponent from 'components/base-component/BaseComponent'
 import DisplayChurchDetails from 'components/DisplayChurchDetails/DisplayChurchDetails'
 import { ChurchContext } from 'contexts/ChurchContext'
 import React, { useContext } from 'react'
-import { DISPLAY_GATHERING } from './ReadQueries'
+import { DISPLAY_GATHERINGSERVICE } from './ReadQueries'
 
 const DetailsGatheringService = () => {
   const { gatheringServiceId } = useContext(ChurchContext)
 
-  const { data, loading, error } = useQuery(DISPLAY_GATHERING, {
+  const { data, loading, error } = useQuery(DISPLAY_GATHERINGSERVICE, {
     variables: { id: gatheringServiceId },
   })
 

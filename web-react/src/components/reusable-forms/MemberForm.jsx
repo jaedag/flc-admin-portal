@@ -8,7 +8,6 @@ import {
   isAuthorised,
   makeSelectOptions,
   MARITAL_STATUS_OPTIONS,
-  permitAdminAndThoseAbove,
   PHONE_NUM_REGEX,
   TITLE_OPTIONS,
 } from '../../global-utils'
@@ -22,6 +21,7 @@ import { Col, Container, Row } from 'react-bootstrap'
 import LoadingScreen from 'components/base-component/LoadingScreen'
 import { MemberContext } from 'contexts/MemberContext'
 import SubmitButton from 'components/formik-components/SubmitButton'
+import { permitAdmin } from 'permission-utils'
 
 function MemberForm({ initialValues, onSubmit, title, loading, update }) {
   const { currentUser } = useContext(MemberContext)
@@ -172,7 +172,7 @@ function MemberForm({ initialValues, onSubmit, title, loading, update }) {
                     {(!update ||
                       !formik.initialValues.email ||
                       isAuthorised(
-                        permitAdminAndThoseAbove('GatheringService'),
+                        permitAdmin('GatheringService'),
                         currentUser.roles
                       )) && (
                       <Col sm={10}>
@@ -236,7 +236,7 @@ function MemberForm({ initialValues, onSubmit, title, loading, update }) {
                 {/* <!-- End of Church Info Section--> */}
 
                 {/* <!-- Beginning of Pastoral Appointments Section--> */}
-                <RoleView roles={permitAdminAndThoseAbove('GatheringService')}>
+                <RoleView roles={permitAdmin('GatheringService')}>
                   <Col className="my-4">
                     <HeadingPrimary>
                       Pastoral Appointments (if any)
@@ -285,7 +285,7 @@ function MemberForm({ initialValues, onSubmit, title, loading, update }) {
                 {/* <!--End of Pastoral Appointments Section--> */}
 
                 {/* <!--Beginning of Pastoral History Section--> */}
-                <RoleView roles={permitAdminAndThoseAbove('GatheringService')}>
+                <RoleView roles={permitAdmin('GatheringService')}>
                   <Col className="my-4">
                     <HeadingPrimary>Pastoral History</HeadingPrimary>
                     <FieldArray name="pastoralHistory">

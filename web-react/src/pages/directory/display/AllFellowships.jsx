@@ -7,7 +7,7 @@ import { ChurchContext } from '../../../contexts/ChurchContext'
 import RoleView from '../../../auth/RoleView'
 import BaseComponent from 'components/base-component/BaseComponent'
 import { Container, Row, Col, Button } from 'react-bootstrap'
-import { permitAdminAndThoseAbove } from 'global-utils'
+import { permitAdmin } from 'permission-utils'
 
 const DisplayAllFellowships = () => {
   const { bacentaId, setBacentaId } = useContext(ChurchContext)
@@ -33,7 +33,7 @@ const DisplayAllFellowships = () => {
                 <h4>{`${fellowships?.[0].bacenta.name} Bacenta`}</h4>
               </Link>
             </Col>
-            <RoleView roles={permitAdminAndThoseAbove('Constituency')}>
+            <RoleView roles={permitAdmin('Constituency')}>
               <Col className="col-auto">
                 <Link
                   to="/fellowship/addfellowship"

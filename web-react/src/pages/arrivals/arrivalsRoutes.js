@@ -1,4 +1,4 @@
-import { permitArrivalsAndThoseAbove } from 'global-utils'
+import { permitArrivals } from 'permission-utils'
 import Arrivals from 'pages/arrivals/Arrivals'
 import BacentaArrivals from 'pages/arrivals/BacentaArrivals'
 import BacentasHaveBeenCounted from 'pages/arrivals/BacentasHaveBeenCounted'
@@ -16,36 +16,37 @@ export const arrivals = [
     path: '/arrivals',
     element: Arrivals,
     placeholder: true,
+    roles: permitArrivals('Fellowship'),
   },
 
   //Main Arrivals Pages for the Different Churches
   {
     path: '/arrivals/bacentas',
-    roles: permitArrivalsAndThoseAbove('Bacenta'),
+    roles: permitArrivals('Bacenta'),
     element: BacentaArrivals,
     placeholder: true,
   },
   {
     path: '/arrivals/constituencies',
-    roles: permitArrivalsAndThoseAbove('Constituency'),
+    roles: permitArrivals('Constituency'),
     element: ConstituencyArrivals,
     placeholder: true,
   },
   {
     path: '/arrivals/constituency/dashboard',
-    roles: permitArrivalsAndThoseAbove('Constituency'),
+    roles: permitArrivals('Constituency'),
     element: ConstituencyDashboard,
     placeholder: true,
   },
   {
     path: '/arrivals/councils',
-    roles: permitArrivalsAndThoseAbove('Council'),
+    roles: permitArrivals('Council'),
     element: CouncilArrivals,
     placeholder: true,
   },
   {
     path: '/arrivals/council/dashboard',
-    roles: permitArrivalsAndThoseAbove('Council'),
+    roles: permitArrivals('Council'),
     element: ConstituencyDashboard,
     placeholder: true,
   },
@@ -54,19 +55,19 @@ export const arrivals = [
 
   {
     path: '/arrivals/bacentas-not-arrived',
-    roles: permitArrivalsAndThoseAbove('Constituency'),
+    roles: permitArrivals('Constituency'),
     element: BacentasNotArrived,
     placeholder: true,
   },
   {
     path: '/arrivals/bacentas-that-submitted',
-    roles: permitArrivalsAndThoseAbove('Constituency'),
+    roles: permitArrivals('Constituency'),
     element: BacentasThatSubmitted,
     placeholder: true,
   },
   {
     path: '/arrivals/bacentas-have-been-counted',
-    roles: permitArrivalsAndThoseAbove('Constituency'),
+    roles: permitArrivals('Constituency'),
     element: BacentasHaveBeenCounted,
     placeholder: true,
   },

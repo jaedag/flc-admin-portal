@@ -2,7 +2,7 @@ import { useLazyQuery } from '@apollo/client'
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import HeadingSecondary from 'components/HeadingSecondary'
 import { MemberContext } from 'contexts/MemberContext'
-import { isAuthorised, permitMeAndThoseAbove, plural } from 'global-utils'
+import { isAuthorised, plural } from 'global-utils'
 import React, { useContext, useEffect, useState } from 'react'
 import { Col, Container, Row } from 'react-bootstrap'
 import {
@@ -15,6 +15,7 @@ import './Defaulters.css'
 import PlaceholderCustom from 'components/Placeholder'
 import DefaulterInfoCard from './DefaulterInfoCard'
 import RoleView from 'auth/RoleView'
+import { permitLeaderAdmin } from 'permission-utils'
 
 const Defaulters = () => {
   const { currentUser } = useContext(MemberContext)
@@ -144,7 +145,7 @@ const Defaulters = () => {
       </PlaceholderCustom>
 
       <Row>
-        <RoleView roles={permitMeAndThoseAbove('Council')}>
+        <RoleView roles={permitLeaderAdmin('Council')}>
           <Col xs={12} className="mb-3">
             <DefaulterInfoCard defaulter={aggregates} />
           </Col>

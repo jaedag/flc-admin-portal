@@ -19,17 +19,13 @@ import {
   MAKE_STREAM_ADMIN,
 } from './AdminMutations'
 import FormikControl from '../formik-components/FormikControl'
-import {
-  getWeekNumber,
-  permitAdminAndThoseAbove,
-  plural,
-  throwErrorMsg,
-} from '../../global-utils'
+import { getWeekNumber, plural, throwErrorMsg } from '../../global-utils'
 import Breadcrumb from './Breadcrumb'
 import { Button, Col, Container, Row, Spinner } from 'react-bootstrap'
 import PlaceholderCustom from 'components/Placeholder'
 import { Geo, PencilSquare } from 'react-bootstrap-icons'
 import ViewAll from 'components/buttons/ViewAll'
+import { permitAdmin } from 'permission-utils'
 
 const DisplayChurchDetails = (props) => {
   const navigate = useNavigate()
@@ -40,15 +36,15 @@ const DisplayChurchDetails = (props) => {
   switch (props.churchType) {
     case 'Constituency':
       needsAdmin = true
-      roles = permitAdminAndThoseAbove('Constituency')
+      roles = permitAdmin('Constituency')
       break
     case 'Council':
       needsAdmin = true
-      roles = permitAdminAndThoseAbove('Council')
+      roles = permitAdmin('Council')
       break
     case 'Stream':
       needsAdmin = true
-      roles = permitAdminAndThoseAbove('Stream')
+      roles = permitAdmin('Stream')
       break
     default:
       needsAdmin = false

@@ -3,7 +3,8 @@ import MenuButton from 'components/buttons/MenuButton'
 import PlaceholderCustom from 'components/Placeholder'
 import { ChurchContext } from 'contexts/ChurchContext'
 import { MemberContext } from 'contexts/MemberContext'
-import { parseMemberCount, permitMeAndThoseAbove } from 'global-utils'
+import { parseMemberCount } from 'global-utils'
+import { permitLeaderAdmin } from 'permission-utils'
 import React, { useContext } from 'react'
 import { Container } from 'react-bootstrap'
 import { EmojiFrown } from 'react-bootstrap-icons'
@@ -56,7 +57,7 @@ const ServicesChurchList = () => {
             </>
           )}
 
-          <RoleView roles={permitMeAndThoseAbove('Constituency')}>
+          <RoleView roles={permitLeaderAdmin('Constituency')}>
             <MenuButton
               title="Defaulters"
               color="danger"

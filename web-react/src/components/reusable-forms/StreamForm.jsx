@@ -2,7 +2,8 @@ import { useMutation, useQuery } from '@apollo/client'
 import BaseComponent from 'components/base-component/BaseComponent'
 import { FieldArray, Form, Formik } from 'formik'
 import * as Yup from 'yup'
-import { makeSelectOptions, permitAdminAndThoseAbove } from 'global-utils'
+import { makeSelectOptions } from 'global-utils'
+import { permitAdmin } from 'permission-utils'
 import { COUNCIL_DROPDOWN, GET_GATHERINGSERVICES } from 'queries/ListQueries'
 import React, { useContext } from 'react'
 import { ChurchContext } from 'contexts/ChurchContext'
@@ -60,9 +61,7 @@ const StreamForm = ({ initialValues, onSubmit, title, newStream }) => {
                 <Row className="row-cols-1 row-cols-md-2">
                   {/* <!-- Basic Info Div --> */}
                   <Col className="mb-2">
-                    <RoleView
-                      roles={permitAdminAndThoseAbove('GatheringService')}
-                    >
+                    <RoleView roles={permitAdmin('GatheringService')}>
                       <Row className="form-row">
                         <Col>
                           <FormikControl
@@ -84,9 +83,7 @@ const StreamForm = ({ initialValues, onSubmit, title, newStream }) => {
                     />
 
                     <Row className="d-flex align-items-center mb-3">
-                      <RoleView
-                        roles={permitAdminAndThoseAbove('GatheringService')}
-                      >
+                      <RoleView roles={permitAdmin('GatheringService')}>
                         <Col>
                           <FormikControl
                             control="memberSearch"

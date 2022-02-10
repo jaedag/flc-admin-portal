@@ -14,8 +14,9 @@ import { CONSTIUENCY_ARRIVALS_DASHBOARD } from './arrivalsQueries'
 import { useNavigate } from 'react-router'
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import RoleView from 'auth/RoleView'
-import { permitAdminAndThoseAbove, throwErrorMsg } from 'global-utils'
+import { throwErrorMsg } from 'global-utils'
 import { MAKE_CONSTITUENCYARRIVALS_ADMIN } from './arrivalsMutations'
+import { permitAdmin } from 'permission-utils'
 
 const ConstituencyDashboard = () => {
   const { isOpen, togglePopup, constituencyId } = useContext(ChurchContext)
@@ -98,7 +99,7 @@ const ConstituencyDashboard = () => {
         )}
 
         <div className="d-grid gap-2">
-          <RoleView roles={permitAdminAndThoseAbove('Constituency')}>
+          <RoleView roles={permitAdmin('Constituency')}>
             <Button
               variant="outline-secondary"
               size="lg"

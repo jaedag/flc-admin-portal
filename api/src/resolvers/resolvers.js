@@ -442,9 +442,7 @@ export const resolvers = {
   // Context: Context object, database connection, API, etc
   // GraphQLResolveInfo
   Member: {
-    fullName: (obj) => {
-      return `${obj.firstName} ${obj.lastName}`
-    },
+    fullName: (obj) => `${obj.firstName} ${obj.lastName}`,
   },
 
   Mutation: {

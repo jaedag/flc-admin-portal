@@ -4,7 +4,6 @@ import * as Yup from 'yup'
 import {
   DECIMAL_NUM_REGEX,
   makeSelectOptions,
-  permitAdminAndThoseAbove,
   SERVICE_DAY_OPTIONS,
   throwErrorMsg,
   VACATION_OPTIONS,
@@ -28,6 +27,7 @@ import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import HeadingSecondary from 'components/HeadingSecondary'
 import SubmitButton from 'components/formik-components/SubmitButton'
 import { DISPLAY_BACENTA } from 'pages/directory/display/ReadQueries'
+import { permitAdmin } from 'permission-utils'
 
 const FellowshipForm = (props) => {
   const { clickCard, isOpen, togglePopup, fellowshipId, councilId } =
@@ -106,9 +106,7 @@ const FellowshipForm = (props) => {
                   {/* <!-- Basic Info Div --> */}
                   <Col className="mb-2">
                     <Row className="form-row">
-                      <RoleView
-                        roles={permitAdminAndThoseAbove('Constituency')}
-                      >
+                      <RoleView roles={permitAdmin('Constituency')}>
                         <Col>
                           <FormikControl
                             control="select"
@@ -142,9 +140,7 @@ const FellowshipForm = (props) => {
                     </Row>
 
                     <Row className="form-row">
-                      <RoleView
-                        roles={permitAdminAndThoseAbove('Constituency')}
-                      >
+                      <RoleView roles={permitAdmin('Constituency')}>
                         <Col sm={12}>
                           <FormikControl
                             control="input"
@@ -174,9 +170,7 @@ const FellowshipForm = (props) => {
                           />
                         </Col>
                       </RoleView>
-                      <RoleView
-                        roles={permitAdminAndThoseAbove('Constituency')}
-                      >
+                      <RoleView roles={permitAdmin('Constituency')}>
                         <Col sm={12}>
                           <FormikControl
                             control="memberSearch"

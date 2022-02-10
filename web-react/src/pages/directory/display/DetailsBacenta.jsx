@@ -5,7 +5,7 @@ import DisplayChurchDetails from '../../../components/DisplayChurchDetails/Displ
 import { DISPLAY_BACENTA } from './ReadQueries'
 import { ChurchContext } from '../../../contexts/ChurchContext'
 import BaseComponent from 'components/base-component/BaseComponent'
-import { permitAdminAndThoseAbove } from 'global-utils'
+import { permitArrivals } from 'permission-utils'
 
 const DetailsBacenta = () => {
   const { bacentaId } = useContext(ChurchContext)
@@ -38,7 +38,6 @@ const DetailsBacenta = () => {
       title: 'Zone',
       number: bacenta?.zone.number,
       link: `#`,
-      width: 'auto',
     },
   ]
 
@@ -57,7 +56,7 @@ const DetailsBacenta = () => {
         membership={bacenta?.memberCount}
         churchCount={bacenta?.fellowships.length}
         editlink="/bacenta/editbacenta"
-        editPermitted={permitAdminAndThoseAbove('Constituency')}
+        editPermitted={permitArrivals('Constituency')}
         history={bacenta?.history.length !== 0 && bacenta?.history}
         breadcrumb={breadcrumb && breadcrumb}
         buttons={bacenta ? bacenta?.fellowships : []}

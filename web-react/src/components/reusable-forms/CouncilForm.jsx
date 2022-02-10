@@ -2,7 +2,7 @@ import { useMutation, useQuery } from '@apollo/client'
 import BaseComponent from 'components/base-component/BaseComponent'
 import { FieldArray, Form, Formik } from 'formik'
 import * as Yup from 'yup'
-import { makeSelectOptions, permitAdminAndThoseAbove } from 'global-utils'
+import { makeSelectOptions } from 'global-utils'
 import { CONSTITUENCY_DROPDOWN, GET_STREAMS } from 'queries/ListQueries'
 import React, { useContext } from 'react'
 import { ChurchContext } from 'contexts/ChurchContext'
@@ -18,6 +18,7 @@ import { MemberContext } from 'contexts/MemberContext'
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import HeadingSecondary from 'components/HeadingSecondary'
 import SubmitButton from 'components/formik-components/SubmitButton'
+import { permitAdmin } from 'permission-utils'
 
 const CouncilForm = ({ initialValues, onSubmit, title, newCouncil }) => {
   const { togglePopup, isOpen, clickCard, councilId } =
@@ -61,9 +62,7 @@ const CouncilForm = ({ initialValues, onSubmit, title, newCouncil }) => {
                 <Row className="row-cols-1 row-cols-md-2">
                   {/* <!-- Basic Info Div --> */}
                   <Col className="mb-2">
-                    <RoleView
-                      roles={permitAdminAndThoseAbove('GatheringService')}
-                    >
+                    <RoleView roles={permitAdmin('GatheringService')}>
                       <Row className="form-row">
                         <Col>
                           <FormikControl
@@ -85,7 +84,7 @@ const CouncilForm = ({ initialValues, onSubmit, title, newCouncil }) => {
                     />
 
                     <Row className="d-flex align-items-center mb-3">
-                      <RoleView roles={permitAdminAndThoseAbove('Stream')}>
+                      <RoleView roles={permitAdmin('Stream')}>
                         <Col>
                           <FormikControl
                             control="memberSearch"

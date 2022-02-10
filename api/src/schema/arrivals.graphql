@@ -133,6 +133,18 @@ extend type Mutation {
     bussingTopUp: Float!
     comments: String
   ): BussingRecord
+    @auth(
+      rules: [
+        {
+          roles: [
+            "adminConstituencyArrivals"
+            "adminCouncilArrivals"
+            "adminStreamArrivals"
+            "adminGatheringServiceArrivals"
+          ]
+        }
+      ]
+    )
     @cypher(
       statement: """
       MATCH (bussingRecord:BussingRecord {id: $bussingRecordId})

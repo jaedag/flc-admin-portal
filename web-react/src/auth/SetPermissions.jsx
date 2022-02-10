@@ -1,7 +1,8 @@
 import { useAuth0 } from '@auth0/auth0-react'
 import { ChurchContext } from 'contexts/ChurchContext'
 import { MemberContext } from 'contexts/MemberContext'
-import { isAuthorised, permitMeAndThoseAbove } from 'global-utils'
+import { isAuthorised } from 'global-utils'
+import { permitMe } from 'permission-utils'
 import React, { useContext, useEffect } from 'react'
 
 const SetPermissions = ({ children }) => {
@@ -13,31 +14,19 @@ const SetPermissions = ({ children }) => {
     if (isAuthenticated && currentUser.roles.length) {
       church.setGatheringServiceId(currentUser.gatheringService)
 
-      if (
-        !isAuthorised(
-          permitMeAndThoseAbove('GatheringService'),
-          currentUser.roles
-        )
-      ) {
+      if (!isAuthorised(permitMe('GatheringService'), currentUser.roles)) {
         //if User is not a federal admin
         church.setChurch(currentUser.church)
         church.setStreamId(currentUser.stream)
 
-        if (!isAuthorised(permitMeAndThoseAbove('Stream'), currentUser.roles)) {
+        if (!isAuthorised(permitMe('Stream'), currentUser.roles)) {
           //User is not at the Stream Level
           church.setCouncilId(currentUser.council)
-          if (
-            !isAuthorised(permitMeAndThoseAbove('Council'), currentUser.roles)
-          ) {
+          if (!isAuthorised(permitMe('Council'), currentUser.roles)) {
             //User is not at the Council Level
             church.setConstituencyId(currentUser.constituency)
 
-            if (
-              !isAuthorised(
-                permitMeAndThoseAbove('Constituency'),
-                currentUser.roles
-              )
-            ) {
+            if (!isAuthorised(permitMe('Constituency'), currentUser.roles)) {
               //User is not a Constituency Admin the he can only be looking at his bacenta membership
               church.setBacentaId(currentUser.fellowship?.bacenta?.id)
 

@@ -1,4 +1,4 @@
-const permitMeAndThoseAbove = (churchType) => {
+const permitLeaderAdmin = (churchType) => {
   let permittedFor = []
   switch (churchType) {
     case 'Fellowship':
@@ -82,4 +82,4 @@ const permitMeAndThoseAbove = (churchType) => {
   return permittedFor
 }
 
-export default permitMeAndThoseAbove
+export default permitLeaderAdmin

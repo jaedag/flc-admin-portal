@@ -258,14 +258,19 @@ export const UPDATE_BACENTA_MUTATION = gql`
     $bacentaId: ID!
     $name: String!
     $constituencyId: ID!
+    $zone: Int!
   ) {
     UpdateBacentaDetails(
       bacentaId: $bacentaId
       name: $name
       constituencyId: $constituencyId
+      zone: $zone
     ) {
       id
       name
+      zone {
+        number
+      }
       fellowships {
         id
         name

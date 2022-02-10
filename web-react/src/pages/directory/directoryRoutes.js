@@ -290,7 +290,7 @@ export const directory = [
   {
     path: '/bacenta/editbacenta',
     element: UpdateBacenta,
-    roles: permitAdmin('Constituency'),
+    roles: permitArrivals('Constituency'),
     placeholder: false,
   },
   {

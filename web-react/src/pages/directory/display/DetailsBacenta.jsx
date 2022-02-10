@@ -21,16 +21,10 @@ const DetailsBacenta = () => {
     bacenta,
   ]
 
-  let bacentaStatus = data && 'Graduated'
-
-  if (bacenta?.labels.includes('IC')) {
-    bacentaStatus = 'IC'
-  }
-
   const details = [
     {
-      title: 'Type',
-      number: bacentaStatus,
+      title: 'Status',
+      number: bacenta?.status,
       link: `#`,
       width: 'auto',
     },

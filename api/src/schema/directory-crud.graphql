@@ -623,6 +623,7 @@ extend type Mutation {
     bacentaId: ID!
     name: String!
     constituencyId: ID!
+    zone: Int!
   ): Bacenta
     @auth(
       rules: [
@@ -632,6 +633,7 @@ extend type Mutation {
             "adminStream"
             "adminCouncil"
             "adminConstituency"
+            "adminConstituencyArrivals"
           ]
         }
       ]
@@ -640,6 +642,12 @@ extend type Mutation {
       statement: """
       MATCH (bacenta:Bacenta {id: $bacentaId})
       	SET bacenta.name = $name
+
+      WITH bacenta
+      MATCH (bacenta)-[r:BUSSES_FROM]->(:BussingZone)
+      MATCH (zone:BussingZone {number: $zone})
+      DELETE r
+      MERGE (bacenta)-[:BUSSES_FROM]->(zone)
 
       WITH bacenta
          CALL {

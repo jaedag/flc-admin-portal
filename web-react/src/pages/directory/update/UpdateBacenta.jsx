@@ -17,6 +17,7 @@ import { LOG_BACENTA_HISTORY, LOG_FELLOWSHIP_HISTORY } from './LogMutations'
 import { MAKE_BACENTA_LEADER } from './ChangeLeaderMutations'
 import BacentaForm from '../../../components/reusable-forms/BacentaForm'
 import { MAKE_FELLOWSHIP_INACTIVE } from './CloseChurchMutations'
+import { MAKE_BACENTA_GRADUATED, MAKE_BACENTA_IC } from './StatusChanges'
 
 const UpdateBacenta = () => {
   const { church, bacentaId, setConstituencyId } = useContext(ChurchContext)
@@ -36,6 +37,8 @@ const UpdateBacenta = () => {
     leaderId: bacenta?.leader?.id || '',
     constituency: bacenta?.constituency?.id,
     fellowships: bacenta?.fellowships.length ? bacenta?.fellowships : [''],
+    zone: bacenta?.zone.number,
+    status: bacenta?.status,
   }
 
   const [LogBacentaHistory] = useMutation(LOG_BACENTA_HISTORY)
@@ -45,6 +48,8 @@ const UpdateBacenta = () => {
   })
 
   const [MakeBacentaLeader] = useMutation(MAKE_BACENTA_LEADER)
+  const [MakeBacentaIC] = useMutation(MAKE_BACENTA_IC)
+  const [MakeBacentaGraduated] = useMutation(MAKE_BACENTA_GRADUATED)
   const [UpdateBacenta] = useMutation(UPDATE_BACENTA_MUTATION, {
     refetchQueries: [
       {
@@ -153,6 +158,7 @@ const UpdateBacenta = () => {
         name: values.name,
         leaderId: values.leaderId,
         constituencyId: values.constituency,
+        zone: parseInt(values.zone),
       },
     })
       .then(() => {
@@ -168,6 +174,33 @@ const UpdateBacenta = () => {
               historyRecord: `Bacenta name has been changed from ${initialValues.name} to ${values.name}`,
             },
           })
+        }
+
+        if (values.zone !== initialValues.zone) {
+          LogBacentaHistory({
+            variables: {
+              bacentaId: bacentaId,
+              newLeaderId: '',
+              oldLeaderId: '',
+              oldConstituencyId: '',
+              newConstituencyId: '',
+              historyRecord: `Bacenta has been moved from Zone ${initialValues.zone} to Zone ${values.zone}`,
+            },
+          })
+        }
+
+        if (values.status !== initialValues.status) {
+          if (values.status === 'IC') {
+            MakeBacentaIC({
+              variables: {
+                bacentaId: bacentaId,
+              },
+            })
+          }
+
+          if (values.status === 'Graduated') {
+            MakeBacentaGraduated({ variables: { bacentaId: bacentaId } })
+          }
         }
 
         //Log if the Leader Changes

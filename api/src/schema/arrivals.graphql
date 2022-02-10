@@ -19,7 +19,16 @@ extend type Constituency {
 }
 
 extend type Bacenta {
-  zone: BussingZone @relationship(type: "BUSSES_FROM", direction: OUT)
+  status: String!
+    @cypher(
+      statement: """
+      MATCH (this)
+      UNWIND labels(this) AS status
+      WITH status WHERE status = 'Graduated' OR status = 'IC'
+      RETURN status
+      """
+    )
+  zone: BussingZone! @relationship(type: "BUSSES_FROM", direction: OUT)
   #ARrivals Data
   arrivalsCodeOfTheDay: String!
     @cypher(
@@ -86,6 +95,86 @@ extend type Mutation {
       MERGE (arr:ArrivalsCodeOfTheDay)
       SET arr.code = apoc.text.random(5, 'A-Z0-9')
       RETURN arr.code
+      """
+    )
+
+  MakeBacentaIC(bacentaId: ID!): Bacenta!
+    @auth(
+      rules: [
+        {
+          roles: [
+            "adminGatheringService"
+            "adminGatheringServiceArrivals"
+            "adminStream"
+            "adminStreamArrivals"
+            "adminCouncil"
+            "adminCouncilArrivals"
+            "adminConstituency"
+            "adminConstituencyArrivals"
+          ]
+        }
+      ]
+    )
+    @cypher(
+      statement: """
+      MATCH (bacenta:Bacenta {id: $bacentaId})
+
+      CREATE (log:HistoryLog {id:apoc.create.uuid()})
+        SET log.timeStamp = datetime(),
+        log.historyRecord = bacenta.name + ' was demoted to IC status'
+
+      WITH log,bacenta
+      MATCH (admin:Member {auth_id: $auth.jwt.sub})
+      MERGE (date:TimeGraph {date:date()})
+      MERGE (log)-[:LOGGED_BY]->(admin)
+      MERGE (log)-[:RECORDED_ON]->(date)
+      MERGE (bacenta)-[:HAS_HISTORY]->(log)
+      MERGE (bacenta)-[:HAS_HISTORY]->(log)
+
+      SET bacenta:IC
+      REMOVE bacenta:Graduated
+
+      RETURN bacenta
+      """
+    )
+
+  MakeBacentaGraduated(bacentaId: ID!): Bacenta!
+    @auth(
+      rules: [
+        {
+          roles: [
+            "adminGatheringService"
+            "adminGatheringServiceArrivals"
+            "adminStream"
+            "adminStreamArrivals"
+            "adminCouncil"
+            "adminCouncilArrivals"
+            "adminConstituency"
+            "adminConstituencyArrivals"
+          ]
+        }
+      ]
+    )
+    @cypher(
+      statement: """
+      MATCH (bacenta:Bacenta {id: $bacentaId})
+
+      CREATE (log:HistoryLog {id:apoc.create.uuid()})
+        SET log.timeStamp = datetime(),
+        log.historyRecord = bacenta.name + ' was promoted to Graduated status'
+
+      WITH log,bacenta
+      MATCH (admin:Member {auth_id: $auth.jwt.sub})
+      MERGE (date:TimeGraph {date:date()})
+      MERGE (log)-[:LOGGED_BY]->(admin)
+      MERGE (log)-[:RECORDED_ON]->(date)
+      MERGE (bacenta)-[:HAS_HISTORY]->(log)
+      MERGE (bacenta)-[:HAS_HISTORY]->(log)
+
+      SET bacenta:Graduated
+      REMOVE bacenta:IC
+
+      RETURN bacenta
       """
     )
 

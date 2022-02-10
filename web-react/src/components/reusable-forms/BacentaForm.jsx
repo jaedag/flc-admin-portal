@@ -2,7 +2,12 @@ import { useMutation, useQuery } from '@apollo/client'
 import BaseComponent from 'components/base-component/BaseComponent'
 import { FieldArray, Form, Formik } from 'formik'
 import * as Yup from 'yup'
-import { makeSelectOptions, throwErrorMsg } from 'global-utils'
+import {
+  BUSSING_STATUS_OPTIONS,
+  BUSSING_ZONE_OPTIONS,
+  makeSelectOptions,
+  throwErrorMsg,
+} from 'global-utils'
 import { permitAdmin } from 'permission-utils'
 import { GET_COUNCIL_CONSTITUENCIES } from 'queries/ListQueries'
 import React, { useContext } from 'react'
@@ -90,7 +95,16 @@ const BacentaForm = ({ initialValues, onSubmit, title, newBacenta }) => {
                         />
                         <FormikControl
                           control="select"
+                          name="status"
+                          options={BUSSING_STATUS_OPTIONS}
+                          defaultOption="Choose Status"
+                          label="Status"
+                        />
+                        <FormikControl
+                          control="select"
                           name="zone"
+                          options={BUSSING_ZONE_OPTIONS}
+                          defaultOption="Pick a Zone"
                           label="Bussing Zone"
                         />
                       </Col>

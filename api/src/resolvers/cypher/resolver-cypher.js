@@ -106,7 +106,7 @@ export const componentServiceAggregates = `
   MATCH (componentServices)-[:HAS_SERVICE]->(componentRecords:ServiceRecord)
 
   MATCH (componentRecords)-[:SERVICE_HELD_ON]->(date:TimeGraph)
-  WHERE date.date > date() - duration({months: 2})
+  WHERE date.date > date() - duration({months: 1})
   WITH DISTINCT componentServices,componentRecords, date(date.date).week AS week ORDER BY week
 
 RETURN week AS week,SUM(componentRecords.attendance) AS attendance, SUM(componentRecords.income) AS income LIMIT toInteger($limit)

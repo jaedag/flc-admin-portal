@@ -5,19 +5,19 @@ type ServiceDay @auth(rules: [{ isAuthenticated: true }]) {
 }
 
 extend type GatheringService {
-  componentServiceAggregate(limit: Int = 4): [ComponentServiceAggregate] @ignore
+  componentServiceAggregate(limit: Int = 6): [ComponentServiceAggregate] @ignore
 }
 extend type Stream {
-  componentServiceAggregate(limit: Int = 4): [ComponentServiceAggregate] @ignore
+  componentServiceAggregate(limit: Int = 6): [ComponentServiceAggregate] @ignore
 }
 extend type Council {
-  componentServiceAggregate(limit: Int = 4): [ComponentServiceAggregate] @ignore
+  componentServiceAggregate(limit: Int = 6): [ComponentServiceAggregate] @ignore
 }
 extend type Constituency {
-  componentServiceAggregate(limit: Int = 4): [ComponentServiceAggregate] @ignore
+  componentServiceAggregate(limit: Int = 6): [ComponentServiceAggregate] @ignore
 }
 extend type Bacenta {
-  componentServiceAggregate(limit: Int = 4): [ComponentServiceAggregate] @ignore
+  componentServiceAggregate(limit: Int = 6): [ComponentServiceAggregate] @ignore
 }
 
 interface Record {

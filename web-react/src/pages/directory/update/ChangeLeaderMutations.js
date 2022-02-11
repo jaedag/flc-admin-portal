@@ -28,6 +28,10 @@ export const MAKE_FELLOWSHIP_LEADER = gql`
         }
       }
     }
+    ConnectFellowshipHistory(churchId: $fellowshipId) {
+      id
+      historyRecord
+    }
   }
 `
 
@@ -67,6 +71,10 @@ export const MAKE_BACENTA_LEADER = gql`
         #   historyRecord
         # }
       }
+    }
+    ConnectChurchHistory(churchId: $bacentaId) {
+      id
+      historyRecord
     }
   }
 `
@@ -154,6 +162,10 @@ export const MAKE_CONSTITUENCY_LEADER = gql`
         # }
       }
     }
+    ConnectChurchHistory(churchId: $constituencyId) {
+      id
+      historyRecord
+    }
   }
 `
 
@@ -194,6 +206,10 @@ export const MAKE_COUNCIL_LEADER = gql`
         # }
       }
     }
+    ConnectChurchHistory(churchId: $councilId) {
+      id
+      historyRecord
+    }
   }
 `
 
@@ -233,6 +249,10 @@ export const MAKE_STREAM_LEADER = gql`
         #   historyRecord
         # }
       }
+    }
+    ConnectChurchHistory(churchId: $streamId) {
+      id
+      historyRecord
     }
   }
 `

@@ -1,26 +1,42 @@
 extend type Mutation {
   #resolver Mutations
-  MakeStreamAdmin(adminId: ID!, streamId: ID!): Member
+  MakeStreamAdmin(adminId: ID!, streamId: ID!, oldAdminId: ID): Member
   RemoveStreamAdmin(adminId: ID!, streamId: ID!): Member
-  MakeCouncilAdmin(adminId: ID!, councilId: ID!): Member
+  MakeCouncilAdmin(adminId: ID!, councilId: ID!, oldAdminId: ID): Member
   RemoveCouncilAdmin(adminId: ID!, councilId: ID!): Member
-  MakeConstituencyAdmin(adminId: ID!, constituencyId: ID!): Member
+  MakeConstituencyAdmin(
+    adminId: ID!
+    constituencyId: ID!
+    oldAdminId: ID
+  ): Member
   RemoveConstituencyAdmin(adminId: ID!, constituencyId: ID!): Member
 
   #Pastoral Roles
-  MakeFellowshipLeader(leaderId: ID!, fellowshipId: ID!): Member
+  MakeFellowshipLeader(
+    leaderId: ID!
+    fellowshipId: ID!
+    oldLeaderId: ID
+  ): Member
   RemoveFellowshipLeader(leaderId: ID!, fellowshipId: ID!): Member
-  MakeBacentaLeader(leaderId: ID!, bacentaId: ID!): Member
+  MakeBacentaLeader(leaderId: ID!, bacentaId: ID!, oldLeaderId: ID): Member
   RemoveBacentaLeader(leaderId: ID!, bacentaId: ID!): Member
-  MakeSontaLeader(leaderId: ID!, sontaId: ID!): Member
+  MakeSontaLeader(leaderId: ID!, sontaId: ID!, oldLeaderId: ID): Member
   RemoveSontaLeader(leaderId: ID!, sontaId: ID!): Member
-  MakeConstituencyLeader(leaderId: ID!, constituencyId: ID!): Member
+  MakeConstituencyLeader(
+    leaderId: ID!
+    constituencyId: ID!
+    oldLeaderId: ID
+  ): Member
   RemoveConstituencyLeader(leaderId: ID!, constituencyId: ID!): Member
-  MakeCouncilLeader(leaderId: ID!, councilId: ID!): Member
+  MakeCouncilLeader(leaderId: ID!, councilId: ID!, oldLeaderId: ID): Member
   RemoveCouncilLeader(leaderId: ID!, councilId: ID!): Member
-  MakeStreamLeader(leaderId: ID!, streamId: ID!): Member
+  MakeStreamLeader(leaderId: ID!, streamId: ID!, oldLeaderId: ID): Member
   RemoveStreamLeader(leaderId: ID!, streamId: ID!): Member
-  MakeGatheringServiceLeader(leaderId: ID!, gatheringServiceId: ID!): Member
+  MakeGatheringServiceLeader(
+    leaderId: ID!
+    gatheringServiceId: ID!
+    oldLeaderId: ID
+  ): Member
   RemoveGatheringServiceLeader(leaderId: ID!, gatheringServiceId: ID!): Member
 }
 
@@ -124,11 +140,10 @@ extend type Mutation {
       MERGE (date:TimeGraph {date: date()})
       MERGE (log)-[:LOGGED_BY]->(currentUser)
       MERGE (log)-[:RECORDED_ON]->(date)
-      MERGE (stream)-[r1:HAS_HISTORY]->(log)
+      MERGE (stream)-[:HAS_HISTORY]->(log)
       MERGE (gatheringService)-[r2:HAS_HISTORY]->(log)
       MERGE (leader)-[r3:HAS_HISTORY]->(log)
-        SET r1.current = true,
-        r2.current = true,
+        SET r2.current = true,
         r3.current = true
 
       WITH stream, gatheringService

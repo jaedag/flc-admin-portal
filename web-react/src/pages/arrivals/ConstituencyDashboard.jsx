@@ -16,7 +16,7 @@ import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import RoleView from 'auth/RoleView'
 import { throwErrorMsg } from 'global-utils'
 import { MAKE_CONSTITUENCYARRIVALS_ADMIN } from './arrivalsMutations'
-import { permitAdmin } from 'permission-utils'
+import { permitAdmin, permitArrivals } from 'permission-utils'
 
 const ConstituencyDashboard = () => {
   const { isOpen, togglePopup, constituencyId } = useContext(ChurchContext)
@@ -99,7 +99,12 @@ const ConstituencyDashboard = () => {
         )}
 
         <div className="d-grid gap-2">
-          <RoleView roles={permitAdmin('Constituency')}>
+          <RoleView
+            roles={[
+              ...permitAdmin('Constituency'),
+              ...permitArrivals('Council'),
+            ]}
+          >
             <Button
               variant="outline-secondary"
               size="lg"

@@ -23,7 +23,7 @@ WITH apoc.cypher.runFirstColumn(
   RETURN adminCouncil", {this: member}, true) | member_adminCouncils { .id,.name}],
    isAdminForStream: [ member_adminStreams IN apoc.cypher.runFirstColumn("MATCH (this)-[:IS_ADMIN_FOR]-(adminStream:Member)
   RETURN adminStream", {this: member}, true) | member_adminStreams { .id,.name}],
-  isAdminForConstituencyArrivals: [ member_adminConstituencyArrivals IN apoc.cypher.runFirstColumn("MATCH (this)-[:IS_ARRIVALS_FOR]-(adminConstituencyArrivals:Constituency)
+  isAdminForConstituencyArrivals: [ member_adminConstituencyArrivals IN apoc.cypher.runFirstColumn("MATCH (this)-[:DOES_ARRIVALS_FOR]-(adminConstituencyArrivals:Constituency)
   RETURN adminConstituencyArrivals", {this: member}, true) | member_adminConstituencyArrivals { .id,.name }] } AS member
   `
 

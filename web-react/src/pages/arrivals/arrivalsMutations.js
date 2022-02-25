@@ -33,6 +33,93 @@ export const MAKE_CONSTITUENCYARRIVALS_ADMIN = gql`
   }
 `
 
+export const MAKE_COUNCILARRIVALS_ADMIN = gql`
+  mutation MakeCouncilArrrivalsAdmin(
+    $councilId: ID!
+    $newAdminId: ID!
+    $oldAdminId: ID!
+  ) {
+    RemoveCouncilArrivalsAdmin(councilId: $councilId, adminId: $oldAdminId) {
+      id
+      firstName
+      lastName
+    }
+    MakeCouncilArrivalsAdmin(councilId: $councilId, adminId: $newAdminId) {
+      id
+      firstName
+      lastName
+      isAdminForCouncilArrivals {
+        id
+        admin {
+          id
+          firstName
+          lastName
+        }
+      }
+    }
+  }
+`
+
+export const MAKE_STREAMARRIVALS_ADMIN = gql`
+  mutation MakeStreamArrrivalsAdmin(
+    $streamId: ID!
+    $newAdminId: ID!
+    $oldAdminId: ID!
+  ) {
+    RemoveStreamArrivalsAdmin(streamId: $streamId, adminId: $oldAdminId) {
+      id
+      firstName
+      lastName
+    }
+    MakeStreamArrivalsAdmin(streamId: $streamId, adminId: $newAdminId) {
+      id
+      firstName
+      lastName
+      isAdminForStreamArrivals {
+        id
+        admin {
+          id
+          firstName
+          lastName
+        }
+      }
+    }
+  }
+`
+
+export const MAKE_GATHERINGSERVICEARRIVALS_ADMIN = gql`
+  mutation MakeGatheringServiceArrrivalsAdmin(
+    $gatheringServiceId: ID!
+    $newAdminId: ID!
+    $oldAdminId: ID!
+  ) {
+    RemoveGatheringServiceArrivalsAdmin(
+      gatheringServiceId: $gatheringServiceId
+      adminId: $oldAdminId
+    ) {
+      id
+      firstName
+      lastName
+    }
+    MakeGatheringServiceArrivalsAdmin(
+      gatheringServiceId: $gatheringServiceId
+      adminId: $newAdminId
+    ) {
+      id
+      firstName
+      lastName
+      isAdminForGatheringServiceArrivals {
+        id
+        admin {
+          id
+          firstName
+          lastName
+        }
+      }
+    }
+  }
+`
+
 export const RECORD_BUSSING_FROM_BACENTA = gql`
   mutation RecordBussingFromBacenta(
     $id: ID!

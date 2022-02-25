@@ -14,7 +14,11 @@ export const MAKE_FELLOWSHIP_LEADER = gql`
       firstName
       lastName
     }
-    MakeFellowshipLeader(fellowshipId: $fellowshipId, leaderId: $newLeaderId) {
+    MakeFellowshipLeader(
+      fellowshipId: $fellowshipId
+      leaderId: $newLeaderId
+      oldLeaderId: $oldLeaderId
+    ) {
       id
       firstName
       lastName
@@ -46,7 +50,11 @@ export const MAKE_BACENTA_LEADER = gql`
       firstName
       lastName
     }
-    MakeBacentaLeader(bacentaId: $bacentaId, leaderId: $newLeaderId) {
+    MakeBacentaLeader(
+      bacentaId: $bacentaId
+      leaderId: $newLeaderId
+      oldLeaderId: $oldLeaderId
+    ) {
       id
       firstName
       lastName
@@ -136,6 +144,7 @@ export const MAKE_CONSTITUENCY_LEADER = gql`
     MakeConstituencyLeader(
       constituencyId: $constituencyId
       leaderId: $newLeaderId
+      oldLeaderId: $oldLeaderId
     ) {
       id
       firstName
@@ -180,7 +189,11 @@ export const MAKE_COUNCIL_LEADER = gql`
       firstName
       lastName
     }
-    MakeCouncilLeader(councilId: $councilId, leaderId: $newLeaderId) {
+    MakeCouncilLeader(
+      councilId: $councilId
+      leaderId: $newLeaderId
+      oldLeaderId: $oldLeaderId
+    ) {
       id
       firstName
       lastName
@@ -224,7 +237,11 @@ export const MAKE_STREAM_LEADER = gql`
       firstName
       lastName
     }
-    MakeStreamLeader(streamId: $streamId, leaderId: $newLeaderId) {
+    MakeStreamLeader(
+      streamId: $streamId
+      leaderId: $newLeaderId
+      oldLeaderId: $oldLeaderId
+    ) {
       id
       firstName
       lastName

@@ -209,7 +209,7 @@ const ServantsDashboard = () => {
 
             <Col>
               <StatDisplay
-                title="Avg Weekly Income (in GH₵)"
+                title="Avg Weekly Income (GH₵)"
                 loading={!assessmentChurchData}
                 statistic={getMonthlyStatAverage(
                   assessmentChurchData,

@@ -10,6 +10,7 @@ import BusFormSubmission from 'pages/arrivals/BusFormSubmission'
 import ConstituencyArrivals from 'pages/arrivals/ConstituencyArrivals'
 import ConstituencyDashboard from 'pages/arrivals/ConstituencyDashboard'
 import CouncilArrivals from 'pages/arrivals/CouncilArrivals'
+import CouncilDashboard from './CouncilDashboard'
 
 export const arrivals = [
   {
@@ -47,7 +48,7 @@ export const arrivals = [
   {
     path: '/arrivals/council/dashboard',
     roles: permitArrivals('Council'),
-    element: ConstituencyDashboard,
+    element: CouncilDashboard,
     placeholder: true,
   },
 

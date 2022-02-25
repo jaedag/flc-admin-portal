@@ -119,9 +119,9 @@ type Member @auth(rules: [{ isAuthenticated: true }]) {
     @relationship(type: "IS_ADMIN_FOR", direction: OUT)
 
   isAdminForCouncilArrivals: [Council]
-    @relationship(type: "IS_ARRIVALS_FOR", direction: OUT)
+    @relationship(type: "DOES_ARRIVALS_FOR", direction: OUT)
   isAdminForConstituencyArrivals: [Constituency]
-    @relationship(type: "IS_ARRIVALS_FOR", direction: OUT)
+    @relationship(type: "DOES_ARRIVALS_FOR", direction: OUT)
 
   #OTHER WORKS
   was_treasurer_for: [ServiceRecord]!

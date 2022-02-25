@@ -14,8 +14,9 @@ import { COUNCIL_ARRIVALS_DASHBOARD } from './arrivalsQueries'
 import { useNavigate } from 'react-router'
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import RoleView from 'auth/RoleView'
-import { permitAdminAndThoseAbove, throwErrorMsg } from 'global-utils'
+import { throwErrorMsg } from 'global-utils'
 import { MAKE_COUNCILARRIVALS_ADMIN } from './arrivalsMutations'
+import { permitAdmin, permitArrivals } from 'permission-utils'
 
 const CouncilDashboard = () => {
   const { isOpen, togglePopup, councilId } = useContext(ChurchContext)
@@ -83,7 +84,6 @@ const CouncilDashboard = () => {
                         placeholder="Select an Admin"
                         setFieldValue={formik.setFieldValue}
                         aria-describedby="Member Search"
-                        className="form-control"
                         error={formik.errors.admin}
                       />
                     </Col>
@@ -99,8 +99,10 @@ const CouncilDashboard = () => {
         <Card>
           <Card.Header>Arrivals Summary</Card.Header>
         </Card>
-        {/* <div className="d-grid gap-2">
-          <RoleView roles={permitAdminAndThoseAbove('Council')}>
+        <div className="d-grid gap-2">
+          <RoleView
+            roles={[...permitAdmin('Council'), ...permitArrivals('Stream')]}
+          >
             <Button
               variant="outline-secondary"
               size="lg"
@@ -130,7 +132,7 @@ const CouncilDashboard = () => {
             iconBg
             noCaption
           />
-        </div> */}
+        </div>
       </Container>
     </BaseComponent>
   )

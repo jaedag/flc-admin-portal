@@ -117,6 +117,9 @@ export const churchInEmail = (church) => {
 
   return `${church.name} ${church.type[0]}`
 }
+export const servantInEmail = (servant) => {
+  return servant
+}
 
 export const historyRecordString = ({
   servant,
@@ -153,9 +156,13 @@ export const makeServantCypher = async (
   oldServant,
   church
 ) => {
-  const servantLower = servantType.toLowerCase()
+  let servantLower = servantType.toLowerCase()
+  if (servantType === 'ArrivalsAdmin') {
+    servantLower = 'arrivalsAdmin'
+  }
   const session = context.driver.session()
   //Connect Leader to Church
+
   const connectedChurchRes = rearrangeCypherObject(
     await session.run(servantCypher[`connectChurch${servantType}`], {
       [`${servantLower}Id`]: servant.id,
@@ -195,15 +202,15 @@ export const makeServantCypher = async (
   })
 
   //Run Cypher to Connect the History
-  if (churchType === 'Fellowship') {
+  if (churchType === 'Fellowship' && servantType === 'Leader') {
     await session.run(servantCypher.connectFellowshipHistory, {
       churchId: church.id,
     })
-  } else if (churchType === 'GatheringService') {
+  } else if (churchType === 'GatheringService' && servantType === 'Leader') {
     await session.run(servantCypher.connectGatheringServiceHistory, {
       churchId: church.id,
     })
-  } else {
+  } else if (servantType === 'Leader') {
     await session.run(servantCypher.connectChurchHistory, {
       churchId: church.id,
     })

@@ -80,7 +80,7 @@ export const arrivals = [
   },
   {
     path: '/arrivals/submit-bus-attendance',
-    roles: ['adminConstituencyArrivals'],
+    roles: ['arrivalsAdminConstituency'],
     element: BusFormConfirmation,
     placeholder: false,
   },

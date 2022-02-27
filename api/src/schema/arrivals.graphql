@@ -79,29 +79,42 @@ type BussingRecord implements Record @auth(rules: [{ isAuthenticated: true }]) {
   momoName: String
   momoNumber: String
   comments: String
+  mobilisationPicture: String!
   bussingPictures: [String]!
+  arrivalTime: Date
   serviceLog: ServiceLog @relationship(type: "HAS_BUSSING", direction: IN)
 }
 
 extend type Mutation {
   #Arrivals Roles
   MakeConstituencyArrivalsAdmin(
-    adminId: ID!
+    arrivalsAdminId: ID!
     constituencyId: ID!
-    oldAdminId: ID
+    oldArrivalsAdminId: ID
   ): Member
-  RemoveConstituencyArrivalsAdmin(adminId: ID!, constituencyId: ID!): Member
-  MakeCouncilArrivalsAdmin(adminId: ID!, councilId: ID!, oldAdminId: ID): Member
-  RemoveCouncilArrivalsAdmin(adminId: ID!, councilId: ID!): Member
-  MakeStreamArrivalsAdmin(adminId: ID!, streamId: ID!, oldAdminId: ID): Member
-  RemoveStreamArrivalsAdmin(adminId: ID!, streamId: ID!): Member
+  RemoveConstituencyArrivalsAdmin(
+    arrivalsAdminId: ID!
+    constituencyId: ID!
+  ): Member
+  MakeCouncilArrivalsAdmin(
+    arrivalsAdminId: ID!
+    councilId: ID!
+    oldArrivalsAdminId: ID
+  ): Member
+  RemoveCouncilArrivalsAdmin(arrivalsAdminId: ID!, councilId: ID!): Member
+  MakeStreamArrivalsAdmin(
+    arrivalsAdminId: ID!
+    streamId: ID!
+    oldArrivalsAdminId: ID
+  ): Member
+  RemoveStreamArrivalsAdmin(arrivalsAdminId: ID!, streamId: ID!): Member
   MakeGatheringServiceArrivalsAdmin(
-    adminId: ID!
+    arrivalsAdminId: ID!
     gatheringServiceId: ID!
-    oldAdminId: ID
+    oldArrivalsAdminId: ID
   ): Member
   RemoveGatheringServiceArrivalsAdmin(
-    adminId: ID!
+    arrivalsAdminId: ID!
     gatheringServiceId: ID!
   ): Member
 
@@ -122,13 +135,13 @@ extend type Mutation {
         {
           roles: [
             "adminGatheringService"
-            "adminGatheringServiceArrivals"
+            "arrivalsAdminGatheringService"
             "adminStream"
-            "adminStreamArrivals"
+            "arrivalsAdminStream"
             "adminCouncil"
-            "adminCouncilArrivals"
+            "arrivalsAdminCouncil"
             "adminConstituency"
-            "adminConstituencyArrivals"
+            "arrivalsAdminConstituency"
           ]
         }
       ]
@@ -162,13 +175,13 @@ extend type Mutation {
         {
           roles: [
             "adminGatheringService"
-            "adminGatheringServiceArrivals"
+            "arrivalsAdminGatheringService"
             "adminStream"
-            "adminStreamArrivals"
+            "arrivalsAdminStream"
             "adminCouncil"
-            "adminCouncilArrivals"
+            "arrivalsAdminCouncil"
             "adminConstituency"
-            "adminConstituencyArrivals"
+            "arrivalsAdminConstituency"
           ]
         }
       ]
@@ -196,9 +209,22 @@ extend type Mutation {
       """
     )
 
+  UploadMobilisationPicture(mobilisationPicture: String!): BussingRecord
+    @cypher(
+      statement: """
+      CREATE (bussingRecord:BussingRecord {created_at:datetime()})
+
+      MERGE (serviceDate:TimeGraph {date:date($serviceDate)})
+      MERGE (bussingRecord)-[:BUSSED_ON]->(serviceDate)
+
+      RETURN bussingRecord
+      """
+    )
+
   #Bussing Records Entries
   RecordBussingFromBacenta(
-    id: ID!
+    bussingRecordId: ID!
+    bacentaId: ID!
     serviceDate: String!
     bussingPictures: [String]!
     bussingCost: Float!
@@ -210,27 +236,25 @@ extend type Mutation {
   ): BussingRecord
     @cypher(
       statement: """
-      CREATE (bussingRecord:BussingRecord {created_at:datetime()})
-        SET bussingRecord.id = apoc.create.uuid(),
-        bussingRecord.bussingPictures = $bussingPictures,
-        bussingRecord.bussingCost = $bussingCost,
-        bussingRecord.offeringRaised = $offeringRaised,
-        bussingRecord.numberOfBusses = $numberOfBusses,
-        bussingRecord.numberOfCars = $numberOfCars,
-        bussingRecord.momoNumber = $momoNumber,
-        bussingRecord.momoName = $momoName
+      MATCH (bussingRecord:BussingRecord {id: $bussingRecordId})
+      SET bussingRecord.id = apoc.create.uuid(),
+      bussingRecord.bussingPictures = $bussingPictures,
+      bussingRecord.bussingCost = $bussingCost,
+      bussingRecord.offeringRaised = $offeringRaised,
+      bussingRecord.numberOfBusses = $numberOfBusses,
+      bussingRecord.numberOfCars = $numberOfCars,
+      bussingRecord.momoNumber = $momoNumber,
+      bussingRecord.momoName = $momoName
 
-         WITH bussingRecord
-          MATCH (bacenta:Bacenta {id:$id})
-          MATCH (bacenta)-[has_history:HAS_HISTORY]->(log:ServiceLog) WHERE has_history.current = true
-          MATCH (leader:Member {auth_id: $auth.jwt.sub})
+       WITH bussingRecord
+        MATCH (bacenta:Bacenta {id:$id})
+        MATCH (bacenta)-[has_history:HAS_HISTORY]->(log:ServiceLog) WHERE has_history.current = true
+        MATCH (leader:Member {auth_id: $auth.jwt.sub})
 
-          MERGE (bussingRecord)-[:LOGGED_BY]->(leader)
-          MERGE (serviceDate:TimeGraph {date:date($serviceDate)})
-          MERGE (bussingRecord)-[:BUSSED_ON]->(serviceDate)
-          MERGE (log)-[:HAS_BUSSING]->(bussingRecord)
+        MERGE (bussingRecord)-[:LOGGED_BY]->(leader)
+        MERGE (log)-[:HAS_BUSSING]->(bussingRecord)
 
-          RETURN bussingRecord
+        RETURN bussingRecord
       """
     )
 
@@ -244,10 +268,10 @@ extend type Mutation {
       rules: [
         {
           roles: [
-            "adminConstituencyArrivals"
-            "adminCouncilArrivals"
-            "adminStreamArrivals"
-            "adminGatheringServiceArrivals"
+            "arrivalsAdminConstituency"
+            "arrivalsAdminCouncil"
+            "arrivalsAdminStream"
+            "arrivalsAdminGatheringService"
           ]
         }
       ]
@@ -264,6 +288,32 @@ extend type Mutation {
           MERGE (bussingRecord)-[:CONFIRMED_BY]->(admin)
 
           RETURN bussingRecord
+      """
+    )
+
+  RecordArrivalTime(bussingRecordId: ID!): BussingRecord
+    @auth(
+      rules: [
+        {
+          roles: [
+            "arrivalsAdminConstituency"
+            "arrivalsAdminCouncil"
+            "arrivalsAdminStream"
+            "arrivalsAdminGatheringService"
+          ]
+        }
+      ]
+    )
+    @cypher(
+      statement: """
+      MATCH (bussingRecord:BussingRecord {id: $bussingRecordId})
+        SET bussingRecord.arrivalTime = datetime()
+
+      WITH bussingRecord
+      MATCH (admin:Member {auth_id: $auth.jwt.sub})
+      MERGE (bussingRecord)<-[:LOG_ARRIVAL_FOR]-(admin)
+
+      RETURN bussingRecord
       """
     )
 }

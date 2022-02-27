@@ -8,7 +8,7 @@ export const MAKE_CONSTITUENCYARRIVALS_ADMIN = gql`
   ) {
     RemoveConstituencyArrivalsAdmin(
       constituencyId: $constituencyId
-      adminId: $oldAdminId
+      arrivalsAdminId: $oldAdminId
     ) {
       id
       firstName
@@ -16,12 +16,12 @@ export const MAKE_CONSTITUENCYARRIVALS_ADMIN = gql`
     }
     MakeConstituencyArrivalsAdmin(
       constituencyId: $constituencyId
-      adminId: $newAdminId
+      arrivalsAdminId: $newAdminId
     ) {
       id
       firstName
       lastName
-      isAdminForConstituencyArrivals {
+      isArrivalsAdminForConstituency {
         id
         admin {
           id
@@ -39,16 +39,22 @@ export const MAKE_COUNCILARRIVALS_ADMIN = gql`
     $newAdminId: ID!
     $oldAdminId: ID!
   ) {
-    RemoveCouncilArrivalsAdmin(councilId: $councilId, adminId: $oldAdminId) {
+    RemoveCouncilArrivalsAdmin(
+      councilId: $councilId
+      arrivalsAdminId: $oldAdminId
+    ) {
       id
       firstName
       lastName
     }
-    MakeCouncilArrivalsAdmin(councilId: $councilId, adminId: $newAdminId) {
+    MakeCouncilArrivalsAdmin(
+      councilId: $councilId
+      arrivalsAdminId: $newAdminId
+    ) {
       id
       firstName
       lastName
-      isAdminForCouncilArrivals {
+      isArrivalsAdminForCouncil {
         id
         admin {
           id
@@ -66,12 +72,15 @@ export const MAKE_STREAMARRIVALS_ADMIN = gql`
     $newAdminId: ID!
     $oldAdminId: ID!
   ) {
-    RemoveStreamArrivalsAdmin(streamId: $streamId, adminId: $oldAdminId) {
+    RemoveStreamArrivalsAdmin(
+      streamId: $streamId
+      arrivalsAdminId: $oldAdminId
+    ) {
       id
       firstName
       lastName
     }
-    MakeStreamArrivalsAdmin(streamId: $streamId, adminId: $newAdminId) {
+    MakeStreamArrivalsAdmin(streamId: $streamId, arrivalsAdminId: $newAdminId) {
       id
       firstName
       lastName
@@ -95,7 +104,7 @@ export const MAKE_GATHERINGSERVICEARRIVALS_ADMIN = gql`
   ) {
     RemoveGatheringServiceArrivalsAdmin(
       gatheringServiceId: $gatheringServiceId
-      adminId: $oldAdminId
+      arrivalsAdminId: $oldAdminId
     ) {
       id
       firstName
@@ -103,7 +112,7 @@ export const MAKE_GATHERINGSERVICEARRIVALS_ADMIN = gql`
     }
     MakeGatheringServiceArrivalsAdmin(
       gatheringServiceId: $gatheringServiceId
-      adminId: $newAdminId
+      arrivalsAdminId: $newAdminId
     ) {
       id
       firstName
@@ -122,7 +131,7 @@ export const MAKE_GATHERINGSERVICEARRIVALS_ADMIN = gql`
 
 export const RECORD_BUSSING_FROM_BACENTA = gql`
   mutation RecordBussingFromBacenta(
-    $id: ID!
+    $bacentaId: ID!
     $serviceDate: String!
     $bussingPictures: [String]!
     $bussingCost: Float!
@@ -133,7 +142,7 @@ export const RECORD_BUSSING_FROM_BACENTA = gql`
     $momoNumber: String!
   ) {
     RecordBussingFromBacenta(
-      id: $id
+      bacentaId: $bacentaId
       serviceDate: $serviceDate
       bussingPictures: $bussingPictures
       bussingCost: $bussingCost

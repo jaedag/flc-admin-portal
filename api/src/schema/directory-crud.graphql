@@ -648,7 +648,7 @@ extend type Mutation {
             "adminStream"
             "adminCouncil"
             "adminConstituency"
-            "adminConstituencyArrivals"
+            "arrivalsAdminConstituency"
           ]
         }
       ]

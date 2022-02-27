@@ -101,32 +101,32 @@ export const permitArrivals = (churchLevel) => {
     case 'Fellowship':
     case 'Bacenta':
       permittedFor = [
-        'adminGatheringServiceArrivals',
-        'adminStreamArrivals',
-        'adminCouncilArrivals',
-        'adminConstituencyArrivals',
+        'arrivalsAdminGatheringService',
+        'arrivalsAdminStream',
+        'arrivalsAdminCouncil',
+        'arrivalsAdminConstituency',
       ]
       break
     case 'Constituency':
       permittedFor = [
-        'adminGatheringServiceArrivals',
-        'adminStreamArrivals',
-        'adminCouncilArrivals',
-        'adminConstituencyArrivals',
+        'arrivalsAdminGatheringService',
+        'arrivalsAdminStream',
+        'arrivalsAdminCouncil',
+        'arrivalsAdminConstituency',
       ]
       break
     case 'Council':
       permittedFor = [
-        'adminGatheringServiceArrivals',
-        'adminStreamArrivals',
-        'adminCouncilArrivals',
+        'arrivalsAdminGatheringService',
+        'arrivalsAdminStream',
+        'arrivalsAdminCouncil',
       ]
       break
     case 'Stream':
-      permittedFor = ['adminGatheringServiceArrivals', 'adminStreamArrivals']
+      permittedFor = ['arrivalsAdminGatheringService', 'arrivalsAdminStream']
       break
     case 'GatheringService':
-      permittedFor = ['adminGatheringServiceArrivals']
+      permittedFor = ['arrivalsAdminGatheringService']
       break
     default:
       permittedFor = []

@@ -55,67 +55,6 @@ export const GET_FEDERAL_MEMBERS = gql`
   }
 `
 
-export const GET_FEDERAL_PASTORS = gql`
-  query {
-    federalPastorList(orderBy: firstName_asc) {
-      id
-      firstName
-      lastName
-      pictureUrl
-      fellowship {
-        id
-        name
-      }
-      ministry {
-        id
-        name
-      }
-      maritalStatus {
-        status
-      }
-      gender {
-        gender
-      }
-      title {
-        title
-      }
-      leadsFellowship {
-        id
-        name
-      }
-      leadsBacenta {
-        id
-        name
-      }
-      leadsMinistry {
-        id
-        name
-      }
-      leadsSonta {
-        id
-        name
-      }
-      leadsBasonta {
-        id
-        name
-      }
-      leadsConstituency {
-        id
-        name
-      }
-
-      isAdminForCouncil {
-        id
-        name
-      }
-      isAdminForConstituency {
-        id
-        name
-      }
-    }
-  }
-`
-
 export const GET_GATHERING_SERVICE_MEMBERS = gql`
   query ($id: ID) {
     gatheringServices(where: { id: $id }) {

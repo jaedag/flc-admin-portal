@@ -23,8 +23,8 @@ WITH apoc.cypher.runFirstColumn(
   RETURN adminCouncil", {this: member}, true) | member_adminCouncils { .id,.name}],
    isAdminForStream: [ member_adminStreams IN apoc.cypher.runFirstColumn("MATCH (this)-[:IS_ADMIN_FOR]-(adminStream:Member)
   RETURN adminStream", {this: member}, true) | member_adminStreams { .id,.name}],
-  isAdminForConstituencyArrivals: [ member_adminConstituencyArrivals IN apoc.cypher.runFirstColumn("MATCH (this)-[:DOES_ARRIVALS_FOR]-(adminConstituencyArrivals:Constituency)
-  RETURN adminConstituencyArrivals", {this: member}, true) | member_adminConstituencyArrivals { .id,.name }] } AS member
+  isArrivalsAdminForConstituency: [ member_arrivalsAdminConstituency IN apoc.cypher.runFirstColumn("MATCH (this)-[:DOES_ARRIVALS_FOR]-(arrivalsAdminConstituency:Constituency)
+  RETURN arrivalsAdminConstituency", {this: member}, true) | member_arrivalsAdminConstituency { .id,.name }] } AS member
   `
 
 export const matchChurchQuery = `
@@ -57,46 +57,6 @@ CREATE (log:HistoryLog)
   MERGE (log)-[:RECORDED_ON]->(date)
 
 RETURN member.id`
-
-export const makeSontaLeader = `
-MATCH (leader:Member {id:$leaderId})
-MATCH (sonta:Sonta {id:$sontaId})
-OPTIONAL MATCH (sonta)<-[:HAS_SONTA]-(constituency) 
-UNWIND labels(constituency) AS stream
-CREATE (log:HistoryLog:ServiceLog)
-  SET leader.auth_id = $auth_id,
-   log.id = apoc.create.uuid(),
-   log.timeStamp = datetime(),
-   log.historyRecord = leader.firstName + ' ' +leader.lastName + ' started ' + sonta.name +' Sonta under '+ constituency.name + ' ' + stream
-WITH leader,sonta, log
-OPTIONAL MATCH (sonta)<-[oldLeads:LEADS]-(oldLeader:Member)
-OPTIONAL MATCH (sonta)-[oldHistory:HAS_HISTORY]->()-[oldLeaderHistory:HAS_HISTORY]-(oldLeader)
-SET oldHistory.current = false, oldLeaderHistory.current = false //nullify old history relationship
-   DELETE oldLeads //Delete old relationship
-WITH log,sonta,oldLeader,leader 
-       CALL{
-         WITH log,sonta,oldLeader, leader
-         WITH log,sonta,oldLeader, leader 
-         WHERE EXISTS (oldLeader.firstName) AND oldLeader.id <> $leaderId
-        
-       MERGE (oldLeader)-[hasHistory:HAS_HISTORY]->(log)
-       SET hasHistory.neverLed = true,
-       log.historyRecord = leader.firstName + ' ' +leader.lastName + ' became the leader of ' + sonta.name + " Sonta replacing " + oldLeader.firstName +" "+oldLeader.lastName
-       RETURN COUNT(log)
-       }
-  
-   MATCH (currentUser:Member {auth_id:$auth.jwt.sub}) 
-   WITH currentUser, leader, sonta, log
-   MERGE (leader)-[:LEADS]->(sonta)
-   MERGE (log)-[:LOGGED_BY]->(currentUser)
-   MERGE (date:TimeGraph {date: date()})
-   MERGE (log)-[:RECORDED_ON]->(date)
-   MERGE (leader)-[r1:HAS_HISTORY]->(log)
-   MERGE (sonta)-[r2:HAS_HISTORY]->(log)
-   SET r1.current = true,
-   r2.current = true
-   RETURN leader.id AS id, leader.auth_id AS auth_id, leader.firstName AS firstName, leader.lastName AS lastName
-`
 
 // Adding the records of the services underneath so that we can have the total attendances and incomes
 export const componentServiceAggregates = `

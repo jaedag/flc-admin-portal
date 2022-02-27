@@ -194,9 +194,18 @@ const MakeServant = async (
   servantType
 ) => {
   //Set Up
-  let churchLower = churchType.toLowerCase().replace('arrivals', '')
+  let churchLower = churchType.toLowerCase()
+  let servantLower = servantType.toLowerCase()
 
-  const servantLower = servantType.toLowerCase()
+  let verb = `leads${churchType}`
+  if (servantType === 'Admin') {
+    verb = `isAdminFor${churchType}`
+  }
+  if (servantType === 'ArrivalsAdmin') {
+    verb = `isArrivalsAdminFor${churchType}`
+    servantLower = 'arrivalsAdmin'
+  }
+
   isAuth(permittedRoles, context.auth.roles)
   noEmptyArgsValidation([
     `${churchLower}Id`,
@@ -204,11 +213,6 @@ const MakeServant = async (
     `${servantLower}Id`,
     args[`${servantLower}Id`],
   ])
-
-  let verb = `leads${churchType}`
-  if (servantType === 'Admin') {
-    verb = `isAdminFor${churchType}`
-  }
 
   const session = context.driver.session()
 
@@ -250,7 +254,7 @@ const MakeServant = async (
         servant,
         'Your Account Has Been Created On The FL Admin Portal',
         null,
-        `<p>Hi ${servant.firstName} ${servant.lastName},<br/><br/>Congratulations on being made the <b>${churchType} ${servantType}</b> for <b>${churchInEmail}</b>.<br/><br/>Your account has just been created on the First Love Church Administrative Portal. Please set up your password by clicking <b><a href=${passwordTicketResponse.data.ticket}>this link</a></b>. After setting up your password, you can log in by clicking <b>https://flcadmin.netlify.app/</b><br/><br/>Please go through ${texts.html.helpdesk} to find guidelines and instructions on how to use it as well as answers to questions you may have.</p>${texts.html.subscription}`,
+        `<p>Hi ${servant.firstName} ${servant.lastName},<br/><br/>Congratulations on being made the <b>${churchType} ${servantType}</b> for <b>${churchInEmail}</b>.<br/><br/>Your account has just been created on the First Love Church Administrative Portal. Please set up your password by clicking <b><a href=${passwordTicketResponse.data.ticket}>this link</a></b>. After setting up your password, you can log in by clicking <b>https://admin.firstlovecenter.com//</b><br/><br/>Please go through ${texts.html.helpdesk} to find guidelines and instructions on how to use it as well as answers to questions you may have.</p>${texts.html.subscription}`,
         'servant_account_created',
         [servant.firstName, passwordTicketResponse?.data?.ticket]
       )
@@ -332,9 +336,18 @@ const RemoveServant = async (
   servantType
 ) => {
   //Set Up
-  let churchLower = churchType.toLowerCase().replace('arrivals', '')
+  let churchLower = churchType.toLowerCase()
+  let servantLower = servantType.toLowerCase()
 
-  const servantLower = servantType.toLowerCase()
+  let verb = `leads${churchType}`
+  if (servantType === 'Admin') {
+    verb = `isAdminFor${churchType}`
+  }
+  if (servantType === 'ArrivalsAdmin') {
+    verb = `isArrivalsAdminFor${churchType}`
+    servantLower = 'arrivalsAdmin'
+  }
+
   isAuth(permittedRoles, context.auth.roles)
   noEmptyArgsValidation([
     `${churchLower}Id`,
@@ -342,11 +355,6 @@ const RemoveServant = async (
     `${servantLower}Id`,
     args[`${servantLower}Id`],
   ])
-
-  let verb = `leads${churchType}`
-  if (servantType === 'Admin') {
-    verb = `isAdminFor${churchType}`
-  }
 
   const session = context.driver.session()
 
@@ -810,8 +818,8 @@ export const resolvers = {
         context,
         args,
         [...permitAdmin('Constituency'), ...permitArrivals('Council')],
-        'ConstituencyArrivals',
-        'Admin'
+        'Constituency',
+        'ArrivalsAdmin'
       )
     },
     RemoveConstituencyArrivalsAdmin: async (object, args, context) => {
@@ -819,8 +827,8 @@ export const resolvers = {
         context,
         args,
         [...permitAdmin('Constituency'), ...permitArrivals('Council')],
-        'ConstituencyArrivals',
-        'Admin'
+        'Constituency',
+        'ArrivalsAdmin'
       )
     },
 
@@ -829,8 +837,8 @@ export const resolvers = {
         context,
         args,
         [...permitAdmin('Council'), ...permitArrivals('Stream')],
-        'CouncilArrivals',
-        'Admin'
+        'Council',
+        'ArrivalsAdmin'
       )
     },
     RemoveCouncilArrivalsAdmin: async (object, args, context) => {
@@ -838,8 +846,8 @@ export const resolvers = {
         context,
         args,
         [...permitAdmin('Council'), ...permitArrivals('Stream')],
-        'CouncilArrivals',
-        'Admin'
+        'Council',
+        'ArrivalsAdmin'
       )
     },
 
@@ -848,8 +856,8 @@ export const resolvers = {
         context,
         args,
         [...permitAdmin('Stream'), ...permitArrivals('GatheringService')],
-        'StreamArrivals',
-        'Admin'
+        'Stream',
+        'ArrivalsAdmin'
       )
     },
     RemoveStreamArrivalsAdmin: async (object, args, context) => {
@@ -857,8 +865,8 @@ export const resolvers = {
         context,
         args,
         [...permitAdmin('Stream'), ...permitArrivals('GatheringService')],
-        'StreamArrivals',
-        'Admin'
+        'Stream',
+        'ArrivalsAdmin'
       )
     },
 
@@ -867,8 +875,8 @@ export const resolvers = {
         context,
         args,
         [...permitAdmin('GatheringService'), ...permitArrivals('Denomination')],
-        'GatheringServiceArrivals',
-        'Admin'
+        'GatheringService',
+        'ArrivalsAdmin'
       )
     },
     RemoveGatheringServiceArrivalsAdmin: async (object, args, context) => {
@@ -876,8 +884,8 @@ export const resolvers = {
         context,
         args,
         [...permitAdmin('GatheringService'), ...permitArrivals('Denomination')],
-        'GatheringServiceArrivals',
-        'Admin'
+        'GatheringService',
+        'ArrivalsAdmin'
       )
     },
   },

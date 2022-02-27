@@ -177,7 +177,7 @@ const BusFormDetails = () => {
           </Col>
         </Row>
         <div className="d-grid gap-2">
-          <RoleView roles={['adminConstituencyArrivals']}>
+          <RoleView roles={['arrivalsAdminConstituency']}>
             {changeCondition() && (
               <Button
                 onClick={() => navigate('/arrivals/submit-bus-attendance')}

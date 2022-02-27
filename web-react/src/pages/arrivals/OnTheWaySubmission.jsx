@@ -16,11 +16,10 @@ import MinusSign from 'components/buttons/PlusMinusSign/MinusSign'
 import { RECORD_BUSSING_FROM_BACENTA } from './arrivalsMutations'
 import { MOMO_NUM_REGEX } from 'global-utils'
 
-const BusFormSubmission = () => {
+const OnTheWaySubmission = () => {
   const navigate = useNavigate()
   const { bacentaId, clickCard } = useContext(ChurchContext)
   const initialValues = {
-    serviceDate: new Date().toISOString().slice(0, 10),
     bussingPictures: [''],
     bussingCost: '',
     offeringRaised: '',
@@ -215,4 +214,4 @@ const BusFormSubmission = () => {
   )
 }
 
-export default BusFormSubmission
+export default OnTheWaySubmission

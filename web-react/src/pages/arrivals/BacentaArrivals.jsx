@@ -35,7 +35,7 @@ const BacentaArrivals = () => {
               title={`${bacenta.name}`}
               onClick={() => {
                 clickCard(bacenta)
-                navigate('/arrivals/submit-bus-picture')
+                navigate('/arrivals/submit-mobilisation-picture')
               }}
               icon={MemberIcon}
               iconCaption="Bacenta"

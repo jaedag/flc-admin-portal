@@ -28,14 +28,14 @@ type Member @auth(rules: [{ isAuthenticated: true }]) {
   members: [Member]
     @cypher(
       statement: """
-      MATCH (this)-[:LEADS|HAS|IS_ADMIN_FOR*1..6]->(:Fellowship)-[:BELONGS_TO]-(members)
+      MATCH (this)-[:LEADS|DOES_ARRIVALS_FOR|IS_ADMIN_FOR*1..6]->(:Fellowship)-[:BELONGS_TO]-(members)
       RETURN DISTINCT members
       """
     )
   memberCount: Int
     @cypher(
       statement: """
-      MATCH (this)-[:LEADS|HAS|IS_ADMIN_FOR*1..6]->(:Fellowship)-[:BELONGS_TO]-(members)
+      MATCH (this)-[:LEADS|DOES_ARRIVALS_FOR|IS_ADMIN_FOR*1..6]->(:Fellowship)-[:BELONGS_TO]-(members)
       RETURN COUNT(DISTINCT members)
       """
     )

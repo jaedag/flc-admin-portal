@@ -19,6 +19,7 @@ import {
 } from 'global-utils'
 import { useNavigate } from 'react-router'
 import RoleView from 'auth/RoleView'
+import { permitMe } from 'permission-utils'
 
 const BusFormDetails = () => {
   const { bacentaId } = useContext(ChurchContext)
@@ -52,14 +53,16 @@ const BusFormDetails = () => {
         <PlaceholderCustom as="h6" loading={loading}>
           <HeadingSecondary>{`${church?.name} ${church?.__typename}`}</HeadingSecondary>
           <p>{`Recorded by ${bussing?.created_by.fullName}`}</p>
-          {bussing?.confirmed_by && (
-            <p>
-              {`Confirmed by `}
-              <span className="fw-bold good">
-                {bussing?.confirmed_by.fullName}
-              </span>
-            </p>
-          )}
+          <RoleView roles={permitMe('Constituency')}>
+            {bussing?.confirmed_by && (
+              <p>
+                {`Confirmed by `}
+                <span className="fw-bold good">
+                  {bussing?.confirmed_by.fullName}
+                </span>
+              </p>
+            )}
+          </RoleView>
         </PlaceholderCustom>
 
         <Row>
@@ -163,7 +166,7 @@ const BusFormDetails = () => {
               </Table>
               <div className="text-center">
                 <h6>Bussing Pictures</h6>
-                {bussing?.bussingPictures.map((picture, index) => {
+                {bussing?.bussingPictures?.map((picture, index) => {
                   return (
                     <img
                       key={index}

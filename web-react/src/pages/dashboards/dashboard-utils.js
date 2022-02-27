@@ -20,7 +20,10 @@ export const menuItems = [
   {
     name: 'Arrivals',
     to: '/arrivals',
-    roles: permitArrivals('Fellowship'),
+    roles: [
+      ...permitLeaderAdmin('Fellowship'),
+      ...permitArrivals('Fellowship'),
+    ],
   },
   {
     name: 'Campaigns',

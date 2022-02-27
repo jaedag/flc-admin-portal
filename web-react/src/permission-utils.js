@@ -135,3 +135,7 @@ export const permitArrivals = (churchLevel) => {
 
   return [...permitAdmin(churchLevel), ...permittedFor]
 }
+
+export const permitLeaderAdminArrivals = (churchLevel) => {
+  return [...permitLeaderAdmin(churchLevel), ...permitArrivals(churchLevel)]
+}

@@ -128,11 +128,38 @@ export const MAKE_GATHERINGSERVICEARRIVALS_ADMIN = gql`
     }
   }
 `
+export const UPLOAD_MOBILISATION_PICTURE = gql`
+  mutation UploadMobilisationPicture(
+    $bacentaId: ID!
+    $serviceDate: String!
+    $mobilisationPicture: String!
+  ) {
+    UploadMobilisationPicture(
+      bacentaId: $bacentaId
+      serviceDate: $serviceDate
+      mobilisationPicture: $mobilisationPicture
+    ) {
+      id
+      attendance
+      mobilisationPicture
+      serviceLog {
+        bacenta {
+          id
+          stream_name
+          bussing(limit: 4) {
+            id
+            week
+          }
+        }
+      }
+    }
+  }
+`
 
 export const RECORD_BUSSING_FROM_BACENTA = gql`
   mutation RecordBussingFromBacenta(
-    $bacentaId: ID!
-    $serviceDate: String!
+    $bussingRecordId: ID!
+    $attendance: Int!
     $bussingPictures: [String]!
     $bussingCost: Float!
     $offeringRaised: Float!
@@ -142,8 +169,8 @@ export const RECORD_BUSSING_FROM_BACENTA = gql`
     $momoNumber: String!
   ) {
     RecordBussingFromBacenta(
-      bacentaId: $bacentaId
-      serviceDate: $serviceDate
+      bussingRecordId: $bussingRecordId
+      attendance: $attendance
       bussingPictures: $bussingPictures
       bussingCost: $bussingCost
       offeringRaised: $offeringRaised
@@ -153,6 +180,15 @@ export const RECORD_BUSSING_FROM_BACENTA = gql`
       momoNumber: $momoNumber
     ) {
       id
+      attendance
+      bussingPictures
+      bussingCost
+      offeringRaised
+      numberOfBusses
+      numberOfCars
+      momoName
+      momoNumber
+
       serviceLog {
         bacenta {
           id

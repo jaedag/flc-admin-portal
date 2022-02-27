@@ -59,10 +59,7 @@ type BussingZone {
 
 type BussingRecord implements Record @auth(rules: [{ isAuthenticated: true }]) {
   id: ID!
-  created_at: Date!
-  created_by: Member! @relationship(type: "LOGGED_BY", direction: OUT)
-  confirmed_by: Member @relationship(type: "CONFIRMED_BY", direction: OUT)
-  serviceDate: TimeGraph! @relationship(type: "BUSSED_ON", direction: OUT)
+
   week: Int
     @cypher(
       statement: """
@@ -70,18 +67,30 @@ type BussingRecord implements Record @auth(rules: [{ isAuthenticated: true }]) {
       RETURN date(date.date).week
       """
     )
+  # Mobilisation
+  created_at: Date! #mobilisation time is the time the record was created
+  serviceDate: TimeGraph! @relationship(type: "BUSSED_ON", direction: OUT)
+  mobilisationPicture: String!
+  created_by: Member! @relationship(type: "LOGGED_BY", direction: OUT)
+
+  #On The Way
+  bussingPictures: [String]
   attendance: Int
-  numberOfBusses: Int!
+  numberOfBusses: Int
   numberOfCars: Int
   offeringRaised: Float
-  bussingCost: Float!
+  bussingCost: Float
   bussingTopUp: Float
   momoName: String
   momoNumber: String
+  confirmed_by: Member @relationship(type: "CONFIRMED_BY", direction: OUT)
+
+  #Arrived
   comments: String
-  mobilisationPicture: String!
-  bussingPictures: [String]!
   arrivalTime: Date
+  arrivalTime_logged_by: Member
+    @relationship(type: "ARRIVAL_LOGGED_BY", direction: OUT)
+
   serviceLog: ServiceLog @relationship(type: "HAS_BUSSING", direction: IN)
 }
 
@@ -209,23 +218,37 @@ extend type Mutation {
       """
     )
 
-  UploadMobilisationPicture(mobilisationPicture: String!): BussingRecord
+  UploadMobilisationPicture(
+    bacentaId: ID!
+    serviceDate: String!
+    mobilisationPicture: String!
+  ): BussingRecord
     @cypher(
       statement: """
-      CREATE (bussingRecord:BussingRecord {created_at:datetime()})
+       CREATE (bussingRecord:BussingRecord {created_at:datetime()})
+         SET bussingRecord.id = apoc.create.uuid(),
+         bussingRecord.mobilisationPicture = $mobilisationPicture
 
-      MERGE (serviceDate:TimeGraph {date:date($serviceDate)})
-      MERGE (bussingRecord)-[:BUSSED_ON]->(serviceDate)
+       WITH bussingRecord
+         MATCH (bacenta:Bacenta {id:$bacentaId})
+         MATCH (bacenta)-[has_history:HAS_HISTORY]->(log:ServiceLog) WHERE has_history.current = true
 
-      RETURN bussingRecord
+       MERGE (log)-[:HAS_BUSSING]->(bussingRecord)
+       MERGE (serviceDate:TimeGraph {date: date($serviceDate)})
+       MERGE (bussingRecord)-[:BUSSED_ON]->(serviceDate)
+
+      WITH bussingRecord
+         MATCH (leader:Member {auth_id: $auth.jwt.sub})
+         MERGE (bussingRecord)-[:LOGGED_BY]->(leader)
+
+       RETURN bussingRecord
       """
     )
 
   #Bussing Records Entries
   RecordBussingFromBacenta(
     bussingRecordId: ID!
-    bacentaId: ID!
-    serviceDate: String!
+    attendance: Int!
     bussingPictures: [String]!
     bussingCost: Float!
     offeringRaised: Float!
@@ -237,7 +260,7 @@ extend type Mutation {
     @cypher(
       statement: """
       MATCH (bussingRecord:BussingRecord {id: $bussingRecordId})
-      SET bussingRecord.id = apoc.create.uuid(),
+      SET bussingRecord.attendance = $attendance,
       bussingRecord.bussingPictures = $bussingPictures,
       bussingRecord.bussingCost = $bussingCost,
       bussingRecord.offeringRaised = $offeringRaised,
@@ -247,14 +270,10 @@ extend type Mutation {
       bussingRecord.momoName = $momoName
 
        WITH bussingRecord
-        MATCH (bacenta:Bacenta {id:$id})
-        MATCH (bacenta)-[has_history:HAS_HISTORY]->(log:ServiceLog) WHERE has_history.current = true
         MATCH (leader:Member {auth_id: $auth.jwt.sub})
-
         MERGE (bussingRecord)-[:LOGGED_BY]->(leader)
-        MERGE (log)-[:HAS_BUSSING]->(bussingRecord)
 
-        RETURN bussingRecord
+      RETURN bussingRecord
       """
     )
 
@@ -287,7 +306,7 @@ extend type Mutation {
           MATCH (admin:Member {auth_id: $auth.jwt.sub})
           MERGE (bussingRecord)-[:CONFIRMED_BY]->(admin)
 
-          RETURN bussingRecord
+      RETURN bussingRecord
       """
     )
 
@@ -311,7 +330,7 @@ extend type Mutation {
 
       WITH bussingRecord
       MATCH (admin:Member {auth_id: $auth.jwt.sub})
-      MERGE (bussingRecord)<-[:LOG_ARRIVAL_FOR]-(admin)
+      MERGE (bussingRecord)-[:ARRIVAL_LOGGED_BY]->(admin)
 
       RETURN bussingRecord
       """

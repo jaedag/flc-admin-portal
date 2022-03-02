@@ -28,6 +28,34 @@ export const SET_ACTIVE_FELLOWSHIP = gql`
   }
 `
 
+export const SET_VACATION_BACENTA = gql`
+  mutation SetVacationBacenta($bacentaId: ID!) {
+    SetVacationBacenta(bacentaId: $bacentaId) {
+      id
+      name
+      labels
+      history {
+        id
+        historyRecord
+      }
+    }
+  }
+`
+
+export const SET_ACTIVE_BACENTA = gql`
+  mutation SetActiveBacenta($bacentaId: ID!) {
+    SetActiveBacenta(bacentaId: $bacentaId) {
+      id
+      name
+      labels
+      history {
+        id
+        historyRecord
+      }
+    }
+  }
+`
+
 export const MAKE_BACENTA_IC = gql`
   mutation MakeBacentaIC($bacentaId: ID!) {
     MakeBacentaIC(bacentaId: $bacentaId) {

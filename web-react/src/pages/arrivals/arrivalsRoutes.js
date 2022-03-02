@@ -2,8 +2,8 @@ import { permitLeaderAdminArrivals } from 'permission-utils'
 import Arrivals from 'pages/arrivals/Arrivals'
 import BacentaArrivals from 'pages/arrivals/BacentaArrivals'
 import BacentasHaveBeenCounted from 'pages/arrivals/BacentasHaveBeenCounted'
-import BacentasNotArrived from 'pages/arrivals/BacentasNotArrived'
-import BacentasThatSubmitted from 'pages/arrivals/BacentasThatSubmitted'
+import BacentasNotActivity from 'pages/arrivals/BacentasNoActivity'
+import BacentasOnTheWay from 'pages/arrivals/BacentasOnTheWay'
 import BusFormConfirmation from 'pages/arrivals/BusFormConfirmation'
 import BusFormDetails from 'pages/arrivals/BusFormDetails'
 import OnTheWaySubmission from 'pages/arrivals/OnTheWaySubmission'
@@ -55,15 +55,15 @@ export const arrivals = [
   },
 
   {
-    path: '/arrivals/bacentas-not-arrived',
+    path: '/arrivals/bacentas-no-activity',
     roles: permitLeaderAdminArrivals('Constituency'),
-    element: BacentasNotArrived,
+    element: BacentasNotActivity,
     placeholder: true,
   },
   {
-    path: '/arrivals/bacentas-that-submitted',
+    path: '/arrivals/bacentas-on-the-way',
     roles: permitLeaderAdminArrivals('Constituency'),
-    element: BacentasThatSubmitted,
+    element: BacentasOnTheWay,
     placeholder: true,
   },
   {
@@ -73,6 +73,7 @@ export const arrivals = [
     placeholder: true,
   },
 
+  //Bacenta Forms
   {
     path: '/arrivals/submit-bus-attendance',
     roles: ['arrivalsAdminConstituency'],

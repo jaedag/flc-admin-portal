@@ -141,7 +141,7 @@ const UpdateFellowship = () => {
           })
         }
 
-        // Log if the Meeting Day Changes
+        // Log if the Vacation Status Changes
         if (values.vacationStatus !== initialValues.vacationStatus) {
           if (values.vacationStatus === 'Vacation') {
             SetFellowshipOnVacation({

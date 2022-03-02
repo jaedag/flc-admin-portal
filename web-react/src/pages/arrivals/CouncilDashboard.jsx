@@ -113,14 +113,14 @@ const CouncilDashboard = () => {
           </RoleView>
           <MenuButton
             title="Bacentas Yet to Submit"
-            onClick={() => navigate('/arrivals/bacentas-not-arrived')}
+            onClick={() => navigate('/arrivals/bacentas-no-activity')}
             icon
             iconBg
             noCaption
           />
           <MenuButton
             title="Bacentas That Have Submitted"
-            onClick={() => navigate('/arrivals/bacentas-that-submitted')}
+            onClick={() => navigate('/arrivals/bacentas-on-the-way')}
             icon
             iconBg
             noCaption

@@ -58,7 +58,7 @@ MERGE (admin)-[:IS_ADMIN_FOR]->(church)
 RETURN church.id AS id, church.name AS name, higherChurch.id AS higherChurchId, higherChurch.name AS higherChurchName
 `
 
-export const connectChurchArrivalsAdmin = `
+export const connectChurchArcrivalsAdmin = `
 MATCH (church {id:$churchId})<-[:HAS]-(higherChurch)
 WHERE church:Constituency OR church:Council OR church:Stream OR church:GatheringService OR church:Sonta OR church:Ministry
 MATCH (admin:Member {id: $arrivalsAdminId})

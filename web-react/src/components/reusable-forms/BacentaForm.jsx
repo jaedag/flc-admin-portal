@@ -7,6 +7,7 @@ import {
   BUSSING_ZONE_OPTIONS,
   makeSelectOptions,
   throwErrorMsg,
+  VACATION_OPTIONS,
 } from 'global-utils'
 import { permitAdmin } from 'permission-utils'
 import { GET_COUNCIL_CONSTITUENCIES } from 'queries/ListQueries'
@@ -56,6 +57,12 @@ const BacentaForm = ({ initialValues, onSubmit, title, newBacenta }) => {
       : Yup.array().of(
           Yup.object().required('Please pick a fellowship from the dropdown')
         ),
+    graduationStatus: Yup.string().required(
+      'Graduation Status is a required field'
+    ),
+    vacationStatus: Yup.string().required(
+      'Vacation Status is a required field'
+    ),
   })
 
   return (
@@ -95,9 +102,16 @@ const BacentaForm = ({ initialValues, onSubmit, title, newBacenta }) => {
                         />
                         <FormikControl
                           control="select"
-                          name="status"
+                          name="graduationStatus"
                           options={BUSSING_STATUS_OPTIONS}
-                          defaultOption="Choose Status"
+                          defaultOption="Choose Graduation Status"
+                          label="Status"
+                        />
+                        <FormikControl
+                          control="select"
+                          name="vacationStatus"
+                          options={VACATION_OPTIONS}
+                          defaultOption="Choose Vacation Status"
                           label="Status"
                         />
                         <FormikControl

@@ -171,7 +171,7 @@ const OnTheWaySubmission = () => {
                       const { values } = form
                       const { bussingPictures } = values
 
-                      const pictureLimit = 2
+                      const pictureLimit = 4
                       return (
                         <>
                           {bussingPictures.map((bussingPicture, index) => (

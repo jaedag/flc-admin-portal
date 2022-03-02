@@ -164,18 +164,20 @@ const BusFormDetails = () => {
                   )}
                 </tbody>
               </Table>
-              <div className="text-center">
+              <Row className="text-center">
                 <h6>Bussing Pictures</h6>
+
                 {bussing?.bussingPictures?.map((picture, index) => {
                   return (
-                    <img
-                      key={index}
-                      className="report-picture"
-                      src={transformCloudinaryImg(picture, 'large')}
-                    />
+                    <Col key={index}>
+                      <img
+                        className="report-picture"
+                        src={transformCloudinaryImg(picture, 'large')}
+                      />
+                    </Col>
                   )
                 })}
-              </div>
+              </Row>
             </Row>
           </Col>
         </Row>

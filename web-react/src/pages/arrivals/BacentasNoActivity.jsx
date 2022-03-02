@@ -10,7 +10,7 @@ import { useContext } from 'react'
 import { Container } from 'react-bootstrap'
 import { CONSTITUENCY_BUSSING_DATA } from './arrivalsQueries'
 
-const BacentasNotArrived = () => {
+const BacentasNoActiviity = () => {
   const { constituencyId } = useContext(ChurchContext)
   const { data, loading, error } = useQuery(CONSTITUENCY_BUSSING_DATA, {
     variables: { id: constituencyId },
@@ -21,7 +21,7 @@ const BacentasNotArrived = () => {
     <BaseComponent data={data} loading={loading} error={error} placeholder>
       <Container>
         <HeadingPrimary loading={loading}>
-          Bacentas Not Yet Arrived
+          Bacentas With No Activity
         </HeadingPrimary>
         <HeadingSecondary loading={!constituency?.name}>
           {constituency?.name} Constituency
@@ -44,4 +44,4 @@ const BacentasNotArrived = () => {
   )
 }
 
-export default BacentasNotArrived
+export default BacentasNoActiviity

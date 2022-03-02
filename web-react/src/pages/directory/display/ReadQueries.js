@@ -278,7 +278,8 @@ export const DISPLAY_BACENTA = gql`
     bacentas(where: { id: $id }, options: { limit: 1 }) {
       id
       name
-      status
+      labels
+      graduationStatus
       zone {
         number
       }

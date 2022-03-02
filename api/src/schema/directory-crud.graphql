@@ -54,6 +54,7 @@ extend type Mutation {
 
       WITH log,fellowship
       MATCH (admin:Member {auth_id: $auth.jwt.sub})
+      MATCH (fellowship)<-[:HAS]-(bacenta:Bacenta)
       MERGE (date:TimeGraph {date:date()})
       MERGE (log)-[:LOGGED_BY]->(admin)
       MERGE (log)-[:RECORDED_ON]->(date)
@@ -61,9 +62,34 @@ extend type Mutation {
       MERGE (bacenta)-[:HAS_HISTORY]->(log)
 
       SET fellowship:Vacation
-      REMOVE fellowship:ActiveFellowship
+      REMOVE fellowship:Active:Fellowship
 
       RETURN fellowship
+      """
+    )
+  #Set Bacenta to be 'OnVacation
+  SetVacationBacenta(bacentaId: ID!): Bacenta
+    @cypher(
+      statement: """
+      MATCH (bacenta:Bacenta {id:$bacentaId})
+
+      CREATE (log:HistoryLog {id:apoc.create.uuid()})
+        SET log.timeStamp = datetime(),
+        log.historyRecord = bacenta.name + ' Bacenta went on vacation mode'
+
+      WITH log,bacenta
+      MATCH (admin:Member {auth_id: $auth.jwt.sub})
+      MATCH (bacenta)<-[:HAS]-(constituency:Constituency)
+      MERGE (date:TimeGraph {date:date()})
+      MERGE (log)-[:LOGGED_BY]->(admin)
+      MERGE (log)-[:RECORDED_ON]->(date)
+      MERGE (bacenta)-[:HAS_HISTORY]->(log)
+      MERGE (constituency)-[:HAS_HISTORY]->(log)
+
+      SET bacenta:Vacation
+      REMOVE bacenta:ActiveBacenta
+
+      RETURN bacenta
       """
     )
 
@@ -79,16 +105,43 @@ extend type Mutation {
 
       WITH log,fellowship
       MATCH (admin:Member {auth_id: $auth.jwt.sub})
+      MATCH (fellowship)<-[:HAS]-(bacenta:Bacenta)
       MERGE (date:TimeGraph {date:date()})
       MERGE (log)-[:LOGGED_BY]->(admin)
       MERGE (log)-[:RECORDED_ON]->(date)
       MERGE (fellowship)-[:HAS_HISTORY]->(log)
       MERGE (bacenta)-[:HAS_HISTORY]->(log)
 
-      SET fellowship:ActiveFellowship
+      SET fellowship:Active:Fellowship
       REMOVE fellowship:Vacation
 
       RETURN fellowship
+      """
+    )
+
+  #Set Bacenta to be 'Active
+  SetActiveBacenta(bacentaId: ID!): Bacenta
+    @cypher(
+      statement: """
+      MATCH (bacenta:Bacenta {id:$bacentaId})
+
+      CREATE (log:HistoryLog {id:apoc.create.uuid()})
+        SET log.timeStamp = datetime(),
+        log.historyRecord = bacenta.name + ' Bacenta was made active again'
+
+      WITH log,bacenta
+      MATCH (admin:Member {auth_id: $auth.jwt.sub})
+      MATCH (bacenta)<-[:HAS]-(constituency:Constituency)
+      MERGE (date:TimeGraph {date:date()})
+      MERGE (log)-[:LOGGED_BY]->(admin)
+      MERGE (log)-[:RECORDED_ON]->(date)
+      MERGE (bacenta)-[:HAS_HISTORY]->(log)
+      MERGE (constituency)-[:HAS_HISTORY]->(log)
+
+      SET bacenta:ActiveBacenta
+      REMOVE bacenta:Vacation
+
+      RETURN bacenta
       """
     )
 }
@@ -416,7 +469,7 @@ extend type Mutation {
     @cypher(
       statement: """
       MATCH (lastCode:LastBankingCode)
-      CREATE (fellowship:Fellowship:ActiveFellowship {name:$name,location: point({latitude:toFloat($venueLatitude), longitude:toFloat($venueLongitude), crs:'WGS-84'})})
+      CREATE (fellowship:Fellowship:Active:Fellowship {name:$name,location: point({latitude:toFloat($venueLatitude), longitude:toFloat($venueLongitude), crs:'WGS-84'})})
          	SET
       	fellowship.id = apoc.create.uuid(),
         fellowship.bankingCode = lastCode.number + 1,

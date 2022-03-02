@@ -114,15 +114,15 @@ const ConstituencyDashboard = () => {
             </Button>
           </RoleView>
           <MenuButton
-            title="Bacentas Yet to Submit"
-            onClick={() => navigate('/arrivals/bacentas-not-arrived')}
+            title="Bacentas With No Activity"
+            onClick={() => navigate('/arrivals/bacentas-no-activity')}
             icon
             iconBg
             noCaption
           />
           <MenuButton
-            title="Bacentas That Have Submitted"
-            onClick={() => navigate('/arrivals/bacentas-that-submitted')}
+            title="Bacentas On The Way"
+            onClick={() => navigate('/arrivals/bacentas-on-the-way')}
             icon
             iconBg
             noCaption
@@ -130,6 +130,13 @@ const ConstituencyDashboard = () => {
           <MenuButton
             title="Bacentas That Have Been Counted"
             onClick={() => navigate('/arrivals/bacentas-have-been-counted')}
+            icon
+            iconBg
+            noCaption
+          />
+          <MenuButton
+            title="Bacentas That Have Arrived"
+            onClick={() => navigate('/arrivals/bacentas-arrived')}
             icon
             iconBg
             noCaption

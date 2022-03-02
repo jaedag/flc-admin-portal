@@ -55,6 +55,75 @@ export const GET_FEDERAL_MEMBERS = gql`
   }
 `
 
+export const GET_SERVANT_MEMBERS = gql`
+  query ($id: ID) {
+    members(where: { id: $id }) {
+      id
+      firstName
+      lastName
+      fullName
+
+      members {
+        id
+        firstName
+        lastName
+        pictureUrl
+        stream_name
+        fellowship {
+          id
+          name
+        }
+        ministry {
+          id
+          name
+        }
+        maritalStatus {
+          status
+        }
+        gender {
+          gender
+        }
+        title {
+          title
+        }
+        leadsFellowship {
+          id
+          name
+        }
+        leadsBacenta {
+          id
+          name
+        }
+        leadsMinistry {
+          id
+          name
+        }
+        leadsSonta {
+          id
+          name
+        }
+        leadsBasonta {
+          id
+          name
+        }
+        leadsConstituency {
+          id
+          name
+        }
+
+        isAdminForCouncil {
+          id
+          name
+        }
+        isAdminForConstituency {
+          id
+          name
+        }
+      }
+    }
+  }
+`
+
 export const GET_GATHERING_SERVICE_MEMBERS = gql`
   query ($id: ID) {
     gatheringServices(where: { id: $id }) {

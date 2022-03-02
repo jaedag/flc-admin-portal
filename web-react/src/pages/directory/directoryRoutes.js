@@ -6,7 +6,6 @@ import UserProfileEditPage from 'pages/directory/user-profile/EditPage'
 import CreateMember from 'pages/directory/create/CreateMember'
 import UpdateMember from 'pages/directory/update/UpdateMember'
 import SearchPageMobile from 'pages/directory/mobile/SearchPage'
-import MembersGrid from 'components/members-grids/MembersGrid'
 import CouncilMembers from 'pages/directory/grids/CouncilMembers'
 import ConstituencyMembers from 'pages/directory/grids/ConstituencyMembers'
 import BacentaMembers from 'pages/directory/grids/BacentaMembers'
@@ -46,11 +45,12 @@ import {
   permitArrivals,
   permitLeaderAdmin,
 } from 'permission-utils'
+import ServantMembers from './grids/ServantMembers'
 
 export const memberDirectory = [
   {
     path: '/directory/members',
-    element: MembersGrid,
+    element: ServantMembers,
     roles: ['all'],
   },
 ]

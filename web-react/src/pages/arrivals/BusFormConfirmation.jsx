@@ -10,7 +10,7 @@ import { transformCloudinaryImg } from 'global-utils'
 import React from 'react'
 import * as Yup from 'yup'
 import { useContext } from 'react'
-import { Container } from 'react-bootstrap'
+import { Card, Container } from 'react-bootstrap'
 import { DISPLAY_BUSSING_RECORDS } from './arrivalsQueries'
 import { CONFIRM_BUSSING_BY_ADMIN } from './arrivalsMutations'
 import { useNavigate } from 'react-router'
@@ -94,6 +94,18 @@ const BusFormConfirmation = () => {
           )
         })}
       </div>
+      <Container>
+        <Card>
+          <Card.Body>
+            <div className="text-secondary">
+              Bussing Cost:{' '}
+              <span className="fw-bold text-info">
+                GHS {bussing?.bussingCost}
+              </span>
+            </div>
+          </Card.Body>
+        </Card>
+      </Container>
 
       <Formik
         initialValues={initialValues}
@@ -108,6 +120,7 @@ const BusFormConfirmation = () => {
                 control="input"
                 name="attendance"
                 label="Attendance (from Picture)*"
+                placeholder={bussing?.attendance}
                 onChange={(e) => {
                   formik.setFieldValue('attendance', e.target.value)
                   if (e.target.value > 20) {

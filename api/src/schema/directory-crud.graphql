@@ -87,7 +87,7 @@ extend type Mutation {
       MERGE (constituency)-[:HAS_HISTORY]->(log)
 
       SET bacenta:Vacation
-      REMOVE bacenta:ActiveBacenta
+      REMOVE bacenta:Active:Bacenta
 
       RETURN bacenta
       """
@@ -138,7 +138,7 @@ extend type Mutation {
       MERGE (bacenta)-[:HAS_HISTORY]->(log)
       MERGE (constituency)-[:HAS_HISTORY]->(log)
 
-      SET bacenta:ActiveBacenta
+      SET bacenta:Active:Bacenta
       REMOVE bacenta:Vacation
 
       RETURN bacenta

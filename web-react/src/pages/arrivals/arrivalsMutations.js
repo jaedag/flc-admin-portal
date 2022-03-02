@@ -241,3 +241,17 @@ export const CONFIRM_BUSSING_BY_ADMIN = gql`
     }
   }
 `
+
+export const RECORD_ARRIVAL_TIME = gql`
+  mutation RecordArrivalTime($bussingRecordId: ID!) {
+    RecordArrivalTime(bussingRecordId: $bussingRecordId) {
+      id
+      arrivalTime
+      arrivalTime_Logged_By {
+        id
+        firstName
+        lastName
+      }
+    }
+  }
+`

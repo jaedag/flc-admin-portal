@@ -199,6 +199,7 @@ export const DISPLAY_BUSSING_RECORDS = gql`
       numberOfBusses
       numberOfCars
       comments
+      arrivalTime
     }
     bacentas(where: { id: $bacentaId }) {
       id

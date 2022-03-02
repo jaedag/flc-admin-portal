@@ -28,8 +28,7 @@ const SetPermissions = ({ children }) => {
 
             if (!isAuthorised(permitMe('Constituency'), currentUser.roles)) {
               //User is not a Constituency Admin the he can only be looking at his bacenta membership
-              church.setBacentaId(currentUser.fellowship?.bacenta?.id)
-
+              // church.setBacentaId(currentUser.bacenta)
               // if (!isAuthorised( ['leaderBacenta'])) {
               //   //User is not a Bacenta Leader and he can only be looking at his fellowship membership
               //   setFellowshipId(currentUser.fellowship?.id)

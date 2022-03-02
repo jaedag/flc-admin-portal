@@ -86,7 +86,6 @@ const MobilisationSubmission = () => {
                     placeholder="dd/mm/yyyy"
                     aria-describedby="dateofservice"
                   />
-                  {console.log(formik.errors)}
                   <FormikControl
                     control="imageUpload"
                     name="mobilisationPicture"

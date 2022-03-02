@@ -30,10 +30,7 @@ const BacentasThatSubmitted = () => {
         </HeadingSecondary>
 
         {constituency?.bacentas.map((bacenta, i) => {
-          if (
-            bacenta.bussing[0]?.week === getWeekNumber() &&
-            !bacenta.bussing[0]?.attendance
-          ) {
+          if (bacenta.bussing[0]?.week === getWeekNumber()) {
             return (
               <MemberDisplayCard
                 key={i}

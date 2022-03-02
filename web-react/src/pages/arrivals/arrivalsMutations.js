@@ -149,6 +149,7 @@ export const UPLOAD_MOBILISATION_PICTURE = gql`
           bussing(limit: 4) {
             id
             week
+            mobilisationPicture
           }
         }
       }

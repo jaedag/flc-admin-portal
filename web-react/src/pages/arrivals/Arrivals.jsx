@@ -7,10 +7,11 @@ import { Container } from 'react-bootstrap'
 import { useNavigate } from 'react-router'
 import MemberIcon from '../../assets/people-svgrepo-com-2.svg'
 import HeadingSecondary from 'components/HeadingSecondary'
-import { plural } from 'global-utils'
+import { ChurchContext } from 'contexts/ChurchContext'
 
 const Arrivals = () => {
   const { userJobs } = useContext(MemberContext)
+  const { clickCard } = useContext(ChurchContext)
   const navigate = useNavigate()
   // console.log(getUserChurchTypeList(userJobs))
   // let arrivalsChurches = getUserChurchTypeList(userJobs)?.filter(
@@ -26,24 +27,26 @@ const Arrivals = () => {
       {/* This Page will require a redesign. Possibly by Basoah */}
       <div className="d-grid gap-2 mt-5 text-left">
         {userJobs?.assessmentData ? (
-          userJobs?.jobs.map((role, index) => {
+          userJobs?.jobs.map((role) => {
             if (role.name === 'Fellowship' || role.name === 'Fellowships') {
               return null
             }
 
-            return (
+            return role.church.map((church, index) => (
               <MenuButton
                 key={index}
-                title={role.name}
+                title={church.name}
                 caption={`${role.number} ${role.name}`}
                 icon={MemberIcon}
+                iconCaption={church.__typename}
                 iconBg={true}
                 color="arrivals"
-                onClick={() =>
-                  navigate(`/arrivals/${plural(role.name.toLowerCase())}`)
-                }
+                onClick={() => {
+                  clickCard(church)
+                  navigate(`/arrivals/${church.__typename.toLowerCase()}`)
+                }}
               />
-            )
+            ))
           })
         ) : (
           <>

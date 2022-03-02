@@ -7,9 +7,7 @@ import BacentasThatSubmitted from 'pages/arrivals/BacentasThatSubmitted'
 import BusFormConfirmation from 'pages/arrivals/BusFormConfirmation'
 import BusFormDetails from 'pages/arrivals/BusFormDetails'
 import OnTheWaySubmission from 'pages/arrivals/OnTheWaySubmission'
-import ConstituencyArrivals from 'pages/arrivals/ConstituencyArrivals'
 import ConstituencyDashboard from 'pages/arrivals/ConstituencyDashboard'
-import CouncilArrivals from 'pages/arrivals/CouncilArrivals'
 import CouncilDashboard from './CouncilDashboard'
 import MobilisationSubmission from './MobilisationSubmission'
 
@@ -23,31 +21,20 @@ export const arrivals = [
 
   //Main Arrivals Pages for the Different Churches
   {
-    path: '/arrivals/bacentas',
+    path: '/arrivals/bacenta',
     roles: permitLeaderAdminArrivals('Bacenta'),
     element: BacentaArrivals,
     placeholder: true,
   },
   {
-    path: '/arrivals/constituencies',
-    roles: permitLeaderAdminArrivals('Constituency'),
-    element: ConstituencyArrivals,
-    placeholder: true,
-  },
-  {
-    path: '/arrivals/constituency/dashboard',
+    path: '/arrivals/constituency',
     roles: permitLeaderAdminArrivals('Constituency'),
     element: ConstituencyDashboard,
     placeholder: true,
   },
+
   {
-    path: '/arrivals/councils',
-    roles: permitLeaderAdminArrivals('Council'),
-    element: CouncilArrivals,
-    placeholder: true,
-  },
-  {
-    path: '/arrivals/council/dashboard',
+    path: '/arrivals/council',
     roles: permitLeaderAdminArrivals('Council'),
     element: CouncilDashboard,
     placeholder: true,
@@ -55,7 +42,7 @@ export const arrivals = [
 
   //Bacenta Forms that need to be Filled
   {
-    path: '/arrivals/submit-bus-picture',
+    path: '/arrivals/submit-on-the-way',
     roles: ['leaderBacenta'],
     element: OnTheWaySubmission,
     placeholder: false,

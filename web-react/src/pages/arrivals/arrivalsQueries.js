@@ -80,20 +80,14 @@ export const BACENTA_ARRIVALS = gql`
       id
       name
       arrivalsCodeOfTheDay
-    }
-  }
-`
-
-export const BACENTA_LEADER_ARRIVALS = gql`
-  query ($id: ID) {
-    members(where: { id: $id }, options: { limit: 1 }) {
-      id
-      firstName
-      lastName
-      fullName
-      leadsBacenta {
+      bussing(limit: 1) {
         id
-        name
+        serviceDate {
+          date
+        }
+        week
+        mobilisationPicture
+        bussingPictures
       }
     }
   }

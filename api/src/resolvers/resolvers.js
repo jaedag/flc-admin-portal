@@ -82,10 +82,7 @@ const notifyMember = (
   mg.messages
     .create('mg.firstlovecenter.com', {
       from: 'FL Accra Admin <no-reply@firstlovecenter.org>',
-      to: process.env.TEST_EMAIL_ADDRESS || [
-        member.email,
-        'admin@firstlovecenter.com',
-      ],
+      to: process.env.TEST_EMAIL_ADDRESS || member.email,
       subject: subject,
       text: body,
       html: html || null, //HTML Version of the Message for Better Styling

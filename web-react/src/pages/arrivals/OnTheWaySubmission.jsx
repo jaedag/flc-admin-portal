@@ -14,12 +14,15 @@ import BaseComponent from 'components/base-component/BaseComponent'
 import PlusSign from 'components/buttons/PlusMinusSign/PlusSign'
 import MinusSign from 'components/buttons/PlusMinusSign/MinusSign'
 import { RECORD_BUSSING_FROM_BACENTA } from './arrivalsMutations'
-import { MOMO_NUM_REGEX } from 'global-utils'
+import { MOMO_NUM_REGEX, parseDate } from 'global-utils'
+import { ServiceContext } from 'contexts/ServiceContext'
 
 const OnTheWaySubmission = () => {
   const navigate = useNavigate()
   const { bacentaId, clickCard } = useContext(ChurchContext)
+  const { bussingRecordId } = useContext(ServiceContext)
   const initialValues = {
+    attendance: '',
     bussingPictures: [''],
     bussingCost: '',
     offeringRaised: '',
@@ -32,12 +35,16 @@ const OnTheWaySubmission = () => {
   const { data, loading, error } = useQuery(BACENTA_ARRIVALS, {
     variables: { id: bacentaId },
   })
+
+  const bacenta = data?.bacentas[0]
   const [RecordBussingFromBacenta] = useMutation(RECORD_BUSSING_FROM_BACENTA)
 
   const validationSchema = Yup.object({
-    serviceDate: Yup.date()
-      .max(new Date(), 'Service could not possibly have happened after today')
-      .required('Date is a required field'),
+    attendance: Yup.number()
+      .typeError('Please enter a valid number')
+      .positive()
+      .integer('You cannot have attendance with decimals!')
+      .required('This is a required field'),
     bussingPictures: Yup.array()
       .max(4, 'You cannot upload more than four pictures per bacenta')
       .of(Yup.string().required('You must upload a bussing picture')),
@@ -72,8 +79,8 @@ const OnTheWaySubmission = () => {
     onSubmitProps.setSubmitting(true)
     RecordBussingFromBacenta({
       variables: {
-        id: bacentaId,
-        serviceDate: values.serviceDate,
+        attendance: parseInt(values.attendance),
+        bussingRecordId: bussingRecordId,
         bussingPictures: values.bussingPictures,
         bussingCost: parseFloat(values.bussingCost),
         offeringRaised: parseFloat(values.offeringRaised),
@@ -104,28 +111,29 @@ const OnTheWaySubmission = () => {
               Record Bussing Data
             </HeadingPrimary>
             <HeadingSecondary loading={loading}>
-              {data?.bacentas[0].name} Bacenta
+              {bacenta?.name} Bacenta
             </HeadingSecondary>
             <HeadingSecondary loading={loading}>
               Code of The Day:{' '}
             </HeadingSecondary>
             <HeadingPrimary className="fw-bold">
-              {data?.bacentas[0]?.arrivalsCodeOfTheDay}
+              {bacenta?.arrivalsCodeOfTheDay}
             </HeadingPrimary>
 
             <Form>
               <Row className="row-cols-1 row-cols-md-2 mt-2">
                 <Col className="mb-2">
                   <small htmlFor="dateofservice" className="form-text label">
-                    Date of Service*
-                    <i className="text-secondary">(Day/Month/Year)</i>
+                    Date of Service
                   </small>
+                  <HeadingPrimary>
+                    {parseDate(bacenta?.bussing[0].serviceDate.date)}
+                  </HeadingPrimary>
+
                   <FormikControl
                     control="input"
-                    name="serviceDate"
-                    type="date"
-                    placeholder="dd/mm/yyyy"
-                    aria-describedby="dateofservice"
+                    name="attendance"
+                    label="Attendance*"
                   />
                   <FormikControl
                     control="input"

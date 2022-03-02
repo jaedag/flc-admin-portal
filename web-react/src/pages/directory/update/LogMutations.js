@@ -18,7 +18,7 @@ export const LOG_FELLOWSHIP_HISTORY = gql`
       newBacentaId: $newBacentaId
     ) {
       id
-      history(options: { limit: 10 }) {
+      history(options: { limit: 5 }) {
         id
         timeStamp
         created_at {
@@ -63,7 +63,7 @@ export const LOG_BACENTA_HISTORY = gql`
         firstName
         lastName
       }
-      history(options: { limit: 10 }) {
+      history(options: { limit: 5 }) {
         id
         timeStamp
         created_at {
@@ -108,7 +108,7 @@ export const LOG_CONSTITUENCY_HISTORY = gql`
         firstName
         lastName
       }
-      history(options: { limit: 10 }) {
+      history(options: { limit: 5 }) {
         id
         timeStamp
         created_at {
@@ -153,7 +153,7 @@ export const LOG_COUNCIL_HISTORY = gql`
         firstName
         lastName
       }
-      history(options: { limit: 10 }) {
+      history(options: { limit: 5 }) {
         id
         timeStamp
         created_at {
@@ -198,7 +198,7 @@ export const LOG_STREAM_HISTORY = gql`
         firstName
         lastName
       }
-      history(options: { limit: 10 }) {
+      history(options: { limit: 5 }) {
         id
         timeStamp
         created_at {
@@ -243,7 +243,7 @@ export const LOG_SONTA_HISTORY = gql`
         firstName
         lastName
       }
-      history(options: { limit: 10 }) {
+      history(options: { limit: 5 }) {
         id
         timeStamp
         created_at {

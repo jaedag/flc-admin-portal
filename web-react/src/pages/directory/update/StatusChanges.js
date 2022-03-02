@@ -5,7 +5,7 @@ export const SET_VACATION_FELLOWSHIP = gql`
     SetVacationFellowship(fellowshipId: $fellowshipId) {
       id
       name
-      labels
+      vacationStatus
       history {
         id
         historyRecord
@@ -19,7 +19,7 @@ export const SET_ACTIVE_FELLOWSHIP = gql`
     SetActiveFellowship(fellowshipId: $fellowshipId) {
       id
       name
-      labels
+      vacationStatus
       history {
         id
         historyRecord
@@ -33,7 +33,7 @@ export const SET_VACATION_BACENTA = gql`
     SetVacationBacenta(bacentaId: $bacentaId) {
       id
       name
-      labels
+      vacationStatus
       history {
         id
         historyRecord
@@ -47,7 +47,7 @@ export const SET_ACTIVE_BACENTA = gql`
     SetActiveBacenta(bacentaId: $bacentaId) {
       id
       name
-      labels
+      vacationStatus
       history {
         id
         historyRecord
@@ -61,9 +61,9 @@ export const MAKE_BACENTA_IC = gql`
     MakeBacentaIC(bacentaId: $bacentaId) {
       id
       name
-      labels
+      graduationStatus
       status
-      history(options: { limit: 10 }) {
+      history(options: { limit: 5 }) {
         id
         timeStamp
         created_at {
@@ -86,9 +86,8 @@ export const MAKE_BACENTA_GRADUATED = gql`
     MakeBacentaGraduated(bacentaId: $bacentaId) {
       id
       name
-      labels
-      status
-      history(options: { limit: 10 }) {
+      graduationStatus
+      history(options: { limit: 5 }) {
         id
         timeStamp
         created_at {

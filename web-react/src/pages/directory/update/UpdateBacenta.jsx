@@ -44,9 +44,7 @@ const UpdateBacenta = () => {
     fellowships: bacenta?.fellowships.length ? bacenta?.fellowships : [''],
     zone: bacenta?.zone.number,
     graduationStatus: bacenta?.graduationStatus,
-    vacationStatus: bacenta?.labels.includes('Vacation')
-      ? 'Vacation'
-      : 'Active',
+    vacationStatus: bacenta?.vacationStatus,
   }
 
   const [LogBacentaHistory] = useMutation(LOG_BACENTA_HISTORY)

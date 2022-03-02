@@ -55,16 +55,10 @@ const DetailsFellowship = () => {
     }
   })
 
-  let vacation = fellowshipData && 'Active'
-
-  if (fellowship?.labels.includes('Vacation')) {
-    vacation = 'Vacation'
-  }
-
   const details = [
     {
       title: 'Status',
-      number: vacation,
+      number: fellowship?.vacationStatus,
       link: '#',
       width: '',
     },
@@ -94,7 +88,7 @@ const DetailsFellowship = () => {
       editPermitted={permitAdmin('Constituency')}
       weekNumber={getWeekNumber()}
       last3Weeks={fellowship && check}
-      vacation={vacation}
+      vacation={fellowship?.vacationStatus && true}
       history={history?.history.length && history?.history}
       breadcrumb={breadcrumb && breadcrumb}
     />

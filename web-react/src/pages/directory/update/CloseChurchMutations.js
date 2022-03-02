@@ -45,7 +45,7 @@ export const MAKE_CONSTITUENCY_INACTIVE = gql`
           id
         }
 
-        history(options: { limit: 10 }) {
+        history(options: { limit: 5 }) {
           id
           timeStamp
           created_at {
@@ -75,7 +75,7 @@ export const MAKE_COUNCIL_INACTIVE = gql`
         councils {
           id
         }
-        history(options: { limit: 10 }) {
+        history(options: { limit: 5 }) {
           id
           timeStamp
           created_at {
@@ -104,7 +104,7 @@ export const MAKE_STREAM_INACTIVE = gql`
         streams {
           id
         }
-        history(options: { limit: 10 }) {
+        history(options: { limit: 5 }) {
           id
           timeStamp
           created_at {

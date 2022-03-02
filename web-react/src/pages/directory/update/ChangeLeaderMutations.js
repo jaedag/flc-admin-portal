@@ -65,7 +65,7 @@ export const MAKE_BACENTA_LEADER = gql`
           firstName
           lastName
         }
-        # history(options: { limit: 10 }) {
+        # history(options: { limit: 5 }) {
         #   id
         #   timeStamp
         #   created_at {
@@ -109,7 +109,7 @@ export const MAKE_SONTA_LEADER = gql`
           firstName
           lastName
         }
-        # history(options: { limit: 10 }) {
+        # history(options: { limit: 5 }) {
         #   id
         #   timeStamp
         #   created_at {
@@ -156,7 +156,7 @@ export const MAKE_CONSTITUENCY_LEADER = gql`
           firstName
           lastName
         }
-        # history(options: { limit: 10 }) {
+        # history(options: { limit: 5 }) {
         #   id
         #   timeStamp
         #   created_at {
@@ -204,7 +204,7 @@ export const MAKE_COUNCIL_LEADER = gql`
           firstName
           lastName
         }
-        # history(options: { limit: 10 }) {
+        # history(options: { limit: 5 }) {
         #   id
         #   timeStamp
         #   created_at {
@@ -252,7 +252,7 @@ export const MAKE_STREAM_LEADER = gql`
           firstName
           lastName
         }
-        # history(options: { limit: 10 }) {
+        # history(options: { limit: 5 }) {
         #   id
         #   timeStamp
         #   created_at {

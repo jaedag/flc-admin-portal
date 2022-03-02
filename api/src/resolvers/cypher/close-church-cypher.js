@@ -28,8 +28,7 @@ MERGE (fellowship)-[:HAS_HISTORY]->(log)
 MERGE (bacenta)-[:HAS_HISTORY]->(log)
 
 SET fellowship:ClosedFellowship
-REMOVE fellowship:Fellowship
-REMOVE fellowship:Active:Fellowship
+REMOVE fellowship:Fellowship, fellowship:Active
 
 RETURN bacenta {
   .id, .name, 
@@ -56,7 +55,7 @@ MERGE (bacenta)-[:HAS_HISTORY]->(log)
 MERGE (constituency)-[:HAS_HISTORY]->(log)
 
 SET bacenta:ClosedBacenta, fellowships:ClosedFellowship
-REMOVE bacenta:Bacenta,  fellowships:Fellowship:Active:Fellowship
+REMOVE bacenta:Bacenta,  fellowships:Fellowship:Active
 
 RETURN constituency {
   .id, .name, 

@@ -581,6 +581,15 @@ type Bacenta implements Church {
       RETURN DISTINCT toLower(stream.name)
       """
     )
+  vacationStatus: String!
+    @cypher(
+      statement: """
+      MATCH (this)
+      UNWIND labels(this) AS status
+      WITH status WHERE status = 'Active' OR status = 'Vacation'
+      RETURN status
+      """
+    )
   labels: [String]
     @cypher(
       statement: """
@@ -660,6 +669,15 @@ type Fellowship implements Church {
       statement: """
       MATCH (this)<-[:HAS*4]-(stream:Stream)
       RETURN DISTINCT toLower(stream.name)
+      """
+    )
+  vacationStatus: String!
+    @cypher(
+      statement: """
+      MATCH (this)
+      UNWIND labels(this) AS status
+      WITH status WHERE status = 'Active' OR status = 'Vacation'
+      RETURN status
       """
     )
   bacenta: Bacenta @relationship(type: "HAS", direction: IN)

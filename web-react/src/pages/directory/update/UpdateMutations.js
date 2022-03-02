@@ -119,7 +119,7 @@ export const UPDATE_STREAM_MUTATION = gql`
         firstName
         lastName
       }
-      history(options: { limit: 10 }) {
+      history(options: { limit: 5 }) {
         id
         timeStamp
         created_at {
@@ -174,7 +174,7 @@ export const UPDATE_COUNCIL_MUTATION = gql`
         firstName
         lastName
       }
-      history(options: { limit: 10 }) {
+      history(options: { limit: 5 }) {
         id
         timeStamp
         created_at {
@@ -236,7 +236,7 @@ export const UPDATE_CONSTITUENCY_MUTATION = gql`
         firstName
         lastName
       }
-      history(options: { limit: 10 }) {
+      history(options: { limit: 5 }) {
         id
         timeStamp
         created_at {
@@ -303,7 +303,7 @@ export const UPDATE_BACENTA_MUTATION = gql`
           title
         }
       }
-      history(options: { limit: 10 }) {
+      history(options: { limit: 5 }) {
         id
         timeStamp
         created_at {
@@ -339,7 +339,7 @@ export const UPDATE_SONTA_MUTATION = gql`
           title
         }
       }
-      history(options: { limit: 10 }) {
+      history(options: { limit: 5 }) {
         id
         timeStamp
         created_at {
@@ -400,7 +400,7 @@ export const UPDATE_FELLOWSHIP = gql`
         pictureUrl
       }
 
-      history(options: { limit: 10 }) {
+      history(options: { limit: 5 }) {
         id
         timeStamp
         created_at {

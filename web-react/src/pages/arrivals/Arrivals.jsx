@@ -31,12 +31,11 @@ const Arrivals = () => {
             if (role.name === 'Fellowship' || role.name === 'Fellowships') {
               return null
             }
-
             return role.church.map((church, index) => (
               <MenuButton
                 key={index}
                 title={church.name}
-                caption={`${role.number} ${role.name}`}
+                caption={`${church.memberCount} Members`}
                 icon={MemberIcon}
                 iconCaption={church.__typename}
                 iconBg={true}

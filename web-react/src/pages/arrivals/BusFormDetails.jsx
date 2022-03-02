@@ -35,14 +35,19 @@ const BusFormDetails = () => {
   const changeCondition = () => {
     const today = new Date()
     const arrivalsCutoff = setTime(ARRIVALS_CUTOFF)
-
-    if (parseDate(bussing?.created_at) === 'Today' && today < arrivalsCutoff) {
-      //If the record was created today
-      //And if the time is less than the arrivals cutoff time
+    if (bussing?.bussingPictures?.length) {
+      if (
+        parseDate(bussing?.created_at) === 'Today' &&
+        today < arrivalsCutoff
+      ) {
+        //If the record was created today
+        //And if the time is less than the arrivals cutoff time
+        return true
+      }
+      // return false
       return true
     }
-    // return false
-    return true
+    return false
   }
   return (
     <BaseComponent loading={loading} error={error} data={data} placeholder>
@@ -82,6 +87,21 @@ const BusFormDetails = () => {
                         {new Date(bussing?.serviceDate.date).toDateString()}
                       </td>
                     </PlaceholderCustom>
+                  </tr>
+                  <tr>
+                    <td>Mobilisation Picture</td>
+                    <td>
+                      <PlaceholderCustom loading={loading}>
+                        <span
+                          className="text-primary"
+                          onClick={() =>
+                            navigate('/arrivals/mobilisation-picture')
+                          }
+                        >
+                          <u>Click Here To View</u>
+                        </span>
+                      </PlaceholderCustom>
+                    </td>
                   </tr>
                   <tr>
                     <td>Attendance</td>

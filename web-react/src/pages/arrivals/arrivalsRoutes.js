@@ -10,6 +10,7 @@ import OnTheWaySubmission from 'pages/arrivals/OnTheWaySubmission'
 import ConstituencyDashboard from 'pages/arrivals/ConstituencyDashboard'
 import CouncilDashboard from './CouncilDashboard'
 import MobilisationSubmission from './MobilisationSubmission'
+import MobilisationPicture from './MobilisationPicture'
 
 export const arrivals = [
   {
@@ -84,6 +85,12 @@ export const arrivals = [
     path: '/bacenta/bussing-details',
     roles: ['leaderBacenta'],
     element: BusFormDetails,
+    placeholder: false,
+  },
+  {
+    path: '/arrivals/mobilisation-picture',
+    roles: permitLeaderAdminArrivals('Bacenta'),
+    element: MobilisationPicture,
     placeholder: false,
   },
 ]

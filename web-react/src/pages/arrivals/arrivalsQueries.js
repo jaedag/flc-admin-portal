@@ -190,6 +190,7 @@ export const DISPLAY_BUSSING_RECORDS = gql`
         date
       }
       week
+      mobilisationPicture
       attendance
       bussingPictures
       bussingCost

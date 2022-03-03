@@ -5,6 +5,10 @@
 .arrivals.dark {
   color: var(--arrivals-accent);
 }
+
+.defaulters.dark {
+  color: var(--defaulters-accent);
+}
 .members.dark {
   color: var(--members-accent);
 }

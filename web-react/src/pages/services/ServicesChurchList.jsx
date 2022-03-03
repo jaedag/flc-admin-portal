@@ -1,20 +1,16 @@
 import RoleView from 'auth/RoleView'
 import MenuButton from 'components/buttons/MenuButton'
 import PlaceholderCustom from 'components/Placeholder'
-import { ChurchContext } from 'contexts/ChurchContext'
 import { MemberContext } from 'contexts/MemberContext'
-import { parseMemberCount } from 'global-utils'
 import { permitLeaderAdmin } from 'permission-utils'
 import React, { useContext } from 'react'
 import { Container } from 'react-bootstrap'
 import { EmojiFrown } from 'react-bootstrap-icons'
 import { useNavigate } from 'react-router'
-import MemberIcon from '../../assets/people-svgrepo-com-2.svg'
+import ChurchList from './ChurchList'
 
 const ServicesChurchList = () => {
-  const { currentUser, setCurrentUser, userJobs, theme } =
-    useContext(MemberContext)
-  const { clickCard } = useContext(ChurchContext)
+  const { currentUser, theme } = useContext(MemberContext)
 
   const navigate = useNavigate()
   return (
@@ -26,37 +22,8 @@ const ServicesChurchList = () => {
             <p className={`${theme} menu-subheading`}>Services</p>
           </div>
         </PlaceholderCustom>
-
-        <div className="d-grid gap-2 mt-5 text-left">
-          {userJobs?.jobs.length ? (
-            userJobs.jobs.map((job) =>
-              job.church.map((church, index) => (
-                <MenuButton
-                  key={index}
-                  title={church.name}
-                  caption={parseMemberCount(church.memberCount)}
-                  icon={MemberIcon}
-                  iconBg={true}
-                  iconCaption={church.__typename}
-                  onClick={() => {
-                    clickCard(church)
-                    setCurrentUser({
-                      ...currentUser,
-                      currentChurch: church,
-                    })
-                    navigate('/services')
-                  }}
-                  color="churches"
-                />
-              ))
-            )
-          ) : (
-            <>
-              <MenuButton color="churches" />
-              <MenuButton color="churches" />
-            </>
-          )}
-
+        <ChurchList link="/services" color="churches" />
+        <div className="d-grid gap-2 mt-2 text-left">
           <RoleView roles={permitLeaderAdmin('Constituency')}>
             <MenuButton
               title="Defaulters"

@@ -152,6 +152,7 @@ export const parsePhoneNum = (phoneNumber) => {
     .replace('+', '')
     .replace('(', '')
     .replace(')', '')
+    .replace('-', '')
 }
 
 export const repackDecimals = (decimal) => {

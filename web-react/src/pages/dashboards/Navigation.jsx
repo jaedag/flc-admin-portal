@@ -64,6 +64,7 @@ const Navigator = () => {
         email: user?.email,
         roles: user ? user[`https://flcadmin.netlify.app/roles`] : [],
       })
+      sessionStorage.setItem('currentUser', currentUser)
     },
   })
 

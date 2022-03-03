@@ -69,18 +69,20 @@ const PastorsAdmin = () => {
     sessionStorage.getItem('memberId') ?? ''
   )
   const [theme, setTheme] = useState('dark')
-  const [currentUser, setCurrentUser] = useState({
-    id: '',
-    picture: '',
-    firstName: '',
-    lastName: '',
-    fullName: '',
-    bishop: '',
-    church: {},
-    email: '',
-    constituency: '',
-    roles: [],
-  })
+  const [currentUser, setCurrentUser] = useState(
+    sessionStorage.getItem('currentUser') ?? {
+      id: '',
+      picture: '',
+      firstName: '',
+      lastName: '',
+      fullName: '',
+      bishop: '',
+      church: {},
+      email: '',
+      constituency: '',
+      roles: [],
+    }
+  )
   const [userJobs, setUserJobs] = useState()
 
   const [searchKey, setSearchKey] = useState('')

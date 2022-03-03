@@ -334,6 +334,7 @@ const DisplayChurchDetails = (props) => {
                       __typename: props.churchType,
                     },
                   })
+                  sessionStorage.setItem('currentUser', currentUser)
                   navigate(`/services/${props.churchType.toLowerCase()}`)
                 }}
               >

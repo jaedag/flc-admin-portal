@@ -1,18 +1,22 @@
 import { useQuery } from '@apollo/client'
 import BaseComponent from 'components/base-component/BaseComponent'
 import { ChurchContext } from 'contexts/ChurchContext'
+import { MemberContext } from 'contexts/MemberContext'
 import React, { useContext } from 'react'
 import { Card, Col, Container, Row, Button } from 'react-bootstrap'
 import { TelephoneFill, Whatsapp } from 'react-bootstrap-icons'
+import { useNavigate } from 'react-router'
 import { COUNCIL_BY_CONSTITUENCY } from './DefaultersQueries'
 
 const CouncilByConstituency = () => {
-  const { councilId } = useContext(ChurchContext)
+  const { councilId, clickCard } = useContext(ChurchContext)
+  const { currentUser, setCurrentUser } = useContext(MemberContext)
   const { data, loading, error } = useQuery(COUNCIL_BY_CONSTITUENCY, {
     variables: {
       id: councilId,
     },
   })
+  const navigate = useNavigate()
 
   return (
     <BaseComponent data={data} loading={loading} error={error}>
@@ -24,7 +28,24 @@ const CouncilByConstituency = () => {
           <Col key={i} xs={12} className="mb-3">
             <Card>
               <Card.Header className="fw-bold">{`${constituency.name} Constituency`}</Card.Header>
-              <Card.Body>
+              <Card.Body
+                onClick={() => {
+                  clickCard(constituency)
+                  setCurrentUser({
+                    ...currentUser,
+                    currentChurch: constituency,
+                  })
+                  sessionStorage.setItem(
+                    'currentUser',
+                    JSON.stringify({
+                      ...currentUser,
+                      currentChurch: constituency,
+                    })
+                  )
+
+                  navigate('/services/defaulters/dashboard')
+                }}
+              >
                 <div>
                   Active Fellowships {constituency.activeFellowshipCount}
                 </div>

@@ -20,12 +20,12 @@ import Banked from 'pages/services/defaulters/Banked'
 import BankingDefaulters from 'pages/services/defaulters/BankingDefaulters'
 import CancelledServicesThisWeek from 'pages/services/defaulters/CancelledServiceThisWeek'
 import CouncilByConstituency from 'pages/services/defaulters/CouncilByConstituency'
-import DefaultersDashboard from 'pages/services/defaulters/DefaultersDashboard'
+import ShowDefaulters from 'pages/services/defaulters/ShowDefaulters'
 import FormDefaulters from 'pages/services/defaulters/FormDefaulters'
 import ServicesThisWeek from 'pages/services/defaulters/ServicesThisWeek'
 import Fellowship from 'pages/services/Fellowship'
 import ServicesChurchList from 'pages/services/ServicesChurchList'
-import Services from 'pages/services/ServicesMenu'
+import ServicesMenu from 'pages/services/ServicesMenu'
 import StreamReport from 'pages/services/reports/StreamReport'
 import GatheringServiceReport from 'pages/services/reports/GatheringServiceReport'
 import StreamByCouncil from 'pages/services/defaulters/StreamByCouncil'
@@ -49,7 +49,7 @@ import Defaulters from './defaulters/Defaulters'
 export const services = [
   {
     path: '/services',
-    element: Services,
+    element: ServicesMenu,
     roles: permitLeaderAdmin('Fellowship'),
     placeholder: true,
   },
@@ -298,7 +298,7 @@ export const reports = [
   },
   {
     path: '/services/defaulters/dashboard',
-    element: DefaultersDashboard,
+    element: ShowDefaulters,
     roles: permitLeaderAdmin('Constituency'),
     placeholder: true,
   },

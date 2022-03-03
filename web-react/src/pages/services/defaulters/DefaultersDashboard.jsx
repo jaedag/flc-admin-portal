@@ -1,8 +1,7 @@
 import { useLazyQuery } from '@apollo/client'
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import HeadingSecondary from 'components/HeadingSecondary'
-import { MemberContext } from 'contexts/MemberContext'
-import { isAuthorised, plural } from 'global-utils'
+import { plural } from 'global-utils'
 import React, { useContext, useEffect, useState } from 'react'
 import { Col, Container, Row } from 'react-bootstrap'
 import {
@@ -16,9 +15,11 @@ import PlaceholderCustom from 'components/Placeholder'
 import DefaulterInfoCard from './DefaulterInfoCard'
 import RoleView from 'auth/RoleView'
 import { permitLeaderAdmin } from 'permission-utils'
+import { ChurchContext } from 'contexts/ChurchContext'
 
-const Defaulters = () => {
-  const { currentUser } = useContext(MemberContext)
+const Defaulters = (props) => {
+  const { constituencyId, councilId, streamId, gatheringServiceId } =
+    useContext(ChurchContext)
   const [constituencyDefaulters, { data: constituencyData }] = useLazyQuery(
     CONSTITUENCY_DEFAULTERS
   )
@@ -32,60 +33,44 @@ const Defaulters = () => {
   const [subChurch, setSubChurch] = useState(null)
 
   useEffect(() => {
-    if (
-      isAuthorised(
-        ['adminConstituency', 'leaderConstituency'],
-        currentUser.roles
-      )
-    ) {
+    if (props.churchLevel === 'Constituency') {
       constituencyDefaulters({
         variables: {
-          id: currentUser.constituency,
+          id: constituencyId,
         },
       })
       setChurch(constituencyData?.constituencies[0])
     }
-    if (isAuthorised(['adminCouncil', 'leaderCouncil'], currentUser.roles)) {
+    if (props.churchLevel === 'Council') {
       councilDefaulters({
         variables: {
-          id: currentUser.council,
+          id: councilId,
         },
       })
       setChurch(councilData?.councils[0])
       setSubChurch('Constituency')
     }
 
-    if (isAuthorised(['adminStream', 'leaderStream'], currentUser.roles)) {
+    if (props.churchLevel === 'Stream') {
       streamDefaulters({
         variables: {
-          id: currentUser.stream,
+          id: streamId,
         },
       })
       setChurch(streamData?.streams[0])
       setSubChurch('Council')
     }
 
-    if (
-      isAuthorised(
-        ['adminGatheringService', 'leaderGatheringService'],
-        currentUser.roles
-      )
-    ) {
+    if (props.churchLevel === 'GatheringService') {
       gatheringServiceDefaulters({
         variables: {
-          id: currentUser.gatheringService,
+          id: gatheringServiceId,
         },
       })
       setChurch(gatheringServiceData?.gatheringServices[0])
       setSubChurch('Stream')
     }
-  }, [
-    currentUser,
-    constituencyData,
-    councilData,
-    streamData,
-    gatheringServiceData,
-  ])
+  }, [constituencyData, councilData, streamData, gatheringServiceData])
 
   const defaulters = [
     {
@@ -140,14 +125,14 @@ const Defaulters = () => {
       >{`${church?.name} ${church?.__typename}`}</HeadingPrimary>
       <HeadingSecondary>Defaulters Page</HeadingSecondary>
 
-      <PlaceholderCustom as="h6" loading={!church?.activeFellowshipCount}>
+      <PlaceholderCustom as="h6" loading={!church}>
         <h6>{`Total Number of Fellowships: ${church?.activeFellowshipCount}`}</h6>
       </PlaceholderCustom>
 
       <Row>
         <RoleView roles={permitLeaderAdmin('Council')}>
           <Col xs={12} className="mb-3">
-            <DefaulterInfoCard defaulter={aggregates} />
+            {aggregates?.title && <DefaulterInfoCard defaulter={aggregates} />}
           </Col>
         </RoleView>
         {defaulters.map((defaulter, i) => (

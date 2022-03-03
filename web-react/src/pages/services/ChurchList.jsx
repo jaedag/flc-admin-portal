@@ -40,7 +40,14 @@ const ChurchList = ({ color, link }) => {
                     ...currentUser,
                     currentChurch: church,
                   })
-                  sessionStorage.setItem('currentUser', currentUser)
+
+                  sessionStorage.setItem(
+                    'currentUser',
+                    JSON.stringify({
+                      ...currentUser,
+                      currentChurch: church,
+                    })
+                  )
 
                   if (color === 'arrivals') {
                     navigate(`/arrivals/${church.__typename.toLowerCase()}`)

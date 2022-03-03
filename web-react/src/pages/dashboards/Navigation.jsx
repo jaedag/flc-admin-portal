@@ -27,6 +27,7 @@ const Navigator = () => {
     useContext(MemberContext)
   const { clickCard } = useContext(ChurchContext)
   const { user } = useAuth0()
+
   const { data } = useQuery(SERVANTS_DASHBOARD, {
     variables: { id: currentUser.id },
   })
@@ -64,7 +65,7 @@ const Navigator = () => {
         email: user?.email,
         roles: user ? user[`https://flcadmin.netlify.app/roles`] : [],
       })
-      sessionStorage.setItem('currentUser', currentUser)
+      sessionStorage.setItem('currentUser', JSON.stringify({ ...currentUser }))
     },
   })
 

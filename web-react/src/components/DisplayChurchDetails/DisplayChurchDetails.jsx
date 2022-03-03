@@ -334,7 +334,18 @@ const DisplayChurchDetails = (props) => {
                       __typename: props.churchType,
                     },
                   })
-                  sessionStorage.setItem('currentUser', currentUser)
+                  sessionStorage.setItem(
+                    'currentUser',
+                    JSON.stringify({
+                      ...currentUser,
+                      currentChurch: {
+                        id: props.churchId,
+                        name: props.name,
+                        __typename: props.churchType,
+                      },
+                    })
+                  )
+
                   navigate(`/services/${props.churchType.toLowerCase()}`)
                 }}
               >

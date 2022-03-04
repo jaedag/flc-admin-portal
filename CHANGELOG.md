@@ -1,3 +1,43 @@
+### 0.7.0 (2022-03-04)
+
+##### Chores
+
+*  fixed merge changes ([c880c2e7](https://github.com/jaedag/fl-admin-portal/commit/c880c2e75ece31491c80599b2566e48c2d312397))
+*  merge branch 'hotfix/council-form' into develop ([589bb547](https://github.com/jaedag/fl-admin-portal/commit/589bb54750a837b3e67b18683137582a6c94ddc0))
+*  updated gitignore file to ignore eslintcache file ([7e69be3e](https://github.com/jaedag/fl-admin-portal/commit/7e69be3ec3f15f422e77d5d86923bde83805136a))
+
+##### New Features
+
+*  implemented functionality to switch bacenta status between 'vacation' and 'active' ([70b27059](https://github.com/jaedag/fl-admin-portal/commit/70b2705927fe00b3881984978e6e0589cb5eda61))
+*  added functionality for constituency arrivals admin ([72614471](https://github.com/jaedag/fl-admin-portal/commit/726144716089236c9805caf43b32ad0ee3963688))
+*  implemented api functionality to fill the forms that B Josh wants for arrivals ([23a546e7](https://github.com/jaedag/fl-admin-portal/commit/23a546e76f5f43cde2021232ebc33fe1861f43ab))
+*  implemented functionality to switch bacenta status between 'IC' and 'Graduated' ([18938d5a](https://github.com/jaedag/fl-admin-portal/commit/18938d5af38d0d8a6458de99afc52b28f2c38994))
+*  added functionality of inputing momo details for bacenta leaders ([ed90084b](https://github.com/jaedag/fl-admin-portal/commit/ed90084b4dd6ce511debf37cc52c7331e6ada949))
+
+##### Bug Fixes
+
+*  merge branch 'feature/arrivals' into develop ([f960ae5f](https://github.com/jaedag/fl-admin-portal/commit/f960ae5f05fe8e7c8c7529865e70c7f35cf33ba8))
+*  implemented custom resolver so that admins can change member emails without fear ([7384c490](https://github.com/jaedag/fl-admin-portal/commit/7384c49084432c3091d1863795c19c88ecd20083))
+*  defaulters flow can show you outside your personal church  instead of being limited ([4582572e](https://github.com/jaedag/fl-admin-portal/commit/4582572ea1616ac64434f34a866c3124b96e92fd))
+*  fixed bug where current user doesn't remain after refreshing ([bf86adaa](https://github.com/jaedag/fl-admin-portal/commit/bf86adaa47f605dbc3682f83a8eb8d49267bce61))
+*  tweaked the graph for the componennt services ([1f1dc3c8](https://github.com/jaedag/fl-admin-portal/commit/1f1dc3c807f0510c306dad50f7a780fdd9cb8c4e))
+*  tweaked the order of members in member display pages ([b8ae13e7](https://github.com/jaedag/fl-admin-portal/commit/b8ae13e766489e66c22de9903700f0fb21b27b86))
+*  addded functionality to confirm the arrival time of a bacenta ([188e92b4](https://github.com/jaedag/fl-admin-portal/commit/188e92b44ff2c63d0618b324be5ff6977305e64d))
+*  added a page to view mobilisation picture ([afeeca29](https://github.com/jaedag/fl-admin-portal/commit/afeeca29485c7de7289ab2355edddfd1798f1629))
+*  rewrote the code for making leaders and admins ([3cca7b24](https://github.com/jaedag/fl-admin-portal/commit/3cca7b2427cda9bac9cda3297365bd7430c9ca71))
+*  improved the church graph ([d6d6c5e4](https://github.com/jaedag/fl-admin-portal/commit/d6d6c5e4d60b7abb4ff36261a556eac2efe99f5a))
+*  added connect history to the change leader mutations ([620c6e81](https://github.com/jaedag/fl-admin-portal/commit/620c6e81b4bf8b59c503a9c30c8edb3335bde9f1))
+*  added momo name and number to the busssing details submission form ([efe96853](https://github.com/jaedag/fl-admin-portal/commit/efe96853175dbf3a27d139d001a9e7dc4a355c81))
+
+##### Other Changes
+
+* Fellowship ([949ddb96](https://github.com/jaedag/fl-admin-portal/commit/949ddb96999349791e93da79fa2f42bfb9f52946))
+
+##### Refactors
+
+*  moved permissions definitions to a separate file ([b57ddc36](https://github.com/jaedag/fl-admin-portal/commit/b57ddc3685b4a58b2a2324ff55c24460a6ae9502))
+*  moved arrivals schema definitiions to arrivals.graphql file ([061f2c4a](https://github.com/jaedag/fl-admin-portal/commit/061f2c4ad8a2b4e73a009a271ad4d8eff08608be))
+
 #### 0.6.2 (2022-02-04)
 
 ##### Chores

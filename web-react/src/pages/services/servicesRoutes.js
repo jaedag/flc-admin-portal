@@ -61,7 +61,7 @@ export const services = [
   },
   {
     path: '/fellowship/record-service',
-    element: Fellowship,
+    element: FellowshipService,
     roles: permitLeaderAdmin('Fellowship'),
     placeholder: true,
   },

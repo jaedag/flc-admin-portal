@@ -70,6 +70,9 @@ export const componentServiceAggregates = `
   
   MATCH (church)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS*1..5]->(componentServices:ServiceLog)
   MATCH (componentServices)-[:HAS_SERVICE]->(componentRecords:ServiceRecord)
+  WHERE EXISTS {
+    MATCH (church)-[:HAS*1..5]->(downChurch)-[:HAS_HISTORY]->(componentServices)
+  }
 
   MATCH (componentRecords)-[:SERVICE_HELD_ON]->(date:TimeGraph)
   WHERE date.date > date() - duration({months: 2})

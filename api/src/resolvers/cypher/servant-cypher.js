@@ -4,10 +4,12 @@ MATCH (church {id: $churchId})
 WHERE church:Fellowship OR church:Bacenta OR church:Constituency OR church:Council OR church:Stream OR church:GatheringService OR church:Sonta OR church:Ministry
 OR church:ClosedFellowship OR church:ClosedBacenta
 MATCH (church)<-[oldLeads:LEADS]-(leader:Member)
+DELETE oldLeads
+
+WITH church, leader
 
 MATCH (church)-[oldHistory:HAS_HISTORY]->(:ServiceLog)<-[oldLeaderHistory:HAS_HISTORY]-(leader)
 REMOVE oldHistory.current, oldLeaderHistory.current
-DELETE oldLeads
 
 RETURN leader.id AS id, leader.auth_id AS auth_id, leader.firstName AS firstName, leader.lastName AS lastName
 `
@@ -39,7 +41,7 @@ RETURN admin.id AS id, admin.auth_id AS auth_id, admin.firstName AS firstName, a
 
 //Create Church Leader Connection
 export const connectChurchLeader = `
-MATCH (church {id:$churchId})<-[:HAS]-(higherChurch)
+MATCH (church {id: $churchId})<-[:HAS]-(higherChurch)
 WHERE church:Fellowship OR church:Bacenta OR church:Constituency OR church:Council OR church:Stream OR church:GatheringService OR church:Sonta OR church:Ministry
 OR church:ClosedFellowship OR church:ClosedBacenta
 MATCH (leader:Member {id:$leaderId})

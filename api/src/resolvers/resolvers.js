@@ -1,11 +1,11 @@
-import { permitAdmin, permitArrivals } from './permissions'
+import { permitAdmin, permitArrivals, permitLeaderAdmin } from './permissions'
 
 /* eslint-disable no-console */
 const dotenv = require('dotenv')
 const axios = require('axios').default
 const cypher = require('./cypher/resolver-cypher')
 const closeChurchCypher = require('./cypher/close-church-cypher')
-const servantCypher = require('./cypher/servant-cypher')
+
 const {
   isAuth,
   throwErrorMsg,
@@ -270,7 +270,6 @@ const MakeServant = async (
       makeServantCypher(
         context,
         args,
-        servantCypher,
         churchType,
         servantType,
         servant,
@@ -296,7 +295,6 @@ const MakeServant = async (
     makeServantCypher(
       context,
       args,
-      servantCypher,
       churchType,
       servantType,
       servant,
@@ -374,14 +372,7 @@ const RemoveServant = async (
 
   if (!servant.auth_id) {
     //if he has no auth_id then there is nothing to do
-    removeServantCypher(
-      context,
-      servantCypher,
-      churchType,
-      servantType,
-      servant,
-      church
-    )
+    removeServantCypher(context, churchType, servantType, servant, church)
     return
   }
   if (servant[`${verb}`].length > 1) {
@@ -391,14 +382,7 @@ const RemoveServant = async (
     )
 
     //Disconnect him from the Church
-    removeServantCypher(
-      context,
-      servantCypher,
-      churchType,
-      servantType,
-      servant,
-      church
-    )
+    removeServantCypher(context, churchType, servantType, servant, church)
 
     //Send a Mail to That Effect
     notifyMember(
@@ -434,14 +418,7 @@ const RemoveServant = async (
       `Auth0 Account successfully deleted for ${servant.firstName} ${servant.lastName}`
     )
     //Remove Auth0 ID of Leader from Neo4j DB
-    removeServantCypher(
-      context,
-      servantCypher,
-      churchType,
-      servantType,
-      servant,
-      church
-    )
+    removeServantCypher(context, churchType, servantType, servant, church)
     await session.run(cypher.removeMemberAuthId, {
       log: `${servant.firstName} ${servant.lastName} was removed as a ${churchType} ${servantType}`,
       auth_id: servant.auth_id,
@@ -497,7 +474,7 @@ export const resolvers = {
 
   Mutation: {
     CreateMember: async (object, args, context) => {
-      isAuth(permitAdmin('Fellowship'), context.auth.roles)
+      isAuth(permitLeaderAdmin('Fellowship'), context.auth.roles)
 
       const session = context.driver.session()
       const memberResponse = await session.run(

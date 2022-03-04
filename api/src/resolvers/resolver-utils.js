@@ -1,3 +1,5 @@
+const servantCypher = require('./cypher/servant-cypher')
+
 export const isAuth = (permittedRoles, userRoles) => {
   if (!permittedRoles.some((r) => userRoles.includes(r))) {
     throw 'You are not permitted to run this mutation'
@@ -149,7 +151,6 @@ export const historyRecordString = ({
 export const makeServantCypher = async (
   context,
   args,
-  servantCypher,
   churchType,
   servantType,
   servant,
@@ -171,7 +172,7 @@ export const makeServantCypher = async (
       auth: context.auth,
     })
   )
-
+  console.log(`connectChurch${servantType}`, connectedChurchRes)
   const historyRecordStringArgs = {
     servant: servant,
     servantType: servantType,
@@ -220,7 +221,6 @@ export const makeServantCypher = async (
 
 export const removeServantCypher = async (
   context,
-  servantCypher,
   churchType,
   servantType,
   servant,

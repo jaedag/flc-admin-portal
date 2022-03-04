@@ -174,6 +174,7 @@ export const makeServantCypher = async (
 
   const historyRecordStringArgs = {
     servant: servant,
+    servantType: servantType,
     oldServant: oldServant,
     church: church,
     churchType: churchType,

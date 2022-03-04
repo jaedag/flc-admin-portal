@@ -535,6 +535,31 @@ export const resolvers = {
 
       return member
     },
+    UpdateMemberEmail: async (object, args, context) => {
+      isAuth(permitAdmin('Fellowship'), context.auth.roles)
+
+      const session = context.driver.session()
+
+      const member = rearrangeCypherObject(
+        await session.run(cypher.matchMemberQuery, {
+          id: args.id,
+        })
+      )
+
+      const updatedMember = rearrangeCypherObject(
+        await session.run(cypher.updateMemberEmail, {
+          id: args.id,
+          email: args.email,
+        })
+      )
+
+      if (member.auth_id) {
+        //Update a user's Auth Profile with Picture and Name Details
+        await axios(auth0.updateAuthUserConfig(updatedMember, authToken))
+      }
+
+      return updatedMember
+    },
     CloseDownFellowship: async (object, args, context) => {
       isAuth(permitAdmin('Constituency'), context.auth.roles)
 

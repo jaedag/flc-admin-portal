@@ -17,6 +17,13 @@ import RoleView from 'auth/RoleView'
 import { throwErrorMsg } from 'global-utils'
 import { MAKE_CONSTITUENCYARRIVALS_ADMIN } from './arrivalsMutations'
 import { permitAdmin, permitArrivals } from 'permission-utils'
+import HeadingSecondary from 'components/HeadingSecondary'
+import {
+  CashStack,
+  PersonCheck,
+  Forward,
+  Download,
+} from 'react-bootstrap-icons'
 
 const ConstituencyDashboard = () => {
   const { isOpen, togglePopup, constituencyId } = useContext(ChurchContext)
@@ -30,10 +37,10 @@ const ConstituencyDashboard = () => {
   const constituency = data?.constituencies[0]
 
   const initialValues = {
-    adminName: constituency?.arrivvalsAdmin
-      ? `${constituency?.arrivvalsAdmin?.firstName} ${constituency?.arrivvalsAdmin?.lastName}`
+    adminName: constituency?.arrivalsAdmin
+      ? `${constituency?.arrivalsAdmin?.fullName}`
       : '',
-    adminSelect: constituency?.arrivvalsAdmin?.id ?? '',
+    adminSelect: constituency?.arrivalsAdmin?.id ?? '',
   }
   const validationSchema = Yup.object({
     adminSelect: Yup.string().required(
@@ -65,6 +72,7 @@ const ConstituencyDashboard = () => {
         <HeadingPrimary loading={loading}>
           {constituency?.name} Constituency Arrivals
         </HeadingPrimary>
+        <HeadingSecondary>{`Arrivals Rep: ${constituency?.arrivalsAdmin?.fullName}`}</HeadingSecondary>
         {isOpen && (
           <Popup handleClose={togglePopup}>
             <b>Change Arrivals Admin</b>
@@ -106,8 +114,7 @@ const ConstituencyDashboard = () => {
             ]}
           >
             <Button
-              variant="outline-secondary"
-              size="lg"
+              variant="outline-secondary my-3"
               onClick={() => togglePopup()}
             >
               Change Arrivals Admin
@@ -116,28 +123,35 @@ const ConstituencyDashboard = () => {
           <MenuButton
             title="Bacentas With No Activity"
             onClick={() => navigate('/arrivals/bacentas-no-activity')}
-            icon
+            number={`12`}
             iconBg
             noCaption
           />
           <MenuButton
             title="Bacentas On The Way"
             onClick={() => navigate('/arrivals/bacentas-on-the-way')}
-            icon
+            iconComponent={Forward}
             iconBg
             noCaption
           />
           <MenuButton
             title="Bacentas That Have Been Counted"
             onClick={() => navigate('/arrivals/bacentas-have-been-counted')}
-            icon
+            iconComponent={PersonCheck}
             iconBg
             noCaption
           />
           <MenuButton
             title="Bacentas That Have Arrived"
             onClick={() => navigate('/arrivals/bacentas-arrived')}
-            icon
+            iconComponent={Download}
+            iconBg
+            noCaption
+          />
+          <MenuButton
+            title="Bacentas That Have Arrived"
+            onClick={() => navigate('/arrivals/bacentas-arrived')}
+            iconComponent={CashStack}
             iconBg
             noCaption
           />

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/client'
 
 import { parsePhoneNum, throwErrorMsg } from '../../../global-utils'
-import { UPDATE_MEMBER_MUTATION } from './UpdateMutations'
+import { UPDATE_MEMBER_EMAIL, UPDATE_MEMBER_MUTATION } from './UpdateMutations'
 import {
   DISPLAY_MEMBER_BIO,
   DISPLAY_MEMBER_CHURCH,
@@ -75,6 +75,7 @@ const UpdateMember = () => {
       { query: DISPLAY_MEMBER_CHURCH, variables: { id: memberId } },
     ],
   })
+  const [UpdateMemberEmail] = useMutation(UPDATE_MEMBER_EMAIL)
   const [AddMemberTitle] = useMutation(ADD_MEMBER_TITLE_MUTATION)
 
   const onSubmit = async (values, onSubmitProps) => {
@@ -93,7 +94,6 @@ const UpdateMember = () => {
         gender: values.gender,
         phoneNumber: parsePhoneNum(values.phoneNumber),
         whatsappNumber: parsePhoneNum(values.whatsappNumber),
-        email: values.email.trim().toLowerCase(),
         dob: values.dob,
         maritalStatus: values.maritalStatus,
         occupation: values.occupation,
@@ -103,24 +103,32 @@ const UpdateMember = () => {
         ministry: values.ministry,
       },
     })
-      .then((res) => {
-        pastoralAppointment.forEach((title) => {
-          if (!title.date) {
-            return
-          }
+      .then(() => {
+        return UpdateMemberEmail({
+          variables: {
+            id: memberId,
+            email: values.email.trim().toLowerCase(),
+          },
+        }).then(() => {
+          pastoralAppointment.forEach((title) => {
+            if (!title.date) {
+              return
+            }
 
-          return AddMemberTitle({
-            variables: {
-              memberId: res.data.UpdateMemberDetails.id,
-              title: title.title,
-              status: true,
-              date: title.date,
-            },
-          }).catch((error) =>
-            throwErrorMsg(`There was a problem adding member title`, error)
-          )
+            return AddMemberTitle({
+              variables: {
+                memberId: memberId,
+                title: title.title,
+                status: true,
+                date: title.date,
+              },
+            }).catch((error) =>
+              throwErrorMsg(`There was a problem adding member title`, error)
+            )
+          })
         })
-
+      })
+      .then(() => {
         onSubmitProps.setSubmitting(false)
         onSubmitProps.resetForm()
         navigate('/member/displaydetails')

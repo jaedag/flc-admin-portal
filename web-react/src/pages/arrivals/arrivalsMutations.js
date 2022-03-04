@@ -21,12 +21,14 @@ export const MAKE_CONSTITUENCYARRIVALS_ADMIN = gql`
       id
       firstName
       lastName
+      fullName
       isArrivalsAdminForConstituency {
         id
-        admin {
+        arrivalsAdmin {
           id
           firstName
           lastName
+          fullName
         }
       }
     }
@@ -54,9 +56,10 @@ export const MAKE_COUNCILARRIVALS_ADMIN = gql`
       id
       firstName
       lastName
+      fullName
       isArrivalsAdminForCouncil {
         id
-        admin {
+        arrivalsAdmin {
           id
           firstName
           lastName
@@ -86,7 +89,7 @@ export const MAKE_STREAMARRIVALS_ADMIN = gql`
       lastName
       isAdminForStreamArrivals {
         id
-        admin {
+        arrivalsAdmin {
           id
           firstName
           lastName
@@ -119,7 +122,7 @@ export const MAKE_GATHERINGSERVICEARRIVALS_ADMIN = gql`
       lastName
       isAdminForGatheringServiceArrivals {
         id
-        admin {
+        arrivalsAdmin {
           id
           firstName
           lastName

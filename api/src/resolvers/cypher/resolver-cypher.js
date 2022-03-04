@@ -39,6 +39,12 @@ MATCH (member:Member {id:$id})
 SET member.auth_id = $auth_id
 RETURN member.auth_id`
 
+export const updateMemberEmail = `
+MATCH (member:Member {id: $id})
+    SET member.email = $email
+RETURN member.id AS id, member.auth_id AS auth_id, member.firstName AS firstName, member.lastName AS lastName, member.email AS email, member.pictureUrl AS pictureUrl
+`
+
 export const removeMemberAuthId = `
 MATCH (member:Member {auth_id:$auth_id})
 REMOVE member.auth_id

@@ -14,6 +14,7 @@ export const CONSTIUENCY_ARRIVALS_DASHBOARD = gql`
         id
         firstName
         lastName
+        fullName
         pictureUrl
       }
       bacentas {
@@ -38,6 +39,7 @@ export const COUNCIL_ARRIVALS_DASHBOARD = gql`
         id
         firstName
         lastName
+        fullName
         pictureUrl
       }
       bacentaCount

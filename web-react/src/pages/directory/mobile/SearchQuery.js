@@ -78,16 +78,6 @@ export const FEDERAL_SEARCH = gql`
 
 export const STREAM_SEARCH = gql`
   query streamSearch($searchKey: String, $streamId: ID!) {
-    streamSontaSearch(searchKey: $searchKey, streamId: $streamId) {
-      id
-      name
-      stream_name
-      constituency {
-        council {
-          id
-        }
-      }
-    }
     streamCouncilSearch(searchKey: $searchKey, streamId: $streamId) {
       id
       name

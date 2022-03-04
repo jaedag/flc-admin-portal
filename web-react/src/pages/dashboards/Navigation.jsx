@@ -65,6 +65,7 @@ const Navigator = () => {
         email: user?.email,
         roles: user ? user[`https://flcadmin.netlify.app/roles`] : [],
       })
+
       sessionStorage.setItem('currentUser', JSON.stringify({ ...currentUser }))
     },
   })
@@ -74,9 +75,7 @@ const Navigator = () => {
   let assessmentChurchData, assessmentChurch
 
   useEffect(() => {
-    if (!currentUser?.email?.length) {
-      user && memberByEmail({ variables: { email: user.email } })
-    }
+    user && memberByEmail({ variables: { email: user.email } })
 
     setUserJobs({
       jobs: roles,

@@ -42,7 +42,6 @@ const SearchPageMobile = () => {
           ...data.streamMemberSearch,
           ...data.streamCouncilSearch,
           ...data.streamConstituencySearch,
-          ...data.streamSontaSearch,
           ...data.streamBacentaSearch,
           ...data.streamFellowshipSearch,
         ])

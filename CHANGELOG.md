@@ -1,3 +1,15 @@
+#### 0.7.1 (2022-03-04)
+
+##### New Features
+
+*  overwrite deploy with release ([fc26c0b0](https://github.com/jaedag/fl-admin-portal/commit/fc26c0b0e48e16cf7e5751852745ae0804723237))
+
+##### Bug Fixes
+
+*  fixed bug preventing the edit fellowship page from loading ([204f2357](https://github.com/jaedag/fl-admin-portal/commit/204f2357e2170fe5cdee5d6c330a8172067935a7))
+*  fixed broken fellowship service link 2 ([a058203e](https://github.com/jaedag/fl-admin-portal/commit/a058203e126b2a8536cbb5e82322d8f41d6f15b6))
+*  fixed broken fellowship service link ([db20f03a](https://github.com/jaedag/fl-admin-portal/commit/db20f03ae28c0e6a350954ba98adcca1bf7972db))
+
 ### 0.7.0 (2022-03-04)
 
 ##### Chores

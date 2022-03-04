@@ -36,9 +36,7 @@ const UpdateFellowship = () => {
     constituencySelect: fellowship?.bacenta?.constituency?.id,
     bacenta: fellowship?.bacenta?.id,
     meetingDay: fellowship?.meetingDay?.day,
-    vacationStatus: fellowship?.labels.includes('Vacation')
-      ? 'Vacation'
-      : 'Active',
+    vacationStatus: fellowship?.vacationStatus,
     venueLatitude: repackDecimals(fellowship?.location?.latitude),
     venueLongitude: repackDecimals(fellowship?.location?.longitude),
   }

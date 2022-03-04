@@ -1,3 +1,11 @@
+#### 0.7.2 (2022-03-04)
+
+##### Bug Fixes
+
+*  fixed slight error with the component service calculations ([cd289da7](https://github.com/jaedag/fl-admin-portal/commit/cd289da70a2186ac70b89e0cfaf4a59e032848e4))
+*  fixed bug with changing leader, and with submitting service forms ([6dba4b03](https://github.com/jaedag/fl-admin-portal/commit/6dba4b03dde10bb8b0f3e6eaef9e134d562f74db))
+*  fixed bug where history log was showing 'undefined' after a change ([d7c6694f](https://github.com/jaedag/fl-admin-portal/commit/d7c6694ff9986a8fd81437c2ca1a953fb2bf4297))
+
 #### 0.7.1 (2022-03-04)
 
 ##### New Features

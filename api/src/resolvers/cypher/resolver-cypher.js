@@ -64,23 +64,6 @@ CREATE (log:HistoryLog)
 
 RETURN member.id`
 
-// Adding the records of the services underneath so that we can have the total attendances and incomes
-export const componentServiceAggregates = `
- MATCH (church {id:$id}) WHERE church:Bacenta OR church:Constituency OR church:Council OR church:Stream OR church:GatheringService
-  
-  MATCH (church)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS*1..5]->(componentServices:ServiceLog)
-  MATCH (componentServices)-[:HAS_SERVICE]->(componentRecords:ServiceRecord)
-  WHERE EXISTS {
-    MATCH (church)-[:HAS*1..5]->(downChurch)-[:HAS_HISTORY]->(componentServices)
-  }
-
-  MATCH (componentRecords)-[:SERVICE_HELD_ON]->(date:TimeGraph)
-  WHERE date.date > date() - duration({months: 2})
-  WITH DISTINCT componentServices,componentRecords, date(date.date).week AS week ORDER BY week
-
-RETURN week AS week,SUM(componentRecords.attendance) AS attendance, SUM(componentRecords.income) AS income ORDER BY week DESC LIMIT toInteger($limit)
-`
-
 export const checkMemberEmailExists = `
 MATCH (member:Member)
 WHERE member.email = $email

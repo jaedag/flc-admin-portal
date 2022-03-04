@@ -1,11 +1,11 @@
-const cypher = require('./cypher/resolver-cypher')
+const cypher = require('./cypher/component-service-cypher')
 
-const getComponentServiceAggregates = async (obj, args, context) => {
+const getComponentServiceAggregates = async (obj, args, context, church) => {
   let serviceAggregates = []
 
   const session = context.driver.session()
   const serviceAggregateResponse = await session.run(
-    cypher.componentServiceAggregates,
+    cypher[`component${church}ServiceAggregates`],
     { ...obj, ...args }
   )
 
@@ -23,27 +23,32 @@ const getComponentServiceAggregates = async (obj, args, context) => {
 export const serviceResolvers = {
   Bacenta: {
     componentServiceAggregate: async (obj, args, context) => {
-      return getComponentServiceAggregates(obj, args, context)
+      return getComponentServiceAggregates(obj, args, context, 'Bacenta')
     },
   },
   Constituency: {
     componentServiceAggregate: (obj, args, context) => {
-      return getComponentServiceAggregates(obj, args, context)
+      return getComponentServiceAggregates(obj, args, context, 'Constituency')
     },
   },
   Council: {
     componentServiceAggregate: (obj, args, context) => {
-      return getComponentServiceAggregates(obj, args, context)
+      return getComponentServiceAggregates(obj, args, context, 'Council')
     },
   },
   Stream: {
     componentServiceAggregate: (obj, args, context) => {
-      return getComponentServiceAggregates(obj, args, context)
+      return getComponentServiceAggregates(obj, args, context, 'Stream')
     },
   },
   GatheringService: {
     componentServiceAggregate: (obj, args, context) => {
-      return getComponentServiceAggregates(obj, args, context)
+      return getComponentServiceAggregates(
+        obj,
+        args,
+        context,
+        'GatheringService'
+      )
     },
   },
 }

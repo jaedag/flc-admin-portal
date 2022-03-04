@@ -3,7 +3,7 @@ import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import HeadingSecondary from 'components/HeadingSecondary'
 import PlaceholderCustom from 'components/Placeholder'
 import { MemberContext } from 'contexts/MemberContext'
-import { getWeekNumber, isAuthorised } from 'global-utils'
+import { getWeekNumber } from 'global-utils'
 import React, { useContext, useEffect, useState } from 'react'
 import { Col, Container, Row } from 'react-bootstrap'
 import {
@@ -30,12 +30,7 @@ const CancelledServicesThisWeek = () => {
     useLazyQuery(GATHERINGSERVICE_CANCELLED_SERVICES_LIST)
 
   useEffect(() => {
-    if (
-      isAuthorised(
-        ['adminConstituency', 'leaderConstituency'],
-        currentUser.roles
-      )
-    ) {
+    if (currentUser.currentChurch.__typename === 'Constituency') {
       constituencyCancelledServices({
         variables: {
           id: currentUser.constituency,
@@ -43,31 +38,26 @@ const CancelledServicesThisWeek = () => {
       })
       setChurch(constituencyData?.constituencies[0])
     }
-    if (isAuthorised(['adminCouncil', 'leaderCouncil'], currentUser.roles)) {
+    if (currentUser.currentChurch.__typename === 'Council') {
       councilCancelledServices({
         variables: {
-          id: currentUser.council,
+          id: currentUser.currentChurch.id,
         },
       })
       setChurch(councilData?.councils[0])
     }
-    if (isAuthorised(['adminStream', 'leaderStream'], currentUser.roles)) {
+    if (currentUser.currentChurch.__typename === 'Stream') {
       streamCancelledServices({
         variables: {
-          id: currentUser.stream,
+          id: currentUser.currentChurch.id,
         },
       })
       setChurch(streamData?.streams[0])
     }
-    if (
-      isAuthorised(
-        ['adminGatheringService', 'leaderGatheringService'],
-        currentUser.roles
-      )
-    ) {
+    if (currentUser.currentChurch.__typename === 'GatheringService') {
       gatheringServiceCancelledServices({
         variables: {
-          id: currentUser.gatheringService,
+          id: currentUser.currentChurch.id,
         },
       })
       setChurch(gatheringServiceData?.gatheringServices[0])

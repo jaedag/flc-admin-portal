@@ -3,12 +3,8 @@ import { useQuery } from '@apollo/client'
 import DisplayChurchDetails from '../../../components/DisplayChurchDetails/DisplayChurchDetails'
 import { DISPLAY_FELLOWSHIP, DISPLAY_FELLOWSHIP_HISTORY } from './ReadQueries'
 import { ChurchContext } from '../../../contexts/ChurchContext'
-import {
-  getWeekNumber,
-  last3Weeks,
-  permitAdminAndThoseAbove,
-  throwErrorMsg,
-} from 'global-utils'
+import { getWeekNumber, last3Weeks, throwErrorMsg } from 'global-utils'
+import { permitAdmin } from 'permission-utils'
 
 const DetailsFellowship = () => {
   const { fellowshipId } = useContext(ChurchContext)
@@ -59,16 +55,10 @@ const DetailsFellowship = () => {
     }
   })
 
-  let vacation = fellowshipData && 'Active'
-
-  if (fellowship?.labels.includes('Vacation')) {
-    vacation = 'Vacation'
-  }
-
   const details = [
     {
       title: 'Status',
-      number: vacation,
+      number: fellowship?.vacationStatus,
       link: '#',
       width: '',
     },
@@ -95,10 +85,10 @@ const DetailsFellowship = () => {
       churchType="Fellowship"
       buttons={['']}
       editlink="/fellowship/editfellowship"
-      editPermitted={permitAdminAndThoseAbove('Constituency')}
+      editPermitted={permitAdmin('Constituency')}
       weekNumber={getWeekNumber()}
       last3Weeks={fellowship && check}
-      vacation={vacation}
+      vacation={fellowship?.vacationStatus && true}
       history={history?.history.length && history?.history}
       breadcrumb={breadcrumb && breadcrumb}
     />

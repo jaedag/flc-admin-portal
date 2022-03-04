@@ -6,7 +6,6 @@ import UserProfileEditPage from 'pages/directory/user-profile/EditPage'
 import CreateMember from 'pages/directory/create/CreateMember'
 import UpdateMember from 'pages/directory/update/UpdateMember'
 import SearchPageMobile from 'pages/directory/mobile/SearchPage'
-import MembersGrid from 'components/members-grids/MembersGrid'
 import CouncilMembers from 'pages/directory/grids/CouncilMembers'
 import ConstituencyMembers from 'pages/directory/grids/ConstituencyMembers'
 import BacentaMembers from 'pages/directory/grids/BacentaMembers'
@@ -41,12 +40,17 @@ import CreateStream from 'pages/directory/create/CreateStream'
 import UpdateStream from 'pages/directory/update/UpdateStream'
 import GatheringServiceMembers from 'pages/directory/grids/GatheringServiceMembers'
 import StreamMembers from 'pages/directory/grids/StreamMembers'
-import { permitAdminAndThoseAbove, permitMeAndThoseAbove } from 'global-utils'
+import {
+  permitAdmin,
+  permitArrivals,
+  permitLeaderAdmin,
+} from 'permission-utils'
+import ServantMembers from './grids/ServantMembers'
 
 export const memberDirectory = [
   {
     path: '/directory/members',
-    element: MembersGrid,
+    element: ServantMembers,
     roles: ['all'],
   },
 ]
@@ -54,38 +58,38 @@ export const memberGrids = [
   {
     path: '/gatheringservice/members',
     element: GatheringServiceMembers,
-    roles: permitMeAndThoseAbove('GatheringService'),
+    roles: permitLeaderAdmin('GatheringService'),
   },
   {
     path: '/stream/members',
     element: StreamMembers,
-    roles: permitMeAndThoseAbove('Stream'),
+    roles: permitLeaderAdmin('Stream'),
   },
   {
     path: '/council/members',
     element: CouncilMembers,
-    roles: permitMeAndThoseAbove('Council'),
+    roles: permitLeaderAdmin('Council'),
   },
   {
     path: '/constituency/members',
     element: ConstituencyMembers,
-    roles: permitMeAndThoseAbove('Constituency'),
+    roles: permitLeaderAdmin('Constituency'),
   },
 
   {
     path: '/bacenta/members',
     element: BacentaMembers,
-    roles: permitMeAndThoseAbove('Bacenta'),
+    roles: permitLeaderAdmin('Bacenta'),
   },
   {
     path: '/fellowship/members',
     element: FellowshipMembers,
-    roles: permitMeAndThoseAbove('Fellowship'),
+    roles: permitLeaderAdmin('Fellowship'),
   },
   {
     path: '/sonta/members',
     element: SontaMembers,
-    roles: permitMeAndThoseAbove('Sonta'),
+    roles: permitLeaderAdmin('Sonta'),
   },
 ]
 
@@ -94,12 +98,12 @@ export const directory = [
     path: '/directory',
     element: Directory,
     placeholder: true,
-    roles: ['all'],
+    roles: permitArrivals('Fellowship'),
   },
   {
     path: '/directory/churches',
     element: Churches,
-    roles: permitMeAndThoseAbove('Fellowship'),
+    roles: permitArrivals('Fellowship'),
   },
   // Member Display and Edit Pages
   {
@@ -111,7 +115,7 @@ export const directory = [
   {
     path: '/member/displaydetails',
     element: DisplayMember,
-    roles: permitMeAndThoseAbove('Fellowship'),
+    roles: permitArrivals('Fellowship'),
     placeholder: true,
   },
   {
@@ -123,13 +127,13 @@ export const directory = [
   {
     path: '/member/addmember',
     element: CreateMember,
-    roles: permitMeAndThoseAbove('Fellowship'),
+    roles: permitLeaderAdmin('Fellowship'),
     placeholder: true,
   },
   {
     path: '/member/editmember',
     element: UpdateMember,
-    roles: permitMeAndThoseAbove('Constituency'),
+    roles: permitLeaderAdmin('Constituency'),
     placeholder: true,
   },
 
@@ -145,50 +149,50 @@ export const directory = [
   {
     path: '/fellowship/displaydetails',
     element: DetailsFellowship,
-    roles: permitMeAndThoseAbove('Fellowship'),
+    roles: permitLeaderAdmin('Fellowship'),
     placeholder: true,
   },
   {
     path: '/bacenta/displaydetails',
     element: DetailsBacenta,
-    roles: permitMeAndThoseAbove('Bacenta'),
+    roles: permitArrivals('Bacenta'),
     placeholder: true,
   },
   {
     path: '/constituency/displaydetails',
     element: DetailsConstituency,
-    roles: permitMeAndThoseAbove('Constituency'),
+    roles: permitArrivals('Constituency'),
     placeholder: true,
   },
 
   {
     path: '/council/displaydetails',
     element: DetailsCouncil,
-    roles: permitMeAndThoseAbove('Council'),
+    roles: permitArrivals('Council'),
     placeholder: true,
   },
   {
     path: '/stream/displaydetails',
     element: DetailsStream,
-    roles: permitAdminAndThoseAbove('Stream'),
+    roles: permitArrivals('Stream'),
     placeholder: false,
   },
   {
     path: '/gatheringservice/displaydetails',
     element: DetailsGatheringService,
-    roles: permitMeAndThoseAbove('GatheringService'),
+    roles: permitArrivals('GatheringService'),
     placeholder: false,
   },
   {
     path: '/gatheringservice/constituencies',
     element: GatheringServiceConstituencies,
-    roles: permitMeAndThoseAbove('GatheringService'),
+    roles: permitArrivals('GatheringService'),
     placeholder: false,
   },
   {
     path: '/sonta/displaydetails',
     element: DetailsSonta,
-    roles: permitMeAndThoseAbove('Sonta'),
+    roles: permitLeaderAdmin('Sonta'),
     placeholder: true,
   },
 
@@ -196,45 +200,45 @@ export const directory = [
   {
     path: '/bacenta/displayall',
     element: DisplayAllBacentas,
-    roles: permitMeAndThoseAbove('Constituency'),
+    roles: permitArrivals('Constituency'),
     placeholder: false,
   },
   {
     path: '/sonta/displayall',
     element: DisplayAllSontas,
-    roles: permitMeAndThoseAbove('Constituency'),
+    roles: permitLeaderAdmin('Constituency'),
     placeholder: false,
   },
   {
     path: '/constituency/display-sontas',
     element: DisplaySontasByConstituency,
-    roles: permitMeAndThoseAbove('Council'),
+    roles: permitLeaderAdmin('Council'),
     placeholder: false,
   },
 
   {
     path: '/constituency/displayall',
     element: DisplayAllConstituencies,
-    roles: permitAdminAndThoseAbove('Council'),
+    roles: permitArrivals('Council'),
     placeholder: false,
   },
 
   {
     path: '/fellowship/displayall',
     element: DisplayAllFellowships,
-    roles: permitMeAndThoseAbove('Bacenta'),
+    roles: permitArrivals('Bacenta'),
     placeholder: false,
   },
   {
     path: '/council/displayall',
     element: DisplayAllCouncils,
-    roles: permitMeAndThoseAbove('Stream'),
+    roles: permitArrivals('Stream'),
     placeholder: false,
   },
   {
     path: '/stream/displayall',
     element: DisplayAllStreams,
-    roles: permitMeAndThoseAbove('GatheringService'),
+    roles: permitLeaderAdmin('GatheringService'),
     placeholder: false,
   },
 
@@ -242,37 +246,37 @@ export const directory = [
   {
     path: '/fellowship/addfellowship',
     element: CreateFellowship,
-    roles: permitAdminAndThoseAbove('Constituency'),
+    roles: permitAdmin('Constituency'),
     placeholder: false,
   },
   {
     path: '/bacenta/addbacenta',
     element: CreateBacenta,
-    roles: permitAdminAndThoseAbove('Constituency'),
+    roles: permitAdmin('Constituency'),
     placeholder: false,
   },
   {
     path: '/sonta/addsonta',
     element: CreateSonta,
-    roles: permitAdminAndThoseAbove('Constituency'),
+    roles: permitAdmin('Constituency'),
     placeholder: false,
   },
   {
     path: '/constituency/addconstituency',
     element: CreateConstituency,
-    roles: permitAdminAndThoseAbove('Council'),
+    roles: permitAdmin('Council'),
     placeholder: false,
   },
   {
     path: '/council/addcouncil',
     element: CreateCouncil,
-    roles: permitAdminAndThoseAbove('Stream'),
+    roles: permitAdmin('Stream'),
     placeholder: false,
   },
   {
     path: '/stream/addstream',
     element: CreateStream,
-    roles: permitAdminAndThoseAbove('GatheringService'),
+    roles: permitAdmin('GatheringService'),
     placeholder: false,
   },
 
@@ -280,37 +284,37 @@ export const directory = [
   {
     path: '/fellowship/editfellowship',
     element: UpdateFellowship,
-    roles: permitAdminAndThoseAbove('Constituency'),
+    roles: permitAdmin('Constituency'),
     placeholder: false,
   },
   {
     path: '/bacenta/editbacenta',
     element: UpdateBacenta,
-    roles: permitAdminAndThoseAbove('Constituency'),
+    roles: permitArrivals('Constituency'),
     placeholder: false,
   },
   {
     path: '/sonta/editsonta',
     element: UpdateSonta,
-    roles: permitAdminAndThoseAbove('Constituency'),
+    roles: permitAdmin('Constituency'),
     placeholder: false,
   },
   {
     path: '/constituency/editconstituency',
     element: UpdateConstituency,
-    roles: permitAdminAndThoseAbove('Council'),
+    roles: permitAdmin('Council'),
     placeholder: false,
   },
   {
     path: '/council/editcouncil',
     element: UpdateCouncil,
-    roles: permitAdminAndThoseAbove('Stream'),
+    roles: permitAdmin('Stream'),
     placeholder: false,
   },
   {
     path: '/stream/editstream',
     element: UpdateStream,
-    roles: permitAdminAndThoseAbove('GatheringService'),
+    roles: permitAdmin('GatheringService'),
     placeholder: false,
   },
 ]

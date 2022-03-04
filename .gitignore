@@ -9,6 +9,10 @@ node_modules/
 # production
 build/
 
+#cypher files
+*.cql
+.eslintcache
+
 # misc
 .DS_Store
 .env

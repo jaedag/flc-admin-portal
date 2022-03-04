@@ -8,7 +8,7 @@ import { ChurchContext } from '../../../contexts/ChurchContext'
 import RoleView from '../../../auth/RoleView'
 import BaseComponent from 'components/base-component/BaseComponent'
 import { Col, Container, Row, Button } from 'react-bootstrap'
-import { permitAdminAndThoseAbove } from 'global-utils'
+import { permitAdmin } from 'permission-utils'
 
 const DisplayAllBacentas = () => {
   const { constituencyId, setBacentaId, setConstituencyId, clickCard } =
@@ -59,7 +59,7 @@ const DisplayAllBacentas = () => {
                 </Link>
               ) : null}
             </Col>
-            <RoleView roles={permitAdminAndThoseAbove('Constituency')}>
+            <RoleView roles={permitAdmin('Constituency')}>
               <Col className="col-auto">
                 <Link
                   to="/bacenta/addbacenta"

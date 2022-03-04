@@ -8,7 +8,7 @@ export const MAKE_CONSTITUENCYARRIVALS_ADMIN = gql`
   ) {
     RemoveConstituencyArrivalsAdmin(
       constituencyId: $constituencyId
-      adminId: $oldAdminId
+      arrivalsAdminId: $oldAdminId
     ) {
       id
       firstName
@@ -16,14 +16,50 @@ export const MAKE_CONSTITUENCYARRIVALS_ADMIN = gql`
     }
     MakeConstituencyArrivalsAdmin(
       constituencyId: $constituencyId
-      adminId: $newAdminId
+      arrivalsAdminId: $newAdminId
     ) {
       id
       firstName
       lastName
-      isAdminForConstituencyArrivals {
+      fullName
+      isArrivalsAdminForConstituency {
         id
-        admin {
+        arrivalsAdmin {
+          id
+          firstName
+          lastName
+          fullName
+        }
+      }
+    }
+  }
+`
+
+export const MAKE_COUNCILARRIVALS_ADMIN = gql`
+  mutation MakeCouncilArrrivalsAdmin(
+    $councilId: ID!
+    $newAdminId: ID!
+    $oldAdminId: ID!
+  ) {
+    RemoveCouncilArrivalsAdmin(
+      councilId: $councilId
+      arrivalsAdminId: $oldAdminId
+    ) {
+      id
+      firstName
+      lastName
+    }
+    MakeCouncilArrivalsAdmin(
+      councilId: $councilId
+      arrivalsAdminId: $newAdminId
+    ) {
+      id
+      firstName
+      lastName
+      fullName
+      isArrivalsAdminForCouncil {
+        id
+        arrivalsAdmin {
           id
           firstName
           lastName
@@ -33,26 +69,130 @@ export const MAKE_CONSTITUENCYARRIVALS_ADMIN = gql`
   }
 `
 
+export const MAKE_STREAMARRIVALS_ADMIN = gql`
+  mutation MakeStreamArrrivalsAdmin(
+    $streamId: ID!
+    $newAdminId: ID!
+    $oldAdminId: ID!
+  ) {
+    RemoveStreamArrivalsAdmin(
+      streamId: $streamId
+      arrivalsAdminId: $oldAdminId
+    ) {
+      id
+      firstName
+      lastName
+    }
+    MakeStreamArrivalsAdmin(streamId: $streamId, arrivalsAdminId: $newAdminId) {
+      id
+      firstName
+      lastName
+      isAdminForStreamArrivals {
+        id
+        arrivalsAdmin {
+          id
+          firstName
+          lastName
+        }
+      }
+    }
+  }
+`
+
+export const MAKE_GATHERINGSERVICEARRIVALS_ADMIN = gql`
+  mutation MakeGatheringServiceArrrivalsAdmin(
+    $gatheringServiceId: ID!
+    $newAdminId: ID!
+    $oldAdminId: ID!
+  ) {
+    RemoveGatheringServiceArrivalsAdmin(
+      gatheringServiceId: $gatheringServiceId
+      arrivalsAdminId: $oldAdminId
+    ) {
+      id
+      firstName
+      lastName
+    }
+    MakeGatheringServiceArrivalsAdmin(
+      gatheringServiceId: $gatheringServiceId
+      arrivalsAdminId: $newAdminId
+    ) {
+      id
+      firstName
+      lastName
+      isAdminForGatheringServiceArrivals {
+        id
+        arrivalsAdmin {
+          id
+          firstName
+          lastName
+        }
+      }
+    }
+  }
+`
+export const UPLOAD_MOBILISATION_PICTURE = gql`
+  mutation UploadMobilisationPicture(
+    $bacentaId: ID!
+    $serviceDate: String!
+    $mobilisationPicture: String!
+  ) {
+    UploadMobilisationPicture(
+      bacentaId: $bacentaId
+      serviceDate: $serviceDate
+      mobilisationPicture: $mobilisationPicture
+    ) {
+      id
+      attendance
+      mobilisationPicture
+      serviceLog {
+        bacenta {
+          id
+          stream_name
+          bussing(limit: 4) {
+            id
+            week
+            mobilisationPicture
+          }
+        }
+      }
+    }
+  }
+`
+
 export const RECORD_BUSSING_FROM_BACENTA = gql`
   mutation RecordBussingFromBacenta(
-    $id: ID!
-    $serviceDate: String!
+    $bussingRecordId: ID!
+    $attendance: Int!
     $bussingPictures: [String]!
     $bussingCost: Float!
     $offeringRaised: Float!
     $numberOfBusses: Int!
-    $numberOfCars: Int
+    $numberOfCars: Int!
+    $momoName: String!
+    $momoNumber: String!
   ) {
     RecordBussingFromBacenta(
-      id: $id
-      serviceDate: $serviceDate
+      bussingRecordId: $bussingRecordId
+      attendance: $attendance
       bussingPictures: $bussingPictures
       bussingCost: $bussingCost
       offeringRaised: $offeringRaised
       numberOfBusses: $numberOfBusses
       numberOfCars: $numberOfCars
+      momoName: $momoName
+      momoNumber: $momoNumber
     ) {
       id
+      attendance
+      bussingPictures
+      bussingCost
+      offeringRaised
+      numberOfBusses
+      numberOfCars
+      momoName
+      momoNumber
+
       serviceLog {
         bacenta {
           id
@@ -72,11 +212,13 @@ export const CONFIRM_BUSSING_BY_ADMIN = gql`
     $bussingRecordId: ID!
     $attendance: Int!
     $bussingTopUp: Float!
+    $comments: String
   ) {
     ConfirmBussingByAdmin(
       bussingRecordId: $bussingRecordId
       attendance: $attendance
       bussingTopUp: $bussingTopUp
+      comments: $comments
     ) {
       id
       serviceLog {
@@ -86,9 +228,32 @@ export const CONFIRM_BUSSING_BY_ADMIN = gql`
             id
             attendance
             bussingTopUp
+            momoName
+            momoNumber
             week
+            confirmed_by {
+              id
+              firstName
+              lastName
+              fullName
+            }
+            comments
           }
         }
+      }
+    }
+  }
+`
+
+export const RECORD_ARRIVAL_TIME = gql`
+  mutation RecordArrivalTime($bussingRecordId: ID!) {
+    RecordArrivalTime(bussingRecordId: $bussingRecordId) {
+      id
+      arrivalTime
+      arrivalTime_Logged_By {
+        id
+        firstName
+        lastName
       }
     }
   }

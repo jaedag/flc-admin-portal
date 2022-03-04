@@ -7,7 +7,7 @@ import { GET_CONSTITUENCY_BACENTAS } from '../../../queries/ListQueries'
 import { ChurchContext } from '../../../contexts/ChurchContext'
 import RoleView from '../../../auth/RoleView'
 import BaseComponent from 'components/base-component/BaseComponent'
-import { permitAdminAndThoseAbove } from 'global-utils'
+import { permitAdmin } from 'permission-utils'
 
 const DisplayAllSontas = () => {
   const { constituencyId, setConsituencyId } = useContext(ChurchContext)
@@ -33,7 +33,7 @@ const DisplayAllSontas = () => {
               </Link>
             </div>
             {data.sontas.length < 10 && (
-              <RoleView roles={permitAdminAndThoseAbove('Constituency')}>
+              <RoleView roles={permitAdmin('Constituency')}>
                 <div className="col-auto">
                   <Link
                     to="/sonta/addsonta"

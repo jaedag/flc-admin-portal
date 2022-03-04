@@ -1,7 +1,6 @@
-// Global Constants
-
-export const PHONE_NUM_REGEX_VALIDATION =
-  /^[+][(]{0,1}[1-9]{1,4}[)]{0,1}[-\s/0-9]*$/
+//Global Constants
+export const PHONE_NUM_REGEX = /^[+][(]{0,1}[1-9]{1,4}[)]{0,1}[-\s/0-9]*$/
+export const MOMO_NUM_REGEX = /^[0][\s/0-9]{9}$/
 export const DECIMAL_NUM_REGEX = /^-?\d*\.{1}\d*$/
 export const DECIMAL_NUM_REGEX_POSITIVE_ONLY = /^\d*\.{1}\d*$/
 export const DEBOUNCE_TIMER = 500
@@ -44,6 +43,17 @@ export const SERVICE_DAY_OPTIONS = [
   { key: 'Thursday', value: 'Thursday' },
   { key: 'Friday', value: 'Friday' },
   { key: 'Saturday', value: 'Saturday' },
+]
+export const BUSSING_ZONE_OPTIONS = [
+  { key: '1', value: '1' },
+  { key: '2', value: '2' },
+  { key: '3', value: '3' },
+  { key: '4', value: '4' },
+  { key: '5', value: '5' },
+]
+export const BUSSING_STATUS_OPTIONS = [
+  { key: 'IC', value: 'IC' },
+  { key: 'Graduated', value: 'Graduated' },
 ]
 
 export const throwErrorMsg = (message, error) => {
@@ -132,6 +142,7 @@ export const plural = (church) => {
     case 'Fellowship':
       return 'Fellowships'
     default:
+      return church
   }
 }
 
@@ -141,6 +152,7 @@ export const parsePhoneNum = (phoneNumber) => {
     .replace('+', '')
     .replace('(', '')
     .replace(')', '')
+    .replace('-', '')
 }
 
 export const repackDecimals = (decimal) => {
@@ -414,182 +426,4 @@ export const last3Weeks = () => {
   const last2Weeks = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000)
 
   return [getWeekNumber(), getWeekNumber(lastWeek), getWeekNumber(last2Weeks)]
-}
-
-// Permissions Things
-export const permitMeAndThoseAbove = (churchType) => {
-  let permittedFor = []
-  switch (churchType.toLowerCase()) {
-    case 'fellowship':
-      permittedFor = [
-        'adminGatheringService',
-        'adminStream',
-        'adminCouncil',
-        'adminConstituency',
-        'adminConstituencyArrivals',
-        'leaderGatheringService',
-        'leaderStream',
-        'leaderCouncil',
-        'leaderConstituency',
-        'leaderBacenta',
-        'leaderFellowship',
-      ]
-      break
-    case 'bacenta':
-      permittedFor = [
-        'adminGatheringService',
-        'adminStream',
-        'adminCouncil',
-        'adminConstituency',
-        'adminConstituencyArrivals',
-        'leaderGatheringService',
-        'leaderStream',
-        'leaderCouncil',
-        'leaderConstituency',
-        'leaderBacenta',
-      ]
-      break
-    case 'sonta':
-      permittedFor = [
-        'adminGatheringService',
-        'adminStream',
-        'adminCouncil',
-        'adminConstituency',
-        'adminConstituencyArrivals',
-        'leaderGatheringService',
-        'leaderStream',
-        'leaderCouncil',
-        'leaderConstituency',
-        'leaderSonta',
-      ]
-      break
-    case 'constituency':
-      permittedFor = [
-        'adminGatheringService',
-        'adminStream',
-        'adminCouncil',
-        'adminConstituency',
-        'adminConstituencyArrivals',
-        'leaderGatheringService',
-        'leaderStream',
-        'leaderCouncil',
-        'leaderConstituency',
-      ]
-      break
-    case 'council':
-      permittedFor = [
-        'adminGatheringService',
-        'adminStream',
-        'adminCouncil',
-        'leaderGatheringService',
-        'leaderStream',
-        'leaderCouncil',
-      ]
-      break
-    case 'stream':
-      permittedFor = [
-        'adminGatheringService',
-        'adminStream',
-        'leaderGatheringService',
-        'leaderStream',
-      ]
-      break
-    case 'gatheringservice':
-      permittedFor = ['adminGatheringService', 'leaderGatheringService']
-      break
-    default:
-      permittedFor = []
-      break
-  }
-
-  return permittedFor
-}
-
-export const permitAdminAndThoseAbove = (churchType) => {
-  let permittedFor = []
-  switch (churchType) {
-    case 'Sonta':
-      permittedFor = [
-        'adminGatheringService',
-        'adminStream',
-        'adminCouncil',
-        'adminConstituency',
-      ]
-      break
-    case 'Constituency':
-      permittedFor = [
-        'adminGatheringService',
-        'adminStream',
-        'adminCouncil',
-        'adminConstituency',
-      ]
-      break
-    case 'Council':
-      permittedFor = ['adminGatheringService', 'adminStream', 'adminCouncil']
-      break
-    case 'Stream':
-      permittedFor = ['adminGatheringService', 'adminStream']
-      break
-    case 'GatheringService':
-      permittedFor = ['adminGatheringService']
-      break
-    default:
-      permittedFor = []
-      break
-  }
-
-  return permittedFor
-}
-
-export const permitArrivalsAndThoseAbove = (churchType) => {
-  let permittedFor = []
-  switch (churchType) {
-    case 'Bacenta':
-      permittedFor = [
-        'adminGatheringService',
-        'adminStream',
-        'adminStreamArrivals',
-        'adminCouncil',
-        'adminCouncilArrivals',
-        'adminConstituency',
-        'adminConstituencyArrivals',
-        'leaderBacenta',
-      ]
-      break
-    case 'Constituency':
-      permittedFor = [
-        'adminGatheringService',
-        'adminStream',
-        'adminStreamArrivals',
-        'adminCouncil',
-        'adminCouncilArrivals',
-        'adminConstituency',
-        'adminConstituencyArrivals',
-      ]
-      break
-    case 'Council':
-      permittedFor = [
-        'adminGatheringService',
-        'adminStream',
-        'adminStreamArrivals',
-        'adminCouncil',
-        'adminCouncilArrivals',
-      ]
-      break
-    case 'Stream':
-      permittedFor = [
-        'adminGatheringService',
-        'adminStream',
-        'adminStreamArrivals',
-      ]
-      break
-    case 'GatheringService':
-      permittedFor = ['adminGatheringService']
-      break
-    default:
-      permittedFor = []
-      break
-  }
-
-  return permittedFor
 }

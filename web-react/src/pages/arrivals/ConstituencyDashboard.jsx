@@ -14,8 +14,16 @@ import { CONSTIUENCY_ARRIVALS_DASHBOARD } from './arrivalsQueries'
 import { useNavigate } from 'react-router'
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import RoleView from 'auth/RoleView'
-import { permitAdminAndThoseAbove, throwErrorMsg } from 'global-utils'
+import { throwErrorMsg } from 'global-utils'
 import { MAKE_CONSTITUENCYARRIVALS_ADMIN } from './arrivalsMutations'
+import { permitAdmin, permitArrivals } from 'permission-utils'
+import HeadingSecondary from 'components/HeadingSecondary'
+import {
+  CashStack,
+  PersonCheck,
+  Forward,
+  Download,
+} from 'react-bootstrap-icons'
 
 const ConstituencyDashboard = () => {
   const { isOpen, togglePopup, constituencyId } = useContext(ChurchContext)
@@ -29,10 +37,10 @@ const ConstituencyDashboard = () => {
   const constituency = data?.constituencies[0]
 
   const initialValues = {
-    adminName: constituency?.arrivvalsAdmin
-      ? `${constituency?.arrivvalsAdmin?.firstName} ${constituency?.arrivvalsAdmin?.lastName}`
+    adminName: constituency?.arrivalsAdmin
+      ? `${constituency?.arrivalsAdmin?.fullName}`
       : '',
-    adminSelect: constituency?.arrivvalsAdmin?.id ?? '',
+    adminSelect: constituency?.arrivalsAdmin?.id ?? '',
   }
   const validationSchema = Yup.object({
     adminSelect: Yup.string().required(
@@ -64,6 +72,7 @@ const ConstituencyDashboard = () => {
         <HeadingPrimary loading={loading}>
           {constituency?.name} Constituency Arrivals
         </HeadingPrimary>
+        <HeadingSecondary>{`Arrivals Rep: ${constituency?.arrivalsAdmin?.fullName}`}</HeadingSecondary>
         {isOpen && (
           <Popup handleClose={togglePopup}>
             <b>Change Arrivals Admin</b>
@@ -85,7 +94,6 @@ const ConstituencyDashboard = () => {
                         placeholder="Select an Admin"
                         setFieldValue={formik.setFieldValue}
                         aria-describedby="Member Search"
-                        className="form-control"
                         error={formik.errors.admin}
                       />
                     </Col>
@@ -99,33 +107,51 @@ const ConstituencyDashboard = () => {
         )}
 
         <div className="d-grid gap-2">
-          <RoleView roles={permitAdminAndThoseAbove('Constituency')}>
+          <RoleView
+            roles={[
+              ...permitAdmin('Constituency'),
+              ...permitArrivals('Council'),
+            ]}
+          >
             <Button
-              variant="outline-secondary"
-              size="lg"
+              variant="outline-secondary my-3"
               onClick={() => togglePopup()}
             >
               Change Arrivals Admin
             </Button>
           </RoleView>
           <MenuButton
-            title="Bacentas Yet to Submit"
-            onClick={() => navigate('/arrivals/bacentas-not-arrived')}
-            icon
+            title="Bacentas With No Activity"
+            onClick={() => navigate('/arrivals/bacentas-no-activity')}
+            number={`12`}
             iconBg
             noCaption
           />
           <MenuButton
-            title="Bacentas That Have Submitted"
-            onClick={() => navigate('/arrivals/bacentas-that-submitted')}
-            icon
+            title="Bacentas On The Way"
+            onClick={() => navigate('/arrivals/bacentas-on-the-way')}
+            iconComponent={Forward}
             iconBg
             noCaption
           />
           <MenuButton
             title="Bacentas That Have Been Counted"
             onClick={() => navigate('/arrivals/bacentas-have-been-counted')}
-            icon
+            iconComponent={PersonCheck}
+            iconBg
+            noCaption
+          />
+          <MenuButton
+            title="Bacentas That Have Arrived"
+            onClick={() => navigate('/arrivals/bacentas-arrived')}
+            iconComponent={Download}
+            iconBg
+            noCaption
+          />
+          <MenuButton
+            title="Bacentas That Have Arrived"
+            onClick={() => navigate('/arrivals/bacentas-arrived')}
+            iconComponent={CashStack}
             iconBg
             noCaption
           />

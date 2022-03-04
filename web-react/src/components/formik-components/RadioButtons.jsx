@@ -14,7 +14,7 @@ function RadioButtons(props) {
           </label>
         </div>
       ) : null}
-      <Field name={name} className="row row-cols-2 " {...rest}>
+      <Field name={name} className="row row-cols-2 form-control" {...rest}>
         {({ field }) => {
           return options.map((option) => {
             return (

@@ -6,6 +6,7 @@ import { Neo4jGraphQL } from '@neo4j/graphql'
 import dotenv from 'dotenv'
 import { resolvers } from './resolvers/resolvers'
 import { serviceResolvers } from './resolvers/service-resolvers'
+import { arrivalsResolvers } from './resolvers/arrivals-resolvers'
 
 // set environment variables from .env
 dotenv.config()
@@ -25,12 +26,12 @@ const driver = neo4j.driver(
 
 const neoSchema = new Neo4jGraphQL({
   typeDefs,
-  resolvers: { ...resolvers, ...serviceResolvers },
+  resolvers: { ...resolvers, ...serviceResolvers, ...arrivalsResolvers },
   driver,
   config: {
     jwt: {
       secret: process.env.JWT_SECRET,
-      rolesPath: 'permissions',
+      rolesPath: 'https://flcadmin\\.netlify\\.app/roles',
     },
   },
 })

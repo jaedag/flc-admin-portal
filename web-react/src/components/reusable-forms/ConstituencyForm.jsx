@@ -2,7 +2,7 @@ import { useMutation, useQuery } from '@apollo/client'
 import BaseComponent from 'components/base-component/BaseComponent'
 import { FieldArray, Form, Formik } from 'formik'
 import * as Yup from 'yup'
-import { makeSelectOptions, permitAdminAndThoseAbove } from 'global-utils'
+import { makeSelectOptions } from 'global-utils'
 import { GET_COUNCILS } from 'queries/ListQueries'
 import React, { useContext } from 'react'
 import { ChurchContext } from 'contexts/ChurchContext'
@@ -18,6 +18,7 @@ import { MemberContext } from 'contexts/MemberContext'
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import HeadingSecondary from 'components/HeadingSecondary'
 import SubmitButton from 'components/formik-components/SubmitButton'
+import { permitAdmin } from 'permission-utils'
 
 const ConstituencyForm = ({
   initialValues,
@@ -77,13 +78,10 @@ const ConstituencyForm = ({
                   {/* <!-- Basic Info Div --> */}
 
                   <Col className="mb-2">
-                    <RoleView
-                      roles={permitAdminAndThoseAbove('GatheringService')}
-                    >
+                    <RoleView roles={permitAdmin('GatheringService')}>
                       <Row className="form-row">
                         <Col>
                           <FormikControl
-                            className="form-control"
                             control="select"
                             name="council"
                             label="Select a Council"
@@ -95,7 +93,6 @@ const ConstituencyForm = ({
                     </RoleView>
 
                     <FormikControl
-                      className="form-control"
                       control="input"
                       name="name"
                       label={`Name of Constituency`}
@@ -103,7 +100,7 @@ const ConstituencyForm = ({
                     />
 
                     <Row className="d-flex align-items-center mb-3">
-                      <RoleView roles={permitAdminAndThoseAbove('Council')}>
+                      <RoleView roles={permitAdmin('Council')}>
                         <Col>
                           <FormikControl
                             control="memberSearch"
@@ -113,7 +110,6 @@ const ConstituencyForm = ({
                             initialValue={initialValues?.leaderName}
                             setFieldValue={formik.setFieldValue}
                             aria-describedby="Member Search Box"
-                            className="form-control"
                             error={formik.errors.leaderId}
                           />
                         </Col>
@@ -141,7 +137,6 @@ const ConstituencyForm = ({
                                     initialValue={bacenta?.name}
                                     setFieldValue={formik.setFieldValue}
                                     aria-describedby="Bacenta Name"
-                                    className="form-control"
                                     error={
                                       formik.errors.bacentas &&
                                       formik.errors.bacentas[index]

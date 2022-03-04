@@ -11,7 +11,7 @@ import { Card, Container } from 'react-bootstrap'
 import { useNavigate } from 'react-router'
 import { CONSTITUENCY_BUSSING_DATA } from './arrivalsQueries'
 
-const BacentasThatSubmitted = () => {
+const BacentasOnTheWay = () => {
   const { constituencyId, clickCard } = useContext(ChurchContext)
   const navigate = useNavigate()
   const { data, loading, error } = useQuery(CONSTITUENCY_BUSSING_DATA, {
@@ -22,18 +22,13 @@ const BacentasThatSubmitted = () => {
   return (
     <BaseComponent data={data} loading={loading} error={error} placeholder>
       <Container>
-        <HeadingPrimary loading={loading}>
-          Bacentas That Have Submitted Pictures
-        </HeadingPrimary>
+        <HeadingPrimary loading={loading}>Bacentas On The Way</HeadingPrimary>
         <HeadingSecondary loading={!constituency?.name}>
           {constituency?.name} Constituency
         </HeadingSecondary>
 
         {constituency?.bacentas.map((bacenta, i) => {
-          if (
-            bacenta.bussing[0]?.week === getWeekNumber() &&
-            !bacenta.bussing[0]?.attendance
-          ) {
+          if (bacenta.bussing[0]?.week === getWeekNumber()) {
             return (
               <MemberDisplayCard
                 key={i}
@@ -62,4 +57,4 @@ const BacentasThatSubmitted = () => {
   )
 }
 
-export default BacentasThatSubmitted
+export default BacentasOnTheWay

@@ -68,7 +68,6 @@ const CancelledServiceForm = ({ church, churchId, churchType }) => {
                       <i className="text-secondary">(Day/Month/Year)</i>
                     </small>
                     <FormikControl
-                      className="form-control"
                       control="input"
                       name="serviceDate"
                       type="date"
@@ -79,7 +78,6 @@ const CancelledServiceForm = ({ church, churchId, churchType }) => {
                       control="input"
                       name="noServiceReason"
                       label="Reason"
-                      className="form-control"
                     />
 
                     <div className="d-flex justify-content-center mt-5">

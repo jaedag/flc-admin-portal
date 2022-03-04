@@ -17,6 +17,12 @@ import { LOG_BACENTA_HISTORY, LOG_FELLOWSHIP_HISTORY } from './LogMutations'
 import { MAKE_BACENTA_LEADER } from './ChangeLeaderMutations'
 import BacentaForm from '../../../components/reusable-forms/BacentaForm'
 import { MAKE_FELLOWSHIP_INACTIVE } from './CloseChurchMutations'
+import {
+  MAKE_BACENTA_GRADUATED,
+  MAKE_BACENTA_IC,
+  SET_ACTIVE_BACENTA,
+  SET_VACATION_BACENTA,
+} from './StatusChanges'
 
 const UpdateBacenta = () => {
   const { church, bacentaId, setConstituencyId } = useContext(ChurchContext)
@@ -36,6 +42,9 @@ const UpdateBacenta = () => {
     leaderId: bacenta?.leader?.id || '',
     constituency: bacenta?.constituency?.id,
     fellowships: bacenta?.fellowships.length ? bacenta?.fellowships : [''],
+    zone: bacenta?.zone.number,
+    graduationStatus: bacenta?.graduationStatus,
+    vacationStatus: bacenta?.vacationStatus,
   }
 
   const [LogBacentaHistory] = useMutation(LOG_BACENTA_HISTORY)
@@ -45,6 +54,10 @@ const UpdateBacenta = () => {
   })
 
   const [MakeBacentaLeader] = useMutation(MAKE_BACENTA_LEADER)
+  const [MakeBacentaIC] = useMutation(MAKE_BACENTA_IC)
+  const [MakeBacentaGraduated] = useMutation(MAKE_BACENTA_GRADUATED)
+  const [SetBacentaOnVacation] = useMutation(SET_VACATION_BACENTA)
+  const [SetBacentaActive] = useMutation(SET_ACTIVE_BACENTA)
   const [UpdateBacenta] = useMutation(UPDATE_BACENTA_MUTATION, {
     refetchQueries: [
       {
@@ -153,6 +166,7 @@ const UpdateBacenta = () => {
         name: values.name,
         leaderId: values.leaderId,
         constituencyId: values.constituency,
+        zone: parseInt(values.zone),
       },
     })
       .then(() => {
@@ -168,6 +182,52 @@ const UpdateBacenta = () => {
               historyRecord: `Bacenta name has been changed from ${initialValues.name} to ${values.name}`,
             },
           })
+        }
+
+        if (values.zone !== initialValues.zone) {
+          LogBacentaHistory({
+            variables: {
+              bacentaId: bacentaId,
+              newLeaderId: '',
+              oldLeaderId: '',
+              oldConstituencyId: '',
+              newConstituencyId: '',
+              historyRecord: `Bacenta has been moved from Zone ${initialValues.zone} to Zone ${values.zone}`,
+            },
+          })
+        }
+
+        //Change from IC to Graduated
+        if (values.graduationStatus !== initialValues.graduationStatus) {
+          if (values.graduationStatus === 'IC') {
+            MakeBacentaIC({
+              variables: {
+                bacentaId: bacentaId,
+              },
+            })
+          }
+
+          if (values.graduationStatus === 'Graduated') {
+            MakeBacentaGraduated({ variables: { bacentaId: bacentaId } })
+          }
+        }
+
+        //Change if the vacation status changes
+        if (values.vacationStatus !== initialValues.vacationStatus) {
+          if (values.vacationStatus === 'Vacation') {
+            SetBacentaOnVacation({
+              variables: {
+                bacentaId: bacentaId,
+              },
+            })
+          }
+          if (values.vacationStatus === 'Active') {
+            SetBacentaActive({
+              variables: {
+                bacentaId: bacentaId,
+              },
+            })
+          }
         }
 
         //Log if the Leader Changes

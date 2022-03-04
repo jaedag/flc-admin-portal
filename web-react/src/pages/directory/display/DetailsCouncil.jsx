@@ -2,7 +2,7 @@ import { useQuery } from '@apollo/client'
 import BaseComponent from 'components/base-component/BaseComponent'
 import DisplayChurchDetails from 'components/DisplayChurchDetails/DisplayChurchDetails'
 import { ChurchContext } from 'contexts/ChurchContext'
-import { permitAdminAndThoseAbove } from 'global-utils'
+import { permitAdmin } from 'permission-utils'
 import React, { useContext, useEffect } from 'react'
 import { DISPLAY_COUNCIL } from './ReadQueries'
 
@@ -49,7 +49,7 @@ const DetailsCouncil = () => {
         details={details}
         churchCount={council?.constituencyCount}
         editlink="/council/editcouncil"
-        editPermitted={permitAdminAndThoseAbove('Stream')}
+        editPermitted={permitAdmin('Stream')}
         history={council?.history.length !== 0 && council?.history}
         buttons={council ? council.constituencies : []}
         breadcrumb={breadcrumb && breadcrumb}

@@ -91,8 +91,8 @@ extend type Mutation {
     historyRecord: String!
     newLeaderId: ID
     oldLeaderId: ID
-    newconstituencyId: ID
-    oldconstituencyId: ID
+    newConstituencyId: ID
+    oldConstituencyId: ID
   ): Bacenta
     @cypher(
       statement: """
@@ -128,8 +128,8 @@ extend type Mutation {
        WITH log,bacenta
        CALL {
          WITH log
-         WITH log WHERE $oldconstituencyId IS NOT NULL
-         MATCH (oldconstituency:Constituency {id: $oldconstituencyId})
+         WITH log WHERE $oldConstituencyId IS NOT NULL
+         MATCH (oldconstituency:Constituency {id: $oldConstituencyId})
          MERGE (oldconstituency)-[:HAS_HISTORY]->(log)
          RETURN COUNT(log)
        }
@@ -137,8 +137,8 @@ extend type Mutation {
        WITH log,bacenta
        CALL {
          WITH log
-         WITH log WHERE $newconstituencyId IS NOT NULL
-         MATCH (newconstituency:Constituency {id: $newconstituencyId})
+         WITH log WHERE $newConstituencyId IS NOT NULL
+         MATCH (newconstituency:Constituency {id: $newConstituencyId})
          MERGE (newconstituency)-[:HAS_HISTORY]->(log)
          RETURN COUNT(log)
        }

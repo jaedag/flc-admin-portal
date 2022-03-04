@@ -25,6 +25,7 @@ import { Button, Col, Container, Row, Spinner } from 'react-bootstrap'
 import PlaceholderCustom from 'components/Placeholder'
 import { Geo, PencilSquare } from 'react-bootstrap-icons'
 import ViewAll from 'components/buttons/ViewAll'
+import { permitAdmin } from 'permission-utils'
 
 const DisplayChurchDetails = (props) => {
   const navigate = useNavigate()
@@ -35,15 +36,15 @@ const DisplayChurchDetails = (props) => {
   switch (props.churchType) {
     case 'Constituency':
       needsAdmin = true
-      roles = ['adminGatheringService', 'adminStream', 'adminCouncil']
+      roles = permitAdmin('Constituency')
       break
     case 'Council':
       needsAdmin = true
-      roles = ['adminGatheringService', 'adminStream']
+      roles = permitAdmin('Council')
       break
     case 'Stream':
       needsAdmin = true
-      roles = ['adminGatheringService']
+      roles = permitAdmin('Stream')
       break
     default:
       needsAdmin = false
@@ -216,7 +217,6 @@ const DisplayChurchDetails = (props) => {
                           placeholder="Select an Admin"
                           setFieldValue={formik.setFieldValue}
                           aria-describedby="Member Search"
-                          className="form-control"
                           error={formik.errors.admin}
                         />
                       </Col>
@@ -334,6 +334,18 @@ const DisplayChurchDetails = (props) => {
                       __typename: props.churchType,
                     },
                   })
+                  sessionStorage.setItem(
+                    'currentUser',
+                    JSON.stringify({
+                      ...currentUser,
+                      currentChurch: {
+                        id: props.churchId,
+                        name: props.name,
+                        __typename: props.churchType,
+                      },
+                    })
+                  )
+
                   navigate(`/services/${props.churchType.toLowerCase()}`)
                 }}
               >

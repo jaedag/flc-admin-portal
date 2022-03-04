@@ -15,8 +15,8 @@ const directory = fs
   .readFileSync(path.join(__dirname, 'directory.graphql'))
   .toString('utf-8')
 
-const directoryChanges = fs
-  .readFileSync(path.join(__dirname, 'directory-changes.graphql'))
+const directoryCrud = fs
+  .readFileSync(path.join(__dirname, 'directory-crud.graphql'))
   .toString('utf-8')
 
 const directoryHistory = fs
@@ -44,7 +44,7 @@ exports.typeDefs =
   ' ' +
   directory +
   ' ' +
-  directoryChanges +
+  directoryCrud +
   ' ' +
   directoryHistory +
   ' ' +

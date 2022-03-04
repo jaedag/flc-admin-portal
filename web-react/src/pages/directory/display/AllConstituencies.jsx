@@ -7,7 +7,7 @@ import { ChurchContext } from 'contexts/ChurchContext'
 import BaseComponent from 'components/base-component/BaseComponent'
 import { Container, Row, Col, Button } from 'react-bootstrap'
 import RoleView from 'auth/RoleView'
-import { permitAdminAndThoseAbove } from 'global-utils'
+import { permitAdmin } from 'permission-utils'
 
 const DisplayAllConstituencies = () => {
   const { clickCard, councilId } = useContext(ChurchContext)
@@ -45,7 +45,7 @@ const DisplayAllConstituencies = () => {
                 </Link>
               ) : null}
             </Col>
-            <RoleView roles={permitAdminAndThoseAbove('Council')}>
+            <RoleView roles={permitAdmin('Council')}>
               <Col className="col-auto">
                 <Link
                   to="/constituency/addconstituency"

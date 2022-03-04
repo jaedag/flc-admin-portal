@@ -1,5 +1,6 @@
 import { MemberContext } from 'contexts/MemberContext'
-import { authorisedLink, permitMeAndThoseAbove } from 'global-utils'
+import { authorisedLink } from 'global-utils'
+import { permitMe } from 'permission-utils'
 import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { ChurchContext } from '../../contexts/ChurchContext'
@@ -30,7 +31,7 @@ const Breadcrumb = ({ breadcrumb }) => {
         key={i}
         to={authorisedLink(
           currentUser,
-          permitMeAndThoseAbove(bread?.__typename),
+          permitMe(bread?.__typename),
           `/${bread?.__typename.toLowerCase()}/displaydetails`
         )}
         onClick={() => {

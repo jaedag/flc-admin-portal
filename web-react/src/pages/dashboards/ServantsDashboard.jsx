@@ -16,12 +16,8 @@ import {
 } from '../services/reports/report-utils'
 import { ChurchContext } from 'contexts/ChurchContext'
 import StatDisplay from 'pages/services/reports/CompStatDisplay'
-import {
-  authorisedLink,
-  isAuthorised,
-  permitMeAndThoseAbove,
-  plural,
-} from 'global-utils'
+import { authorisedLink, isAuthorised, plural } from 'global-utils'
+import { permitMe } from 'permission-utils'
 import BaseComponent from 'components/base-component/BaseComponent'
 import { Col, Row, Table, Container } from 'react-bootstrap'
 import Placeholder from '../../components/Placeholder'
@@ -32,7 +28,7 @@ const ServantsDashboard = () => {
   const navigate = useNavigate()
   let servantId = currentUser.id
 
-  if (isAuthorised(permitMeAndThoseAbove('Constituency'), currentUser.roles)) {
+  if (isAuthorised(permitMe('Constituency'), currentUser.roles)) {
     servantId = memberId
   }
 
@@ -67,7 +63,7 @@ const ServantsDashboard = () => {
         break
     }
 
-    const permittedForLink = permitMeAndThoseAbove(churchType)
+    const permittedForLink = permitMe(churchType)
 
     if (servantType === 'Admin') {
       const adminsOneChurch = servant[`${verb}`].length === 1 ?? false
@@ -213,7 +209,7 @@ const ServantsDashboard = () => {
 
             <Col>
               <StatDisplay
-                title="Avg Weekly Income (in GH₵)"
+                title="Avg Weekly Income (GH₵)"
                 loading={!assessmentChurchData}
                 statistic={getMonthlyStatAverage(
                   assessmentChurchData,

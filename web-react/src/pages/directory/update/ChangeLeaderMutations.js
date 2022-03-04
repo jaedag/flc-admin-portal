@@ -14,7 +14,11 @@ export const MAKE_FELLOWSHIP_LEADER = gql`
       firstName
       lastName
     }
-    MakeFellowshipLeader(fellowshipId: $fellowshipId, leaderId: $newLeaderId) {
+    MakeFellowshipLeader(
+      fellowshipId: $fellowshipId
+      leaderId: $newLeaderId
+      oldLeaderId: $oldLeaderId
+    ) {
       id
       firstName
       lastName
@@ -27,6 +31,10 @@ export const MAKE_FELLOWSHIP_LEADER = gql`
           lastName
         }
       }
+    }
+    ConnectFellowshipHistory(churchId: $fellowshipId) {
+      id
+      historyRecord
     }
   }
 `
@@ -42,7 +50,11 @@ export const MAKE_BACENTA_LEADER = gql`
       firstName
       lastName
     }
-    MakeBacentaLeader(bacentaId: $bacentaId, leaderId: $newLeaderId) {
+    MakeBacentaLeader(
+      bacentaId: $bacentaId
+      leaderId: $newLeaderId
+      oldLeaderId: $oldLeaderId
+    ) {
       id
       firstName
       lastName
@@ -53,7 +65,7 @@ export const MAKE_BACENTA_LEADER = gql`
           firstName
           lastName
         }
-        # history(options: { limit: 10 }) {
+        # history(options: { limit: 5 }) {
         #   id
         #   timeStamp
         #   created_at {
@@ -67,6 +79,10 @@ export const MAKE_BACENTA_LEADER = gql`
         #   historyRecord
         # }
       }
+    }
+    ConnectChurchHistory(churchId: $bacentaId) {
+      id
+      historyRecord
     }
   }
 `
@@ -93,7 +109,7 @@ export const MAKE_SONTA_LEADER = gql`
           firstName
           lastName
         }
-        # history(options: { limit: 10 }) {
+        # history(options: { limit: 5 }) {
         #   id
         #   timeStamp
         #   created_at {
@@ -128,6 +144,7 @@ export const MAKE_CONSTITUENCY_LEADER = gql`
     MakeConstituencyLeader(
       constituencyId: $constituencyId
       leaderId: $newLeaderId
+      oldLeaderId: $oldLeaderId
     ) {
       id
       firstName
@@ -139,7 +156,7 @@ export const MAKE_CONSTITUENCY_LEADER = gql`
           firstName
           lastName
         }
-        # history(options: { limit: 10 }) {
+        # history(options: { limit: 5 }) {
         #   id
         #   timeStamp
         #   created_at {
@@ -153,6 +170,10 @@ export const MAKE_CONSTITUENCY_LEADER = gql`
         #   historyRecord
         # }
       }
+    }
+    ConnectChurchHistory(churchId: $constituencyId) {
+      id
+      historyRecord
     }
   }
 `
@@ -168,7 +189,11 @@ export const MAKE_COUNCIL_LEADER = gql`
       firstName
       lastName
     }
-    MakeCouncilLeader(councilId: $councilId, leaderId: $newLeaderId) {
+    MakeCouncilLeader(
+      councilId: $councilId
+      leaderId: $newLeaderId
+      oldLeaderId: $oldLeaderId
+    ) {
       id
       firstName
       lastName
@@ -179,7 +204,7 @@ export const MAKE_COUNCIL_LEADER = gql`
           firstName
           lastName
         }
-        # history(options: { limit: 10 }) {
+        # history(options: { limit: 5 }) {
         #   id
         #   timeStamp
         #   created_at {
@@ -193,6 +218,10 @@ export const MAKE_COUNCIL_LEADER = gql`
         #   historyRecord
         # }
       }
+    }
+    ConnectChurchHistory(churchId: $councilId) {
+      id
+      historyRecord
     }
   }
 `
@@ -208,7 +237,11 @@ export const MAKE_STREAM_LEADER = gql`
       firstName
       lastName
     }
-    MakeStreamLeader(streamId: $streamId, leaderId: $newLeaderId) {
+    MakeStreamLeader(
+      streamId: $streamId
+      leaderId: $newLeaderId
+      oldLeaderId: $oldLeaderId
+    ) {
       id
       firstName
       lastName
@@ -219,7 +252,7 @@ export const MAKE_STREAM_LEADER = gql`
           firstName
           lastName
         }
-        # history(options: { limit: 10 }) {
+        # history(options: { limit: 5 }) {
         #   id
         #   timeStamp
         #   created_at {
@@ -233,6 +266,10 @@ export const MAKE_STREAM_LEADER = gql`
         #   historyRecord
         # }
       }
+    }
+    ConnectChurchHistory(churchId: $streamId) {
+      id
+      historyRecord
     }
   }
 `

@@ -1,7 +1,4 @@
-import {
-  permitArrivalsAndThoseAbove,
-  permitMeAndThoseAbove,
-} from 'global-utils'
+import { permitArrivals, permitLeaderAdmin } from 'permission-utils'
 
 export const menuItems = [
   { name: 'Home', to: '/', roles: ['all'] },
@@ -18,17 +15,20 @@ export const menuItems = [
   {
     name: 'Services',
     to: '/services/church-list',
-    roles: permitMeAndThoseAbove('Fellowship'),
+    roles: permitLeaderAdmin('Fellowship'),
   },
   {
     name: 'Arrivals',
     to: '/arrivals',
-    roles: permitArrivalsAndThoseAbove('Bacenta'),
+    roles: [
+      ...permitLeaderAdmin('Fellowship'),
+      ...permitArrivals('Fellowship'),
+    ],
   },
   {
     name: 'Campaigns',
     to: '/campaigns',
-    roles: permitMeAndThoseAbove('Constituency'),
+    roles: permitLeaderAdmin('Constituency'),
   },
   {
     name: 'Maps',

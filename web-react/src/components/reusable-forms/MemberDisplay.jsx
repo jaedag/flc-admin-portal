@@ -9,7 +9,6 @@ import {
   transformCloudinaryImg,
   throwErrorMsg,
   getHighestTitle,
-  permitAdminAndThoseAbove,
 } from '../../global-utils'
 import {
   DISPLAY_MEMBER_ADMIN,
@@ -23,6 +22,7 @@ import DetailsCard from 'components/card/DetailsCard'
 import EditButton from 'components/buttons/EditButton'
 import RoleView from 'auth/RoleView'
 import ViewAll from 'components/buttons/ViewAll'
+import { permitAdmin } from 'permission-utils'
 
 const MemberDisplay = ({ memberId }) => {
   const {
@@ -52,7 +52,7 @@ const MemberDisplay = ({ memberId }) => {
 
   return (
     <Container>
-      <RoleView roles={permitAdminAndThoseAbove('Constituency')}>
+      <RoleView roles={permitAdmin('Constituency')}>
         <EditButton link="/member/editmember" />
       </RoleView>
 

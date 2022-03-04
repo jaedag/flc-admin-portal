@@ -4,7 +4,6 @@ import * as Yup from 'yup'
 import {
   DECIMAL_NUM_REGEX,
   makeSelectOptions,
-  permitAdminAndThoseAbove,
   SERVICE_DAY_OPTIONS,
   throwErrorMsg,
   VACATION_OPTIONS,
@@ -28,6 +27,7 @@ import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import HeadingSecondary from 'components/HeadingSecondary'
 import SubmitButton from 'components/formik-components/SubmitButton'
 import { DISPLAY_BACENTA } from 'pages/directory/display/ReadQueries'
+import { permitAdmin } from 'permission-utils'
 
 const FellowshipForm = (props) => {
   const { clickCard, isOpen, togglePopup, fellowshipId, councilId } =
@@ -106,12 +106,9 @@ const FellowshipForm = (props) => {
                   {/* <!-- Basic Info Div --> */}
                   <Col className="mb-2">
                     <Row className="form-row">
-                      <RoleView
-                        roles={permitAdminAndThoseAbove('Constituency')}
-                      >
+                      <RoleView roles={permitAdmin('Constituency')}>
                         <Col>
                           <FormikControl
-                            className="form-control"
                             control="select"
                             label={`Constituency`}
                             name="constituencySelect"
@@ -127,7 +124,6 @@ const FellowshipForm = (props) => {
                           />
 
                           <FormikControl
-                            className="form-control"
                             control="selectWithQuery"
                             name="bacenta"
                             label="Bacenta"
@@ -144,12 +140,9 @@ const FellowshipForm = (props) => {
                     </Row>
 
                     <Row className="form-row">
-                      <RoleView
-                        roles={permitAdminAndThoseAbove('Constituency')}
-                      >
+                      <RoleView roles={permitAdmin('Constituency')}>
                         <Col sm={12}>
                           <FormikControl
-                            className="form-control"
                             control="input"
                             name="name"
                             label="Name of Fellowship"
@@ -159,7 +152,6 @@ const FellowshipForm = (props) => {
 
                         <Col sm={12}>
                           <FormikControl
-                            className="form-control"
                             control="select"
                             label="Meeting Day"
                             name="meetingDay"
@@ -170,7 +162,6 @@ const FellowshipForm = (props) => {
 
                         <Col sm={12}>
                           <FormikControl
-                            className="form-control"
                             control="select"
                             label="Vacation Status"
                             name="vacationStatus"
@@ -179,9 +170,7 @@ const FellowshipForm = (props) => {
                           />
                         </Col>
                       </RoleView>
-                      <RoleView
-                        roles={permitAdminAndThoseAbove('Constituency')}
-                      >
+                      <RoleView roles={permitAdmin('Constituency')}>
                         <Col sm={12}>
                           <FormikControl
                             control="memberSearch"
@@ -191,7 +180,6 @@ const FellowshipForm = (props) => {
                             placeholder="Select a Leader"
                             setFieldValue={formik.setFieldValue}
                             aria-describedby="Member Search Box"
-                            className="form-control"
                             error={formik.errors.leaderId}
                           />
                         </Col>
@@ -204,7 +192,6 @@ const FellowshipForm = (props) => {
                     <Row className="row-cols-2 d-flex align-items-center">
                       <Col>
                         <FormikControl
-                          className="form-control"
                           control="input"
                           name="venueLatitude"
                           placeholder="Latitude"
@@ -212,7 +199,6 @@ const FellowshipForm = (props) => {
                       </Col>
                       <Col>
                         <FormikControl
-                          className="form-control"
                           control="input"
                           name="venueLongitude"
                           placeholder="Longitude"

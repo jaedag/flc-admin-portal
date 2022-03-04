@@ -1,12 +1,8 @@
 import { useLazyQuery } from '@apollo/client'
 import { MemberContext } from 'contexts/MemberContext'
 import { ErrorMessage } from 'formik'
-import {
-  DEBOUNCE_TIMER,
-  isAuthorised,
-  permitMeAndThoseAbove,
-  throwErrorMsg,
-} from 'global-utils'
+import { DEBOUNCE_TIMER, isAuthorised, throwErrorMsg } from 'global-utils'
+import { permitMe } from 'permission-utils'
 import React, { useContext, useEffect, useState } from 'react'
 import Autosuggest from 'react-autosuggest'
 import {
@@ -63,36 +59,28 @@ const SearchBacenta = (props) => {
   throwErrorMsg(error)
 
   const whichSearch = (searchString) => {
-    if (
-      isAuthorised(permitMeAndThoseAbove('GatheringService'), currentUser.roles)
-    ) {
+    if (isAuthorised(permitMe('GatheringService'), currentUser.roles)) {
       gatheringServiceSearch({
         variables: {
           id: currentUser.gatheringService,
           key: searchString?.trim(),
         },
       })
-    } else if (
-      isAuthorised(permitMeAndThoseAbove('Stream'), currentUser.roles)
-    ) {
+    } else if (isAuthorised(permitMe('Stream'), currentUser.roles)) {
       streamSearch({
         variables: {
           id: currentUser.stream,
           key: searchString?.trim(),
         },
       })
-    } else if (
-      isAuthorised(permitMeAndThoseAbove('Council'), currentUser.roles)
-    ) {
+    } else if (isAuthorised(permitMe('Council'), currentUser.roles)) {
       councilSearch({
         variables: {
           id: currentUser.council,
           key: searchString?.trim(),
         },
       })
-    } else if (
-      isAuthorised(permitMeAndThoseAbove('Constituency'), currentUser.roles)
-    ) {
+    } else if (isAuthorised(permitMe('Constituency'), currentUser.roles)) {
       constituencySearch({
         variables: {
           id: currentUser.constituency,

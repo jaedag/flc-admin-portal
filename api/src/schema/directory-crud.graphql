@@ -1,26 +1,42 @@
 extend type Mutation {
   #resolver Mutations
-  MakeStreamAdmin(adminId: ID!, streamId: ID!): Member
+  MakeStreamAdmin(adminId: ID!, streamId: ID!, oldAdminId: ID): Member
   RemoveStreamAdmin(adminId: ID!, streamId: ID!): Member
-  MakeCouncilAdmin(adminId: ID!, councilId: ID!): Member
+  MakeCouncilAdmin(adminId: ID!, councilId: ID!, oldAdminId: ID): Member
   RemoveCouncilAdmin(adminId: ID!, councilId: ID!): Member
-  MakeConstituencyAdmin(adminId: ID!, constituencyId: ID!): Member
+  MakeConstituencyAdmin(
+    adminId: ID!
+    constituencyId: ID!
+    oldAdminId: ID
+  ): Member
   RemoveConstituencyAdmin(adminId: ID!, constituencyId: ID!): Member
 
   #Pastoral Roles
-  MakeFellowshipLeader(leaderId: ID!, fellowshipId: ID!): Member
+  MakeFellowshipLeader(
+    leaderId: ID!
+    fellowshipId: ID!
+    oldLeaderId: ID
+  ): Member
   RemoveFellowshipLeader(leaderId: ID!, fellowshipId: ID!): Member
-  MakeBacentaLeader(leaderId: ID!, bacentaId: ID!): Member
+  MakeBacentaLeader(leaderId: ID!, bacentaId: ID!, oldLeaderId: ID): Member
   RemoveBacentaLeader(leaderId: ID!, bacentaId: ID!): Member
-  MakeSontaLeader(leaderId: ID!, sontaId: ID!): Member
+  MakeSontaLeader(leaderId: ID!, sontaId: ID!, oldLeaderId: ID): Member
   RemoveSontaLeader(leaderId: ID!, sontaId: ID!): Member
-  MakeConstituencyLeader(leaderId: ID!, constituencyId: ID!): Member
+  MakeConstituencyLeader(
+    leaderId: ID!
+    constituencyId: ID!
+    oldLeaderId: ID
+  ): Member
   RemoveConstituencyLeader(leaderId: ID!, constituencyId: ID!): Member
-  MakeCouncilLeader(leaderId: ID!, councilId: ID!): Member
+  MakeCouncilLeader(leaderId: ID!, councilId: ID!, oldLeaderId: ID): Member
   RemoveCouncilLeader(leaderId: ID!, councilId: ID!): Member
-  MakeStreamLeader(leaderId: ID!, streamId: ID!): Member
+  MakeStreamLeader(leaderId: ID!, streamId: ID!, oldLeaderId: ID): Member
   RemoveStreamLeader(leaderId: ID!, streamId: ID!): Member
-  MakeGatheringServiceLeader(leaderId: ID!, gatheringServiceId: ID!): Member
+  MakeGatheringServiceLeader(
+    leaderId: ID!
+    gatheringServiceId: ID!
+    oldLeaderId: ID
+  ): Member
   RemoveGatheringServiceLeader(leaderId: ID!, gatheringServiceId: ID!): Member
 }
 
@@ -38,6 +54,7 @@ extend type Mutation {
 
       WITH log,fellowship
       MATCH (admin:Member {auth_id: $auth.jwt.sub})
+      MATCH (fellowship)<-[:HAS]-(bacenta:Bacenta)
       MERGE (date:TimeGraph {date:date()})
       MERGE (log)-[:LOGGED_BY]->(admin)
       MERGE (log)-[:RECORDED_ON]->(date)
@@ -45,9 +62,34 @@ extend type Mutation {
       MERGE (bacenta)-[:HAS_HISTORY]->(log)
 
       SET fellowship:Vacation
-      REMOVE fellowship:ActiveFellowship
+      REMOVE fellowship:Active:Fellowship
 
       RETURN fellowship
+      """
+    )
+  #Set Bacenta to be 'OnVacation
+  SetVacationBacenta(bacentaId: ID!): Bacenta
+    @cypher(
+      statement: """
+      MATCH (bacenta:Bacenta {id:$bacentaId})
+
+      CREATE (log:HistoryLog {id:apoc.create.uuid()})
+        SET log.timeStamp = datetime(),
+        log.historyRecord = bacenta.name + ' Bacenta went on vacation mode'
+
+      WITH log,bacenta
+      MATCH (admin:Member {auth_id: $auth.jwt.sub})
+      MATCH (bacenta)<-[:HAS]-(constituency:Constituency)
+      MERGE (date:TimeGraph {date:date()})
+      MERGE (log)-[:LOGGED_BY]->(admin)
+      MERGE (log)-[:RECORDED_ON]->(date)
+      MERGE (bacenta)-[:HAS_HISTORY]->(log)
+      MERGE (constituency)-[:HAS_HISTORY]->(log)
+
+      SET bacenta:Vacation
+      REMOVE bacenta:Active:Bacenta
+
+      RETURN bacenta
       """
     )
 
@@ -63,16 +105,43 @@ extend type Mutation {
 
       WITH log,fellowship
       MATCH (admin:Member {auth_id: $auth.jwt.sub})
+      MATCH (fellowship)<-[:HAS]-(bacenta:Bacenta)
       MERGE (date:TimeGraph {date:date()})
       MERGE (log)-[:LOGGED_BY]->(admin)
       MERGE (log)-[:RECORDED_ON]->(date)
       MERGE (fellowship)-[:HAS_HISTORY]->(log)
       MERGE (bacenta)-[:HAS_HISTORY]->(log)
 
-      SET fellowship:ActiveFellowship
+      SET fellowship:Active:Fellowship
       REMOVE fellowship:Vacation
 
       RETURN fellowship
+      """
+    )
+
+  #Set Bacenta to be 'Active
+  SetActiveBacenta(bacentaId: ID!): Bacenta
+    @cypher(
+      statement: """
+      MATCH (bacenta:Bacenta {id:$bacentaId})
+
+      CREATE (log:HistoryLog {id:apoc.create.uuid()})
+        SET log.timeStamp = datetime(),
+        log.historyRecord = bacenta.name + ' Bacenta was made active again'
+
+      WITH log,bacenta
+      MATCH (admin:Member {auth_id: $auth.jwt.sub})
+      MATCH (bacenta)<-[:HAS]-(constituency:Constituency)
+      MERGE (date:TimeGraph {date:date()})
+      MERGE (log)-[:LOGGED_BY]->(admin)
+      MERGE (log)-[:RECORDED_ON]->(date)
+      MERGE (bacenta)-[:HAS_HISTORY]->(log)
+      MERGE (constituency)-[:HAS_HISTORY]->(log)
+
+      SET bacenta:Active:Bacenta
+      REMOVE bacenta:Vacation
+
+      RETURN bacenta
       """
     )
 }
@@ -124,11 +193,10 @@ extend type Mutation {
       MERGE (date:TimeGraph {date: date()})
       MERGE (log)-[:LOGGED_BY]->(currentUser)
       MERGE (log)-[:RECORDED_ON]->(date)
-      MERGE (stream)-[r1:HAS_HISTORY]->(log)
+      MERGE (stream)-[:HAS_HISTORY]->(log)
       MERGE (gatheringService)-[r2:HAS_HISTORY]->(log)
       MERGE (leader)-[r3:HAS_HISTORY]->(log)
-        SET r1.current = true,
-        r2.current = true,
+        SET r2.current = true,
         r3.current = true
 
       WITH stream, gatheringService
@@ -401,7 +469,7 @@ extend type Mutation {
     @cypher(
       statement: """
       MATCH (lastCode:LastBankingCode)
-      CREATE (fellowship:Fellowship:ActiveFellowship {name:$name,location: point({latitude:toFloat($venueLatitude), longitude:toFloat($venueLongitude), crs:'WGS-84'})})
+      CREATE (fellowship:Fellowship:Active:Fellowship {name:$name,location: point({latitude:toFloat($venueLatitude), longitude:toFloat($venueLongitude), crs:'WGS-84'})})
          	SET
       	fellowship.id = apoc.create.uuid(),
         fellowship.bankingCode = lastCode.number + 1,
@@ -425,12 +493,13 @@ extend type Mutation {
 
 ### UPDATE OPERATIONS ###
 extend type Mutation {
+  UpdateMemberEmail(id: ID!, email: String!): Member
+
   UpdateMemberDetails(
     id: ID!
     firstName: String!
     middleName: String
     lastName: String!
-    email: String
     phoneNumber: String!
     whatsappNumber: String
     dob: String
@@ -463,7 +532,6 @@ extend type Mutation {
       	member.firstName = $firstName,
       	member.middleName = $middleName,
       	member.lastName = $lastName,
-      	member.email = $email,
       	member.phoneNumber = $phoneNumber,
         member.whatsappNumber = $whatsappNumber,
       	member.pictureUrl = $pictureUrl
@@ -623,6 +691,7 @@ extend type Mutation {
     bacentaId: ID!
     name: String!
     constituencyId: ID!
+    zone: Int!
   ): Bacenta
     @auth(
       rules: [
@@ -632,6 +701,7 @@ extend type Mutation {
             "adminStream"
             "adminCouncil"
             "adminConstituency"
+            "arrivalsAdminConstituency"
           ]
         }
       ]
@@ -640,6 +710,12 @@ extend type Mutation {
       statement: """
       MATCH (bacenta:Bacenta {id: $bacentaId})
       	SET bacenta.name = $name
+
+      WITH bacenta
+      MATCH (bacenta)-[r:BUSSES_FROM]->(:BussingZone)
+      MATCH (zone:BussingZone {number: $zone})
+      DELETE r
+      MERGE (bacenta)-[:BUSSES_FROM]->(zone)
 
       WITH bacenta
          CALL {

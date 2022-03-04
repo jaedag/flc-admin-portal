@@ -53,7 +53,6 @@ const Filters = ({ ToggleAccordion }) => {
               <Col className="filter-col">
                 <FormikControl
                   label="Gender"
-                  className="form-control"
                   control="checkbox"
                   name="gender"
                   options={GENDER_OPTIONS}
@@ -62,7 +61,6 @@ const Filters = ({ ToggleAccordion }) => {
               <Col className="filter-col">
                 <FormikControl
                   label="Marital Status"
-                  className="form-control"
                   control="checkbox"
                   name="maritalStatus"
                   options={MARITAL_STATUS_OPTIONS}
@@ -71,7 +69,6 @@ const Filters = ({ ToggleAccordion }) => {
 
               <Col className="filter-col">
                 <FormikControl
-                  className="form-control"
                   control="checkboxWithQuery"
                   name="ministry"
                   modifier="filter"
@@ -85,7 +82,6 @@ const Filters = ({ ToggleAccordion }) => {
               <Col className="filter-col">
                 <FormikControl
                   label="Leader Rank"
-                  className="form-control"
                   name="leaderRank"
                   control="checkbox"
                   options={LEADER_OPTIONS}
@@ -94,7 +90,6 @@ const Filters = ({ ToggleAccordion }) => {
               <Col className="filter-col">
                 <FormikControl
                   label="Leader Title"
-                  className="form-control"
                   name="leaderTitle"
                   control="checkbox"
                   options={TITLE_OPTIONS}

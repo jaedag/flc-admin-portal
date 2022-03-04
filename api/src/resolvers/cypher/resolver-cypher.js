@@ -23,8 +23,8 @@ WITH apoc.cypher.runFirstColumn(
   RETURN adminCouncil", {this: member}, true) | member_adminCouncils { .id,.name}],
    isAdminForStream: [ member_adminStreams IN apoc.cypher.runFirstColumn("MATCH (this)-[:IS_ADMIN_FOR]-(adminStream:Member)
   RETURN adminStream", {this: member}, true) | member_adminStreams { .id,.name}],
-  isAdminForConstituencyArrivals: [ member_adminConstituencyArrivals IN apoc.cypher.runFirstColumn("MATCH (this)-[:IS_ARRIVALS_FOR]-(adminConstituencyArrivals:Constituency)
-  RETURN adminConstituencyArrivals", {this: member}, true) | member_adminConstituencyArrivals { .id,.name }] } AS member
+  isArrivalsAdminForConstituency: [ member_arrivalsAdminConstituency IN apoc.cypher.runFirstColumn("MATCH (this)-[:DOES_ARRIVALS_FOR]-(arrivalsAdminConstituency:Constituency)
+  RETURN arrivalsAdminConstituency", {this: member}, true) | member_arrivalsAdminConstituency { .id,.name }] } AS member
   `
 
 export const matchChurchQuery = `
@@ -38,6 +38,12 @@ export const setMemberAuthId = `
 MATCH (member:Member {id:$id})
 SET member.auth_id = $auth_id
 RETURN member.auth_id`
+
+export const updateMemberEmail = `
+MATCH (member:Member {id: $id})
+    SET member.email = $email
+RETURN member.id AS id, member.auth_id AS auth_id, member.firstName AS firstName, member.lastName AS lastName, member.email AS email, member.pictureUrl AS pictureUrl
+`
 
 export const removeMemberAuthId = `
 MATCH (member:Member {auth_id:$auth_id})
@@ -58,46 +64,6 @@ CREATE (log:HistoryLog)
 
 RETURN member.id`
 
-export const makeSontaLeader = `
-MATCH (leader:Member {id:$leaderId})
-MATCH (sonta:Sonta {id:$sontaId})
-OPTIONAL MATCH (sonta)<-[:HAS_SONTA]-(constituency) 
-UNWIND labels(constituency) AS stream
-CREATE (log:HistoryLog:ServiceLog)
-  SET leader.auth_id = $auth_id,
-   log.id = apoc.create.uuid(),
-   log.timeStamp = datetime(),
-   log.historyRecord = leader.firstName + ' ' +leader.lastName + ' started ' + sonta.name +' Sonta under '+ constituency.name + ' ' + stream
-WITH leader,sonta, log
-OPTIONAL MATCH (sonta)<-[oldLeads:LEADS]-(oldLeader:Member)
-OPTIONAL MATCH (sonta)-[oldHistory:HAS_HISTORY]->()-[oldLeaderHistory:HAS_HISTORY]-(oldLeader)
-SET oldHistory.current = false, oldLeaderHistory.current = false //nullify old history relationship
-   DELETE oldLeads //Delete old relationship
-WITH log,sonta,oldLeader,leader 
-       CALL{
-         WITH log,sonta,oldLeader, leader
-         WITH log,sonta,oldLeader, leader 
-         WHERE EXISTS (oldLeader.firstName) AND oldLeader.id <> $leaderId
-        
-       MERGE (oldLeader)-[hasHistory:HAS_HISTORY]->(log)
-       SET hasHistory.neverLed = true,
-       log.historyRecord = leader.firstName + ' ' +leader.lastName + ' became the leader of ' + sonta.name + " Sonta replacing " + oldLeader.firstName +" "+oldLeader.lastName
-       RETURN COUNT(log)
-       }
-  
-   MATCH (currentUser:Member {auth_id:$auth.jwt.sub}) 
-   WITH currentUser, leader, sonta, log
-   MERGE (leader)-[:LEADS]->(sonta)
-   MERGE (log)-[:LOGGED_BY]->(currentUser)
-   MERGE (date:TimeGraph {date: date()})
-   MERGE (log)-[:RECORDED_ON]->(date)
-   MERGE (leader)-[r1:HAS_HISTORY]->(log)
-   MERGE (sonta)-[r2:HAS_HISTORY]->(log)
-   SET r1.current = true,
-   r2.current = true
-   RETURN leader.id AS id, leader.auth_id AS auth_id, leader.firstName AS firstName, leader.lastName AS lastName
-`
-
 // Adding the records of the services underneath so that we can have the total attendances and incomes
 export const componentServiceAggregates = `
  MATCH (church {id:$id}) WHERE church:Bacenta OR church:Constituency OR church:Council OR church:Stream OR church:GatheringService
@@ -109,7 +75,7 @@ export const componentServiceAggregates = `
   WHERE date.date > date() - duration({months: 2})
   WITH DISTINCT componentServices,componentRecords, date(date.date).week AS week ORDER BY week
 
-RETURN week AS week,SUM(componentRecords.attendance) AS attendance, SUM(componentRecords.income) AS income LIMIT toInteger($limit)
+RETURN week AS week,SUM(componentRecords.attendance) AS attendance, SUM(componentRecords.income) AS income ORDER BY week DESC LIMIT toInteger($limit)
 `
 
 export const checkMemberEmailExists = `

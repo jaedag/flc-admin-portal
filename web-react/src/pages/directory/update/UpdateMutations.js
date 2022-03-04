@@ -6,7 +6,6 @@ export const UPDATE_MEMBER_MUTATION = gql`
     $firstName: String!
     $middleName: String
     $lastName: String!
-    $email: String!
     $phoneNumber: String!
     $whatsappNumber: String
     $dob: String
@@ -22,7 +21,6 @@ export const UPDATE_MEMBER_MUTATION = gql`
       firstName: $firstName
       middleName: $middleName
       lastName: $lastName
-      email: $email
       phoneNumber: $phoneNumber
       whatsappNumber: $whatsappNumber
       dob: $dob
@@ -77,6 +75,18 @@ export const UPDATE_MEMBER_MUTATION = gql`
     }
   }
 `
+
+export const UPDATE_MEMBER_EMAIL = gql`
+  mutation UpdateMemberEmail($id: ID!, $email: String!) {
+    UpdateMemberEmail(id: $id, email: $email) {
+      id
+      firstName
+      lastName
+      email
+    }
+  }
+`
+
 export const UPDATE_STREAM_MUTATION = gql`
   mutation UpdateStream(
     $streamId: ID!
@@ -119,7 +129,7 @@ export const UPDATE_STREAM_MUTATION = gql`
         firstName
         lastName
       }
-      history(options: { limit: 10 }) {
+      history(options: { limit: 5 }) {
         id
         timeStamp
         created_at {
@@ -174,7 +184,7 @@ export const UPDATE_COUNCIL_MUTATION = gql`
         firstName
         lastName
       }
-      history(options: { limit: 10 }) {
+      history(options: { limit: 5 }) {
         id
         timeStamp
         created_at {
@@ -236,7 +246,7 @@ export const UPDATE_CONSTITUENCY_MUTATION = gql`
         firstName
         lastName
       }
-      history(options: { limit: 10 }) {
+      history(options: { limit: 5 }) {
         id
         timeStamp
         created_at {
@@ -258,14 +268,19 @@ export const UPDATE_BACENTA_MUTATION = gql`
     $bacentaId: ID!
     $name: String!
     $constituencyId: ID!
+    $zone: Int!
   ) {
     UpdateBacentaDetails(
       bacentaId: $bacentaId
       name: $name
       constituencyId: $constituencyId
+      zone: $zone
     ) {
       id
       name
+      zone {
+        number
+      }
       fellowships {
         id
         name
@@ -298,7 +313,7 @@ export const UPDATE_BACENTA_MUTATION = gql`
           title
         }
       }
-      history(options: { limit: 10 }) {
+      history(options: { limit: 5 }) {
         id
         timeStamp
         created_at {
@@ -334,7 +349,7 @@ export const UPDATE_SONTA_MUTATION = gql`
           title
         }
       }
-      history(options: { limit: 10 }) {
+      history(options: { limit: 5 }) {
         id
         timeStamp
         created_at {
@@ -395,7 +410,7 @@ export const UPDATE_FELLOWSHIP = gql`
         pictureUrl
       }
 
-      history(options: { limit: 10 }) {
+      history(options: { limit: 5 }) {
         id
         timeStamp
         created_at {

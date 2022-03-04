@@ -14,6 +14,7 @@ export const CONSTIUENCY_ARRIVALS_DASHBOARD = gql`
         id
         firstName
         lastName
+        fullName
         pictureUrl
       }
       bacentas {
@@ -38,6 +39,7 @@ export const COUNCIL_ARRIVALS_DASHBOARD = gql`
         id
         firstName
         lastName
+        fullName
         pictureUrl
       }
       bacentaCount
@@ -80,20 +82,14 @@ export const BACENTA_ARRIVALS = gql`
       id
       name
       arrivalsCodeOfTheDay
-    }
-  }
-`
-
-export const BACENTA_LEADER_ARRIVALS = gql`
-  query ($id: ID) {
-    members(where: { id: $id }, options: { limit: 1 }) {
-      id
-      firstName
-      lastName
-      fullName
-      leadsBacenta {
+      bussing(limit: 1) {
         id
-        name
+        serviceDate {
+          date
+        }
+        week
+        mobilisationPicture
+        bussingPictures
       }
     }
   }
@@ -196,6 +192,7 @@ export const DISPLAY_BUSSING_RECORDS = gql`
         date
       }
       week
+      mobilisationPicture
       attendance
       bussingPictures
       bussingCost
@@ -203,10 +200,16 @@ export const DISPLAY_BUSSING_RECORDS = gql`
       offeringRaised
       numberOfBusses
       numberOfCars
+      comments
+      arrivalTime
     }
     bacentas(where: { id: $bacentaId }) {
       id
       name
+      zone {
+        number
+        bussingTopUp
+      }
     }
   }
 `

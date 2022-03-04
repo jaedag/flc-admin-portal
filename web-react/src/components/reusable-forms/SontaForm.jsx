@@ -1,7 +1,8 @@
 import BaseComponent from 'components/base-component/BaseComponent'
 import { Form, Formik } from 'formik'
 import * as Yup from 'yup'
-import { makeSelectOptions, permitAdminAndThoseAbove } from 'global-utils'
+import { makeSelectOptions } from 'global-utils'
+import { permitAdmin } from 'permission-utils'
 import { GET_COUNCIL_CONSTITUENCIES, GET_MINISTRIES } from 'queries/ListQueries'
 import React, { useContext } from 'react'
 import FormikControl from 'components/formik-components/FormikControl'
@@ -88,9 +89,8 @@ const SontaForm = ({ initialValues, onSubmit, title, loading, newSonta }) => {
                   <div className="col mb-2">
                     <div className="form-row row-cols-2">
                       <div className="col-10">
-                        <RoleView roles={permitAdminAndThoseAbove('Council')}>
+                        <RoleView roles={permitAdmin('Council')}>
                           <FormikControl
-                            className="form-control"
                             control="select"
                             label={`Select a Constituency`}
                             name="constituency"
@@ -98,9 +98,7 @@ const SontaForm = ({ initialValues, onSubmit, title, loading, newSonta }) => {
                             defaultOption={`Select a Constituency`}
                           />
                         </RoleView>
-                        <RoleView
-                          roles={permitAdminAndThoseAbove('Constituency')}
-                        >
+                        <RoleView roles={permitAdmin('Constituency')}>
                           <label className="label">{`Constituency:`}</label>
                           <div className="pl-2">
                             <p>{`${constituency?.name} Constituency`}</p>
@@ -112,7 +110,6 @@ const SontaForm = ({ initialValues, onSubmit, title, loading, newSonta }) => {
                     <div className="form-row row-cols-3">
                       <div className="col-10">
                         <FormikControl
-                          className="form-control"
                           label="Ministry*"
                           control="select"
                           name="ministrySelect"
@@ -133,7 +130,6 @@ const SontaForm = ({ initialValues, onSubmit, title, loading, newSonta }) => {
                           placeholder="Select a Leader"
                           setFieldValue={formik.setFieldValue}
                           aria-describedby="Member Search Box"
-                          className="form-control"
                           error={formik.errors.leaderId}
                         />
                       </div>

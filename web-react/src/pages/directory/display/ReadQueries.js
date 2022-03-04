@@ -165,7 +165,7 @@ export const DISPLAY_FELLOWSHIP = gql`
   query ($id: ID) {
     fellowships(where: { id: $id }, options: { limit: 1 }) {
       id
-      labels
+      vacationStatus
       stream_name
       bankingCode
       name
@@ -249,7 +249,7 @@ export const DISPLAY_SONTA = gql`
           name
         }
       }
-      history(options: { limit: 10 }) {
+      history(options: { limit: 5 }) {
         id
         timeStamp
         created_at {
@@ -278,7 +278,11 @@ export const DISPLAY_BACENTA = gql`
     bacentas(where: { id: $id }, options: { limit: 1 }) {
       id
       name
-      labels
+      vacationStatus
+      graduationStatus
+      zone {
+        number
+      }
       stream_name
       fellowships {
         id
@@ -313,7 +317,7 @@ export const DISPLAY_BACENTA = gql`
           title
         }
       }
-      history(options: { limit: 10 }) {
+      history(options: { limit: 5 }) {
         id
         timeStamp
         created_at {
@@ -383,7 +387,7 @@ export const DISPLAY_CONSTITUENCY = gql`
         fullName
         pictureUrl
       }
-      history(options: { limit: 10 }) {
+      history(options: { limit: 5 }) {
         id
         timeStamp
         created_at {
@@ -451,7 +455,7 @@ export const DISPLAY_COUNCIL = gql`
         fullName
         pictureUrl
       }
-      history(options: { limit: 10 }) {
+      history(options: { limit: 5 }) {
         id
         timeStamp
         created_at {
@@ -501,7 +505,7 @@ export const DISPLAY_STREAM = gql`
         lastName
         pictureUrl
       }
-      history(options: { limit: 10 }) {
+      history(options: { limit: 5 }) {
         id
         timeStamp
         created_at {
@@ -551,7 +555,7 @@ export const DISPLAY_GATHERINGSERVICE = gql`
         fullName
         pictureUrl
       }
-      history(options: { limit: 10 }) {
+      history(options: { limit: 5 }) {
         id
         timeStamp
         created_at {

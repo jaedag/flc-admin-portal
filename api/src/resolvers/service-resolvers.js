@@ -13,6 +13,7 @@ const getComponentServiceAggregates = async (obj, args, context) => {
     let serviceAggregate = {}
 
     record.keys.forEach((key, i) => (serviceAggregate[key] = record._fields[i]))
+
     serviceAggregates.push(serviceAggregate)
   })
 

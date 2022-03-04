@@ -3,7 +3,7 @@ import RoleView from 'auth/RoleView'
 import UserProfileIcon from 'components/UserProfileIcon/UserProfileIcon'
 import { ChurchContext } from 'contexts/ChurchContext'
 import { MemberContext } from 'contexts/MemberContext'
-import { authorisedLink, permitMeAndThoseAbove, plural } from 'global-utils'
+import { authorisedLink, plural } from 'global-utils'
 import { getServiceGraphData } from 'pages/services/reports/report-utils'
 import React, { useContext, useEffect } from 'react'
 import { Container, Nav, Navbar, Offcanvas, Row, Col } from 'react-bootstrap'
@@ -20,12 +20,14 @@ import { useAuth0 } from '@auth0/auth0-react'
 import { GET_LOGGED_IN_USER } from 'components/UserProfileIcon/UserQueries'
 import SearchBox from 'components/SearchBox'
 import { Moon, Sun } from 'react-bootstrap-icons'
+import { permitMe } from 'permission-utils'
 
 const Navigator = () => {
   const { currentUser, theme, setTheme, setUserJobs, setCurrentUser } =
     useContext(MemberContext)
   const { clickCard } = useContext(ChurchContext)
   const { user } = useAuth0()
+
   const { data } = useQuery(SERVANTS_DASHBOARD, {
     variables: { id: currentUser.id },
   })
@@ -63,6 +65,7 @@ const Navigator = () => {
         email: user?.email,
         roles: user ? user[`https://flcadmin.netlify.app/roles`] : [],
       })
+      sessionStorage.setItem('currentUser', JSON.stringify({ ...currentUser }))
     },
   })
 
@@ -102,7 +105,7 @@ const Navigator = () => {
         break
     }
 
-    const permittedForLink = permitMeAndThoseAbove(churchType)
+    const permittedForLink = permitMe(churchType)
 
     if (servantType === 'Admin') {
       const adminsOneChurch = servant[`${verb}`].length === 1 ?? false

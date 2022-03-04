@@ -8,7 +8,7 @@ import './MenuButton.css'
 const MenuButton = (props) => {
   const { theme } = useContext(MemberContext)
 
-  const icon = props.icon || props.iconComponent || props.avatar
+  const icon = props.icon || props.iconComponent || props.avatar || props.number
 
   return (
     <Button
@@ -30,6 +30,7 @@ const MenuButton = (props) => {
                 {props.avatar && <img src={props.avatar} className="avatar" />}
                 {props.icon && <img src={props.icon} className="square-img" />}
                 {props.iconComponent && <props.iconComponent />}
+                {props.number && <div className="fw-bold">{props.number}</div>}
               </div>
               {props.iconCaption && (
                 <small className={`${theme} icon-caption`}>
@@ -42,7 +43,7 @@ const MenuButton = (props) => {
 
         <Col className="btn-right-col">
           <PlaceholderCustom loading={!props.title} as="div" xs={10}>
-            <span> {capitalise(props.title)}</span>
+            <span>{capitalise(props.title)}</span>
           </PlaceholderCustom>
           {!props.noCaption && (
             <PlaceholderCustom loading={!props.caption} as="div" xs={10}>

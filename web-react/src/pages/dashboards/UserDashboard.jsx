@@ -65,7 +65,7 @@ const UserDashboard = () => {
 
             <Col>
               <StatDisplay
-                title="Avg Weekly Income (in GH₵)"
+                title="Avg Weekly Income (GH₵)"
                 loading={!userJobs?.assessmentData}
                 statistic={getMonthlyStatAverage(
                   userJobs?.assessmentData,

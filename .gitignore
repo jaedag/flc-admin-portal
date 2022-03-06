@@ -20,7 +20,6 @@ build/
 .env.development.local
 .env.test.local
 .env.production.local
-*.cql
 .eslintcache
 yarn.lock
 npm-debug.log*

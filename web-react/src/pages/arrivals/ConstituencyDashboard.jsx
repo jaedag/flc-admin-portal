@@ -128,6 +128,13 @@ const ConstituencyDashboard = () => {
             noCaption
           />
           <MenuButton
+            title="Bacentas Mobilising"
+            onClick={() => navigate('/arrivals/bacentas-mobilising')}
+            number={`12`}
+            iconBg
+            noCaption
+          />
+          <MenuButton
             title="Bacentas On The Way"
             onClick={() => navigate('/arrivals/bacentas-on-the-way')}
             iconComponent={Forward}
@@ -149,7 +156,7 @@ const ConstituencyDashboard = () => {
             noCaption
           />
           <MenuButton
-            title="Bacentas That Have Arrived"
+            title="Bacentas That Have Money Sent"
             onClick={() => navigate('/arrivals/bacentas-arrived')}
             iconComponent={CashStack}
             iconBg

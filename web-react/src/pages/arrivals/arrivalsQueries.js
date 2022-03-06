@@ -17,10 +17,11 @@ export const CONSTIUENCY_ARRIVALS_DASHBOARD = gql`
         fullName
         pictureUrl
       }
-      bacentas {
-        id
-        name
-      }
+      bacentasNoActivityCount
+      bacentasMobilisingCount
+      bacentasOnTheWayCount
+      bacentasHaveBeenCountedCount
+      bacentasHaveArrivedCount
     }
   }
 `

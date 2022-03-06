@@ -87,13 +87,15 @@ const BacentaForm = ({ initialValues, onSubmit, title, newBacenta }) => {
                   <Col className="mb-2">
                     <Row className="form-row">
                       <Col>
-                        <FormikControl
-                          control="select"
-                          label={`Select a Constituency`}
-                          name="constituency"
-                          options={constituencyOptions}
-                          defaultOption={`Select a Constituency`}
-                        />
+                        <RoleView roles={permitAdmin('Council')}>
+                          <FormikControl
+                            control="select"
+                            label={`Select a Constituency`}
+                            name="constituency"
+                            options={constituencyOptions}
+                            defaultOption={`Select a Constituency`}
+                          />
+                        </RoleView>
                         <FormikControl
                           control="input"
                           name="name"

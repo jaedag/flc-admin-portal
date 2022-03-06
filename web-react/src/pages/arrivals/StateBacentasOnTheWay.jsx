@@ -4,17 +4,16 @@ import MemberDisplayCard from 'components/card/MemberDisplayCard'
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import HeadingSecondary from 'components/HeadingSecondary'
 import { ChurchContext } from 'contexts/ChurchContext'
-import { getWeekNumber } from 'global-utils'
 import PlaceholderMemberDisplay from 'pages/services/defaulters/PlaceholderDefaulter'
 import React, { useContext } from 'react'
 import { Card, Container } from 'react-bootstrap'
 import { useNavigate } from 'react-router'
-import { CONSTITUENCY_BUSSING_DATA } from './arrivalsQueries'
+import { CONSTIUENCY_BACENTAS_ON_THE_WAY } from './bussingStatusQueries'
 
 const BacentasOnTheWay = () => {
   const { constituencyId, clickCard } = useContext(ChurchContext)
   const navigate = useNavigate()
-  const { data, loading, error } = useQuery(CONSTITUENCY_BUSSING_DATA, {
+  const { data, loading, error } = useQuery(CONSTIUENCY_BACENTAS_ON_THE_WAY, {
     variables: { id: constituencyId },
   })
   const constituency = data?.constituencies[0]
@@ -27,31 +26,31 @@ const BacentasOnTheWay = () => {
           {constituency?.name} Constituency
         </HeadingSecondary>
 
-        {constituency?.bacentas.map((bacenta, i) => {
-          if (bacenta.bussing[0]?.week === getWeekNumber()) {
-            return (
-              <MemberDisplayCard
-                key={i}
-                member={bacenta}
-                leader={bacenta.leader}
-                contact
-                onClick={() => {
-                  clickCard(bacenta)
-                  clickCard(bacenta.bussing[0])
-                  navigate('/bacenta/bussing-details')
-                }}
-              />
-            )
-          } else if (i === 0) {
-            return (
-              <Card>
-                <Card.Body>There is no data to display for you</Card.Body>
-              </Card>
-            )
-          }
+        {!constituency?.bacentasOnTheWay.length && !loading && (
+          <Card>
+            <Card.Body>There are no bacentas on the way</Card.Body>
+          </Card>
+        )}
+
+        {constituency?.bacentasOnTheWay?.map((bacenta, i) => {
+          return (
+            <MemberDisplayCard
+              key={i}
+              member={bacenta}
+              leader={bacenta.leader}
+              contact
+              onClick={() => {
+                clickCard(bacenta)
+                clickCard(bacenta.bussing[0])
+                navigate('/bacenta/bussing-details')
+              }}
+            />
+          )
         })}
 
-        {!constituency?.bacentas.length && <PlaceholderMemberDisplay />}
+        {!constituency?.bacentasOnTheWay.length && loading && (
+          <PlaceholderMemberDisplay />
+        )}
       </Container>
     </BaseComponent>
   )

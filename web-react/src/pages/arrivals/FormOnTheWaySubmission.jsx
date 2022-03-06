@@ -17,7 +17,7 @@ import { RECORD_BUSSING_FROM_BACENTA } from './arrivalsMutations'
 import { MOMO_NUM_REGEX, parseDate } from 'global-utils'
 import { ServiceContext } from 'contexts/ServiceContext'
 
-const OnTheWaySubmission = () => {
+const FormOnTheWaySubmission = () => {
   const navigate = useNavigate()
   const { bacentaId, clickCard } = useContext(ChurchContext)
   const { bussingRecordId } = useContext(ServiceContext)
@@ -222,4 +222,4 @@ const OnTheWaySubmission = () => {
   )
 }
 
-export default OnTheWaySubmission
+export default FormOnTheWaySubmission

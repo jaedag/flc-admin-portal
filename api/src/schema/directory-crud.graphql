@@ -62,7 +62,7 @@ extend type Mutation {
       MERGE (bacenta)-[:HAS_HISTORY]->(log)
 
       SET fellowship:Vacation
-      REMOVE fellowship:Active:Fellowship
+      REMOVE fellowship:Active
 
       RETURN fellowship
       """
@@ -87,7 +87,7 @@ extend type Mutation {
       MERGE (constituency)-[:HAS_HISTORY]->(log)
 
       SET bacenta:Vacation
-      REMOVE bacenta:Active:Bacenta
+      REMOVE bacenta:Active
 
       RETURN bacenta
       """
@@ -331,6 +331,7 @@ extend type Mutation {
     constituencyId: ID!
     leaderId: ID!
     fellowships: [ID]
+    zone: Int!
   ): Bacenta  #Return constituency and drill down to get bacenta info
     @auth(
       rules: [
@@ -346,20 +347,21 @@ extend type Mutation {
     )
     @cypher(
       statement: """
-      CREATE (bacenta:Bacenta:IC {name:$name})
+      CREATE (bacenta:Bacenta:IC:Active {name:$name})
          	SET
       	bacenta.id = apoc.create.uuid()
       WITH bacenta
        MATCH (leader:Member {id:$leaderId})
        MATCH (constituency:Constituency {id:$constituencyId})
        MATCH (currentUser:Member {auth_id:$auth.jwt.sub})
-       UNWIND labels(constituency) AS stream
+       MATCH (zone:BussingZone {number: $zone})
 
       CREATE (log:HistoryLog:ServiceLog)
       SET log.id = apoc.create.uuid(),
        log.timeStamp = datetime(),
        log.historyRecord = bacenta.name +' Bacenta History Begins'
-
+        
+       MERGE (bacenta)-[:BUSSES_FROM]->(zone)
        MERGE (constituency)-[:HAS]->(bacenta)
        MERGE (leader)-[:LEADS]->(bacenta)
 
@@ -367,11 +369,7 @@ extend type Mutation {
        MERGE (log)-[:LOGGED_BY]->(currentUser)
        MERGE (log)-[:RECORDED_ON]->(date)
        MERGE (constituency)-[r1:HAS_HISTORY]->(log)
-       MERGE (bacenta)-[r2:HAS_HISTORY]->(log)
-       MERGE (leader)-[r3:HAS_HISTORY]->(log)
-         SET r1.current = true,
-        r2.current = true,
-        r3.current = true
+
 
        WITH bacenta
       CALL {

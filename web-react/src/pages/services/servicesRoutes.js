@@ -74,7 +74,7 @@ export const services = [
   {
     path: '/services/bacenta',
     element: BacentaJoint,
-    roles: permitLeaderAdmin('Bacenta'),
+    roles: ['all'],
     placeholder: true,
   },
   {

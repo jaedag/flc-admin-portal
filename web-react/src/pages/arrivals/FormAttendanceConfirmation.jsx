@@ -19,7 +19,7 @@ import SubmitButton from 'components/formik-components/SubmitButton'
 import { useState } from 'react'
 import { useEffect } from 'react'
 
-const BusFormConfirmation = () => {
+const FormAttendanceConfirmation = () => {
   const navigate = useNavigate()
   const { bacentaId } = useContext(ChurchContext)
   const { bussingRecordId } = useContext(ServiceContext)
@@ -156,4 +156,4 @@ const BusFormConfirmation = () => {
   )
 }
 
-export default BusFormConfirmation
+export default FormAttendanceConfirmation

@@ -40,11 +40,7 @@ import CreateStream from 'pages/directory/create/CreateStream'
 import UpdateStream from 'pages/directory/update/UpdateStream'
 import GatheringServiceMembers from 'pages/directory/grids/GatheringServiceMembers'
 import StreamMembers from 'pages/directory/grids/StreamMembers'
-import {
-  permitAdmin,
-  permitArrivals,
-  permitLeaderAdmin,
-} from 'permission-utils'
+import { permitAdmin, permitMe, permitLeaderAdmin } from 'permission-utils'
 import ServantMembers from './grids/ServantMembers'
 
 export const memberDirectory = [
@@ -98,12 +94,12 @@ export const directory = [
     path: '/directory',
     element: Directory,
     placeholder: true,
-    roles: permitArrivals('Fellowship'),
+    roles: permitMe('Fellowship'),
   },
   {
     path: '/directory/churches',
     element: Churches,
-    roles: permitArrivals('Fellowship'),
+    roles: permitMe('Fellowship'),
   },
   // Member Display and Edit Pages
   {
@@ -115,7 +111,7 @@ export const directory = [
   {
     path: '/member/displaydetails',
     element: DisplayMember,
-    roles: permitArrivals('Fellowship'),
+    roles: permitMe('Fellowship'),
     placeholder: true,
   },
   {
@@ -155,38 +151,38 @@ export const directory = [
   {
     path: '/bacenta/displaydetails',
     element: DetailsBacenta,
-    roles: permitArrivals('Bacenta'),
+    roles: permitMe('Bacenta'),
     placeholder: true,
   },
   {
     path: '/constituency/displaydetails',
     element: DetailsConstituency,
-    roles: permitArrivals('Constituency'),
+    roles: permitMe('Constituency'),
     placeholder: true,
   },
 
   {
     path: '/council/displaydetails',
     element: DetailsCouncil,
-    roles: permitArrivals('Council'),
+    roles: permitMe('Council'),
     placeholder: true,
   },
   {
     path: '/stream/displaydetails',
     element: DetailsStream,
-    roles: permitArrivals('Stream'),
+    roles: permitMe('Stream'),
     placeholder: false,
   },
   {
     path: '/gatheringservice/displaydetails',
     element: DetailsGatheringService,
-    roles: permitArrivals('GatheringService'),
+    roles: permitMe('GatheringService'),
     placeholder: false,
   },
   {
     path: '/gatheringservice/constituencies',
     element: GatheringServiceConstituencies,
-    roles: permitArrivals('GatheringService'),
+    roles: permitMe('GatheringService'),
     placeholder: false,
   },
   {
@@ -200,7 +196,7 @@ export const directory = [
   {
     path: '/bacenta/displayall',
     element: DisplayAllBacentas,
-    roles: permitArrivals('Constituency'),
+    roles: permitMe('Constituency'),
     placeholder: false,
   },
   {
@@ -219,20 +215,20 @@ export const directory = [
   {
     path: '/constituency/displayall',
     element: DisplayAllConstituencies,
-    roles: permitArrivals('Council'),
+    roles: permitMe('Council'),
     placeholder: false,
   },
 
   {
     path: '/fellowship/displayall',
     element: DisplayAllFellowships,
-    roles: permitArrivals('Bacenta'),
+    roles: permitMe('Bacenta'),
     placeholder: false,
   },
   {
     path: '/council/displayall',
     element: DisplayAllCouncils,
-    roles: permitArrivals('Stream'),
+    roles: permitMe('Stream'),
     placeholder: false,
   },
   {
@@ -290,7 +286,7 @@ export const directory = [
   {
     path: '/bacenta/editbacenta',
     element: UpdateBacenta,
-    roles: permitArrivals('Constituency'),
+    roles: permitMe('Constituency'),
     placeholder: false,
   },
   {

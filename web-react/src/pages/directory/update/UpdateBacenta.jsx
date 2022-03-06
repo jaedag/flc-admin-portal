@@ -157,7 +157,6 @@ const UpdateBacenta = () => {
   //onSubmit receives the form state as argument
   const onSubmit = (values, onSubmitProps) => {
     onSubmitProps.setSubmitting(true)
-
     setConstituencyId(values.constituency)
 
     UpdateBacenta({

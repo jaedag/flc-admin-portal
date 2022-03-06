@@ -13,7 +13,7 @@ import { ChurchContext } from 'contexts/ChurchContext'
 import BaseComponent from 'components/base-component/BaseComponent'
 import { UPLOAD_MOBILISATION_PICTURE } from './arrivalsMutations'
 
-const MobilisationSubmission = () => {
+const FormMobilisationSubmission = () => {
   const navigate = useNavigate()
   const { bacentaId, clickCard } = useContext(ChurchContext)
   const initialValues = {
@@ -110,4 +110,4 @@ const MobilisationSubmission = () => {
   )
 }
 
-export default MobilisationSubmission
+export default FormMobilisationSubmission

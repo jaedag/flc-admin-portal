@@ -17,6 +17,9 @@ const CreateBacenta = () => {
     leaderId: '',
     constituency: constituencyId ?? '',
     fellowships: [''],
+    zone: '',
+    graduationStatus: '',
+    vacationStatus: '',
   }
 
   const [NewBacentaLeader] = useMutation(NEW_BACENTA_LEADER)
@@ -33,6 +36,7 @@ const CreateBacenta = () => {
         constituencyId: values.constituency,
         leaderId: values.leaderId,
         fellowships: values.fellowships,
+        zone: parseInt(values.zone),
       },
     })
       .then((res) => {

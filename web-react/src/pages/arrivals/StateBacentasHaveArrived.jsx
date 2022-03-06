@@ -21,7 +21,7 @@ import { useNavigate } from 'react-router'
 import { RECORD_ARRIVAL_TIME } from './arrivalsMutations'
 import { CONSTITUENCY_BUSSING_DATA } from './arrivalsQueries'
 
-const BacentasHaveBeenCounted = () => {
+const FormBacentasHaveArrived = () => {
   const { constituencyId, clickCard, isOpen, togglePopup } =
     useContext(ChurchContext)
   const { theme } = useContext(MemberContext)
@@ -175,4 +175,4 @@ const BacentasHaveBeenCounted = () => {
   )
 }
 
-export default BacentasHaveBeenCounted
+export default FormBacentasHaveArrived

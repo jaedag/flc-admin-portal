@@ -12,10 +12,18 @@ import CouncilDashboard from './CouncilDashboard'
 import MobilisationSubmission from './FormMobilisationSubmission'
 import MobilisationPicture from './MobilisationPicture'
 import BacentasMobilising from './StateBacentasMobilising'
+import DummyPage from './DummyPage'
+import StreamDashboard from './StreamDashboard'
 
 export const arrivals = [
   {
     path: '/arrivals',
+    element: DummyPage,
+    placeholder: true,
+    roles: permitLeaderAdminArrivals('Fellowship'),
+  },
+  {
+    path: '/arrivals-working',
     element: Arrivals,
     placeholder: true,
     roles: permitLeaderAdminArrivals('Fellowship'),
@@ -44,7 +52,7 @@ export const arrivals = [
   {
     path: '/arrivals/stream',
     roles: permitLeaderAdminArrivals('Stream'),
-    element: CouncilDashboard,
+    element: StreamDashboard,
     placeholder: true,
   },
   //Bacenta Forms that need to be Filled

@@ -1,7 +1,8 @@
+import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import React from 'react'
 
 const StreamDashboard = () => {
-  return <div>StreamDashboard</div>
+  return <HeadingPrimary>Stream Dashboard</HeadingPrimary>
 }
 
 export default StreamDashboard

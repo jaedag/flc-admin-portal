@@ -228,7 +228,7 @@ export const removeServantCypher = async (
 ) => {
   const servantLower = servantType.toLowerCase()
   const session = context.driver.session()
-  console.log(servant, church)
+
   //Disconnect him from the Church
   await session.run(servantCypher[`disconnectChurch${servantType}`], {
     [`${servantLower}Id`]: servant.id,

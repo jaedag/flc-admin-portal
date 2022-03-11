@@ -1,3 +1,21 @@
+#### 0.7.3 (2022-03-11)
+
+##### Chores
+
+*  edited prettier config ([1f540a96](https://github.com/jaedag/fl-admin-portal/commit/1f540a96d8e0cf68b45178d561ff348026884db2))
+*  added the cypher file ([4c33a1c2](https://github.com/jaedag/fl-admin-portal/commit/4c33a1c2d60c2832996d1f7e73512529a17028f7))
+*  updated prettier settings ([cc3aa026](https://github.com/jaedag/fl-admin-portal/commit/cc3aa02608efe24c97ade95947aca350119fe504))
+
+##### New Features
+
+* **arrivals:**  disabled arrivals flow for members ([b1c2e0f2](https://github.com/jaedag/fl-admin-portal/commit/b1c2e0f2433fc88f2fb8333183ec74058f38038a))
+
+##### Bug Fixes
+
+*  fixed bug where leader roles were not being changed in the database ([f7a6a8b9](https://github.com/jaedag/fl-admin-portal/commit/f7a6a8b952173acd2df373804f00a42267e1753a))
+*  fixed bug where leaders could not view church details ([b504399c](https://github.com/jaedag/fl-admin-portal/commit/b504399c82ca123c532530137d9ad09572c0b81d))
+*  fixed error with stream search ([ba2aeeec](https://github.com/jaedag/fl-admin-portal/commit/ba2aeeecd96f4a26015f2cdaea0a85dab8180a58))
+
 #### 0.7.2 (2022-03-04)
 
 ##### Bug Fixes

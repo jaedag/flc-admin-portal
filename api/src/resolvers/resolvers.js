@@ -76,7 +76,7 @@ const notifyMember = (
           member.firstName + ' ' + member.lastName
         )
       )
-      .catch((error) => throwErrorMsg('WhatsApp Message Failed to Send', error))
+      .catch(error => throwErrorMsg('WhatsApp Message Failed to Send', error))
   }
 
   mg.messages
@@ -87,8 +87,8 @@ const notifyMember = (
       text: body,
       html: html || null, //HTML Version of the Message for Better Styling
     })
-    .then((msg) => console.log('Mailgun API response', msg)) // logs response data
-    .catch((err) => console.log('Mailgun API error', err)) // logs any error
+    .then(msg => console.log('Mailgun API response', msg)) // logs response data
+    .catch(err => console.log('Mailgun API error', err)) // logs any error
 }
 
 const getTokenConfig = {
@@ -104,7 +104,7 @@ const getTokenConfig = {
 }
 
 axios(getTokenConfig)
-  .then(async (res) => {
+  .then(async res => {
     authToken = res.data.access_token
 
     const getRolesConfig = {
@@ -119,9 +119,9 @@ axios(getTokenConfig)
 
     return axios(getRolesConfig)
   })
-  .then((res) => {
+  .then(res => {
     res.data.forEach(
-      (role) =>
+      role =>
         (authRoles[role.name] = {
           id: role.id,
           name: role.name,
@@ -130,19 +130,19 @@ axios(getTokenConfig)
     )
     console.log('Auth token obtained')
   })
-  .catch((err) =>
+  .catch(err =>
     console.error('There was an error obtaining auth token', err?.data ?? err)
   )
 
 const assignRoles = (servant, userRoles, rolesToAssign) => {
-  const userRoleIds = userRoles.map((role) => authRoles[role].id)
+  const userRoleIds = userRoles.map(role => authRoles[role].id)
   const nameOfRoles = Object.entries(authRoles)
-    .map((role) => {
+    .map(role => {
       if (rolesToAssign[0] === role[1].id) {
         return role[1].name
       }
     })
-    .filter((role) => role)
+    .filter(role => role)
 
   if (userRoleIds.includes(rolesToAssign[0])) {
     console.log(
@@ -161,12 +161,12 @@ const assignRoles = (servant, userRoles, rolesToAssign) => {
           `role successfully added to ${servant.firstName} ${servant.lastName}`
         )
       )
-      .catch((err) => throwErrorMsg('There was an error assigning role', err))
+      .catch(err => throwErrorMsg('There was an error assigning role', err))
   }
   return
 }
 const removeRoles = (servant, userRoles, rolesToRemove) => {
-  const userRoleIds = userRoles.map((role) => authRoles[role].id)
+  const userRoleIds = userRoles.map(role => authRoles[role].id)
 
   //A remove roles function to simplify removing roles with an axios request
   if (userRoleIds.includes(rolesToRemove)) {
@@ -178,7 +178,7 @@ const removeRoles = (servant, userRoles, rolesToRemove) => {
           `Role successfully removed for ${servant.firstName} ${servant.lastName}`
         )
       )
-      .catch((err) => throwErrorMsg('There was an error removing role', err))
+      .catch(err => throwErrorMsg('There was an error removing role', err))
   }
   return
 }
@@ -287,7 +287,7 @@ const MakeServant = async (
     const userRoleResponse = await axios(
       auth0.getUserRoles(servant.auth_id, authToken)
     )
-    const roles = userRoleResponse.data.map((role) => role.name)
+    const roles = userRoleResponse.data.map(role => role.name)
 
     assignRoles(servant, roles, [authRoles[`${servantLower}${churchType}`].id])
     //Write Auth0 ID of Servant to Neo4j DB
@@ -375,6 +375,7 @@ const RemoveServant = async (
     removeServantCypher(context, churchType, servantType, servant, church)
     return
   }
+
   if (servant[`${verb}`].length > 1) {
     //If he leads more than one Church don't touch his Auth0 roles
     console.log(
@@ -408,8 +409,9 @@ const RemoveServant = async (
   const userRoleResponse = await axios(
     auth0.getUserRoles(servant.auth_id, authToken)
   )
-  const roles = userRoleResponse.data.map((role) => role.name)
+  const roles = userRoleResponse.data.map(role => role.name)
 
+  console.log(roles) //.includes(`${servantLower}${churchType}`))
   //If the person is only a constituency Admin, delete auth0 profile
   if (roles.includes(`${servantLower}${churchType}`) && roles.length === 1) {
     await axios(auth0.deleteAuthUserConfig(servant.auth_id, authToken))
@@ -443,6 +445,7 @@ const RemoveServant = async (
 
   //If the person is a bacenta leader as well as any other position, remove role bacenta leader
   if (roles.includes(`${servantLower}${churchType}`) && roles.length > 1) {
+    removeServantCypher(context, churchType, servantType, servant, church)
     removeRoles(servant, roles, authRoles[`${servantLower}${churchType}`].id)
     //Send Email Using Mailgun
     notifyMember(
@@ -469,7 +472,7 @@ export const resolvers = {
   // Context: Context object, database connection, API, etc
   // GraphQLResolveInfo
   Member: {
-    fullName: (obj) => `${obj.firstName} ${obj.lastName}`,
+    fullName: obj => `${obj.firstName} ${obj.lastName}`,
   },
 
   Mutation: {

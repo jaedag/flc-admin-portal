@@ -1,7 +1,7 @@
 const servantCypher = require('./cypher/servant-cypher')
 
 export const isAuth = (permittedRoles, userRoles) => {
-  if (!permittedRoles.some((r) => userRoles.includes(r))) {
+  if (!permittedRoles.some(r => userRoles.includes(r))) {
     throw 'You are not permitted to run this mutation'
   }
 }
@@ -21,7 +21,7 @@ export const throwErrorMsg = (message, error) => {
   throw `${message} ${errorVar}`
 }
 
-export const noEmptyArgsValidation = (args) => {
+export const noEmptyArgsValidation = args => {
   if (!args.length) {
     throwErrorMsg('args must be passed in array')
   }
@@ -33,14 +33,14 @@ export const noEmptyArgsValidation = (args) => {
   })
 }
 
-export const errorHandling = (member) => {
+export const errorHandling = member => {
   if (!member.email) {
     throw `${member.firstName} ${member.lastName} does not have a valid email address. Please add an email address and then try again`
   }
   return
 }
 
-export const rearrangeCypherObject = (response) => {
+export const rearrangeCypherObject = response => {
   let member = {}
 
   response.records[0]?.keys.forEach(
@@ -61,7 +61,7 @@ export const parseForCache = (servant, church, verb, role) => {
     },
   })
 
-  servant[`${verb}`].map((church) => {
+  servant[`${verb}`].map(church => {
     church[`${role}`] = {
       id: servant.id,
       firstName: servant.firstName,
@@ -73,14 +73,14 @@ export const parseForCache = (servant, church, verb, role) => {
 }
 export const parseForCache_Removal = (servant, removedChurch, verb, role) => {
   //Returning the data such that it can update apollo cache
-  servant[`${verb}`] = servant[`${verb}`].filter((church) => {
+  servant[`${verb}`] = servant[`${verb}`].filter(church => {
     if (church.id === removedChurch.id) {
       return false
     }
     return true
   })
 
-  servant[`${verb}`].map((church) => {
+  servant[`${verb}`].map(church => {
     church[`${role}`] = {
       id: servant.id,
       firstName: servant.firstName,
@@ -91,7 +91,7 @@ export const parseForCache_Removal = (servant, removedChurch, verb, role) => {
   return servant
 }
 
-export const nextHigherChurch = (churchLevel) => {
+export const nextHigherChurch = churchLevel => {
   switch (churchLevel) {
     case 'Fellowship':
       return 'Bacenta'
@@ -108,7 +108,7 @@ export const nextHigherChurch = (churchLevel) => {
   }
 }
 
-export const churchInEmail = (church) => {
+export const churchInEmail = church => {
   if (church.type[0] === 'ClosedFellowship') {
     return `${church.name} Fellowship which has been closed`
   }
@@ -119,7 +119,7 @@ export const churchInEmail = (church) => {
 
   return `${church.name} ${church.type[0]}`
 }
-export const servantInEmail = (servant) => {
+export const servantInEmail = servant => {
   return servant
 }
 
@@ -172,7 +172,7 @@ export const makeServantCypher = async (
       auth: context.auth,
     })
   )
-  console.log(`connectChurch${servantType}`, connectedChurchRes)
+
   const historyRecordStringArgs = {
     servant: servant,
     servantType: servantType,
@@ -228,7 +228,7 @@ export const removeServantCypher = async (
 ) => {
   const servantLower = servantType.toLowerCase()
   const session = context.driver.session()
-
+  console.log(servant, church)
   //Disconnect him from the Church
   await session.run(servantCypher[`disconnectChurch${servantType}`], {
     [`${servantLower}Id`]: servant.id,

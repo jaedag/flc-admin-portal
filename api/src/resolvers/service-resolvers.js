@@ -9,7 +9,7 @@ const getComponentServiceAggregates = async (obj, args, context, church) => {
     { ...obj, ...args }
   )
 
-  serviceAggregateResponse.records.map((record) => {
+  serviceAggregateResponse.records.map(record => {
     let serviceAggregate = {}
 
     record.keys.forEach((key, i) => (serviceAggregate[key] = record._fields[i]))

@@ -28,7 +28,7 @@ REMOVE oldHistory.current, oldAdminHistory.current
 
 RETURN admin.id AS id, admin.auth_id AS auth_id, admin.firstName AS firstName, admin.lastName AS lastName
 `
-export const disconnectArrivalsAdmin = `
+export const disconnectChurchArrivalsAdmin = `
 MATCH (church {id: $churchId}) 
 WHERE church:Fellowship OR church:Bacenta OR church:Constituency OR church:Council OR church:Stream OR church:GatheringService OR church:Sonta OR church:Ministry
 OR church:ClosedFellowship OR church:ClosedBacenta

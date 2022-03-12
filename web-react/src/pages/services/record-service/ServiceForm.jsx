@@ -9,6 +9,7 @@ import { ServiceContext } from 'contexts/ServiceContext'
 import { Col, Container, Row } from 'react-bootstrap'
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import SubmitButton from 'components/formik-components/SubmitButton'
+import { throwErrorMsg } from 'global-utils'
 
 const ServiceForm = ({
   church,
@@ -60,6 +61,10 @@ const ServiceForm = ({
   })
 
   const onSubmit = (values, onSubmitProps) => {
+    if (values.treasurers[0] === values.treasurers[1]) {
+      throwErrorMsg('You cannot choose the same treasurer twice!')
+    }
+
     onSubmitProps.setSubmitting(true)
     RecordServiceMutation({
       variables: {
@@ -73,7 +78,7 @@ const ServiceForm = ({
         treasurerSelfie: values.treasurerSelfie,
         servicePicture: values.servicePicture,
       },
-    }).then((res) => {
+    }).then(res => {
       onSubmitProps.setSubmitting(false)
       onSubmitProps.resetForm()
       setServiceRecordId(res.data.RecordService.id)
@@ -88,7 +93,7 @@ const ServiceForm = ({
       onSubmit={onSubmit}
       validateOnMount
     >
-      {(formik) => (
+      {formik => (
         <Container>
           <HeadingPrimary>Record Your Service Details</HeadingPrimary>
           <h5 className="text-secondary">{`${church?.name} ${church?.__typename}`}</h5>
@@ -132,7 +137,7 @@ const ServiceForm = ({
                     />
                     <small className="label">Treasurers (minimum of 2)</small>
                     <FieldArray name="treasurers">
-                      {(fieldArrayProps) => {
+                      {fieldArrayProps => {
                         const { push, remove, form } = fieldArrayProps
                         const { values } = form
                         const { treasurers } = values

@@ -1,3 +1,17 @@
+#### 0.7.4 (2022-03-12)
+
+##### New Features
+
+*  prevented users from selecting the same treasurer twice to fill the form ([0f535e7e](https://github.com/jaedag/fl-admin-portal/commit/0f535e7e69cb66bcce7d6ac340ec1aed0a7a0a1d))
+
+##### Bug Fixes
+
+*  implemented arrivals dummy sheet ([7b49d008](https://github.com/jaedag/fl-admin-portal/commit/7b49d008ae415820ec477be782dbc10bd8e64717))
+*  fixed bug where exceptions thrown in nodejs prefixed with 'unexpected error' ([f2cf8b4a](https://github.com/jaedag/fl-admin-portal/commit/f2cf8b4a048dfd535cfb9331cb317d2d7326ba75))
+*  admin-45 final touches to this issue ([b9b3fb7d](https://github.com/jaedag/fl-admin-portal/commit/b9b3fb7d971655cd288a750a6d68e252b4006779))
+*  fixed bug where leaders were not being changed in db ADMIN-45 ([1171161b](https://github.com/jaedag/fl-admin-portal/commit/1171161b1ca265ff4ec3133a0dc0b48ece0148ba))
+*  admin-45 fixed bug where leaders were not being changed in db ([5f55f91f](https://github.com/jaedag/fl-admin-portal/commit/5f55f91f0feb3724cdfd98707df222bab7fe6a1a))
+
 #### 0.7.3 (2022-03-11)
 
 ##### Chores

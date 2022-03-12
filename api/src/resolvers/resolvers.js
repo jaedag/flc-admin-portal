@@ -411,7 +411,6 @@ const RemoveServant = async (
   )
   const roles = userRoleResponse.data.map(role => role.name)
 
-  console.log(roles) //.includes(`${servantLower}${churchType}`))
   //If the person is only a constituency Admin, delete auth0 profile
   if (roles.includes(`${servantLower}${churchType}`) && roles.length === 1) {
     await axios(auth0.deleteAuthUserConfig(servant.auth_id, authToken))

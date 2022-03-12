@@ -16,7 +16,8 @@ export const MAKE_CONSTITUENCYARRIVALS_ADMIN = gql`
     }
     MakeConstituencyArrivalsAdmin(
       constituencyId: $constituencyId
-      arrivalsAdminId: $newAdminId
+      adminId: $newAdminId
+      oldAdminId: $oldAdminId
     ) {
       id
       firstName

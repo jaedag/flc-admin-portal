@@ -17,6 +17,7 @@ export const MAKE_CONSTITUENCY_ADMIN = gql`
     MakeConstituencyAdmin(
       constituencyId: $constituencyId
       adminId: $newAdminId
+      oldAdminId: $oldAdminId
     ) {
       id
       firstName
@@ -44,7 +45,11 @@ export const MAKE_COUNCIL_ADMIN = gql`
       firstName
       lastName
     }
-    MakeCouncilAdmin(councilId: $councilId, adminId: $newAdminId) {
+    MakeCouncilAdmin(
+      councilId: $councilId
+      adminId: $newAdminId
+      oldAdminId: $oldAdminId
+    ) {
       id
       firstName
       lastName
@@ -67,7 +72,11 @@ export const MAKE_STREAM_ADMIN = gql`
       firstName
       lastName
     }
-    MakeStreamAdmin(streamId: $streamId, adminId: $newAdminId) {
+    MakeStreamAdmin(
+      streamId: $streamId
+      adminId: $newAdminId
+      oldAdminId: $oldAdminId
+    ) {
       id
       firstName
       lastName

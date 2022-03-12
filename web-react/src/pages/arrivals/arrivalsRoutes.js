@@ -1,5 +1,5 @@
 import { permitLeaderAdminArrivals } from 'permission-utils'
-import Arrivals from 'pages/arrivals/Arrivals'
+// import Arrivals from 'pages/arrivals/Arrivals'
 import BacentaArrivals from 'pages/arrivals/BacentaArrivals'
 import BacentasHaveBeenCounted from 'pages/arrivals/StateBacentasHaveArrived'
 import BacentasNotActivity from 'pages/arrivals/StateBacentasNoActivity'
@@ -14,11 +14,12 @@ import MobilisationPicture from './MobilisationPicture'
 import BacentasMobilising from './StateBacentasMobilising'
 import StreamDashboard from './DashboardStream'
 import ArrivalsHelpersStream from './ArrivalsHelpersStream'
+import ArrivalsDummy from './ArrivalsDummy'
 
 export const arrivals = [
   {
     path: '/arrivals',
-    element: Arrivals,
+    element: ArrivalsDummy,
     placeholder: true,
     roles: permitLeaderAdminArrivals('Fellowship'),
   },

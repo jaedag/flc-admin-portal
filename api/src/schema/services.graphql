@@ -510,7 +510,7 @@ type ComponentServiceAggregate {
 
 extend type Mutation {
   RecordService(
-    id: ID!
+    churchId: ID!
     serviceDate: String!
     attendance: Int!
     income: Float!
@@ -520,36 +520,6 @@ extend type Mutation {
     treasurerSelfie: String!
     servicePicture: String!
   ): ServiceRecord
-    @cypher(
-      statement: """
-      CREATE (serviceRecord:ServiceRecord {created_at:datetime()})
-        SET serviceRecord.id = apoc.create.uuid(),
-        serviceRecord.attendance = $attendance,
-        serviceRecord.income = $income,
-        serviceRecord.foreignCurrency = $foreignCurrency,
-        serviceRecord.numberOfTithers = $numberOfTithers,
-        serviceRecord.treasurerSelfie = $treasurerSelfie,
-        serviceRecord.servicePicture = $servicePicture
-      WITH serviceRecord
-
-      MATCH (church {id:$id}) WHERE church:Fellowship OR church:Bacenta OR church:Constituency OR church:Council OR church:Stream
-      MATCH (church)-[has_history:HAS_HISTORY]->(log:HistoryLog) WHERE has_history.current = true
-
-      MATCH (leader:Member {auth_id: $auth.jwt.sub})
-
-      MERGE (serviceRecord)-[:LOGGED_BY]->(leader)
-      MERGE (serviceDate:TimeGraph {date:date($serviceDate)})
-      MERGE (serviceRecord)-[:SERVICE_HELD_ON]->(serviceDate)
-      MERGE (log)-[:HAS_SERVICE]->(serviceRecord)
-
-      WITH serviceRecord
-      UNWIND $treasurers AS treasurerId WITH treasurerId, serviceRecord
-      MATCH (treasurer:Member {id: treasurerId})
-      MERGE (treasurer)-[:WAS_TREASURER_FOR]->(serviceRecord)
-
-      RETURN serviceRecord
-      """
-    )
 
   RecordCancelledService(
     id: ID!

@@ -16,8 +16,8 @@ export const MAKE_CONSTITUENCYARRIVALS_ADMIN = gql`
     }
     MakeConstituencyArrivalsAdmin(
       constituencyId: $constituencyId
-      adminId: $newAdminId
-      oldAdminId: $oldAdminId
+      arrivalsAdminId: $newAdminId
+      oldArrivalsAdminId: $oldAdminId
     ) {
       id
       firstName
@@ -53,6 +53,7 @@ export const MAKE_COUNCILARRIVALS_ADMIN = gql`
     MakeCouncilArrivalsAdmin(
       councilId: $councilId
       arrivalsAdminId: $newAdminId
+      oldArrivalsAdminId: $oldAdminId
     ) {
       id
       firstName
@@ -84,7 +85,11 @@ export const MAKE_STREAMARRIVALS_ADMIN = gql`
       firstName
       lastName
     }
-    MakeStreamArrivalsAdmin(streamId: $streamId, arrivalsAdminId: $newAdminId) {
+    MakeStreamArrivalsAdmin(
+      streamId: $streamId
+      arrivalsAdminId: $newAdminId
+      oldArrivalsAdminId: $oldAdminId
+    ) {
       id
       firstName
       lastName
@@ -117,6 +122,7 @@ export const MAKE_GATHERINGSERVICEARRIVALS_ADMIN = gql`
     MakeGatheringServiceArrivalsAdmin(
       gatheringServiceId: $gatheringServiceId
       arrivalsAdminId: $newAdminId
+      oldArrivalsAdminId: $oldAdminId
     ) {
       id
       firstName

@@ -63,27 +63,28 @@ const ServiceForm = ({
   const onSubmit = (values, onSubmitProps) => {
     if (values.treasurers[0] === values.treasurers[1]) {
       throwErrorMsg('You cannot choose the same treasurer twice!')
+      return
+    } else {
+      onSubmitProps.setSubmitting(true)
+      RecordServiceMutation({
+        variables: {
+          churchId: churchId,
+          serviceDate: values.serviceDate,
+          attendance: parseInt(values.attendance),
+          income: parseFloat(values.cediIncome),
+          foreignCurrency: values.foreignCurrency,
+          numberOfTithers: parseInt(values.numberOfTithers),
+          treasurers: values?.treasurers,
+          treasurerSelfie: values.treasurerSelfie,
+          servicePicture: values.servicePicture,
+        },
+      }).then((res) => {
+        onSubmitProps.setSubmitting(false)
+        onSubmitProps.resetForm()
+        setServiceRecordId(res.data.RecordService.id)
+        navigate(`/${churchType}/service-details`)
+      })
     }
-
-    onSubmitProps.setSubmitting(true)
-    RecordServiceMutation({
-      variables: {
-        id: churchId,
-        serviceDate: values.serviceDate,
-        attendance: parseInt(values.attendance),
-        income: parseFloat(values.cediIncome),
-        foreignCurrency: values.foreignCurrency,
-        numberOfTithers: parseInt(values.numberOfTithers),
-        treasurers: values?.treasurers,
-        treasurerSelfie: values.treasurerSelfie,
-        servicePicture: values.servicePicture,
-      },
-    }).then(res => {
-      onSubmitProps.setSubmitting(false)
-      onSubmitProps.resetForm()
-      setServiceRecordId(res.data.RecordService.id)
-      navigate(`/${churchType}/service-details`)
-    })
   }
 
   return (
@@ -93,7 +94,7 @@ const ServiceForm = ({
       onSubmit={onSubmit}
       validateOnMount
     >
-      {formik => (
+      {(formik) => (
         <Container>
           <HeadingPrimary>Record Your Service Details</HeadingPrimary>
           <h5 className="text-secondary">{`${church?.name} ${church?.__typename}`}</h5>
@@ -137,7 +138,7 @@ const ServiceForm = ({
                     />
                     <small className="label">Treasurers (minimum of 2)</small>
                     <FieldArray name="treasurers">
-                      {fieldArrayProps => {
+                      {(fieldArrayProps) => {
                         const { push, remove, form } = fieldArrayProps
                         const { values } = form
                         const { treasurers } = values

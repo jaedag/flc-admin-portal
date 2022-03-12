@@ -2,7 +2,7 @@ import { gql } from '@apollo/client'
 
 export const RECORD_SERVICE = gql`
   mutation RecordService(
-    $id: ID!
+    $churchId: ID!
     $serviceDate: String!
     $attendance: Int!
     $income: Float!
@@ -13,7 +13,7 @@ export const RECORD_SERVICE = gql`
     $servicePicture: String!
   ) {
     RecordService(
-      id: $id
+      churchId: $churchId
       serviceDate: $serviceDate
       attendance: $attendance
       income: $income

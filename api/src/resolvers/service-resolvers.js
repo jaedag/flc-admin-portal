@@ -1,4 +1,8 @@
+import { permitLeaderAdmin } from './permissions'
+import { isAuth, rearrangeCypherObject, throwErrorMsg } from './resolver-utils'
+
 const cypher = require('./cypher/component-service-cypher')
+const serviceCypher = require('./cypher/service-cypher')
 
 const getComponentServiceAggregates = async (obj, args, context, church) => {
   let serviceAggregates = []
@@ -9,7 +13,7 @@ const getComponentServiceAggregates = async (obj, args, context, church) => {
     { ...obj, ...args }
   )
 
-  serviceAggregateResponse.records.map(record => {
+  serviceAggregateResponse.records.map((record) => {
     let serviceAggregate = {}
 
     record.keys.forEach((key, i) => (serviceAggregate[key] = record._fields[i]))
@@ -49,6 +53,30 @@ export const serviceResolvers = {
         context,
         'GatheringService'
       )
+    },
+  },
+  Mutation: {
+    RecordService: async (object, args, context) => {
+      isAuth(permitLeaderAdmin('Fellowship'), context.auth.roles)
+      const session = context.driver.session()
+
+      const serviceCheck = rearrangeCypherObject(
+        await session.run(serviceCypher.checkFormFilledThisWeek, args)
+      )
+
+      if (Object.keys(serviceCheck).length !== 0) {
+        throwErrorMsg('You have already filled your service form this week!')
+        return
+      }
+
+      const serviceDetails = rearrangeCypherObject(
+        await session.run(serviceCypher.recordService, {
+          ...args,
+          auth: context.auth,
+        })
+      )
+      console.log(serviceDetails.serviceRecord.properties)
+      return serviceDetails.serviceRecord.properties
     },
   },
 }

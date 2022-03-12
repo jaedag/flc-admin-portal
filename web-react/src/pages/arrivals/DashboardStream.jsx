@@ -1,37 +1,36 @@
 import { useMutation, useQuery } from '@apollo/client'
+import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
+import { ChurchContext } from 'contexts/ChurchContext'
+import React, { useContext } from 'react'
+import * as Yup from 'yup'
+import { useNavigate } from 'react-router'
+import { MAKE_STREAMARRIVALS_ADMIN } from './arrivalsMutations'
+import { STREAM_ARRIVALS_DASHBOARD } from './arrivalsQueries'
+import { throwErrorMsg } from 'global-utils'
 import BaseComponent from 'components/base-component/BaseComponent'
-import MenuButton from 'components/buttons/MenuButton'
+import { Card, Col, Container, Row, Button } from 'react-bootstrap'
+import Popup from 'components/Popup/Popup'
+import { Form, Formik } from 'formik'
 import FormikControl from 'components/formik-components/FormikControl'
 import SubmitButton from 'components/formik-components/SubmitButton'
-import Popup from 'components/Popup/Popup'
-import { ChurchContext } from 'contexts/ChurchContext'
-import { Form, Formik } from 'formik'
-import * as Yup from 'yup'
-import React from 'react'
-import { useContext } from 'react'
-import { Button, Card, Col, Container, Row } from 'react-bootstrap'
-import { COUNCIL_ARRIVALS_DASHBOARD } from './arrivalsQueries'
-import { useNavigate } from 'react-router'
-import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import RoleView from 'auth/RoleView'
-import { throwErrorMsg } from 'global-utils'
-import { MAKE_COUNCILARRIVALS_ADMIN } from './arrivalsMutations'
 import { permitAdmin, permitArrivals } from 'permission-utils'
+import MenuButton from 'components/buttons/MenuButton'
 
-const CouncilDashboard = () => {
-  const { isOpen, togglePopup, councilId } = useContext(ChurchContext)
+const StreamDashboard = () => {
+  const { isOpen, togglePopup, streamId } = useContext(ChurchContext)
   const navigate = useNavigate()
-  const { data, loading, error } = useQuery(COUNCIL_ARRIVALS_DASHBOARD, {
-    variables: { id: councilId },
+  const { data, loading, error } = useQuery(STREAM_ARRIVALS_DASHBOARD, {
+    variables: { id: streamId },
   })
-  const [MakeCouncilArrivalsAdmin] = useMutation(MAKE_COUNCILARRIVALS_ADMIN)
-  const council = data?.councils[0]
+  const [MakeStreamArrivalsAdmin] = useMutation(MAKE_STREAMARRIVALS_ADMIN)
+  const stream = data?.streams[0]
 
   const initialValues = {
-    adminName: council?.arrivvalsAdmin
-      ? `${council?.arrivvalsAdmin?.firstName} ${council?.arrivvalsAdmin?.lastName}`
+    adminName: stream?.arrivalsAdmin
+      ? `${stream?.arrivalsAdmin?.firstName} ${stream?.arrivalsAdmin?.lastName}`
       : '',
-    adminSelect: council?.arrivvalsAdmin?.id ?? '',
+    adminSelect: stream?.arrivalsAdmin?.id ?? '',
   }
   const validationSchema = Yup.object({
     adminSelect: Yup.string().required(
@@ -42,9 +41,9 @@ const CouncilDashboard = () => {
   const onSubmit = (values, onSubmitProps) => {
     onSubmitProps.setSubmitting(true)
 
-    MakeCouncilArrivalsAdmin({
+    MakeStreamArrivalsAdmin({
       variables: {
-        councilId: councilId,
+        streamId: streamId,
         newAdminId: values.adminSelect,
         oldAdminId: initialValues.adminSelect || 'no-old-admin',
       },
@@ -52,7 +51,7 @@ const CouncilDashboard = () => {
       .then(() => {
         togglePopup()
         onSubmitProps.setSubmitting(false)
-        alert('Council Arrivals Admin has been changed successfully')
+        alert('stream Arrivals Admin has been changed successfully')
       })
       .catch((e) => throwErrorMsg(e))
   }
@@ -61,7 +60,7 @@ const CouncilDashboard = () => {
     <BaseComponent data={data} loading={loading} error={error}>
       <Container>
         <HeadingPrimary loading={loading}>
-          {council?.name} Council Arrivals
+          {stream?.name} stream Arrivals
         </HeadingPrimary>
         {isOpen && (
           <Popup handleClose={togglePopup}>
@@ -101,7 +100,7 @@ const CouncilDashboard = () => {
         </Card>
         <div className="d-grid gap-2">
           <RoleView
-            roles={[...permitAdmin('Council'), ...permitArrivals('Stream')]}
+            roles={[...permitAdmin('stream'), ...permitArrivals('Stream')]}
           >
             <Button
               variant="outline-secondary"
@@ -109,6 +108,13 @@ const CouncilDashboard = () => {
               onClick={() => togglePopup()}
             >
               Change Arrivals Admin
+            </Button>
+            <Button
+              variant="outline-secondary"
+              size="lg"
+              onClick={() => navigate('/stream/arrivals-helpers')}
+            >
+              Arrivals Helpers
             </Button>
           </RoleView>
           <MenuButton
@@ -138,4 +144,4 @@ const CouncilDashboard = () => {
   )
 }
 
-export default CouncilDashboard
+export default StreamDashboard

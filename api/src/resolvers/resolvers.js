@@ -76,7 +76,7 @@ const notifyMember = (
           member.firstName + ' ' + member.lastName
         )
       )
-      .catch(error => throwErrorMsg('WhatsApp Message Failed to Send', error))
+      .catch((error) => throwErrorMsg('WhatsApp Message Failed to Send', error))
   }
 
   mg.messages
@@ -87,8 +87,8 @@ const notifyMember = (
       text: body,
       html: html || null, //HTML Version of the Message for Better Styling
     })
-    .then(msg => console.log('Mailgun API response', msg)) // logs response data
-    .catch(err => console.log('Mailgun API error', err)) // logs any error
+    .then((msg) => console.log('Mailgun API response', msg)) // logs response data
+    .catch((err) => console.log('Mailgun API error', err)) // logs any error
 }
 
 const getTokenConfig = {
@@ -104,7 +104,7 @@ const getTokenConfig = {
 }
 
 axios(getTokenConfig)
-  .then(async res => {
+  .then(async (res) => {
     authToken = res.data.access_token
 
     const getRolesConfig = {
@@ -119,9 +119,9 @@ axios(getTokenConfig)
 
     return axios(getRolesConfig)
   })
-  .then(res => {
+  .then((res) => {
     res.data.forEach(
-      role =>
+      (role) =>
         (authRoles[role.name] = {
           id: role.id,
           name: role.name,
@@ -130,19 +130,19 @@ axios(getTokenConfig)
     )
     console.log('Auth token obtained')
   })
-  .catch(err =>
+  .catch((err) =>
     console.error('There was an error obtaining auth token', err?.data ?? err)
   )
 
 const assignRoles = (servant, userRoles, rolesToAssign) => {
-  const userRoleIds = userRoles.map(role => authRoles[role].id)
+  const userRoleIds = userRoles.map((role) => authRoles[role].id)
   const nameOfRoles = Object.entries(authRoles)
-    .map(role => {
+    .map((role) => {
       if (rolesToAssign[0] === role[1].id) {
         return role[1].name
       }
     })
-    .filter(role => role)
+    .filter((role) => role)
 
   if (userRoleIds.includes(rolesToAssign[0])) {
     console.log(
@@ -161,12 +161,12 @@ const assignRoles = (servant, userRoles, rolesToAssign) => {
           `role successfully added to ${servant.firstName} ${servant.lastName}`
         )
       )
-      .catch(err => throwErrorMsg('There was an error assigning role', err))
+      .catch((err) => throwErrorMsg('There was an error assigning role', err))
   }
   return
 }
 const removeRoles = (servant, userRoles, rolesToRemove) => {
-  const userRoleIds = userRoles.map(role => authRoles[role].id)
+  const userRoleIds = userRoles.map((role) => authRoles[role].id)
 
   //A remove roles function to simplify removing roles with an axios request
   if (userRoleIds.includes(rolesToRemove)) {
@@ -178,7 +178,7 @@ const removeRoles = (servant, userRoles, rolesToRemove) => {
           `Role successfully removed for ${servant.firstName} ${servant.lastName}`
         )
       )
-      .catch(err => throwErrorMsg('There was an error removing role', err))
+      .catch((err) => throwErrorMsg('There was an error removing role', err))
   }
   return
 }
@@ -202,7 +202,12 @@ const MakeServant = async (
     verb = `isArrivalsAdminFor${churchType}`
     servantLower = 'arrivalsAdmin'
   }
+  if (servantType === 'ArrivalsHelper') {
+    verb = `isArrivalsHelperFor${churchType}`
+    servantLower = 'arrivalsHelper'
+  }
 
+  console.log(args, verb, servant)
   isAuth(permittedRoles, context.auth.roles)
   noEmptyArgsValidation([
     `${churchLower}Id`,
@@ -287,7 +292,7 @@ const MakeServant = async (
     const userRoleResponse = await axios(
       auth0.getUserRoles(servant.auth_id, authToken)
     )
-    const roles = userRoleResponse.data.map(role => role.name)
+    const roles = userRoleResponse.data.map((role) => role.name)
 
     assignRoles(servant, roles, [authRoles[`${servantLower}${churchType}`].id])
     //Write Auth0 ID of Servant to Neo4j DB
@@ -333,7 +338,7 @@ const RemoveServant = async (
   //Set Up
   let churchLower = churchType.toLowerCase()
   let servantLower = servantType.toLowerCase()
-
+  console.log(args)
   let verb = `leads${churchType}`
   if (servantType === 'Admin') {
     verb = `isAdminFor${churchType}`
@@ -409,7 +414,7 @@ const RemoveServant = async (
   const userRoleResponse = await axios(
     auth0.getUserRoles(servant.auth_id, authToken)
   )
-  const roles = userRoleResponse.data.map(role => role.name)
+  const roles = userRoleResponse.data.map((role) => role.name)
 
   //If the person is only a constituency Admin, delete auth0 profile
   if (roles.includes(`${servantLower}${churchType}`) && roles.length === 1) {
@@ -471,7 +476,7 @@ export const resolvers = {
   // Context: Context object, database connection, API, etc
   // GraphQLResolveInfo
   Member: {
-    fullName: obj => `${obj.firstName} ${obj.lastName}`,
+    fullName: (obj) => `${obj.firstName} ${obj.lastName}`,
   },
 
   Mutation: {
@@ -698,6 +703,7 @@ export const resolvers = {
       )
     },
     RemoveFellowshipLeader: async (object, args, context) => {
+      console.log(object)
       return RemoveServant(
         context,
         args,
@@ -760,16 +766,10 @@ export const resolvers = {
         'Leader'
       )
     },
-    MakeCouncilLeader: async (object, args, context) => {
-      return MakeServant(
-        context,
-        args,
-        permitAdmin('Stream'),
-        'Council',
-        'Leader'
-      )
-    },
+    MakeCouncilLeader: async (object, args, context) =>
+      MakeServant(context, args, permitAdmin('Stream'), 'Council', 'Leader'),
     RemoveCouncilLeader: async (object, args, context) => {
+      console.log('removing council leader')
       return RemoveServant(
         context,
         args,
@@ -889,6 +889,27 @@ export const resolvers = {
         [...permitAdmin('GatheringService'), ...permitArrivals('Denomination')],
         'GatheringService',
         'ArrivalsAdmin'
+      )
+    },
+
+    //ARRIVALS HELPERS
+    MakeStreamArrivalsHelper: async (object, args, context) => {
+      console.log('making stream arrivals')
+      return MakeServant(
+        context,
+        args,
+        [...permitAdmin('Stream'), ...permitArrivals('Stream')],
+        'Stream',
+        'ArrivalsHelper'
+      )
+    },
+    RemoveStreamArrivalsHelper: async (object, args, context) => {
+      return RemoveServant(
+        context,
+        args,
+        [...permitAdmin('Stream'), ...permitArrivals('Stream')],
+        'Stream',
+        'ArrivalsHelper'
       )
     },
   },

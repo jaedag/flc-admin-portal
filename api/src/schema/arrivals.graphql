@@ -1,5 +1,16 @@
+extend type Member {
+  isArrivalsAdminForCouncil: [Council]
+    @relationship(type: "DOES_ARRIVALS_FOR", direction: OUT)
+  isArrivalsAdminForConstituency: [Constituency]
+    @relationship(type: "DOES_ARRIVALS_FOR", direction: OUT)
+  isArrivalsHelperForStream: [Stream]
+    @relationship(type: "HELPS_ARRIVALS_FOR", direction: OUT)
+}
+
 extend type Stream {
   arrivalsAdmin: Member @relationship(type: "DOES_ARRIVALS_FOR", direction: IN)
+  arrivalsHelpers: [Member]
+    @relationship(type: "HELPS_ARRIVALS_FOR", direction: IN)
   bacentasThatSubmittedCount: Int!
     @cypher(
       statement: """
@@ -264,6 +275,9 @@ extend type Mutation {
     arrivalsAdminId: ID!
     gatheringServiceId: ID!
   ): Member
+
+  MakeStreamArrivalsHelper(arrivalsHelperId: ID!, streamId: ID!): Member
+  RemoveStreamArrivalsHelper(arrivalsHelperId: ID!, streamId: ID!): Member
 
   ## GENERATE CODE OF THE DAY
   GenerateCodeOfTheDay: String!

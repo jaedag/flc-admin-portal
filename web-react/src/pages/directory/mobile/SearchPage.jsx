@@ -187,13 +187,7 @@ const SearchPageMobile = () => {
         )}
         {!loading &&
           combinedData.slice(0, 10).map((searchResult, index) => {
-            return (
-              <MemberDisplayCard
-                key={index}
-                index={index}
-                member={searchResult}
-              />
-            )
+            return <MemberDisplayCard key={index} member={searchResult} />
           })}
       </Container>
     </>

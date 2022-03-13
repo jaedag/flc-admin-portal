@@ -360,7 +360,7 @@ extend type Mutation {
       SET log.id = apoc.create.uuid(),
        log.timeStamp = datetime(),
        log.historyRecord = bacenta.name +' Bacenta History Begins'
-        
+
        MERGE (bacenta)-[:BUSSES_FROM]->(zone)
        MERGE (constituency)-[:HAS]->(bacenta)
        MERGE (leader)-[:LEADS]->(bacenta)

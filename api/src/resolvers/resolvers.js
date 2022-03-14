@@ -5,6 +5,7 @@ const dotenv = require('dotenv')
 const axios = require('axios').default
 const cypher = require('./cypher/resolver-cypher')
 const closeChurchCypher = require('./cypher/close-church-cypher')
+const serviceCypher = require('./cypher/service-cypher')
 
 const {
   isAuth,
@@ -76,7 +77,7 @@ const notifyMember = (
           member.firstName + ' ' + member.lastName
         )
       )
-      .catch(error => throwErrorMsg('WhatsApp Message Failed to Send', error))
+      .catch((error) => throwErrorMsg('WhatsApp Message Failed to Send', error))
   }
 
   mg.messages
@@ -87,8 +88,8 @@ const notifyMember = (
       text: body,
       html: html || null, //HTML Version of the Message for Better Styling
     })
-    .then(msg => console.log('Mailgun API response', msg)) // logs response data
-    .catch(err => console.log('Mailgun API error', err)) // logs any error
+    .then((msg) => console.log('Mailgun API response', msg)) // logs response data
+    .catch((err) => console.log('Mailgun API error', err)) // logs any error
 }
 
 const getTokenConfig = {
@@ -104,7 +105,7 @@ const getTokenConfig = {
 }
 
 axios(getTokenConfig)
-  .then(async res => {
+  .then(async (res) => {
     authToken = res.data.access_token
 
     const getRolesConfig = {
@@ -119,9 +120,9 @@ axios(getTokenConfig)
 
     return axios(getRolesConfig)
   })
-  .then(res => {
+  .then((res) => {
     res.data.forEach(
-      role =>
+      (role) =>
         (authRoles[role.name] = {
           id: role.id,
           name: role.name,
@@ -130,19 +131,19 @@ axios(getTokenConfig)
     )
     console.log('Auth token obtained')
   })
-  .catch(err =>
+  .catch((err) =>
     console.error('There was an error obtaining auth token', err?.data ?? err)
   )
 
 const assignRoles = (servant, userRoles, rolesToAssign) => {
-  const userRoleIds = userRoles.map(role => authRoles[role].id)
+  const userRoleIds = userRoles.map((role) => authRoles[role].id)
   const nameOfRoles = Object.entries(authRoles)
-    .map(role => {
+    .map((role) => {
       if (rolesToAssign[0] === role[1].id) {
         return role[1].name
       }
     })
-    .filter(role => role)
+    .filter((role) => role)
 
   if (userRoleIds.includes(rolesToAssign[0])) {
     console.log(
@@ -161,12 +162,12 @@ const assignRoles = (servant, userRoles, rolesToAssign) => {
           `role successfully added to ${servant.firstName} ${servant.lastName}`
         )
       )
-      .catch(err => throwErrorMsg('There was an error assigning role', err))
+      .catch((err) => throwErrorMsg('There was an error assigning role', err))
   }
   return
 }
 const removeRoles = (servant, userRoles, rolesToRemove) => {
-  const userRoleIds = userRoles.map(role => authRoles[role].id)
+  const userRoleIds = userRoles.map((role) => authRoles[role].id)
 
   //A remove roles function to simplify removing roles with an axios request
   if (userRoleIds.includes(rolesToRemove)) {
@@ -178,7 +179,7 @@ const removeRoles = (servant, userRoles, rolesToRemove) => {
           `Role successfully removed for ${servant.firstName} ${servant.lastName}`
         )
       )
-      .catch(err => throwErrorMsg('There was an error removing role', err))
+      .catch((err) => throwErrorMsg('There was an error removing role', err))
   }
   return
 }
@@ -287,7 +288,7 @@ const MakeServant = async (
     const userRoleResponse = await axios(
       auth0.getUserRoles(servant.auth_id, authToken)
     )
-    const roles = userRoleResponse.data.map(role => role.name)
+    const roles = userRoleResponse.data.map((role) => role.name)
 
     assignRoles(servant, roles, [authRoles[`${servantLower}${churchType}`].id])
     //Write Auth0 ID of Servant to Neo4j DB
@@ -409,7 +410,7 @@ const RemoveServant = async (
   const userRoleResponse = await axios(
     auth0.getUserRoles(servant.auth_id, authToken)
   )
-  const roles = userRoleResponse.data.map(role => role.name)
+  const roles = userRoleResponse.data.map((role) => role.name)
 
   //If the person is only a constituency Admin, delete auth0 profile
   if (roles.includes(`${servantLower}${churchType}`) && roles.length === 1) {
@@ -471,7 +472,7 @@ export const resolvers = {
   // Context: Context object, database connection, API, etc
   // GraphQLResolveInfo
   Member: {
-    fullName: obj => `${obj.firstName} ${obj.lastName}`,
+    fullName: (obj) => `${obj.firstName} ${obj.lastName}`,
   },
 
   Mutation: {
@@ -631,265 +632,249 @@ export const resolvers = {
       }
     },
 
+    RecordService: async (object, args, context) => {
+      isAuth(permitLeaderAdmin('Fellowship'), context.auth.roles)
+      const session = context.driver.session()
+
+      const serviceCheck = rearrangeCypherObject(
+        await session.run(serviceCypher.checkFormFilledThisWeek, args)
+      )
+
+      if (Object.keys(serviceCheck).length !== 0) {
+        throwErrorMsg('You have already filled your service form this week!')
+        return
+      }
+
+      const serviceDetails = rearrangeCypherObject(
+        await session.run(serviceCypher.recordService, {
+          ...args,
+          auth: context.auth,
+        })
+      )
+
+      return serviceDetails.serviceRecord.properties
+    },
+
     //Administrative Mutations
-    MakeStreamAdmin: async (object, args, context) => {
-      return MakeServant(
+    MakeStreamAdmin: async (object, args, context) =>
+      MakeServant(
         context,
         args,
         permitAdmin('GatheringService'),
         'Stream',
         'Admin'
-      )
-    },
-    RemoveStreamAdmin: async (object, args, context) => {
-      return RemoveServant(
+      ),
+    RemoveStreamAdmin: async (object, args, context) =>
+      RemoveServant(
         context,
         args,
         permitAdmin('GatheringService'),
         'Stream',
         'Admin'
-      )
-    },
-    MakeCouncilAdmin: async (object, args, context) => {
-      return MakeServant(
-        context,
-        args,
-        permitAdmin('Stream'),
-        'Council',
-        'Admin'
-      )
-    },
-    RemoveCouncilAdmin: async (object, args, context) => {
-      return RemoveServant(
-        context,
-        args,
-        permitAdmin('Stream'),
-        'Council',
-        'Admin'
-      )
-    },
-    MakeConstituencyAdmin: async (object, args, context) => {
-      return MakeServant(
+      ),
+    MakeCouncilAdmin: async (object, args, context) =>
+      MakeServant(context, args, permitAdmin('Stream'), 'Council', 'Admin'),
+    RemoveCouncilAdmin: async (object, args, context) =>
+      RemoveServant(context, args, permitAdmin('Stream'), 'Council', 'Admin'),
+    MakeConstituencyAdmin: async (object, args, context) =>
+      MakeServant(
         context,
         args,
         permitAdmin('Council'),
         'Constituency',
         'Admin'
-      )
-    },
-    RemoveConstituencyAdmin: async (object, args, context) => {
-      return RemoveServant(
+      ),
+    RemoveConstituencyAdmin: async (object, args, context) =>
+      RemoveServant(
         context,
         args,
         permitAdmin('Council'),
         'Constituency',
         'Admin'
-      )
-    },
+      ),
 
     //Pastoral Mutations
-    MakeFellowshipLeader: async (object, args, context) => {
-      return MakeServant(
+    MakeFellowshipLeader: async (object, args, context) =>
+      MakeServant(
         context,
         args,
         permitAdmin('Bacenta'),
         'Fellowship',
         'Leader'
-      )
-    },
-    RemoveFellowshipLeader: async (object, args, context) => {
-      return RemoveServant(
+      ),
+    RemoveFellowshipLeader: async (object, args, context) =>
+      RemoveServant(
         context,
         args,
         permitAdmin('Bacenta'),
         'Fellowship',
         'Leader'
-      )
-    },
-    MakeSontaLeader: async (object, args, context) => {
-      return MakeServant(
+      ),
+    MakeSontaLeader: async (object, args, context) =>
+      MakeServant(
         context,
         args,
         permitAdmin('Constituency'),
         'Sonta',
         'Leader'
-      )
-    },
-    RemoveSontaLeader: (object, args, context) => {
-      return RemoveServant(
+      ),
+    RemoveSontaLeader: (object, args, context) =>
+      RemoveServant(
         context,
         args,
         permitAdmin('Constituency'),
         'Sonta',
         'Leader'
-      )
-    },
-    MakeBacentaLeader: async (object, args, context) => {
-      return MakeServant(
+      ),
+    MakeBacentaLeader: async (object, args, context) =>
+      MakeServant(
         context,
         args,
         permitAdmin('Constituency'),
         'Bacenta',
         'Leader'
-      )
-    },
-    RemoveBacentaLeader: async (object, args, context) => {
-      return RemoveServant(
+      ),
+    RemoveBacentaLeader: async (object, args, context) =>
+      RemoveServant(
         context,
         args,
         permitAdmin('Constituency'),
         'Bacenta',
         'Leader'
-      )
-    },
-    MakeConstituencyLeader: async (object, args, context) => {
-      return MakeServant(
+      ),
+    MakeConstituencyLeader: async (object, args, context) =>
+      MakeServant(
         context,
         args,
         permitAdmin('Council'),
         'Constituency',
         'Leader'
-      )
-    },
-    RemoveConstituencyLeader: async (object, args, context) => {
-      return RemoveServant(
+      ),
+    RemoveConstituencyLeader: async (object, args, context) =>
+      RemoveServant(
         context,
         args,
         permitAdmin('Council'),
         'Constituency',
         'Leader'
-      )
-    },
-    MakeCouncilLeader: async (object, args, context) => {
-      return MakeServant(
-        context,
-        args,
-        permitAdmin('Stream'),
-        'Council',
-        'Leader'
-      )
-    },
-    RemoveCouncilLeader: async (object, args, context) => {
-      return RemoveServant(
-        context,
-        args,
-        permitAdmin('Stream'),
-        'Council',
-        'Leader'
-      )
-    },
-    MakeStreamLeader: async (object, args, context) => {
-      return MakeServant(
+      ),
+    MakeCouncilLeader: async (object, args, context) =>
+      MakeServant(context, args, permitAdmin('Stream'), 'Council', 'Leader'),
+    RemoveCouncilLeader: async (object, args, context) =>
+      RemoveServant(context, args, permitAdmin('Stream'), 'Council', 'Leader'),
+    MakeStreamLeader: async (object, args, context) =>
+      MakeServant(
         context,
         args,
         permitAdmin('GatheringService'),
         'Stream',
         'Leader'
-      )
-    },
-    RemoveStreamLeader: async (object, args, context) => {
-      return RemoveServant(
+      ),
+    RemoveStreamLeader: async (object, args, context) =>
+      RemoveServant(
         context,
         args,
         permitAdmin('GatheringService'),
         'Stream',
         'Leader'
-      )
-    },
-    MakeGatheringServiceLeader: async (object, args, context) => {
-      return MakeServant(
+      ),
+    MakeGatheringServiceLeader: async (object, args, context) =>
+      MakeServant(
         context,
         args,
         permitAdmin('Denomination'),
         'GatheringService',
         'Leader'
-      )
-    },
-    RemoveGatheringServiceLeader: async (object, args, context) => {
-      return RemoveServant(
+      ),
+    RemoveGatheringServiceLeader: async (object, args, context) =>
+      RemoveServant(
         context,
         args,
         permitAdmin('Denomination'),
         'GatheringService',
         'Leader'
-      )
-    },
-
+      ),
     //ARRIVALS MUTATIONS
-    MakeConstituencyArrivalsAdmin: async (object, args, context) => {
-      return MakeServant(
+    MakeConstituencyArrivalsAdmin: async (object, args, context) =>
+      MakeServant(
         context,
         args,
         [...permitAdmin('Constituency'), ...permitArrivals('Council')],
         'Constituency',
         'ArrivalsAdmin'
-      )
-    },
-    RemoveConstituencyArrivalsAdmin: async (object, args, context) => {
-      return RemoveServant(
+      ),
+    RemoveConstituencyArrivalsAdmin: async (object, args, context) =>
+      RemoveServant(
         context,
         args,
         [...permitAdmin('Constituency'), ...permitArrivals('Council')],
         'Constituency',
         'ArrivalsAdmin'
-      )
-    },
-
-    MakeCouncilArrivalsAdmin: async (object, args, context) => {
-      return MakeServant(
+      ),
+    MakeCouncilArrivalsAdmin: async (object, args, context) =>
+      MakeServant(
         context,
         args,
         [...permitAdmin('Council'), ...permitArrivals('Stream')],
         'Council',
         'ArrivalsAdmin'
-      )
-    },
-    RemoveCouncilArrivalsAdmin: async (object, args, context) => {
-      return RemoveServant(
+      ),
+    RemoveCouncilArrivalsAdmin: async (object, args, context) =>
+      RemoveServant(
         context,
         args,
         [...permitAdmin('Council'), ...permitArrivals('Stream')],
         'Council',
         'ArrivalsAdmin'
-      )
-    },
-
-    MakeStreamArrivalsAdmin: async (object, args, context) => {
-      return MakeServant(
+      ),
+    MakeStreamArrivalsAdmin: async (object, args, context) =>
+      MakeServant(
         context,
         args,
         [...permitAdmin('Stream'), ...permitArrivals('GatheringService')],
         'Stream',
         'ArrivalsAdmin'
-      )
-    },
-    RemoveStreamArrivalsAdmin: async (object, args, context) => {
-      return RemoveServant(
+      ),
+    RemoveStreamArrivalsAdmin: async (object, args, context) =>
+      RemoveServant(
         context,
         args,
         [...permitAdmin('Stream'), ...permitArrivals('GatheringService')],
         'Stream',
         'ArrivalsAdmin'
-      )
-    },
-
-    MakeGatheringServiceArrivalsAdmin: async (object, args, context) => {
-      return MakeServant(
+      ),
+    MakeGatheringServiceArrivalsAdmin: async (object, args, context) =>
+      MakeServant(
         context,
         args,
         [...permitAdmin('GatheringService'), ...permitArrivals('Denomination')],
         'GatheringService',
         'ArrivalsAdmin'
-      )
-    },
-    RemoveGatheringServiceArrivalsAdmin: async (object, args, context) => {
-      return RemoveServant(
+      ),
+    RemoveGatheringServiceArrivalsAdmin: async (object, args, context) =>
+      RemoveServant(
         context,
         args,
         [...permitAdmin('GatheringService'), ...permitArrivals('Denomination')],
         'GatheringService',
         'ArrivalsAdmin'
-      )
-    },
+      ),
+    //ARRIVALS HELPERS
+    MakeStreamArrivalsHelper: async (object, args, context) =>
+      MakeServant(
+        context,
+        args,
+        [...permitAdmin('Stream'), ...permitArrivals('Stream')],
+        'Stream',
+        'ArrivalsHelper'
+      ),
+    RemoveStreamArrivalsHelper: async (object, args, context) =>
+      RemoveServant(
+        context,
+        args,
+        [...permitAdmin('Stream'), ...permitArrivals('Stream')],
+        'Stream',
+        'ArrivalsHelper'
+      ),
   },
 }

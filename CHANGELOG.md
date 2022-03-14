@@ -1,3 +1,10 @@
+#### 0.7.5 (2022-03-14)
+
+##### Bug Fixes
+
+*  fixed breaking change in code ([0011d9d5](https://github.com/jaedag/fl-admin-portal/commit/0011d9d5ffd49b13297c7fdae09f04ea5eb140a7))
+*  fixed bug preventing leaders from being changed ([86bbece8](https://github.com/jaedag/fl-admin-portal/commit/86bbece8298763d16b30a5812f4e22e852791781))
+
 #### 0.7.4 (2022-03-12)
 
 ##### New Features

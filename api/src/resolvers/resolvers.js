@@ -860,21 +860,21 @@ export const resolvers = {
         'ArrivalsAdmin'
       ),
     //ARRIVALS HELPERS
-    MakeStreamArrivalsHelper: async (object, args, context) =>
-      MakeServant(
-        context,
-        args,
-        [...permitAdmin('Stream'), ...permitArrivals('Stream')],
-        'Stream',
-        'ArrivalsHelper'
-      ),
-    RemoveStreamArrivalsHelper: async (object, args, context) =>
-      RemoveServant(
-        context,
-        args,
-        [...permitAdmin('Stream'), ...permitArrivals('Stream')],
-        'Stream',
-        'ArrivalsHelper'
-      ),
+    // MakeStreamArrivalsHelper: async (object, args, context) =>
+    //   MakeServant(
+    //     context,
+    //     args,
+    //     [...permitAdmin('Stream'), ...permitArrivals('Stream')],
+    //     'Stream',
+    //     'ArrivalsHelper'
+    //   ),
+    // RemoveStreamArrivalsHelper: async (object, args, context) =>
+    //   RemoveServant(
+    //     context,
+    //     args,
+    //     [...permitAdmin('Stream'), ...permitArrivals('Stream')],
+    //     'Stream',
+    //     'ArrivalsHelper'
+    //   ),
   },
 }

@@ -9,11 +9,8 @@ import { ChurchContext } from 'contexts/ChurchContext'
 import { MemberContext } from 'contexts/MemberContext'
 import { ServiceContext } from 'contexts/ServiceContext'
 import { Form, Formik } from 'formik'
-import {
-  getWeekNumber,
-  throwErrorMsg,
-  transformCloudinaryImg,
-} from 'global-utils'
+import { throwErrorMsg, transformCloudinaryImg } from 'global-utils'
+import { getWeekNumber } from 'date-utils'
 import PlaceholderMemberDisplay from 'pages/services/defaulters/PlaceholderDefaulter'
 import React, { useContext, useEffect, useState } from 'react'
 import { Button, Card, Container } from 'react-bootstrap'

@@ -1,11 +1,12 @@
-import { permitAdmin, permitArrivals, permitLeaderAdmin } from './permissions'
+import { permitAdmin, permitLeaderAdmin } from './permissions'
+import { serviceMutation } from './service-resolvers'
+import { arrivalsMutation } from './arrivals-resolvers'
 
 /* eslint-disable no-console */
 const dotenv = require('dotenv')
 const axios = require('axios').default
 const cypher = require('./cypher/resolver-cypher')
 const closeChurchCypher = require('./cypher/close-church-cypher')
-const serviceCypher = require('./cypher/service-cypher')
 
 const {
   isAuth,
@@ -184,7 +185,7 @@ const removeRoles = (servant, userRoles, rolesToRemove) => {
   return
 }
 
-const MakeServant = async (
+export const MakeServant = async (
   context,
   args,
   permittedRoles,
@@ -324,7 +325,7 @@ const MakeServant = async (
 
   return parseForCache(servant, church, verb, servantLower)
 }
-const RemoveServant = async (
+export const RemoveServant = async (
   context,
   args,
   permittedRoles,
@@ -632,29 +633,6 @@ export const resolvers = {
       }
     },
 
-    RecordService: async (object, args, context) => {
-      isAuth(permitLeaderAdmin('Fellowship'), context.auth.roles)
-      const session = context.driver.session()
-
-      const serviceCheck = rearrangeCypherObject(
-        await session.run(serviceCypher.checkFormFilledThisWeek, args)
-      )
-
-      if (Object.keys(serviceCheck).length !== 0) {
-        throwErrorMsg('You have already filled your service form this week!')
-        return
-      }
-
-      const serviceDetails = rearrangeCypherObject(
-        await session.run(serviceCypher.recordService, {
-          ...args,
-          auth: context.auth,
-        })
-      )
-
-      return serviceDetails.serviceRecord.properties
-    },
-
     //Administrative Mutations
     MakeStreamAdmin: async (object, args, context) =>
       MakeServant(
@@ -795,70 +773,8 @@ export const resolvers = {
         'Leader'
       ),
     //ARRIVALS MUTATIONS
-    MakeConstituencyArrivalsAdmin: async (object, args, context) =>
-      MakeServant(
-        context,
-        args,
-        [...permitAdmin('Constituency'), ...permitArrivals('Council')],
-        'Constituency',
-        'ArrivalsAdmin'
-      ),
-    RemoveConstituencyArrivalsAdmin: async (object, args, context) =>
-      RemoveServant(
-        context,
-        args,
-        [...permitAdmin('Constituency'), ...permitArrivals('Council')],
-        'Constituency',
-        'ArrivalsAdmin'
-      ),
-    MakeCouncilArrivalsAdmin: async (object, args, context) =>
-      MakeServant(
-        context,
-        args,
-        [...permitAdmin('Council'), ...permitArrivals('Stream')],
-        'Council',
-        'ArrivalsAdmin'
-      ),
-    RemoveCouncilArrivalsAdmin: async (object, args, context) =>
-      RemoveServant(
-        context,
-        args,
-        [...permitAdmin('Council'), ...permitArrivals('Stream')],
-        'Council',
-        'ArrivalsAdmin'
-      ),
-    MakeStreamArrivalsAdmin: async (object, args, context) =>
-      MakeServant(
-        context,
-        args,
-        [...permitAdmin('Stream'), ...permitArrivals('GatheringService')],
-        'Stream',
-        'ArrivalsAdmin'
-      ),
-    RemoveStreamArrivalsAdmin: async (object, args, context) =>
-      RemoveServant(
-        context,
-        args,
-        [...permitAdmin('Stream'), ...permitArrivals('GatheringService')],
-        'Stream',
-        'ArrivalsAdmin'
-      ),
-    MakeGatheringServiceArrivalsAdmin: async (object, args, context) =>
-      MakeServant(
-        context,
-        args,
-        [...permitAdmin('GatheringService'), ...permitArrivals('Denomination')],
-        'GatheringService',
-        'ArrivalsAdmin'
-      ),
-    RemoveGatheringServiceArrivalsAdmin: async (object, args, context) =>
-      RemoveServant(
-        context,
-        args,
-        [...permitAdmin('GatheringService'), ...permitArrivals('Denomination')],
-        'GatheringService',
-        'ArrivalsAdmin'
-      ),
+    ...arrivalsMutation,
+    ...serviceMutation,
     //ARRIVALS HELPERS
     // MakeStreamArrivalsHelper: async (object, args, context) =>
     //   MakeServant(

@@ -68,6 +68,14 @@ export const throwErrorMsg = (message, error) => {
     return
   }
 
+  if (!message) {
+    // eslint-disable-next-line no-console
+    console.error(error)
+    // eslint-disable-next-line no-alert
+    alert(`${error}`)
+    return
+  }
+
   // eslint-disable-next-line no-console
   console.error(message, ' ', error)
   // eslint-disable-next-line no-alert

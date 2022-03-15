@@ -1,3 +1,7 @@
+import { permitLeaderAdmin } from './permissions'
+import { isAuth, rearrangeCypherObject, throwErrorMsg } from './resolver-utils'
+
+const serviceCypher = require('./cypher/service-cypher')
 const cypher = require('./cypher/component-service-cypher')
 
 const getComponentServiceAggregates = async (obj, args, context, church) => {
@@ -18,6 +22,31 @@ const getComponentServiceAggregates = async (obj, args, context, church) => {
   })
 
   return serviceAggregates
+}
+
+export const serviceMutation = {
+  RecordService: async (object, args, context) => {
+    isAuth(permitLeaderAdmin('Fellowship'), context.auth.roles)
+    const session = context.driver.session()
+
+    const serviceCheck = rearrangeCypherObject(
+      await session.run(serviceCypher.checkFormFilledThisWeek, args)
+    )
+
+    if (Object.keys(serviceCheck).length !== 0) {
+      throwErrorMsg('You have already filled your service form this week!')
+      return
+    }
+
+    const serviceDetails = rearrangeCypherObject(
+      await session.run(serviceCypher.recordService, {
+        ...args,
+        auth: context.auth,
+      })
+    )
+    console.log(serviceDetails)
+    return serviceDetails.serviceRecord.properties
+  },
 }
 
 export const serviceResolvers = {

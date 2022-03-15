@@ -63,6 +63,7 @@ const ServiceForm = ({
   const onSubmit = (values, onSubmitProps) => {
     if (values.treasurers[0] === values.treasurers[1]) {
       throwErrorMsg('You cannot choose the same treasurer twice!')
+      onSubmitProps.setSubmitting(false)
       return
     } else {
       onSubmitProps.setSubmitting(true)
@@ -78,12 +79,14 @@ const ServiceForm = ({
           treasurerSelfie: values.treasurerSelfie,
           servicePicture: values.servicePicture,
         },
-      }).then((res) => {
-        onSubmitProps.setSubmitting(false)
-        onSubmitProps.resetForm()
-        setServiceRecordId(res.data.RecordService.id)
-        navigate(`/${churchType}/service-details`)
       })
+        .then((res) => {
+          onSubmitProps.setSubmitting(false)
+          onSubmitProps.resetForm()
+          setServiceRecordId(res.data.RecordService.id)
+          navigate(`/${churchType}/service-details`)
+        })
+        .catch((error) => throwErrorMsg('', error))
     }
   }
 

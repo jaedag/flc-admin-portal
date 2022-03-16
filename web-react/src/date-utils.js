@@ -11,6 +11,15 @@ export const setTime = (timeArray) => {
   return now
 }
 
+export const getMondayThisWeek = (date) => {
+  const firstDate = new Date(date)
+  const numberOfDaysBefore = date.getDay()
+
+  firstDate.setDate(firstDate.getDate() - numberOfDaysBefore)
+
+  return firstDate
+}
+
 export const parseNeoTime = (time) => {
   if (!time) {
     return

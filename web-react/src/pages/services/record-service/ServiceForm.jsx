@@ -10,6 +10,7 @@ import { Col, Container, Row } from 'react-bootstrap'
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import SubmitButton from 'components/formik-components/SubmitButton'
 import { throwErrorMsg } from 'global-utils'
+import { getMondayThisWeek } from 'date-utils'
 
 const ServiceForm = ({
   church,
@@ -31,10 +32,12 @@ const ServiceForm = ({
     servicePicture: '',
   }
 
+  const today = new Date()
+
   const validationSchema = Yup.object({
     serviceDate: Yup.date()
-      .max(new Date(), 'Service could not possibly have happened after today')
-      .min(new Date(), 'Service could not possibly have happened after today')
+      .max(today, 'Service could not possibly have happened after today')
+      .min(getMondayThisWeek(today), 'You can only fill forms for this week')
       .required('Date is a required field'),
     cediIncome: Yup.number()
       .typeError('Please enter a valid number')

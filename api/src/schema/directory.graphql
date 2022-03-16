@@ -32,6 +32,14 @@ type Member @auth(rules: [{ isAuthenticated: true }]) {
       RETURN DISTINCT members ORDER BY toLower(members.lastName), toLower(members.firstName)
       """
     )
+  memberSearch(key: String!, limit: Int! = 5): [Member]
+    @cypher(
+      statement: """
+      MATCH (this)-[:LEADS|HAS|DOES_ARRIVALS_FOR|IS_ADMIN_FOR*1..6]->(:Fellowship)-[:BELONGS_TO]-(members)
+      WHERE toLower(members.firstName+ ' ' + members.lastName) CONTAINS toLower($key)
+      RETURN DISTINCT members ORDER BY toLower(members.lastName), toLower(members.firstName) LIMIT $limit
+      """
+    )
   memberCount: Int
     @cypher(
       statement: """

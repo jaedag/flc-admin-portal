@@ -2,7 +2,7 @@ import { gql } from '@apollo/client'
 
 export const GATHERINGSERVICE_MEMBER_SEARCH = gql`
   query ($id: ID!, $key: String!) {
-    gatheringServices(where: { id: $id }) {
+    fellowships(where: { id: $id }) {
       id
       memberSearch(key: $key, limit: 5) {
         id
@@ -68,6 +68,19 @@ export const BACENTA_MEMBER_SEARCH = gql`
 export const FELLOWSHIP_MEMBER_SEARCH = gql`
   query ($id: ID!, $key: String!) {
     fellowships(where: { id: $id }) {
+      id
+      memberSearch(key: $key, limit: 5) {
+        id
+        firstName
+        lastName
+      }
+    }
+  }
+`
+
+export const MEMBER_MEMBER_SEARCH = gql`
+  query ($id: ID!, $key: String!) {
+    members(where: { id: $id }) {
       id
       memberSearch(key: $key, limit: 5) {
         id

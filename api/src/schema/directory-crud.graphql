@@ -360,7 +360,7 @@ extend type Mutation {
       SET log.id = apoc.create.uuid(),
        log.timeStamp = datetime(),
        log.historyRecord = bacenta.name +' Bacenta History Begins'
-        
+
        MERGE (bacenta)-[:BUSSES_FROM]->(zone)
        MERGE (constituency)-[:HAS]->(bacenta)
        MERGE (leader)-[:LEADS]->(bacenta)
@@ -798,6 +798,7 @@ extend type Mutation {
 ### DELETE OPERATIONS (MAKE INACTIVE) ###
 extend type Mutation {
   # In the context of church data we never delete, we only render inactive
+  MakeMemberInactive(id: ID!): Member
   CloseDownFellowship(fellowshipId: ID!, leaderId: ID!): Bacenta
   CloseDownBacenta(bacentaId: ID!, leaderId: ID!): Constituency
 

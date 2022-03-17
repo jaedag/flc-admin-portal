@@ -1,6 +1,7 @@
-import { permitAdmin, permitLeaderAdmin } from './permissions'
+import { permitAdmin } from './permissions'
 import { serviceMutation } from './service-resolvers'
 import { arrivalsMutation } from './arrivals-resolvers'
+import { directoryMutation } from './directory-resolvers'
 
 /* eslint-disable no-console */
 const dotenv = require('dotenv')
@@ -477,45 +478,6 @@ export const resolvers = {
   },
 
   Mutation: {
-    CreateMember: async (object, args, context) => {
-      isAuth(permitLeaderAdmin('Fellowship'), context.auth.roles)
-
-      const session = context.driver.session()
-      const memberResponse = await session.run(
-        cypher.checkMemberEmailExists,
-        args
-      )
-
-      const memberCheck = rearrangeCypherObject(memberResponse)
-
-      if (memberCheck.email || memberCheck.whatsappNumber) {
-        throwErrorMsg(
-          'A member with this email address/whatsapp number already exists in the database',
-          ''
-        )
-      }
-
-      const createMemberResponse = await session.run(cypher.createMember, {
-        firstName: args?.firstName ?? '',
-        middleName: args?.middleName ?? '',
-        lastName: args?.lastName ?? '',
-        email: args?.email ?? '',
-        phoneNumber: args?.phoneNumber ?? '',
-        whatsappNumber: args?.whatsappNumber ?? '',
-        dob: args?.dob ?? '',
-        maritalStatus: args?.maritalStatus ?? '',
-        gender: args?.gender ?? '',
-        occupation: args?.occupation ?? '',
-        fellowship: args?.fellowship ?? '',
-        ministry: args?.ministry ?? '',
-        pictureUrl: args?.pictureUrl ?? '',
-        auth_id: context.auth.jwt.sub ?? '',
-      })
-
-      const member = rearrangeCypherObject(createMemberResponse)
-
-      return member
-    },
     UpdateMemberEmail: async (object, args, context) => {
       isAuth(permitAdmin('Fellowship'), context.auth.roles)
 
@@ -775,6 +737,7 @@ export const resolvers = {
     //ARRIVALS MUTATIONS
     ...arrivalsMutation,
     ...serviceMutation,
+    ...directoryMutation,
     //ARRIVALS HELPERS
     // MakeStreamArrivalsHelper: async (object, args, context) =>
     //   MakeServant(

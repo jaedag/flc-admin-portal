@@ -3,7 +3,8 @@ import { useQuery } from '@apollo/client'
 import DisplayChurchDetails from '../../../components/DisplayChurchDetails/DisplayChurchDetails'
 import { DISPLAY_FELLOWSHIP, DISPLAY_FELLOWSHIP_HISTORY } from './ReadQueries'
 import { ChurchContext } from '../../../contexts/ChurchContext'
-import { getWeekNumber, last3Weeks, throwErrorMsg } from 'global-utils'
+import { throwErrorMsg } from 'global-utils'
+import { last3Weeks, getWeekNumber } from 'date-utils'
 import { permitAdmin } from 'permission-utils'
 
 const DetailsFellowship = () => {

@@ -12,6 +12,7 @@ import {
   CONSTITUENCY_MEMBER_SEARCH,
   BACENTA_MEMBER_SEARCH,
   FELLOWSHIP_MEMBER_SEARCH,
+  MEMBER_MEMBER_SEARCH,
 } from './SearchMemberQueries'
 import TextError from './TextError'
 
@@ -74,58 +75,77 @@ const SearchMember = (props) => {
     }
   )
 
+  const [memberSearch, { error: memberError }] = useLazyQuery(
+    MEMBER_MEMBER_SEARCH,
+    {
+      onCompleted: (data) => {
+        setSuggestions(data.members[0].memberSearch)
+        return
+      },
+    }
+  )
+
   const error =
     gatheringServiceError ||
     streamError ||
     councilError ||
     constituencyError ||
     bacentaError ||
-    fellowshipError
+    fellowshipError ||
+    memberError
   throwErrorMsg(error)
 
   const whichSearch = (searchString) => {
-    if (isAuthorised(permitMe('GatheringService'), currentUser.roles)) {
-      gatheringServiceSearch({
-        variables: {
-          id: currentUser.gatheringService,
-          key: searchString?.trim(),
-        },
-      })
-    } else if (isAuthorised(permitMe('Stream'), currentUser.roles)) {
-      streamSearch({
-        variables: {
-          id: currentUser.stream,
-          key: searchString?.trim(),
-        },
-      })
-    } else if (isAuthorised(permitMe('Council'), currentUser.roles)) {
-      councilSearch({
-        variables: {
-          id: currentUser.council,
-          key: searchString?.trim(),
-        },
-      })
-    } else if (isAuthorised(permitMe('Constituency'), currentUser.roles)) {
-      constituencySearch({
-        variables: {
-          id: currentUser.constituency,
-          key: searchString?.trim(),
-        },
-      })
-    } else if (isAuthorised(permitMe('Bacenta'), currentUser.roles)) {
-      bacentaSearch({
-        variables: {
-          id: currentUser.bacenta,
-          key: searchString?.trim(),
-        },
-      })
-    } else if (isAuthorised(permitMe('Fellowship'), currentUser.roles)) {
-      fellowshipSearch({
-        variables: {
-          id: currentUser.fellowship,
-          key: searchString?.trim(),
-        },
-      })
+    memberSearch({
+      variables: {
+        id: currentUser.id,
+        key: searchString?.trim(),
+      },
+    })
+    if (props.roleBased) {
+      if (isAuthorised(permitMe('GatheringService'), currentUser.roles)) {
+        gatheringServiceSearch({
+          variables: {
+            id: currentUser.gatheringService,
+            key: searchString?.trim(),
+          },
+        })
+      } else if (isAuthorised(permitMe('Stream'), currentUser.roles)) {
+        streamSearch({
+          variables: {
+            id: currentUser.stream,
+            key: searchString?.trim(),
+          },
+        })
+      } else if (isAuthorised(permitMe('Council'), currentUser.roles)) {
+        councilSearch({
+          variables: {
+            id: currentUser.council,
+            key: searchString?.trim(),
+          },
+        })
+      } else if (isAuthorised(permitMe('Constituency'), currentUser.roles)) {
+        constituencySearch({
+          variables: {
+            id: currentUser.constituency,
+            key: searchString?.trim(),
+          },
+        })
+      } else if (isAuthorised(permitMe('Bacenta'), currentUser.roles)) {
+        bacentaSearch({
+          variables: {
+            id: currentUser.bacenta,
+            key: searchString?.trim(),
+          },
+        })
+      } else if (isAuthorised(permitMe('Fellowship'), currentUser.roles)) {
+        fellowshipSearch({
+          variables: {
+            id: currentUser.fellowship,
+            key: searchString?.trim(),
+          },
+        })
+      }
     }
   }
 

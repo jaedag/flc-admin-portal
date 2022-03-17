@@ -71,6 +71,19 @@ OR member.whatsappNumber = $whatsappNumber
 RETURN member.email AS email, member.whatsappNumber AS whatsappNumber
 `
 
+export const checkMemberHasNoActiveRelationships = `
+MATCH p=(member:Member {id: $id})-[:LEADS|DOES_ARRIVALS_FOR|IS_ADMIN_FOR]->(church)
+RETURN p
+`
+
+export const makeMemberInactive = `
+MATCH (member:Member {id: $id})
+SET member:InactiveMember
+REMOVE member:Member
+
+RETURN member
+`
+
 export const createMember = `
 CREATE (member:Member {whatsappNumber:$whatsappNumber})
       SET

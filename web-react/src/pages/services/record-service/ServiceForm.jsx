@@ -10,6 +10,7 @@ import { Col, Container, Row } from 'react-bootstrap'
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import SubmitButton from 'components/formik-components/SubmitButton'
 import { throwErrorMsg } from 'global-utils'
+import { getMondayThisWeek } from 'date-utils'
 
 const ServiceForm = ({
   church,
@@ -31,9 +32,12 @@ const ServiceForm = ({
     servicePicture: '',
   }
 
+  const today = new Date()
+
   const validationSchema = Yup.object({
     serviceDate: Yup.date()
-      .max(new Date(), 'Service could not possibly have happened after today')
+      .max(today, 'Service could not possibly have happened after today')
+      .min(getMondayThisWeek(today), 'You can only fill forms for this week')
       .required('Date is a required field'),
     cediIncome: Yup.number()
       .typeError('Please enter a valid number')
@@ -63,6 +67,7 @@ const ServiceForm = ({
   const onSubmit = (values, onSubmitProps) => {
     if (values.treasurers[0] === values.treasurers[1]) {
       throwErrorMsg('You cannot choose the same treasurer twice!')
+      onSubmitProps.setSubmitting(false)
       return
     } else {
       onSubmitProps.setSubmitting(true)
@@ -78,12 +83,14 @@ const ServiceForm = ({
           treasurerSelfie: values.treasurerSelfie,
           servicePicture: values.servicePicture,
         },
-      }).then((res) => {
-        onSubmitProps.setSubmitting(false)
-        onSubmitProps.resetForm()
-        setServiceRecordId(res.data.RecordService.id)
-        navigate(`/${churchType}/service-details`)
       })
+        .then((res) => {
+          onSubmitProps.setSubmitting(false)
+          onSubmitProps.resetForm()
+          setServiceRecordId(res.data.RecordService.id)
+          navigate(`/${churchType}/service-details`)
+        })
+        .catch((error) => throwErrorMsg('', error))
     }
   }
 

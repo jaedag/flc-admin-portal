@@ -19,7 +19,8 @@ import {
   MAKE_STREAM_ADMIN,
 } from './AdminMutations'
 import FormikControl from '../formik-components/FormikControl'
-import { getWeekNumber, plural, throwErrorMsg } from '../../global-utils'
+import { plural, throwErrorMsg } from '../../global-utils'
+import { getWeekNumber } from 'date-utils'
 import Breadcrumb from './Breadcrumb'
 import { Button, Col, Container, Row, Spinner } from 'react-bootstrap'
 import PlaceholderCustom from 'components/Placeholder'

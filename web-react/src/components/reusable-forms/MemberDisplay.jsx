@@ -5,11 +5,11 @@ import Timeline from '../../components/Timeline/Timeline'
 import MemberRoleList from '../../components/MemberRoleList'
 import {
   getNameWithTitle,
-  getMemberDob,
   transformCloudinaryImg,
   throwErrorMsg,
   getHighestTitle,
 } from '../../global-utils'
+import { getMemberDob } from 'date-utils'
 import {
   DISPLAY_MEMBER_ADMIN,
   DISPLAY_MEMBER_BIO,

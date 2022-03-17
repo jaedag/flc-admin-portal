@@ -15,7 +15,7 @@ import HeadingSecondary from 'components/HeadingSecondary'
 import BaseComponent from 'components/base-component/BaseComponent'
 import { useNavigate } from 'react-router'
 import { ChurchContext } from 'contexts/ChurchContext'
-import { getHumanReadableDate } from 'global-utils'
+import { getHumanReadableDate } from 'date-utils'
 
 const CouncilBankingSlipSubmission = () => {
   const { serviceRecordId } = useContext(ServiceContext)

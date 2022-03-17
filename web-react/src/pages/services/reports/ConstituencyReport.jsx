@@ -32,7 +32,7 @@ export const ConstituencyReport = () => {
         <div className="row">
           <div className="col">
             <MembershipCard
-              link="/campus/members"
+              link="/constituency/members"
               title="Membership"
               count={data?.constituencies[0].memberCount}
             />

@@ -14,7 +14,8 @@ import BaseComponent from 'components/base-component/BaseComponent'
 import PlusSign from 'components/buttons/PlusMinusSign/PlusSign'
 import MinusSign from 'components/buttons/PlusMinusSign/MinusSign'
 import { RECORD_BUSSING_FROM_BACENTA } from './arrivalsMutations'
-import { MOMO_NUM_REGEX, parseDate } from 'global-utils'
+import { MOMO_NUM_REGEX } from 'global-utils'
+import { parseDate } from 'date-utils'
 import { ServiceContext } from 'contexts/ServiceContext'
 
 const FormOnTheWaySubmission = () => {

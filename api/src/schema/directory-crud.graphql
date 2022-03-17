@@ -798,6 +798,7 @@ extend type Mutation {
 ### DELETE OPERATIONS (MAKE INACTIVE) ###
 extend type Mutation {
   # In the context of church data we never delete, we only render inactive
+  MakeMemberInactive(id: ID!): Member
   CloseDownFellowship(fellowshipId: ID!, leaderId: ID!): Bacenta
   CloseDownBacenta(bacentaId: ID!, leaderId: ID!): Constituency
 

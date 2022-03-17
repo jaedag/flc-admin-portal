@@ -318,9 +318,7 @@ function MemberForm({ initialValues, onSubmit, title, loading }) {
                   </Col>
                 </RoleView>
 
-                <Col>
-                  <SubmitButton formik={formik} />
-                </Col>
+                <SubmitButton formik={formik} />
               </Row>
             </Form>
           </Container>

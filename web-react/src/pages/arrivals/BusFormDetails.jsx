@@ -11,12 +11,9 @@ import { useContext } from 'react'
 import { Container, Row, Col, Table, Button } from 'react-bootstrap'
 import { DISPLAY_BUSSING_RECORDS } from './arrivalsQueries'
 import '../services/record-service/ServiceDetails.css'
-import {
-  ARRIVALS_CUTOFF,
-  parseDate,
-  setTime,
-  transformCloudinaryImg,
-} from 'global-utils'
+import { ARRIVALS_CUTOFF, transformCloudinaryImg } from 'global-utils'
+import { parseDate } from 'date-utils'
+import { setTime } from 'date-utils'
 import { useNavigate } from 'react-router'
 import RoleView from 'auth/RoleView'
 import { permitMe } from 'permission-utils'

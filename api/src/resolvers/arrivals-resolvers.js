@@ -74,6 +74,11 @@ export const arrivalsMutation = {
     isAuth(permitArrivals('Council'), context.auth.roles)
     const session = context.driver.session()
 
+    if (args.stream_name === 'Anagkazo') {
+      throwErrorMsg(
+        'Anagkazo is not entitled to bussing support using this application'
+      )
+    }
     const transactionResponse = rearrangeCypherObject(
       await session.run(cypher.checkTransactionId, args)
     )

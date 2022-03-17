@@ -93,7 +93,7 @@ export const MAKE_STREAMARRIVALS_ADMIN = gql`
       id
       firstName
       lastName
-      isAdminForStreamArrivals {
+      isArrivalsAdminForStream {
         id
         arrivalsAdmin {
           id
@@ -127,7 +127,7 @@ export const MAKE_GATHERINGSERVICEARRIVALS_ADMIN = gql`
       id
       firstName
       lastName
-      isAdminForGatheringServiceArrivals {
+      isArrivalsAdminForGatheringService {
         id
         arrivalsAdmin {
           id
@@ -269,12 +269,22 @@ export const RECORD_ARRIVAL_TIME = gql`
   }
 `
 export const SEND_BUSSING_SUPPORT = gql`
-  mutation SendBussingSupport($bussingRecordId: ID!) {
-    SendBussingSupport(bussingRecordId: $bussingRecordId) {
+  mutation SendBussingSupport($bussingRecordId: ID!, $stream_name: String!) {
+    SendBussingSupport(
+      bussingRecordId: $bussingRecordId
+      stream_name: $stream_name
+    ) {
       id
       bussingTopUp
       momoNumber
       transactionId
+    }
+  }
+`
+export const SET_SWELL_DATE = gql`
+  mutation SetSwellDate($date: String!) {
+    SetSwellDate(date: $date) {
+      date
     }
   }
 `

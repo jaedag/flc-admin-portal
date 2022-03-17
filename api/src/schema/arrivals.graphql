@@ -9,8 +9,24 @@ extend type Member {
     @relationship(type: "DOES_ARRIVALS_FOR", direction: OUT)
   isArrivalsAdminForConstituency: [Constituency]
     @relationship(type: "DOES_ARRIVALS_FOR", direction: OUT)
+  isArrivalsAdminForStream: [Stream]
+    @relationship(type: "DOES_ARRIVALS_FOR", direction: OUT)
+  isArrivalsAdminForGatheringService: [GatheringService]
+    @relationship(type: "DOES_ARRIVALS_FOR", direction: OUT)
   isArrivalsHelperForStream: [Stream]
     @relationship(type: "HELPS_ARRIVALS_FOR", direction: OUT)
+}
+extend type GatheringService {
+  arrivalsAdmin: Member @relationship(type: "DOES_ARRIVALS_FOR", direction: IN)
+  bacentasThatSubmittedCount: Int!
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*3]->(bacentas:Bacenta)
+      MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
+      WHERE date(date.date) <> date()
+      RETURN bacentas
+      """
+    )
 }
 
 extend type Stream {
@@ -494,6 +510,6 @@ extend type Mutation {
       """
     )
 
-  SetSwellDate: SwellDay
-  SendBussingSupport(bussingRecordId: ID!): BussingRecord
+  SetSwellDate(date: String!): SwellDay
+  SendBussingSupport(bussingRecordId: ID!, stream_name: String!): BussingRecord
 }

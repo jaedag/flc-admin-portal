@@ -73,6 +73,7 @@ export const getHumanReadableDate = (date) => {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
+    weekday: 'long',
   })
 }
 

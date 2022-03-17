@@ -70,6 +70,32 @@ export const STREAM_ARRIVALS_DASHBOARD = gql`
   }
 `
 
+export const GATHERINGSERVICE_ARRIVALS_DASHBOARD = gql`
+  query ($id: ID, $date: Date!) {
+    gatheringServices(where: { id: $id }, options: { limit: 1 }) {
+      id
+      name
+      admin {
+        id
+        firstName
+        lastName
+      }
+      arrivalsAdmin {
+        id
+        firstName
+        lastName
+        fullName
+        pictureUrl
+      }
+      bacentaCount
+    }
+    timeGraphs(where: { date: $date }) {
+      date
+      swell
+    }
+  }
+`
+
 export const CONSTITUENCY_BUSSING_DATA = gql`
   query ($id: ID) {
     constituencies(where: { id: $id }, options: { limit: 1 }) {

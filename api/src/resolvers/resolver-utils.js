@@ -109,6 +109,8 @@ export const nextHigherChurch = (churchLevel) => {
       return 'Stream'
     case 'Stream':
       return 'Gathering Service'
+    case 'Gathering Service':
+      return 'Denomination'
     default:
       break
   }
@@ -143,12 +145,16 @@ export const historyRecordString = ({
     return `${servant.firstName} ${servant.lastName} was removed as the ${churchType} ${servantType} for  ${church.name} ${churchType}`
   }
 
-  if (args.oldLeaderId || args.oldAdminId) {
+  if (args.oldLeaderId || args.oldAdminId || args.oldArrivalsAdminId) {
     return `${servant.firstName} ${servant.lastName} became the ${servantType} of ${church.name} ${churchType} replacing ${oldServant.firstName} ${oldServant.lastName}`
   }
 
   if (args.adminId) {
     return `${servant.firstName} ${servant.lastName} became the admin for ${church.name} ${churchType}`
+  }
+
+  if (args.arrivalsAdminId) {
+    return `${servant.firstName} ${servant.lastName} became the arrivals admin for ${church.name} ${churchType}`
   }
 
   return `${servant.firstName} ${servant.lastName} started ${church.name} ${churchType} under ${higherChurch.name} ${higherChurch.type}`
@@ -265,4 +271,32 @@ export const removeServantCypher = async (
     logId: historyLogRes.id,
     auth: context.auth,
   })
+}
+
+export const formatting = (churchType, servantType) => {
+  let churchLower = churchType.toLowerCase()
+  let servantLower = servantType.toLowerCase()
+
+  let verb = `leads${churchType}`
+  if (servantType === 'Admin') {
+    verb = `isAdminFor${churchType}`
+  }
+  if (servantType === 'ArrivalsAdmin') {
+    verb = `isArrivalsAdminFor${churchType}`
+    servantLower = 'arrivalsAdmin'
+  }
+  if (servantType === 'ArrivalsHelper') {
+    verb = `isArrivalsHelperFor${churchType}`
+    servantLower = 'arrivalsHelper'
+  }
+
+  if (churchType === 'GatheringService') {
+    churchLower = 'gatheringService'
+  }
+
+  return {
+    verb,
+    servantLower,
+    churchLower,
+  }
 }

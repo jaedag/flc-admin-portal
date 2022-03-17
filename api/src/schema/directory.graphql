@@ -163,6 +163,15 @@ interface TimeGraphNode {
 type TimeGraph implements TimeGraphNode
   @auth(rules: [{ isAuthenticated: true }]) {
   date: Date
+  swell: Boolean
+    @cypher(
+      statement: """
+      MATCH (this)
+      UNWIND labels(this) AS swellStatus
+      WITH swellStatus WHERE swellStatus ='SwellDate'
+      RETURN true
+      """
+    )
   memberDob: Member @relationship(type: "WAS_BORN_ON", direction: IN)
   # titleAppointmentDate: Member @relationship(type: "APPOINTED_ON", direction: IN)
   leaderHistoryStartDate: Member

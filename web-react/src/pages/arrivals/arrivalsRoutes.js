@@ -14,6 +14,7 @@ import MobilisationPicture from './MobilisationPicture'
 import BacentasMobilising from './StateBacentasMobilising'
 import StreamDashboard from './DashboardStream'
 import ArrivalsHelpersStream from './ArrivalsHelpers/ArrivalsHelpersStream'
+import GatheringSerivceDashboard from './DashboardGatheringService'
 
 export const arrivals = [
   {
@@ -47,6 +48,12 @@ export const arrivals = [
     path: '/arrivals/stream',
     roles: permitLeaderAdminArrivals('Stream'),
     element: StreamDashboard,
+    placeholder: true,
+  },
+  {
+    path: '/arrivals/gatheringservice',
+    roles: permitLeaderAdminArrivals('GatheringService'),
+    element: GatheringSerivceDashboard,
     placeholder: true,
   },
   //Bacenta Forms that need to be Filled

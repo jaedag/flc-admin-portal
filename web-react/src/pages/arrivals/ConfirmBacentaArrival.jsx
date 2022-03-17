@@ -90,6 +90,7 @@ const ConfirmBacentaArrival = () => {
                     return SendBussingSupport({
                       variables: {
                         bussingRecordId: bussingRecordId,
+                        stream_name: constituency.stream_name,
                       },
                     })
                       .then((res) => {

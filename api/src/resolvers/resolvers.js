@@ -20,6 +20,7 @@ const {
   makeServantCypher,
   parseForCache_Removal,
   removeServantCypher,
+  formatting,
 } = require('./resolver-utils')
 
 const auth0 = require('./auth0-utils')
@@ -194,23 +195,11 @@ export const MakeServant = async (
   servantType
 ) => {
   //Set Up
-  let churchLower = churchType.toLowerCase()
-  let servantLower = servantType.toLowerCase()
+  const terms = formatting(churchType, servantType)
+  const verb = terms.verb
+  const churchLower = terms.churchLower
+  const servantLower = terms.servantLower
 
-  let verb = `leads${churchType}`
-  if (servantType === 'Admin') {
-    verb = `isAdminFor${churchType}`
-  }
-  if (servantType === 'ArrivalsAdmin') {
-    verb = `isArrivalsAdminFor${churchType}`
-    servantLower = 'arrivalsAdmin'
-  }
-  if (servantType === 'ArrivalsHelper') {
-    verb = `isArrivalsHelperFor${churchType}`
-    servantLower = 'arrivalsHelper'
-  }
-
-  console.log(args, verb, servant)
   isAuth(permittedRoles, context.auth.roles)
   noEmptyArgsValidation([
     `${churchLower}Id`,
@@ -339,17 +328,11 @@ export const RemoveServant = async (
   servantType
 ) => {
   //Set Up
-  let churchLower = churchType.toLowerCase()
-  let servantLower = servantType.toLowerCase()
-  console.log(args)
-  let verb = `leads${churchType}`
-  if (servantType === 'Admin') {
-    verb = `isAdminFor${churchType}`
-  }
-  if (servantType === 'ArrivalsAdmin') {
-    verb = `isArrivalsAdminFor${churchType}`
-    servantLower = 'arrivalsAdmin'
-  }
+  //Set Up
+  const terms = formatting(churchType, servantType)
+  const verb = terms.verb
+  const churchLower = terms.churchLower
+  const servantLower = terms.servantLower
 
   isAuth(permittedRoles, context.auth.roles)
   noEmptyArgsValidation([

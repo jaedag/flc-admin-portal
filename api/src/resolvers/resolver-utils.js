@@ -16,6 +16,10 @@ export const throwErrorMsg = (message, error) => {
     errorVar = error?.response?.data?.message
   }
 
+  if (error?.response?.statusText) {
+    errorVar = error.response.status + ' ' + error.response.statusText
+  }
+
   // eslint-disable-next-line no-console
   console.error(message, errorVar)
   throw new Error(`${message} ${errorVar}`)

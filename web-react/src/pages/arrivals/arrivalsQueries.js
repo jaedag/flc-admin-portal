@@ -221,6 +221,9 @@ export const DISPLAY_BUSSING_RECORDS = gql`
       bussingCost
       bussingTopUp
       offeringRaised
+      mobileNetwork
+      momoName
+      momoNumber
       numberOfBusses
       numberOfCars
       comments

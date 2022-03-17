@@ -1,5 +1,5 @@
 // Permissions Things
-export const permitLeader = churchLevel => {
+export const permitLeader = (churchLevel) => {
   let permittedFor = []
   switch (churchLevel.toLowerCase()) {
     case 'fellowship':
@@ -55,7 +55,7 @@ export const permitLeader = churchLevel => {
   return permittedFor
 }
 
-export const permitAdmin = churchLevel => {
+export const permitAdmin = (churchLevel) => {
   let permittedFor = []
   switch (churchLevel) {
     case 'Fellowship':
@@ -87,15 +87,15 @@ export const permitAdmin = churchLevel => {
   return permittedFor
 }
 
-export const permitLeaderAdmin = churchLevel => {
+export const permitLeaderAdmin = (churchLevel) => {
   return [...permitLeader(churchLevel), ...permitAdmin(churchLevel)]
 }
 
-export const permitMe = churchLevel => {
+export const permitMe = (churchLevel) => {
   return [...permitLeaderAdmin(churchLevel), ...permitArrivals(churchLevel)]
 }
 
-export const permitArrivals = churchLevel => {
+export const permitArrivals = (churchLevel) => {
   let permittedFor = []
   switch (churchLevel) {
     case 'Fellowship':

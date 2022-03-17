@@ -58,6 +58,9 @@ export const CONSTIUENCY_BACENTAS_ON_THE_WAY = gql`
           fullName
           pictureUrl
         }
+        bussing(limit: 1) {
+          id
+        }
       }
     }
   }

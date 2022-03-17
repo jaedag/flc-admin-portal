@@ -230,6 +230,7 @@ type BussingRecord implements Record @auth(rules: [{ isAuthenticated: true }]) {
   offeringRaised: Float
   bussingCost: Float
   bussingTopUp: Float
+  mobileNetwork: String
   momoName: String
   momoNumber: String
   confirmed_by: Member @relationship(type: "CONFIRMED_BY", direction: OUT)
@@ -237,6 +238,7 @@ type BussingRecord implements Record @auth(rules: [{ isAuthenticated: true }]) {
   #Arrived
   comments: String
   arrivalTime: DateTime
+  transactionId: Int
   arrivalTime_Logged_By: Member
     @relationship(type: "ARRIVAL_LOGGED_BY", direction: OUT)
 
@@ -406,6 +408,7 @@ extend type Mutation {
     offeringRaised: Float!
     numberOfBusses: Int!
     numberOfCars: Int!
+    mobileNetwork: String!
     momoName: String!
     momoNumber: String!
   ): BussingRecord
@@ -418,6 +421,7 @@ extend type Mutation {
       bussingRecord.offeringRaised = $offeringRaised,
       bussingRecord.numberOfBusses = $numberOfBusses,
       bussingRecord.numberOfCars = $numberOfCars,
+      bussingRecord.mobileNetwork = $mobileNetwork,
       bussingRecord.momoNumber = $momoNumber,
       bussingRecord.momoName = $momoName
 
@@ -487,4 +491,6 @@ extend type Mutation {
       RETURN bussingRecord
       """
     )
+
+  SendBussingSupport(bussingRecordId: ID!): BussingRecord
 }

@@ -176,6 +176,7 @@ export const RECORD_BUSSING_FROM_BACENTA = gql`
     $offeringRaised: Float!
     $numberOfBusses: Int!
     $numberOfCars: Int!
+    $mobileNetwork: String!
     $momoName: String!
     $momoNumber: String!
   ) {
@@ -187,6 +188,7 @@ export const RECORD_BUSSING_FROM_BACENTA = gql`
       offeringRaised: $offeringRaised
       numberOfBusses: $numberOfBusses
       numberOfCars: $numberOfCars
+      mobileNetwork: $mobileNetwork
       momoName: $momoName
       momoNumber: $momoNumber
     ) {
@@ -262,6 +264,16 @@ export const RECORD_ARRIVAL_TIME = gql`
         firstName
         lastName
       }
+    }
+  }
+`
+export const SEND_BUSSING_SUPPORT = gql`
+  mutation SendBussingSupport($bussingRecordId: ID!) {
+    SendBussingSupport(bussingRecordId: $bussingRecordId) {
+      id
+      bussingTopUp
+      momoNumber
+      transactionId
     }
   }
 `

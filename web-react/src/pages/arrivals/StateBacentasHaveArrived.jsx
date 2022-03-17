@@ -9,13 +9,13 @@ import { ChurchContext } from 'contexts/ChurchContext'
 import { MemberContext } from 'contexts/MemberContext'
 import { ServiceContext } from 'contexts/ServiceContext'
 import { Form, Formik } from 'formik'
-import { throwErrorMsg, transformCloudinaryImg } from 'global-utils'
+import { alertMsg, throwErrorMsg, transformCloudinaryImg } from 'global-utils'
 import { getWeekNumber } from 'date-utils'
 import PlaceholderMemberDisplay from 'pages/services/defaulters/PlaceholderDefaulter'
 import React, { useContext, useEffect, useState } from 'react'
-import { Button, Card, Container } from 'react-bootstrap'
+import { Button, Card, Container, Spinner } from 'react-bootstrap'
 import { useNavigate } from 'react-router'
-import { RECORD_ARRIVAL_TIME } from './arrivalsMutations'
+import { RECORD_ARRIVAL_TIME, SEND_BUSSING_SUPPORT } from './arrivalsMutations'
 import { CONSTITUENCY_BUSSING_DATA } from './arrivalsQueries'
 
 const FormBacentasHaveArrived = () => {
@@ -23,11 +23,13 @@ const FormBacentasHaveArrived = () => {
     useContext(ChurchContext)
   const { theme } = useContext(MemberContext)
   const { bussingRecordId } = useContext(ServiceContext)
+  const [isSubmitting, setSubmitting] = useState(false)
   const navigate = useNavigate()
   const { data, loading, error } = useQuery(CONSTITUENCY_BUSSING_DATA, {
     variables: { id: constituencyId },
   })
   const [RecordArrivalTime] = useMutation(RECORD_ARRIVAL_TIME)
+  const [SendBussingSupport] = useMutation(SEND_BUSSING_SUPPORT)
   const constituency = data?.constituencies[0]
   const initialValues = {
     bacentaSearch: '',
@@ -68,16 +70,35 @@ const FormBacentasHaveArrived = () => {
               type="submit"
               size="lg"
               className={`btn-main ${theme}`}
+              disabled={isSubmitting}
               onClick={() => {
+                setSubmitting(true)
                 RecordArrivalTime({
                   variables: {
                     bussingRecordId: bussingRecordId,
                   },
                 })
                   .then(() => {
-                    togglePopup()
+                    return SendBussingSupport({
+                      variables: {
+                        bussingRecordId: bussingRecordId,
+                      },
+                    })
+                      .then((res) => {
+                        togglePopup()
+                        alertMsg(
+                          'Money Successfully Sent to ' +
+                            res.data.SendBussingSupport.momoNumber
+                        )
+                        setSubmitting(false)
+                      })
+                      .catch((err) => {
+                        setSubmitting(false)
+                        throwErrorMsg(err)
+                      })
                   })
                   .catch((error) => {
+                    setSubmitting(false)
                     throwErrorMsg(
                       'There was an error recording the arrival time of this bacenta',
                       error
@@ -85,7 +106,14 @@ const FormBacentasHaveArrived = () => {
                   })
               }}
             >
-              {`Yes, I'm sure`}
+              {isSubmitting ? (
+                <>
+                  <Spinner animation="grow" size="sm" />
+                  <span> Submitting</span>
+                </>
+              ) : (
+                `Yes, I'm sure`
+              )}
             </Button>
             <Button
               variant="primary"

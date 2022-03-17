@@ -17,6 +17,7 @@ import { RECORD_BUSSING_FROM_BACENTA } from './arrivalsMutations'
 import { MOMO_NUM_REGEX } from 'global-utils'
 import { parseDate } from 'date-utils'
 import { ServiceContext } from 'contexts/ServiceContext'
+import { MOBILE_NETWORK_OPTIONS } from './arrivals-utils'
 
 const FormOnTheWaySubmission = () => {
   const navigate = useNavigate()
@@ -29,6 +30,7 @@ const FormOnTheWaySubmission = () => {
     offeringRaised: '',
     numberOfBusses: '',
     numberOfCars: '',
+    mobileNetwork: '',
     momoName: '',
     momoNumber: '',
   }
@@ -74,6 +76,10 @@ const FormOnTheWaySubmission = () => {
       is: (momoNumber) => momoNumber && momoNumber.length > 0,
       then: Yup.string().required('Please enter the Momo Name'),
     }),
+    mobileNetwork: Yup.string().when('momoNumber', {
+      is: (momoNumber) => momoNumber && momoNumber.length > 0,
+      then: Yup.string().required('Please enter the Mobile Network'),
+    }),
   })
 
   const onSubmit = (values, onSubmitProps) => {
@@ -87,6 +93,7 @@ const FormOnTheWaySubmission = () => {
         offeringRaised: parseFloat(values.offeringRaised),
         numberOfBusses: parseInt(values.numberOfBusses),
         numberOfCars: parseInt(values.numberOfCars || 0),
+        mobileNetwork: values.mobileNetwork,
         momoName: values.momoName,
         momoNumber: values.momoNumber,
       },
@@ -157,9 +164,16 @@ const FormOnTheWaySubmission = () => {
                     label="Number of Cars"
                   />
                   <FormikControl
+                    control="select"
+                    name="mobileNetwork"
+                    label="Mobile Network"
+                    options={MOBILE_NETWORK_OPTIONS}
+                  />
+                  <FormikControl
                     control="input"
                     name="momoNumber"
                     label="MoMo Number"
+                    defaultOption="Choose a Network"
                   />
                   <FormikControl
                     control="input"

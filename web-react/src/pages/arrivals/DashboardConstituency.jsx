@@ -150,7 +150,7 @@ const ConstituencyDashboard = () => {
           />
           <MenuButton
             title="Bacentas That Have Arrived"
-            onClick={() => navigate('/arrivals/bacentas-arrived')}
+            onClick={() => navigate('/arrivals/bacentas-have-arrived')}
             iconComponent={Download}
             iconBg
             noCaption

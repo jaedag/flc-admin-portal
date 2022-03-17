@@ -116,26 +116,6 @@ const BusFormDetails = () => {
                       </PlaceholderCustom>
                     </td>
                   </tr>
-                  {bussing?.momoNumber && (
-                    <tr>
-                      <td>Momo Number</td>
-                      <td>
-                        <PlaceholderCustom loading={loading}>
-                          {bussing?.momoNumber}
-                        </PlaceholderCustom>
-                      </td>
-                    </tr>
-                  )}
-                  {bussing?.momoName && (
-                    <tr>
-                      <td>Momo Name</td>
-                      <td>
-                        <PlaceholderCustom loading={loading}>
-                          {bussing?.momoName}
-                        </PlaceholderCustom>
-                      </td>
-                    </tr>
-                  )}
 
                   <tr>
                     <td>Bussing Top Up</td>
@@ -169,6 +149,36 @@ const BusFormDetails = () => {
                       </PlaceholderCustom>
                     </td>
                   </tr>
+                  {bussing?.mobileNetwork && (
+                    <tr>
+                      <td>Mobile Network</td>
+                      <td>
+                        <PlaceholderCustom loading={loading}>
+                          {bussing?.mobileNetwork}
+                        </PlaceholderCustom>
+                      </td>
+                    </tr>
+                  )}
+                  {bussing?.momoNumber && (
+                    <tr>
+                      <td>Momo Number</td>
+                      <td>
+                        <PlaceholderCustom loading={loading}>
+                          {bussing?.momoNumber}
+                        </PlaceholderCustom>
+                      </td>
+                    </tr>
+                  )}
+                  {bussing?.momoName && (
+                    <tr>
+                      <td>Momo Name</td>
+                      <td>
+                        <PlaceholderCustom loading={loading}>
+                          {bussing?.momoName}
+                        </PlaceholderCustom>
+                      </td>
+                    </tr>
+                  )}
                   {bussing?.comments && (
                     <tr>
                       <td>Comments</td>

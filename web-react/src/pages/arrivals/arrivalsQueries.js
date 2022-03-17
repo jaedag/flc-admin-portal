@@ -75,7 +75,7 @@ export const CONSTITUENCY_BUSSING_DATA = gql`
     constituencies(where: { id: $id }, options: { limit: 1 }) {
       id
       name
-
+      stream_name
       bacentas {
         id
         name
@@ -232,10 +232,8 @@ export const DISPLAY_BUSSING_RECORDS = gql`
     bacentas(where: { id: $bacentaId }) {
       id
       name
-      zone {
-        number
-        bussingTopUp
-      }
+      normalBussingTopUp
+      swellBussingTopUp
     }
   }
 `

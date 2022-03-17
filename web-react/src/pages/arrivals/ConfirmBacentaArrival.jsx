@@ -18,7 +18,7 @@ import { useNavigate } from 'react-router'
 import { RECORD_ARRIVAL_TIME, SEND_BUSSING_SUPPORT } from './arrivalsMutations'
 import { CONSTITUENCY_BUSSING_DATA } from './arrivalsQueries'
 
-const FormBacentasHaveArrived = () => {
+const ConfirmBacentaArrival = () => {
   const { constituencyId, clickCard, isOpen, togglePopup } =
     useContext(ChurchContext)
   const { theme } = useContext(MemberContext)
@@ -56,7 +56,7 @@ const FormBacentasHaveArrived = () => {
     <BaseComponent data={data} loading={loading} error={error} placeholder>
       <Container>
         <HeadingPrimary loading={loading}>
-          Bacentas That Have Been Counted
+          Confirm Bacenta Arrival
         </HeadingPrimary>
         <HeadingSecondary loading={!constituency?.name}>
           {constituency?.name} Constituency
@@ -78,7 +78,15 @@ const FormBacentasHaveArrived = () => {
                     bussingRecordId: bussingRecordId,
                   },
                 })
-                  .then(() => {
+                  .then((res) => {
+                    if (
+                      !res.data.RecordArrivalTime.bussingTopUp ||
+                      constituency.stream_name === 'Anagkazo'
+                    ) {
+                      //if there is no value for the bussing top up
+                      return
+                    }
+
                     return SendBussingSupport({
                       variables: {
                         bussingRecordId: bussingRecordId,
@@ -200,4 +208,4 @@ const FormBacentasHaveArrived = () => {
   )
 }
 
-export default FormBacentasHaveArrived
+export default ConfirmBacentaArrival

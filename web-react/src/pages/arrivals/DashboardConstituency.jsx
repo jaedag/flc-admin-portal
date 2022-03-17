@@ -18,12 +18,7 @@ import { throwErrorMsg } from 'global-utils'
 import { MAKE_CONSTITUENCYARRIVALS_ADMIN } from './arrivalsMutations'
 import { permitAdmin, permitArrivals } from 'permission-utils'
 import HeadingSecondary from 'components/HeadingSecondary'
-import {
-  CashStack,
-  PersonCheck,
-  Forward,
-  Download,
-} from 'react-bootstrap-icons'
+import { CashStack, PersonCheck, Forward } from 'react-bootstrap-icons'
 
 const ConstituencyDashboard = () => {
   const { isOpen, togglePopup, constituencyId } = useContext(ChurchContext)
@@ -142,7 +137,7 @@ const ConstituencyDashboard = () => {
             noCaption
           />
           <MenuButton
-            title="Bacentas That Have Been Counted"
+            title="Confirm Bacenta Arrival"
             onClick={() => navigate('/arrivals/bacentas-have-been-counted')}
             iconComponent={PersonCheck}
             iconBg
@@ -151,13 +146,6 @@ const ConstituencyDashboard = () => {
           <MenuButton
             title="Bacentas That Have Arrived"
             onClick={() => navigate('/arrivals/bacentas-have-arrived')}
-            iconComponent={Download}
-            iconBg
-            noCaption
-          />
-          <MenuButton
-            title="Bacentas That Have Money Sent"
-            onClick={() => navigate('/arrivals/bacentas-arrived')}
             iconComponent={CashStack}
             iconBg
             noCaption

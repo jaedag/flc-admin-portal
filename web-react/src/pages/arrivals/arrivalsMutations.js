@@ -258,6 +258,7 @@ export const RECORD_ARRIVAL_TIME = gql`
   mutation RecordArrivalTime($bussingRecordId: ID!) {
     RecordArrivalTime(bussingRecordId: $bussingRecordId) {
       id
+      bussingTopUp
       arrivalTime
       arrivalTime_Logged_By {
         id

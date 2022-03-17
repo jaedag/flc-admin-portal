@@ -1,4 +1,4 @@
-import { permitAdmin, permitArrivals } from './permissions'
+import { permitAdmin, permitAdminArrivals, permitArrivals } from './permissions'
 import { isAuth, rearrangeCypherObject, throwErrorMsg } from './resolver-utils'
 import { MakeServant, RemoveServant } from './resolvers'
 const cypher = require('./cypher/arrivals-cypher')
@@ -141,6 +141,18 @@ export const arrivalsMutation = {
       )
 
     return bussingRecord
+  },
+
+  SetSwellDate: async (object, args, context) => {
+    isAuth(permitAdminArrivals('GatheringService'), context.auth.roles)
+
+    const session = context.driver.session()
+
+    const cypherResponse = rearrangeCypherObject(
+      await session.run(cypher.setSwellDate, args)
+    )
+
+    return cypherResponse
   },
 }
 

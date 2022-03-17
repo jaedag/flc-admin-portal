@@ -331,7 +331,8 @@ extend type Mutation {
     constituencyId: ID!
     leaderId: ID!
     fellowships: [ID]
-    zone: Int!
+    normalBussingTopUp: Float!
+    swellBussingTopUp: Float!
   ): Bacenta  #Return constituency and drill down to get bacenta info
     @auth(
       rules: [
@@ -348,20 +349,20 @@ extend type Mutation {
     @cypher(
       statement: """
       CREATE (bacenta:Bacenta:IC:Active {name:$name})
-         	SET
-      	bacenta.id = apoc.create.uuid()
+        SET	bacenta.id = apoc.create.uuid(),
+        bacenta.normalBussingTopUp = $normalBussingTopUp,
+        bacenta.swellBussingTopUp = $swellBussingTopUp
       WITH bacenta
        MATCH (leader:Member {id:$leaderId})
        MATCH (constituency:Constituency {id:$constituencyId})
        MATCH (currentUser:Member {auth_id:$auth.jwt.sub})
-       MATCH (zone:BussingZone {number: $zone})
+
 
       CREATE (log:HistoryLog:ServiceLog)
       SET log.id = apoc.create.uuid(),
        log.timeStamp = datetime(),
        log.historyRecord = bacenta.name +' Bacenta History Begins'
 
-       MERGE (bacenta)-[:BUSSES_FROM]->(zone)
        MERGE (constituency)-[:HAS]->(bacenta)
        MERGE (leader)-[:LEADS]->(bacenta)
 
@@ -689,7 +690,8 @@ extend type Mutation {
     bacentaId: ID!
     name: String!
     constituencyId: ID!
-    zone: Int!
+    normalBussingTopUp: Float!
+    swellBussingTopUp: Float!
   ): Bacenta
     @auth(
       rules: [
@@ -707,13 +709,9 @@ extend type Mutation {
     @cypher(
       statement: """
       MATCH (bacenta:Bacenta {id: $bacentaId})
-      	SET bacenta.name = $name
-
-      WITH bacenta
-      MATCH (bacenta)-[r:BUSSES_FROM]->(:BussingZone)
-      MATCH (zone:BussingZone {number: $zone})
-      DELETE r
-      MERGE (bacenta)-[:BUSSES_FROM]->(zone)
+      	SET bacenta.name = $name,
+        bacenta.normalBussingTopUp = $normalBussingTopUp,
+        bacenta.swellBussingTopUp = $swellBussingTopUp
 
       WITH bacenta
          CALL {

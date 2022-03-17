@@ -1,7 +1,7 @@
 import { permitLeaderAdminArrivals } from 'permission-utils'
 import Arrivals from 'pages/arrivals/Arrivals'
 import BacentaArrivals from 'pages/arrivals/BacentaArrivals'
-import BacentasHaveBeenCounted from 'pages/arrivals/StateBacentasHaveArrived'
+import ConfirmBacentaArrival from 'pages/arrivals/ConfirmBacentaArrival'
 import BacentasNotActivity from 'pages/arrivals/StateBacentasNoActivity'
 import BacentasOnTheWay from 'pages/arrivals/StateBacentasOnTheWay'
 import BusFormConfirmation from 'pages/arrivals/FormAttendanceConfirmation'
@@ -84,7 +84,7 @@ export const arrivals = [
   {
     path: '/arrivals/bacentas-have-been-counted',
     roles: permitLeaderAdminArrivals('Constituency'),
-    element: BacentasHaveBeenCounted,
+    element: ConfirmBacentaArrival,
     placeholder: true,
   },
 

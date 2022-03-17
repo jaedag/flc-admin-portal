@@ -4,12 +4,11 @@ import { FieldArray, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import {
   BUSSING_STATUS_OPTIONS,
-  BUSSING_ZONE_OPTIONS,
   makeSelectOptions,
   throwErrorMsg,
   VACATION_OPTIONS,
 } from 'global-utils'
-import { permitAdmin } from 'permission-utils'
+import { permitAdmin, permitArrivals } from 'permission-utils'
 import { GET_COUNCIL_CONSTITUENCIES } from 'queries/ListQueries'
 import React, { useContext } from 'react'
 import { ChurchContext } from 'contexts/ChurchContext'
@@ -116,13 +115,25 @@ const BacentaForm = ({ initialValues, onSubmit, title, newBacenta }) => {
                           defaultOption="Choose Vacation Status"
                           label="Status"
                         />
-                        <FormikControl
-                          control="select"
-                          name="zone"
-                          options={BUSSING_ZONE_OPTIONS}
-                          defaultOption="Pick a Zone"
-                          label="Bussing Zone"
-                        />
+                        <RoleView
+                          roles={[
+                            ...permitArrivals('Stream'),
+                            ...permitAdmin('Stream'),
+                          ]}
+                        >
+                          <FormikControl
+                            control="input"
+                            name="normalBussingTopUp"
+                            label="Bussing Top Up (Normal)"
+                            placeholder="Enter the Exact Amount Here"
+                          />
+                          <FormikControl
+                            control="input"
+                            name="swellBussingTopUp"
+                            label="Bussing Top Up (Swell)"
+                            placeholder="Enter the Exact Amount Here"
+                          />
+                        </RoleView>
                       </Col>
                     </Row>
 

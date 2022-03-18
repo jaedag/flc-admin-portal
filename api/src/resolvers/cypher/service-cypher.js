@@ -22,7 +22,7 @@ CREATE (serviceRecord:ServiceRecord {created_at:datetime()})
       WITH serviceRecord
 
       MATCH (church {id:$churchId}) WHERE church:Fellowship OR church:Bacenta OR church:Constituency OR church:Council OR church:Stream
-      MATCH (church)-[has_history:HAS_HISTORY]->(log:HistoryLog) WHERE has_history.current = true
+      MATCH (church)-[has_history:HAS_HISTORY {current: true}]->(log:ServiceLog)
 
       MATCH (leader:Member {auth_id: $auth.jwt.sub})
 
@@ -37,4 +37,17 @@ CREATE (serviceRecord:ServiceRecord {created_at:datetime()})
       MERGE (treasurer)-[:WAS_TREASURER_FOR]->(serviceRecord)
 
       RETURN serviceRecord
+`
+
+export const checkCurrentServiceLog = `
+MATCH (church {id:$churchId}) WHERE church:Fellowship OR church:Bacenta OR church:Constituency OR church:Council OR church:Stream
+MATCH (church)-[:HAS_HISTORY {current: true}]->(log:ServiceLog)
+RETURN true AS exists
+`
+export const getServantAndChurchId = `
+MATCH (church {id:$churchId}) WHERE church:Fellowship OR church:Bacenta OR church:Constituency OR church:Council OR church:Stream
+MATCH (church)<-[:LEADS]-(leader:Member)
+UNWIND labels(church) AS churchType 
+WITH churchType, church, leader WHERE churchType = 'Fellowship' OR churchType = 'Bacenta' OR churchType = 'Constituency' OR churchType = 'Council' OR churchType = 'Stream'
+RETURN church.id AS churchId, leader.id AS leaderId, churchType AS churchType
 `

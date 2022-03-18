@@ -1,5 +1,10 @@
 import { permitLeaderAdmin } from './permissions'
-import { isAuth, rearrangeCypherObject, throwErrorMsg } from './resolver-utils'
+import {
+  isAuth,
+  makeServantCypher,
+  rearrangeCypherObject,
+  throwErrorMsg,
+} from './resolver-utils'
 
 const serviceCypher = require('./cypher/service-cypher')
 const cypher = require('./cypher/component-service-cypher')
@@ -28,6 +33,27 @@ export const serviceMutation = {
   RecordService: async (object, args, context) => {
     isAuth(permitLeaderAdmin('Fellowship'), context.auth.roles)
     const session = context.driver.session()
+
+    const relationshipCheck = rearrangeCypherObject(
+      await session.run(serviceCypher.checkCurrentServiceLog, args)
+    )
+
+    if (!relationshipCheck.exists) {
+      const getServantAndChurch = rearrangeCypherObject(
+        await session.run(serviceCypher.getServantAndChurchId, args)
+      )
+      console.log(getServantAndChurch)
+      makeServantCypher(
+        context,
+        {},
+        getServantAndChurch.churchType,
+        'Leader',
+        {
+          id: getServantAndChurch.servantId,
+        },
+        { id: getServantAndChurch.churchId }
+      )
+    }
 
     const serviceCheck = rearrangeCypherObject(
       await session.run(serviceCypher.checkFormFilledThisWeek, args)

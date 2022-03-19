@@ -6,6 +6,7 @@ import {
   getNameWithTitle,
   throwErrorMsg,
   getHighestTitle,
+  USER_PLACEHOLDER,
 } from '../../global-utils'
 import { getMemberDob } from 'date-utils'
 import {
@@ -62,14 +63,12 @@ const MemberDisplay = ({ memberId }) => {
           loading={!member || loading}
           xs={12}
         >
-          <div>
-            <CloudinaryImage
-              className="profile-img"
-              src={member?.pictureUrl}
-              alt={`${member?.fullName}`}
-              large
-            />
-          </div>
+          <CloudinaryImage
+            className="profile-img"
+            src={member?.pictureUrl || USER_PLACEHOLDER}
+            alt={`${member?.fullName}`}
+            large
+          />
         </PlaceholderCustom>
       </div>
 

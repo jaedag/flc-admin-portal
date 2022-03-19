@@ -130,9 +130,8 @@ export const arrivalsMutation = {
       }
     }
 
-    const getStringNumbers = (number) => {
-      const emptyStr = '000000000000'
-      return emptyStr.slice(number.toString().length) + number
+    const padNumbers = (number) => {
+      return number.toString().padStart(12, '0')
     }
 
     const sendBussingSupport = {
@@ -144,8 +143,8 @@ export const arrivalsMutation = {
       },
       data: {
         merchant_id: process.env.PAYSWITCH_MERCHANT_ID,
-        transaction_id: getStringNumbers(bussingRecord.transactionId),
-        amount: getStringNumbers(bussingRecord.bussingTopUp * 100),
+        transaction_id: padNumbers(bussingRecord.transactionId),
+        amount: padNumbers(bussingRecord.bussingTopUp * 100),
         processing_code: '404000',
         'r-switch': 'FLT',
         desc:

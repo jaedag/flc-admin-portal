@@ -101,12 +101,6 @@ const MemberTable = (props) => {
       <MobileView>
         <div className="member-grid">
           {data.map((soul, index) => {
-            // if (index < offset) {
-            //   return null
-            // } else if (index >= offset + numberOfRecords) {
-            //   return null
-            // }
-
             return (
               <Container key={index}>
                 <div
@@ -118,11 +112,13 @@ const MemberTable = (props) => {
                 >
                   <div className="flex-shrink-0">
                     <CloudinaryImage
-                      className="card-img-top"
-                      src={soul?.pictureUrl || USER_PLACEHOLDER}
-                      alt={soul?.firstName + ' ' + soul?.lastName}
+                      className="rounded-circle img-search"
+                      src={soul?.pictureUrl}
+                      // alt attribute messes with the lazy loading feature of the cloudinary sdk
+                      // alt={soul?.firstName + ' ' + soul?.lastName}
                     />
                   </div>
+
                   <div className="flex-grow-1 ms-3">
                     <p className="card-title">{`${soul?.firstName} ${soul?.lastName}`}</p>
                     {soul?.fellowship ? (

@@ -39,19 +39,27 @@ export const serviceMutation = {
     )
 
     if (!relationshipCheck.exists) {
+      //Checks if the church has a current historyLog with current= true, otherwise creates it
       const getServantAndChurch = rearrangeCypherObject(
-        await session.run(serviceCypher.getServantAndChurchId, args)
+        await session.run(serviceCypher.getServantAndChurch, args)
       )
-      console.log(getServantAndChurch)
-      makeServantCypher(
+
+      await makeServantCypher(
         context,
         {},
         getServantAndChurch.churchType,
         'Leader',
         {
           id: getServantAndChurch.servantId,
+          auth_id: getServantAndChurch.auth_id,
+          firstName: getServantAndChurch.firstName,
+          lastName: getServantAndChurch.lastName,
         },
-        { id: getServantAndChurch.churchId }
+        '',
+        {
+          id: getServantAndChurch.churchId,
+          name: getServantAndChurch.churchName,
+        }
       )
     }
 
@@ -70,7 +78,7 @@ export const serviceMutation = {
         auth: context.auth,
       })
     )
-    console.log(serviceDetails)
+
     return serviceDetails.serviceRecord.properties
   },
 }

@@ -156,10 +156,14 @@ export const UPLOAD_MOBILISATION_PICTURE = gql`
         bacenta {
           id
           stream_name
-          bussing(limit: 4) {
+          bussing(limit: 1) {
             id
+            serviceDate {
+              date
+            }
             week
             mobilisationPicture
+            bussingPictures
           }
         }
       }
@@ -268,6 +272,16 @@ export const RECORD_ARRIVAL_TIME = gql`
     }
   }
 `
+
+export const SET_BUSSING_SUPPORT = gql`
+  mutation SetBussingSupport($bussingRecordId: ID!) {
+    SetBussingSupport(bussingRecordId: $bussingRecordId) {
+      id
+      bussingTopUp
+    }
+  }
+`
+
 export const SEND_BUSSING_SUPPORT = gql`
   mutation SendBussingSupport($bussingRecordId: ID!, $stream_name: String!) {
     SendBussingSupport(

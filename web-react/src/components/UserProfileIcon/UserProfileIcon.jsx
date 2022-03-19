@@ -3,10 +3,10 @@ import { useAuth0 } from '@auth0/auth0-react'
 import AuthButton from '../buttons/AuthButton'
 import './UserProfileIcon.css'
 import { MemberContext } from '../../contexts/MemberContext.js'
-import userIcon from '../../assets/user.png'
 import { ChurchContext } from '../../contexts/ChurchContext'
-import { transformCloudinaryImg } from 'global-utils'
 import { Spinner } from 'react-bootstrap'
+import CloudinaryImage from 'components/CloudinaryImage'
+import { USER_PLACEHOLDER } from 'global-utils'
 
 function UserProfileIcon() {
   const { setChurch } = useContext(ChurchContext)
@@ -19,9 +19,9 @@ function UserProfileIcon() {
         <div onClick={() => setChurch(currentUser.church)}>
           <div className="d-flex">
             <div className="flex-shrink-0">
-              <img
+              <CloudinaryImage
                 className="user-navbar-img "
-                src={transformCloudinaryImg(currentUser?.picture) || userIcon}
+                src={currentUser?.picture || USER_PLACEHOLDER}
                 alt={currentUser?.firstName || null}
               />
             </div>

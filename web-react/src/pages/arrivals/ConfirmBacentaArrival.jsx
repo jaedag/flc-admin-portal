@@ -9,7 +9,7 @@ import { ChurchContext } from 'contexts/ChurchContext'
 import { MemberContext } from 'contexts/MemberContext'
 import { ServiceContext } from 'contexts/ServiceContext'
 import { Form, Formik } from 'formik'
-import { alertMsg, throwErrorMsg, transformCloudinaryImg } from 'global-utils'
+import { alertMsg, throwErrorMsg } from 'global-utils'
 import { getWeekNumber } from 'date-utils'
 import PlaceholderMemberDisplay from 'pages/services/defaulters/PlaceholderDefaulter'
 import React, { useContext, useEffect, useState } from 'react'
@@ -17,6 +17,7 @@ import { Button, Card, Container, Spinner } from 'react-bootstrap'
 import { useNavigate } from 'react-router'
 import { RECORD_ARRIVAL_TIME, SEND_BUSSING_SUPPORT } from './arrivalsMutations'
 import { CONSTITUENCY_BUSSING_DATA } from './arrivalsQueries'
+import CloudinaryImage from 'components/CloudinaryImage'
 
 const ConfirmBacentaArrival = () => {
   const { constituencyId, clickCard, isOpen, togglePopup } =
@@ -166,9 +167,9 @@ const ConfirmBacentaArrival = () => {
                   className="d-flex align-items-center"
                 >
                   <div className="flex-shrink-0">
-                    <img
+                    <CloudinaryImage
                       className="rounded-circle img-search"
-                      src={transformCloudinaryImg(bacenta?.leader?.pictureUrl)}
+                      src={bacenta?.leader?.pictureUrl}
                       alt={bacenta?.leader.fullName}
                     />
                   </div>

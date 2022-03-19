@@ -6,7 +6,6 @@ import PlaceholderCustom from 'components/Placeholder'
 import { ChurchContext } from 'contexts/ChurchContext'
 import { ServiceContext } from 'contexts/ServiceContext'
 import { Formik, Form } from 'formik'
-import { transformCloudinaryImg } from 'global-utils'
 import React from 'react'
 import * as Yup from 'yup'
 import { useContext } from 'react'
@@ -18,6 +17,7 @@ import FormikControl from 'components/formik-components/FormikControl'
 import SubmitButton from 'components/formik-components/SubmitButton'
 import { useState } from 'react'
 import { useEffect } from 'react'
+import CloudinaryImage from 'components/CloudinaryImage'
 
 const FormAttendanceConfirmation = () => {
   const navigate = useNavigate()
@@ -86,10 +86,11 @@ const FormAttendanceConfirmation = () => {
         <h6>Bussing Pictures</h6>
         {bussing?.bussingPictures.map((picture, index) => {
           return (
-            <img
+            <CloudinaryImage
               key={index}
               className="report-picture"
-              src={transformCloudinaryImg(picture, 'large')}
+              large
+              src={picture}
             />
           )
         })}

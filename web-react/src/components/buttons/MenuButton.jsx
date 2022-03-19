@@ -1,3 +1,4 @@
+import CloudinaryImage from 'components/CloudinaryImage'
 import PlaceholderCustom from 'components/Placeholder'
 import { MemberContext } from 'contexts/MemberContext'
 import { capitalise } from 'global-utils'
@@ -27,7 +28,9 @@ const MenuButton = (props) => {
                   `rounded-circle menu gradient-bg ${props.color}`
                 }
               >
-                {props.avatar && <img src={props.avatar} className="avatar" />}
+                {props.avatar && (
+                  <CloudinaryImage src={props.avatar} className="avatar" />
+                )}
                 {props.icon && <img src={props.icon} className="square-img" />}
                 {props.iconComponent && <props.iconComponent />}
                 {props.number && <div className="fw-bold">{props.number}</div>}

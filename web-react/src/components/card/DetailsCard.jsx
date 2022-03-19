@@ -1,6 +1,6 @@
+import CloudinaryImage from 'components/CloudinaryImage'
 import PlaceholderCustom from 'components/Placeholder'
 import { MemberContext } from 'contexts/MemberContext'
-import { transformCloudinaryImg } from 'global-utils'
 import React, { useContext } from 'react'
 import './DetailsCard.css'
 
@@ -23,10 +23,7 @@ const DetailsCard = (props) => {
           xs={12}
           loading={loading}
         >
-          <img
-            src={transformCloudinaryImg(props.img)}
-            className="img-search-placeholder"
-          />
+          <CloudinaryImage src={props.img} className="img-search-placeholder" />
         </PlaceholderCustom>
       )}
       <div className="flex-grow-1">

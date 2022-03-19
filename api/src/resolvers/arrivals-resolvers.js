@@ -1,3 +1,4 @@
+import { getHumanReadableDate } from './date-utils'
 import { permitAdmin, permitAdminArrivals, permitArrivals } from './permissions'
 import { isAuth, rearrangeCypherObject, throwErrorMsg } from './resolver-utils'
 import { MakeServant, RemoveServant } from './resolvers'
@@ -70,6 +71,27 @@ export const arrivalsMutation = {
       'ArrivalsAdmin'
     ),
 
+  SetBussingSupport: async (object, args, context) => {
+    const session = context.driver.session()
+
+    const response = rearrangeCypherObject(
+      await session.run(cypher.getBussingRecordWithDate, args)
+    )
+
+    let bussingRecord
+
+    if (response.dateLabels.includes('SwellDate')) {
+      bussingRecord = rearrangeCypherObject(
+        await session.run(cypher.setSwellBussingTopUp, args)
+      )
+    } else {
+      bussingRecord = rearrangeCypherObject(
+        await session.run(cypher.setNormalBussingTopUp, args)
+      )
+    }
+
+    return bussingRecord.record.properties
+  },
   SendBussingSupport: async (object, args, context) => {
     isAuth(permitArrivals('Council'), context.auth.roles)
     const session = context.driver.session()
@@ -87,10 +109,11 @@ export const arrivalsMutation = {
       throwErrorMsg('Money has already been sent to this bacenta')
     }
 
-    const bussingRecordNode = rearrangeCypherObject(
-      await session.run(cypher.getBussingRecord, args)
+    const cypherResponse = rearrangeCypherObject(
+      await session.run(cypher.setBussingRecordTransactionId, args)
     )
-    const bussingRecord = bussingRecordNode.record.properties
+
+    const bussingRecord = cypherResponse.record.properties
 
     const getMobileCode = (network) => {
       switch (network) {
@@ -114,7 +137,7 @@ export const arrivalsMutation = {
 
     const sendBussingSupport = {
       method: 'post',
-      url: `https://prod.theteller.net//v1.1/transaction/process`,
+      url: `https://prod.theteller.net/v1.1/transaction/process`,
       headers: {
         'content-type': 'application/json',
         Authorization: process.env.PAYSWITCH_AUTH,
@@ -125,27 +148,31 @@ export const arrivalsMutation = {
         amount: getStringNumbers(bussingRecord.bussingTopUp * 100),
         processing_code: '404000',
         'r-switch': 'FLT',
-        desc: 'Bussing Support',
+        desc:
+          cypherResponse.bacentaName +
+          ' ' +
+          getHumanReadableDate(cypherResponse.date),
         pass_code: process.env.PAYSWITCH_PASSCODE,
         account_number: bussingRecord.momoNumber,
         account_issuer: getMobileCode(bussingRecord.mobileNetwork),
       },
     }
+    try {
+      const res = await axios(sendBussingSupport)
 
-    await axios(sendBussingSupport)
-      .then((res) =>
-        // eslint-disable-next-line no-console
-        console.log(
-          'Money Sent Successfully to',
-          bussingRecord.momoNumber,
-          res.data
-        )
+      if (res.data.code !== '000') {
+        throwErrorMsg(res.data.code + ' ' + res.data.reason)
+      }
+      // eslint-disable-next-line no-console
+      console.log(
+        'Money Sent Successfully to',
+        bussingRecord.momoNumber,
+        res.data
       )
-      .catch((err) =>
-        throwErrorMsg('There was a problem sending the money', err)
-      )
-
-    return bussingRecord
+      return bussingRecord
+    } catch (error) {
+      throwErrorMsg(error, 'Money could not be sent!')
+    }
   },
 
   SetSwellDate: async (object, args, context) => {

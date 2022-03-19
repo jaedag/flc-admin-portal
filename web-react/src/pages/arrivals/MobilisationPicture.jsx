@@ -1,9 +1,9 @@
 import { useQuery } from '@apollo/client'
 import BaseComponent from 'components/base-component/BaseComponent'
+import CloudinaryImage from 'components/CloudinaryImage'
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import { ChurchContext } from 'contexts/ChurchContext'
 import { ServiceContext } from 'contexts/ServiceContext'
-import { transformCloudinaryImg } from 'global-utils'
 import React, { useContext } from 'react'
 import { Button, Container } from 'react-bootstrap'
 import { useNavigate } from 'react-router'
@@ -22,9 +22,10 @@ const MobilisationPicture = () => {
     <BaseComponent loading={loading} error={error} data={data} placeholder>
       <Container className="text-center">
         <HeadingPrimary>MobilisationPicture</HeadingPrimary>
-        <img
+        <CloudinaryImage
           className="report-picture"
-          src={transformCloudinaryImg(bussing?.mobilisationPicture, 'large')}
+          src={bussing?.mobilisationPicture}
+          large
         />
         <div className="d-grid gap-2">
           <Button size="lg" onClick={() => navigate(-1)}>

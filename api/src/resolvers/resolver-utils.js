@@ -53,6 +53,12 @@ export const rearrangeCypherObject = (response) => {
     (key, i) => (member[key] = response.records[0]._fields[i])
   )
 
+  response.records.map((record, index) => {
+    record?.keys.forEach(
+      (key, j) => (member[key] = response.records[index]._fields[j])
+    )
+  })
+
   return member?.member || member
 }
 export const parseForCache = (servant, church, verb, role) => {

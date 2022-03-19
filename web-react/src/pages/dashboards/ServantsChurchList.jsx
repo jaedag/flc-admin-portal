@@ -12,7 +12,7 @@ import {
   getMonthlyStatAverage,
   getServiceGraphData,
 } from 'pages/services/reports/report-utils'
-import { plural, transformCloudinaryImg } from 'global-utils'
+import { plural } from 'global-utils'
 import MenuButton from 'components/buttons/MenuButton'
 import { Container } from 'react-bootstrap'
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
@@ -110,7 +110,7 @@ const ServantsChurchList = () => {
             return (
               <MenuButton
                 key={i}
-                avatar={transformCloudinaryImg(church.leaderPic)}
+                avatar={church.leaderPic}
                 title={`${church.name} ${church.__typename}`}
                 caption={church.leader}
                 color="churches"

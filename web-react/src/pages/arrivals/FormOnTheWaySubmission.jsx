@@ -13,7 +13,10 @@ import { ChurchContext } from 'contexts/ChurchContext'
 import BaseComponent from 'components/base-component/BaseComponent'
 import PlusSign from 'components/buttons/PlusMinusSign/PlusSign'
 import MinusSign from 'components/buttons/PlusMinusSign/MinusSign'
-import { RECORD_BUSSING_FROM_BACENTA } from './arrivalsMutations'
+import {
+  RECORD_BUSSING_FROM_BACENTA,
+  SET_BUSSING_SUPPORT,
+} from './arrivalsMutations'
 import { MOMO_NUM_REGEX } from 'global-utils'
 import { parseDate } from 'date-utils'
 import { ServiceContext } from 'contexts/ServiceContext'
@@ -41,6 +44,7 @@ const FormOnTheWaySubmission = () => {
 
   const bacenta = data?.bacentas[0]
   const [RecordBussingFromBacenta] = useMutation(RECORD_BUSSING_FROM_BACENTA)
+  const [SetBussingSupport] = useMutation(SET_BUSSING_SUPPORT)
 
   const validationSchema = Yup.object({
     attendance: Yup.number()
@@ -97,8 +101,14 @@ const FormOnTheWaySubmission = () => {
         momoName: values.momoName,
         momoNumber: values.momoNumber,
       },
-    }).then((res) => {
+    }).then(async (res) => {
       clickCard(res.data.RecordBussingFromBacenta)
+      await SetBussingSupport({
+        variables: {
+          bussingRecordId: bussingRecordId,
+        },
+      })
+
       onSubmitProps.resetForm()
       onSubmitProps.setSubmitting(false)
       navigate(`/bacenta/bussing-details`)

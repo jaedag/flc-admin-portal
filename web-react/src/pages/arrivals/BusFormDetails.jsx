@@ -11,12 +11,13 @@ import { useContext } from 'react'
 import { Container, Row, Col, Table, Button } from 'react-bootstrap'
 import { DISPLAY_BUSSING_RECORDS } from './arrivalsQueries'
 import '../services/record-service/ServiceDetails.css'
-import { ARRIVALS_CUTOFF, transformCloudinaryImg } from 'global-utils'
+import { ARRIVALS_CUTOFF } from 'global-utils'
 import { parseDate } from 'date-utils'
 import { setTime } from 'date-utils'
 import { useNavigate } from 'react-router'
 import RoleView from 'auth/RoleView'
 import { permitMe } from 'permission-utils'
+import CloudinaryImage from 'components/CloudinaryImage'
 
 const BusFormDetails = () => {
   const { bacentaId } = useContext(ChurchContext)
@@ -197,9 +198,10 @@ const BusFormDetails = () => {
                 {bussing?.bussingPictures?.map((picture, index) => {
                   return (
                     <Col key={index}>
-                      <img
+                      <CloudinaryImage
+                        large
                         className="report-picture"
-                        src={transformCloudinaryImg(picture, 'large')}
+                        src={picture}
                       />
                     </Col>
                   )

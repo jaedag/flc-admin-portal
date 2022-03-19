@@ -36,7 +36,7 @@ export const updateAuthUserConfig = (member, authToken) => ({
     name: `${member.firstName} ${member.lastName}`,
     picture:
       member.pictureUrl ||
-      'https://raw.githubusercontent.com/jaedag/fl-admin-portal/deploy/web-react/src/assets/user.png',
+      'https://res.cloudinary.com/firstlovecenter/image/upload/v1627893621/user_qvwhs7.png',
   },
 })
 

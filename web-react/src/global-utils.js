@@ -3,6 +3,7 @@ export const PHONE_NUM_REGEX = /^[+][(]{0,1}[1-9]{1,4}[)]{0,1}[-\s/0-9]*$/
 export const MOMO_NUM_REGEX = /^[0][\s/0-9]{9}$/
 export const DECIMAL_NUM_REGEX = /^-?\d*\.{1}\d*$/
 export const DECIMAL_NUM_REGEX_POSITIVE_ONLY = /^\d*\.{1}\d*$/
+export const USER_PLACEHOLDER = 'v1627893621/user_qvwhs7.png'
 export const DEBOUNCE_TIMER = 500
 export const ARRIVALS_CUTOFF = [14, 30, 0]
 
@@ -84,19 +85,6 @@ export const authorisedLink = (currentUser, permittedRoles, link) => {
   return '#'
 }
 
-export const transformCloudinaryImg = (url, size) => {
-  if (size === 'large') {
-    return url?.replace(
-      'https://res.cloudinary.com/firstlovecenter/image/upload/',
-      'https://res.cloudinary.com/firstlovecenter/image/upload/c_fill,g_face,h_300,w_300/'
-    )
-  }
-
-  return url?.replace(
-    'https://res.cloudinary.com/firstlovecenter/image/upload/',
-    'https://res.cloudinary.com/firstlovecenter/image/upload/c_thumb,g_face,h_150,w_150,z_0.7/'
-  )
-}
 export const capitalise = (str) => {
   return str?.charAt(0).toUpperCase() + str?.slice(1)
 }

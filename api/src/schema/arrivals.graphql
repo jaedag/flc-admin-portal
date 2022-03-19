@@ -1,4 +1,4 @@
-type SwellDay implements TimeGraphNode
+type SwellDate implements TimeGraphNode
   @auth(rules: [{ isAuthenticated: true }]) {
   date: Date
   bussingDate: [BussingRecord] @relationship(type: "BUSSED_ON", direction: IN)
@@ -403,7 +403,7 @@ extend type Mutation {
 
        WITH bussingRecord
          MATCH (bacenta:Bacenta {id:$bacentaId})
-         MATCH (bacenta)-[has_history:HAS_HISTORY]->(log:ServiceLog) WHERE has_history.current = true
+         MATCH (bacenta)-[has_history:HAS_HISTORY {current: true}]->(log:ServiceLog)
 
        MERGE (log)-[:HAS_BUSSING]->(bussingRecord)
        MERGE (serviceDate:TimeGraph {date: date($serviceDate)})
@@ -450,6 +450,8 @@ extend type Mutation {
       RETURN bussingRecord
       """
     )
+
+  SetBussingSupport(bussingRecordId: ID!): BussingRecord
 
   ConfirmBussingByAdmin(
     bussingRecordId: ID!
@@ -510,6 +512,6 @@ extend type Mutation {
       """
     )
 
-  SetSwellDate(date: String!): SwellDay
+  SetSwellDate(date: String!): SwellDate
   SendBussingSupport(bussingRecordId: ID!, stream_name: String!): BussingRecord
 }

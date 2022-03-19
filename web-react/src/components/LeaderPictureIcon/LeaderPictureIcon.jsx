@@ -1,4 +1,4 @@
-import { transformCloudinaryImg } from 'global-utils'
+import CloudinaryImage from 'components/CloudinaryImage'
 import React from 'react'
 
 function LeaderPictureIcon({ member }) {
@@ -7,9 +7,9 @@ function LeaderPictureIcon({ member }) {
   }
 
   return (
-    <img
+    <CloudinaryImage
       className="mr-3 rounded-circle img-search"
-      src={transformCloudinaryImg(member?.pictureUrl)}
+      src={member?.pictureUrl}
       alt={member.fullName}
     />
   )

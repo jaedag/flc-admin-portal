@@ -1,14 +1,14 @@
 import React, { useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
-import userIcon from '../../assets/user.png'
 import TabletDesktopView from '../responsive-design/TabletDesktopView'
 import MobileView from '../responsive-design/MobileView'
 import { ChurchContext } from 'contexts/ChurchContext.js'
-import { transformCloudinaryImg } from 'global-utils.js'
+import { USER_PLACEHOLDER } from 'global-utils.js'
 import PlaceholderCustom from 'components/Placeholder.jsx'
 import './MemberTable.css'
 import { MemberContext } from 'contexts/MemberContext.js'
 import { Container } from 'react-bootstrap'
+import CloudinaryImage from 'components/CloudinaryImage'
 
 const MemberTable = (props) => {
   const { data, error, loading, offset, numberOfRecords } = props
@@ -80,9 +80,9 @@ const MemberTable = (props) => {
                       navigate('/member/displaydetails')
                     }}
                   >
-                    <img
+                    <CloudinaryImage
                       className="card-img-top"
-                      src={transformCloudinaryImg(soul?.pictureUrl) || userIcon}
+                      src={soul?.pictureUrl || USER_PLACEHOLDER}
                       alt={soul?.firstName + ' ' + soul?.lastName}
                     />
 
@@ -117,10 +117,10 @@ const MemberTable = (props) => {
                   }}
                 >
                   <div className="flex-shrink-0">
-                    <img
-                      className="rounded-circle img-search"
-                      src={transformCloudinaryImg(soul?.pictureUrl) || userIcon}
-                      alt={`${soul?.firstName} ${soul?.lastName}`}
+                    <CloudinaryImage
+                      className="card-img-top"
+                      src={soul?.pictureUrl || USER_PLACEHOLDER}
+                      alt={soul?.firstName + ' ' + soul?.lastName}
                     />
                   </div>
                   <div className="flex-grow-1 ms-3">

@@ -1,19 +1,19 @@
 import React, { useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ChurchContext } from '../../contexts/ChurchContext'
-import user from '../../assets/user.png'
 import bussolid from '../../assets/bus-solid.svg'
 import fellowship from '../../assets/fellowship.svg'
 import stream from '../../assets/stream.svg'
 import council from '../../assets/council.svg'
 import bacenta from '../../assets/bacenta.svg'
 import constituency from '../../assets/constituency-location.svg'
-import { transformCloudinaryImg } from 'global-utils'
 import { Button, Card } from 'react-bootstrap'
 import { MemberContext } from 'contexts/MemberContext'
 import '../../components/members-grids/MemberTable.css'
 import './MemberDisplayCard.css'
 import { TelephoneFill, Whatsapp } from 'react-bootstrap-icons'
+import CloudinaryImage from 'components/CloudinaryImage'
+import { USER_PLACEHOLDER } from 'global-utils'
 
 const MemberDisplayCard = (props) => {
   const { member, leader, ...rest } = props
@@ -21,11 +21,11 @@ const MemberDisplayCard = (props) => {
   const { theme } = useContext(MemberContext)
   const navigate = useNavigate()
   let icon, name, details
-  let picture = member?.pictureUrl || leader?.pictureUrl
+  let picture = member?.pictureUrl || leader?.pictureUrl || USER_PLACEHOLDER
 
   switch (member.__typename) {
     case 'Member':
-      icon = user
+      icon = ''
       name = member?.fullName || member.firstName + ' ' + member.lastName
       details = [
         member.fellowship && member.fellowship.name + ' Fellowship',
@@ -85,11 +85,18 @@ const MemberDisplayCard = (props) => {
     >
       <div className="d-flex align-items-center">
         <div className="flex-shrink-0">
-          <img
-            className={`${picture && 'rounded-circle'} img-search`}
-            src={picture ? transformCloudinaryImg(picture) : icon}
-            alt={member.fullName}
-          />
+          {!picture ? (
+            <img
+              className={`${picture && 'rounded-circle'} img-search`}
+              src={icon}
+            />
+          ) : (
+            <CloudinaryImage
+              src={picture}
+              alt={member.fullName}
+              className={`${picture && 'rounded-circle'} img-search`}
+            />
+          )}
         </div>
         <div className="flex-grow-1 ms-3">
           <Card.Title>{name}</Card.Title>

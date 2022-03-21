@@ -66,7 +66,10 @@ const ConstituencyBankingSlipSubmission = () => {
             <HeadingSecondary>{constituency?.name}</HeadingSecondary>
             <p>
               Date of Joint Service Code:{' '}
-              {getHumanReadableDate(data.serviceRecords[0].serviceDate.date)}
+              {getHumanReadableDate(
+                data.serviceRecords[0].serviceDate.date,
+                'weekday'
+              )}
             </p>
             <p>Expected Income: {data.serviceRecords[0].income}</p>
             <Form>

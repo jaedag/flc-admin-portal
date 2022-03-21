@@ -9,7 +9,7 @@ import { Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import React from 'react'
 import { useContext } from 'react'
-import { Button, Card, Col, Container, Row } from 'react-bootstrap'
+import { Button, Col, Container, Row } from 'react-bootstrap'
 import { COUNCIL_ARRIVALS_DASHBOARD } from './arrivalsQueries'
 import { useNavigate } from 'react-router'
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
@@ -17,6 +17,7 @@ import RoleView from 'auth/RoleView'
 import { throwErrorMsg } from 'global-utils'
 import { MAKE_COUNCILARRIVALS_ADMIN } from './arrivalsMutations'
 import { permitAdmin, permitArrivals } from 'permission-utils'
+import HeadingSecondary from 'components/HeadingSecondary'
 
 const CouncilDashboard = () => {
   const { isOpen, togglePopup, councilId } = useContext(ChurchContext)
@@ -61,8 +62,11 @@ const CouncilDashboard = () => {
     <BaseComponent data={data} loading={loading} error={error}>
       <Container>
         <HeadingPrimary loading={loading}>
-          {council?.name} Council Arrivals
+          {council?.name} Council Arrivals Summary
         </HeadingPrimary>
+        <HeadingSecondary>{`Arrivals Rep: ${
+          council?.arrivalsAdmin?.fullName ?? 'None'
+        }`}</HeadingSecondary>
         {isOpen && (
           <Popup handleClose={togglePopup}>
             <b>Change Arrivals Admin</b>
@@ -96,39 +100,51 @@ const CouncilDashboard = () => {
           </Popup>
         )}
 
-        <Card>
-          <Card.Header>Arrivals Summary</Card.Header>
-        </Card>
         <div className="d-grid gap-2">
           <RoleView
             roles={[...permitAdmin('Council'), ...permitArrivals('Stream')]}
           >
             <Button
-              variant="outline-secondary"
-              size="lg"
+              variant="outline-secondary my-3"
               onClick={() => togglePopup()}
             >
               Change Arrivals Admin
             </Button>
           </RoleView>
           <MenuButton
-            title="Bacentas Yet to Submit"
+            title="Bacentas With No Activity"
             onClick={() => navigate('/arrivals/bacentas-no-activity')}
-            icon
+            number={council?.bacentasNoActivityCount.toString()}
             iconBg
             noCaption
           />
           <MenuButton
-            title="Bacentas That Have Submitted"
+            title="Bacentas Mobilising"
+            onClick={() => navigate('/arrivals/bacentas-mobilising')}
+            number={council?.bacentasMobilisingCount.toString()}
+            iconBg
+            noCaption
+          />
+          <MenuButton
+            title="Bacentas On The Way"
             onClick={() => navigate('/arrivals/bacentas-on-the-way')}
-            icon
+            number={council?.bacentasOnTheWayCount.toString()}
             iconBg
             noCaption
           />
+
           <MenuButton
-            title="Bacentas That Have Been Counted"
-            onClick={() => navigate('/arrivals/bacentas-have-been-counted')}
-            icon
+            title="Confirm Bacenta Arrival"
+            onClick={() => navigate('/arrivals/confirm-bacenta-arrival')}
+            number={council?.bacentasOnTheWayCount.toString()}
+            iconBg
+            noCaption
+          />
+
+          <MenuButton
+            title="Bacentas That Have Arrived"
+            onClick={() => navigate('/arrivals/bacentas-have-arrived')}
+            number={council?.bacentasHaveArrivedCount.toString()}
             iconBg
             noCaption
           />

@@ -1,36 +1,50 @@
-import { useQuery } from '@apollo/client'
+import { useLazyQuery } from '@apollo/client'
 import BaseComponent from 'components/base-component/BaseComponent'
 import MemberDisplayCard from 'components/card/MemberDisplayCard'
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import HeadingSecondary from 'components/HeadingSecondary'
-import { ChurchContext } from 'contexts/ChurchContext'
 import React from 'react'
-import { useContext } from 'react'
 import { Card, Container } from 'react-bootstrap'
-import { CONSTIUENCY_BACENTAS_MOBILISING } from './bussingStatusQueries'
+import {
+  CONSTITUENCY_BACENTAS_MOBILISING,
+  COUNCIL_BACENTAS_MOBILISING,
+  GATHERINGSERVICE_BACENTAS_MOBILISING,
+  STREAM_BACENTAS_MOBILISING,
+} from './bussingStatusQueries'
+import useChurchLevel from '../../hooks/useChurchLevel'
 
 const BacentasMobilising = () => {
-  const { constituencyId } = useContext(ChurchContext)
-  const { data, loading, error } = useQuery(CONSTIUENCY_BACENTAS_MOBILISING, {
-    variables: { id: constituencyId },
+  const [constituencyBacentasMobilising] = useLazyQuery(
+    CONSTITUENCY_BACENTAS_MOBILISING
+  )
+  const [councilBacentasMobilising] = useLazyQuery(COUNCIL_BACENTAS_MOBILISING)
+  const [streamBacentasMobilising] = useLazyQuery(STREAM_BACENTAS_MOBILISING)
+  const [gatheringServiceBacentasMobilising] = useLazyQuery(
+    GATHERINGSERVICE_BACENTAS_MOBILISING
+  )
+
+  const { church, loading, error } = useChurchLevel({
+    constituencyFunction: constituencyBacentasMobilising,
+    councilFunction: councilBacentasMobilising,
+    streamFunction: streamBacentasMobilising,
+    gatheringServiceFunction: gatheringServiceBacentasMobilising,
   })
-  const constituency = data?.constituencies[0]
 
   return (
-    <BaseComponent data={data} loading={loading} error={error} placeholder>
+    <BaseComponent data={church} loading={loading} error={error} placeholder>
       <Container>
         <HeadingPrimary loading={loading}>Bacentas Mobilising</HeadingPrimary>
-        <HeadingSecondary loading={!constituency?.name}>
-          {constituency?.name} Constituency
+        <HeadingSecondary loading={!church?.name}>
+          {church?.name} {church?.__typename}
         </HeadingSecondary>
 
-        {!constituency?.bacentasMobilising.length && (
+        {!church?.bacentasMobilising.length && (
           <Card>
             <Card.Body>There are no mobilising bacentas</Card.Body>
           </Card>
         )}
 
-        {constituency?.bacentasMobilising.map((bacenta, i) => {
+        {church?.bacentasMobilising.map((bacenta, i) => {
           return (
             <MemberDisplayCard
               key={i}

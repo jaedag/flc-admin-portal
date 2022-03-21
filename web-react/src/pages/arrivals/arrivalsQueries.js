@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client'
 
-export const CONSTIUENCY_ARRIVALS_DASHBOARD = gql`
+export const CONSTITUENCY_ARRIVALS_DASHBOARD = gql`
   query ($id: ID) {
     constituencies(where: { id: $id }, options: { limit: 1 }) {
       id
@@ -43,7 +43,11 @@ export const COUNCIL_ARRIVALS_DASHBOARD = gql`
         fullName
         pictureUrl
       }
-      bacentaCount
+      bacentasNoActivityCount
+      bacentasMobilisingCount
+      bacentasOnTheWayCount
+      bacentasHaveBeenCountedCount
+      bacentasHaveArrivedCount
     }
   }
 `
@@ -65,7 +69,11 @@ export const STREAM_ARRIVALS_DASHBOARD = gql`
         fullName
         pictureUrl
       }
-      bacentaCount
+      bacentasNoActivityCount
+      bacentasMobilisingCount
+      bacentasOnTheWayCount
+      bacentasHaveBeenCountedCount
+      bacentasHaveArrivedCount
     }
   }
 `
@@ -87,7 +95,11 @@ export const GATHERINGSERVICE_ARRIVALS_DASHBOARD = gql`
         fullName
         pictureUrl
       }
-      bacentaCount
+      bacentasNoActivityCount
+      bacentasMobilisingCount
+      bacentasOnTheWayCount
+      bacentasHaveBeenCountedCount
+      bacentasHaveArrivedCount
     }
     timeGraphs(where: { date: $date }) {
       date

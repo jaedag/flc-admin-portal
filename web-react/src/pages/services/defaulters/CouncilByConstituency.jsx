@@ -19,7 +19,7 @@ const CouncilByConstituency = () => {
   const navigate = useNavigate()
 
   return (
-    <BaseComponent data={data} loading={loading} error={error}>
+    <BaseComponent data={data} loading={loading} error={error} placeholder>
       <Container
         className={`fw-bold large-number pb-3`}
       >{`${data?.councils[0].name} Council By Constituency`}</Container>

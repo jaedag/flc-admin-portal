@@ -199,9 +199,9 @@ const BusFormDetails = () => {
                   return (
                     <Col key={index}>
                       <CloudinaryImage
-                        large
                         className="report-picture"
                         src={picture}
+                        large
                       />
                     </Col>
                   )

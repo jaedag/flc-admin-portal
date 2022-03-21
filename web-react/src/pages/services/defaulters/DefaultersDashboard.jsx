@@ -2,7 +2,7 @@ import { useLazyQuery } from '@apollo/client'
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import HeadingSecondary from 'components/HeadingSecondary'
 import { plural } from 'global-utils'
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext } from 'react'
 import { Col, Container, Row } from 'react-bootstrap'
 import {
   CONSTITUENCY_DEFAULTERS,
@@ -15,62 +15,40 @@ import PlaceholderCustom from 'components/Placeholder'
 import DefaulterInfoCard from './DefaulterInfoCard'
 import RoleView from 'auth/RoleView'
 import { permitLeaderAdmin } from 'permission-utils'
-import { ChurchContext } from 'contexts/ChurchContext'
+import { MemberContext } from 'contexts/MemberContext'
+import useChurchLevel from 'hooks/useChurchLevel'
+import BaseComponent from 'components/base-component/BaseComponent'
 
-const Defaulters = (props) => {
-  const { constituencyId, councilId, streamId, gatheringServiceId } =
-    useContext(ChurchContext)
-  const [constituencyDefaulters, { data: constituencyData }] = useLazyQuery(
-    CONSTITUENCY_DEFAULTERS
-  )
-  const [councilDefaulters, { data: councilData }] =
-    useLazyQuery(COUNCIL_DEFAULTERS)
-  const [streamDefaulters, { data: streamData }] =
-    useLazyQuery(STREAM_DEFAULTERS)
-  const [gatheringServiceDefaulters, { data: gatheringServiceData }] =
-    useLazyQuery(GATHERINGSERVICE_DEFAULTERS)
-  const [church, setChurch] = useState(null)
-  const [subChurch, setSubChurch] = useState(null)
+const DefaultersDashboard = () => {
+  const { currentUser } = useContext(MemberContext)
+  const [constituencyDefaulters] = useLazyQuery(CONSTITUENCY_DEFAULTERS)
+  const [councilDefaulters] = useLazyQuery(COUNCIL_DEFAULTERS)
+  const [streamDefaulters] = useLazyQuery(STREAM_DEFAULTERS)
+  const [gatheringServiceDefaulters] = useLazyQuery(GATHERINGSERVICE_DEFAULTERS)
 
-  useEffect(() => {
-    if (props.churchLevel === 'Constituency') {
-      constituencyDefaulters({
-        variables: {
-          id: constituencyId,
-        },
-      })
-      setChurch(constituencyData?.constituencies[0])
-    }
-    if (props.churchLevel === 'Council') {
-      councilDefaulters({
-        variables: {
-          id: councilId,
-        },
-      })
-      setChurch(councilData?.councils[0])
-      setSubChurch('Constituency')
-    }
+  let subChurch
 
-    if (props.churchLevel === 'Stream') {
-      streamDefaulters({
-        variables: {
-          id: streamId,
-        },
-      })
-      setChurch(streamData?.streams[0])
-      setSubChurch('Council')
-    }
+  const { church, loading, error } = useChurchLevel({
+    constituencyFunction: constituencyDefaulters,
+    councilFunction: councilDefaulters,
+    streamFunction: streamDefaulters,
+    gatheringServiceFunction: gatheringServiceDefaulters,
+  })
 
-    if (props.churchLevel === 'GatheringService') {
-      gatheringServiceDefaulters({
-        variables: {
-          id: gatheringServiceId,
-        },
-      })
-      setChurch(gatheringServiceData?.gatheringServices[0])
-      setSubChurch('Stream')
-    }
-  }, [constituencyData, councilData, streamData, gatheringServiceData])
+  switch (currentUser?.currentChurch?.__typename) {
+    case 'Council':
+      subChurch = 'Constituency'
+      break
+    case 'Stream':
+      subChurch = 'Council'
+      break
+
+    case 'GatheringService':
+      subChurch = 'Stream'
+      break
+    default:
+      break
+  }
 
   const defaulters = [
     {
@@ -119,30 +97,34 @@ const Defaulters = (props) => {
   }
 
   return (
-    <Container>
-      <HeadingPrimary
-        loading={!church}
-      >{`${church?.name} ${church?.__typename}`}</HeadingPrimary>
-      <HeadingSecondary>Defaulters Page</HeadingSecondary>
+    <BaseComponent data={church} loading={loading} error={error} placeholder>
+      <Container>
+        <HeadingPrimary
+          loading={!church}
+        >{`${church?.name} ${church?.__typename}`}</HeadingPrimary>
+        <HeadingSecondary>Defaulters Page</HeadingSecondary>
 
-      <PlaceholderCustom as="h6" loading={!church}>
-        <h6>{`Total Number of Fellowships: ${church?.activeFellowshipCount}`}</h6>
-      </PlaceholderCustom>
+        <PlaceholderCustom as="h6" loading={!church}>
+          <h6>{`Total Number of Fellowships: ${church?.activeFellowshipCount}`}</h6>
+        </PlaceholderCustom>
 
-      <Row>
-        <RoleView roles={permitLeaderAdmin('Council')}>
-          <Col xs={12} className="mb-3">
-            {aggregates?.title && <DefaulterInfoCard defaulter={aggregates} />}
-          </Col>
-        </RoleView>
-        {defaulters.map((defaulter, i) => (
-          <Col key={i} xs={6} className="mb-3">
-            <DefaulterInfoCard defaulter={defaulter} />
-          </Col>
-        ))}
-      </Row>
-    </Container>
+        <Row>
+          <RoleView roles={permitLeaderAdmin('Council')}>
+            <Col xs={12} className="mb-3">
+              {aggregates?.title && (
+                <DefaulterInfoCard defaulter={aggregates} />
+              )}
+            </Col>
+          </RoleView>
+          {defaulters.map((defaulter, i) => (
+            <Col key={i} xs={6} className="mb-3">
+              <DefaulterInfoCard defaulter={defaulter} />
+            </Col>
+          ))}
+        </Row>
+      </Container>
+    </BaseComponent>
   )
 }
 
-export default Defaulters
+export default DefaultersDashboard

@@ -110,7 +110,7 @@ const GatheringServiceDashboard = () => {
           </Popup>
         )}
 
-        <h4>{getHumanReadableDate(data?.timeGraphs[0].date)}</h4>
+        <h4>{getHumanReadableDate(data?.timeGraphs[0].date, 'weekday')}</h4>
         <h5>{data?.timeGraphs[0].swell && `Swollen Weekend!`}</h5>
 
         <div className="d-grid gap-2">

@@ -1,4 +1,3 @@
-import { getHumanReadableDate } from './date-utils'
 import { permitAdmin, permitAdminArrivals, permitArrivals } from './permissions'
 import { isAuth, rearrangeCypherObject, throwErrorMsg } from './resolver-utils'
 import { MakeServant, RemoveServant } from './resolvers'
@@ -147,10 +146,7 @@ export const arrivalsMutation = {
         amount: padNumbers(bussingRecord.bussingTopUp * 100),
         processing_code: '404000',
         'r-switch': 'FLT',
-        desc:
-          cypherResponse.bacentaName +
-          ' ' +
-          getHumanReadableDate(cypherResponse.date),
+        desc: cypherResponse.bacentaName + ' ' + cypherResponse.date,
         pass_code: process.env.PAYSWITCH_PASSCODE,
         account_number: bussingRecord.momoNumber,
         account_issuer: getMobileCode(bussingRecord.mobileNetwork),

@@ -1,10 +1,11 @@
 import { useLazyQuery } from '@apollo/client'
+import BaseComponent from 'components/base-component/BaseComponent'
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import HeadingSecondary from 'components/HeadingSecondary'
 import PlaceholderCustom from 'components/Placeholder'
-import { MemberContext } from 'contexts/MemberContext'
 import { getWeekNumber } from 'date-utils'
-import React, { useContext, useEffect, useState } from 'react'
+import useChurchLevel from 'hooks/useChurchLevel'
+import React from 'react'
 import { Container, Row, Col } from 'react-bootstrap'
 import DefaulterCard from './DefaulterCard'
 import {
@@ -16,84 +17,45 @@ import {
 import PlaceholderDefaulter from './PlaceholderDefaulter'
 
 const Banked = () => {
-  const { currentUser } = useContext(MemberContext)
-  const [church, setChurch] = useState(null)
-  const [constituencyBanked, { data: constituencyData }] = useLazyQuery(
-    CONSTITUENCY_BANKED_LIST
-  )
-  const [councilBanked, { data: councilData }] =
-    useLazyQuery(COUNCIL_BANKED_LIST)
-  const [streamBanked, { data: streamData }] = useLazyQuery(STREAM_BANKED_LIST)
-  const [gatheringServiceBanked, { data: gatheringServiceData }] = useLazyQuery(
-    GATHERINGSERVICE_BANKED_LIST
-  )
+  const [constituencyBanked] = useLazyQuery(CONSTITUENCY_BANKED_LIST)
+  const [councilBanked] = useLazyQuery(COUNCIL_BANKED_LIST)
+  const [streamBanked] = useLazyQuery(STREAM_BANKED_LIST)
+  const [gatheringServiceBanked] = useLazyQuery(GATHERINGSERVICE_BANKED_LIST)
 
-  useEffect(() => {
-    if (currentUser.currentChurch.__typename === 'Constituency') {
-      constituencyBanked({
-        variables: {
-          id: currentUser.currentChurch.id,
-        },
-      })
-      setChurch(constituencyData?.constituencies[0])
-    }
-    if (currentUser.currentChurch.__typename === 'Council') {
-      councilBanked({
-        variables: {
-          id: currentUser.currentChurch.id,
-        },
-      })
-      setChurch(councilData?.councils[0])
-    }
-    if (currentUser.currentChurch.__typename === 'Stream') {
-      streamBanked({
-        variables: {
-          id: currentUser.currentChurch.id,
-        },
-      })
-      setChurch(streamData?.streams[0])
-    }
-    if (currentUser.currentChurch.__typename === 'GatheringService') {
-      gatheringServiceBanked({
-        variables: {
-          id: currentUser.currentChurch.id,
-        },
-      })
-      setChurch(gatheringServiceData?.gatheringServices[0])
-    }
-  }, [
-    currentUser.currentChurch,
-    constituencyData,
-    councilData,
-    streamData,
-    gatheringServiceData,
-  ])
+  const { church, loading, error } = useChurchLevel({
+    constituencyFunction: constituencyBanked,
+    councilFunction: councilBanked,
+    streamFunction: streamBanked,
+    gatheringServiceFunction: gatheringServiceBanked,
+  })
 
   return (
-    <Container>
-      <HeadingPrimary
-        loading={!church}
-      >{`${church?.name} ${church?.__typename}`}</HeadingPrimary>
-      <HeadingSecondary>
-        {`Fellowships That Have Banked This Week (Week ${getWeekNumber()})`}
-      </HeadingSecondary>
+    <BaseComponent data={church} loading={loading} error={error} placeholder>
+      <Container>
+        <HeadingPrimary
+          loading={!church}
+        >{`${church?.name} ${church?.__typename}`}</HeadingPrimary>
+        <HeadingSecondary>
+          {`Fellowships That Have Banked This Week (Week ${getWeekNumber()})`}
+        </HeadingSecondary>
 
-      <PlaceholderCustom as="h6" loading={!church?.bankedThisWeek.length}>
-        <h6>{`Number Who Have Banked: ${church?.bankedThisWeek.length}`}</h6>
-      </PlaceholderCustom>
+        <PlaceholderCustom as="h6" loading={!church?.bankedThisWeek.length}>
+          <h6>{`Number Who Have Banked: ${church?.bankedThisWeek.length}`}</h6>
+        </PlaceholderCustom>
 
-      <Row>
-        {church?.bankedThisWeek.map((defaulter, i) => (
-          <Col key={i} xs={12} className="mb-3">
-            <DefaulterCard
-              defaulter={defaulter}
-              link="/fellowship/service-details"
-            />
-          </Col>
-        ))}
-        {!church && <PlaceholderDefaulter />}
-      </Row>
-    </Container>
+        <Row>
+          {church?.bankedThisWeek.map((defaulter, i) => (
+            <Col key={i} xs={12} className="mb-3">
+              <DefaulterCard
+                defaulter={defaulter}
+                link="/fellowship/service-details"
+              />
+            </Col>
+          ))}
+          {!church && <PlaceholderDefaulter />}
+        </Row>
+      </Container>
+    </BaseComponent>
   )
 }
 

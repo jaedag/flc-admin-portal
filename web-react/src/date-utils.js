@@ -65,15 +65,23 @@ export const parseDate = (date) => {
   return inputDate.toDateString()
 }
 
-export const getHumanReadableDate = (date) => {
+export const getHumanReadableDate = (date, weekday) => {
   if (!date) {
     return
   }
+  if (weekday) {
+    return new Date(date).toLocaleDateString('en-gb', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      weekday: 'long',
+    })
+  }
+
   return new Date(date).toLocaleDateString('en-gb', {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
-    weekday: 'long',
   })
 }
 

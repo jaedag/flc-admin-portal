@@ -185,19 +185,6 @@ const UpdateBacenta = () => {
           })
         }
 
-        if (values.zone !== initialValues.zone) {
-          LogBacentaHistory({
-            variables: {
-              bacentaId: bacentaId,
-              newLeaderId: '',
-              oldLeaderId: '',
-              oldConstituencyId: '',
-              newConstituencyId: '',
-              historyRecord: `Bacenta has been moved from Zone ${initialValues.zone} to Zone ${values.zone}`,
-            },
-          })
-        }
-
         //Change from IC to Graduated
         if (values.graduationStatus !== initialValues.graduationStatus) {
           if (values.graduationStatus === 'IC') {

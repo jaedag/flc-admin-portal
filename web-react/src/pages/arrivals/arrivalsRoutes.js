@@ -2,7 +2,7 @@ import { permitLeaderAdminArrivals } from 'permission-utils'
 import Arrivals from 'pages/arrivals/Arrivals'
 import BacentaArrivals from 'pages/arrivals/BacentaArrivals'
 import ConfirmBacentaArrival from 'pages/arrivals/ConfirmBacentaArrival'
-import BacentasNotActivity from 'pages/arrivals/StateBacentasNoActivity'
+import StateBacentasNoActivity from 'pages/arrivals/StateBacentasNoActivity'
 import BacentasOnTheWay from 'pages/arrivals/StateBacentasOnTheWay'
 import BusFormConfirmation from 'pages/arrivals/FormAttendanceConfirmation'
 import BusFormDetails from 'pages/arrivals/BusFormDetails'
@@ -15,6 +15,7 @@ import BacentasMobilising from './StateBacentasMobilising'
 import StreamDashboard from './DashboardStream'
 import ArrivalsHelpersStream from './ArrivalsHelpers/ArrivalsHelpersStream'
 import GatheringSerivceDashboard from './DashboardGatheringService'
+import BacentasHaveArrived from './StateBacentasArrived'
 
 export const arrivals = [
   {
@@ -73,7 +74,7 @@ export const arrivals = [
   {
     path: '/arrivals/bacentas-no-activity',
     roles: permitLeaderAdminArrivals('Constituency'),
-    element: BacentasNotActivity,
+    element: StateBacentasNoActivity,
     placeholder: true,
   },
   {
@@ -89,9 +90,15 @@ export const arrivals = [
     placeholder: true,
   },
   {
-    path: '/arrivals/bacentas-have-been-counted',
-    roles: permitLeaderAdminArrivals('Constituency'),
+    path: '/arrivals/confirm-bacenta-arrival',
+    roles: permitLeaderAdminArrivals('Council'),
     element: ConfirmBacentaArrival,
+    placeholder: true,
+  },
+  {
+    path: '/arrivals/bacentas-have-arrived',
+    roles: permitLeaderAdminArrivals('Constituency'),
+    element: BacentasHaveArrived,
     placeholder: true,
   },
 

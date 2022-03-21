@@ -147,6 +147,10 @@ export const repackDecimals = (decimal) => {
   return parseFloat(decimal)
 }
 
+export const arrayOr = (array) => {
+  return array.some((element) => element)
+}
+
 export const makeSelectOptions = (initialArray) => {
   if (!initialArray) {
     return null

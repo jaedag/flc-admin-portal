@@ -2,9 +2,8 @@ import { useLazyQuery } from '@apollo/client'
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import HeadingSecondary from 'components/HeadingSecondary'
 import PlaceholderCustom from 'components/Placeholder'
-import { MemberContext } from 'contexts/MemberContext'
 import { getWeekNumber } from 'date-utils'
-import React, { useContext, useEffect, useState } from 'react'
+import React from 'react'
 import { Col, Container, Row } from 'react-bootstrap'
 import {
   CONSTITUENCY_FORM_DEFAULTERS_LIST,
@@ -14,88 +13,53 @@ import {
 } from './DefaultersQueries'
 import DefaulterCard from './DefaulterCard'
 import PlaceholderDefaulter from './PlaceholderDefaulter'
+import useChurchLevel from 'hooks/useChurchLevel'
+import BaseComponent from 'components/base-component/BaseComponent'
 
 const FormDefaulters = () => {
-  const { currentUser } = useContext(MemberContext)
-  const [church, setChurch] = useState(null)
-  const [constituencyFormDefaulters, { data: constituencyData }] = useLazyQuery(
+  const [constituencyFormDefaulters] = useLazyQuery(
     CONSTITUENCY_FORM_DEFAULTERS_LIST
   )
-  const [councilFormDefaulters, { data: councilData }] = useLazyQuery(
-    COUNCIL_FORM_DEFAULTERS_LIST
+  const [councilFormDefaulters] = useLazyQuery(COUNCIL_FORM_DEFAULTERS_LIST)
+  const [streamFormDefaulters] = useLazyQuery(STREAM_FORM_DEFAULTERS_LIST)
+  const [gatheringServiceFormDefaulters] = useLazyQuery(
+    GATHERINGSERVICE_FORM_DEFAULTERS_LIST
   )
-  const [streamFormDefaulters, { data: streamData }] = useLazyQuery(
-    STREAM_FORM_DEFAULTERS_LIST
-  )
-  const [gatheringServiceFormDefaulters, { data: gatheringServiceData }] =
-    useLazyQuery(GATHERINGSERVICE_FORM_DEFAULTERS_LIST)
 
-  useEffect(() => {
-    if (currentUser.currentChurch.__typename === 'Constituency') {
-      constituencyFormDefaulters({
-        variables: {
-          id: currentUser.currentChurch.id,
-        },
-      })
-      setChurch(constituencyData?.constituencies[0])
-    }
-    if (currentUser.currentChurch.__typename === 'Council') {
-      councilFormDefaulters({
-        variables: {
-          id: currentUser.currentChurch.id,
-        },
-      })
-      setChurch(councilData?.councils[0])
-    }
-    if (currentUser.currentChurch.__typename === 'Stream') {
-      streamFormDefaulters({
-        variables: {
-          id: currentUser.currentChurch.id,
-        },
-      })
-      setChurch(streamData?.streams[0])
-    }
-    if (currentUser.currentChurch.__typename === 'GatheringService') {
-      gatheringServiceFormDefaulters({
-        variables: {
-          id: currentUser.currentChurch.id,
-        },
-      })
-      setChurch(gatheringServiceData?.gatheringServices[0])
-    }
-  }, [
-    currentUser.currentChurch,
-    constituencyData,
-    councilData,
-    streamData,
-    gatheringServiceData,
-  ])
+  const { church, loading, error } = useChurchLevel({
+    constituencyFunction: constituencyFormDefaulters,
+    councilFunction: councilFormDefaulters,
+    streamFunction: streamFormDefaulters,
+    gatheringServiceFunction: gatheringServiceFormDefaulters,
+  })
 
   return (
-    <Container>
-      <HeadingPrimary
-        loading={!church}
-      >{`${church?.name} ${church?.__typename}`}</HeadingPrimary>
-      <HeadingSecondary>
-        {`Fellowships That Have Not Filled The Form This Week (Week ${getWeekNumber()})`}
-      </HeadingSecondary>
+    <BaseComponent data={church} loading={loading} error={error} placeholder>
+      <Container>
+        <HeadingPrimary
+          loading={!church}
+        >{`${church?.name} ${church?.__typename}`}</HeadingPrimary>
+        <HeadingSecondary>
+          {`Fellowships That Have Not Filled The Form This Week (Week ${getWeekNumber()})`}
+        </HeadingSecondary>
 
-      <PlaceholderCustom
-        as="h6"
-        loading={!church?.formDefaultersThisWeek.length}
-      >
-        <h6>{`Number of Defaulters: ${church?.formDefaultersThisWeek.length}`}</h6>
-      </PlaceholderCustom>
+        <PlaceholderCustom
+          as="h6"
+          loading={!church?.formDefaultersThisWeek.length}
+        >
+          <h6>{`Number of Defaulters: ${church?.formDefaultersThisWeek.length}`}</h6>
+        </PlaceholderCustom>
 
-      <Row>
-        {church?.formDefaultersThisWeek.map((defaulter, i) => (
-          <Col key={i} xs={12} className="mb-3">
-            <DefaulterCard defaulter={defaulter} />
-          </Col>
-        ))}
-        {!church && <PlaceholderDefaulter />}
-      </Row>
-    </Container>
+        <Row>
+          {church?.formDefaultersThisWeek.map((defaulter, i) => (
+            <Col key={i} xs={12} className="mb-3">
+              <DefaulterCard defaulter={defaulter} />
+            </Col>
+          ))}
+          {!church && <PlaceholderDefaulter />}
+        </Row>
+      </Container>
+    </BaseComponent>
   )
 }
 

@@ -1,36 +1,50 @@
-import { useQuery } from '@apollo/client'
+import { useLazyQuery } from '@apollo/client'
 import BaseComponent from 'components/base-component/BaseComponent'
 import MemberDisplayCard from 'components/card/MemberDisplayCard'
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import HeadingSecondary from 'components/HeadingSecondary'
-import { ChurchContext } from 'contexts/ChurchContext'
 import React from 'react'
-import { useContext } from 'react'
 import { Container } from 'react-bootstrap'
-import { CONSTIUENCY_BACENTAS_NO_ACTIVITY } from './bussingStatusQueries'
+import {
+  CONSTITUENCY_BACENTAS_NO_ACTIVITY,
+  COUNCIL_BACENTAS_NO_ACTIVITY,
+  GATHERINGSERVICE_BACENTAS_NO_ACTIVITY,
+  STREAM_BACENTAS_NO_ACTIVITY,
+} from './bussingStatusQueries'
+import useChurchLevel from '../../hooks/useChurchLevel'
 
 const BacentasNoActiviity = () => {
-  const { constituencyId } = useContext(ChurchContext)
-  const { data, loading, error } = useQuery(CONSTIUENCY_BACENTAS_NO_ACTIVITY, {
-    variables: { id: constituencyId },
+  const [constituencyBacentasNoActivity] = useLazyQuery(
+    CONSTITUENCY_BACENTAS_NO_ACTIVITY
+  )
+  const [councilBacentasNoActivity] = useLazyQuery(COUNCIL_BACENTAS_NO_ACTIVITY)
+  const [streamBacentasNoActivity] = useLazyQuery(STREAM_BACENTAS_NO_ACTIVITY)
+  const [gatheringServiceBacentasNoActivity] = useLazyQuery(
+    GATHERINGSERVICE_BACENTAS_NO_ACTIVITY
+  )
+
+  const { church, loading, error } = useChurchLevel({
+    constituencyFunction: constituencyBacentasNoActivity,
+    councilFunction: councilBacentasNoActivity,
+    streamFunction: streamBacentasNoActivity,
+    gatheringServiceFunction: gatheringServiceBacentasNoActivity,
   })
-  const constituency = data?.constituencies[0]
 
   return (
-    <BaseComponent data={data} loading={loading} error={error} placeholder>
+    <BaseComponent data={church} loading={loading} error={error} placeholder>
       <Container>
         <HeadingPrimary loading={loading}>
           Bacentas With No Activity
         </HeadingPrimary>
-        <HeadingSecondary loading={!constituency?.name}>
-          {constituency?.name} Constituency
+        <HeadingSecondary loading={!church?.name}>
+          {church?.name} {church?.__typename}
         </HeadingSecondary>
 
-        {!constituency?.bacentasNoActivity.length && (
+        {!church?.bacentasNoActivity.length && (
           <div>There are no bacentas without activity</div>
         )}
 
-        {constituency?.bacentasNoActivity.map((bacenta, i) => {
+        {church?.bacentasNoActivity.map((bacenta, i) => {
           return (
             <MemberDisplayCard
               key={i}

@@ -10,7 +10,7 @@ import * as Yup from 'yup'
 import React from 'react'
 import { useContext } from 'react'
 import { Button, Col, Container, Row } from 'react-bootstrap'
-import { CONSTIUENCY_ARRIVALS_DASHBOARD } from './arrivalsQueries'
+import { CONSTITUENCY_ARRIVALS_DASHBOARD } from './arrivalsQueries'
 import { useNavigate } from 'react-router'
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import RoleView from 'auth/RoleView'
@@ -18,12 +18,11 @@ import { throwErrorMsg } from 'global-utils'
 import { MAKE_CONSTITUENCYARRIVALS_ADMIN } from './arrivalsMutations'
 import { permitAdmin, permitArrivals } from 'permission-utils'
 import HeadingSecondary from 'components/HeadingSecondary'
-import { CashStack, PersonCheck, Forward } from 'react-bootstrap-icons'
 
 const ConstituencyDashboard = () => {
   const { isOpen, togglePopup, constituencyId } = useContext(ChurchContext)
   const navigate = useNavigate()
-  const { data, loading, error } = useQuery(CONSTIUENCY_ARRIVALS_DASHBOARD, {
+  const { data, loading, error } = useQuery(CONSTITUENCY_ARRIVALS_DASHBOARD, {
     variables: { id: constituencyId },
   })
   const [MakeConstituencyArrivalsAdmin] = useMutation(
@@ -65,9 +64,11 @@ const ConstituencyDashboard = () => {
     <BaseComponent data={data} loading={loading} error={error}>
       <Container>
         <HeadingPrimary loading={loading}>
-          {constituency?.name} Constituency Arrivals
+          {constituency?.name} Constituency Arrivals Summary
         </HeadingPrimary>
-        <HeadingSecondary>{`Arrivals Rep: ${constituency?.arrivalsAdmin?.fullName}`}</HeadingSecondary>
+        <HeadingSecondary>{`Arrivals Rep: ${
+          constituency?.arrivalsAdmin?.fullName ?? 'None'
+        }`}</HeadingSecondary>
         {isOpen && (
           <Popup handleClose={togglePopup}>
             <b>Change Arrivals Admin</b>
@@ -118,35 +119,29 @@ const ConstituencyDashboard = () => {
           <MenuButton
             title="Bacentas With No Activity"
             onClick={() => navigate('/arrivals/bacentas-no-activity')}
-            number={`12`}
+            number={constituency?.bacentasNoActivityCount.toString()}
             iconBg
             noCaption
           />
           <MenuButton
             title="Bacentas Mobilising"
             onClick={() => navigate('/arrivals/bacentas-mobilising')}
-            number={`12`}
+            number={constituency?.bacentasMobilisingCount.toString()}
             iconBg
             noCaption
           />
           <MenuButton
             title="Bacentas On The Way"
             onClick={() => navigate('/arrivals/bacentas-on-the-way')}
-            iconComponent={Forward}
+            number={constituency?.bacentasOnTheWayCount.toString()}
             iconBg
             noCaption
           />
-          <MenuButton
-            title="Confirm Bacenta Arrival"
-            onClick={() => navigate('/arrivals/bacentas-have-been-counted')}
-            iconComponent={PersonCheck}
-            iconBg
-            noCaption
-          />
+
           <MenuButton
             title="Bacentas That Have Arrived"
             onClick={() => navigate('/arrivals/bacentas-have-arrived')}
-            iconComponent={CashStack}
+            number={constituency?.bacentasHaveArrivedCount.toString()}
             iconBg
             noCaption
           />

@@ -23,6 +23,7 @@ const useChurchLevel = (props) => {
 
           setChurch(res.data?.constituencies[0])
           setLoading(res.loading)
+          setError(res.error)
         }
         break
       case 'Council':
@@ -40,22 +41,30 @@ const useChurchLevel = (props) => {
 
         break
       case 'Stream':
-        props.streamFunction({
-          variables: {
-            id: currentChurch?.id,
-          },
-        })
-        setChurch(props.streamData?.streams[0])
+        {
+          const res = await props.streamFunction({
+            variables: {
+              id: currentChurch?.id,
+            },
+          })
+          setChurch(res?.data.streams[0])
+          setLoading(res.loading)
+          setError(res.error)
+        }
         break
 
       case 'GatheringService':
-        props.gatheringServiceFunction({
-          variables: {
-            id: currentChurch?.id,
-          },
-        })
-        props.setChurch(props.gatheringServiceData?.gatheringServices[0])
-
+        {
+          const res = await props.gatheringServiceFunction({
+            variables: {
+              id: currentChurch?.id,
+            },
+          })
+          console.log(res.data.gatheringServices)
+          setChurch(res?.data.gatheringServices[0])
+          setLoading(res.loading)
+          setError(res.error)
+        }
         break
       default:
         break

@@ -44,16 +44,14 @@ const BacentasNoActiviity = () => {
           <div>There are no bacentas without activity</div>
         )}
 
-        {church?.bacentasNoActivity.map((bacenta, i) => {
-          return (
-            <MemberDisplayCard
-              key={i}
-              member={bacenta}
-              leader={bacenta.leader}
-              contact
-            />
-          )
-        })}
+        {church?.bacentasNoActivity.map((bacenta, i) => (
+          <MemberDisplayCard
+            key={i}
+            member={bacenta}
+            leader={bacenta.leader}
+            contact
+          />
+        ))}
       </Container>
     </BaseComponent>
   )

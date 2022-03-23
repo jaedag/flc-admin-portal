@@ -28,12 +28,12 @@ RETURN toString(date.date) AS id, date.date AS date, true AS swell
 
 export const setSwellBussingTopUp = `
 MATCH (record:BussingRecord {id: $bussingRecordId})<-[:HAS_BUSSING]-(:ServiceLog)<-[:HAS_HISTORY]-(bacenta:Bacenta)
-SET record.bussingTopUp = bacenta.swellBussingTopUp
+SET record.bussingTopUp = bacenta.swellBussingCost - bacenta.swellPersonalContribution
 RETURN record
 `
 
 export const setNormalBussingTopUp = `
 MATCH (record:BussingRecord {id: $bussingRecordId})<-[:HAS_BUSSING]-(:ServiceLog)<-[:HAS_HISTORY]-(bacenta:Bacenta)
-SET record.bussingTopUp = bacenta.normalBussingTopUp
+SET record.bussingTopUp = bacenta.normalBussingCost - bacenta.normalPersonalContribution
 RETURN record
 `

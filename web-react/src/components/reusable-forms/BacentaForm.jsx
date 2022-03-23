@@ -8,7 +8,7 @@ import {
   throwErrorMsg,
   VACATION_OPTIONS,
 } from 'global-utils'
-import { permitAdmin, permitArrivals } from 'permission-utils'
+import { permitAdmin } from 'permission-utils'
 import { GET_COUNCIL_CONSTITUENCIES } from 'queries/ListQueries'
 import React, { useContext } from 'react'
 import { ChurchContext } from 'contexts/ChurchContext'
@@ -69,7 +69,11 @@ const BacentaForm = ({ initialValues, onSubmit, title, newBacenta }) => {
       <Container>
         <HeadingPrimary>{title}</HeadingPrimary>
         <HeadingSecondary>{initialValues.name}</HeadingSecondary>
+        <Button onClick={() => navigate('/bacenta/editbussing')}>
+          Edit Bussing Details
+        </Button>
       </Container>
+
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
@@ -115,25 +119,6 @@ const BacentaForm = ({ initialValues, onSubmit, title, newBacenta }) => {
                           defaultOption="Choose Vacation Status"
                           label="Status"
                         />
-                        <RoleView
-                          roles={[
-                            ...permitArrivals('Stream'),
-                            ...permitAdmin('Stream'),
-                          ]}
-                        >
-                          <FormikControl
-                            control="input"
-                            name="normalBussingTopUp"
-                            label="Bussing Top Up (Normal)"
-                            placeholder="Enter the Exact Amount Here"
-                          />
-                          <FormikControl
-                            control="input"
-                            name="swellBussingTopUp"
-                            label="Bussing Top Up (Swell)"
-                            placeholder="Enter the Exact Amount Here"
-                          />
-                        </RoleView>
                       </Col>
                     </Row>
 

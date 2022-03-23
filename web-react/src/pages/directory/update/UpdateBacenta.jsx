@@ -42,9 +42,6 @@ const UpdateBacenta = () => {
     leaderId: bacenta?.leader?.id || '',
     constituency: bacenta?.constituency?.id,
     fellowships: bacenta?.fellowships.length ? bacenta?.fellowships : [''],
-    normalBussingTopUp: bacenta?.normalBussingTopUp ?? '',
-    swellBussingTopUp: bacenta?.swellBussingTopUp ?? '',
-    graduationStatus: bacenta?.graduationStatus,
     vacationStatus: bacenta?.vacationStatus,
   }
 
@@ -166,8 +163,6 @@ const UpdateBacenta = () => {
         name: values.name,
         leaderId: values.leaderId,
         constituencyId: values.constituency,
-        normalBussingTopUp: parseFloat(values.normalBussingTopUp),
-        swellBussingTopUp: parseFloat(values.swellBussingTopUp),
       },
     })
       .then(() => {

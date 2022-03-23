@@ -559,9 +559,27 @@ extend type Bacenta {
       RETURN status
       """
     )
+  target: Int
+  normalBussingCost: Float
+  normalPersonalContribution: Float
   normalBussingTopUp: Float
+    @cypher(
+      statement: """
+      MATCH (this)
+      RETURN this.normalBussingCost - this.normalPersonalContribution
+      """
+    )
+  swellBussingCost: Float
+  swellPersonalContribution: Float
   swellBussingTopUp: Float
-  #ARrivals Data
+    @cypher(
+      statement: """
+      MATCH (this)
+      RETURN this.swellBussingCost - this.swellPersonalContribution
+      """
+    )
+
+  #Arrivals Data
   arrivalsCodeOfTheDay: String!
     @cypher(
       statement: "MATCH (arrivals:ArrivalsCodeOfTheDay) RETURN arrivals.code"
@@ -669,6 +687,52 @@ extend type Mutation {
       """
     )
 
+  UpdateBacentaBussingDetails(
+    bacentaId: ID!
+    target: Int!
+    normalBussingCost: Float!
+    normalPersonalContribution: Float!
+    swellBussingCost: Float!
+    swellPersonalContribution: Float!
+  ): Bacenta
+    @auth(
+      rules: [
+        {
+          roles: [
+            "adminGatheringService"
+            "adminStream"
+            "arrivalsAdminStream"
+            "adminCouncil"
+            "arrivalsAdminCouncil"
+          ]
+        }
+      ]
+    )
+    @cypher(
+      statement: """
+      MATCH (bacenta:Bacenta {id: $bacentaId})
+      	SET bacenta.target = $target,
+        bacenta.normalBussingCost = $normalBussingCost,
+        bacenta.normalPersonalContribution = $normalPersonalContribution,
+        bacenta.swellBussingCost = $swellBussingCost,
+        bacenta.swellPersonalContribution = $swellPersonalContribution
+
+      WITH bacenta
+      CREATE (log:HistoryLog {id:apoc.create.uuid()})
+        SET log.timeStamp = datetime(),
+        log.historyRecord = bacenta.name + ' Bussing Details were updated'
+
+      WITH log,bacenta
+      MATCH (admin:Member {auth_id: $auth.jwt.sub})
+      MERGE (date:TimeGraph {date:date()})
+      MERGE (log)-[:LOGGED_BY]->(admin)
+      MERGE (log)-[:RECORDED_ON]->(date)
+      MERGE (bacenta)-[:HAS_HISTORY]->(log)
+
+      RETURN bacenta
+      """
+    )
+
   MakeBacentaIC(bacentaId: ID!): Bacenta!
     @auth(
       rules: [
@@ -699,7 +763,6 @@ extend type Mutation {
       MERGE (date:TimeGraph {date:date()})
       MERGE (log)-[:LOGGED_BY]->(admin)
       MERGE (log)-[:RECORDED_ON]->(date)
-      MERGE (bacenta)-[:HAS_HISTORY]->(log)
       MERGE (bacenta)-[:HAS_HISTORY]->(log)
 
       SET bacenta:IC

@@ -690,8 +690,6 @@ extend type Mutation {
     bacentaId: ID!
     name: String!
     constituencyId: ID!
-    normalBussingTopUp: Float!
-    swellBussingTopUp: Float!
   ): Bacenta
     @auth(
       rules: [
@@ -709,9 +707,7 @@ extend type Mutation {
     @cypher(
       statement: """
       MATCH (bacenta:Bacenta {id: $bacentaId})
-      	SET bacenta.name = $name,
-        bacenta.normalBussingTopUp = $normalBussingTopUp,
-        bacenta.swellBussingTopUp = $swellBussingTopUp
+      	SET bacenta.name = $name
 
       WITH bacenta
          CALL {

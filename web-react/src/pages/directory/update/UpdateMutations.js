@@ -275,13 +275,9 @@ export const UPDATE_BACENTA_MUTATION = gql`
       bacentaId: $bacentaId
       name: $name
       constituencyId: $constituencyId
-      normalBussingTopUp: $normalBussingTopUp
-      swellBussingTopUp: $swellBussingTopUp
     ) {
       id
       name
-      normalBussingTopUp
-      swellBussingTopUp
       fellowships {
         id
         name

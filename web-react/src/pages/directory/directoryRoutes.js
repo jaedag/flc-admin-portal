@@ -42,6 +42,7 @@ import GatheringServiceMembers from 'pages/directory/grids/GatheringServiceMembe
 import StreamMembers from 'pages/directory/grids/StreamMembers'
 import { permitAdmin, permitMe, permitLeaderAdmin } from 'permission-utils'
 import ServantMembers from './grids/ServantMembers'
+import UpdateBacentaBussing from './update/UpdateBacentaBussing'
 
 export const memberDirectory = [
   {
@@ -288,6 +289,12 @@ export const directory = [
     element: UpdateBacenta,
     roles: permitMe('Constituency'),
     placeholder: false,
+  },
+  {
+    path: '/bacenta/editbussing',
+    element: UpdateBacentaBussing,
+    roles: permitMe('Constituency'),
+    placeholder: true,
   },
   {
     path: '/sonta/editsonta',

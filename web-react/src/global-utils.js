@@ -329,3 +329,18 @@ export const getChurchCount = (servant) => {
 
   return churchesCount
 }
+
+export const getSubChurchLevel = (churchType) => {
+  switch (churchType) {
+    case 'Constituency':
+      return 'Bacenta'
+    case 'Council':
+      return 'Constituency'
+    case 'Stream':
+      return 'Council'
+    case 'GatheringService':
+      return 'Stream'
+    default:
+      break
+  }
+}

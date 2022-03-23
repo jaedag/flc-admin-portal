@@ -8,7 +8,7 @@ import { MAKE_STREAMARRIVALS_ADMIN } from './arrivalsMutations'
 import { STREAM_ARRIVALS_DASHBOARD } from './arrivalsQueries'
 import { throwErrorMsg } from 'global-utils'
 import BaseComponent from 'components/base-component/BaseComponent'
-import { Card, Col, Container, Row, Button } from 'react-bootstrap'
+import { Col, Container, Row, Button } from 'react-bootstrap'
 import Popup from 'components/Popup/Popup'
 import { Form, Formik } from 'formik'
 import FormikControl from 'components/formik-components/FormikControl'
@@ -16,6 +16,7 @@ import SubmitButton from 'components/formik-components/SubmitButton'
 import RoleView from 'auth/RoleView'
 import { permitAdmin, permitArrivals } from 'permission-utils'
 import MenuButton from 'components/buttons/MenuButton'
+import DefaulterInfoCard from 'pages/services/defaulters/DefaulterInfoCard'
 
 const StreamDashboard = () => {
   const { isOpen, togglePopup, streamId } = useContext(ChurchContext)
@@ -56,11 +57,17 @@ const StreamDashboard = () => {
       .catch((e) => throwErrorMsg(e))
   }
 
+  const aggregates = {
+    title: 'Councils',
+    data: stream?.councilCount,
+    link: `/arrivals/stream-by-council`,
+  }
+
   return (
     <BaseComponent data={data} loading={loading} error={error}>
       <Container>
         <HeadingPrimary loading={loading}>
-          {stream?.name} stream Arrivals
+          {stream?.name} Stream Arrivals Summary
         </HeadingPrimary>
         {isOpen && (
           <Popup handleClose={togglePopup}>
@@ -95,9 +102,6 @@ const StreamDashboard = () => {
           </Popup>
         )}
 
-        <Card>
-          <Card.Header>Arrivals Summary</Card.Header>
-        </Card>
         <div className="d-grid gap-2">
           <RoleView
             roles={[...permitAdmin('stream'), ...permitArrivals('Stream')]}
@@ -117,24 +121,42 @@ const StreamDashboard = () => {
               Arrivals Helpers
             </Button>
           </RoleView>
+
+          <DefaulterInfoCard defaulter={aggregates} />
           <MenuButton
-            title="Bacentas Yet to Submit"
+            title="Bacentas With No Activity"
             onClick={() => navigate('/arrivals/bacentas-no-activity')}
-            icon
+            number={stream?.bacentasNoActivityCount.toString()}
             iconBg
             noCaption
           />
           <MenuButton
-            title="Bacentas That Have Submitted"
+            title="Bacentas Mobilising"
+            onClick={() => navigate('/arrivals/bacentas-mobilising')}
+            number={stream?.bacentasMobilisingCount.toString()}
+            iconBg
+            noCaption
+          />
+          <MenuButton
+            title="Bacentas On The Way"
             onClick={() => navigate('/arrivals/bacentas-on-the-way')}
-            icon
+            number={stream?.bacentasOnTheWayCount.toString()}
             iconBg
             noCaption
           />
+
           <MenuButton
-            title="Bacentas That Have Been Counted"
-            onClick={() => navigate('/arrivals/bacentas-have-been-counted')}
-            icon
+            title="Confirm Bacenta Arrival"
+            onClick={() => navigate('/arrivals/confirm-bacenta-arrival')}
+            number={stream?.bacentasOnTheWayCount.toString()}
+            iconBg
+            noCaption
+          />
+
+          <MenuButton
+            title="Bacentas That Have Arrived"
+            onClick={() => navigate('/arrivals/bacentas-have-arrived')}
+            number={stream?.bacentasHaveArrivedCount.toString()}
             iconBg
             noCaption
           />

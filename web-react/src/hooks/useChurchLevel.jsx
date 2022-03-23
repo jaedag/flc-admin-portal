@@ -1,4 +1,5 @@
 import { MemberContext } from 'contexts/MemberContext'
+import { getSubChurchLevel } from 'global-utils'
 import { useContext, useEffect, useState } from 'react'
 
 const useChurchLevel = (props) => {
@@ -6,6 +7,7 @@ const useChurchLevel = (props) => {
 
   const currentChurch = currentUser?.currentChurch
   const churchLevel = currentUser?.currentChurch?.__typename
+  const subChurchLevel = getSubChurchLevel(currentChurch?.__typename)
 
   const [church, setChurch] = useState(null)
   const [loading, setLoading] = useState(false)
@@ -60,7 +62,7 @@ const useChurchLevel = (props) => {
               id: currentChurch?.id,
             },
           })
-          console.log(res.data.gatheringServices)
+
           setChurch(res?.data.gatheringServices[0])
           setLoading(res.loading)
           setError(res.error)
@@ -69,9 +71,9 @@ const useChurchLevel = (props) => {
       default:
         break
     }
-  }, [setChurch])
+  }, [setChurch, currentChurch])
 
-  return { church, loading, error }
+  return { church, subChurchLevel, loading, error }
 }
 
 export default useChurchLevel

@@ -18,6 +18,7 @@ import { throwErrorMsg } from 'global-utils'
 import { MAKE_COUNCILARRIVALS_ADMIN } from './arrivalsMutations'
 import { permitAdmin, permitArrivals } from 'permission-utils'
 import HeadingSecondary from 'components/HeadingSecondary'
+import DefaulterInfoCard from 'pages/services/defaulters/DefaulterInfoCard'
 
 const CouncilDashboard = () => {
   const { isOpen, togglePopup, councilId } = useContext(ChurchContext)
@@ -56,6 +57,12 @@ const CouncilDashboard = () => {
         alert('Council Arrivals Admin has been changed successfully')
       })
       .catch((e) => throwErrorMsg(e))
+  }
+
+  const aggregates = {
+    title: 'Constituencies',
+    data: council?.constituencyCount,
+    link: `/arrivals/council-by-constituency`,
   }
 
   return (
@@ -111,6 +118,8 @@ const CouncilDashboard = () => {
               Change Arrivals Admin
             </Button>
           </RoleView>
+
+          <DefaulterInfoCard defaulter={aggregates} />
           <MenuButton
             title="Bacentas With No Activity"
             onClick={() => navigate('/arrivals/bacentas-no-activity')}

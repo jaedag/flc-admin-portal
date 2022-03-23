@@ -1,6 +1,22 @@
 type SwellDate implements TimeGraphNode
   @auth(rules: [{ isAuthenticated: true }]) {
+  id: ID
+    @cypher(
+      statement: """
+      MATCH (this)
+      RETURN toString(this.date)
+      """
+    )
   date: Date
+  swell: Boolean
+    @cypher(
+      statement: """
+      MATCH (this)
+      UNWIND labels(this) AS swellStatus
+      WITH swellStatus WHERE swellStatus ='SwellDate'
+      RETURN true
+      """
+    )
   bussingDate: [BussingRecord] @relationship(type: "BUSSED_ON", direction: IN)
 }
 
@@ -855,6 +871,6 @@ extend type Mutation {
       """
     )
 
-  SetSwellDate(date: String!): SwellDate
+  SetSwellDate(date: String!): TimeGraph
   SendBussingSupport(bussingRecordId: ID!, stream_name: String!): BussingRecord
 }

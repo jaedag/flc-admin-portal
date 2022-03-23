@@ -162,6 +162,13 @@ interface TimeGraphNode {
 
 type TimeGraph implements TimeGraphNode
   @auth(rules: [{ isAuthenticated: true }]) {
+  id: ID
+    @cypher(
+      statement: """
+      MATCH (this)
+      RETURN toString(this.date)
+      """
+    )
   date: Date
   swell: Boolean
     @cypher(

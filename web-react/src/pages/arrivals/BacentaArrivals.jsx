@@ -2,12 +2,13 @@ import { useQuery } from '@apollo/client'
 import BaseComponent from 'components/base-component/BaseComponent'
 import React from 'react'
 import { useContext } from 'react'
-import { Button, Container } from 'react-bootstrap'
+import { Button, Card, Container } from 'react-bootstrap'
 import { BACENTA_ARRIVALS } from './arrivalsQueries'
 import { useNavigate } from 'react-router'
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import { ChurchContext } from 'contexts/ChurchContext'
 import { getWeekNumber } from 'date-utils'
+import { CheckCircleFill } from 'react-bootstrap-icons'
 
 const BacentaArrivals = () => {
   const { clickCard, bacentaId } = useContext(ChurchContext)
@@ -60,6 +61,15 @@ const BacentaArrivals = () => {
           >
             Submit On-The-Way Picture
           </Button>
+          {bussing?.arrivalTime && (
+            <Card>
+              <Card.Body className="text-center">
+                <span className="text-success fw-bold">
+                  <CheckCircleFill color="green" size={35} /> Arrived!
+                </span>
+              </Card.Body>
+            </Card>
+          )}
         </div>
       </Container>
     </BaseComponent>

@@ -16,6 +16,7 @@ import StreamDashboard from './DashboardStream'
 import ArrivalsHelpersStream from './ArrivalsHelpers/ArrivalsHelpersStream'
 import GatheringSerivceDashboard from './DashboardGatheringService'
 import BacentasHaveArrived from './StateBacentasArrived'
+import ChurchBySubChurch from './ChurchBySubChurch'
 
 export const arrivals = [
   {
@@ -57,6 +58,27 @@ export const arrivals = [
     element: GatheringSerivceDashboard,
     placeholder: true,
   },
+
+  //Drilling Down
+  {
+    path: '/arrivals/council-by-constituency',
+    roles: permitLeaderAdminArrivals('Council'),
+    element: ChurchBySubChurch,
+    placeholder: true,
+  },
+  {
+    path: '/arrivals/stream-by-council',
+    roles: permitLeaderAdminArrivals('Stream'),
+    element: ChurchBySubChurch,
+    placeholder: true,
+  },
+  {
+    path: '/arrivals/gatheringservice-by-stream',
+    roles: permitLeaderAdminArrivals('GatheringService'),
+    element: ChurchBySubChurch,
+    placeholder: true,
+  },
+
   //Bacenta Forms that need to be Filled
   {
     path: '/arrivals/submit-on-the-way',

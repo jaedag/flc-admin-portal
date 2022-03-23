@@ -21,6 +21,7 @@ import { permitAdmin } from 'permission-utils'
 import MenuButton from 'components/buttons/MenuButton'
 import HeadingSecondary from 'components/HeadingSecondary'
 import { getHumanReadableDate } from 'date-utils'
+import DefaulterInfoCard from 'pages/services/defaulters/DefaulterInfoCard'
 
 const GatheringServiceDashboard = () => {
   const { isOpen, togglePopup, gatheringServiceId } = useContext(ChurchContext)
@@ -32,6 +33,7 @@ const GatheringServiceDashboard = () => {
       variables: { id: gatheringServiceId, date: today },
     }
   )
+
   const [SetSwellDate] = useMutation(SET_SWELL_DATE)
   const [MakeGatheringServiceArrivalsAdmin] = useMutation(
     MAKE_GATHERINGSERVICEARRIVALS_ADMIN
@@ -66,6 +68,12 @@ const GatheringServiceDashboard = () => {
         alert('Gathering Service Arrivals Admin has been changed successfully')
       })
       .catch((e) => throwErrorMsg(e))
+  }
+
+  const aggregates = {
+    title: 'Streams',
+    data: gatheringService?.streamCount,
+    link: `/arrivals/gatheringservice-by-stream`,
   }
 
   return (
@@ -110,8 +118,14 @@ const GatheringServiceDashboard = () => {
           </Popup>
         )}
 
-        <h4>{getHumanReadableDate(data?.timeGraphs[0].date, 'weekday')}</h4>
-        <h5>{data?.timeGraphs[0].swell && `Swollen Weekend!`}</h5>
+        {data?.timeGraphs.length && (
+          <>
+            <h4>
+              {getHumanReadableDate(data?.timeGraphs[0]?.date, 'weekday')}
+            </h4>
+            <h5>{data?.timeGraphs[0].swell && `Swollen Weekend!`}</h5>
+          </>
+        )}
 
         <div className="d-grid gap-2">
           <RoleView roles={permitAdmin('GatheringService')}>
@@ -123,7 +137,7 @@ const GatheringServiceDashboard = () => {
               Change Arrivals Admin
             </Button>
           </RoleView>
-          {data?.timeGraphs[0].swell ?? (
+          {(!data?.timeGraphs.length || !data?.timeGraphs[0]?.swell) && (
             <Button
               onClick={() => {
                 const confirmBox = window.confirm(
@@ -140,24 +154,43 @@ const GatheringServiceDashboard = () => {
               Set Today as Swell
             </Button>
           )}
+
+          <DefaulterInfoCard defaulter={aggregates} />
+
           <MenuButton
-            title="Bacentas Yet to Submit"
+            title="Bacentas With No Activity"
             onClick={() => navigate('/arrivals/bacentas-no-activity')}
-            icon
+            number={gatheringService?.bacentasNoActivityCount.toString()}
             iconBg
             noCaption
           />
           <MenuButton
-            title="Bacentas That Have Submitted"
+            title="Bacentas Mobilising"
+            onClick={() => navigate('/arrivals/bacentas-mobilising')}
+            number={gatheringService?.bacentasMobilisingCount.toString()}
+            iconBg
+            noCaption
+          />
+          <MenuButton
+            title="Bacentas On The Way"
             onClick={() => navigate('/arrivals/bacentas-on-the-way')}
-            icon
+            number={gatheringService?.bacentasOnTheWayCount.toString()}
             iconBg
             noCaption
           />
+
           <MenuButton
-            title="Bacentas That Have Been Counted"
-            onClick={() => navigate('/arrivals/bacentas-have-been-counted')}
-            icon
+            title="Confirm Bacenta Arrival"
+            onClick={() => navigate('/arrivals/confirm-bacenta-arrival')}
+            number={gatheringService?.bacentasOnTheWayCount.toString()}
+            iconBg
+            noCaption
+          />
+
+          <MenuButton
+            title="Bacentas That Have Arrived"
+            onClick={() => navigate('/arrivals/bacentas-have-arrived')}
+            number={gatheringService?.bacentasHaveArrivedCount.toString()}
             iconBg
             noCaption
           />

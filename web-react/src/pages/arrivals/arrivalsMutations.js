@@ -298,7 +298,9 @@ export const SEND_BUSSING_SUPPORT = gql`
 export const SET_SWELL_DATE = gql`
   mutation SetSwellDate($date: String!) {
     SetSwellDate(date: $date) {
+      id
       date
+      swell
     }
   }
 `

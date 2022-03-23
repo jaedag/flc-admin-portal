@@ -43,6 +43,7 @@ export const COUNCIL_ARRIVALS_DASHBOARD = gql`
         fullName
         pictureUrl
       }
+      constituencyCount
       bacentasNoActivityCount
       bacentasMobilisingCount
       bacentasOnTheWayCount
@@ -69,6 +70,7 @@ export const STREAM_ARRIVALS_DASHBOARD = gql`
         fullName
         pictureUrl
       }
+      councilCount
       bacentasNoActivityCount
       bacentasMobilisingCount
       bacentasOnTheWayCount
@@ -95,6 +97,7 @@ export const GATHERINGSERVICE_ARRIVALS_DASHBOARD = gql`
         fullName
         pictureUrl
       }
+      streamCount
       bacentasNoActivityCount
       bacentasMobilisingCount
       bacentasOnTheWayCount
@@ -102,6 +105,7 @@ export const GATHERINGSERVICE_ARRIVALS_DASHBOARD = gql`
       bacentasHaveArrivedCount
     }
     timeGraphs(where: { date: $date }) {
+      id
       date
       swell
     }
@@ -151,6 +155,7 @@ export const BACENTA_ARRIVALS = gql`
         week
         mobilisationPicture
         bussingPictures
+        arrivalTime
       }
     }
   }

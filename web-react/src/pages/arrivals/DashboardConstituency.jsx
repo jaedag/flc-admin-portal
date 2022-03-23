@@ -120,6 +120,7 @@ const ConstituencyDashboard = () => {
             title="Bacentas With No Activity"
             onClick={() => navigate('/arrivals/bacentas-no-activity')}
             number={constituency?.bacentasNoActivityCount.toString()}
+            color="red"
             iconBg
             noCaption
           />
@@ -127,6 +128,7 @@ const ConstituencyDashboard = () => {
             title="Bacentas Mobilising"
             onClick={() => navigate('/arrivals/bacentas-mobilising')}
             number={constituency?.bacentasMobilisingCount.toString()}
+            color="orange"
             iconBg
             noCaption
           />
@@ -134,6 +136,7 @@ const ConstituencyDashboard = () => {
             title="Bacentas On The Way"
             onClick={() => navigate('/arrivals/bacentas-on-the-way')}
             number={constituency?.bacentasOnTheWayCount.toString()}
+            color="yellow"
             iconBg
             noCaption
           />
@@ -142,9 +145,26 @@ const ConstituencyDashboard = () => {
             title="Bacentas That Have Arrived"
             onClick={() => navigate('/arrivals/bacentas-have-arrived')}
             number={constituency?.bacentasHaveArrivedCount.toString()}
+            color="green"
             iconBg
             noCaption
           />
+          <div className="mt-5 d-grid gap-2">
+            <MenuButton
+              title="Members On The Way"
+              number={constituency?.bussingMembersOnTheWayCount.toString()}
+              color="yellow"
+              iconBg
+              noCaption
+            />
+            <MenuButton
+              title="Members That Have Arrived"
+              number={constituency?.bussingMembersHaveArrivedCount.toString()}
+              color="green"
+              iconBg
+              noCaption
+            />
+          </div>
         </div>
       </Container>
     </BaseComponent>

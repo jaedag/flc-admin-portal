@@ -136,31 +136,32 @@ const GatheringServiceDashboard = () => {
             >
               Change Arrivals Admin
             </Button>
+
+            {(!data?.timeGraphs.length || !data?.timeGraphs[0]?.swell) && (
+              <Button
+                onClick={() => {
+                  const confirmBox = window.confirm(
+                    'Do you want to set today as a swell day?'
+                  )
+
+                  if (confirmBox === true) {
+                    SetSwellDate({
+                      variables: { date: today },
+                    }).then(() => alertMsg('Swell Date Set Succesffully'))
+                  }
+                }}
+              >
+                Set Today as Swell
+              </Button>
+            )}
           </RoleView>
-          {(!data?.timeGraphs.length || !data?.timeGraphs[0]?.swell) && (
-            <Button
-              onClick={() => {
-                const confirmBox = window.confirm(
-                  'Do you want to set today as a swell day?'
-                )
-
-                if (confirmBox === true) {
-                  SetSwellDate({
-                    variables: { date: today },
-                  }).then(() => alertMsg('Swell Date Set Succesffully'))
-                }
-              }}
-            >
-              Set Today as Swell
-            </Button>
-          )}
-
           <DefaulterInfoCard defaulter={aggregates} />
 
           <MenuButton
             title="Bacentas With No Activity"
             onClick={() => navigate('/arrivals/bacentas-no-activity')}
             number={gatheringService?.bacentasNoActivityCount.toString()}
+            color="red"
             iconBg
             noCaption
           />
@@ -168,6 +169,7 @@ const GatheringServiceDashboard = () => {
             title="Bacentas Mobilising"
             onClick={() => navigate('/arrivals/bacentas-mobilising')}
             number={gatheringService?.bacentasMobilisingCount.toString()}
+            color="orange"
             iconBg
             noCaption
           />
@@ -175,6 +177,7 @@ const GatheringServiceDashboard = () => {
             title="Bacentas On The Way"
             onClick={() => navigate('/arrivals/bacentas-on-the-way')}
             number={gatheringService?.bacentasOnTheWayCount.toString()}
+            color="yellow"
             iconBg
             noCaption
           />
@@ -191,9 +194,27 @@ const GatheringServiceDashboard = () => {
             title="Bacentas That Have Arrived"
             onClick={() => navigate('/arrivals/bacentas-have-arrived')}
             number={gatheringService?.bacentasHaveArrivedCount.toString()}
+            color="green"
             iconBg
             noCaption
           />
+
+          <div className="mt-5 d-grid gap-2">
+            <MenuButton
+              title="Members On The Way"
+              number={gatheringService?.bussingMembersOnTheWayCount.toString()}
+              color="yellow"
+              iconBg
+              noCaption
+            />
+            <MenuButton
+              title="Members That Have Arrived"
+              number={gatheringService?.bussingMembersHaveArrivedCount.toString()}
+              color="green"
+              iconBg
+              noCaption
+            />
+          </div>
         </div>
       </Container>
     </BaseComponent>

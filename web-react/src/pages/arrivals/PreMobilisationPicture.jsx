@@ -9,7 +9,7 @@ import { Button, Container } from 'react-bootstrap'
 import { useNavigate } from 'react-router'
 import { DISPLAY_BUSSING_RECORDS } from './arrivalsQueries'
 
-const MobilisationPicture = () => {
+const PreMobilisationPicture = () => {
   const { bacentaId } = useContext(ChurchContext)
   const { bussingRecordId } = useContext(ServiceContext)
   const navigate = useNavigate()
@@ -21,7 +21,7 @@ const MobilisationPicture = () => {
   return (
     <BaseComponent loading={loading} error={error} data={data} placeholder>
       <Container className="text-center">
-        <HeadingPrimary>MobilisationPicture</HeadingPrimary>
+        <HeadingPrimary>Mobilisation Picture</HeadingPrimary>
         <CloudinaryImage
           className="report-picture"
           src={bussing?.mobilisationPicture}
@@ -37,4 +37,4 @@ const MobilisationPicture = () => {
   )
 }
 
-export default MobilisationPicture
+export default PreMobilisationPicture

@@ -15,9 +15,11 @@
   --defaulters-accent: #9531e6;
   --btn-submit: #136e02;
   --border: #1d1d1d;
+  --yellow: #ffff00;
   --good: #4de531;
   --whatsapp-green: #128c7e;
   --bad: #da0218;
+  --orange: #ffa500;
 }
 :root .light {
   --body-bg: #f1f0f0;
@@ -32,9 +34,11 @@
   --text-box-inner: #121212;
   --full-black: #000000;
   --border: #1d1d1d;
+  --yellow: #ffff00;
   --good: #4de531;
   --whatsapp-green: #128c7e;
   --bad: #da0218;
+  --orange: #ffa500;
 }
 
 /*--Global colors*/

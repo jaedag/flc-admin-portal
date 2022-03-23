@@ -38,7 +38,7 @@ const BacentasMobilising = () => {
           {church?.name} {church?.__typename}
         </HeadingSecondary>
 
-        {!church?.bacentasMobilising.length && (
+        {church && !church?.bacentasMobilising.length && (
           <Card>
             <Card.Body>There are no mobilising bacentas</Card.Body>
           </Card>

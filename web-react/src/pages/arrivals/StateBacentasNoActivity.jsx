@@ -40,7 +40,7 @@ const BacentasNoActiviity = () => {
           {church?.name} {church?.__typename}
         </HeadingSecondary>
 
-        {!church?.bacentasNoActivity.length && (
+        {church && !church?.bacentasNoActivity.length && (
           <div>There are no bacentas without activity</div>
         )}
 

@@ -60,7 +60,7 @@ const FormMobilisationSubmission = () => {
         {(formik) => (
           <Container>
             <HeadingPrimary loading={loading}>
-              Upload Mobilisation Picture
+              Upload Pre-Mobilisation Picture
             </HeadingPrimary>
             <HeadingSecondary loading={loading}>
               {data?.bacentas[0].name} Bacenta

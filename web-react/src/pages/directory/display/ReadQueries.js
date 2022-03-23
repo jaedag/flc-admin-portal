@@ -280,6 +280,7 @@ export const DISPLAY_BACENTA = gql`
       name
       vacationStatus
       graduationStatus
+      target
       normalBussingTopUp
       swellBussingTopUp
       stream_name

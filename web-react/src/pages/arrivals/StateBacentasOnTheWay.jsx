@@ -41,7 +41,7 @@ const BacentasOnTheWay = () => {
           {church?.name} {church?.__typename}
         </HeadingSecondary>
 
-        {!church?.bacentasOnTheWay.length && !loading && (
+        {church && !church?.bacentasOnTheWay.length && (
           <Card>
             <Card.Body>There are no bacentas on the way</Card.Body>
           </Card>

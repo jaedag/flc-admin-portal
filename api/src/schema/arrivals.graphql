@@ -108,6 +108,19 @@ extend type GatheringService {
       RETURN COUNT(bacentas)
       """
     )
+  bussingMembersOnTheWayCount: Int
+    @cypher(
+      statement: """
+       MATCH (this)-[:HAS*4]->(bacentas:Active:Bacenta)
+       MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
+        WHERE date(date.date)=date()
+        AND bussing.bussingPictures IS NOT NULL
+        AND bussing.arrivalTime IS NULL
+
+      WITH DISTINCT bussing
+      RETURN SUM(bussing.attendance)
+      """
+    )
   bacentasHaveBeenCounted: [Bacenta]
     @cypher(
       statement: """
@@ -156,6 +169,18 @@ extend type GatheringService {
         AND bussing.arrivalTime IS NOT NULL
       }
       RETURN COUNT(bacentas)
+      """
+    )
+  bussingMembersHaveArrivedCount: Int
+    @cypher(
+      statement: """
+       MATCH (this)-[:HAS*4]->(bacentas:Active:Bacenta)
+       MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
+         WHERE date(date.date)=date()
+        AND bussing.arrivalTime IS NOT NULL
+
+      WITH DISTINCT bussing
+      RETURN SUM(bussing.attendance)
       """
     )
 }
@@ -238,6 +263,19 @@ extend type Stream {
       RETURN COUNT(bacentas)
       """
     )
+  bussingMembersOnTheWayCount: Int
+    @cypher(
+      statement: """
+       MATCH (this)-[:HAS*3]->(bacentas:Active:Bacenta)
+       MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
+        WHERE date(date.date)=date()
+        AND bussing.bussingPictures IS NOT NULL
+        AND bussing.arrivalTime IS NULL
+
+      WITH DISTINCT bussing
+      RETURN SUM(bussing.attendance)
+      """
+    )
   bacentasHaveBeenCounted: [Bacenta]
     @cypher(
       statement: """
@@ -286,6 +324,18 @@ extend type Stream {
         AND bussing.arrivalTime IS NOT NULL
       }
       RETURN COUNT(bacentas)
+      """
+    )
+  bussingMembersHaveArrivedCount: Int
+    @cypher(
+      statement: """
+       MATCH (this)-[:HAS*3]->(bacentas:Active:Bacenta)
+       MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
+         WHERE date(date.date)=date()
+        AND bussing.arrivalTime IS NOT NULL
+
+      WITH DISTINCT bussing
+      RETURN SUM(bussing.attendance)
       """
     )
 }
@@ -368,6 +418,19 @@ extend type Council {
       RETURN COUNT(bacentas)
       """
     )
+  bussingMembersOnTheWayCount: Int
+    @cypher(
+      statement: """
+       MATCH (this)-[:HAS*2]->(bacentas:Active:Bacenta)
+       MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
+        WHERE date(date.date)=date()
+        AND bussing.bussingPictures IS NOT NULL
+        AND bussing.arrivalTime IS NULL
+
+      WITH DISTINCT bussing
+      RETURN SUM(bussing.attendance)
+      """
+    )
   bacentasHaveBeenCounted: [Bacenta]
     @cypher(
       statement: """
@@ -416,6 +479,18 @@ extend type Council {
         AND bussing.arrivalTime IS NOT NULL
       }
       RETURN COUNT(bacentas)
+      """
+    )
+  bussingMembersHaveArrivedCount: Int
+    @cypher(
+      statement: """
+       MATCH (this)-[:HAS*2]->(bacentas:Active:Bacenta)
+       MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
+         WHERE date(date.date)=date()
+        AND bussing.arrivalTime IS NOT NULL
+
+      WITH DISTINCT bussing
+      RETURN SUM(bussing.attendance)
       """
     )
 }
@@ -497,6 +572,19 @@ extend type Constituency {
       RETURN COUNT(bacentas)
       """
     )
+  bussingMembersOnTheWayCount: Int
+    @cypher(
+      statement: """
+       MATCH (this)-[:HAS]->(bacentas:Active:Bacenta)
+       MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
+        WHERE date(date.date)=date()
+        AND bussing.bussingPictures IS NOT NULL
+        AND bussing.arrivalTime IS NULL
+
+      WITH DISTINCT bussing
+      RETURN SUM(bussing.attendance)
+      """
+    )
   bacentasHaveBeenCounted: [Bacenta]
     @cypher(
       statement: """
@@ -545,6 +633,18 @@ extend type Constituency {
         AND bussing.arrivalTime IS NOT NULL
       }
       RETURN COUNT(bacentas)
+      """
+    )
+  bussingMembersHaveArrivedCount: Int
+    @cypher(
+      statement: """
+       MATCH (this)-[:HAS]->(bacentas:Active:Bacenta)
+       MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
+         WHERE date(date.date)=date()
+        AND bussing.arrivalTime IS NOT NULL
+
+      WITH DISTINCT bussing
+      RETURN SUM(bussing.attendance)
       """
     )
 }

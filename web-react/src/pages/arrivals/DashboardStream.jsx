@@ -104,7 +104,7 @@ const StreamDashboard = () => {
 
         <div className="d-grid gap-2">
           <RoleView
-            roles={[...permitAdmin('stream'), ...permitArrivals('Stream')]}
+            roles={[...permitAdmin('Stream'), ...permitArrivals('Stream')]}
           >
             <Button
               variant="outline-secondary"
@@ -127,6 +127,7 @@ const StreamDashboard = () => {
             title="Bacentas With No Activity"
             onClick={() => navigate('/arrivals/bacentas-no-activity')}
             number={stream?.bacentasNoActivityCount.toString()}
+            color="red"
             iconBg
             noCaption
           />
@@ -134,6 +135,7 @@ const StreamDashboard = () => {
             title="Bacentas Mobilising"
             onClick={() => navigate('/arrivals/bacentas-mobilising')}
             number={stream?.bacentasMobilisingCount.toString()}
+            color="orange"
             iconBg
             noCaption
           />
@@ -141,6 +143,7 @@ const StreamDashboard = () => {
             title="Bacentas On The Way"
             onClick={() => navigate('/arrivals/bacentas-on-the-way')}
             number={stream?.bacentasOnTheWayCount.toString()}
+            color="yellow"
             iconBg
             noCaption
           />
@@ -158,8 +161,26 @@ const StreamDashboard = () => {
             onClick={() => navigate('/arrivals/bacentas-have-arrived')}
             number={stream?.bacentasHaveArrivedCount.toString()}
             iconBg
+            color="green"
             noCaption
           />
+
+          <div className="mt-5 d-grid gap-2">
+            <MenuButton
+              title="Members On The Way"
+              number={stream?.bussingMembersOnTheWayCount.toString()}
+              color="yellow"
+              iconBg
+              noCaption
+            />
+            <MenuButton
+              title="Members That Have Arrived"
+              number={stream?.bussingMembersHaveArrivedCount.toString()}
+              color="green"
+              iconBg
+              noCaption
+            />
+          </div>
         </div>
       </Container>
     </BaseComponent>

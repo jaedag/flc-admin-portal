@@ -45,7 +45,7 @@ const BacentasHaveArrived = () => {
           {church?.name} Constituency
         </HeadingSecondary>
 
-        {!church?.bacentasHaveArrived.length && !loading && (
+        {church && !church?.bacentasHaveArrived.length && (
           <Card>
             <Card.Body>No Bacentas Have Arrived at the Centre</Card.Body>
           </Card>

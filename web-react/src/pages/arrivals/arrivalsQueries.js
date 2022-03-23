@@ -22,6 +22,8 @@ export const CONSTITUENCY_ARRIVALS_DASHBOARD = gql`
       bacentasOnTheWayCount
       bacentasHaveBeenCountedCount
       bacentasHaveArrivedCount
+      bussingMembersOnTheWayCount
+      bussingMembersHaveArrivedCount
     }
   }
 `
@@ -49,6 +51,8 @@ export const COUNCIL_ARRIVALS_DASHBOARD = gql`
       bacentasOnTheWayCount
       bacentasHaveBeenCountedCount
       bacentasHaveArrivedCount
+      bussingMembersOnTheWayCount
+      bussingMembersHaveArrivedCount
     }
   }
 `
@@ -76,6 +80,8 @@ export const STREAM_ARRIVALS_DASHBOARD = gql`
       bacentasOnTheWayCount
       bacentasHaveBeenCountedCount
       bacentasHaveArrivedCount
+      bussingMembersOnTheWayCount
+      bussingMembersHaveArrivedCount
     }
   }
 `
@@ -103,6 +109,8 @@ export const GATHERINGSERVICE_ARRIVALS_DASHBOARD = gql`
       bacentasOnTheWayCount
       bacentasHaveBeenCountedCount
       bacentasHaveArrivedCount
+      bussingMembersOnTheWayCount
+      bussingMembersHaveArrivedCount
     }
     timeGraphs(where: { date: $date }) {
       id

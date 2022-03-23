@@ -40,7 +40,12 @@ import CreateStream from 'pages/directory/create/CreateStream'
 import UpdateStream from 'pages/directory/update/UpdateStream'
 import GatheringServiceMembers from 'pages/directory/grids/GatheringServiceMembers'
 import StreamMembers from 'pages/directory/grids/StreamMembers'
-import { permitAdmin, permitMe, permitLeaderAdmin } from 'permission-utils'
+import {
+  permitAdmin,
+  permitMe,
+  permitLeaderAdmin,
+  permitAdminArrivals,
+} from 'permission-utils'
 import ServantMembers from './grids/ServantMembers'
 import UpdateBacentaBussing from './update/UpdateBacentaBussing'
 
@@ -293,7 +298,7 @@ export const directory = [
   {
     path: '/bacenta/editbussing',
     element: UpdateBacentaBussing,
-    roles: permitMe('Constituency'),
+    roles: permitAdminArrivals('Stream'),
     placeholder: true,
   },
   {

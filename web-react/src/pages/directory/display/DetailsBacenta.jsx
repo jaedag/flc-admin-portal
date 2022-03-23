@@ -35,6 +35,12 @@ const DetailsBacenta = () => {
       width: 'auto',
     },
     {
+      title: 'Target',
+      number: bacenta?.target,
+      link: '#',
+      width: 'auto',
+    },
+    {
       title: 'Normal Bussing Top Up',
       number: bacenta?.normalBussingTopUp,
       link: `#`,

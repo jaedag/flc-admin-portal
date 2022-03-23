@@ -44,7 +44,7 @@ const BacentaArrivals = () => {
               navigate('/arrivals/submit-mobilisation-picture')
             }}
           >
-            Upload Mobilisation Picture
+            Upload Pre-Mobilisation Picture
           </Button>
           <Button
             variant="primary"

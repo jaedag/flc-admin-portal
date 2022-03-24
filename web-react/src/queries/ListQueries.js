@@ -92,6 +92,7 @@ export const GET_CONSTITUENCY_BACENTAS = gql`
       leader {
         firstName
         lastName
+        fullName
       }
       memberCount
       sontas {

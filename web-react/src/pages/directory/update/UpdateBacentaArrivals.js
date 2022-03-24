@@ -40,8 +40,10 @@ export const UPDATE_BACENTA_BUSSING_DETAILS = gql`
       target
       normalBussingCost
       normalPersonalContribution
+      normalBussingTopUp
       swellBussingCost
       swellPersonalContribution
+      swellBussingTopUp
 
       leader {
         id

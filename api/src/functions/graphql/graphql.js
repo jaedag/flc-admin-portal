@@ -26,7 +26,7 @@ const neoSchema = new Neo4jGraphQL({
   config: {
     jwt: {
       secret: process.env.JWT_SECRET.replace(/\\n/gm, '\n'),
-      rolesPath: 'permissions',
+      rolesPath: 'https://flcadmin\\.netlify\\.app/roles',
     },
   },
 })

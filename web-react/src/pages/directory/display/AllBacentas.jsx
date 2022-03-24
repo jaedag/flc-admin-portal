@@ -41,10 +41,8 @@ const DisplayAllBacentas = () => {
                 }}
               >
                 <h6 className="text-muted">
-                  Overseer:
-                  {constituency?.leader
-                    ? ` ${constituency?.leader.fullName}`
-                    : null}
+                  CO:
+                  {constituency?.leader && ` ${constituency?.leader.fullName}`}
                 </h6>
               </Link>
               {constituency?.admin ? (

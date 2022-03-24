@@ -60,28 +60,28 @@ export const memberGrids = [
   {
     path: '/gatheringservice/members',
     element: GatheringServiceMembers,
-    roles: permitLeaderAdmin('GatheringService'),
+    roles: permitMe('GatheringService'),
   },
   {
     path: '/stream/members',
     element: StreamMembers,
-    roles: permitLeaderAdmin('Stream'),
+    roles: permitMe('Stream'),
   },
   {
     path: '/council/members',
     element: CouncilMembers,
-    roles: permitLeaderAdmin('Council'),
+    roles: permitMe('Council'),
   },
   {
     path: '/constituency/members',
     element: ConstituencyMembers,
-    roles: permitLeaderAdmin('Constituency'),
+    roles: permitMe('Constituency'),
   },
 
   {
     path: '/bacenta/members',
     element: BacentaMembers,
-    roles: permitLeaderAdmin('Bacenta'),
+    roles: permitMe('Bacenta'),
   },
   {
     path: '/fellowship/members',

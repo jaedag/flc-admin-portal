@@ -969,10 +969,11 @@ extend type Mutation {
       rules: [
         {
           roles: [
+            "adminGatheringService"
+            "arrivalsAdminGatheringService"
             "arrivalsAdminConstituency"
             "arrivalsAdminCouncil"
             "arrivalsAdminStream"
-            "arrivalsAdminGatheringService"
             "arrivalsHelperStream"
           ]
         }

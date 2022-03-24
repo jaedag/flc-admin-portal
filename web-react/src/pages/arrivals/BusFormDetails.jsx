@@ -13,11 +13,7 @@ import { DISPLAY_BUSSING_RECORDS } from './arrivalsQueries'
 import '../services/record-service/ServiceDetails.css'
 import { useNavigate } from 'react-router'
 import RoleView from 'auth/RoleView'
-import {
-  permitAdminArrivals,
-  permitArrivalsHelper,
-  permitMe,
-} from 'permission-utils'
+import { permitArrivalsHelper, permitMe } from 'permission-utils'
 import CloudinaryImage from 'components/CloudinaryImage'
 import { beforeArrivalDeadline } from './arrivals-utils'
 
@@ -196,12 +192,7 @@ const BusFormDetails = () => {
           </Col>
         </Row>
         <div className="d-grid gap-2">
-          <RoleView
-            roles={[
-              ...permitAdminArrivals('Stream'),
-              ...permitArrivalsHelper('Stream'),
-            ]}
-          >
+          <RoleView roles={permitArrivalsHelper('Stream')}>
             {beforeArrivalDeadline(bussing, church) && (
               <Button
                 onClick={() => navigate('/arrivals/submit-bus-attendance')}

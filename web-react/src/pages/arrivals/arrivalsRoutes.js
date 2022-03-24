@@ -149,7 +149,7 @@ export const arrivals = [
   //Bacenta Forms
   {
     path: '/arrivals/submit-bus-attendance',
-    roles: ['arrivalsHelperStream'],
+    roles: permitArrivalsHelper('Stream'),
     element: BusFormConfirmation,
     placeholder: false,
   },

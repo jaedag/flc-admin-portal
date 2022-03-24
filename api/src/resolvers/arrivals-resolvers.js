@@ -110,7 +110,7 @@ export const arrivalsMutation = {
     return bussingRecord.record.properties
   },
   SendBussingSupport: async (object, args, context) => {
-    isAuth(permitArrivals('Council'), context.auth.roles)
+    isAuth(permitAdminArrivals('Council'), context.auth.roles)
     const session = context.driver.session()
 
     if (args.stream_name === 'Anagkazo') {

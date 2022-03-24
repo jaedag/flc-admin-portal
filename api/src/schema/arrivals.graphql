@@ -970,6 +970,8 @@ extend type Mutation {
         {
           roles: [
             "adminGatheringService"
+            "adminStream"
+            "adminCouncil"
             "arrivalsAdminGatheringService"
             "arrivalsAdminConstituency"
             "arrivalsAdminCouncil"
@@ -1003,6 +1005,9 @@ extend type Mutation {
             "arrivalsAdminCouncil"
             "arrivalsAdminStream"
             "arrivalsAdminGatheringService"
+            "adminGatheringService"
+            "adminStream"
+            "adminCouncil"
           ]
         }
       ]

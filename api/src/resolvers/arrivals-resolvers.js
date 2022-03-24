@@ -138,6 +138,8 @@ export const arrivalsMutation = {
           return 'MTN'
         case 'Vodafone':
           return 'VDF'
+        case 'AirtelTigo':
+          return 'ATL'
         case 'Airtel':
           return 'ATL'
         case 'Tigo':
@@ -174,6 +176,7 @@ export const arrivalsMutation = {
       const res = await axios(sendBussingSupport)
 
       if (res.data.code !== '000') {
+        await session.run(cypher.removeBussingRecordTransactionId, args)
         throwErrorMsg(res.data.code + ' ' + res.data.reason)
       }
       // eslint-disable-next-line no-console

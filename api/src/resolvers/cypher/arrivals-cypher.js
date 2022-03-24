@@ -8,6 +8,14 @@ transaction.id = record.transactionId
 RETURN record, bacenta.name AS bacentaName, date.date AS date
 `
 
+export const removeBussingRecordTransactionId = `
+MATCH (record:BussingRecord {id: $bussingRecordId})<-[:HAS_BUSSING]-(:ServiceLog)<-[:HAS_HISTORY]-(bacenta:Bacenta)
+MATCH (record)-[:BUSSED_ON]->(date:TimeGraph)
+REMOVE record.transactionId
+
+RETURN record, bacenta.name AS bacentaName, date.date AS date
+`
+
 export const getBussingRecordWithDate = `
 MATCH (record:BussingRecord {id: $bussingRecordId})
 MATCH (record)-[:BUSSED_ON]->(date:TimeGraph)

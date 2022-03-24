@@ -9,9 +9,10 @@ import * as Yup from 'yup'
 import { Form, Formik } from 'formik'
 import {
   MAKE_STREAMARRIVALS_HELPER,
+  REMOVE_STREAMARRIVALS_HELPER,
   STREAM_ARRIVALS_HELPERS,
 } from './ArrivalsHelpersGQL'
-import { throwErrorMsg } from 'global-utils'
+import { alertMsg, throwErrorMsg } from 'global-utils'
 import Popup from 'components/Popup/Popup'
 import FormikControl from 'components/formik-components/FormikControl'
 import SubmitButton from 'components/formik-components/SubmitButton'
@@ -32,6 +33,18 @@ const ArrivalsHelpersStream = () => {
       },
     ],
   })
+
+  const [RemoveStreamArrivalsHelper] = useMutation(
+    REMOVE_STREAMARRIVALS_HELPER,
+    {
+      refetchQueries: [
+        {
+          query: STREAM_ARRIVALS_HELPERS,
+          variables: { id: streamId },
+        },
+      ],
+    }
+  )
 
   const initialValues = {
     helperName: '',
@@ -67,7 +80,7 @@ const ArrivalsHelpersStream = () => {
         <HeadingPrimary>{`${stream?.name} Arrivals Helpers`}</HeadingPrimary>
         {isOpen && (
           <Popup handleClose={togglePopup}>
-            <b>Change Arrivals Admin</b>
+            <b>Add Arrivals Helper</b>
             <p>Please enter the name of the new arrivals rep</p>
 
             <Formik
@@ -98,9 +111,32 @@ const ArrivalsHelpersStream = () => {
           </Popup>
         )}
         <Button onClick={() => togglePopup()}>Add Helpers</Button>
-        <Button>Delete Helpers</Button>
+        <Button>Delete All Helpers</Button>
+
         {stream?.arrivalsHelpers.map((helper, i) => (
-          <MemberDisplayCard key={i} member={helper} />
+          <div key={i}>
+            <MemberDisplayCard key={i} member={helper} />
+            <Button
+              onClick={() => {
+                const confirmBox = window.confirm(
+                  `Do you want to delete ${helper.fullName} as a helper`
+                )
+
+                if (confirmBox === true) {
+                  RemoveStreamArrivalsHelper({
+                    variables: {
+                      streamId: streamId,
+                      arrivalsHelperId: helper.id,
+                    },
+                  }).then(() =>
+                    alertMsg(`${helper.fullName} Deleted Successfully`)
+                  )
+                }
+              }}
+            >
+              Delete
+            </Button>
+          </div>
         ))}
       </Container>
     </BaseComponent>

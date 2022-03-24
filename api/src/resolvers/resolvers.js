@@ -328,7 +328,6 @@ export const RemoveServant = async (
   servantType
 ) => {
   //Set Up
-  //Set Up
   const terms = formatting(churchType, servantType)
   const verb = terms.verb
   const churchLower = terms.churchLower
@@ -726,22 +725,5 @@ export const resolvers = {
     ...arrivalsMutation,
     ...serviceMutation,
     ...directoryMutation,
-    //ARRIVALS HELPERS
-    // MakeStreamArrivalsHelper: async (object, args, context) =>
-    //   MakeServant(
-    //     context,
-    //     args,
-    //     [...permitAdmin('Stream'), ...permitArrivals('Stream')],
-    //     'Stream',
-    //     'ArrivalsHelper'
-    //   ),
-    // RemoveStreamArrivalsHelper: async (object, args, context) =>
-    //   RemoveServant(
-    //     context,
-    //     args,
-    //     [...permitAdmin('Stream'), ...permitArrivals('Stream')],
-    //     'Stream',
-    //     'ArrivalsHelper'
-    //   ),
   },
 }

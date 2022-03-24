@@ -5,7 +5,6 @@ export const DECIMAL_NUM_REGEX = /^-?\d*\.{1}\d*$/
 export const DECIMAL_NUM_REGEX_POSITIVE_ONLY = /^\d*\.{1}\d*$/
 export const USER_PLACEHOLDER = 'v1627893621/user_qvwhs7.png'
 export const DEBOUNCE_TIMER = 500
-export const ARRIVALS_CUTOFF = [14, 30, 0]
 
 export const GENDER_OPTIONS = [
   { key: 'Male', value: 'Male' },

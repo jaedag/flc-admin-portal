@@ -1,4 +1,8 @@
-import { permitLeaderAdminArrivals } from 'permission-utils'
+import {
+  permitAdminArrivals,
+  permitArrivalsHelper,
+  permitLeaderAdminArrivals,
+} from 'permission-utils'
 import Arrivals from 'pages/arrivals/Arrivals'
 import BacentaArrivals from 'pages/arrivals/BacentaArrivals'
 import ConfirmBacentaArrival from 'pages/arrivals/ConfirmBacentaArrival'
@@ -23,7 +27,10 @@ export const arrivals = [
     path: '/arrivals',
     element: Arrivals,
     placeholder: true,
-    roles: permitLeaderAdminArrivals('Fellowship'),
+    roles: [
+      ...permitLeaderAdminArrivals('Fellowship'),
+      ...permitArrivalsHelper('Stream'),
+    ],
   },
 
   //Main Arrivals Pages for the Different Churches
@@ -48,7 +55,10 @@ export const arrivals = [
   },
   {
     path: '/arrivals/stream',
-    roles: permitLeaderAdminArrivals('Stream'),
+    roles: [
+      ...permitLeaderAdminArrivals('Stream'),
+      ...permitArrivalsHelper('Stream'),
+    ],
     element: StreamDashboard,
     placeholder: true,
   },
@@ -95,19 +105,28 @@ export const arrivals = [
 
   {
     path: '/arrivals/bacentas-no-activity',
-    roles: permitLeaderAdminArrivals('Constituency'),
+    roles: [
+      ...permitLeaderAdminArrivals('Constituency'),
+      ...permitArrivalsHelper('Stream'),
+    ],
     element: StateBacentasNoActivity,
     placeholder: true,
   },
   {
     path: '/arrivals/bacentas-mobilising',
-    roles: permitLeaderAdminArrivals('Constituency'),
+    roles: [
+      ...permitLeaderAdminArrivals('Constituency'),
+      ...permitArrivalsHelper('Stream'),
+    ],
     element: BacentasMobilising,
     placeholder: true,
   },
   {
     path: '/arrivals/bacentas-on-the-way',
-    roles: permitLeaderAdminArrivals('Constituency'),
+    roles: [
+      ...permitLeaderAdminArrivals('Constituency'),
+      ...permitArrivalsHelper('Stream'),
+    ],
     element: BacentasOnTheWay,
     placeholder: true,
   },
@@ -119,7 +138,10 @@ export const arrivals = [
   },
   {
     path: '/arrivals/bacentas-have-arrived',
-    roles: permitLeaderAdminArrivals('Constituency'),
+    roles: [
+      ...permitLeaderAdminArrivals('Constituency'),
+      ...permitArrivalsHelper('Stream'),
+    ],
     element: BacentasHaveArrived,
     placeholder: true,
   },
@@ -127,7 +149,7 @@ export const arrivals = [
   //Bacenta Forms
   {
     path: '/arrivals/submit-bus-attendance',
-    roles: ['arrivalsAdminConstituency'],
+    roles: ['arrivalsHelperStream'],
     element: BusFormConfirmation,
     placeholder: false,
   },
@@ -147,7 +169,7 @@ export const arrivals = [
   //Arrivals Helpers
   {
     path: '/stream/arrivals-helpers',
-    roles: permitLeaderAdminArrivals('Bacenta'),
+    roles: permitAdminArrivals('Stream'),
     element: ArrivalsHelpersStream,
     placeholder: false,
   },

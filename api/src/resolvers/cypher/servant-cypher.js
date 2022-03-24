@@ -16,7 +16,7 @@ RETURN leader.id AS id, leader.auth_id AS auth_id, leader.firstName AS firstName
 
 export const disconnectChurchAdmin = `
 MATCH (church {id: $churchId}) 
-WHERE church:Fellowship OR church:Bacenta OR church:Constituency OR church:Council OR church:Stream OR church:GatheringService OR church:Sonta OR church:Ministry
+WHERE church:Constituency OR church:Council OR church:Stream OR church:GatheringService OR church:Sonta OR church:Ministry
 OR church:ClosedFellowship OR church:ClosedBacenta
 MATCH (church)<-[oldAdmin:IS_ADMIN_FOR]-(admin:Member)
 DELETE oldAdmin
@@ -30,7 +30,7 @@ RETURN admin.id AS id, admin.auth_id AS auth_id, admin.firstName AS firstName, a
 `
 export const disconnectChurchArrivalsAdmin = `
 MATCH (church {id: $churchId}) 
-WHERE church:Fellowship OR church:Bacenta OR church:Constituency OR church:Council OR church:Stream OR church:GatheringService OR church:Sonta OR church:Ministry
+WHERE church:Constituency OR church:Council OR church:Stream OR church:GatheringService OR church:Sonta OR church:Ministry
 OR church:ClosedFellowship OR church:ClosedBacenta
 MATCH (church)<-[oldAdmin:DOES_ARRIVALS_FOR]-(admin:Member)
 DELETE oldAdmin
@@ -46,9 +46,8 @@ RETURN admin.id AS id, admin.auth_id AS auth_id, admin.firstName AS firstName, a
 
 export const disconnectChurchArrivalsHelper = `
 MATCH (church {id: $churchId}) 
-WHERE church:Fellowship OR church:Bacenta OR church:Constituency OR church:Council OR church:Stream OR church:GatheringService OR church:Sonta OR church:Ministry
-OR church:ClosedFellowship OR church:ClosedBacenta
-MATCH (church)<-[oldAdmin:HELPS_ARRIVALS_FOR]-(admin:Member)
+WHERE church:Council OR church:Stream OR church:GatheringService OR church:Sonta OR church:Ministry
+MATCH (church)<-[oldAdmin:HELPS_ARRIVALS_FOR]-(admin:Member {id: $arrivalsHelperId})
 DELETE oldAdmin
 
 WITH church, admin
@@ -94,7 +93,7 @@ RETURN church.id AS id, church.name AS name, higherChurch.id AS higherChurchId, 
 export const connectChurchArrivalsHelper = `
 MATCH (church {id:$churchId})<-[:HAS]-(higherChurch)
 WHERE church:Constituency OR church:Council OR church:Stream OR church:GatheringService OR church:Sonta OR church:Ministry
-MATCH (admin:Member {id: $arrivalsAdminId})
+MATCH (admin:Member {id: $arrivalsHelperId})
    SET admin.auth_id =  $auth_id
 MERGE (admin)-[:HELPS_ARRIVALS_FOR]->(church)
 

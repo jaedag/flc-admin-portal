@@ -1,4 +1,8 @@
-import { permitArrivals, permitLeaderAdmin } from 'permission-utils'
+import {
+  permitArrivals,
+  permitArrivalsHelper,
+  permitLeaderAdmin,
+} from 'permission-utils'
 
 export const menuItems = [
   { name: 'Home', to: '/', roles: ['all'] },
@@ -20,7 +24,11 @@ export const menuItems = [
   {
     name: 'Arrivals',
     to: '/arrivals',
-    roles: [...permitLeaderAdmin('Bacenta'), ...permitArrivals('Bacenta')],
+    roles: [
+      ...permitLeaderAdmin('Bacenta'),
+      ...permitArrivals('Bacenta'),
+      ...permitArrivalsHelper('Stream'),
+    ],
   },
   {
     name: 'Campaigns',

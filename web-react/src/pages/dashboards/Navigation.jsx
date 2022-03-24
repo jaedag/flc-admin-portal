@@ -11,6 +11,7 @@ import { Link } from 'react-router-dom'
 import { menuItems } from './dashboard-utils'
 import {
   SERVANTS_ADMIN,
+  SERVANTS_ARRIVALS,
   SERVANTS_DASHBOARD,
   SERVANTS_LEADERSHIP,
 } from './DashboardQueries'
@@ -35,6 +36,9 @@ const Navigator = () => {
     variables: { id: currentUser.id },
   })
   const { data: leaderData } = useQuery(SERVANTS_LEADERSHIP, {
+    variables: { id: currentUser.id },
+  })
+  const { data: arrivalsData } = useQuery(SERVANTS_ARRIVALS, {
     variables: { id: currentUser.id },
   })
 
@@ -84,11 +88,12 @@ const Navigator = () => {
     })
 
     // eslint-disable-next-line
-  }, [data, adminData, leaderData])
+  }, [data, adminData, leaderData, arrivalsData])
 
   const servant = data?.members[0]
   const servantAdmin = adminData?.members[0]
   const servantLeader = leaderData?.members[0]
+  const servantArrivals = arrivalsData?.members[0]
 
   const setServantRoles = (servant, servantType, churchType) => {
     let verb
@@ -100,18 +105,42 @@ const Navigator = () => {
       case 'Admin':
         verb = `isAdminFor${churchType}`
         break
+      case 'ArrivalsAdmin':
+        verb = `isArrivalsAdminFor${churchType}`
+        break
+      case 'ArrivalsHelper':
+        verb = `isArrivalsHelperFor${churchType}`
+        break
       default:
         break
     }
 
     const permittedForLink = permitMe(churchType)
 
-    if (servantType === 'Admin') {
+    if (servantType === 'ArrivalsHelper') {
       const adminsOneChurch = servant[`${verb}`].length === 1 ?? false
       roles.push({
         name: adminsOneChurch
-          ? churchType + ' Admin'
-          : plural(churchType) + ' Admin',
+          ? churchType + ' ' + servantType
+          : plural(churchType) + ' ' + servantType,
+        church: servant[`${verb}`],
+        number: servant[`${verb}`].length,
+        clickCard: () => {
+          clickCard(servant[`${verb}`][0])
+        },
+        link: authorisedLink(currentUser, permittedForLink, `/arrivals`),
+      })
+
+      assessmentChurch = servant[`${verb}`][0]
+      return
+    }
+
+    if (servantType === 'Admin' || servantType === 'ArrivalsAdmin') {
+      const adminsOneChurch = servant[`${verb}`].length === 1 ?? false
+      roles.push({
+        name: adminsOneChurch
+          ? churchType + ' ' + servantType
+          : plural(churchType) + ' ' + servantType,
         church: servant[`${verb}`],
         number: servant[`${verb}`].length,
         clickCard: () => {
@@ -167,11 +196,17 @@ const Navigator = () => {
     if (servantAdmin?.isAdminForConstituency?.length) {
       setServantRoles(servantAdmin, 'Admin', 'Constituency')
     }
+    if (servantArrivals?.isArrivalsAdminForConstituency?.length) {
+      setServantRoles(servantArrivals, 'ArrivalsAdmin', 'Constituency')
+    }
     if (servantLeader?.leadsCouncil?.length) {
       setServantRoles(servantLeader, 'Leader', 'Council')
     }
     if (servantAdmin?.isAdminForCouncil?.length) {
       setServantRoles(servantAdmin, 'Admin', 'Council')
+    }
+    if (servantArrivals?.isArrivalsAdminForCouncil?.length) {
+      setServantRoles(servantArrivals, 'ArrivalsAdmin', 'Council')
     }
     if (servantLeader?.leadsMinistry?.length) {
       setServantRoles(servantLeader, 'Leader', 'Ministry')
@@ -182,11 +217,20 @@ const Navigator = () => {
     if (servantAdmin?.isAdminForStream?.length) {
       setServantRoles(servantAdmin, 'Admin', 'Stream')
     }
+    if (servantArrivals?.isArrivalsAdminForStream?.length) {
+      setServantRoles(servantArrivals, 'ArrivalsAdmin', 'Stream')
+    }
+    if (servantArrivals?.isArrivalsHelperForStream?.length) {
+      setServantRoles(servantArrivals, 'ArrivalsHelper', 'Stream')
+    }
     if (servantLeader?.leadsGatheringService?.length) {
       setServantRoles(servantLeader, 'Leader', 'GatheringService')
     }
     if (servantAdmin?.isAdminForGatheringService?.length) {
       setServantRoles(servantAdmin, 'Admin', 'GatheringService')
+    }
+    if (servantArrivals?.isArrivalsAdminForGatheringService?.length) {
+      setServantRoles(servantArrivals, 'ArrivalsAdmin', 'GatheringService')
     }
     if (servantLeader?.leadsBasonta?.length) {
       setServantRoles(servantLeader, 'Leader', 'Basonta')

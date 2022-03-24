@@ -4,7 +4,7 @@ import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import HeadingSecondary from 'components/HeadingSecondary'
 import { Form, Formik } from 'formik'
 import { useMutation, useQuery } from '@apollo/client'
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import * as Yup from 'yup'
 import { Col, Container, Row } from 'react-bootstrap'
 import { useNavigate } from 'react-router'
@@ -12,6 +12,7 @@ import { BACENTA_ARRIVALS } from './arrivalsQueries'
 import { ChurchContext } from 'contexts/ChurchContext'
 import BaseComponent from 'components/base-component/BaseComponent'
 import { UPLOAD_MOBILISATION_PICTURE } from './arrivalsMutations'
+import { beforeMobilisationDeadline } from './arrivals-utils'
 
 const FormMobilisationSubmission = () => {
   const navigate = useNavigate()
@@ -48,6 +49,17 @@ const FormMobilisationSubmission = () => {
       navigate(`/bacenta/bussing-details`)
     })
   }
+
+  useEffect(() => {
+    if (
+      !beforeMobilisationDeadline(
+        data?.bacentas[0].bussing[0],
+        data?.bacentas[0]
+      )
+    ) {
+      navigate('/arrivals/bacenta')
+    }
+  }, [])
 
   return (
     <BaseComponent data={data} loading={loading} error={error}>

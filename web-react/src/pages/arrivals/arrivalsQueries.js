@@ -154,9 +154,11 @@ export const BACENTA_ARRIVALS = gql`
     bacentas(where: { id: $id }, options: { limit: 1 }) {
       id
       name
+      stream_name
       arrivalsCodeOfTheDay
       bussing(limit: 1) {
         id
+        created_at
         serviceDate {
           date
         }
@@ -283,6 +285,7 @@ export const DISPLAY_BUSSING_RECORDS = gql`
     bacentas(where: { id: $bacentaId }) {
       id
       name
+      stream_name
       normalBussingTopUp
       swellBussingTopUp
     }

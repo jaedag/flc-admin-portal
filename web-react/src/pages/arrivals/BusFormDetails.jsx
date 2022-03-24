@@ -11,13 +11,15 @@ import { useContext } from 'react'
 import { Container, Row, Col, Table, Button } from 'react-bootstrap'
 import { DISPLAY_BUSSING_RECORDS } from './arrivalsQueries'
 import '../services/record-service/ServiceDetails.css'
-import { ARRIVALS_CUTOFF } from 'global-utils'
-import { parseDate } from 'date-utils'
-import { setTime } from 'date-utils'
 import { useNavigate } from 'react-router'
 import RoleView from 'auth/RoleView'
-import { permitMe } from 'permission-utils'
+import {
+  permitAdminArrivals,
+  permitArrivalsHelper,
+  permitMe,
+} from 'permission-utils'
 import CloudinaryImage from 'components/CloudinaryImage'
+import { beforeArrivalDeadline } from './arrivals-utils'
 
 const BusFormDetails = () => {
   const { bacentaId } = useContext(ChurchContext)
@@ -30,23 +32,6 @@ const BusFormDetails = () => {
   const bussing = data?.bussingRecords[0]
   const church = data?.bacentas[0]
 
-  const changeCondition = () => {
-    const today = new Date()
-    const arrivalsCutoff = setTime(ARRIVALS_CUTOFF)
-    if (bussing?.bussingPictures?.length) {
-      if (
-        parseDate(bussing?.created_at) === 'Today' &&
-        today < arrivalsCutoff
-      ) {
-        //If the record was created today
-        //And if the time is less than the arrivals cutoff time
-        return true
-      }
-      // return false
-      return true
-    }
-    return false
-  }
   return (
     <BaseComponent loading={loading} error={error} data={data} placeholder>
       <Container>
@@ -211,8 +196,13 @@ const BusFormDetails = () => {
           </Col>
         </Row>
         <div className="d-grid gap-2">
-          <RoleView roles={['arrivalsAdminConstituency']}>
-            {changeCondition() && (
+          <RoleView
+            roles={[
+              ...permitAdminArrivals('Stream'),
+              ...permitArrivalsHelper('Stream'),
+            ]}
+          >
+            {beforeArrivalDeadline(bussing, church) && (
               <Button
                 onClick={() => navigate('/arrivals/submit-bus-attendance')}
               >

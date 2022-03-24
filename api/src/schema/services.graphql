@@ -441,13 +441,13 @@ extend type Bacenta {
 
 interface Record {
   id: ID!
-  created_at: Date!
+  created_at: DateTime!
   created_by: Member! @relationship(type: "LOGGED_BY", direction: OUT)
 }
 
 type ServiceRecord implements Record @auth(rules: [{ isAuthenticated: true }]) {
   id: ID!
-  created_at: Date!
+  created_at: DateTime!
   created_by: Member!
   serviceDate: TimeGraph @relationship(type: "SERVICE_HELD_ON", direction: OUT)
   week: Int
@@ -470,7 +470,7 @@ type ServiceRecord implements Record @auth(rules: [{ isAuthenticated: true }]) {
 
 type NoService implements Record @auth(rules: [{ isAuthenticated: true }]) {
   id: ID!
-  created_at: Date!
+  created_at: DateTime!
   created_by: Member!
   serviceDate: TimeGraph @relationship(type: "SERVICE_HELD_ON", direction: OUT)
   week: Int

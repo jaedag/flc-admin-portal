@@ -126,10 +126,8 @@ extend type GatheringService {
       statement: """
       MATCH (this)-[:HAS*4]->(bacentas:Active:Bacenta)
       WHERE EXISTS {
-      MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
-        WHERE date(date.date)=date()
-        AND bussing.bussingTopUp IS NOT NULL
-        AND bussing.arrivalTime IS NULL
+      MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph) WHERE date(date.date)=date()
+       AND EXISTS {MATCH (bussing)-[:CONFIRMED_BY]->(:Member)}
       }
       RETURN bacentas
       """
@@ -139,10 +137,8 @@ extend type GatheringService {
       statement: """
       MATCH (this)-[:HAS*4]->(bacentas:Active:Bacenta)
       WHERE EXISTS {
-      MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
-        WHERE date(date.date)=date()
-        AND bussing.bussingTopUp IS NOT NULL
-        AND bussing.arrivalTime IS NULL
+       MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph) WHERE date(date.date)=date()
+       AND EXISTS {MATCH (bussing)-[:CONFIRMED_BY]->(:Member)}
       }
       RETURN COUNT(bacentas)
       """
@@ -281,10 +277,8 @@ extend type Stream {
       statement: """
       MATCH (this)-[:HAS*3]->(bacentas:Active:Bacenta)
       WHERE EXISTS {
-      MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
-        WHERE date(date.date)=date()
-        AND bussing.bussingTopUp IS NOT NULL
-        AND bussing.arrivalTime IS NULL
+      MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph) WHERE date(date.date)=date()
+       AND EXISTS {MATCH (bussing)-[:CONFIRMED_BY]->(:Member)}
       }
       RETURN bacentas
       """
@@ -292,14 +286,12 @@ extend type Stream {
   bacentasHaveBeenCountedCount: Int
     @cypher(
       statement: """
-      MATCH (this)-[:HAS*3]->(bacentas:Active:Bacenta)
-      WHERE EXISTS {
-      MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
-        WHERE date(date.date)=date()
-        AND bussing.bussingTopUp IS NOT NULL
-        AND bussing.arrivalTime IS NULL
-      }
-      RETURN COUNT(bacentas)
+       MATCH (this)-[:HAS*3]->(bacentas:Active:Bacenta)
+       WHERE EXISTS {
+      MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph) WHERE date(date.date)=date()
+        AND EXISTS {MATCH (bussing)-[:CONFIRMED_BY]->(:Member)}
+       }
+       RETURN COUNT(bacentas)
       """
     )
   bacentasHaveArrived: [Bacenta]
@@ -436,10 +428,8 @@ extend type Council {
       statement: """
       MATCH (this)-[:HAS*2]->(bacentas:Active:Bacenta)
       WHERE EXISTS {
-      MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
-        WHERE date(date.date)=date()
-        AND bussing.bussingTopUp IS NOT NULL
-        AND bussing.arrivalTime IS NULL
+      MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph) WHERE date(date.date)=date()
+       AND EXISTS {MATCH (bussing)-[:CONFIRMED_BY]->(:Member)}
       }
       RETURN bacentas
       """
@@ -449,10 +439,8 @@ extend type Council {
       statement: """
       MATCH (this)-[:HAS*2]->(bacentas:Active:Bacenta)
       WHERE EXISTS {
-      MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
-        WHERE date(date.date)=date()
-        AND bussing.bussingTopUp IS NOT NULL
-        AND bussing.arrivalTime IS NULL
+      MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph) WHERE date(date.date)=date()
+       AND EXISTS {MATCH (bussing)-[:CONFIRMED_BY]->(:Member)}
       }
       RETURN COUNT(bacentas)
       """
@@ -590,10 +578,8 @@ extend type Constituency {
       statement: """
       MATCH (this)-[:HAS]->(bacentas:Active:Bacenta)
       WHERE EXISTS {
-      MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
-        WHERE date(date.date)=date()
-        AND bussing.bussingTopUp IS NOT NULL
-        AND bussing.arrivalTime IS NULL
+      MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph) WHERE date(date.date)=date()
+       AND EXISTS {MATCH (bussing)-[:CONFIRMED_BY]->(:Member)}
       }
       RETURN bacentas
       """
@@ -603,10 +589,8 @@ extend type Constituency {
       statement: """
       MATCH (this)-[:HAS]->(bacentas:Active:Bacenta)
       WHERE EXISTS {
-      MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
-        WHERE date(date.date)=date()
-        AND bussing.bussingTopUp IS NOT NULL
-        AND bussing.arrivalTime IS NULL
+      MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph) WHERE date(date.date)=date()
+       AND EXISTS {MATCH (bussing)-[:CONFIRMED_BY]->(:Member)}
       }
       RETURN COUNT(bacentas)
       """
@@ -712,7 +696,7 @@ type BussingRecord implements Record @auth(rules: [{ isAuthenticated: true }]) {
       """
     )
   # Mobilisation
-  created_at: Date! #mobilisation time is the time the record was created
+  created_at: DateTime! #mobilisation time is the time the record was created
   serviceDate: TimeGraph! @relationship(type: "BUSSED_ON", direction: OUT)
   mobilisationPicture: String!
   created_by: Member! @relationship(type: "LOGGED_BY", direction: OUT)
@@ -989,6 +973,7 @@ extend type Mutation {
             "arrivalsAdminCouncil"
             "arrivalsAdminStream"
             "arrivalsAdminGatheringService"
+            "arrivalsHelperStream"
           ]
         }
       ]

@@ -70,6 +70,24 @@ export const arrivalsMutation = {
       'ArrivalsAdmin'
     ),
 
+  //ARRIVALS HELPERS
+  MakeStreamArrivalsHelper: async (object, args, context) =>
+    MakeServant(
+      context,
+      args,
+      [...permitAdmin('Stream'), ...permitArrivals('Stream')],
+      'Stream',
+      'ArrivalsHelper'
+    ),
+  RemoveStreamArrivalsHelper: async (object, args, context) =>
+    RemoveServant(
+      context,
+      args,
+      [...permitAdmin('Stream'), ...permitArrivals('Stream')],
+      'Stream',
+      'ArrivalsHelper'
+    ),
+
   SetBussingSupport: async (object, args, context) => {
     const session = context.driver.session()
 

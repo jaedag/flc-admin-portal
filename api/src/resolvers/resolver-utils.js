@@ -175,10 +175,9 @@ export const makeServantCypher = async (
   oldServant,
   church
 ) => {
-  let servantLower = servantType.toLowerCase()
-  if (servantType === 'ArrivalsAdmin') {
-    servantLower = 'arrivalsAdmin'
-  }
+  const terms = formatting(churchType, servantType)
+  let servantLower = terms.servantLower
+
   const session = context.driver.session()
   //Connect Leader to Church
 
@@ -244,7 +243,8 @@ export const removeServantCypher = async (
   servant,
   church
 ) => {
-  const servantLower = servantType.toLowerCase()
+  const terms = formatting(churchType, servantType)
+  const servantLower = terms.servantLower
   const session = context.driver.session()
 
   //Disconnect him from the Church

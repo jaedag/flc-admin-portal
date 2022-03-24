@@ -7,8 +7,12 @@ import { BACENTA_ARRIVALS } from './arrivalsQueries'
 import { useNavigate } from 'react-router'
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import { ChurchContext } from 'contexts/ChurchContext'
-import { getWeekNumber } from 'date-utils'
 import { CheckCircleFill } from 'react-bootstrap-icons'
+import {
+  beforeArrivalDeadline,
+  beforeMobilisationDeadline,
+} from './arrivals-utils'
+import { parseDate } from 'date-utils'
 
 const BacentaArrivals = () => {
   const { clickCard, bacentaId } = useContext(ChurchContext)
@@ -21,11 +25,24 @@ const BacentaArrivals = () => {
   let bussing
 
   data?.bacentas[0].bussing.map((data) => {
-    if (data?.week === getWeekNumber()) {
+    if (parseDate(data.serviceDate.date) === 'Today') {
       bussing = data
     }
     return
   })
+
+  const canFillOnTheWay = () => {
+    // Ring true if it is before the deadline
+    // and there is a mobilisation picture
+    // and there are no bussing pictures already
+    if (!bussing) {
+      return false
+    }
+    return (
+      beforeArrivalDeadline(bussing, bacenta) &&
+      (bussing?.mobilisationPicture || !bussing?.bussingPictures?.length)
+    )
+  }
 
   return (
     <BaseComponent data={data} loading={loading} error={error}>
@@ -38,7 +55,7 @@ const BacentaArrivals = () => {
           <Button
             variant="primary"
             size="lg"
-            disabled={bussing?.mobilisationPicture && true}
+            disabled={!beforeMobilisationDeadline(bussing, bacenta)}
             onClick={() => {
               clickCard(bacenta)
               navigate('/arrivals/submit-mobilisation-picture')
@@ -46,14 +63,11 @@ const BacentaArrivals = () => {
           >
             Upload Pre-Mobilisation Picture
           </Button>
+
           <Button
             variant="primary"
             size="lg"
-            disabled={
-              (!bussing?.mobilisationPicture ||
-                bussing?.bussingPictures?.length) &&
-              true
-            }
+            disabled={!canFillOnTheWay()}
             onClick={() => {
               clickCard(bacenta)
               navigate('/arrivals/submit-on-the-way')
@@ -61,6 +75,7 @@ const BacentaArrivals = () => {
           >
             Submit On-The-Way Picture
           </Button>
+
           {bussing?.arrivalTime && (
             <Card>
               <Card.Body className="text-center">

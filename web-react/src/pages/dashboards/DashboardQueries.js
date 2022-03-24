@@ -343,6 +343,148 @@ export const SERVANTS_ADMIN = gql`
   }
 `
 
+export const SERVANTS_ARRIVALS = gql`
+  query servantIsArrivals($id: ID!) {
+    members(where: { id: $id }) {
+      id
+
+      # The person is an admin
+      isArrivalsAdminForConstituency {
+        id
+        name
+        stream_name
+        memberCount
+        leader {
+          id
+          firstName
+          lastName
+          fullName
+        }
+        council {
+          id
+        }
+        services(limit: 4) {
+          created_at
+          attendance
+          income
+          week
+          serviceDate {
+            date
+          }
+        }
+
+        componentServiceAggregate {
+          week
+          attendance
+          income
+        }
+      }
+      isArrivalsAdminForCouncil {
+        id
+        name
+        stream_name
+        memberCount
+        leader {
+          id
+          firstName
+          lastName
+          fullName
+        }
+        services(limit: 4) {
+          created_at
+          attendance
+          income
+          week
+          serviceDate {
+            date
+          }
+        }
+
+        componentServiceAggregate {
+          week
+          attendance
+          income
+        }
+      }
+      isArrivalsHelperForStream {
+        id
+        name
+
+        memberCount
+        leader {
+          id
+          firstName
+          lastName
+          fullName
+        }
+        services(limit: 4) {
+          created_at
+          attendance
+          income
+          week
+          serviceDate {
+            date
+          }
+        }
+
+        componentServiceAggregate {
+          week
+          attendance
+          income
+        }
+      }
+      isArrivalsAdminForStream {
+        id
+        name
+
+        memberCount
+        leader {
+          id
+          firstName
+          lastName
+          fullName
+        }
+        services(limit: 4) {
+          created_at
+          attendance
+          income
+          week
+          serviceDate {
+            date
+          }
+        }
+
+        componentServiceAggregate {
+          week
+          attendance
+          income
+        }
+      }
+      isArrivalsAdminForGatheringService {
+        id
+        name
+        memberCount
+
+        services(limit: 4) {
+          created_at
+          attendance
+          income
+          week
+          serviceDate {
+            date
+          }
+        }
+
+        componentServiceAggregate {
+          week
+          attendance
+          income
+        }
+      }
+    }
+  }
+`
+
 export const SERVANT_CHURCHES_COUNT = gql`
   query churchesLed($id: ID!) {
     members(where: { id: $id }) {

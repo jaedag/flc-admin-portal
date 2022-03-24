@@ -1,4 +1,5 @@
 export const matchMemberQuery = `
+
 WITH apoc.cypher.runFirstColumn(
   "MATCH (member:Member {id:$id})
   RETURN member", {offset:0, first:5, id: $id}, True) AS x UNWIND x AS member
@@ -30,7 +31,10 @@ WITH apoc.cypher.runFirstColumn(
   isArrivalsAdminForStream: [ member_arrivalsAdminStreams IN apoc.cypher.runFirstColumn("MATCH (this)-[:DOES_ARRIVALS_FOR]->(arrivalsAdminStream:Stream)
   RETURN arrivalsAdminStream", {this: member}, true) | member_arrivalsAdminStreams { .id,.name}],
   isArrivalsAdminForGatheringService: [ member_arrivalsAdminGatheringServices IN apoc.cypher.runFirstColumn("MATCH (this)-[:DOES_ARRIVALS_FOR]->(arrivalsAdminGatheringService:GatheringService)
-  RETURN arrivalsAdminGatheringService", {this: member}, true) | member_arrivalsAdminGatheringServices { .id,.name}]} AS member
+  RETURN arrivalsAdminGatheringService", {this: member}, true) | member_arrivalsAdminGatheringServices { .id,.name}],
+  isArrivalsHelperForStream: [ member_arrivalsHelperStreams IN apoc.cypher.runFirstColumn("MATCH (this)-[:HELPS_ARRIVALS_FOR]->(arrivalsHelperStream:Stream)
+  RETURN arrivalsHelperStream", {this: member}, true) | member_arrivalsHelperStreams { .id,.name}]
+  } AS member
   `
 
 export const matchChurchQuery = `

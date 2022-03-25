@@ -68,7 +68,12 @@ const DefaultersDashboard = () => {
     {
       title: 'Have Banked',
       data: church?.bankedThisWeekCount || '0',
-      color: church?.bankedThisWeekCount ? 'good' : 'bad',
+      color:
+        church?.bankedThisWeekCount === church?.servicesThisWeekCount
+          ? 'good'
+          : church?.bankedThisWeekCount > 0
+          ? 'yellow'
+          : 'bad',
       link: church?.bankedThisWeekCount ? '/services/banked' : '#',
     },
     {

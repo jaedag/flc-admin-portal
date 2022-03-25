@@ -19,17 +19,3 @@
   width: 25px;
 }
 
-.yellow.dark {
-  color: var(--yellow);
-}
-
-.green.dark {
-  color: var(--good);
-}
-
-.red.dark {
-  color: var(--bad);
-}
-.orange.dark {
-  color: var(--orange);
-}

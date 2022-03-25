@@ -52,7 +52,7 @@ const DefaultersDashboard = () => {
 
   const defaulters = [
     {
-      title: 'Filled Forms',
+      title: 'Services This Week',
       data: church?.servicesThisWeekCount || '0',
       color: church?.servicesThisWeekCount ? 'good' : 'bad',
       link: church?.servicesThisWeekCount ? '/services/filled-services' : '#',

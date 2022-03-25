@@ -217,12 +217,28 @@ body {
   color: red;
 }
 
+.yellow {
+  color: var(--yellow);
+}
+
+.green {
+  color: var(--good);
+}
+
 .good {
   color: var(--good);
+}
+
+.red {
+  color: var(--bad);
 }
 .bad {
   color: var(--bad);
 }
+.orange {
+  color: var(--orange);
+}
+
 .whatsapp-green {
   background-color: var(--whatsapp-green);
 }

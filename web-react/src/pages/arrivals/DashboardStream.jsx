@@ -17,12 +17,14 @@ import RoleView from 'auth/RoleView'
 import { permitAdmin, permitArrivals } from 'permission-utils'
 import MenuButton from 'components/buttons/MenuButton'
 import DefaulterInfoCard from 'pages/services/defaulters/DefaulterInfoCard'
+import { MemberContext } from 'contexts/MemberContext'
 
 const StreamDashboard = () => {
-  const { isOpen, togglePopup, streamId } = useContext(ChurchContext)
+  const { isOpen, togglePopup } = useContext(ChurchContext)
+  const { currentUser } = useContext(MemberContext)
   const navigate = useNavigate()
   const { data, loading, error } = useQuery(STREAM_ARRIVALS_DASHBOARD, {
-    variables: { id: streamId },
+    variables: { id: currentUser?.currentChurch.id },
   })
   const [MakeStreamArrivalsAdmin] = useMutation(MAKE_STREAMARRIVALS_ADMIN)
   const stream = data?.streams[0]
@@ -44,7 +46,7 @@ const StreamDashboard = () => {
 
     MakeStreamArrivalsAdmin({
       variables: {
-        streamId: streamId,
+        streamId: currentUser?.currentChurch.id,
         newAdminId: values.adminSelect,
         oldAdminId: initialValues.adminSelect || 'no-old-admin',
       },

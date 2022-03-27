@@ -18,12 +18,14 @@ import { throwErrorMsg } from 'global-utils'
 import { MAKE_CONSTITUENCYARRIVALS_ADMIN } from './arrivalsMutations'
 import { permitAdmin, permitArrivals } from 'permission-utils'
 import HeadingSecondary from 'components/HeadingSecondary'
+import { MemberContext } from 'contexts/MemberContext'
 
 const ConstituencyDashboard = () => {
-  const { isOpen, togglePopup, constituencyId } = useContext(ChurchContext)
+  const { isOpen, togglePopup } = useContext(ChurchContext)
+  const { currentUser } = useContext(MemberContext)
   const navigate = useNavigate()
   const { data, loading, error } = useQuery(CONSTITUENCY_ARRIVALS_DASHBOARD, {
-    variables: { id: constituencyId },
+    variables: { id: currentUser?.currentChurch.id },
   })
   const [MakeConstituencyArrivalsAdmin] = useMutation(
     MAKE_CONSTITUENCYARRIVALS_ADMIN
@@ -47,7 +49,7 @@ const ConstituencyDashboard = () => {
 
     MakeConstituencyArrivalsAdmin({
       variables: {
-        constituencyId: constituencyId,
+        constituencyId: currentUser?.currentChurch.id,
         newAdminId: values.adminSelect,
         oldAdminId: initialValues.adminSelect || 'no-old-admin',
       },

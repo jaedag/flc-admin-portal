@@ -22,15 +22,17 @@ import MenuButton from 'components/buttons/MenuButton'
 import HeadingSecondary from 'components/HeadingSecondary'
 import { getHumanReadableDate } from 'date-utils'
 import DefaulterInfoCard from 'pages/services/defaulters/DefaulterInfoCard'
+import { MemberContext } from 'contexts/MemberContext'
 
 const GatheringServiceDashboard = () => {
-  const { isOpen, togglePopup, gatheringServiceId } = useContext(ChurchContext)
+  const { isOpen, togglePopup } = useContext(ChurchContext)
+  const { currentUser } = useContext(MemberContext)
   const navigate = useNavigate()
   const today = new Date().toISOString().slice(0, 10)
   const { data, loading, error } = useQuery(
     GATHERINGSERVICE_ARRIVALS_DASHBOARD,
     {
-      variables: { id: gatheringServiceId, date: today },
+      variables: { id: currentUser?.currentChurch.id, date: today },
     }
   )
 
@@ -57,7 +59,7 @@ const GatheringServiceDashboard = () => {
 
     MakeGatheringServiceArrivalsAdmin({
       variables: {
-        gatheringServiceId: gatheringServiceId,
+        gatheringServiceId: currentUser?.currentChurch.id,
         newAdminId: values.adminSelect,
         oldAdminId: initialValues.adminSelect || 'no-old-admin',
       },

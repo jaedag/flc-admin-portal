@@ -19,12 +19,14 @@ import { MAKE_COUNCILARRIVALS_ADMIN } from './arrivalsMutations'
 import { permitAdmin, permitArrivals } from 'permission-utils'
 import HeadingSecondary from 'components/HeadingSecondary'
 import DefaulterInfoCard from 'pages/services/defaulters/DefaulterInfoCard'
+import { MemberContext } from 'contexts/MemberContext'
 
 const CouncilDashboard = () => {
-  const { isOpen, togglePopup, councilId } = useContext(ChurchContext)
+  const { isOpen, togglePopup } = useContext(ChurchContext)
+  const { currentUser } = useContext(MemberContext)
   const navigate = useNavigate()
   const { data, loading, error } = useQuery(COUNCIL_ARRIVALS_DASHBOARD, {
-    variables: { id: councilId },
+    variables: { id: currentUser?.currentChurch.id },
   })
   const [MakeCouncilArrivalsAdmin] = useMutation(MAKE_COUNCILARRIVALS_ADMIN)
   const council = data?.councils[0]
@@ -46,7 +48,7 @@ const CouncilDashboard = () => {
 
     MakeCouncilArrivalsAdmin({
       variables: {
-        councilId: councilId,
+        councilId: currentUser?.currentChurch.id,
         newAdminId: values.adminSelect,
         oldAdminId: initialValues.adminSelect || 'no-old-admin',
       },

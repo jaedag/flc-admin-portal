@@ -79,6 +79,7 @@ const UpdateMember = () => {
   const [AddMemberTitle] = useMutation(ADD_MEMBER_TITLE_MUTATION)
 
   const onSubmit = async (values, onSubmitProps) => {
+    console.log(onSubmitProps)
     onSubmitProps.setSubmitting(true)
 
     //Variables that are not controlled by formik

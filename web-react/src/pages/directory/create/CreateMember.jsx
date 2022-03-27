@@ -63,8 +63,8 @@ const CreateMember = () => {
   const navigate = useNavigate()
 
   const onSubmit = async (values, onSubmitProps) => {
-    const { setSubmitting, resetForm } = onSubmitProps
-    setSubmitting(true)
+    const { isSubmitting, resetForm } = onSubmitProps
+    isSubmitting(true)
     // Variables that are not controlled by formik
 
     const pastoralAppointment = filterPastoralTitles(values.pastoralAppointment)
@@ -105,7 +105,7 @@ const CreateMember = () => {
           )
         })
 
-        setSubmitting(false)
+        isSubmitting(false)
         resetForm()
         navigate('/member/displaydetails')
       })

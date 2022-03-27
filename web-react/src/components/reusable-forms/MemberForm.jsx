@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client'
 import { FieldArray, Form, Formik } from 'formik'
 import * as Yup from 'yup'
-import React, { useContext } from 'react'
+import React from 'react'
 import RoleView from '../../auth/RoleView'
 import {
   GENDER_OPTIONS,
@@ -16,13 +16,12 @@ import PlusSign from '../buttons/PlusMinusSign/PlusSign'
 import ErrorScreen from '../base-component/ErrorScreen'
 import FormikControl from '../formik-components/FormikControl'
 import { HeadingPrimary } from '../HeadingPrimary/HeadingPrimary'
-import { Button, Col, Container, Row, Spinner } from 'react-bootstrap'
+import { Col, Container, Row } from 'react-bootstrap'
 import LoadingScreen from 'components/base-component/LoadingScreen'
 import { permitAdmin } from 'permission-utils'
-import { MemberContext } from 'contexts/MemberContext'
+import SubmitButton from 'components/formik-components/SubmitButton'
 
 function MemberForm({ initialValues, onSubmit, title, loading }) {
-  const { theme } = useContext(MemberContext)
   const { data: ministriesData, loading: ministriesLoading } =
     useQuery(GET_MINISTRIES)
 
@@ -319,22 +318,7 @@ function MemberForm({ initialValues, onSubmit, title, loading }) {
                   </Col>
                 </RoleView>
 
-                <Button
-                  variant="primary"
-                  size="lg"
-                  type="submit"
-                  className={`btn-main ${theme}`}
-                  disabled={!formik.isValid || formik.isSubmitting}
-                >
-                  {formik.isSubmitting ? (
-                    <>
-                      <Spinner animation="grow" size="sm" />
-                      <span> Submitting</span>
-                    </>
-                  ) : (
-                    'Submit'
-                  )}
-                </Button>
+                <SubmitButton formik={formik} />
               </Row>
             </Form>
           </Container>

@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client'
-import { FieldArray, Form, Formik } from 'formik'
+import { Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import React from 'react'
 import RoleView from '../../auth/RoleView'
@@ -8,11 +8,8 @@ import {
   makeSelectOptions,
   MARITAL_STATUS_OPTIONS,
   PHONE_NUM_REGEX,
-  TITLE_OPTIONS,
 } from '../../global-utils'
 import { GET_MINISTRIES } from '../../queries/ListQueries'
-import MinusSign from '../buttons/PlusMinusSign/MinusSign'
-import PlusSign from '../buttons/PlusMinusSign/PlusSign'
 import ErrorScreen from '../base-component/ErrorScreen'
 import FormikControl from '../formik-components/FormikControl'
 import { HeadingPrimary } from '../HeadingPrimary/HeadingPrimary'
@@ -21,7 +18,7 @@ import LoadingScreen from 'components/base-component/LoadingScreen'
 import { permitAdmin } from 'permission-utils'
 import SubmitButton from 'components/formik-components/SubmitButton'
 
-function MemberForm({ initialValues, onSubmit, title, loading }) {
+const MemberForm = ({ initialValues, onSubmit, title, loading }) => {
   const { data: ministriesData, loading: ministriesLoading } =
     useQuery(GET_MINISTRIES)
 
@@ -166,16 +163,17 @@ function MemberForm({ initialValues, onSubmit, title, loading }) {
                   </div>
 
                   <div className="form-row justify-content-center">
-                    <Col sm={10}>
-                      <FormikControl
-                        label="Email Address*"
-                        control="input"
-                        name="email"
-                        placeholder="Enter Email Address"
-                        aria-describedby="emailHelp"
-                      />
-                    </Col>
-
+                    <RoleView roles={permitAdmin('Stream')}>
+                      <Col sm={10}>
+                        <FormikControl
+                          label="Email Address*"
+                          control="input"
+                          name="email"
+                          placeholder="Enter Email Address"
+                          aria-describedby="emailHelp"
+                        />
+                      </Col>
+                    </RoleView>
                     <Col sm={10}>
                       <small htmlFor="dateofbirth" className="form-text ">
                         Date of Birth*{' '}
@@ -224,99 +222,6 @@ function MemberForm({ initialValues, onSubmit, title, loading }) {
                   </div>
                 </div>
                 {/* <!-- End of Church Info Section--> */}
-
-                {/* <!-- Beginning of Pastoral Appointments Section--> */}
-                <RoleView roles={permitAdmin('GatheringService')}>
-                  <Col className="my-4">
-                    <HeadingPrimary>
-                      Pastoral Appointments (if any)
-                    </HeadingPrimary>
-                    <FieldArray name="pastoralAppointment">
-                      {(fieldArrayProps) => {
-                        const { remove, form } = fieldArrayProps
-                        const { values } = form
-                        const { pastoralAppointment } = values
-
-                        return (
-                          <>
-                            {pastoralAppointment.map(
-                              (pastoralAppointment, index) => (
-                                <Row key={index} className="form-row">
-                                  <Col className="col-auto">
-                                    <FormikControl
-                                      control="select"
-                                      options={TITLE_OPTIONS}
-                                      defaultOption="Title"
-                                      name={`pastoralAppointment[${index}].title`}
-                                    />
-                                  </Col>
-                                  <Col>
-                                    <FormikControl
-                                      placeholder="Date"
-                                      control="input"
-                                      type="date"
-                                      name={`pastoralAppointment[${index}].date`}
-                                    />
-                                  </Col>
-                                  <Col className="col d-flex">
-                                    {index > 0 && (
-                                      <MinusSign onClick={() => remove()} />
-                                    )}
-                                  </Col>
-                                </Row>
-                              )
-                            )}
-                          </>
-                        )
-                      }}
-                    </FieldArray>
-                  </Col>
-                </RoleView>
-                {/* <!--End of Pastoral Appointments Section--> */}
-
-                {/* <!--Beginning of Pastoral History Section--> */}
-                <RoleView roles={permitAdmin('GatheringService')}>
-                  <Col className="my-4">
-                    <HeadingPrimary>Pastoral History</HeadingPrimary>
-                    <FieldArray name="pastoralHistory">
-                      {(fieldArrayProps) => {
-                        const { push, remove, form } = fieldArrayProps
-                        const { values } = form
-                        const { pastoralHistory } = values
-
-                        return (
-                          <div>
-                            {pastoralHistory.map((pastoralHistory, index) => (
-                              <Row key={index} className="form-row">
-                                <Col className="col-7">
-                                  <FormikControl
-                                    placeholder="History Entry"
-                                    control="input"
-                                    name={`pastoralHistory[${index}].historyRecord`}
-                                  />
-                                </Col>
-                                <Col>
-                                  <FormikControl
-                                    placeholder="Year"
-                                    control="input"
-                                    name={`pastoralHistory[${index}].historyDate`}
-                                  />
-                                </Col>
-                                <Col className="d-flex">
-                                  <PlusSign onClick={() => push()} />
-                                  {index > 0 && (
-                                    <MinusSign onClick={() => remove(index)} />
-                                  )}
-                                </Col>
-                              </Row>
-                            ))}
-                          </div>
-                        )
-                      }}
-                    </FieldArray>
-                    {/* <!--End of Pastoral History Section--> */}
-                  </Col>
-                </RoleView>
 
                 <SubmitButton formik={formik} />
               </Row>

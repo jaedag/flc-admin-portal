@@ -79,64 +79,63 @@ const UpdateMember = () => {
   const [AddMemberTitle] = useMutation(ADD_MEMBER_TITLE_MUTATION)
 
   const onSubmit = async (values, onSubmitProps) => {
-    console.log(onSubmitProps)
     onSubmitProps.setSubmitting(true)
 
     //Variables that are not controlled by formik
 
     const pastoralAppointment = filterPastoralTitles(values.pastoralAppointment)
+    try {
+      await UpdateMember({
+        variables: {
+          id: memberId,
+          firstName: values.firstName.trim(),
+          middleName: values.middleName.trim(),
+          lastName: values.lastName.trim(),
+          gender: values.gender,
+          phoneNumber: parsePhoneNum(values.phoneNumber),
+          whatsappNumber: parsePhoneNum(values.whatsappNumber),
+          dob: values.dob,
+          maritalStatus: values.maritalStatus,
+          occupation: values.occupation,
+          pictureUrl: values.pictureUrl,
 
-    UpdateMember({
-      variables: {
-        id: memberId,
-        firstName: values.firstName.trim(),
-        middleName: values.middleName.trim(),
-        lastName: values.lastName.trim(),
-        gender: values.gender,
-        phoneNumber: parsePhoneNum(values.phoneNumber),
-        whatsappNumber: parsePhoneNum(values.whatsappNumber),
-        dob: values.dob,
-        maritalStatus: values.maritalStatus,
-        occupation: values.occupation,
-        pictureUrl: values.pictureUrl,
+          fellowship: values.fellowship,
+          ministry: values.ministry,
+        },
+      })
 
-        fellowship: values.fellowship,
-        ministry: values.ministry,
-      },
-    })
-      .then(() => {
-        return UpdateMemberEmail({
-          variables: {
-            id: memberId,
-            email: values.email.trim().toLowerCase(),
-          },
-        }).then(() => {
-          pastoralAppointment.forEach((title) => {
-            if (!title.date) {
-              return
-            }
+      await UpdateMemberEmail({
+        variables: {
+          id: memberId,
+          email: values.email.trim().toLowerCase(),
+        },
+      })
 
-            return AddMemberTitle({
-              variables: {
-                memberId: memberId,
-                title: title.title,
-                status: true,
-                date: title.date,
-              },
-            }).catch((error) =>
-              throwErrorMsg(`There was a problem adding member title`, error)
-            )
+      pastoralAppointment.forEach(async (title) => {
+        if (!title.date) {
+          return
+        }
+
+        try {
+          await AddMemberTitle({
+            variables: {
+              memberId: memberId,
+              title: title.title,
+              status: true,
+              date: title.date,
+            },
           })
-        })
+        } catch (error) {
+          throwErrorMsg(`There was a problem adding member title`, error)
+        }
       })
-      .then(() => {
-        onSubmitProps.setSubmitting(false)
-        onSubmitProps.resetForm()
-        navigate('/member/displaydetails')
-      })
-      .catch((err) =>
-        throwErrorMsg('There was an error updating the member profile\n', err)
-      )
+
+      onSubmitProps.setSubmitting(false)
+      onSubmitProps.resetForm()
+      navigate('/member/displaydetails')
+    } catch (error) {
+      throwErrorMsg('There was an error updating the member profile\n', error)
+    }
   }
 
   if (memberError) {
@@ -149,7 +148,6 @@ const UpdateMember = () => {
       initialValues={initialValues}
       onSubmit={onSubmit}
       loading={memberLoading}
-      update
     />
   )
 }

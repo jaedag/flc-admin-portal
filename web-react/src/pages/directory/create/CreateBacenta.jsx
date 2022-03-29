@@ -17,8 +17,6 @@ const CreateBacenta = () => {
     leaderId: '',
     constituency: constituencyId ?? '',
     fellowships: [''],
-    normalBussingTopUp: '',
-    swellBussingTopUp: '',
     graduationStatus: '',
     vacationStatus: '',
   }
@@ -37,8 +35,6 @@ const CreateBacenta = () => {
         constituencyId: values.constituency,
         leaderId: values.leaderId,
         fellowships: values.fellowships,
-        normalBussingTopUp: parseFloat(values.normalBussingTopUp),
-        swellBussingTopUp: parseFloat(values.swellBussingTopUp),
       },
     })
       .then((res) => {

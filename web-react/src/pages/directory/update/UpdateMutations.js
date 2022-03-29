@@ -268,8 +268,6 @@ export const UPDATE_BACENTA_MUTATION = gql`
     $bacentaId: ID!
     $name: String!
     $constituencyId: ID!
-    $normalBussingTopUp: Float!
-    $swellBussingTopUp: Float!
   ) {
     UpdateBacentaDetails(
       bacentaId: $bacentaId

@@ -12,6 +12,7 @@ const TOWN_MOBILISATION_START_TIME = [9, 0, 0]
 const GENERIC_MOBILISATION_START_TIME = [14, 0, 0]
 
 export const MOBILE_NETWORK_OPTIONS = [
+  { key: '', value: '' },
   { key: 'MTN', value: 'MTN' },
   { key: 'Vodafone', value: 'Vodafone' },
   { key: 'AirtelTigo', value: 'AirtelTigo' },

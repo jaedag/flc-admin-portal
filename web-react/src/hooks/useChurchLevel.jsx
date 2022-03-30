@@ -36,7 +36,7 @@ const useChurchLevel = (props) => {
             },
           })
 
-          setChurch(res?.data.councils[0])
+          setChurch(res?.data?.councils[0])
           setLoading(res.loading)
           setError(res.error)
         }
@@ -49,7 +49,7 @@ const useChurchLevel = (props) => {
               id: currentChurch?.id,
             },
           })
-          setChurch(res?.data.streams[0])
+          setChurch(res?.data?.streams[0])
           setLoading(res.loading)
           setError(res.error)
         }
@@ -63,7 +63,7 @@ const useChurchLevel = (props) => {
             },
           })
 
-          setChurch(res?.data.gatheringServices[0])
+          setChurch(res?.data?.gatheringServices[0])
           setLoading(res.loading)
           setError(res.error)
         }

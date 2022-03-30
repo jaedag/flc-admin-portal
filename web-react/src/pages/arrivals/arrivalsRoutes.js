@@ -21,6 +21,7 @@ import ArrivalsHelpersStream from './ArrivalsHelpers/ArrivalsHelpersStream'
 import GatheringSerivceDashboard from './DashboardGatheringService'
 import BacentasHaveArrived from './StateBacentasArrived'
 import ChurchBySubChurch from './ChurchBySubChurch'
+import StateBacentasToCount from './StateBacentasToCount'
 
 export const arrivals = [
   {
@@ -123,16 +124,25 @@ export const arrivals = [
   },
   {
     path: '/arrivals/bacentas-on-the-way',
-    roles: [
-      ...permitLeaderAdminArrivals('Constituency'),
-      ...permitArrivalsHelper('Stream'),
-    ],
+    roles: [...permitLeaderAdminArrivals('Constituency')],
     element: BacentasOnTheWay,
     placeholder: true,
   },
   {
+    path: '/arrivals/bacentas-to-count',
+    roles: [
+      ...permitLeaderAdminArrivals('Constituency'),
+      ...permitArrivalsHelper('Stream'),
+    ],
+    element: StateBacentasToCount,
+    placeholder: true,
+  },
+  {
     path: '/arrivals/confirm-bacenta-arrival',
-    roles: permitLeaderAdminArrivals('Council'),
+    roles: [
+      ...permitLeaderAdminArrivals('Council'),
+      ...permitArrivalsHelper('Stream'),
+    ],
     element: ConfirmBacentaArrival,
     placeholder: true,
   },

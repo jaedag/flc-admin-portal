@@ -177,7 +177,6 @@ export const RECORD_BUSSING_FROM_BACENTA = gql`
     $attendance: Int!
     $bussingPictures: [String]!
     $bussingCost: Float!
-    $offeringRaised: Float!
     $numberOfBusses: Int!
     $numberOfCars: Int!
     $mobileNetwork: String!
@@ -189,7 +188,6 @@ export const RECORD_BUSSING_FROM_BACENTA = gql`
       attendance: $attendance
       bussingPictures: $bussingPictures
       bussingCost: $bussingCost
-      offeringRaised: $offeringRaised
       numberOfBusses: $numberOfBusses
       numberOfCars: $numberOfCars
       mobileNetwork: $mobileNetwork
@@ -200,7 +198,6 @@ export const RECORD_BUSSING_FROM_BACENTA = gql`
       attendance
       bussingPictures
       bussingCost
-      offeringRaised
       numberOfBusses
       numberOfCars
       momoName

@@ -143,6 +143,30 @@ extend type GatheringService {
       RETURN COUNT(bacentas)
       """
     )
+  bacentasNotCounted: [Bacenta]
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*4]->(bacentas:Active:Bacenta)
+      MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
+      WHERE date(date.date)=date()
+      AND NOT EXISTS {
+       MATCH (bussing)-[:CONFIRMED_BY]->(:Member)
+      }
+      RETURN bacentas
+      """
+    )
+  bacentasNotCountedCount: Int
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*4]->(bacentas:Active:Bacenta)
+      MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
+      WHERE date(date.date)=date()
+      AND NOT EXISTS {
+        MATCH (bussing)-[:CONFIRMED_BY]->(:Member)
+      }
+      RETURN COUNT(bacentas)
+      """
+    )
   bacentasHaveArrived: [Bacenta]
     @cypher(
       statement: """
@@ -294,6 +318,30 @@ extend type Stream {
        RETURN COUNT(bacentas)
       """
     )
+  bacentasNotCounted: [Bacenta]
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*3]->(bacentas:Active:Bacenta)
+      MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
+      WHERE date(date.date)=date()
+      AND NOT EXISTS {
+       MATCH (bussing)-[:CONFIRMED_BY]->(:Member)
+      }
+      RETURN bacentas
+      """
+    )
+  bacentasNotCountedCount: Int
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*3]->(bacentas:Active:Bacenta)
+      MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
+      WHERE date(date.date)=date()
+      AND NOT EXISTS {
+        MATCH (bussing)-[:CONFIRMED_BY]->(:Member)
+      }
+      RETURN COUNT(bacentas)
+      """
+    )
   bacentasHaveArrived: [Bacenta]
     @cypher(
       statement: """
@@ -441,6 +489,30 @@ extend type Council {
       WHERE EXISTS {
       MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph) WHERE date(date.date)=date()
        AND EXISTS {MATCH (bussing)-[:CONFIRMED_BY]->(:Member)}
+      }
+      RETURN COUNT(bacentas)
+      """
+    )
+  bacentasNotCounted: [Bacenta]
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*2]->(bacentas:Active:Bacenta)
+      MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
+      WHERE date(date.date)=date()
+      AND NOT EXISTS {
+       MATCH (bussing)-[:CONFIRMED_BY]->(:Member)
+      }
+      RETURN bacentas
+      """
+    )
+  bacentasNotCountedCount: Int
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*2]->(bacentas:Active:Bacenta)
+      MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
+      WHERE date(date.date)=date()
+      AND NOT EXISTS {
+        MATCH (bussing)-[:CONFIRMED_BY]->(:Member)
       }
       RETURN COUNT(bacentas)
       """
@@ -595,6 +667,30 @@ extend type Constituency {
       RETURN COUNT(bacentas)
       """
     )
+  bacentasNotCounted: [Bacenta]
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS]->(bacentas:Active:Bacenta)
+      MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
+      WHERE date(date.date)=date()
+      AND NOT EXISTS {
+       MATCH (bussing)-[:CONFIRMED_BY]->(:Member)
+      }
+      RETURN bacentas
+      """
+    )
+  bacentasNotCountedCount: Int
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS]->(bacentas:Active:Bacenta)
+      MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
+      WHERE date(date.date)=date()
+      AND NOT EXISTS {
+        MATCH (bussing)-[:CONFIRMED_BY]->(:Member)
+      }
+      RETURN COUNT(bacentas)
+      """
+    )
   bacentasHaveArrived: [Bacenta]
     @cypher(
       statement: """
@@ -706,7 +802,6 @@ type BussingRecord implements Record @auth(rules: [{ isAuthenticated: true }]) {
   attendance: Int
   numberOfBusses: Int
   numberOfCars: Int
-  offeringRaised: Float
   bussingCost: Float
   bussingTopUp: Float
   mobileNetwork: String
@@ -929,7 +1024,6 @@ extend type Mutation {
     attendance: Int!
     bussingPictures: [String]!
     bussingCost: Float!
-    offeringRaised: Float!
     numberOfBusses: Int!
     numberOfCars: Int!
     mobileNetwork: String!
@@ -940,9 +1034,9 @@ extend type Mutation {
       statement: """
       MATCH (bussingRecord:BussingRecord {id: $bussingRecordId})
       SET bussingRecord.attendance = $attendance,
+      bussingRecord.leaderDeclaration = $attendance,
       bussingRecord.bussingPictures = $bussingPictures,
       bussingRecord.bussingCost = $bussingCost,
-      bussingRecord.offeringRaised = $offeringRaised,
       bussingRecord.numberOfBusses = $numberOfBusses,
       bussingRecord.numberOfCars = $numberOfCars,
       bussingRecord.mobileNetwork = $mobileNetwork,

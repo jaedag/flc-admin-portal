@@ -107,14 +107,7 @@ const BusFormDetails = () => {
                       </PlaceholderCustom>
                     </td>
                   </tr>
-                  <tr>
-                    <td>Offering Raised</td>
-                    <td>
-                      <PlaceholderCustom loading={loading}>
-                        {bussing?.offeringRaised}
-                      </PlaceholderCustom>
-                    </td>
-                  </tr>
+
                   <tr>
                     <td>Number of Busses</td>
                     <td>

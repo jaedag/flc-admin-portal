@@ -78,6 +78,7 @@ export const STREAM_ARRIVALS_DASHBOARD = gql`
       bacentasNoActivityCount
       bacentasMobilisingCount
       bacentasOnTheWayCount
+      bacentasNotCountedCount
       bacentasHaveBeenCountedCount
       bacentasHaveArrivedCount
       bussingMembersOnTheWayCount
@@ -120,13 +121,13 @@ export const GATHERINGSERVICE_ARRIVALS_DASHBOARD = gql`
   }
 `
 
-export const CONSTITUENCY_BUSSING_DATA = gql`
+export const CONFIRM_CONSTITUENCY_ARRIVALS = gql`
   query ($id: ID) {
     constituencies(where: { id: $id }, options: { limit: 1 }) {
       id
       name
       stream_name
-      bacentas {
+      bacentasHaveBeenCounted {
         id
         name
         leader {
@@ -138,11 +139,110 @@ export const CONSTITUENCY_BUSSING_DATA = gql`
           phoneNumber
           whatsappNumber
         }
-        bussing(limit: 4) {
+        bussing(limit: 1) {
           id
-          week
-          attendance
-          bussingPictures
+          confirmed_by {
+            id
+            firstName
+            lastName
+            fullName
+          }
+        }
+      }
+    }
+  }
+`
+
+export const CONFIRM_COUNCIL_ARRIVALS = gql`
+  query ($id: ID) {
+    councils(where: { id: $id }, options: { limit: 1 }) {
+      id
+      name
+      stream_name
+      bacentasHaveBeenCounted {
+        id
+        name
+        leader {
+          id
+          firstName
+          lastName
+          fullName
+          pictureUrl
+          phoneNumber
+          whatsappNumber
+        }
+        bussing(limit: 1) {
+          id
+          confirmed_by {
+            id
+            firstName
+            lastName
+            fullName
+          }
+        }
+      }
+    }
+  }
+`
+
+export const CONFIRM_STREAM_ARRIVALS = gql`
+  query ($id: ID) {
+    streams(where: { id: $id }, options: { limit: 1 }) {
+      id
+      name
+      stream_name
+      bacentasHaveBeenCounted {
+        id
+        name
+        leader {
+          id
+          firstName
+          lastName
+          fullName
+          pictureUrl
+          phoneNumber
+          whatsappNumber
+        }
+        bussing(limit: 1) {
+          id
+          confirmed_by {
+            id
+            firstName
+            lastName
+            fullName
+          }
+        }
+      }
+    }
+  }
+`
+
+export const CONFIRM_GATHERINGSERVICE_ARRIVALS = gql`
+  query ($id: ID) {
+    gatheringServices(where: { id: $id }, options: { limit: 1 }) {
+      id
+      name
+
+      bacentasHaveBeenCounted {
+        id
+        name
+        leader {
+          id
+          firstName
+          lastName
+          fullName
+          pictureUrl
+          phoneNumber
+          whatsappNumber
+        }
+        bussing(limit: 1) {
+          id
+          confirmed_by {
+            id
+            firstName
+            lastName
+            fullName
+          }
         }
       }
     }
@@ -273,7 +373,6 @@ export const DISPLAY_BUSSING_RECORDS = gql`
       bussingPictures
       bussingCost
       bussingTopUp
-      offeringRaised
       mobileNetwork
       momoName
       momoNumber

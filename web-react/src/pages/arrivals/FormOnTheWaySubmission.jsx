@@ -30,7 +30,6 @@ const FormOnTheWaySubmission = () => {
     attendance: '',
     bussingPictures: [''],
     bussingCost: '',
-    offeringRaised: '',
     numberOfBusses: '',
     numberOfCars: '',
     mobileNetwork: '',
@@ -56,10 +55,6 @@ const FormOnTheWaySubmission = () => {
       .max(4, 'You cannot upload more than four pictures per bacenta')
       .of(Yup.string().required('You must upload a bussing picture')),
     bussingCost: Yup.number()
-      .typeError('Please enter a valid number')
-      .positive()
-      .required('This is a required field'),
-    offeringRaised: Yup.number()
       .typeError('Please enter a valid number')
       .positive()
       .required('This is a required field'),
@@ -94,7 +89,6 @@ const FormOnTheWaySubmission = () => {
         bussingRecordId: bussingRecordId,
         bussingPictures: values.bussingPictures,
         bussingCost: parseFloat(values.bussingCost),
-        offeringRaised: parseFloat(values.offeringRaised),
         numberOfBusses: parseInt(values.numberOfBusses),
         numberOfCars: parseInt(values.numberOfCars || 0),
         mobileNetwork: values.mobileNetwork,
@@ -158,11 +152,7 @@ const FormOnTheWaySubmission = () => {
                     name="bussingCost"
                     label="Bussing Cost (in Cedis)*"
                   />
-                  <FormikControl
-                    control="input"
-                    name="offeringRaised"
-                    label="Offering Raised (in Cedis)*"
-                  />
+
                   <FormikControl
                     control="input"
                     name="numberOfBusses"

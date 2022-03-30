@@ -14,10 +14,15 @@ import { Form, Formik } from 'formik'
 import FormikControl from 'components/formik-components/FormikControl'
 import SubmitButton from 'components/formik-components/SubmitButton'
 import RoleView from 'auth/RoleView'
-import { permitAdmin, permitArrivals } from 'permission-utils'
+import {
+  permitAdmin,
+  permitArrivals,
+  permitArrivalsHelper,
+} from 'permission-utils'
 import MenuButton from 'components/buttons/MenuButton'
 import DefaulterInfoCard from 'pages/services/defaulters/DefaulterInfoCard'
 import { MemberContext } from 'contexts/MemberContext'
+import { CheckAll } from 'react-bootstrap-icons'
 
 const StreamDashboard = () => {
   const { isOpen, togglePopup } = useContext(ChurchContext)
@@ -149,11 +154,20 @@ const StreamDashboard = () => {
             iconBg
             noCaption
           />
-
+          <RoleView roles={permitArrivalsHelper('Stream')}>
+            <MenuButton
+              title="Bacentas To Be Counted"
+              onClick={() => navigate('/arrivals/bacentas-to-count')}
+              number={stream?.bacentasNotCountedCount.toString()}
+              color="yellow"
+              iconBg
+              noCaption
+            />
+          </RoleView>
           <MenuButton
             title="Confirm Bacenta Arrival"
             onClick={() => navigate('/arrivals/confirm-bacenta-arrival')}
-            number={stream?.bacentasOnTheWayCount.toString()}
+            iconComponent={CheckAll}
             iconBg
             noCaption
           />

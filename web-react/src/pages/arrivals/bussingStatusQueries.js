@@ -264,6 +264,101 @@ export const GATHERINGSERVICE_BACENTAS_ON_THE_WAY = gql`
   }
 `
 
+export const CONSTITUENCY_BACENTAS_TO_COUNT = gql`
+  query ($id: ID) {
+    constituencies(where: { id: $id }, options: { limit: 1 }) {
+      id
+      name
+
+      bacentasNotCounted {
+        id
+        name
+        leader {
+          id
+          firstName
+          lastName
+          fullName
+          pictureUrl
+        }
+        bussing(limit: 1) {
+          id
+        }
+      }
+    }
+  }
+`
+
+export const COUNCIL_BACENTAS_TO_COUNT = gql`
+  query ($id: ID) {
+    councils(where: { id: $id }, options: { limit: 1 }) {
+      id
+      name
+
+      bacentasNotCounted {
+        id
+        name
+        leader {
+          id
+          firstName
+          lastName
+          fullName
+          pictureUrl
+        }
+        bussing(limit: 1) {
+          id
+        }
+      }
+    }
+  }
+`
+export const STREAM_BACENTAS_TO_COUNT = gql`
+  query ($id: ID) {
+    streams(where: { id: $id }, options: { limit: 1 }) {
+      id
+      name
+
+      bacentasNotCounted {
+        id
+        name
+        leader {
+          id
+          firstName
+          lastName
+          fullName
+          pictureUrl
+        }
+        bussing(limit: 1) {
+          id
+        }
+      }
+    }
+  }
+`
+
+export const GATHERINGSERVICE_BACENTAS_TO_COUNT = gql`
+  query ($id: ID) {
+    gatheringServices(where: { id: $id }, options: { limit: 1 }) {
+      id
+      name
+
+      bacentasNotCounted {
+        id
+        name
+        leader {
+          id
+          firstName
+          lastName
+          fullName
+          pictureUrl
+        }
+        bussing(limit: 1) {
+          id
+        }
+      }
+    }
+  }
+`
+
 export const CONSTITUENCY_BACENTAS_ARRIVED = gql`
   query ($id: ID) {
     constituencies(where: { id: $id }, options: { limit: 1 }) {

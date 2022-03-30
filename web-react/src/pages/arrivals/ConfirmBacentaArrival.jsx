@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from '@apollo/client'
+import { useLazyQuery, useMutation } from '@apollo/client'
 import BaseComponent from 'components/base-component/BaseComponent'
 import 'components/card/MemberDisplayCard.css'
 import FormikControl from 'components/formik-components/FormikControl'
@@ -10,57 +10,80 @@ import { MemberContext } from 'contexts/MemberContext'
 import { ServiceContext } from 'contexts/ServiceContext'
 import { Form, Formik } from 'formik'
 import { alertMsg, throwErrorMsg } from 'global-utils'
-import { getWeekNumber } from 'date-utils'
 import PlaceholderMemberDisplay from 'pages/services/defaulters/PlaceholderDefaulter'
 import React, { useContext, useEffect, useState } from 'react'
 import { Button, Card, Container, Spinner } from 'react-bootstrap'
 import { useNavigate } from 'react-router'
 import { RECORD_ARRIVAL_TIME, SEND_BUSSING_SUPPORT } from './arrivalsMutations'
-import { CONSTITUENCY_BUSSING_DATA } from './arrivalsQueries'
+import {
+  CONFIRM_CONSTITUENCY_ARRIVALS,
+  CONFIRM_COUNCIL_ARRIVALS,
+  CONFIRM_GATHERINGSERVICE_ARRIVALS,
+  CONFIRM_STREAM_ARRIVALS,
+} from './arrivalsQueries'
 import CloudinaryImage from 'components/CloudinaryImage'
+import useChurchLevel from 'hooks/useChurchLevel'
 
 const ConfirmBacentaArrival = () => {
-  const { constituencyId, clickCard, isOpen, togglePopup } =
-    useContext(ChurchContext)
+  const { clickCard, isOpen, togglePopup } = useContext(ChurchContext)
   const { theme } = useContext(MemberContext)
   const { bussingRecordId } = useContext(ServiceContext)
   const [isSubmitting, setSubmitting] = useState(false)
   const navigate = useNavigate()
-  const { data, loading, error } = useQuery(CONSTITUENCY_BUSSING_DATA, {
-    variables: { id: constituencyId },
+  const [confirmConstituencyArrivals] = useLazyQuery(
+    CONFIRM_CONSTITUENCY_ARRIVALS
+  )
+  const [confirmCouncilArrivals] = useLazyQuery(CONFIRM_COUNCIL_ARRIVALS)
+  const [confirmStreamArrivals] = useLazyQuery(CONFIRM_STREAM_ARRIVALS)
+  const [confirmGatheringServiceArrivals] = useLazyQuery(
+    CONFIRM_GATHERINGSERVICE_ARRIVALS
+  )
+
+  const { church, loading, error } = useChurchLevel({
+    constituencyFunction: confirmConstituencyArrivals,
+    councilFunction: confirmCouncilArrivals,
+    streamFunction: confirmStreamArrivals,
+    gatheringServiceFunction: confirmGatheringServiceArrivals,
   })
   const [RecordArrivalTime] = useMutation(RECORD_ARRIVAL_TIME)
   const [SendBussingSupport] = useMutation(SEND_BUSSING_SUPPORT)
-  const constituency = data?.constituencies[0]
+
   const initialValues = {
     bacentaSearch: '',
   }
-  const bacentaDataLoaded = data ? constituency?.bacentas : null
+  const bacentaDataLoaded = church ? church?.bacentasHaveBeenCounted : []
   const [bacentaData, setBacentaData] = useState([])
 
   useEffect(() => {
     setBacentaData(bacentaDataLoaded)
-  }, [data])
+  }, [church])
 
   const onSubmit = (values, onSubmitProps) => {
     onSubmitProps.setSubmitting(true)
-
+    const searchTerm = values.bacentaSearch.toLowerCase()
     setBacentaData(
-      constituency?.bacentas.filter((bacenta) =>
-        bacenta.name.toLowerCase().includes(values.bacentaSearch.toLowerCase())
-      )
+      church?.bacentasHaveBeenCounted.filter((bacenta) => {
+        if (bacenta.name.toLowerCase().includes(searchTerm)) {
+          return true
+        } else if (bacenta.leader.fullName.toLowerCase().includes(searchTerm)) {
+          return true
+        }
+
+        return false
+      })
     )
+
     onSubmitProps.setSubmitting(false)
   }
 
   return (
-    <BaseComponent data={data} loading={loading} error={error} placeholder>
+    <BaseComponent data={church} loading={loading} error={error} placeholder>
       <Container>
         <HeadingPrimary loading={loading}>
           Confirm Bacenta Arrival
         </HeadingPrimary>
-        <HeadingSecondary loading={!constituency?.name}>
-          {constituency?.name} Constituency
+        <HeadingSecondary loading={!church?.name}>
+          {church?.name} {church?.__typename}
         </HeadingSecondary>
 
         {isOpen && (
@@ -72,48 +95,48 @@ const ConfirmBacentaArrival = () => {
               size="lg"
               className={`btn-main ${theme}`}
               disabled={isSubmitting}
-              onClick={() => {
+              onClick={async () => {
                 setSubmitting(true)
-                RecordArrivalTime({
-                  variables: {
-                    bussingRecordId: bussingRecordId,
-                  },
-                })
-                  .then((res) => {
-                    if (
-                      !res.data.RecordArrivalTime.bussingTopUp ||
-                      constituency.stream_name === 'Anagkazo'
-                    ) {
-                      //if there is no value for the bussing top up
-                      return
-                    }
 
-                    return SendBussingSupport({
-                      variables: {
-                        bussingRecordId: bussingRecordId,
-                        stream_name: constituency.stream_name,
-                      },
-                    })
-                      .then((res) => {
-                        togglePopup()
-                        alertMsg(
-                          'Money Successfully Sent to ' +
-                            res.data.SendBussingSupport.momoNumber
-                        )
-                        setSubmitting(false)
-                      })
-                      .catch((err) => {
-                        setSubmitting(false)
-                        throwErrorMsg(err)
-                      })
+                try {
+                  const arrivalRes = await RecordArrivalTime({
+                    variables: {
+                      bussingRecordId: bussingRecordId,
+                    },
                   })
-                  .catch((error) => {
-                    setSubmitting(false)
-                    throwErrorMsg(
-                      'There was an error recording the arrival time of this bacenta',
-                      error
-                    )
+
+                  if (
+                    !arrivalRes.data.RecordArrivalTime.bussingTopUp ||
+                    church?.stream_name === 'Anagkazo'
+                  ) {
+                    //if there is no value for the bussing top up
+                    return
+                  }
+                } catch (error) {
+                  setSubmitting(false)
+                  throwErrorMsg(
+                    'There was an error recording the arrival time of this bacenta',
+                    error
+                  )
+                }
+
+                try {
+                  const supportRes = await SendBussingSupport({
+                    variables: {
+                      bussingRecordId: bussingRecordId,
+                      stream_name: church?.stream_name,
+                    },
                   })
+                  togglePopup()
+                  alertMsg(
+                    'Money Successfully Sent to ' +
+                      supportRes.data.SendBussingSupport.momoNumber
+                  )
+                  setSubmitting(false)
+                } catch (error) {
+                  setSubmitting(false)
+                  throwErrorMsg(error)
+                }
               }}
             >
               {isSubmitting ? (
@@ -151,60 +174,52 @@ const ConfirmBacentaArrival = () => {
           )}
         </Formik>
 
-        {bacentaData?.map((bacenta, i) => {
-          if (
-            bacenta.bussing[0]?.week === getWeekNumber() &&
-            bacenta.bussing[0]?.attendance
-          ) {
-            return (
-              <Card className="mobile-search-card">
-                <div
-                  onClick={() => {
-                    clickCard(bacenta)
-                    clickCard(bacenta.bussing[0])
-                    navigate('/bacenta/bussing-details')
-                  }}
-                  className="d-flex align-items-center"
-                >
-                  <div className="flex-shrink-0">
-                    <CloudinaryImage
-                      className="rounded-circle img-search"
-                      src={bacenta?.leader?.pictureUrl}
-                      alt={bacenta?.leader.fullName}
-                    />
-                  </div>
-                  <div className="flex-grow-1 ms-3">
-                    <h6 className="fw-bold">{`${bacenta?.name} Bacenta`}</h6>
-                    <p className={`text-secondary mb-0 ${theme}`}>
-                      <span>{bacenta?.leader?.fullName}</span>
-                    </p>
-                  </div>
-                </div>
+        {bacentaData?.map((bacenta, i) => (
+          <Card key={i} className="mobile-search-card">
+            <div
+              onClick={() => {
+                clickCard(bacenta)
+                clickCard(bacenta.bussing[0])
+                navigate('/bacenta/bussing-details')
+              }}
+              className="d-flex align-items-center"
+            >
+              <div className="flex-shrink-0">
+                <CloudinaryImage
+                  className="rounded-circle img-search"
+                  src={bacenta?.leader?.pictureUrl}
+                  alt={bacenta?.leader?.fullName}
+                />
+              </div>
+              <div className="flex-grow-1 ms-3">
+                <h6 className="fw-bold">{`${bacenta?.name} Bacenta`}</h6>
+                <p className={`text-secondary mb-0 ${theme}`}>
+                  <span>{bacenta?.leader?.fullName}</span>
+                </p>
+              </div>
+            </div>
 
-                <Card.Footer className="text-center">
-                  <Button
-                    onClick={() => {
-                      clickCard(bacenta)
-                      clickCard(bacenta.bussing[0])
-                      togglePopup()
-                    }}
-                    variant="info"
-                  >
-                    Confirm Arrival
-                  </Button>
-                </Card.Footer>
-              </Card>
-            )
-          } else if (i === 0) {
-            return (
-              <Card>
-                <Card.Body>There is no data to display for you</Card.Body>
-              </Card>
-            )
-          }
-        })}
+            <Card.Footer className="text-center">
+              <Button
+                onClick={() => {
+                  clickCard(bacenta)
+                  clickCard(bacenta.bussing[0])
+                  togglePopup()
+                }}
+                variant="info"
+              >
+                Confirm Arrival
+              </Button>
+            </Card.Footer>
+          </Card>
+        ))}
+        {!bacentaData?.length && (
+          <Card className="mt-5 py-3">
+            <Card.Body>There is no data to display for you</Card.Body>
+          </Card>
+        )}
 
-        {!constituency?.bacentas.length && <PlaceholderMemberDisplay />}
+        {loading && <PlaceholderMemberDisplay />}
       </Container>
     </BaseComponent>
   )

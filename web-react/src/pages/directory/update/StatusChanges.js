@@ -62,7 +62,6 @@ export const MAKE_BACENTA_IC = gql`
       id
       name
       graduationStatus
-      status
       history(options: { limit: 5 }) {
         id
         timeStamp

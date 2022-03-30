@@ -385,7 +385,7 @@ export const RemoveServant = async (
         servant.lastName
       },<br/><br/>We regret to inform you that you have been removed as the <b>${churchType} ${servantType}</b> for <b>${churchInEmail(
         church
-      )}<b>.<br/><br/>We however encourage you to strive to serve the Lord faithfully in your other roles. Do not be discouraged by this removal; as you work hard we hope and pray that you will soon be restored to your service to him.</p>${
+      )}</b>.<br/><br/>We however encourage you to strive to serve the Lord faithfully in your other roles. Do not be discouraged by this removal; as you work hard we hope and pray that you will soon be restored to your service to him.</p>${
         texts.html.subscription
       }`,
       'servant_account_deleted',

@@ -44,7 +44,7 @@ export const directoryMutation = {
   },
 
   MakeMemberInactive: async (object, args, context) => {
-    isAuth(permitLeaderAdmin('Fellowship'), context.auth.roles)
+    isAuth(permitLeaderAdmin('Stream'), context.auth.roles)
     const session = context.driver.session()
 
     const memberCheck = rearrangeCypherObject(

@@ -51,10 +51,10 @@ const UpdateBacentaBussing = () => {
     ),
   })
 
-  const onSubmit = (values, onSubmitProps) => {
+  const onSubmit = async (values, onSubmitProps) => {
     onSubmitProps.setSubmitting(true)
 
-    UpdateBacentaBussingDetails({
+    await UpdateBacentaBussingDetails({
       variables: {
         bacentaId: bacentaId,
         target: parseInt(values.target),
@@ -65,11 +65,10 @@ const UpdateBacentaBussing = () => {
         swellBussingCost: parseFloat(values.swellBussingCost),
         swellPersonalContribution: parseFloat(values.swellPersonalContribution),
       },
-    }).then(() => {
-      onSubmitProps.setSubmitting(false)
-      onSubmitProps.resetForm()
-      navigate(`/bacenta/displaydetails`)
     })
+    onSubmitProps.setSubmitting(false)
+    onSubmitProps.resetForm()
+    navigate(`/bacenta/displaydetails`)
   }
   return (
     <BaseComponent

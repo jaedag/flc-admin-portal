@@ -56,13 +56,11 @@ const CreateConstituency = () => {
         }).catch((error) => {
           throwErrorMsg('There was an error adding leader', error)
         })
-
+        onSubmitProps.setSubmitting(false)
+        onSubmitProps.resetForm()
         navigate(`/constituency/displaydetails`)
       })
       .catch((error) => throwErrorMsg('There was an error', error))
-
-    onSubmitProps.setSubmitting(false)
-    onSubmitProps.resetForm()
   }
 
   return (

@@ -45,15 +45,13 @@ const CreateCouncil = () => {
         }).catch((error) => {
           throwErrorMsg('There was an error adding leader', error)
         })
-
+        onSubmitProps.setSubmitting(false)
+        onSubmitProps.resetForm()
         navigate(`/council/displaydetails`)
       })
       .catch((error) => {
         throwErrorMsg('There was an error creating council', error)
       })
-
-    onSubmitProps.setSubmitting(false)
-    onSubmitProps.resetForm()
   }
 
   return (

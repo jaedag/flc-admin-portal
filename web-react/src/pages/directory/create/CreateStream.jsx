@@ -48,14 +48,13 @@ const CreateStream = () => {
         })
 
         setStreamId(res.data.CreateStream.id)
+        onSubmitProps.setSubmitting(false)
+        onSubmitProps.resetForm()
         navigate(`/stream/displaydetails`)
       })
       .catch((error) => {
         throwErrorMsg('There was an error creating stream', error)
       })
-
-    onSubmitProps.setSubmitting(false)
-    onSubmitProps.resetForm()
   }
 
   return (

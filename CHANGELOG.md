@@ -1,3 +1,53 @@
+## 1.0.0 (2022-03-31)
+
+##### Chores
+
+*  accepted incoming changes from deploy ([5b75bd67](https://github.com/jaedag/fl-admin-portal/commit/5b75bd675bd61d7135fdf3688eeef97166712226))
+
+##### New Features
+
+* **arrivals:**
+  *  gathering service admins can set the code of the day ([02294de7](https://github.com/jaedag/fl-admin-portal/commit/02294de77a37c0a7b396ffd63292c9159bea0d76))
+  *  all stream helpers can be deleted at the touch of a button ([4502c5b8](https://github.com/jaedag/fl-admin-portal/commit/4502c5b89a51a98ffc377243c4d86331cc42d0e4))
+  *  arrivals counting has been brought back as a step before confirming arrivals ([da7f3949](https://github.com/jaedag/fl-admin-portal/commit/da7f3949fd00f4730216847a79715895d7ca73dc))
+  *  implemented user flow for arrivals helpers ([db9af4a2](https://github.com/jaedag/fl-admin-portal/commit/db9af4a29eb45cb150f4e9e6452f2920745a9d56))
+  *  implemented cards for Members on the Way and Members Arrived ([62c6e4a0](https://github.com/jaedag/fl-admin-portal/commit/62c6e4a08cdde3b926734bd327c4d2d4b58a794b))
+  *  implemented logging after updating bacenta bussing details ([ea0e01dd](https://github.com/jaedag/fl-admin-portal/commit/ea0e01ddde5018780314f5d56bcee48ed2cf1fe8))
+  *  implemented church by subchurch flow for arrivals ([504a5404](https://github.com/jaedag/fl-admin-portal/commit/504a5404623337dd8dda50072ee69e9f294b1219))
+  *  implemented flow for stream and gatheringservice levels ([ba281546](https://github.com/jaedag/fl-admin-portal/commit/ba28154633e1be5e5089531fc7c5ec1da589fa23))
+  *  implemented feature for gathering service admins to set a date as a swell date ([c15e1556](https://github.com/jaedag/fl-admin-portal/commit/c15e15563a07000e06e7fc9527d98531b718dc75))
+  *  implemented feature in backend to support swell and non swell ([34611e11](https://github.com/jaedag/fl-admin-portal/commit/34611e1130b69cea17e5d2beb49648741c2191ce))
+  *  implemented payswitch integration for paying bussing topup ([6b4c9b7f](https://github.com/jaedag/fl-admin-portal/commit/6b4c9b7f86cac4fdcc0f03236b0459961e41d519))
+*  removed alt attribute which messes with the UI of the cloudinary SDK ([4f31d563](https://github.com/jaedag/fl-admin-portal/commit/4f31d56394e4dc33ecca059401df45965e1ba7e9))
+*  improved image handling using the cloudinary React SDK ([7638214a](https://github.com/jaedag/fl-admin-portal/commit/7638214aece829005a2761ce797981fe086d1bcc))
+*  implemented feature to delete member from the database ([999e8902](https://github.com/jaedag/fl-admin-portal/commit/999e89026dcfa25f45445897d3df480bcd88e7c0))
+
+##### Bug Fixes
+
+*  brought back councilSontaSearch ([21baf963](https://github.com/jaedag/fl-admin-portal/commit/21baf963b1c1076b866fc658f433e8a8033896ef))
+*  improved the submitting ux by ensure that all submit buttons display 'loading' before submit ([1912c21a](https://github.com/jaedag/fl-admin-portal/commit/1912c21a1c43d1d565fc730e552c7d2795d6840a))
+*  fixed  bug with updating bacenta mutation ([ba6c5e95](https://github.com/jaedag/fl-admin-portal/commit/ba6c5e95189305c05830c92cad7ed330a9209f7e))
+*  improved the UX for submitting member forms by refactoring promises into async/await ([f5108b48](https://github.com/jaedag/fl-admin-portal/commit/f5108b4839ba92f55b1b089a4ffe2304aad05541))
+*  made improvements to the arrivals flow to enable better cross stream compatibility ([250eb5bb](https://github.com/jaedag/fl-admin-portal/commit/250eb5bbabb06302ad4eb0c1af41580cbb3a41cb))
+*  touched up the colours on the banked card ([d3ba9bd3](https://github.com/jaedag/fl-admin-portal/commit/d3ba9bd3e693cbc562b40df2fe08f81dbfee0f3b))
+*  insisted on distinctness in the number of fellowships returned in the defaulters numbers ([6dadee69](https://github.com/jaedag/fl-admin-portal/commit/6dadee6945027c4de56bd675fe7a7ad065dcb8ba))
+*  improved the computations for the defaulters ([de81a99a](https://github.com/jaedag/fl-admin-portal/commit/de81a99a2debb92b03651df6420a768f123431c1))
+*  fixed bug where admin could not view councils they aren't members of, refactored code ([e7db7c81](https://github.com/jaedag/fl-admin-portal/commit/e7db7c81336c3b9b50bec3e91e91fd70a434bbb0))
+*  api checks if leader has current history and then creates it before writing the service record ([0b534ff3](https://github.com/jaedag/fl-admin-portal/commit/0b534ff397cab19bcb676245ddf431c9a8ddd2ed))
+*  partially implemented service resolver check before writing to db ([9afa6ae7](https://github.com/jaedag/fl-admin-portal/commit/9afa6ae78366670b50822fb744fb399379bd1ae9))
+*  member search boxes now supports better compatibility across streams ([02cc5f26](https://github.com/jaedag/fl-admin-portal/commit/02cc5f26bad8f0cca7825c8215588eec97dd0cb8))
+*  service forms can only be filled for the week in which they occurred ([04b9a428](https://github.com/jaedag/fl-admin-portal/commit/04b9a428c167a3b3681daed8d8204e62c0095a42))
+*  minor bug fixes ([e70e7124](https://github.com/jaedag/fl-admin-portal/commit/e70e7124fddbd7e3c4ca348f444658d83237fcde))
+* **arrivals:**
+  *  when transaction fails, transactionId should be removed ([7dedf895](https://github.com/jaedag/fl-admin-portal/commit/7dedf8952d3371b5bfb75eacabd9dc15eb2a7aec))
+  *  added some more permissions ([06c176af](https://github.com/jaedag/fl-admin-portal/commit/06c176af6400f098dd5205d02846ca13dc5e291f))
+  *   change the source for the rolesPath in the graphql.js ([b2028426](https://github.com/jaedag/fl-admin-portal/commit/b20284260dff4bbffe0f21986addf45c4317f25f))
+
+##### Refactors
+
+*  created a date functions file ([7fa23da3](https://github.com/jaedag/fl-admin-portal/commit/7fa23da32fe38054a88f131a3e6e380712869b59))
+*  refactored resolvers to be more scalable as well as better error handling ([47181079](https://github.com/jaedag/fl-admin-portal/commit/47181079563ff65d50c8115adad663320bc25a25))
+
 #### 0.7.5 (2022-03-14)
 
 ##### Bug Fixes

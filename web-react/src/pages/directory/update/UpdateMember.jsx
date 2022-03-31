@@ -148,6 +148,7 @@ const UpdateMember = () => {
       initialValues={initialValues}
       onSubmit={onSubmit}
       loading={memberLoading}
+      update
     />
   )
 }

@@ -1,10 +1,10 @@
 import { useQuery } from '@apollo/client'
 import { Form, Formik } from 'formik'
 import * as Yup from 'yup'
-import React from 'react'
-import RoleView from '../../auth/RoleView'
+import React, { useContext } from 'react'
 import {
   GENDER_OPTIONS,
+  isAuthorised,
   makeSelectOptions,
   MARITAL_STATUS_OPTIONS,
   PHONE_NUM_REGEX,
@@ -17,10 +17,23 @@ import { Col, Container, Row } from 'react-bootstrap'
 import LoadingScreen from 'components/base-component/LoadingScreen'
 import { permitAdmin } from 'permission-utils'
 import SubmitButton from 'components/formik-components/SubmitButton'
+import { MemberContext } from 'contexts/MemberContext'
 
-const MemberForm = ({ initialValues, onSubmit, title, loading }) => {
+const MemberForm = ({ initialValues, onSubmit, title, loading, update }) => {
   const { data: ministriesData, loading: ministriesLoading } =
     useQuery(GET_MINISTRIES)
+  const { currentUser } = useContext(MemberContext)
+
+  const canChangeEmail = () => {
+    if (!update) {
+      return true
+    }
+    if (update && isAuthorised(permitAdmin('Stream'), currentUser.role)) {
+      return true
+    }
+
+    return false
+  }
 
   const validationSchema = Yup.object({
     pictureUrl: Yup.string().required('You must upload a picture'),
@@ -163,7 +176,7 @@ const MemberForm = ({ initialValues, onSubmit, title, loading }) => {
                   </div>
 
                   <div className="form-row justify-content-center">
-                    <RoleView roles={permitAdmin('Stream')}>
+                    {canChangeEmail() && (
                       <Col sm={10}>
                         <FormikControl
                           label="Email Address*"
@@ -173,7 +186,8 @@ const MemberForm = ({ initialValues, onSubmit, title, loading }) => {
                           aria-describedby="emailHelp"
                         />
                       </Col>
-                    </RoleView>
+                    )}
+
                     <Col sm={10}>
                       <small htmlFor="dateofbirth" className="form-text ">
                         Date of Birth*{' '}

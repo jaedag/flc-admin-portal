@@ -23,6 +23,7 @@ import {
 } from './arrivalsQueries'
 import CloudinaryImage from 'components/CloudinaryImage'
 import useChurchLevel from 'hooks/useChurchLevel'
+import NoData from './CompNoData'
 
 const ConfirmBacentaArrival = () => {
   const { clickCard, isOpen, togglePopup } = useContext(ChurchContext)
@@ -214,9 +215,7 @@ const ConfirmBacentaArrival = () => {
           </Card>
         ))}
         {!bacentaData?.length && (
-          <Card className="mt-5 py-3">
-            <Card.Body>There is no data to display for you</Card.Body>
-          </Card>
+          <NoData text="There is no data to display for you" />
         )}
 
         {loading && <PlaceholderMemberDisplay />}

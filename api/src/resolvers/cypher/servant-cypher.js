@@ -46,7 +46,7 @@ RETURN admin.id AS id, admin.auth_id AS auth_id, admin.firstName AS firstName, a
 
 export const disconnectChurchArrivalsHelper = `
 MATCH (church {id: $churchId}) 
-WHERE church:Council OR church:Stream OR church:GatheringService OR church:Sonta OR church:Ministry
+WHERE church:Council OR church:Stream OR church:GatheringService
 MATCH (church)<-[oldAdmin:HELPS_ARRIVALS_FOR]-(admin:Member {id: $arrivalsHelperId})
 DELETE oldAdmin
 

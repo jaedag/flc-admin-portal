@@ -7,7 +7,7 @@ import { ChurchContext } from 'contexts/ChurchContext'
 import useChurchLevel from 'hooks/useChurchLevel'
 import PlaceholderMemberDisplay from 'pages/services/defaulters/PlaceholderDefaulter'
 import React, { useContext } from 'react'
-import { Card, Container } from 'react-bootstrap'
+import { Container } from 'react-bootstrap'
 import { useNavigate } from 'react-router'
 import {
   CONSTITUENCY_BACENTAS_ON_THE_WAY,
@@ -15,6 +15,7 @@ import {
   GATHERINGSERVICE_BACENTAS_ON_THE_WAY,
   STREAM_BACENTAS_ON_THE_WAY,
 } from './bussingStatusQueries'
+import NoData from './CompNoData'
 
 const StateBacentasToCount = () => {
   const { clickCard } = useContext(ChurchContext)
@@ -42,9 +43,7 @@ const StateBacentasToCount = () => {
         </HeadingSecondary>
 
         {church && !church?.bacentasToCount.length && (
-          <Card>
-            <Card.Body>There are no bacentas on the way</Card.Body>
-          </Card>
+          <NoData text="There are no bacentas on the way" />
         )}
 
         {church?.bacentasToCount?.map((bacenta, i) => {

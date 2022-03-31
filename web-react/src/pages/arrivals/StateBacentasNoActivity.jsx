@@ -12,6 +12,7 @@ import {
   STREAM_BACENTAS_NO_ACTIVITY,
 } from './bussingStatusQueries'
 import useChurchLevel from '../../hooks/useChurchLevel'
+import NoData from './CompNoData'
 
 const BacentasNoActiviity = () => {
   const [constituencyBacentasNoActivity] = useLazyQuery(
@@ -41,7 +42,7 @@ const BacentasNoActiviity = () => {
         </HeadingSecondary>
 
         {church && !church?.bacentasNoActivity.length && (
-          <div>There are no bacentas without activity</div>
+          <NoData text="There are no bacentas without activity" />
         )}
 
         {church?.bacentasNoActivity.map((bacenta, i) => (

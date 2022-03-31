@@ -7,7 +7,7 @@ import { ChurchContext } from 'contexts/ChurchContext'
 import useChurchLevel from 'hooks/useChurchLevel'
 import PlaceholderMemberDisplay from 'pages/services/defaulters/PlaceholderDefaulter'
 import React, { useContext } from 'react'
-import { Card, Container } from 'react-bootstrap'
+import { Container } from 'react-bootstrap'
 import { useNavigate } from 'react-router'
 import {
   CONSTITUENCY_BACENTAS_ARRIVED,
@@ -15,6 +15,7 @@ import {
   GATHERINGSERVICES_BACENTAS_ARRIVED,
   STREAM_BACENTAS_ARRIVED,
 } from './bussingStatusQueries'
+import NoData from './CompNoData'
 
 const BacentasHaveArrived = () => {
   const navigate = useNavigate()
@@ -46,9 +47,7 @@ const BacentasHaveArrived = () => {
         </HeadingSecondary>
 
         {church && !church?.bacentasHaveArrived.length && (
-          <Card>
-            <Card.Body>No Bacentas Have Arrived at the Centre</Card.Body>
-          </Card>
+          <NoData text="No Bacentas Have Arrived at the Centre" />
         )}
 
         {church?.bacentasHaveArrived?.map((bacenta, i) => {

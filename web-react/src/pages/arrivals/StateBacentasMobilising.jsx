@@ -4,7 +4,7 @@ import MemberDisplayCard from 'components/card/MemberDisplayCard'
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import HeadingSecondary from 'components/HeadingSecondary'
 import React from 'react'
-import { Card, Container } from 'react-bootstrap'
+import { Container } from 'react-bootstrap'
 import {
   CONSTITUENCY_BACENTAS_MOBILISING,
   COUNCIL_BACENTAS_MOBILISING,
@@ -12,6 +12,7 @@ import {
   STREAM_BACENTAS_MOBILISING,
 } from './bussingStatusQueries'
 import useChurchLevel from '../../hooks/useChurchLevel'
+import NoData from './CompNoData'
 
 const BacentasMobilising = () => {
   const [constituencyBacentasMobilising] = useLazyQuery(
@@ -39,9 +40,7 @@ const BacentasMobilising = () => {
         </HeadingSecondary>
 
         {church && !church?.bacentasMobilising.length && (
-          <Card>
-            <Card.Body>There are no mobilising bacentas</Card.Body>
-          </Card>
+          <NoData text="There are no mobilising bacentas" />
         )}
 
         {church?.bacentasMobilising.map((bacenta, i) => {

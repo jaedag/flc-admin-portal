@@ -854,6 +854,23 @@ extend type Mutation {
 
   MakeStreamArrivalsHelper(arrivalsHelperId: ID!, streamId: ID!): Member
   RemoveStreamArrivalsHelper(arrivalsHelperId: ID!, streamId: ID!): Member
+  RemoveAllStreamArrivalsHelpers(streamId: ID!): Member
+    @cypher(
+      statement: """
+      MATCH (church {id: $streamId})
+      WHERE church:Stream
+      MATCH (church)<-[oldAdmin:HELPS_ARRIVALS_FOR]-(admin:Member)
+      DELETE oldAdmin
+
+      WITH church, admin
+
+      MATCH (church)-[oldHistory:HAS_HISTORY]->(:ServiceLog)<-[oldAdminHistory:HAS_HISTORY]-(admin)
+      REMOVE oldHistory.current, oldAdminHistory.current
+
+
+      RETURN admin
+      """
+    )
 
   ## GENERATE CODE OF THE DAY
   GenerateCodeOfTheDay: String!

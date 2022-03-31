@@ -52,3 +52,13 @@ export const REMOVE_STREAMARRIVALS_HELPER = gql`
     }
   }
 `
+
+export const REMOVE_ALL_STREAMARRIVALS_HELPERS = gql`
+  mutation RemoveAllStreamArrivalsHelpers($streamId: ID!) {
+    RemoveAllStreamArrivalsHelpers(streamId: $streamId) {
+      id
+      firstName
+      lastName
+    }
+  }
+`

@@ -9,6 +9,7 @@ import * as Yup from 'yup'
 import { Form, Formik } from 'formik'
 import {
   MAKE_STREAMARRIVALS_HELPER,
+  REMOVE_ALL_STREAMARRIVALS_HELPERS,
   REMOVE_STREAMARRIVALS_HELPER,
   STREAM_ARRIVALS_HELPERS,
 } from './ArrivalsHelpersGQL'
@@ -16,6 +17,7 @@ import { alertMsg, throwErrorMsg } from 'global-utils'
 import Popup from 'components/Popup/Popup'
 import FormikControl from 'components/formik-components/FormikControl'
 import SubmitButton from 'components/formik-components/SubmitButton'
+import NoData from '../CompNoData'
 
 const ArrivalsHelpersStream = () => {
   const { streamId, isOpen, togglePopup } = useContext(ChurchContext)
@@ -36,6 +38,18 @@ const ArrivalsHelpersStream = () => {
 
   const [RemoveStreamArrivalsHelper] = useMutation(
     REMOVE_STREAMARRIVALS_HELPER,
+    {
+      refetchQueries: [
+        {
+          query: STREAM_ARRIVALS_HELPERS,
+          variables: { id: streamId },
+        },
+      ],
+    }
+  )
+
+  const [RemoveAllStreamArrivalsHelpers] = useMutation(
+    REMOVE_ALL_STREAMARRIVALS_HELPERS,
     {
       refetchQueries: [
         {
@@ -111,7 +125,36 @@ const ArrivalsHelpersStream = () => {
           </Popup>
         )}
         <Button onClick={() => togglePopup()}>Add Helpers</Button>
-        <Button>Delete All Helpers</Button>
+        <Button
+          onClick={async () => {
+            const confirmBox = window.confirm(
+              `Do you want to delete all helpers`
+            )
+
+            if (confirmBox === true) {
+              await RemoveAllStreamArrivalsHelpers({
+                variables: { streamId: streamId },
+              })
+
+              stream?.arrivalsHelpers.map(async (helper) => {
+                try {
+                  await RemoveStreamArrivalsHelper({
+                    variables: {
+                      streamId: streamId,
+                      arrivalsHelperId: helper.id,
+                    },
+                  })
+                } catch (error) {
+                  throwErrorMsg('error', error)
+                }
+
+                alertMsg(`${helper.fullName} Deleted Successfully`)
+              })
+            }
+          }}
+        >
+          Delete All Helpers
+        </Button>
 
         {stream?.arrivalsHelpers.map((helper, i) => (
           <div key={i}>
@@ -138,6 +181,10 @@ const ArrivalsHelpersStream = () => {
             </Button>
           </div>
         ))}
+
+        {!stream?.arrivalsHelpers.length && (
+          <NoData text="There are no arrivals helpers" />
+        )}
       </Container>
     </BaseComponent>
   )

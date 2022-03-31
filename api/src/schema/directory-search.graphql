@@ -163,7 +163,7 @@ extend type Query {
     @auth(rules: [{ roles: ["adminStream"] }])
     @cypher(
       statement: """
-      MATCH (stream:Stream {id: $streamId})-[:HAS*3]->(bacenta)
+      MATCH (stream:Stream {id: $streamId})-[:HAS*3]->(bacenta:Bacenta)
 
       WHERE toLower(bacenta.name) STARTS WITH toLower($searchKey)
       OR toLower(bacenta.name) CONTAINS toLower($searchKey)
@@ -174,7 +174,18 @@ extend type Query {
     @auth(rules: [{ roles: ["adminCouncil"] }])
     @cypher(
       statement: """
-      MATCH (council:Council {id: $councilId})-[:HAS*2]->(bacenta)
+      MATCH (council:Council {id: $councilId})-[:HAS*2]->(bacenta:Bacenta)
+
+      WHERE toLower(bacenta.name) STARTS WITH toLower($searchKey)
+      OR toLower(bacenta.name) CONTAINS toLower($searchKey)
+      RETURN bacenta LIMIT 5
+      """
+    )
+  councilSontaSearch(searchKey: String, councilId: ID!): [Bacenta]
+    @auth(rules: [{ roles: ["adminCouncil"] }])
+    @cypher(
+      statement: """
+      MATCH (council:Council {id: $councilId})-[:HAS*2]->(bacenta:Bacenta)
 
       WHERE toLower(bacenta.name) STARTS WITH toLower($searchKey)
       OR toLower(bacenta.name) CONTAINS toLower($searchKey)
@@ -189,7 +200,7 @@ extend type Query {
     @cypher(
       statement: """
       MATCH (constituency:Constituency {id:$constituencyId})
-      MATCH (constituency)-[:HAS]->(bacenta)
+      MATCH (constituency)-[:HAS]->(bacenta:Bacenta)
 
       WHERE toLower(bacenta.name) STARTS WITH toLower($searchKey)
       OR toLower(bacenta.name) CONTAINS toLower($searchKey)
@@ -213,7 +224,7 @@ extend type Query {
     @auth(rules: [{ roles: ["adminStream"] }])
     @cypher(
       statement: """
-      MATCH (stream:Stream {id: $streamId})-[:HAS]->(council:Council)-[:HAS]->(constituency)
+      MATCH (stream:Stream {id: $streamId})-[:HAS]->(council:Council)-[:HAS]->(constituency:Constituency)
 
       WHERE toLower(constituency.name) STARTS WITH toLower($searchKey)
       OR toLower(constituency.name) CONTAINS toLower($searchKey)
@@ -224,7 +235,7 @@ extend type Query {
     @auth(rules: [{ roles: ["adminCouncil"] }])
     @cypher(
       statement: """
-      MATCH (council:Council {id: $councilId})-[:HAS]->(constituency)
+      MATCH (council:Council {id: $councilId})-[:HAS]->(constituency:Constituency)
 
       WHERE toLower(constituency.name) STARTS WITH toLower($searchKey)
       OR toLower(constituency.name) CONTAINS toLower($searchKey)
@@ -248,7 +259,7 @@ extend type Query {
     @auth(rules: [{ roles: ["adminStream"] }])
     @cypher(
       statement: """
-      MATCH (stream:Stream {id: $streamId})-[:HAS]->(council)
+      MATCH (stream:Stream {id: $streamId})-[:HAS]->(council:Council)
       MATCH (council:Council)
       WHERE toLower(council.name) STARTS WITH toLower($searchKey)
       OR toLower(council.name) CONTAINS toLower($searchKey)

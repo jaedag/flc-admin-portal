@@ -26,7 +26,7 @@ const DetailsConstituency = () => {
         churchHeading="Bacentas"
         church2Heading="Fellowships"
         churchCount={data?.constituencies[0]?.bacentas.length}
-        church2Count={data?.constituencies[0]?.fellowshipCount}
+        church2Count={data?.constituencies[0]?.activeFellowshipCount}
         admin={data?.constituencies[0]?.admin}
         churchType={`Constituency`}
         subChurch={`Bacenta`}

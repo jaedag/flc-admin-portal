@@ -95,6 +95,7 @@ RETURN member
 `
 
 export const createMember = `
+MATCH (fellowship:Fellowship {id: $fellowship})
 CREATE (member:Member {whatsappNumber:$whatsappNumber})
       SET
       	member.id = apoc.create.uuid(),
@@ -109,7 +110,7 @@ CREATE (member:Member {whatsappNumber:$whatsappNumber})
         SET
         log.id =  apoc.create.uuid(),
         log.timeStamp = datetime(),
-        log.historyRecord = $firstName +' ' +$lastName+' was registered on '+apoc.date.convertFormat(toString(date()), 'date', 'dd MMMM yyyy')
+        log.historyRecord = $firstName +' ' +$lastName+' was registered on '+apoc.date.convertFormat(toString(date()), 'date', 'dd MMMM yyyy') + ' with ' + fellowship.name + ' Fellowship'
 
       WITH member, log
       MATCH (currentUser:Member {auth_id:$auth_id})

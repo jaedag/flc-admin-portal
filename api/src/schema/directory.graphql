@@ -28,14 +28,14 @@ type Member @auth(rules: [{ isAuthenticated: true }]) {
   members: [Member]
     @cypher(
       statement: """
-      MATCH (this)-[:LEADS|HAS|DOES_ARRIVALS_FOR|IS_ADMIN_FOR*1..6]->(:Fellowship)-[:BELONGS_TO]-(members:Member)
+      MATCH (this)-[:LEADS|HAS|DOES_ARRIVALS_FOR|IS_ADMIN_FOR*1..6]->(:Fellowship)<-[:BELONGS_TO]-(members:Member)
       RETURN DISTINCT members ORDER BY toLower(members.lastName), toLower(members.firstName)
       """
     )
   memberSearch(key: String!, limit: Int! = 5): [Member]
     @cypher(
       statement: """
-      MATCH (this)-[:LEADS|HAS|DOES_ARRIVALS_FOR|IS_ADMIN_FOR*1..6]->(:Fellowship)-[:BELONGS_TO]-(members:Member)
+      MATCH (this)-[:LEADS|HAS|DOES_ARRIVALS_FOR|IS_ADMIN_FOR*1..6]->(:Fellowship)<-[:BELONGS_TO]-(members:Member)
       WHERE toLower(members.firstName+ ' ' + members.lastName) CONTAINS toLower($key)
       RETURN DISTINCT members ORDER BY toLower(members.lastName), toLower(members.firstName) LIMIT $limit
       """
@@ -43,14 +43,14 @@ type Member @auth(rules: [{ isAuthenticated: true }]) {
   memberCount: Int
     @cypher(
       statement: """
-      MATCH (this)-[:LEADS|HAS|DOES_ARRIVALS_FOR|IS_ADMIN_FOR*1..6]->(:Fellowship)-[:BELONGS_TO]-(members:Member)
+      MATCH (this)-[:LEADS|HAS|DOES_ARRIVALS_FOR|IS_ADMIN_FOR*1..6]->(:Fellowship)<-[:BELONGS_TO]-(members:Member)
       RETURN COUNT(DISTINCT members)
       """
     )
   basontaMembers: [Member]
     @cypher(
       statement: """
-      MATCH (this)-[:LEADS|HAS|IS_ADMIN_FOR*1..6]->(:Fellowship)-[:BELONGS_TO]-(members:Member)
+      MATCH (this)-[:LEADS|HAS|IS_ADMIN_FOR*1..6]->(:Fellowship)<-[:BELONGS_TO]-(members:Member)
       MATCH (members)-[:BELONGS_TO]->(:Ministry)
       RETURN DISTINCT members ORDER BY toLower(members.lastName), toLower(members.firstName)
       """
@@ -58,7 +58,7 @@ type Member @auth(rules: [{ isAuthenticated: true }]) {
   basontaMembershipCount: Int
     @cypher(
       statement: """
-      MATCH (this)-[:LEADS|HAS|IS_ADMIN_FOR*1..6]->(:Fellowship)-[:BELONGS_TO]-(members:Member)
+      MATCH (this)-[:LEADS|HAS|IS_ADMIN_FOR*1..6]->(:Fellowship)<-[:BELONGS_TO]-(members:Member)
       MATCH (members)-[:BELONGS_TO]->(:Ministry)
       RETURN COUNT(DISTINCT members)
       """
@@ -281,6 +281,10 @@ type GatheringService implements Church {
     @cypher(
       statement: "MATCH (this)-[:HAS*4]->(bacentas:Bacenta) RETURN COUNT(DISTINCT bacentas)"
     )
+  activeBacentaCount: Int
+    @cypher(
+      statement: "MATCH (this)-[:HAS*4]->(bacentas:Bacenta:Active) RETURN COUNT(DISTINCT bacentas)"
+    )
   fellowshipCount: Int
     @cypher(
       statement: "MATCH (this)-[:HAS*5]->(fellowships:Fellowship) RETURN COUNT(DISTINCT fellowships)"
@@ -381,6 +385,10 @@ type Stream implements Church {
     @cypher(
       statement: "MATCH (this)-[:HAS*3]->(bacentas:Bacenta) RETURN COUNT(DISTINCT bacentas)"
     )
+  activeBacentaCount: Int
+    @cypher(
+      statement: "MATCH (this)-[:HAS*3]->(bacentas:Bacenta:Active) RETURN COUNT(DISTINCT bacentas)"
+    )
   bacentaSearch(key: String!, limit: Int!): [Fellowship]
     @cypher(
       statement: """
@@ -473,6 +481,10 @@ type Council implements Church {
   bacentaCount: Int
     @cypher(
       statement: "MATCH (this)-[:HAS*2]->(bacentas:Bacenta) RETURN COUNT(DISTINCT bacentas)"
+    )
+  activeBacentaCount: Int
+    @cypher(
+      statement: "MATCH (this)-[:HAS*2]->(bacentas:Bacenta:Active) RETURN COUNT(DISTINCT bacentas)"
     )
   bacentaSearch(key: String!, limit: Int!): [Fellowship]
     @cypher(

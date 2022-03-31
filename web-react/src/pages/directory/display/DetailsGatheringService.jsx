@@ -28,12 +28,12 @@ const DetailsGatheringService = () => {
     },
     {
       title: 'Bacenta',
-      number: gathering?.bacentaCount,
+      number: gathering?.activeBacentaCount,
       link: `#`,
     },
     {
       title: 'Fellowships',
-      number: gathering?.fellowshipCount,
+      number: gathering?.activeFellowshipCount,
       link: '#',
     },
   ]

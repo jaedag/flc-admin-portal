@@ -24,12 +24,12 @@ const DetailsStream = () => {
     },
     {
       title: 'Bacenta',
-      number: stream?.bacentaCount,
+      number: stream?.activeBacentaCount,
       link: `#`,
     },
     {
       title: 'Fellowships',
-      number: stream?.fellowshipCount,
+      number: stream?.activeFellowshipCount,
       link: '#',
     },
   ]

@@ -402,7 +402,7 @@ export const DISPLAY_CONSTITUENCY = gql`
         historyRecord
       }
       memberCount
-      fellowshipCount
+      activeFellowshipCount
     }
   }
 `
@@ -418,8 +418,8 @@ export const DISPLAY_COUNCIL = gql`
       }
       stream_name
       constituencyCount
-      bacentaCount
-      fellowshipCount
+      activeBacentaCount
+      activeFellowshipCount
       memberCount
       pastorCount
       constituencies(options: { limit: 5 }) {
@@ -479,8 +479,8 @@ export const DISPLAY_STREAM = gql`
       id
       name
       constituencyCount
-      bacentaCount
-      fellowshipCount
+      activeBacentaCount
+      activeFellowshipCount
       memberCount
       pastorCount
       gatheringService {
@@ -531,8 +531,8 @@ export const DISPLAY_GATHERINGSERVICE = gql`
       streamCount
       councilCount
       constituencyCount
-      bacentaCount
-      fellowshipCount
+      activeBacentaCount
+      activeFellowshipCount
       memberCount
       pastorCount
       streams {

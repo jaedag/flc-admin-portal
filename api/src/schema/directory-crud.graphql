@@ -590,7 +590,7 @@ extend type Mutation {
       	OPTIONAL MATCH (member)-[r0:BELONGS_TO]-> (:Fellowship)
       	DELETE r0
       	MERGE (member)-[:BELONGS_TO]-> (fellowship)
-         	RETURN count(member)
+        RETURN count(member)
          	}
       WITH member
       CALL {

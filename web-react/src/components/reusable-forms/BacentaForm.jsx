@@ -8,7 +8,7 @@ import {
   throwErrorMsg,
   VACATION_OPTIONS,
 } from 'global-utils'
-import { permitAdmin } from 'permission-utils'
+import { permitAdmin, permitAdminArrivals } from 'permission-utils'
 import { GET_COUNCIL_CONSTITUENCIES } from 'queries/ListQueries'
 import React, { useContext } from 'react'
 import { ChurchContext } from 'contexts/ChurchContext'
@@ -69,9 +69,11 @@ const BacentaForm = ({ initialValues, onSubmit, title, newBacenta }) => {
       <Container>
         <HeadingPrimary>{title}</HeadingPrimary>
         <HeadingSecondary>{initialValues.name}</HeadingSecondary>
-        <Button onClick={() => navigate('/bacenta/editbussing')}>
-          Edit Bussing Details
-        </Button>
+        <RoleView roles={permitAdminArrivals('Stream')}>
+          <Button onClick={() => navigate('/bacenta/editbussing')}>
+            Edit Bussing Details
+          </Button>
+        </RoleView>
       </Container>
 
       <Formik

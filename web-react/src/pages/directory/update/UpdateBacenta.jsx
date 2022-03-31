@@ -43,6 +43,7 @@ const UpdateBacenta = () => {
     constituency: bacenta?.constituency?.id,
     fellowships: bacenta?.fellowships.length ? bacenta?.fellowships : [''],
     vacationStatus: bacenta?.vacationStatus,
+    graduationStatus: bacenta?.graduationStatus,
   }
 
   const [LogBacentaHistory] = useMutation(LOG_BACENTA_HISTORY)

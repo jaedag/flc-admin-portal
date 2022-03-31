@@ -5,12 +5,12 @@ type ServiceDay @auth(rules: [{ isAuthenticated: true }]) {
 }
 
 extend type GatheringService {
-  servicesThisWeek: [Fellowship]
+  servicesThisWeek: [Fellowship!]!
     @cypher(
       statement: """
       MATCH (this)-[:HAS*5]->(fellowships:Active:Fellowship)
       WHERE EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph) 
+        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph)
         WHERE date(date.date).week = date().week AND record.attendance IS NOT NULL
         }
       RETURN DISTINCT fellowships
@@ -27,7 +27,7 @@ extend type GatheringService {
       RETURN COUNT(DISTINCT fellowships)
       """
     )
-  cancelledServicesThisWeek: [Fellowship]
+  cancelledServicesThisWeek: [Fellowship!]!
     @cypher(
       statement: """
       MATCH (this)-[:HAS*5]->(fellowships:Active:Fellowship)
@@ -47,7 +47,7 @@ extend type GatheringService {
       RETURN COUNT(DISTINCT fellowships)
       """
     )
-  formDefaultersThisWeek: [Fellowship]
+  formDefaultersThisWeek: [Fellowship!]!
     @cypher(
       statement: """
       MATCH (this)-[:HAS*5]->(fellowships:Active:Fellowship)
@@ -72,7 +72,7 @@ extend type GatheringService {
       RETURN COUNT(DISTINCT fellowships)
       """
     )
-  bankingDefaultersThisWeek: [Fellowship]
+  bankingDefaultersThisWeek: [Fellowship!]!
     @cypher(
       statement: """
       MATCH (this)-[:HAS*5]->(fellowships) WHERE fellowships:Active:Fellowship OR fellowships:ClosedFellowship
@@ -92,7 +92,7 @@ extend type GatheringService {
       RETURN COUNT(DISTINCT fellowships)
       """
     )
-  bankedThisWeek: [Fellowship]
+  bankedThisWeek: [Fellowship!]!
     @cypher(
       statement: """
       MATCH (this)-[:HAS*5]->(fellowships) WHERE fellowships:Active:Fellowship OR fellowships:ClosedFellowship
@@ -112,15 +112,16 @@ extend type GatheringService {
       RETURN COUNT(DISTINCT fellowships)
       """
     )
-  componentServiceAggregate(limit: Int = 6): [ComponentServiceAggregate] @ignore
+  componentServiceAggregate(limit: Int = 6): [ComponentServiceAggregate]
+    @computed
 }
 extend type Stream {
-  servicesThisWeek: [Fellowship]
+  servicesThisWeek: [Fellowship!]!
     @cypher(
       statement: """
       MATCH (this)-[:HAS*4]->(fellowships:Active:Fellowship)
       WHERE EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph) 
+        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph)
         WHERE date(date.date).week = date().week AND record.attendance IS NOT NULL
         }
       RETURN fellowships
@@ -131,13 +132,13 @@ extend type Stream {
       statement: """
       MATCH (this)-[:HAS*4]->(fellowships:Active:Fellowship)
       WHERE EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph) 
+        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph)
         WHERE date(date.date).week = date().week AND record.attendance IS NOT NULL
         }
       RETURN COUNT(DISTINCT fellowships)
       """
     )
-  cancelledServicesThisWeek: [Fellowship]
+  cancelledServicesThisWeek: [Fellowship!]!
     @cypher(
       statement: """
       MATCH (this)-[:HAS*4]->(fellowships:Active:Fellowship)
@@ -157,7 +158,7 @@ extend type Stream {
       RETURN COUNT(DISTINCT fellowships)
       """
     )
-  formDefaultersThisWeek: [Fellowship]
+  formDefaultersThisWeek: [Fellowship!]!
     @cypher(
       statement: """
       MATCH (this)-[:HAS*4]->(fellowships:Active:Fellowship)
@@ -182,7 +183,7 @@ extend type Stream {
       RETURN COUNT(DISTINCT fellowships)
       """
     )
-  bankingDefaultersThisWeek: [Fellowship]
+  bankingDefaultersThisWeek: [Fellowship!]!
     @cypher(
       statement: """
       MATCH (this)-[:HAS*4]->(fellowships) WHERE fellowships:Active:Fellowship OR fellowships:ClosedFellowship
@@ -202,7 +203,7 @@ extend type Stream {
       RETURN COUNT(DISTINCT fellowships)
       """
     )
-  bankedThisWeek: [Fellowship]
+  bankedThisWeek: [Fellowship!]!
     @cypher(
       statement: """
       MATCH (this)-[:HAS*4]->(fellowships) WHERE fellowships:Active:Fellowship OR fellowships:ClosedFellowship
@@ -222,15 +223,16 @@ extend type Stream {
       RETURN COUNT(DISTINCT fellowships)
       """
     )
-  componentServiceAggregate(limit: Int = 6): [ComponentServiceAggregate] @ignore
+  componentServiceAggregate(limit: Int = 6): [ComponentServiceAggregate]
+    @computed
 }
 extend type Council {
-  servicesThisWeek: [Fellowship]
+  servicesThisWeek: [Fellowship!]!
     @cypher(
       statement: """
       MATCH (this)-[:HAS*3]->(fellowships:Active:Fellowship)
       WHERE EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph) 
+        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph)
         WHERE date(date.date).week = date().week AND record.attendance IS NOT NULL
         }
       RETURN fellowships
@@ -241,13 +243,13 @@ extend type Council {
       statement: """
       MATCH (this)-[:HAS*3]->(fellowships:Active:Fellowship)
       WHERE EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph) 
+        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph)
         WHERE date(date.date).week = date().week AND record.attendance IS NOT NULL
         }
       RETURN COUNT(DISTINCT fellowships)
       """
     )
-  cancelledServicesThisWeek: [Fellowship]
+  cancelledServicesThisWeek: [Fellowship!]!
     @cypher(
       statement: """
       MATCH (this)-[:HAS*3]->(fellowships:Active:Fellowship)
@@ -267,7 +269,7 @@ extend type Council {
       RETURN COUNT(DISTINCT fellowships)
       """
     )
-  formDefaultersThisWeek: [Fellowship]
+  formDefaultersThisWeek: [Fellowship!]!
     @cypher(
       statement: """
       MATCH (this)-[:HAS*3]->(fellowships:Active:Fellowship)
@@ -292,7 +294,7 @@ extend type Council {
       RETURN COUNT(DISTINCT fellowships)
       """
     )
-  bankingDefaultersThisWeek: [Fellowship]
+  bankingDefaultersThisWeek: [Fellowship!]!
     @cypher(
       statement: """
       MATCH (this)-[:HAS*3]->(fellowships) WHERE fellowships:Active:Fellowship OR fellowships:ClosedFellowship
@@ -312,7 +314,7 @@ extend type Council {
       RETURN COUNT(DISTINCT fellowships)
       """
     )
-  bankedThisWeek: [Fellowship]
+  bankedThisWeek: [Fellowship!]!
     @cypher(
       statement: """
       MATCH (this)-[:HAS*3]->(fellowships) WHERE fellowships:Active:Fellowship OR fellowships:ClosedFellowship
@@ -332,15 +334,16 @@ extend type Council {
       RETURN COUNT(DISTINCT fellowships)
       """
     )
-  componentServiceAggregate(limit: Int = 6): [ComponentServiceAggregate] @ignore
+  componentServiceAggregate(limit: Int = 6): [ComponentServiceAggregate]
+    @computed
 }
 extend type Constituency {
-  servicesThisWeek: [Fellowship]
+  servicesThisWeek: [Fellowship!]!
     @cypher(
       statement: """
       MATCH (this)-[:HAS*2]->(fellowships:Active:Fellowship)
       WHERE EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph) 
+        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph)
         WHERE date(date.date).week = date().week AND record.attendance IS NOT NULL
         }
       RETURN fellowships
@@ -351,13 +354,13 @@ extend type Constituency {
       statement: """
       MATCH (this)-[:HAS*2]->(fellowships:Active:Fellowship)
       WHERE EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph) 
+        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph)
         WHERE date(date.date).week = date().week AND record.attendance IS NOT NULL
         }
       RETURN COUNT(DISTINCT fellowships)
       """
     )
-  cancelledServicesThisWeek: [Fellowship]
+  cancelledServicesThisWeek: [Fellowship!]!
     @cypher(
       statement: """
       MATCH (this)-[:HAS*2]->(fellowships:Active:Fellowship)
@@ -377,7 +380,7 @@ extend type Constituency {
       RETURN COUNT(DISTINCT fellowships)
       """
     )
-  formDefaultersThisWeek: [Fellowship]
+  formDefaultersThisWeek: [Fellowship!]!
     @cypher(
       statement: """
       MATCH (this)-[:HAS*2]->(fellowships:Active:Fellowship)
@@ -401,7 +404,7 @@ extend type Constituency {
       RETURN COUNT(DISTINCT fellowships)
       """
     )
-  bankingDefaultersThisWeek: [Fellowship]
+  bankingDefaultersThisWeek: [Fellowship!]!
     @cypher(
       statement: """
       MATCH (this)-[:HAS*2]->(fellowships) WHERE fellowships:Active:Fellowship OR fellowships:ClosedFellowship
@@ -421,7 +424,7 @@ extend type Constituency {
       RETURN COUNT(DISTINCT fellowships)
       """
     )
-  bankedThisWeek: [Fellowship]
+  bankedThisWeek: [Fellowship!]!
     @cypher(
       statement: """
       MATCH (this)-[:HAS*2]->(fellowships) WHERE fellowships:Active:Fellowship OR fellowships:ClosedFellowship
@@ -441,10 +444,12 @@ extend type Constituency {
       RETURN COUNT(DISTINCT fellowships)
       """
     )
-  componentServiceAggregate(limit: Int = 6): [ComponentServiceAggregate] @ignore
+  componentServiceAggregate(limit: Int = 6): [ComponentServiceAggregate]
+    @computed
 }
 extend type Bacenta {
-  componentServiceAggregate(limit: Int = 6): [ComponentServiceAggregate] @ignore
+  componentServiceAggregate(limit: Int = 6): [ComponentServiceAggregate]
+    @computed
 }
 
 interface Record {
@@ -471,7 +476,7 @@ type ServiceRecord implements Record @auth(rules: [{ isAuthenticated: true }]) {
   servicePicture: String
   treasurerSelfie: String
   bankingSlip: String
-  treasurers: [Member]! @relationship(type: "WAS_TREASURER_FOR", direction: IN)
+  treasurers: [Member!]! @relationship(type: "WAS_TREASURER_FOR", direction: IN)
   serviceLog: ServiceLog @relationship(type: "HAS_SERVICE", direction: IN)
   noServiceReason: String
 }
@@ -497,17 +502,18 @@ type ServiceLog @auth(rules: [{ isAuthenticated: true }]) {
   historyRecord: String #leader was transferred to
   created_at: TimeGraph @relationship(type: "RECORDED_ON", direction: OUT)
   loggedBy: Member @relationship(type: "LOGGED_BY", direction: OUT)
-  serviceRecords: [ServiceRecord]
+  serviceRecords: [ServiceRecord!]!
     @relationship(type: "HAS_SERVICE", direction: OUT)
-  bussingRecords: [BussingRecord]
+  bussingRecords: [BussingRecord!]!
     @relationship(type: "HAS_BUSSING", direction: OUT)
-  leaders: [Member] @relationship(type: "HAS_HISTORY", direction: IN)
-  fellowship: [Fellowship] @relationship(type: "HAS_HISTORY", direction: IN)
-  bacenta: [Bacenta] @relationship(type: "HAS_HISTORY", direction: IN)
+  leaders: [Member!]! @relationship(type: "HAS_HISTORY", direction: IN)
+  fellowship: [Fellowship!]! @relationship(type: "HAS_HISTORY", direction: IN)
+  bacenta: [Bacenta!]! @relationship(type: "HAS_HISTORY", direction: IN)
   # bacentaFellowshipRecords(bacentaId: ID!): [BacentaFellowshipServiceRecords]
-  constituency: [Constituency] @relationship(type: "HAS_HISTORY", direction: IN)
-  council: [Council] @relationship(type: "HAS_HISTORY", direction: IN)
-  sonta: [Sonta] @relationship(type: "HAS_HISTORY", direction: IN)
+  constituency: [Constituency!]!
+    @relationship(type: "HAS_HISTORY", direction: IN)
+  council: [Council!]! @relationship(type: "HAS_HISTORY", direction: IN)
+  sonta: [Sonta!]! @relationship(type: "HAS_HISTORY", direction: IN)
 }
 
 type ComponentServiceAggregate {

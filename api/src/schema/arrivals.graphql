@@ -17,24 +17,24 @@ type SwellDate implements TimeGraphNode
       RETURN true
       """
     )
-  bussingDate: [BussingRecord] @relationship(type: "BUSSED_ON", direction: IN)
+  bussingDate: [BussingRecord!]! @relationship(type: "BUSSED_ON", direction: IN)
 }
 
 extend type Member {
-  isArrivalsAdminForCouncil: [Council]
+  isArrivalsAdminForCouncil: [Council!]!
     @relationship(type: "DOES_ARRIVALS_FOR", direction: OUT)
-  isArrivalsAdminForConstituency: [Constituency]
+  isArrivalsAdminForConstituency: [Constituency!]!
     @relationship(type: "DOES_ARRIVALS_FOR", direction: OUT)
-  isArrivalsAdminForStream: [Stream]
+  isArrivalsAdminForStream: [Stream!]!
     @relationship(type: "DOES_ARRIVALS_FOR", direction: OUT)
-  isArrivalsAdminForGatheringService: [GatheringService]
+  isArrivalsAdminForGatheringService: [GatheringService!]!
     @relationship(type: "DOES_ARRIVALS_FOR", direction: OUT)
-  isArrivalsHelperForStream: [Stream]
+  isArrivalsHelperForStream: [Stream!]!
     @relationship(type: "HELPS_ARRIVALS_FOR", direction: OUT)
 }
 extend type GatheringService {
   arrivalsAdmin: Member @relationship(type: "DOES_ARRIVALS_FOR", direction: IN)
-  bacentasNoActivity: [Bacenta]
+  bacentasNoActivity: [Bacenta!]!
     @cypher(
       statement: """
       MATCH (this)-[:HAS*4]->(bacentas:Active:Bacenta)
@@ -56,7 +56,7 @@ extend type GatheringService {
       RETURN COUNT(bacentas)
       """
     )
-  bacentasMobilising: [Bacenta]
+  bacentasMobilising: [Bacenta!]!
     @cypher(
       statement: """
       MATCH (this)-[:HAS*4]->(bacentas:Active:Bacenta)
@@ -82,7 +82,7 @@ extend type GatheringService {
       RETURN COUNT(bacentas)
       """
     )
-  bacentasOnTheWay: [Bacenta]
+  bacentasOnTheWay: [Bacenta!]!
     @cypher(
       statement: """
       MATCH (this)-[:HAS*4]->(bacentas:Active:Bacenta)
@@ -121,7 +121,7 @@ extend type GatheringService {
       RETURN SUM(bussing.attendance)
       """
     )
-  bacentasHaveBeenCounted: [Bacenta]
+  bacentasHaveBeenCounted: [Bacenta!]!
     @cypher(
       statement: """
       MATCH (this)-[:HAS*4]->(bacentas:Active:Bacenta)
@@ -143,7 +143,7 @@ extend type GatheringService {
       RETURN COUNT(bacentas)
       """
     )
-  bacentasNotCounted: [Bacenta]
+  bacentasNotCounted: [Bacenta!]!
     @cypher(
       statement: """
       MATCH (this)-[:HAS*4]->(bacentas:Active:Bacenta)
@@ -167,7 +167,7 @@ extend type GatheringService {
       RETURN COUNT(bacentas)
       """
     )
-  bacentasHaveArrived: [Bacenta]
+  bacentasHaveArrived: [Bacenta!]!
     @cypher(
       statement: """
       MATCH (this)-[:HAS*4]->(bacentas:Active:Bacenta)
@@ -207,9 +207,9 @@ extend type GatheringService {
 
 extend type Stream {
   arrivalsAdmin: Member @relationship(type: "DOES_ARRIVALS_FOR", direction: IN)
-  arrivalsHelpers: [Member]
+  arrivalsHelpers: [Member!]!
     @relationship(type: "HELPS_ARRIVALS_FOR", direction: IN)
-  bacentasNoActivity: [Bacenta]
+  bacentasNoActivity: [Bacenta!]!
     @cypher(
       statement: """
       MATCH (this)-[:HAS*3]->(bacentas:Active:Bacenta)
@@ -231,7 +231,7 @@ extend type Stream {
       RETURN COUNT(bacentas)
       """
     )
-  bacentasMobilising: [Bacenta]
+  bacentasMobilising: [Bacenta!]!
     @cypher(
       statement: """
       MATCH (this)-[:HAS*3]->(bacentas:Active:Bacenta)
@@ -257,7 +257,7 @@ extend type Stream {
       RETURN COUNT(bacentas)
       """
     )
-  bacentasOnTheWay: [Bacenta]
+  bacentasOnTheWay: [Bacenta!]!
     @cypher(
       statement: """
       MATCH (this)-[:HAS*3]->(bacentas:Active:Bacenta)
@@ -296,7 +296,7 @@ extend type Stream {
       RETURN SUM(bussing.attendance)
       """
     )
-  bacentasHaveBeenCounted: [Bacenta]
+  bacentasHaveBeenCounted: [Bacenta!]!
     @cypher(
       statement: """
       MATCH (this)-[:HAS*3]->(bacentas:Active:Bacenta)
@@ -318,7 +318,7 @@ extend type Stream {
        RETURN COUNT(bacentas)
       """
     )
-  bacentasNotCounted: [Bacenta]
+  bacentasNotCounted: [Bacenta!]!
     @cypher(
       statement: """
       MATCH (this)-[:HAS*3]->(bacentas:Active:Bacenta)
@@ -342,7 +342,7 @@ extend type Stream {
       RETURN COUNT(bacentas)
       """
     )
-  bacentasHaveArrived: [Bacenta]
+  bacentasHaveArrived: [Bacenta!]!
     @cypher(
       statement: """
       MATCH (this)-[:HAS*3]->(bacentas:Active:Bacenta)
@@ -382,9 +382,9 @@ extend type Stream {
 
 extend type Council {
   arrivalsAdmin: Member @relationship(type: "DOES_ARRIVALS_FOR", direction: IN)
-  graduatedBacentas: [Bacenta]
-  icBacentas: [Bacenta]
-  bacentasNoActivity: [Bacenta]
+  graduatedBacentas: [Bacenta!]!
+  icBacentas: [Bacenta!]!
+  bacentasNoActivity: [Bacenta!]!
     @cypher(
       statement: """
       MATCH (this)-[:HAS*2]->(bacentas:Active:Bacenta)
@@ -406,7 +406,7 @@ extend type Council {
       RETURN COUNT(bacentas)
       """
     )
-  bacentasMobilising: [Bacenta]
+  bacentasMobilising: [Bacenta!]!
     @cypher(
       statement: """
       MATCH (this)-[:HAS*2]->(bacentas:Active:Bacenta)
@@ -432,7 +432,7 @@ extend type Council {
       RETURN COUNT(bacentas)
       """
     )
-  bacentasOnTheWay: [Bacenta]
+  bacentasOnTheWay: [Bacenta!]!
     @cypher(
       statement: """
       MATCH (this)-[:HAS*2]->(bacentas:Active:Bacenta)
@@ -471,7 +471,7 @@ extend type Council {
       RETURN SUM(bussing.attendance)
       """
     )
-  bacentasHaveBeenCounted: [Bacenta]
+  bacentasHaveBeenCounted: [Bacenta!]!
     @cypher(
       statement: """
       MATCH (this)-[:HAS*2]->(bacentas:Active:Bacenta)
@@ -493,7 +493,7 @@ extend type Council {
       RETURN COUNT(bacentas)
       """
     )
-  bacentasNotCounted: [Bacenta]
+  bacentasNotCounted: [Bacenta!]!
     @cypher(
       statement: """
       MATCH (this)-[:HAS*2]->(bacentas:Active:Bacenta)
@@ -517,7 +517,7 @@ extend type Council {
       RETURN COUNT(bacentas)
       """
     )
-  bacentasHaveArrived: [Bacenta]
+  bacentasHaveArrived: [Bacenta!]!
     @cypher(
       statement: """
       MATCH (this)-[:HAS*2]->(bacentas:Active:Bacenta)
@@ -558,7 +558,7 @@ extend type Council {
 extend type Constituency {
   #Arrivals in the Constituency
   arrivalsAdmin: Member @relationship(type: "DOES_ARRIVALS_FOR", direction: IN)
-  bacentasNoActivity: [Bacenta]
+  bacentasNoActivity: [Bacenta!]!
     @cypher(
       statement: """
       MATCH (this)-[:HAS]->(bacentas:Active:Bacenta)
@@ -580,7 +580,7 @@ extend type Constituency {
       RETURN COUNT(bacentas)
       """
     )
-  bacentasMobilising: [Bacenta]
+  bacentasMobilising: [Bacenta!]!
     @cypher(
       statement: """
       MATCH (this)-[:HAS]->(bacentas:Active:Bacenta)
@@ -606,7 +606,7 @@ extend type Constituency {
       RETURN COUNT(bacentas)
       """
     )
-  bacentasOnTheWay: [Bacenta]
+  bacentasOnTheWay: [Bacenta!]!
     @cypher(
       statement: """
       MATCH (this)-[:HAS]->(bacentas:Active:Bacenta)
@@ -645,7 +645,7 @@ extend type Constituency {
       RETURN SUM(bussing.attendance)
       """
     )
-  bacentasHaveBeenCounted: [Bacenta]
+  bacentasHaveBeenCounted: [Bacenta!]!
     @cypher(
       statement: """
       MATCH (this)-[:HAS]->(bacentas:Active:Bacenta)
@@ -667,7 +667,7 @@ extend type Constituency {
       RETURN COUNT(bacentas)
       """
     )
-  bacentasNotCounted: [Bacenta]
+  bacentasNotCounted: [Bacenta!]!
     @cypher(
       statement: """
       MATCH (this)-[:HAS]->(bacentas:Active:Bacenta)
@@ -691,7 +691,7 @@ extend type Constituency {
       RETURN COUNT(bacentas)
       """
     )
-  bacentasHaveArrived: [Bacenta]
+  bacentasHaveArrived: [Bacenta!]!
     @cypher(
       statement: """
       MATCH (this)-[:HAS]->(bacentas:Active:Bacenta)
@@ -764,7 +764,7 @@ extend type Bacenta {
     @cypher(
       statement: "MATCH (arrivals:ArrivalsCodeOfTheDay) RETURN arrivals.code"
     )
-  bussing(limit: Int!): [BussingRecord]
+  bussing(limit: Int!): [BussingRecord!]!
     @cypher(
       statement: """
       MATCH (this)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)

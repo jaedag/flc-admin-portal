@@ -1,7 +1,7 @@
 extend type Query {
   ###Member Searches%####
 
-  federalMemberSearch(searchKey: String): [Member]
+  federalMemberSearch(searchKey: String): [Member!]!
     @auth(rules: [{ roles: ["adminGatheringService"] }])
     @cypher(
       statement: """
@@ -14,7 +14,7 @@ extend type Query {
       RETURN member LIMIT 5
       """
     )
-  streamMemberSearch(searchKey: String, streamId: ID!): [Member]
+  streamMemberSearch(searchKey: String, streamId: ID!): [Member!]!
     @auth(rules: [{ roles: ["adminStream"] }])
     @cypher(
       statement: """
@@ -28,7 +28,7 @@ extend type Query {
       RETURN DISTINCT(member) LIMIT 5
       """
     )
-  councilMemberSearch(searchKey: String, councilId: ID!): [Member]
+  councilMemberSearch(searchKey: String, councilId: ID!): [Member!]!
     @auth(rules: [{ roles: ["adminCouncil"] }])
     @cypher(
       statement: """
@@ -42,7 +42,7 @@ extend type Query {
       RETURN DISTINCT(member) LIMIT 5
       """
     )
-  constituencyMemberSearch(searchKey: String, constituencyId: ID!): [Member]
+  constituencyMemberSearch(searchKey: String, constituencyId: ID!): [Member!]!
     @auth(rules: [{ roles: ["adminConstituency"] }])
     @cypher(
       statement: """
@@ -57,7 +57,7 @@ extend type Query {
       RETURN member LIMIT 5
       """
     )
-  bacentaMemberSearch(searchKey: String, bacentaId: ID!): [Member]
+  bacentaMemberSearch(searchKey: String, bacentaId: ID!): [Member!]!
     @auth(rules: [{ roles: ["leaderBacenta"] }])
     @cypher(
       statement: """
@@ -71,7 +71,7 @@ extend type Query {
       RETURN member LIMIT 5
       """
     )
-  fellowshipMemberSearch(searchKey: String, fellowshipId: ID!): [Member]
+  fellowshipMemberSearch(searchKey: String, fellowshipId: ID!): [Member!]!
     @auth(rules: [{ roles: ["leaderFellowship"] }])
     @cypher(
       statement: """
@@ -88,7 +88,7 @@ extend type Query {
 
   ### Fellowship Search ###
 
-  federalFellowshipSearch(searchKey: String): [Fellowship]
+  federalFellowshipSearch(searchKey: String): [Fellowship!]!
     @auth(rules: [{ roles: ["adminGatheringService"] }])
     @cypher(
       statement: """
@@ -99,7 +99,7 @@ extend type Query {
       """
     )
 
-  streamFellowshipSearch(searchKey: String, streamId: ID!): [Fellowship]
+  streamFellowshipSearch(searchKey: String, streamId: ID!): [Fellowship!]!
     @auth(rules: [{ roles: ["adminStream"] }])
     @cypher(
       statement: """
@@ -111,7 +111,7 @@ extend type Query {
       """
     )
 
-  councilFellowshipSearch(searchKey: String, councilId: ID!): [Fellowship]
+  councilFellowshipSearch(searchKey: String, councilId: ID!): [Fellowship!]!
     @auth(rules: [{ roles: ["adminCouncil"] }])
     @cypher(
       statement: """
@@ -125,7 +125,7 @@ extend type Query {
   constituencyFellowshipSearch(
     searchKey: String
     constituencyId: ID!
-  ): [Fellowship]
+  ): [Fellowship!]!
     @auth(rules: [{ roles: ["adminConstituency"] }])
     @cypher(
       statement: """
@@ -136,7 +136,7 @@ extend type Query {
       RETURN DISTINCT fellowship LIMIT 5
       """
     )
-  bacentaFellowshipSearch(searchKey: String, bacentaId: ID!): [Fellowship]
+  bacentaFellowshipSearch(searchKey: String, bacentaId: ID!): [Fellowship!]!
     @auth(rules: [{ roles: ["leaderBacenta"] }])
     @cypher(
       statement: """
@@ -195,7 +195,7 @@ extend type Query {
   constituencyBacentaSearch(
     searchKey: String
     constituencyId: ID!
-  ): [Fellowship]
+  ): [Fellowship!]!
     @auth(rules: [{ roles: ["adminConstituency"] }])
     @cypher(
       statement: """
@@ -210,7 +210,7 @@ extend type Query {
 
   ### Constituency Search ###
 
-  federalConstituencySearch(searchKey: String): [Constituency]
+  federalConstituencySearch(searchKey: String): [Constituency!]!
     @auth(rules: [{ roles: ["adminGatheringService"] }])
     @cypher(
       statement: """
@@ -220,7 +220,7 @@ extend type Query {
       RETURN constituency LIMIT 5
       """
     )
-  streamConstituencySearch(searchKey: String, streamId: ID!): [Constituency]
+  streamConstituencySearch(searchKey: String, streamId: ID!): [Constituency!]!
     @auth(rules: [{ roles: ["adminStream"] }])
     @cypher(
       statement: """
@@ -231,7 +231,10 @@ extend type Query {
       RETURN constituency LIMIT 5
       """
     )
-  councilConstituencySearch(searchKey: String, councilId: ID!): [Constituency]
+  councilConstituencySearch(
+    searchKey: String
+    councilId: ID!
+  ): [Constituency!]!
     @auth(rules: [{ roles: ["adminCouncil"] }])
     @cypher(
       statement: """
@@ -245,7 +248,7 @@ extend type Query {
 
   ### Council Search ###
 
-  federalCouncilSearch(searchKey: String): [Council]
+  federalCouncilSearch(searchKey: String): [Council!]!
     @auth(rules: [{ roles: ["adminGatheringService"] }])
     @cypher(
       statement: """
@@ -255,7 +258,7 @@ extend type Query {
       RETURN council LIMIT 5
       """
     )
-  streamCouncilSearch(searchKey: String, streamId: ID!): [Council]
+  streamCouncilSearch(searchKey: String, streamId: ID!): [Council!]!
     @auth(rules: [{ roles: ["adminStream"] }])
     @cypher(
       statement: """
@@ -268,7 +271,7 @@ extend type Query {
     )
 
   ### Stream Search ###
-  federalStreamSearch(searchKey: String): [Stream]
+  federalStreamSearch(searchKey: String): [Stream!]!
     @auth(rules: [{ roles: ["adminGatheringService"] }])
     @cypher(
       statement: """

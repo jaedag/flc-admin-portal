@@ -874,11 +874,34 @@ extend type Mutation {
 
   ## GENERATE CODE OF THE DAY
   GenerateCodeOfTheDay: String!
-    @auth(rules: [{ roles: ["adminStream"] }])
+    @auth(
+      rules: [
+        {
+          roles: [
+            "adminStream"
+            "adminGatheringService"
+            "arrivalsAdminGatheringService"
+          ]
+        }
+      ]
+    )
     @cypher(
       statement: """
       MERGE (arr:ArrivalsCodeOfTheDay)
       SET arr.code = apoc.text.random(5, 'A-Z0-9')
+      RETURN arr.code
+      """
+    )
+  SetCodeOfTheDay(code: String!): String!
+    @auth(
+      rules: [
+        { roles: ["adminGatheringService", "arrivalsAdminGatheringService"] }
+      ]
+    )
+    @cypher(
+      statement: """
+      MERGE (arr:ArrivalsCodeOfTheDay)
+      SET arr.code = $code
       RETURN arr.code
       """
     )

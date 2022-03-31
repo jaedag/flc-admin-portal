@@ -301,3 +301,9 @@ export const SET_SWELL_DATE = gql`
     }
   }
 `
+
+export const SET_CODE_OF_THE_DAY = gql`
+  mutation SetCodeOfTheDay($code: String!) {
+    SetCodeOfTheDay(code: $code)
+  }
+`

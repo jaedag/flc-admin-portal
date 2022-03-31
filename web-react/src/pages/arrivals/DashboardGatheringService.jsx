@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router'
 import {
   MAKE_GATHERINGSERVICEARRIVALS_ADMIN,
   SET_SWELL_DATE,
+  SET_CODE_OF_THE_DAY,
 } from './arrivalsMutations'
 import { GATHERINGSERVICE_ARRIVALS_DASHBOARD } from './arrivalsQueries'
 import { alertMsg, throwErrorMsg } from 'global-utils'
@@ -37,6 +38,7 @@ const GatheringServiceDashboard = () => {
   )
 
   const [SetSwellDate] = useMutation(SET_SWELL_DATE)
+  const [SetCodeOfTheDay] = useMutation(SET_CODE_OF_THE_DAY)
   const [MakeGatheringServiceArrivalsAdmin] = useMutation(
     MAKE_GATHERINGSERVICEARRIVALS_ADMIN
   )
@@ -156,6 +158,15 @@ const GatheringServiceDashboard = () => {
                 Set Today as Swell
               </Button>
             )}
+
+            <Button
+              onClick={() => {
+                const promptBox = window.prompt('Enter the Code of The Day')
+                SetCodeOfTheDay({ variables: { code: promptBox } })
+              }}
+            >
+              Code of the Day
+            </Button>
           </RoleView>
           <DefaulterInfoCard defaulter={aggregates} />
 

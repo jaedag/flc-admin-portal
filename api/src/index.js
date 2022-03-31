@@ -3,6 +3,7 @@ import { ApolloServer } from 'apollo-server-express'
 import express from 'express'
 import neo4j from 'neo4j-driver'
 import { Neo4jGraphQL } from '@neo4j/graphql'
+import { Neo4jGraphQLAuthJWTPlugin } from '@neo4j/graphql-plugin-auth'
 import dotenv from 'dotenv'
 import { resolvers } from './resolvers/resolvers'
 import { serviceResolvers } from './resolvers/service-resolvers'
@@ -28,11 +29,11 @@ const neoSchema = new Neo4jGraphQL({
   typeDefs,
   resolvers: { ...resolvers, ...serviceResolvers, ...arrivalsResolvers },
   driver,
-  config: {
-    jwt: {
+  plugins: {
+    auth: new Neo4jGraphQLAuthJWTPlugin({
       secret: process.env.JWT_SECRET,
       rolesPath: 'https://flcadmin\\.netlify\\.app/roles',
-    },
+    }),
   },
 })
 
@@ -50,10 +51,12 @@ const neoSchema = new Neo4jGraphQL({
  */
 
 const startServer = async () => {
+  const schema = await neoSchema.getSchema()
+
   const server = new ApolloServer({
     context: ({ req }) => req,
-    schema: neoSchema.schema,
     introspection: true,
+    schema,
   })
 
   await server.start()

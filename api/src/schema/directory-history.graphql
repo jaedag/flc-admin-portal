@@ -1,5 +1,5 @@
 extend type Mutation {
-  ConnectChurchHistory(churchId: ID!): [ServiceLog]
+  ConnectChurchHistory(churchId: ID!): [ServiceLog!]!
     @cypher(
       statement: """
       MATCH (church {id: $churchId})
@@ -17,7 +17,7 @@ extend type Mutation {
       """
     )
 
-  ConnectFellowshipHistory(churchId: ID!): [ServiceLog]
+  ConnectFellowshipHistory(churchId: ID!): [ServiceLog!]!
     @cypher(
       statement: """
       MATCH (church:Fellowship {id: $churchId})
@@ -30,7 +30,7 @@ extend type Mutation {
       RETURN churchHistory
       """
     )
-  ConnectGatheringServiceHistory(churchId: ID!): [ServiceLog]
+  ConnectGatheringServiceHistory(churchId: ID!): [ServiceLog!]!
     @cypher(
       statement: """
       MATCH (church:GatheringService {id: $churchId})

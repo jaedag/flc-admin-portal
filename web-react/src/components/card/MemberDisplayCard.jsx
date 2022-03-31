@@ -21,6 +21,7 @@ const MemberDisplayCard = (props) => {
   const { theme } = useContext(MemberContext)
   const navigate = useNavigate()
   let icon, name, details
+  const noPicture = !member?.pictureUrl && !leader?.pictureUrl
   let picture = member?.pictureUrl || leader?.pictureUrl || USER_PLACEHOLDER
 
   switch (member.__typename) {
@@ -85,7 +86,7 @@ const MemberDisplayCard = (props) => {
     >
       <div className="d-flex align-items-center">
         <div className="flex-shrink-0">
-          {!picture ? (
+          {noPicture && member.__typename !== 'Member' ? (
             <img
               className={`${picture && 'rounded-circle'} img-search`}
               src={icon}

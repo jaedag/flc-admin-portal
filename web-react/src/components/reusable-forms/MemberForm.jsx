@@ -28,7 +28,7 @@ const MemberForm = ({ initialValues, onSubmit, title, loading, update }) => {
     if (!update) {
       return true
     }
-    if (update && isAuthorised(permitAdmin('Stream'), currentUser.role)) {
+    if (update && isAuthorised(permitAdmin('Stream'), currentUser.roles)) {
       return true
     }
 

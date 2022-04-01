@@ -106,7 +106,7 @@ CREATE (member:Member {whatsappNumber:$whatsappNumber})
       	member.phoneNumber = $phoneNumber,
       	member.pictureUrl = $pictureUrl
 
-      CREATE (log:HistoryLog)
+      CREATE (log:HistoryLog:RegistrationLog)
         SET
         log.id =  apoc.create.uuid(),
         log.timeStamp = datetime(),

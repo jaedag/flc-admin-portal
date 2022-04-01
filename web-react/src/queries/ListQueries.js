@@ -90,6 +90,7 @@ export const GET_CONSTITUENCY_BACENTAS = gql`
         id
       }
       leader {
+        id
         firstName
         lastName
         fullName

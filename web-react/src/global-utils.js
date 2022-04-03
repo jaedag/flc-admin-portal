@@ -133,7 +133,7 @@ export const plural = (church) => {
 export const parsePhoneNum = (phoneNumber) => {
   let rawNumber = phoneNumber
   if (rawNumber.includes('+2330')) {
-    rawNumber.replace('+2330', '+233')
+    rawNumber = rawNumber.replace('+2330', '+233')
   }
 
   return rawNumber

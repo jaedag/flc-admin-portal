@@ -131,14 +131,18 @@ export const plural = (church) => {
 }
 
 export const parsePhoneNum = (phoneNumber) => {
-  return phoneNumber
+  let rawNumber = phoneNumber
+  if (rawNumber.includes('+2330')) {
+    rawNumber.replace('+2330', '+233')
+  }
+
+  return rawNumber
     .replace(/\s/g, '')
     .replace('+', '')
     .replace('(', '')
     .replace(')', '')
     .replace('-', '')
 }
-
 export const repackDecimals = (decimal) => {
   if (decimal === 0) {
     return '0.0'

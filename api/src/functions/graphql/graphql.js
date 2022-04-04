@@ -3,6 +3,7 @@
 
 const { ApolloServer } = require('apollo-server-lambda')
 const { Neo4jGraphQL } = require('@neo4j/graphql')
+const { Neo4jGraphQLAuthJWTPlugin } = require('@neo4j/graphql-plugin-auth')
 const neo4j = require('neo4j-driver')
 
 // This module is copied during the build step
@@ -10,6 +11,7 @@ const neo4j = require('neo4j-driver')
 const { typeDefs } = require('./schema/graphql-schema')
 const { resolvers } = require('../../resolvers/resolvers.js')
 const { serviceResolvers } = require('../../resolvers/service-resolvers')
+const { arrivalsResolvers } = require('../../resolvers/arrivals-resolvers')
 
 const driver = neo4j.driver(
   process.env.NEO4J_URI || 'bolt://localhost:7687',
@@ -21,27 +23,31 @@ const driver = neo4j.driver(
 
 const neoSchema = new Neo4jGraphQL({
   typeDefs,
-  resolvers: { ...resolvers, ...serviceResolvers },
+  resolvers: { ...resolvers, ...serviceResolvers, ...arrivalsResolvers },
   driver,
-  config: {
-    jwt: {
-      secret: process.env.JWT_SECRET.replace(/\\n/gm, '\n'),
+  plugins: {
+    auth: new Neo4jGraphQLAuthJWTPlugin({
+      secret: process.env.JWT_SECRET,
       rolesPath: 'https://flcadmin\\.netlify\\.app/roles',
-    },
+    }),
   },
 })
 
-const server = new ApolloServer({
-  schema: neoSchema.schema,
-  context: ({ event }) => {
-    return { req: event }
-  },
-  introspection: true,
-})
+const startServer = async () => {
+  const schema = await neoSchema.getSchema()
+
+  const server = new ApolloServer({
+    context: ({ req }) => req,
+    introspection: true,
+    schema,
+  })
+
+  return server
+}
 
 // exports.handler = server.createHandler()
 
-const apolloHandler = server.createHandler()
+const apolloHandler = startServer().createHandler()
 
 export const handler = (event, context, ...args) => {
   return apolloHandler(

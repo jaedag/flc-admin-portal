@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@neo4j/graphql": "^3.0.3",
+    "@neo4j/graphql-plugin-auth": "^1.0.0",
     "apollo-server-lambda": "^3.5.0",
     "form-data": "^4.0.0",
     "graphql": "^16.3.0",

@@ -44,10 +44,9 @@ const startServer = async () => {
 
   return server
 }
+const server = startServer()
 
-// exports.handler = server.createHandler()
-
-const apolloHandler = startServer().createHandler()
+const apolloHandler = server.createHandler()
 
 export const handler = (event, context, ...args) => {
   return apolloHandler(

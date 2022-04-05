@@ -43,5 +43,8 @@
     "url": "git://github.com/jaedag/fl-admin-portal.git"
   },
   "license": "Apache-2.0",
-  "version": "1.0.3"
+  "version": "1.0.3",
+  "dependencies": {
+    "neo4j-driver": "^4.4.5"
+  }
 }

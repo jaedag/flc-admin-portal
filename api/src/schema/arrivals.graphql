@@ -1162,3 +1162,91 @@ extend type Mutation {
   SetSwellDate(date: String!): TimeGraph
   SendBussingSupport(bussingRecordId: ID!, stream_name: String!): BussingRecord
 }
+
+#SETTING AND ENDING TIME THINGS
+extend type Stream {
+  mobilisationStartTime: DateTime
+    @auth(
+      rules: [
+        {
+          roles: [
+            "adminStream"
+            "arrivalsAdminStream"
+            "adminGatheringService"
+            "arrivalsAdminGatheringService"
+          ]
+        }
+      ]
+    )
+  mobilisationEndTime: DateTime
+    @auth(
+      rules: [
+        {
+          roles: [
+            "adminStream"
+            "arrivalsAdminStream"
+            "adminGatheringService"
+            "arrivalsAdminGatheringService"
+          ]
+        }
+      ]
+    )
+  arrivalStartTime: DateTime
+    @auth(
+      rules: [
+        {
+          roles: [
+            "adminStream"
+            "arrivalsAdminStream"
+            "adminGatheringService"
+            "arrivalsAdminGatheringService"
+          ]
+        }
+      ]
+    )
+  arrivalEndTime: DateTime
+    @auth(
+      rules: [
+        {
+          roles: [
+            "adminStream"
+            "arrivalsAdminStream"
+            "adminGatheringService"
+            "arrivalsAdminGatheringService"
+          ]
+        }
+      ]
+    )
+}
+
+extend type Mutation {
+  SetStreamArrivalTimes(
+    id: ID!
+    mobilisationStartTime: String!
+    mobilisationEndTime: String!
+    arrivalStartTime: String!
+    arrivalEndTime: String!
+  ): Stream!
+    @cypher(
+      statement: """
+      MATCH (stream:Stream {id: $id})
+      SET stream.mobilisationStartTime = $mobilisationStartTime,
+        stream.mobilisationEndTime = $mobilisationEndTime,
+        stream.arrivalStartTime = $arrivalStartTime,
+        stream.arrivalEndTime = $arrivalEndTime
+      RETURN stream
+      """
+    )
+    @auth(
+      rules: [
+        {
+          roles: [
+            "adminStream"
+            "arrivalsAdminStream"
+            "adminGatheringService"
+            "arrivalsAdminGatheringService"
+          ]
+        }
+      ]
+    )
+}

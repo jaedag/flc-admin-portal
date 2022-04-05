@@ -166,16 +166,16 @@ export const makeSelectOptions = (initialArray) => {
 }
 
 // debouncing function
-export function debounce(func, wait) {
-  let timerId
-  return () => {
-    clearTimeout(timerId)
-    // Clears timer if code has not yet executed
+export const debounce = (callback, delay = 500) => {
+  let timeout
 
-    timerId = setTimeout(() => {
-      timerId = null // Nullifies timer ID Not sure why?
-      func.apply(this, arguments) // pass in the arguments to the function and the scope
-    }, wait)
+  return (...args) => {
+    clearTimeout(timeout)
+    // Clears timer if code haskk not yet executed
+
+    timeout = setTimeout(() => {
+      callback(...args) // pass in the arguments to the function and the scope
+    }, delay)
   }
 }
 

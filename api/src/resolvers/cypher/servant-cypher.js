@@ -175,8 +175,8 @@ export const connectChurchHistory = `
       MATCH (downRelatedChurch)-[r1:HAS_HISTORY]->(downHistory:ServiceLog) WHERE r1.current=true
       MATCH (upRelatedChurch)-[r2:HAS_HISTORY]->(upHistory:ServiceLog) WHERE r2.current=true
 
-      MERGE (upHistory)-[:HAS]->(churchHistory)
-      MERGE (churchHistory)-[:HAS]->(downHistory)
+      MERGE (upHistory)-[:HAS {direct: false}]->(churchHistory)
+      MERGE (churchHistory)-[:HAS {direct: false}]->(downHistory)
 
       RETURN churchHistory
 `
@@ -187,7 +187,7 @@ export const connectFellowshipHistory = `
       MATCH (upRelatedChurch)-[:HAS]->(church)
       MATCH (upRelatedChurch)-[r2:HAS_HISTORY]->(upHistory:ServiceLog) WHERE r2.current=true
 
-      MERGE (upHistory)-[:HAS]->(churchHistory)
+      MERGE (upHistory)-[:HAS {direct: false}]->(churchHistory)
 
       RETURN churchHistory 
 `
@@ -198,7 +198,7 @@ MATCH (church)-[r:HAS_HISTORY]-(churchHistory:ServiceLog) WHERE r.current=true
 MATCH (downRelatedChurch)-[:HAS]->(church)
 MATCH (downRelatedChurch)-[r2:HAS_HISTORY]->(downHistory:ServiceLog) WHERE r2.current=true
 
-MERGE (churchHistory)-[:HAS]->(downHistory)
+MERGE (churchHistory)-[:HAS {direct: false}]->(downHistory)
 
 RETURN churchHistory
 `

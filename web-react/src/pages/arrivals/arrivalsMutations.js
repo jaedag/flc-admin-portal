@@ -307,3 +307,28 @@ export const SET_CODE_OF_THE_DAY = gql`
     SetCodeOfTheDay(code: $code)
   }
 `
+
+export const SET_STREAM_ARRIVAL_TIMES = gql`
+  mutation SetStreamArrivalTimes(
+    $id: ID!
+    $mobilisationStartTime: String!
+    $mobilisationEndTime: String!
+    $arrivalStartTime: String!
+    $arrivalEndTime: String!
+  ) {
+    SetStreamArrivalTimes(
+      id: $id
+      mobilisationStartTime: $mobilisationStartTime
+      mobilisationEndTime: $mobilisationEndTime
+      arrivalStartTime: $arrivalStartTime
+      arrivalEndTime: $arrivalEndTime
+    ) {
+      id
+      name
+      mobilisationStartTime
+      mobilisationEndTime
+      arrivalStartTime
+      arrivalEndTime
+    }
+  }
+`

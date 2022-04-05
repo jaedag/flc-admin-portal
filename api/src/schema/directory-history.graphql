@@ -1,4 +1,24 @@
 extend type Mutation {
+  LogStreamHistory(ids: [ID], historyRecord: String!): HistoryLog
+    @cypher(
+      statement: """
+      CREATE (log:HistoryLog)
+        SET log.id = apoc.create.uuid(),
+         log.timeStamp = datetime(),
+         log.historyRecord = $historyRecord
+
+      WITH  log
+      MATCH (author:Member {auth_id: $auth.jwt.sub})
+      MERGE (date:TimeGraph {date: date()})
+      MERGE (log)-[:LOGGED_BY]->(author)
+      MERGE (log)-[:RECORDED_ON]->(date)
+
+      UNWIND $ids AS nodeId
+      MATCH (node {id: $nodeId}) WHERE node:Member OR node:Stream
+      MERGE (node)-[:HAS_HISTORY]->(log)
+      """
+    )
+
   ConnectChurchHistory(churchId: ID!): [ServiceLog!]!
     @cypher(
       statement: """
@@ -10,8 +30,8 @@ extend type Mutation {
       MATCH (downRelatedChurch)-[r1:HAS_HISTORY]->(downHistory:ServiceLog) WHERE r1.current=true
       MATCH (upRelatedChurch)-[r2:HAS_HISTORY]->(upHistory:ServiceLog) WHERE r2.current=true
 
-      MERGE (upHistory)-[:HAS]->(churchHistory)
-      MERGE (churchHistory)-[:HAS]->(downHistory)
+      MERGE (upHistory)-[:HAS {direct: true}]->(churchHistory)
+      MERGE (churchHistory)-[:HAS {direct: true}]->(downHistory)
 
       RETURN churchHistory
       """
@@ -25,7 +45,7 @@ extend type Mutation {
       MATCH (upRelatedChurch)-[:HAS]->(church)
       MATCH (upRelatedChurch)-[r2:HAS_HISTORY]->(upHistory:ServiceLog) WHERE r2.current=true
 
-      MERGE (upHistory)-[:HAS]->(churchHistory)
+      MERGE (upHistory)-[:HAS {direct: false}]->(churchHistory)
 
       RETURN churchHistory
       """
@@ -282,73 +302,72 @@ extend type Mutation {
       """
     )
 
-  LogStreamHistory(
-    streamId: ID!
-    historyRecord: String!
-    newLeaderId: ID
-    oldLeaderId: ID
-    newGatheringServiceId: ID
-    oldGatheringServiceId: ID
-  ): Stream
-    @cypher(
-      statement: """
-      MATCH  (stream:Stream {id: $streamId})
-      MATCH (admin:Member {auth_id: $auth.jwt.sub})
-      CREATE (log:HistoryLog {id: apoc.create.uuid()})
-        SET log.historyRecord = $historyRecord,
-          log.timeStamp = datetime()
-      MERGE (date:TimeGraph {date: date()})
-      MERGE (stream)-[r:HAS_HISTORY]->(log)
-      MERGE (log)-[:RECORDED_ON]->(date)
-      MERGE (log)-[:LOGGED_BY]->(admin)
+  # LogStreamHistory(
+  #   streamId: ID!
+  #   historyRecord: String!
+  #   newLeaderId: ID
+  #   oldLeaderId: ID
+  #   newGatheringServiceId: ID
+  #   oldGatheringServiceId: ID
+  # ): Stream
+  #   @cypher(
+  #     statement: """
+  #     MATCH  (stream:Stream {id: $streamId})
+  #     MATCH (admin:Member {auth_id: $auth.jwt.sub})
+  #     CREATE (log:HistoryLog {id: apoc.create.uuid()})
+  #       SET log.historyRecord = $historyRecord,
+  #         log.timeStamp = datetime()
+  #     MERGE (date:TimeGraph {date: date()})
+  #     MERGE (stream)-[r:HAS_HISTORY]->(log)
+  #     MERGE (log)-[:RECORDED_ON]->(date)
+  #     MERGE (log)-[:LOGGED_BY]->(admin)
 
-      WITH log,stream
-      CALL{
-        WITH log
-        WITH log WHERE $newLeaderId IS NOT NULL
-      MATCH (newLeader:Member {id: $newLeaderId})
-        SET log :ServiceLog
-        WITH log, newLeader
-      OPTIONAl MATCH ()-[r0:HAS_HISTORY]->(log)
-        SET r0.current = false
-        WITH log,newLeader
-      CREATE (newLeader)-[r:HAS_HISTORY]->(log)
-         SET r.current = true
-         WITH log
-      RETURN COUNT(log)
-      }
+  #     WITH log,stream
+  #     CALL{
+  #       WITH log
+  #       WITH log WHERE $newLeaderId IS NOT NULL
+  #     MATCH (newLeader:Member {id: $newLeaderId})
+  #       SET log :ServiceLog
+  #       WITH log, newLeader
+  #     OPTIONAl MATCH ()-[r0:HAS_HISTORY]->(log)
+  #       SET r0.current = false
+  #       WITH log,newLeader
+  #     CREATE (newLeader)-[r:HAS_HISTORY]->(log)
+  #        SET r.current = true
+  #        WITH log
+  #     RETURN COUNT(log)
+  #     }
 
-      WITH log,stream
-      CALL {
-        WITH log
-        WITH log WHERE $oldLeaderId IS NOT NULL
-        MATCH (oldLeader:Member {id: $oldLeaderId})
-        CREATE (oldLeader)-[:HAS_HISTORY]->(log)
-        RETURN COUNT(log)
-      }
+  #     WITH log,stream
+  #     CALL {
+  #       WITH log
+  #       WITH log WHERE $oldLeaderId IS NOT NULL
+  #       MATCH (oldLeader:Member {id: $oldLeaderId})
+  #       CREATE (oldLeader)-[:HAS_HISTORY]->(log)
+  #       RETURN COUNT(log)
+  #     }
 
+  #     WITH log,stream
+  #     CALL {
+  #       WITH log
+  #       WITH log WHERE $oldGatheringServiceId IS NOT NULL
+  #       MATCH (stream:Stream {id: $oldGatheringServiceId})
+  #       MERGE (stream)-[:HAS_HISTORY]->(log)
+  #       RETURN COUNT(log)
+  #     }
 
-      WITH log,stream
-      CALL {
-        WITH log
-        WITH log WHERE $oldGatheringServiceId IS NOT NULL
-        MATCH (stream:Stream {id: $oldGatheringServiceId})
-        MERGE (stream)-[:HAS_HISTORY]->(log)
-        RETURN COUNT(log)
-      }
+  #     WITH log,stream
+  #     CALL {
+  #       WITH log
+  #       WITH log WHERE $newGatheringServiceId IS NOT NULL
+  #       MATCH (stream:Stream {id: $newGatheringServiceId})
+  #       MERGE (stream)-[:HAS_HISTORY]->(log)
+  #       RETURN COUNT(log)
+  #     }
 
-      WITH log,stream
-      CALL {
-        WITH log
-        WITH log WHERE $newGatheringServiceId IS NOT NULL
-        MATCH (stream:Stream {id: $newGatheringServiceId})
-        MERGE (stream)-[:HAS_HISTORY]->(log)
-        RETURN COUNT(log)
-      }
-
-      RETURN stream
-      """
-    )
+  #     RETURN stream
+  #     """
+  #   )
 
   LogSontaHistory(
     sontaId: ID!

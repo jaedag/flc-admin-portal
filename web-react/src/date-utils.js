@@ -11,6 +11,12 @@ export const setTime = (timeArray) => {
   return now
 }
 
+export const parseTimeToDate = (timeString) => {
+  const array = timeString.split(':')
+  const datetime = setTime([...array, 0])
+  return datetime.toISOString()
+}
+
 export const getMondayThisWeek = (date) => {
   const firstDate = new Date(date)
   const numberOfDaysBefore = date.getDay()
@@ -20,11 +26,11 @@ export const getMondayThisWeek = (date) => {
   return firstDate
 }
 
-export const parseNeoTime = (time) => {
-  if (!time) {
+export const parseNeoTime = (timestamp) => {
+  if (!timestamp) {
     return
   }
-  const data = new Date(time)
+  const data = new Date(timestamp)
   let hrs = data.getHours()
   let mins = data.getMinutes()
   if (hrs <= 9) hrs = `0${hrs}`

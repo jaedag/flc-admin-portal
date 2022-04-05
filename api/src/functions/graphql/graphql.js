@@ -42,10 +42,12 @@ const startServer = async () => {
     schema,
   })
 
-  return server
+  const handler = await server.createHandler()
+
+  return handler
 }
-const server = startServer()
-const apolloHandler = server.createHandler()
+const serverHandler = startServer()
+const apolloHandler = serverHandler
 
 export const handler = (event, context, ...args) => {
   return apolloHandler(

@@ -35,7 +35,7 @@ const SetArrivalsTime = () => {
 
   const onSubmit = async (values, onSubmitProps) => {
     onSubmitProps.setSubmitting(true)
-    console.log(parseTimeToDate(values.mobilisationStartTime))
+
     await SetStreamArrivalTimes({
       variables: {
         id: values.id,

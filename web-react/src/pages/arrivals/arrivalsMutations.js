@@ -207,7 +207,7 @@ export const RECORD_BUSSING_FROM_BACENTA = gql`
         bacenta {
           id
           stream_name
-          bussing(limit: 4) {
+          bussing(limit: 1) {
             id
             week
           }
@@ -231,26 +231,19 @@ export const CONFIRM_BUSSING_BY_ADMIN = gql`
       comments: $comments
     ) {
       id
-      serviceLog {
-        bacenta {
-          id
-          bussing(limit: 4) {
-            id
-            attendance
-            bussingTopUp
-            momoName
-            momoNumber
-            week
-            confirmed_by {
-              id
-              firstName
-              lastName
-              fullName
-            }
-            comments
-          }
-        }
+      attendance
+      bussingTopUp
+      momoName
+      momoNumber
+      week
+      confirmed_by {
+        id
+        firstName
+        lastName
+        fullName
       }
+      arrivalTime
+      comments
     }
   }
 `
@@ -261,6 +254,9 @@ export const RECORD_ARRIVAL_TIME = gql`
       id
       bussingTopUp
       arrivalTime
+      confirmed_by {
+        id
+      }
       arrivalTime_Logged_By {
         id
         firstName

@@ -113,30 +113,33 @@ const ConfirmBacentaArrival = () => {
                     //if there is no value for the bussing top up
                     return
                   }
+
+                  if (arrivalRes.data.RecordArrivalTime.confirmed_by.id) {
+                    //If Attendance has been confrimed then send bussing support
+                    try {
+                      const supportRes = await SendBussingSupport({
+                        variables: {
+                          bussingRecordId: bussingRecordId,
+                          stream_name: church?.stream_name,
+                        },
+                      })
+                      togglePopup()
+                      alertMsg(
+                        'Money Successfully Sent to ' +
+                          supportRes.data.SendBussingSupport.momoNumber
+                      )
+                      setSubmitting(false)
+                    } catch (error) {
+                      setSubmitting(false)
+                      throwErrorMsg(error)
+                    }
+                  }
                 } catch (error) {
                   setSubmitting(false)
                   throwErrorMsg(
                     'There was an error recording the arrival time of this bacenta',
                     error
                   )
-                }
-
-                try {
-                  const supportRes = await SendBussingSupport({
-                    variables: {
-                      bussingRecordId: bussingRecordId,
-                      stream_name: church?.stream_name,
-                    },
-                  })
-                  togglePopup()
-                  alertMsg(
-                    'Money Successfully Sent to ' +
-                      supportRes.data.SendBussingSupport.momoNumber
-                  )
-                  setSubmitting(false)
-                } catch (error) {
-                  setSubmitting(false)
-                  throwErrorMsg(error)
                 }
               }}
             >

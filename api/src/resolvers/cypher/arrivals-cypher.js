@@ -24,8 +24,9 @@ RETURN record.id AS bussingRecordId,  labels(date) AS dateLabels
 
 export const checkTransactionId = `
 MATCH (record:BussingRecord {id: $bussingRecordId})
+MATCH (record)-[:CONFIRMED_BY]->(admin:Member)
 
-RETURN record.transactionId AS transactionId
+RETURN record
 `
 
 export const setSwellDate = `

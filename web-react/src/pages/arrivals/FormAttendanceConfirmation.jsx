@@ -11,13 +11,17 @@ import * as Yup from 'yup'
 import { useContext } from 'react'
 import { Card, Container } from 'react-bootstrap'
 import { DISPLAY_BUSSING_RECORDS } from './arrivalsQueries'
-import { CONFIRM_BUSSING_BY_ADMIN } from './arrivalsMutations'
+import {
+  CONFIRM_BUSSING_BY_ADMIN,
+  SEND_BUSSING_SUPPORT,
+} from './arrivalsMutations'
 import { useNavigate } from 'react-router'
 import FormikControl from 'components/formik-components/FormikControl'
 import SubmitButton from 'components/formik-components/SubmitButton'
 import { useState } from 'react'
 import { useEffect } from 'react'
 import CloudinaryImage from 'components/CloudinaryImage'
+import { alertMsg, throwErrorMsg } from 'global-utils'
 
 const FormAttendanceConfirmation = () => {
   const navigate = useNavigate()
@@ -28,6 +32,7 @@ const FormAttendanceConfirmation = () => {
     variables: { bussingRecordId: bussingRecordId, bacentaId: bacentaId },
   })
   const [ConfirmBussingByAdmin] = useMutation(CONFIRM_BUSSING_BY_ADMIN)
+  const [SendBussingSupport] = useMutation(SEND_BUSSING_SUPPORT)
 
   const bussing = data?.bussingRecords[0]
   const bacenta = data?.bacentas[0]
@@ -54,20 +59,39 @@ const FormAttendanceConfirmation = () => {
       .required('This is a required field'),
   })
 
-  const onSubmit = (values, onSubmitProps) => {
-    onSubmitProps.setSubmitting(true)
-    ConfirmBussingByAdmin({
+  const onSubmit = async (values, onSubmitProps) => {
+    const { setSubmitting } = onSubmitProps
+    setSubmitting(true)
+    const res = await ConfirmBussingByAdmin({
       variables: {
         bussingRecordId: bussingRecordId,
         attendance: parseInt(values.attendance),
         bussingTopUp: parseFloat(values.bussingTopUp),
         comments: values.comments,
       },
-    }).then(() => {
-      onSubmitProps.setSubmitting(false)
-      onSubmitProps.resetForm()
-      navigate(`/bacenta/bussing-details`)
     })
+
+    if (res.data.ConfirmBussingByAdmin.arrivalTime) {
+      //If arrival time has been logged then send bussing support
+      try {
+        const supportRes = await SendBussingSupport({
+          variables: {
+            bussingRecordId: bussingRecordId,
+            stream_name: bacenta?.stream_name,
+          },
+        })
+
+        alertMsg(
+          'Money Successfully Sent to ' +
+            supportRes.data.SendBussingSupport.momoNumber
+        )
+        setSubmitting(false)
+        navigate(`/bacenta/bussing-details`)
+      } catch (error) {
+        setSubmitting(false)
+        throwErrorMsg(error)
+      }
+    }
   }
 
   return (

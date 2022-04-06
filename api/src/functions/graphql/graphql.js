@@ -33,21 +33,17 @@ const neoSchema = new Neo4jGraphQL({
   },
 })
 
-const startServer = async () => {
+export const handler = async (event, context, ...args) => {
   const schema = await neoSchema.getSchema()
 
   const server = new ApolloServer({
-    context: ({ event }) => ({ req: event }),
+    context: ({ req }) => ({ event: req }),
     introspection: true,
     schema,
   })
 
-  return server
-}
-const server = startServer()
-const apolloHandler = server.createHandler()
+  const apolloHandler = server.createHandler()
 
-export const handler = (event, context, ...args) => {
   return apolloHandler(
     {
       ...event,

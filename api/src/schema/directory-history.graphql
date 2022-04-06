@@ -1,5 +1,5 @@
 extend type Mutation {
-  LogStreamHistory(ids: [ID], historyRecord: String!): HistoryLog
+  LogStreamHistory(ids: [ID], historyRecord: String!): Stream
     @cypher(
       statement: """
       CREATE (log:HistoryLog)
@@ -13,9 +13,39 @@ extend type Mutation {
       MERGE (log)-[:LOGGED_BY]->(author)
       MERGE (log)-[:RECORDED_ON]->(date)
 
+      WITH log
       UNWIND $ids AS nodeId
       MATCH (node {id: $nodeId}) WHERE node:Member OR node:Stream
       MERGE (node)-[:HAS_HISTORY]->(log)
+
+      WITH node WHERE node:Stream
+      RETURN node
+      """
+    )
+
+  LogMemberHistory(ids: [ID], historyRecord: String!): Member
+    @cypher(
+      statement: """
+       CREATE (log:HistoryLog)
+         SET log.id = apoc.create.uuid(),
+          log.timeStamp = datetime(),
+          log.historyRecord = $historyRecord
+
+       WITH log
+       MATCH (author:Member {auth_id: $auth.jwt.sub})
+       MERGE (date:TimeGraph {date: date()})
+       MERGE (log)-[:LOGGED_BY]->(author)
+       MERGE (log)-[:RECORDED_ON]->(date)
+
+
+      WITH log
+       UNWIND $ids AS nodeId
+       MATCH (node {id: nodeId}) WHERE node:Member OR node:Fellowship
+       MERGE (node)-[:HAS_HISTORY]->(log)
+
+       WITH node WHERE node:Member
+
+      RETURN node
       """
     )
 

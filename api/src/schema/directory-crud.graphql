@@ -489,6 +489,18 @@ extend type Mutation {
 ### UPDATE OPERATIONS ###
 extend type Mutation {
   UpdateMemberEmail(id: ID!, email: String!): Member
+  UpdateMemberFellowship(memberId: ID!, fellowshipId: ID!): Member
+    @cypher(
+      statement: """
+      MATCH (member:Member {id: $memberId})
+      MATCH (fellowship:Fellowship {id: $fellowshipId})
+
+      OPTIONAL MATCH (member)-[previous:BELONGS_TO]-> (:Fellowship)
+      DELETE previous
+      MERGE (member)-[:BELONGS_TO]-> (fellowship)
+      RETURN member
+      """
+    )
 
   UpdateMemberDetails(
     id: ID!
@@ -582,16 +594,8 @@ extend type Mutation {
       	MERGE (member)-[:HAS_OCCUPATION]-> (occupation)
          	RETURN count(member)
          	}
-      WITH member
-      CALL {
-         	WITH member
-         	WITH member  WHERE $fellowship IS NOT NULL
-         	MATCH (fellowship:Fellowship {id: $fellowship})
-      	OPTIONAL MATCH (member)-[r0:BELONGS_TO]-> (:Fellowship)
-      	DELETE r0
-      	MERGE (member)-[:BELONGS_TO]-> (fellowship)
-        RETURN count(member)
-         	}
+
+
       WITH member
       CALL {
          	WITH member

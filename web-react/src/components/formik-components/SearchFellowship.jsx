@@ -167,6 +167,7 @@ const SearchFellowship = (props) => {
           setSearchString(suggestion.name)
 
           props.setFieldValue(`${props.name}`, suggestion.id)
+          props.setFieldValue('fellowshipName', suggestion.name)
         }}
         getSuggestionValue={(suggestion) => suggestion.name}
         highlightFirstSuggestion={true}

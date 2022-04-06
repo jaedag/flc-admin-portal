@@ -37,7 +37,7 @@ export const handler = async (event, context, ...args) => {
   const schema = await neoSchema.getSchema()
 
   const server = new ApolloServer({
-    context: ({ req }) => ({ event: req }),
+    context: ({ event }) => ({ req: event }),
     introspection: true,
     schema,
   })

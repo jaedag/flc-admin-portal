@@ -255,6 +255,14 @@ export const BACENTA_ARRIVALS = gql`
       id
       name
       stream_name
+      stream {
+        id
+        name
+        mobilisationStartTime
+        mobilisationEndTime
+        arrivalStartTime
+        arrivalEndTime
+      }
       arrivalsCodeOfTheDay
       bussing(limit: 1) {
         id

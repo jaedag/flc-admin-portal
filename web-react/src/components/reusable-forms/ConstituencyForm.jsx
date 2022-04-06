@@ -78,7 +78,7 @@ const ConstituencyForm = ({
                   {/* <!-- Basic Info Div --> */}
 
                   <Col className="mb-2">
-                    <RoleView roles={permitAdmin('GatheringService')}>
+                    <RoleView roles={permitAdmin('Stream')}>
                       <Row className="form-row">
                         <Col>
                           <FormikControl

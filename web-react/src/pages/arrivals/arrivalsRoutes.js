@@ -22,7 +22,8 @@ import GatheringSerivceDashboard from './DashboardGatheringService'
 import BacentasHaveArrived from './StateBacentasArrived'
 import ChurchBySubChurch from './ChurchBySubChurch'
 import StateBacentasToCount from './StateBacentasToCount'
-import SetArrivalsTime from './SetArrivalsTime'
+import SetArrivalsTime from './arrivalTimes/SetArrivalsTime'
+import ArrivalTimes from './arrivalTimes/ArrivalTimes'
 
 export const arrivals = [
   {
@@ -185,7 +186,13 @@ export const arrivals = [
     placeholder: false,
   },
   {
-    path: 'stream/set-arrivals-time',
+    path: '/stream/arrival-times',
+    roles: permitAdminArrivals('Stream'),
+    element: ArrivalTimes,
+    placeholder: false,
+  },
+  {
+    path: '/stream/set-arrivals-time',
     roles: permitAdminArrivals('Stream'),
     element: SetArrivalsTime,
     placeholder: false,

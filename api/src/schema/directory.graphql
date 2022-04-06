@@ -696,6 +696,8 @@ type Bacenta implements Church {
       RETURN council
       """
     )
+  stream: Stream
+    @cypher(statement: "MATCH (this)<-[:HAS*3]-(stream:Stream) RETURN stream")
 }
 
 # Shared Units: Fellowship, Fellowship, Sonta

@@ -1,15 +1,5 @@
-import { parseDate } from 'date-utils'
-import { setTime } from 'date-utils'
-
-const CAMPUS_ARRIVALS_DEADLINE = [19, 45, 0]
-const TOWN_ARRIVALS_DEADLINE = [13, 45, 0]
-const GENERIC_ARRIVALS_DEADLINE = [20, 0, 0]
-const CAMPUS_MOBILISATION_DEADLINE = [5, 0, 0]
-const TOWN_MOBILISATION_DEADLINE = [10, 0, 0]
-const GENERIC_MOBILISATION_DEADLINE = [19, 0, 0]
-const CAMPUS_MOBILISATION_START_TIME = [4, 0, 0]
-const TOWN_MOBILISATION_START_TIME = [9, 0, 0]
-const GENERIC_MOBILISATION_START_TIME = [14, 0, 0]
+import { isToday } from 'date-utils'
+import { parseNeoTime } from 'date-utils'
 
 export const MOBILE_NETWORK_OPTIONS = [
   { key: '', value: '' },
@@ -25,28 +15,18 @@ export const beforeArrivalDeadline = (bussing, church) => {
 
   const today = new Date()
 
-  let arrivalsDeadline = GENERIC_ARRIVALS_DEADLINE
-
-  if (today.getDay() === 0 || today.getDay() === 6) {
-    //If Today is Saturday or Sunday
-    switch (church?.stream_name) {
-      case 'campus':
-        arrivalsDeadline = CAMPUS_ARRIVALS_DEADLINE
-        break
-      case 'town':
-        arrivalsDeadline = TOWN_ARRIVALS_DEADLINE
-        break
-      case 'anagkazo':
-        arrivalsDeadline
-        break
-      default:
-        break
-    }
+  let arrivalEndTime, arrivalStartTime
+  if (church?.__typename === 'Bacenta') {
+    arrivalStartTime = new Date(church?.stream.arrivalStartTime)
+    arrivalEndTime = new Date(church?.stream.arrivalEndTime)
   }
 
-  arrivalsDeadline = setTime(arrivalsDeadline)
+  arrivalEndTime = parseNeoTime(arrivalEndTime)
 
-  if (parseDate(bussing?.created_at) === 'Today' && today < arrivalsDeadline) {
+  if (
+    isToday(bussing?.created_at) &&
+    arrivalStartTime < today < arrivalEndTime
+  ) {
     //If the record was created today
     //And if the time is less than the arrivals cutoff time
     return true
@@ -60,37 +40,22 @@ export const beforeMobilisationDeadline = (bussing, church) => {
     return
   }
 
-  if (!bussing) {
+  const today = new Date()
+
+  let mobilisationEndTime, mobilisationStartTime
+
+  if (church?.__typename === 'Bacenta') {
+    mobilisationStartTime = new Date(church?.stream.mobilisationStartTime)
+    mobilisationEndTime = new Date(church?.stream.mobilisationStartTime)
+  }
+
+  if (!bussing && mobilisationStartTime < today < mobilisationEndTime) {
     return true
   }
 
-  const today = new Date()
-
-  let mobilisationDeadline = GENERIC_MOBILISATION_DEADLINE,
-    mobilisationStartTime = GENERIC_MOBILISATION_START_TIME
-
-  switch (church?.stream_name) {
-    case 'campus':
-      mobilisationDeadline = CAMPUS_MOBILISATION_DEADLINE
-      mobilisationStartTime = CAMPUS_MOBILISATION_START_TIME
-      break
-    case 'town':
-      mobilisationDeadline = TOWN_MOBILISATION_DEADLINE
-      mobilisationStartTime = TOWN_MOBILISATION_START_TIME
-      break
-    case 'anagkazo':
-      mobilisationDeadline
-      break
-    default:
-      break
-  }
-
-  mobilisationDeadline = setTime(mobilisationDeadline)
-  mobilisationStartTime = setTime(mobilisationStartTime)
-
   if (
-    parseDate(bussing?.created_at) === 'Today' &&
-    mobilisationStartTime < today < mobilisationDeadline
+    isToday(bussing?.created_at) &&
+    mobilisationStartTime < today < mobilisationEndTime
   ) {
     if (!bussing?.mobilisationPicture) {
       //If the record was created today

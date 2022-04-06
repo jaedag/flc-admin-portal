@@ -130,9 +130,9 @@ const StreamDashboard = () => {
             <Button
               variant="outline-secondary"
               size="lg"
-              onClick={() => navigate('/stream/set-arrivals-time')}
+              onClick={() => navigate('/stream/arrival-times')}
             >
-              Set Arrivals Times
+              Arrivals Times
             </Button>
           </RoleView>
 

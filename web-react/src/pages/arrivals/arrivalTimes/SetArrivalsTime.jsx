@@ -4,23 +4,31 @@ import { MemberContext } from 'contexts/MemberContext'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 import React, { useContext } from 'react'
-import { useMutation } from '@apollo/client'
-import { SET_STREAM_ARRIVAL_TIMES } from './arrivalsMutations'
+import { useMutation, useQuery } from '@apollo/client'
+import { GET_ARRIVAL_TIMES, SET_STREAM_ARRIVAL_TIMES } from './time-gql'
 import { Col, Container, Row } from 'react-bootstrap'
 import SubmitButton from 'components/formik-components/SubmitButton'
 import BaseComponent from 'components/base-component/BaseComponent'
 
 import { parseTimeToDate } from 'date-utils'
+import { parseNeoTime } from 'date-utils'
+import { useNavigate } from 'react-router'
 
 const SetArrivalsTime = () => {
   const { currentUser } = useContext(MemberContext)
   const church = currentUser?.currentChurch
+  const { data, loading, error } = useQuery(GET_ARRIVAL_TIMES, {
+    variables: { id: church?.id },
+  })
+  const stream = data?.streams[0]
+  const navigate = useNavigate()
+
   const initialValues = {
     id: church?.id,
-    mobilisationStartTime: '',
-    mobilisationEndTime: '',
-    arrivalStartTime: '',
-    arrivalEndTime: '',
+    mobilisationStartTime: parseNeoTime(stream?.mobilisationStartTime) ?? '',
+    mobilisationEndTime: parseNeoTime(stream?.mobilisationEndTime) ?? '',
+    arrivalStartTime: parseNeoTime(stream?.arrivalStartTime) ?? '',
+    arrivalEndTime: parseNeoTime(stream?.arrivalEndTime) ?? '',
   }
   const validationSchema = Yup.object({
     mobilisationStartTime: Yup.string().required('You must enter a time!'),
@@ -29,9 +37,7 @@ const SetArrivalsTime = () => {
     arrivalEndTime: Yup.string().required('You must enter a time!'),
   })
 
-  const [SetStreamArrivalTimes, { loading, error }] = useMutation(
-    SET_STREAM_ARRIVAL_TIMES
-  )
+  const [SetStreamArrivalTimes] = useMutation(SET_STREAM_ARRIVAL_TIMES)
 
   const onSubmit = async (values, onSubmitProps) => {
     onSubmitProps.setSubmitting(true)
@@ -46,10 +52,12 @@ const SetArrivalsTime = () => {
       },
     })
     onSubmitProps.setSubmitting(false)
+
+    navigate('/stream/arrival-times')
   }
 
   return (
-    <BaseComponent data={church} loading={loading} error={error}>
+    <BaseComponent data={church && stream} loading={loading} error={error}>
       <Container>
         <Formik
           initialValues={initialValues}

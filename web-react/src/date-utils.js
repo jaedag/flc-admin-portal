@@ -121,3 +121,7 @@ export const last3Weeks = () => {
 
   return [getWeekNumber(), getWeekNumber(lastWeek), getWeekNumber(last2Weeks)]
 }
+
+export const isToday = (date) => {
+  return parseDate(date) === 'Today'
+}

@@ -12,7 +12,7 @@ import {
   beforeArrivalDeadline,
   beforeMobilisationDeadline,
 } from './arrivals-utils'
-import { parseDate } from 'date-utils'
+import { isToday } from 'date-utils'
 
 const BacentaArrivals = () => {
   const { clickCard, bacentaId } = useContext(ChurchContext)
@@ -25,7 +25,7 @@ const BacentaArrivals = () => {
   let bussing
 
   data?.bacentas[0].bussing.map((data) => {
-    if (parseDate(data.serviceDate.date) === 'Today') {
+    if (isToday(data.serviceDate.date)) {
       bussing = data
     }
     return
@@ -44,6 +44,7 @@ const BacentaArrivals = () => {
     )
   }
 
+  beforeMobilisationDeadline(bussing, bacenta)
   return (
     <BaseComponent data={data} loading={loading} error={error}>
       <Container>

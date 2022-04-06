@@ -127,7 +127,7 @@ export const CONFIRM_CONSTITUENCY_ARRIVALS = gql`
       id
       name
       stream_name
-      bacentasHaveBeenCounted {
+      bacentasOnTheWay {
         id
         name
         leader {
@@ -159,7 +159,7 @@ export const CONFIRM_COUNCIL_ARRIVALS = gql`
       id
       name
       stream_name
-      bacentasHaveBeenCounted {
+      bacentasOnTheWay {
         id
         name
         leader {
@@ -191,7 +191,7 @@ export const CONFIRM_STREAM_ARRIVALS = gql`
       id
       name
       stream_name
-      bacentasHaveBeenCounted {
+      bacentasOnTheWay {
         id
         name
         leader {
@@ -223,7 +223,7 @@ export const CONFIRM_GATHERINGSERVICE_ARRIVALS = gql`
       id
       name
 
-      bacentasHaveBeenCounted {
+      bacentasOnTheWay {
         id
         name
         leader {

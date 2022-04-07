@@ -1,4 +1,13 @@
 extend type Mutation {
-  BankCampusOffering(churchId: ID!, serviceRecordId: ID!): ServiceRecord
+  BankServiceOffering(
+    stream_name: String!
+    serviceRecordId: ID!
+    mobileNetwork: String!
+    mobileNumber: String!
+  ): ServiceRecord
   BankTownOffering(churchId: ID!, serviceRecordId: ID!): ServiceRecord
+  IncrementPaySwitchTransactionId: ID!
+    @cypher(
+      statement: "MATCH (transaction:LastPaySwitchTransactionId) SET transaction.id =  transaction.id + 1 RETURN transaction.id-1"
+    )
 }

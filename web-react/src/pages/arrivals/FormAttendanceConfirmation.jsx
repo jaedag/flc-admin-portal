@@ -120,9 +120,10 @@ const FormAttendanceConfirmation = () => {
             <div className="text-secondary">
               Total Bussing Cost:{' '}
               <span className="fw-bold text-info">
-                GHS {bussing?.bussingCost}
+                GHS {bussing?.bussingCost || 0}
               </span>
             </div>
+            <div>{bussing?.leaderComments}</div>
           </Card.Body>
         </Card>
       </Container>

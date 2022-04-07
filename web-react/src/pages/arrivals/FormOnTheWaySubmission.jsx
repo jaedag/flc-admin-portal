@@ -30,6 +30,7 @@ const FormOnTheWaySubmission = () => {
     attendance: '',
     bussingPictures: [''],
     bussingCost: '',
+    leaderComments: '',
     numberOfBusses: '',
     numberOfCars: '',
     mobileNetwork: '',
@@ -89,6 +90,7 @@ const FormOnTheWaySubmission = () => {
         bussingRecordId: bussingRecordId,
         bussingPictures: values.bussingPictures,
         bussingCost: parseFloat(values.bussingCost),
+        leaderComments: values.leaderComments,
         numberOfBusses: parseInt(values.numberOfBusses),
         numberOfCars: parseInt(values.numberOfCars || 0),
         mobileNetwork: values.mobileNetwork,
@@ -160,6 +162,11 @@ const FormOnTheWaySubmission = () => {
                   />
                   <FormikControl
                     control="input"
+                    name="leaderComments"
+                    label="Comments (if any)"
+                  />
+                  <FormikControl
+                    control="input"
                     name="numberOfCars"
                     label="Number of Cars"
                   />
@@ -187,6 +194,7 @@ const FormOnTheWaySubmission = () => {
                       const { bussingPictures } = values
 
                       const pictureLimit = 4
+
                       return (
                         <>
                           {bussingPictures.map((bussingPicture, index) => (

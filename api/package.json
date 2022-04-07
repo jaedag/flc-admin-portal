@@ -15,7 +15,7 @@
   "license": "MIT",
   "dependencies": {
     "@apollo/client": "^3.2.5",
-    "@neo4j/graphql": "^3.0.3",
+    "@neo4j/graphql": "^3.0.4",
     "@neo4j/graphql-plugin-auth": "^1.0.0",
     "apollo-server": "^3.5.0",
     "apollo-server-lambda": "^3.5.0",

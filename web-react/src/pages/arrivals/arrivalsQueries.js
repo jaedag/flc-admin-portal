@@ -377,9 +377,11 @@ export const DISPLAY_BUSSING_RECORDS = gql`
       }
       week
       mobilisationPicture
+      leaderDeclaration
       attendance
       bussingPictures
       bussingCost
+      leaderComments
       bussingTopUp
       mobileNetwork
       momoName
@@ -393,6 +395,11 @@ export const DISPLAY_BUSSING_RECORDS = gql`
       id
       name
       stream_name
+      stream {
+        id
+        arrivalStartTime
+        arrivalEndTime
+      }
       normalBussingTopUp
       swellBussingTopUp
     }

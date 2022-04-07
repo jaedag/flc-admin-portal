@@ -1,5 +1,6 @@
+import { addMinutes } from 'date-utils'
+import { getTodayTime } from 'date-utils'
 import { isToday } from 'date-utils'
-import { parseNeoTime } from 'date-utils'
 
 export const MOBILE_NETWORK_OPTIONS = [
   { key: '', value: '' },
@@ -7,6 +8,32 @@ export const MOBILE_NETWORK_OPTIONS = [
   { key: 'Vodafone', value: 'Vodafone' },
   { key: 'AirtelTigo', value: 'AirtelTigo' },
 ]
+
+export const beforeCountingDeadline = (bussing, church) => {
+  if (!bussing || !church) {
+    return
+  }
+
+  const today = new Date()
+
+  let arrivalEndTime, arrivalStartTime, countingEndTime
+  if (church?.__typename === 'Bacenta') {
+    arrivalStartTime = new Date(getTodayTime(church?.stream.arrivalStartTime))
+    arrivalEndTime = new Date(getTodayTime(church?.stream.arrivalEndTime))
+    countingEndTime = addMinutes(arrivalEndTime, 30)
+  }
+
+  if (
+    isToday(bussing?.created_at) &&
+    arrivalStartTime < today < countingEndTime
+  ) {
+    //If the record was created today
+    //And if the time is less than the arrivals cutoff time
+    return true
+  }
+  // return false
+  return false
+}
 
 export const beforeArrivalDeadline = (bussing, church) => {
   if (!bussing || !church) {
@@ -17,11 +44,9 @@ export const beforeArrivalDeadline = (bussing, church) => {
 
   let arrivalEndTime, arrivalStartTime
   if (church?.__typename === 'Bacenta') {
-    arrivalStartTime = new Date(church?.stream.arrivalStartTime)
-    arrivalEndTime = new Date(church?.stream.arrivalEndTime)
+    arrivalStartTime = new Date(getTodayTime(church?.stream.arrivalStartTime))
+    arrivalEndTime = new Date(getTodayTime(church?.stream.arrivalEndTime))
   }
-
-  arrivalEndTime = parseNeoTime(arrivalEndTime)
 
   if (
     isToday(bussing?.created_at) &&
@@ -45,8 +70,12 @@ export const beforeMobilisationDeadline = (bussing, church) => {
   let mobilisationEndTime, mobilisationStartTime
 
   if (church?.__typename === 'Bacenta') {
-    mobilisationStartTime = new Date(church?.stream.mobilisationStartTime)
-    mobilisationEndTime = new Date(church?.stream.mobilisationStartTime)
+    mobilisationStartTime = new Date(
+      getTodayTime(church?.stream.mobilisationStartTime)
+    )
+    mobilisationEndTime = new Date(
+      getTodayTime(church?.stream.mobilisationStartTime)
+    )
   }
 
   if (!bussing && mobilisationStartTime < today < mobilisationEndTime) {

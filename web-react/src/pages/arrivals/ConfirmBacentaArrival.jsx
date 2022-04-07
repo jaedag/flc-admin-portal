@@ -54,7 +54,7 @@ const ConfirmBacentaArrival = () => {
   const initialValues = {
     bacentaSearch: '',
   }
-  const bacentaDataLoaded = church ? church?.bacentasHaveBeenCounted : []
+  const bacentaDataLoaded = church ? church?.bacentasOnTheWay : []
   const [bacentaData, setBacentaData] = useState([])
 
   useEffect(() => {
@@ -65,7 +65,7 @@ const ConfirmBacentaArrival = () => {
     onSubmitProps.setSubmitting(true)
     const searchTerm = values.bacentaSearch.toLowerCase()
     setBacentaData(
-      church?.bacentasHaveBeenCounted.filter((bacenta) => {
+      church?.bacentasOnTheWay.filter((bacenta) => {
         if (bacenta.name.toLowerCase().includes(searchTerm)) {
           return true
         } else if (bacenta.leader.fullName.toLowerCase().includes(searchTerm)) {

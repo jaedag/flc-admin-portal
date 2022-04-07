@@ -15,7 +15,7 @@ import { useNavigate } from 'react-router'
 import RoleView from 'auth/RoleView'
 import { permitAdminArrivals, permitArrivalsCounter } from 'permission-utils'
 import CloudinaryImage from 'components/CloudinaryImage'
-import { beforeArrivalDeadline } from './arrivals-utils'
+import { beforeCountingDeadline } from './arrivals-utils'
 
 const BusFormDetails = () => {
   const { bacentaId } = useContext(ChurchContext)
@@ -37,12 +37,19 @@ const BusFormDetails = () => {
         <PlaceholderCustom as="h6" loading={loading}>
           <HeadingSecondary>{`${church?.name} ${church?.__typename}`}</HeadingSecondary>
           <p>{`Recorded by ${bussing?.created_by.fullName}`}</p>
+<<<<<<< HEAD
 
           {bussing?.confirmed_by && (
             <p>
               {`Confirmed`}
               <RoleView roles={permitAdminArrivals('Stream')}>
                 {` by `}
+=======
+          <RoleView roles={permitAdminArrivals('Stream')}>
+            {bussing?.confirmed_by && (
+              <p>
+                {`Confirmed by `}
+>>>>>>> 0812895 (fix: bug fixes, and added section for leader comments)
                 <span className="fw-bold good">
                   {bussing?.confirmed_by.fullName}
                 </span>
@@ -85,6 +92,14 @@ const BusFormDetails = () => {
                     </td>
                   </tr>
                   <tr>
+                    <td>Leader Declaration</td>
+                    <td>
+                      <PlaceholderCustom loading={loading}>
+                        {bussing?.leaderDeclaration}
+                      </PlaceholderCustom>
+                    </td>
+                  </tr>
+                  <tr>
                     <td>Attendance</td>
                     <td>
                       <PlaceholderCustom loading={loading}>
@@ -109,7 +124,16 @@ const BusFormDetails = () => {
                       </PlaceholderCustom>
                     </td>
                   </tr>
-
+                  {bussing?.leaderComments && (
+                    <tr>
+                      <td>Leader Comments</td>
+                      <td>
+                        <PlaceholderCustom loading={loading}>
+                          {bussing?.leaderComments}
+                        </PlaceholderCustom>
+                      </td>
+                    </tr>
+                  )}
                   <tr>
                     <td>Number of Busses</td>
                     <td>
@@ -118,14 +142,16 @@ const BusFormDetails = () => {
                       </PlaceholderCustom>
                     </td>
                   </tr>
-                  <tr>
-                    <td>Number of Cars</td>
-                    <td>
-                      <PlaceholderCustom loading={loading}>
-                        {bussing?.numberOfCars}
-                      </PlaceholderCustom>
-                    </td>
-                  </tr>
+                  {bussing?.numberOfCars ? (
+                    <tr>
+                      <td>Number of Cars</td>
+                      <td>
+                        <PlaceholderCustom loading={loading}>
+                          {bussing?.numberOfCars}
+                        </PlaceholderCustom>
+                      </td>
+                    </tr>
+                  ) : null}
                   {bussing?.mobileNetwork && (
                     <tr>
                       <td>Mobile Network</td>
@@ -156,6 +182,7 @@ const BusFormDetails = () => {
                       </td>
                     </tr>
                   )}
+
                   {bussing?.comments && (
                     <tr>
                       <td>Comments</td>
@@ -170,29 +197,39 @@ const BusFormDetails = () => {
               </Table>
               <Row className="text-center">
                 <h6>Bussing Pictures</h6>
-
-                {bussing?.bussingPictures?.map((picture, index) => {
-                  return (
-                    <Col key={index}>
-                      <CloudinaryImage
-                        className="report-picture"
-                        src={picture}
-                        large
-                      />
-                    </Col>
-                  )
-                })}
+                <div className="container card-button-row">
+                  <table>
+                    <tbody>
+                      <tr>
+                        {bussing?.bussingPictures?.map((picture, index) => (
+                          <td key={index}>
+                            <CloudinaryImage
+                              className="report-picture"
+                              src={picture}
+                              large
+                            />
+                          </td>
+                        ))}
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
               </Row>
             </Row>
           </Col>
         </Row>
         <div className="d-grid gap-2">
+<<<<<<< HEAD
           <RoleView roles={permitArrivalsCounter('Stream')}>
             {beforeArrivalDeadline(bussing, church) && (
+=======
+          <RoleView roles={permitArrivalsHelper('Stream')}>
+            {beforeCountingDeadline(bussing, church) && (
+>>>>>>> 0812895 (fix: bug fixes, and added section for leader comments)
               <Button
                 onClick={() => navigate('/arrivals/submit-bus-attendance')}
               >
-                Enter Attendance
+                Confirm Attendance
               </Button>
             )}
           </RoleView>

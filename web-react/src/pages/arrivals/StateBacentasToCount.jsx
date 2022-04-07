@@ -10,21 +10,21 @@ import React, { useContext } from 'react'
 import { Container } from 'react-bootstrap'
 import { useNavigate } from 'react-router'
 import {
-  CONSTITUENCY_BACENTAS_ON_THE_WAY,
-  COUNCIL_BACENTAS_ON_THE_WAY,
-  GATHERINGSERVICE_BACENTAS_ON_THE_WAY,
-  STREAM_BACENTAS_ON_THE_WAY,
+  CONSTITUENCY_BACENTAS_TO_COUNT,
+  COUNCIL_BACENTAS_TO_COUNT,
+  GATHERINGSERVICE_BACENTAS_TO_COUNT,
+  STREAM_BACENTAS_TO_COUNT,
 } from './bussingStatusQueries'
 import NoData from './CompNoData'
 
 const StateBacentasToCount = () => {
   const { clickCard } = useContext(ChurchContext)
   const navigate = useNavigate()
-  const [constituencyOnTheWay] = useLazyQuery(CONSTITUENCY_BACENTAS_ON_THE_WAY)
-  const [councilOnTheWay] = useLazyQuery(COUNCIL_BACENTAS_ON_THE_WAY)
-  const [streamOnTheWay] = useLazyQuery(STREAM_BACENTAS_ON_THE_WAY)
+  const [constituencyOnTheWay] = useLazyQuery(CONSTITUENCY_BACENTAS_TO_COUNT)
+  const [councilOnTheWay] = useLazyQuery(COUNCIL_BACENTAS_TO_COUNT)
+  const [streamOnTheWay] = useLazyQuery(STREAM_BACENTAS_TO_COUNT)
   const [gatheringServiceOnTheWay] = useLazyQuery(
-    GATHERINGSERVICE_BACENTAS_ON_THE_WAY
+    GATHERINGSERVICE_BACENTAS_TO_COUNT
   )
 
   const { church, loading, error } = useChurchLevel({
@@ -37,16 +37,16 @@ const StateBacentasToCount = () => {
   return (
     <BaseComponent data={church} loading={loading} error={error} placeholder>
       <Container>
-        <HeadingPrimary loading={loading}>Bacentas On The Way</HeadingPrimary>
+        <HeadingPrimary loading={loading}>Bacentas To Count</HeadingPrimary>
         <HeadingSecondary loading={!church?.name}>
           {church?.name} {church?.__typename}
         </HeadingSecondary>
 
-        {church && !church?.bacentasToCount.length && (
+        {church && !church?.bacentasNotCounted.length && (
           <NoData text="There are no bacentas on the way" />
         )}
 
-        {church?.bacentasToCount?.map((bacenta, i) => {
+        {church?.bacentasNotCounted?.map((bacenta, i) => {
           return (
             <MemberDisplayCard
               key={i}
@@ -62,7 +62,7 @@ const StateBacentasToCount = () => {
           )
         })}
 
-        {!church?.bacentasToCount.length && loading && (
+        {!church?.bacentasNotCounted.length && loading && (
           <PlaceholderMemberDisplay />
         )}
       </Container>

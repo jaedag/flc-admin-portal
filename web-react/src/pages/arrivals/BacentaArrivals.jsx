@@ -38,9 +38,11 @@ const BacentaArrivals = () => {
     if (!bussing) {
       return false
     }
+
     return (
       beforeArrivalDeadline(bussing, bacenta) &&
-      (bussing?.mobilisationPicture || !bussing?.bussingPictures?.length)
+      bussing?.mobilisationPicture &&
+      !bussing?.bussingPictures?.length
     )
   }
 
@@ -76,6 +78,18 @@ const BacentaArrivals = () => {
           >
             Submit On-The-Way Picture
           </Button>
+          {bussing && (
+            <Button
+              variant="primary"
+              size="lg"
+              onClick={() => {
+                clickCard(bacenta)
+                navigate('/bacenta/bussing-details')
+              }}
+            >
+              {`Today's Bussing`}
+            </Button>
+          )}
 
           {bussing?.arrivalTime && (
             <Card>

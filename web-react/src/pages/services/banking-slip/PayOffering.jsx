@@ -23,7 +23,7 @@ const PayOffering = () => {
 
   const [BankServiceOffering] = useMutation(PAY_OFFERING_MUTATION)
   const service = data?.serviceRecords[0]
-  console.log(service)
+
   const initialValues = {
     serviceDate: new Date().toISOString().slice(0, 10),
     income: service?.income,

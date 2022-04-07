@@ -5,9 +5,9 @@ extend type Mutation {
     mobileNetwork: String!
     mobileNumber: String!
   ): ServiceRecord
-  BankTownOffering(churchId: ID!, serviceRecordId: ID!): ServiceRecord
-  IncrementPaySwitchTransactionId: ID!
-    @cypher(
-      statement: "MATCH (transaction:LastPaySwitchTransactionId) SET transaction.id =  transaction.id + 1 RETURN transaction.id-1"
-    )
+  ConfirmOfferingPayment(stream_name: String!, serviceRecordId: ID!): String
+}
+
+extend type ServiceRecord {
+  transactionTime: DateTime
 }

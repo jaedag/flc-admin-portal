@@ -70,7 +70,7 @@ const Services = () => {
             <>
               <MenuButton
                 iconComponent={FileEarmarkArrowUpFill}
-                title="Banking Slips"
+                title="Upload Banking Slips"
                 color="banking"
                 noCaption
                 onClick={() =>

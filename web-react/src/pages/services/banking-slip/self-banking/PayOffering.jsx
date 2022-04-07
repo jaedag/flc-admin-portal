@@ -2,6 +2,7 @@ import { useMutation, useQuery } from '@apollo/client'
 import BaseComponent from 'components/base-component/BaseComponent'
 import { ServiceContext } from 'contexts/ServiceContext'
 import React, { useContext } from 'react'
+import { useNavigate } from 'react-router'
 import {
   DISPLAY_OFFERING_DETAILS,
   PAY_OFFERING_MUTATION,
@@ -14,18 +15,21 @@ import { MOBILE_NETWORK_OPTIONS } from 'pages/arrivals/arrivals-utils'
 import SubmitButton from 'components/formik-components/SubmitButton'
 import { Col, Container, Row } from 'react-bootstrap'
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
+import HeadingSecondary from 'components/HeadingSecondary'
+import { parseDate } from 'date-utils'
 
-const PayOffering = () => {
+const PayOffering = (props) => {
+  const { church } = props
   const { serviceRecordId } = useContext(ServiceContext)
   const { data, loading, error } = useQuery(DISPLAY_OFFERING_DETAILS, {
     variables: { serviceRecordId: serviceRecordId },
   })
-
   const [BankServiceOffering] = useMutation(PAY_OFFERING_MUTATION)
+  const navigate = useNavigate()
   const service = data?.serviceRecords[0]
 
   const initialValues = {
-    serviceDate: new Date().toISOString().slice(0, 10),
+    bankingDate: new Date().toISOString().slice(0, 10),
     income: service?.income,
     mobileNetwork: '',
     mobileNumber: '',
@@ -60,12 +64,18 @@ const PayOffering = () => {
     })
 
     setSubmitting(false)
+
+    navigate('/self-banking/confirm-payment')
   }
 
   return (
     <BaseComponent data={data} loading={loading} error={error}>
       <Container>
         <HeadingPrimary loading={loading}>Offering Self-Banking</HeadingPrimary>
+        <HeadingSecondary loading={loading}>
+          {church?.name} {church?.__typename}
+        </HeadingSecondary>
+        <div>{`Banking Code: ${church?.bankingCode}`} </div>
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
@@ -75,6 +85,17 @@ const PayOffering = () => {
             <Form>
               <Row className="row-cols-1 row-cols-md-2 mt-2">
                 <Col className="mb-2">
+                  <small htmlFor="dateofservice" className="form-text label">
+                    Date of Service
+                  </small>
+                  <HeadingPrimary>
+                    {parseDate(service?.serviceDate.date)}
+                  </HeadingPrimary>
+
+                  <small htmlFor="dateofservice" className="form-text label">
+                    Income
+                  </small>
+                  <div className="fw-bold">{service?.income} GHS</div>
                   <FormikControl
                     control="select"
                     name="mobileNetwork"
@@ -95,7 +116,7 @@ const PayOffering = () => {
                 </Col>
               </Row>
               <div className="d-flex justify-content-center">
-                <SubmitButton formik={formik} />
+                <SubmitButton formik={formik}>Make Payment</SubmitButton>
               </div>
             </Form>
           )}

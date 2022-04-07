@@ -4,8 +4,9 @@ WHERE church:Fellowship OR church:Constituency OR church:Council OR church:Strea
 
 MATCH (record)-[:SERVICE_HELD_ON]->(date:TimeGraph)
 MATCH (transaction: LastPaySwitchTransactionId)
-SET record.transactionId = transaction.id + 1,
-transaction.id = record.transactionId
+    SET record.transactionId = transaction.id + 1,
+    record.transactionTime = datetime(),
+    transaction.id = record.transactionId
 
 RETURN record, church.name AS churchName, date.date AS date
 `

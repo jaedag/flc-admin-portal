@@ -10,7 +10,6 @@ export const setTime = (timeArray) => {
 
   return now
 }
-
 export const parseTimeToDate = (timeString) => {
   const array = timeString.split(':')
   const datetime = setTime([...array, 0])
@@ -124,4 +123,21 @@ export const last3Weeks = () => {
 
 export const isToday = (date) => {
   return parseDate(date) === 'Today'
+}
+
+//Arrivals Specific Date Functions
+export const getTodayTime = (timeString) => {
+  return new Date().toISOString().slice(0, 10) + timeString.slice(10)
+}
+
+export const addHours = (date, hours) => {
+  const newDate = new Date(date)
+  newDate.setHours(newDate.getHours() + hours)
+  return newDate
+}
+
+export const addMinutes = (date, minutes) => {
+  const newDate = new Date(date)
+  newDate.setMinutes(newDate.getMinutes() + minutes)
+  return newDate
 }

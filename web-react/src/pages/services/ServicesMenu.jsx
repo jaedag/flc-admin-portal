@@ -6,6 +6,7 @@ import { Container } from 'react-bootstrap'
 import {
   BarChartFill,
   Book,
+  Coin,
   FileEarmarkArrowUpFill,
 } from 'react-bootstrap-icons'
 import { useNavigate } from 'react-router'
@@ -66,15 +67,28 @@ const Services = () => {
             onClick={() => navigate(`/${churchType.toLowerCase()}/reports`)}
           />
           {['Council', 'Constituency', 'Fellowship'].includes(churchType) && (
-            <MenuButton
-              iconComponent={FileEarmarkArrowUpFill}
-              title="Banking Slips"
-              color="members"
-              noCaption
-              onClick={() =>
-                navigate(`/services/${churchType.toLowerCase()}/banking-slips`)
-              }
-            />
+            <>
+              <MenuButton
+                iconComponent={FileEarmarkArrowUpFill}
+                title="Banking Slips"
+                color="banking"
+                noCaption
+                onClick={() =>
+                  navigate(
+                    `/services/${churchType.toLowerCase()}/banking-slips`
+                  )
+                }
+              />
+              <MenuButton
+                iconComponent={Coin}
+                title="Self Banking Option"
+                color="banking"
+                noCaption
+                onClick={() =>
+                  navigate(`/services/${churchType.toLowerCase()}/self-banking`)
+                }
+              />
+            </>
           )}
         </div>
       </Container>

@@ -1,0 +1,10 @@
+extend type GatheringService {
+  averageConstituencyIncome: Float!
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*5]->(fellowships:Fellowship)
+
+      RETURN 
+      """
+    )
+}

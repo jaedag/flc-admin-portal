@@ -44,7 +44,9 @@ const FormAttendanceConfirmation = () => {
   const [bussingMoney, setBussingMoney] = useState(0)
 
   useEffect(() => {
-    setBussingMoney(data?.bacentas[0]?.normalBussingTopUp)
+    if (data?.bacentas[0]?.normalBussingTopUp) {
+      setBussingMoney(data?.bacentas[0]?.normalBussingTopUp)
+    }
   }, [data])
 
   const validationSchema = Yup.object({
@@ -125,9 +127,10 @@ const FormAttendanceConfirmation = () => {
             <div className="text-secondary">
               Total Bussing Cost:{' '}
               <span className="fw-bold text-info">
-                GHS {bussing?.bussingCost}
+                GHS {bussing?.bussingCost || 0}
               </span>
             </div>
+            <div>{bussing?.leaderComments}</div>
           </Card.Body>
         </Card>
       </Container>
@@ -157,7 +160,11 @@ const FormAttendanceConfirmation = () => {
                 }}
               />
 
-              <div>{`This bacenta usually receives ${bacenta?.normalBussingTopUp} GHS on a normal day and ${bacenta?.swellBussingTopUp} on a swell day`}</div>
+              <div>{`This bacenta usually receives ${
+                bacenta?.normalBussingTopUp || 0
+              } GHS on a normal day and ${
+                bacenta?.swellBussingTopUp || 0
+              } on a swell day`}</div>
 
               <FormikControl
                 control="input"

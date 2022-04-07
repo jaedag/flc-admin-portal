@@ -800,9 +800,11 @@ type BussingRecord implements Record @auth(rules: [{ isAuthenticated: true }]) {
   #On The Way
   bussingPictures: [String]
   attendance: Int
+  leaderDeclaration: Int
   numberOfBusses: Int
   numberOfCars: Int
   bussingCost: Float
+  leaderComments: String
   bussingTopUp: Float
   mobileNetwork: String
   momoName: String
@@ -919,10 +921,9 @@ extend type Mutation {
         {
           roles: [
             "adminGatheringService"
+            "arrivalsAdminGatheringService"
             "adminStream"
             "arrivalsAdminStream"
-            "adminCouncil"
-            "arrivalsAdminCouncil"
           ]
         }
       ]
@@ -1064,6 +1065,7 @@ extend type Mutation {
     attendance: Int!
     bussingPictures: [String]!
     bussingCost: Float!
+    leaderComments: String
     numberOfBusses: Int!
     numberOfCars: Int!
     mobileNetwork: String!
@@ -1077,6 +1079,7 @@ extend type Mutation {
       bussingRecord.leaderDeclaration = $attendance,
       bussingRecord.bussingPictures = $bussingPictures,
       bussingRecord.bussingCost = $bussingCost,
+      bussingRecord.leaderComments = $leaderComments,
       bussingRecord.numberOfBusses = $numberOfBusses,
       bussingRecord.numberOfCars = $numberOfCars,
       bussingRecord.mobileNetwork = $mobileNetwork,

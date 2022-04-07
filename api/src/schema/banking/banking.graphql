@@ -1,0 +1,4 @@
+extend type Mutation {
+  BankCampusOffering(churchId: ID!, serviceRecordId: ID!): ServiceRecord
+  BankTownOffering(churchId: ID!, serviceRecordId: ID!): ServiceRecord
+}

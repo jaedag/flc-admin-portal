@@ -52,7 +52,7 @@ const ConfirmBacentaArrival = () => {
   const initialValues = {
     bacentaSearch: '',
   }
-  const bacentaDataLoaded = church ? church?.bacentasHaveBeenCounted : []
+  const bacentaDataLoaded = church ? church?.bacentasOnTheWay : []
   const [bacentaData, setBacentaData] = useState([])
 
   useEffect(() => {
@@ -63,7 +63,7 @@ const ConfirmBacentaArrival = () => {
     onSubmitProps.setSubmitting(true)
     const searchTerm = values.bacentaSearch.toLowerCase()
     setBacentaData(
-      church?.bacentasHaveBeenCounted.filter((bacenta) => {
+      church?.bacentasOnTheWay.filter((bacenta) => {
         if (bacenta.name.toLowerCase().includes(searchTerm)) {
           return true
         } else if (bacenta.leader.fullName.toLowerCase().includes(searchTerm)) {
@@ -114,7 +114,7 @@ const ConfirmBacentaArrival = () => {
                     return
                   }
 
-                  if (arrivalRes.data.RecordArrivalTime.confirmed_by.id) {
+                  if (arrivalRes.data.RecordArrivalTime.confirmed_by?.id) {
                     //If Attendance has been confrimed then send bussing support
                     try {
                       const supportRes = await SendBussingSupport({

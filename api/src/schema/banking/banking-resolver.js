@@ -1,11 +1,11 @@
-import { getMobileCode, padNumbers } from '../../resolvers/financial-utils'
-import { permitLeader } from '../../resolvers/permissions'
+const { getMobileCode, padNumbers } = require('../../resolvers/financial-utils')
+const { permitLeader } = require('../../resolvers/permissions')
 const cypher = require('./banking-cypher')
-import {
+const {
   isAuth,
   rearrangeCypherObject,
   throwErrorMsg,
-} from '../../resolvers/resolver-utils'
+} = require('../../resolvers/resolver-utils')
 const axios = require('axios').default
 
 export const bankingMutation = {

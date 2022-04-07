@@ -46,6 +46,7 @@ import GatheringServiceServiceDetails from 'pages/services/record-service/Gather
 import Defaulters from './defaulters/Defaulters'
 import DefaultersDashboard from './defaulters/DefaultersDashboard'
 import FellowshipSelfBanking from './banking-slip/FellowshipSelfBanking'
+import PayOffering from './banking-slip/PayOffering'
 
 export const services = [
   {
@@ -114,6 +115,11 @@ export const services = [
     element: FellowshipSelfBanking,
     roles: ['leaderFellowship'],
     placeholder: true,
+  },
+  {
+    path: '/services/fellowship/self-banking/pay',
+    element: PayOffering,
+    roles: ['leaderFellowship'],
   },
   {
     path: '/services/constituency/banking-slips',

@@ -476,9 +476,19 @@ type ServiceRecord implements Record @auth(rules: [{ isAuthenticated: true }]) {
   servicePicture: String
   treasurerSelfie: String
   bankingSlip: String
+  transactionId: ID
   treasurers: [Member!]! @relationship(type: "WAS_TREASURER_FOR", direction: IN)
   serviceLog: ServiceLog @relationship(type: "HAS_SERVICE", direction: IN)
   noServiceReason: String
+  stream_name: String
+    @cypher(
+      statement: """
+      MATCH (this)<-[:HAS_SERVICE]-(:ServiceLog)<-[:HAS_HISTORY]-(church)
+      WHERE church:Fellowship OR church:Constituency OR church:Council OR church:Stream
+      MATCH (church)<-[:HAS*1..4]-(stream:Stream)
+      RETURN stream.name
+      """
+    )
 }
 
 type NoService implements Record @auth(rules: [{ isAuthenticated: true }]) {

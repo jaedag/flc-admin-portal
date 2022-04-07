@@ -2,6 +2,7 @@ import { permitAdmin } from './permissions'
 import { serviceMutation } from './service-resolvers'
 import { arrivalsMutation } from './arrivals-resolvers'
 import { directoryMutation } from './directory-resolvers'
+import { bankingMutation } from '../schema/banking/banking-resolver'
 
 /* eslint-disable no-console */
 const dotenv = require('dotenv')
@@ -721,9 +722,11 @@ export const resolvers = {
         'GatheringService',
         'Leader'
       ),
+
     //ARRIVALS MUTATIONS
     ...arrivalsMutation,
     ...serviceMutation,
     ...directoryMutation,
+    ...bankingMutation,
   },
 }

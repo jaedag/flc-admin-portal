@@ -1,3 +1,4 @@
+import { getMobileCode, padNumbers } from './financial-utils'
 import { permitAdmin, permitAdminArrivals, permitArrivals } from './permissions'
 import { isAuth, rearrangeCypherObject, throwErrorMsg } from './resolver-utils'
 import { MakeServant, RemoveServant } from './resolvers'
@@ -113,11 +114,26 @@ export const arrivalsMutation = {
     isAuth(permitAdminArrivals('Council'), context.auth.roles)
     const session = context.driver.session()
 
-    if (args.stream_name === 'Anagkazo') {
-      throwErrorMsg(
-        'Anagkazo is not entitled to bussing support using this application'
-      )
+    let merchantId, passcode, auth
+
+    switch (args.stream_name) {
+      case 'Anagkazo':
+        throwErrorMsg(
+          'Anagkazo is not entitled to bussing support using this application'
+        )
+        break
+      case 'Campus':
+        merchantId = process.env.PAYSWITCH_CAMPUS_MERCHANT_ID
+        passcode = process.env.PAYSWITCH_CAMPUS_PASSCODE
+        auth = process.env.PAYSWITCH_CAMPUS_AUTH
+        break
+      case 'Town':
+        merchantId = process.env.PAYSWITCH_TOWN_MERCHANT_ID
+        passcode = process.env.PAYSWITCH_TOWN_PASSCODE
+        auth = process.env.PAYSWITCH_TOWN_AUTH
+        break
     }
+
     const transactionResponse = rearrangeCypherObject(
       await session.run(cypher.checkTransactionId, args)
     )
@@ -135,46 +151,26 @@ export const arrivalsMutation = {
 
     const bussingRecord = cypherResponse.record.properties
 
-    const getMobileCode = (network) => {
-      switch (network) {
-        case 'MTN':
-          return 'MTN'
-        case 'Vodafone':
-          return 'VDF'
-        case 'AirtelTigo':
-          return 'ATL'
-        case 'Airtel':
-          return 'ATL'
-        case 'Tigo':
-          return 'TGO'
-        default:
-          break
-      }
-    }
-
-    const padNumbers = (number) => {
-      return number.toString().padStart(12, '0')
-    }
-
     const sendBussingSupport = {
       method: 'post',
       url: `https://prod.theteller.net/v1.1/transaction/process`,
       headers: {
         'content-type': 'application/json',
-        Authorization: process.env.PAYSWITCH_AUTH,
+        Authorization: auth,
       },
       data: {
-        merchant_id: process.env.PAYSWITCH_MERCHANT_ID,
+        merchant_id: merchantId,
         transaction_id: padNumbers(bussingRecord.transactionId),
         amount: padNumbers(bussingRecord.bussingTopUp * 100),
         processing_code: '404000',
         'r-switch': 'FLT',
         desc: cypherResponse.bacentaName + ' ' + cypherResponse.date,
-        pass_code: process.env.PAYSWITCH_PASSCODE,
+        pass_code: passcode,
         account_number: bussingRecord.momoNumber,
         account_issuer: getMobileCode(bussingRecord.mobileNetwork),
       },
     }
+
     try {
       const res = await axios(sendBussingSupport)
 

@@ -29,7 +29,7 @@ import StreamReport from 'pages/services/reports/StreamReport'
 import GatheringServiceReport from 'pages/services/reports/GatheringServiceReport'
 import StreamByCouncil from 'pages/services/defaulters/StreamByCouncil'
 import GatheringServiceByStream from 'pages/services/defaulters/GatheringServiceByStream'
-import { permitLeaderAdmin } from 'permission-utils'
+import { permitLeaderAdmin, permitMe } from 'permission-utils'
 import ConstituencyBankingSlipView from 'pages/services/banking-slip/ConstituencyView'
 import ConstituencyBankingSlipSubmission from 'pages/services/banking-slip/ConstituencySubmission'
 import CouncilService from 'pages/services/record-service/CouncilService'
@@ -45,8 +45,9 @@ import GatheringServiceService from 'pages/services/record-service/GatheringServ
 import GatheringServiceServiceDetails from 'pages/services/record-service/GatheringServiceServiceDetails'
 import Defaulters from './defaulters/Defaulters'
 import DefaultersDashboard from './defaulters/DefaultersDashboard'
-import FellowshipSelfBanking from './banking-slip/FellowshipSelfBanking'
-import PayOffering from './banking-slip/PayOffering'
+import FellowshipSelfBanking from './banking-slip/self-banking/FellowshipSelfBanking'
+import PayFellowshipOffering from './banking-slip/self-banking/PayFellowshipOffering'
+import ConfirmPayment from './banking-slip/self-banking/ConfirmPayment'
 
 export const services = [
   {
@@ -110,6 +111,7 @@ export const services = [
     roles: ['leaderFellowship'],
     placeholder: true,
   },
+  //Self Banking Options
   {
     path: '/services/fellowship/self-banking',
     element: FellowshipSelfBanking,
@@ -118,8 +120,13 @@ export const services = [
   },
   {
     path: '/services/fellowship/self-banking/pay',
-    element: PayOffering,
+    element: PayFellowshipOffering,
     roles: ['leaderFellowship'],
+  },
+  {
+    path: '/self-banking/confirm-payment',
+    element: ConfirmPayment,
+    roles: permitMe('Fellowship'),
   },
   {
     path: '/services/constituency/banking-slips',

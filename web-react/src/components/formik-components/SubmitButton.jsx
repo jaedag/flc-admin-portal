@@ -21,7 +21,7 @@ const SubmitButton = (props) => {
           <span> Submitting</span>
         </>
       ) : (
-        'Submit'
+        props.children || 'Submit'
       )}
     </Button>
   )

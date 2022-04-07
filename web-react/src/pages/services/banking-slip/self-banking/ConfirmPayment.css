@@ -1,0 +1,12 @@
+.vertically-center {
+  height: 80vh;
+}
+
+.big-spinner {
+  width: 6rem;
+  height: 6rem;
+}
+
+.force-left {
+  text-align: left !important;
+}

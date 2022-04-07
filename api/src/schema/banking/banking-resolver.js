@@ -1,4 +1,8 @@
-const { getMobileCode, padNumbers } = require('../../resolvers/financial-utils')
+const {
+  getMobileCode,
+  padNumbers,
+  getStreamFinancials,
+} = require('../../resolvers/financial-utils')
 const { permitLeader } = require('../../resolvers/permissions')
 const cypher = require('./banking-cypher')
 const {
@@ -13,24 +17,8 @@ export const bankingMutation = {
     isAuth(permitLeader('Fellowship'), context.auth.roles)
 
     const session = context.driver.session()
-    let merchantId, auth
 
-    switch (args.stream_name) {
-      case 'Anagkazo':
-        throwErrorMsg(
-          'Anagkazo is not entitled to bussing support using this application'
-        )
-        break
-      case 'Campus':
-      case 'Town':
-        merchantId = process.env.PAYSWITCH_CAMPUS_MERCHANT_ID
-        auth = process.env.PAYSWITCH_CAMPUS_AUTH
-        break
-      // case 'Town':
-      //   merchantId = process.env.PAYSWITCH_TOWN_MERCHANT_ID
-      //   auth = process.env.PAYSWITCH_TOWN_AUTH
-      //   break
-    }
+    const { merchantId, auth } = getStreamFinancials(args.stream_name)
 
     const transactionResponse = rearrangeCypherObject(
       await session.run(cypher.checkTransactionId, args)
@@ -39,7 +27,6 @@ export const bankingMutation = {
     if (transactionResponse?.transactionId) {
       throwErrorMsg('Banking has already been done for this service')
     }
-
     const cypherResponse = rearrangeCypherObject(
       await session.run(cypher.setServiceRecordTransactionId, args)
     )
@@ -65,22 +52,45 @@ export const bankingMutation = {
       },
     }
 
-    try {
-      const paymentResponse = await axios(payOffering)
+    axios(payOffering)
+    return
+  },
+  ConfirmOfferingPayment: async (object, args, context) => {
+    isAuth(permitLeader('Fellowship'), context.auth.roles)
+    const session = context.driver.session()
+    const { merchantId, auth } = getStreamFinancials(args.stream_name)
 
-      if (paymentResponse.data.code !== '000') {
+    const transactionResponse = rearrangeCypherObject(
+      await session.run(cypher.checkTransactionId, args)
+    )
+    if (!transactionResponse?.transactionId) {
+      throwErrorMsg('You cannot confirm what has never been sent')
+    }
+
+    const confirmPaymentBody = {
+      method: 'get',
+      url: `https://prod.theteller.net/v1.1/users/transactions/${transactionResponse.transactionId}/status`,
+      headers: {
+        'Content-Type': 'application/json',
+        'Merchant-Id': merchantId,
+        Authorization: auth,
+      },
+    }
+
+    const confirmationResponse = await axios(confirmPaymentBody)
+
+    try {
+      if (confirmationResponse.data.code !== '000') {
         await session.run(cypher.removeServiceRecordTransactionId, args)
         throwErrorMsg(
-          paymentResponse.data.code + ' ' + paymentResponse.data.reason
+          confirmationResponse.data.code +
+            ' ' +
+            confirmationResponse.data.reason
         )
       }
       // eslint-disable-next-line no-console
-      console.log(
-        'Money Sent Successfully to',
-        serviceRecord.mobileNumber,
-        paymentResponse.data
-      )
-      return serviceRecord
+      console.log('Payment Verified Successfully!')
+      return 'Payment Verified Successfully'
     } catch (error) {
       throwErrorMsg(error, 'Payment Unsuccessful!')
     }

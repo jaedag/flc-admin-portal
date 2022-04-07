@@ -7,7 +7,8 @@ import { parseDate } from 'date-utils'
 import React, { useContext } from 'react'
 import { Card, Col, Container, Row } from 'react-bootstrap'
 import { useNavigate } from 'react-router'
-import { FELLOWSHIP_BANKING_SLIP_QUERIES } from '../ServicesQueries'
+import { FELLOWSHIP_BANKING_SLIP_QUERIES } from '../../ServicesQueries'
+import HeadingSecondary from 'components/HeadingSecondary'
 
 const FellowshipSelfBanking = () => {
   const { fellowshipId, clickCard } = useContext(ChurchContext)
@@ -21,11 +22,16 @@ const FellowshipSelfBanking = () => {
 
   return (
     <Container>
-      <HeadingPrimary loading={loading}>{fellowship?.name}</HeadingPrimary>
+      <HeadingPrimary loading={loading}>
+        {fellowship?.name} {fellowship?.__typename}
+      </HeadingPrimary>
       <PlaceholderCustom as="p" loading={loading}>
         <p>Banking Code: {fellowship?.bankingCode}</p>
       </PlaceholderCustom>
 
+      <HeadingSecondary loading={loading}>
+        Please click to bank any of these services
+      </HeadingSecondary>
       {data?.fellowships[0].services.map((service, index) => {
         if (service.noServiceReason || service.bankingSlip) {
           return null

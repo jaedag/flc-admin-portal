@@ -15,6 +15,7 @@ import HeadingSecondary from 'components/HeadingSecondary'
 import BaseComponent from 'components/base-component/BaseComponent'
 import { useNavigate } from 'react-router'
 import { ChurchContext } from 'contexts/ChurchContext'
+import { throwErrorMsg } from 'global-utils'
 
 const FellowshipBankingSlipSubmission = () => {
   const { serviceRecordId } = useContext(ServiceContext)
@@ -36,19 +37,22 @@ const FellowshipBankingSlipSubmission = () => {
     bankingSlip: Yup.string().required('You must upload a banking slip'),
   })
 
-  const onSubmit = (values, onSubmitProps) => {
+  const onSubmit = async (values, onSubmitProps) => {
     onSubmitProps.setSubmitting(true)
-    SubmitBankingSlip({
-      variables: {
-        serviceRecordId: serviceRecordId,
-        bankingSlip: values.bankingSlip,
-      },
-    }).then(() => {
+    try {
+      await SubmitBankingSlip({
+        variables: {
+          serviceRecordId: serviceRecordId,
+          bankingSlip: values.bankingSlip,
+        },
+      })
       onSubmitProps.setSubmitting(false)
       onSubmitProps.resetForm()
 
       navigate(`/fellowship/service-details`)
-    })
+    } catch (error) {
+      throwErrorMsg(error)
+    }
   }
 
   return (

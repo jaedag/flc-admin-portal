@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client'
 
 export const STREAM_ARRIVALS_HELPERS = gql`
-  query ($id: ID) {
+  query ($id: ID!) {
     streams(where: { id: $id }, options: { limit: 1 }) {
       id
       name

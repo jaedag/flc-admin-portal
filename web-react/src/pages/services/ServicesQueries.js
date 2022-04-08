@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client'
 
 export const FELLOWSHIP_BANKING_SLIP_QUERIES = gql`
-  query fellowshipServices($fellowshipId: ID) {
+  query fellowshipServices($fellowshipId: ID!) {
     fellowships(where: { id: $fellowshipId }) {
       id
       bankingCode
@@ -26,7 +26,7 @@ export const FELLOWSHIP_BANKING_SLIP_QUERIES = gql`
   }
 `
 export const CONSTITUENCY_BANKING_SLIP_QUERIES = gql`
-  query constituencyServices($constituencyId: ID) {
+  query constituencyServices($constituencyId: ID!) {
     constituencies(where: { id: $constituencyId }) {
       id
 
@@ -52,7 +52,7 @@ export const CONSTITUENCY_BANKING_SLIP_QUERIES = gql`
 `
 
 export const COUNCIL_BANKING_SLIP_QUERIES = gql`
-  query councilServices($councilId: ID) {
+  query councilServices($councilId: ID!) {
     councils(where: { id: $councilId }) {
       id
 
@@ -79,13 +79,18 @@ export const COUNCIL_BANKING_SLIP_QUERIES = gql`
 
 export const BANKING_SLIP_SUBMISSION = gql`
   mutation SubmitBankingSlip($serviceRecordId: ID!, $bankingSlip: String!) {
-    updateServiceRecords(
-      where: { id: $serviceRecordId }
-      update: { bankingSlip: $bankingSlip }
+    SubmitBankingSlip(
+      serviceRecordId: $serviceRecordId
+      bankingSlip: $bankingSlip
     ) {
       serviceRecords {
         id
         bankingSlip
+        bankingSlipUploader {
+          id
+          firstName
+          lastName
+        }
         serviceLog {
           fellowship {
             id

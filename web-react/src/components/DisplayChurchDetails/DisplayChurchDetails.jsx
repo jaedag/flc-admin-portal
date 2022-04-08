@@ -27,6 +27,7 @@ import PlaceholderCustom from 'components/Placeholder'
 import { Geo, PencilSquare } from 'react-bootstrap-icons'
 import ViewAll from 'components/buttons/ViewAll'
 import { permitAdmin } from 'permission-utils'
+import useSetUserChurch from 'hooks/useSetUserChurch'
 
 const DisplayChurchDetails = (props) => {
   const navigate = useNavigate()
@@ -52,7 +53,7 @@ const DisplayChurchDetails = (props) => {
       break
   }
 
-  const { theme, setCurrentUser, currentUser } = useContext(MemberContext)
+  const { theme } = useContext(MemberContext)
   const [submitting, setSubmitting] = useState(false)
   const {
     clickCard,
@@ -327,25 +328,11 @@ const DisplayChurchDetails = (props) => {
               <Button
                 className={`btn-trends ${theme}`}
                 onClick={() => {
-                  setCurrentUser({
-                    ...currentUser,
-                    currentChurch: {
-                      id: props.churchId,
-                      name: props.name,
-                      __typename: props.churchType,
-                    },
+                  useSetUserChurch({
+                    id: props.churchId,
+                    name: props.name,
+                    __typename: props.churchType,
                   })
-                  sessionStorage.setItem(
-                    'currentUser',
-                    JSON.stringify({
-                      ...currentUser,
-                      currentChurch: {
-                        id: props.churchId,
-                        name: props.name,
-                        __typename: props.churchType,
-                      },
-                    })
-                  )
 
                   navigate(`/services/${props.churchType.toLowerCase()}`)
                 }}

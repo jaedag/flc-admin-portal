@@ -5,6 +5,7 @@ import { ChurchContext } from 'contexts/ChurchContext'
 import { MemberContext } from 'contexts/MemberContext'
 import { plural } from 'global-utils'
 import useChurchLevel from 'hooks/useChurchLevel'
+import useSetUserChurch from 'hooks/useSetUserChurch'
 import React, { useContext } from 'react'
 import { Card, Col, Container, Row } from 'react-bootstrap'
 import { useNavigate } from 'react-router'
@@ -18,7 +19,7 @@ import ConstituencyDashboard from './DashboardConstituency'
 const ChurchBySubChurch = () => {
   const { clickCard } = useContext(ChurchContext)
   const navigate = useNavigate()
-  const { currentUser, setCurrentUser } = useContext(MemberContext)
+  const { currentUser } = useContext(MemberContext)
   const [councilByConstituency] = useLazyQuery(COUNCIL_BY_CONSTITUENCY_ARRIVALS)
   const [streamByCouncil] = useLazyQuery(STREAM_BY_COUNCIL_ARRIVALS)
   const [gatheringServcieByStream] = useLazyQuery(
@@ -52,18 +53,7 @@ const ChurchBySubChurch = () => {
                       <Card.Body
                         onClick={() => {
                           clickCard(subChurch)
-                          setCurrentUser({
-                            ...currentUser,
-                            currentChurch: subChurch,
-                          })
-                          sessionStorage.setItem(
-                            'currentUser',
-                            JSON.stringify({
-                              ...currentUser,
-                              currentChurch: subChurch,
-                            })
-                          )
-
+                          useSetUserChurch(subChurch)
                           navigate(`/arrivals/${subChurchLevel}`)
                         }}
                       >

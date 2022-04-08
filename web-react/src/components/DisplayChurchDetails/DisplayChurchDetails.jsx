@@ -28,6 +28,7 @@ import { Geo, PencilSquare } from 'react-bootstrap-icons'
 import ViewAll from 'components/buttons/ViewAll'
 import { permitAdmin } from 'permission-utils'
 import useSetUserChurch from 'hooks/useSetUserChurch'
+import usePopup from 'hooks/usePopup'
 
 const DisplayChurchDetails = (props) => {
   const navigate = useNavigate()
@@ -55,14 +56,9 @@ const DisplayChurchDetails = (props) => {
 
   const { theme } = useContext(MemberContext)
   const [submitting, setSubmitting] = useState(false)
-  const {
-    clickCard,
-    togglePopup,
-    isOpen,
-    constituencyId,
-    councilId,
-    streamId,
-  } = useContext(ChurchContext)
+  const { clickCard, constituencyId, councilId, streamId } =
+    useContext(ChurchContext)
+  const { togglePopup, isOpen } = usePopup()
 
   //Change Admin Initialised
   const [MakeConstituencyAdmin] = useMutation(MAKE_CONSTITUENCY_ADMIN)

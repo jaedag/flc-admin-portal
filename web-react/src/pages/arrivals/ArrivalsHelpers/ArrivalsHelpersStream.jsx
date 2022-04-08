@@ -18,9 +18,11 @@ import Popup from 'components/Popup/Popup'
 import FormikControl from 'components/formik-components/FormikControl'
 import SubmitButton from 'components/formik-components/SubmitButton'
 import NoData from '../CompNoData'
+import usePopup from 'hooks/usePopup'
 
 const ArrivalsHelpersStream = () => {
-  const { streamId, isOpen, togglePopup } = useContext(ChurchContext)
+  const { streamId } = useContext(ChurchContext)
+  const { isOpen, togglePopup } = usePopup()
 
   const { data, loading, error } = useQuery(STREAM_ARRIVALS_HELPERS, {
     variables: { id: streamId },

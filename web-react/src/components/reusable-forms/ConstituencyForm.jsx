@@ -19,6 +19,7 @@ import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import HeadingSecondary from 'components/HeadingSecondary'
 import SubmitButton from 'components/formik-components/SubmitButton'
 import { permitAdmin } from 'permission-utils'
+import usePopup from 'hooks/usePopup'
 
 const ConstituencyForm = ({
   initialValues,
@@ -26,8 +27,8 @@ const ConstituencyForm = ({
   title,
   newConstituency,
 }) => {
-  const { togglePopup, isOpen, clickCard, constituencyId } =
-    useContext(ChurchContext)
+  const { clickCard, constituencyId } = useContext(ChurchContext)
+  const { togglePopup, isOpen } = usePopup()
   const { theme } = useContext(MemberContext)
 
   const navigate = useNavigate()

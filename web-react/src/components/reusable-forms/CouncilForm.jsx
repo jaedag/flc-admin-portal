@@ -19,10 +19,11 @@ import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import HeadingSecondary from 'components/HeadingSecondary'
 import SubmitButton from 'components/formik-components/SubmitButton'
 import { permitAdmin } from 'permission-utils'
+import usePopup from 'hooks/usePopup'
 
 const CouncilForm = ({ initialValues, onSubmit, title, newCouncil }) => {
-  const { togglePopup, isOpen, clickCard, councilId } =
-    useContext(ChurchContext)
+  const { clickCard, councilId } = useContext(ChurchContext)
+  const { togglePopup, isOpen } = usePopup()
   const { theme } = useContext(MemberContext)
 
   const navigate = useNavigate()

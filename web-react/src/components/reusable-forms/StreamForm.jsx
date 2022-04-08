@@ -19,11 +19,12 @@ import { MemberContext } from 'contexts/MemberContext'
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import HeadingSecondary from 'components/HeadingSecondary'
 import SubmitButton from 'components/formik-components/SubmitButton'
+import usePopup from 'hooks/usePopup'
 
 const StreamForm = ({ initialValues, onSubmit, title, newStream }) => {
-  const { togglePopup, isOpen, clickCard, streamId } = useContext(ChurchContext)
+  const { clickCard, streamId } = useContext(ChurchContext)
   const { theme } = useContext(MemberContext)
-
+  const { togglePopup, isOpen } = usePopup()
   const navigate = useNavigate()
   const { data, loading, error } = useQuery(GET_GATHERINGSERVICES)
   const [CloseDownStream] = useMutation(MAKE_STREAM_INACTIVE)

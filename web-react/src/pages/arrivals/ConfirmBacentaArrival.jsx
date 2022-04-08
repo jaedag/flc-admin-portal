@@ -24,9 +24,11 @@ import {
 import CloudinaryImage from 'components/CloudinaryImage'
 import useChurchLevel from 'hooks/useChurchLevel'
 import NoData from './CompNoData'
+import usePopup from 'hooks/usePopup'
 
 const ConfirmBacentaArrival = () => {
-  const { clickCard, isOpen, togglePopup } = useContext(ChurchContext)
+  const { clickCard } = useContext(ChurchContext)
+  const { togglePopup, isOpen } = usePopup()
   const { theme } = useContext(MemberContext)
   const { bussingRecordId } = useContext(ServiceContext)
   const [isSubmitting, setSubmitting] = useState(false)

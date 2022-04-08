@@ -4,7 +4,6 @@ import MenuButton from 'components/buttons/MenuButton'
 import FormikControl from 'components/formik-components/FormikControl'
 import SubmitButton from 'components/formik-components/SubmitButton'
 import Popup from 'components/Popup/Popup'
-import { ChurchContext } from 'contexts/ChurchContext'
 import { Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import React from 'react'
@@ -20,9 +19,10 @@ import { permitAdmin, permitArrivals } from 'permission-utils'
 import HeadingSecondary from 'components/HeadingSecondary'
 import DefaulterInfoCard from 'pages/services/defaulters/DefaulterInfoCard'
 import { MemberContext } from 'contexts/MemberContext'
+import usePopup from 'hooks/usePopup'
 
 const CouncilDashboard = () => {
-  const { isOpen, togglePopup } = useContext(ChurchContext)
+  const { isOpen, togglePopup } = usePopup()
   const { currentUser } = useContext(MemberContext)
   const navigate = useNavigate()
   const { data, loading, error } = useQuery(COUNCIL_ARRIVALS_DASHBOARD, {

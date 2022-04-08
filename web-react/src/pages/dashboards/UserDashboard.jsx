@@ -8,9 +8,11 @@ import { getMonthlyStatAverage } from '../services/reports/report-utils'
 import StatDisplay from 'pages/services/reports/CompStatDisplay'
 import { Col, Row, Table, Container } from 'react-bootstrap'
 import Placeholder from '../../components/Placeholder'
+import useClickCard from 'hooks/useClickCard'
 
 const UserDashboard = () => {
-  const { currentUser, userJobs, setMemberId } = useContext(MemberContext)
+  const { currentUser, userJobs } = useContext(MemberContext)
+  const { clickCard } = useClickCard()
   const navigate = useNavigate()
 
   return (
@@ -33,7 +35,7 @@ const UserDashboard = () => {
                       className="col-auto p-0"
                       key={i}
                       onClick={() => {
-                        setMemberId(currentUser.id)
+                        clickCard(currentUser.id)
                         role.clickCard()
                         navigate(role.link)
                       }}

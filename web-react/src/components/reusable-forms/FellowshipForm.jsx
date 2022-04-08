@@ -28,11 +28,13 @@ import HeadingSecondary from 'components/HeadingSecondary'
 import SubmitButton from 'components/formik-components/SubmitButton'
 import { DISPLAY_BACENTA } from 'pages/directory/display/ReadQueries'
 import { permitAdmin } from 'permission-utils'
+import usePopup from 'hooks/usePopup'
+import useClickCard from 'hooks/useClickCard'
 
 const FellowshipForm = (props) => {
-  const { clickCard, isOpen, togglePopup, fellowshipId, councilId } =
-    useContext(ChurchContext)
-
+  const { fellowshipId, councilId } = useContext(ChurchContext)
+  const { clickCard } = useClickCard()
+  const { togglePopup, isOpen } = usePopup()
   const { theme } = useContext(MemberContext)
   const navigate = useNavigate()
 

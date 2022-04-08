@@ -25,10 +25,11 @@ import HeadingSecondary from 'components/HeadingSecondary'
 import { MemberContext } from 'contexts/MemberContext'
 import SubmitButton from 'components/formik-components/SubmitButton'
 import { DISPLAY_CONSTITUENCY } from 'pages/directory/display/ReadQueries'
+import usePopup from 'hooks/usePopup'
 
 const BacentaForm = ({ initialValues, onSubmit, title, newBacenta }) => {
-  const { togglePopup, isOpen, clickCard, bacentaId, councilId } =
-    useContext(ChurchContext)
+  const { clickCard, bacentaId, councilId } = useContext(ChurchContext)
+  const { togglePopup, isOpen } = usePopup()
   const { theme } = useContext(MemberContext)
   const navigate = useNavigate()
 

@@ -23,9 +23,9 @@
     "format": "find . -name \"*.js\" | grep -v node_modules | grep -v build | xargs prettier --write",
     "format:log": "find . -name \"*.js\" | grep -v node_modules | grep -v build | xargs prettier",
     "inferschema:write": "node scripts/inferSchema.js",
-    "release:major": "changelog -M && git add CHANGELOG.md && git commit -m 'docs: updated CHANGELOG.md' && npm version major && git push origin && git push origin --tags",
-    "release:minor": "changelog -m && git add CHANGELOG.md && git commit -m 'docs: updated CHANGELOG.md' && npm version minor && git push origin && git push origin --tags",
-    "release:patch": "changelog -p && git add CHANGELOG.md && git commit -m 'docs: updated CHANGELOG.md' && npm version patch && git push origin && git push origin --tags",
+    "release:major": "changelog -M && git add CHANGELOG.md && git commit -m 'docs: updated CHANGELOG.md' && npm version major && cd web-react && npm version major && cd ../api && npm version major && git push origin && git push origin --tags",
+    "release:minor": "changelog -m && git add CHANGELOG.md && git commit -m 'docs: updated CHANGELOG.md' && npm version minor && cd web-react && npm version minor && cd ../api && npm version minor && git push origin && git push origin --tags",
+    "release:patch": "changelog -p && git add CHANGELOG.md && git commit -m 'docs: updated CHANGELOG.md' && npm version patch && cd web-react && npm version patch && cd ../api && npm version patch && git push origin && git push origin --tags",
     "prepare": "husky install"
   },
   "lint-staged": {
@@ -43,7 +43,7 @@
     "url": "git://github.com/jaedag/fl-admin-portal.git"
   },
   "license": "Apache-2.0",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "dependencies": {
     "neo4j-driver": "^4.4.5"
   }

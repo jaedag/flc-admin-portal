@@ -8,11 +8,9 @@ import { getMonthlyStatAverage } from '../services/reports/report-utils'
 import StatDisplay from 'pages/services/reports/CompStatDisplay'
 import { Col, Row, Table, Container } from 'react-bootstrap'
 import Placeholder from '../../components/Placeholder'
-import useClickCard from 'hooks/useClickCard'
 
 const UserDashboard = () => {
-  const { currentUser, userJobs } = useContext(MemberContext)
-  const { clickCard } = useClickCard()
+  const { currentUser, userJobs, clickCard } = useContext(MemberContext)
   const navigate = useNavigate()
 
   return (

@@ -1,6 +1,6 @@
 import PlaceholderCustom from 'components/Placeholder'
-import useClickCard from 'hooks/useClickCard'
-import React, { useState, useEffect } from 'react'
+import { ChurchContext } from 'contexts/ChurchContext'
+import React, { useState, useEffect, useContext } from 'react'
 import { useNavigate } from 'react-router'
 import {
   ResponsiveContainer,
@@ -17,7 +17,7 @@ import './ChurchGraph.css'
 
 const ChurchGraph = (props) => {
   const { loading, stat1, stat2, churchData, secondaryTitle } = props
-  const { clickCard } = useClickCard()
+  const { clickCard } = useContext(ChurchContext)
   const navigate = useNavigate()
 
   const [sortedData, setSortedData] = useState([])

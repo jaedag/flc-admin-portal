@@ -20,7 +20,6 @@ const ServiceDetails = ({ service, church, loading }) => {
   if (loading) {
     return <SpinnerPage />
   }
-
   return (
     <Container>
       <PlaceholderCustom as="h3" loading={loading}>

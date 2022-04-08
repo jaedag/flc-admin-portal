@@ -248,6 +248,9 @@ const useClickCard = () => {
   }
 
   const clickCard = (card) => {
+    if (!card) {
+      return null
+    }
     determineStream(card)
 
     switch (card.__typename) {

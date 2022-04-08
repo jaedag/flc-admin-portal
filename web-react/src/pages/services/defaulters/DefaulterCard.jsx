@@ -1,15 +1,13 @@
 import PlaceholderCustom from 'components/Placeholder'
 import { ChurchContext } from 'contexts/ChurchContext'
-import { ServiceContext } from 'contexts/ServiceContext'
 import React, { useContext } from 'react'
 import { Card, Button } from 'react-bootstrap'
 import { TelephoneFill, Whatsapp } from 'react-bootstrap-icons'
 import { useNavigate } from 'react-router'
 
 const DefaulterCard = ({ defaulter, link }) => {
-  const { setFellowshipId } = useContext(ChurchContext)
-  const { setServiceRecordId } = useContext(ServiceContext)
   const navigate = useNavigate()
+  const { clickCard } = useContext(ChurchContext)
 
   const serviceDetails = defaulter?.services?.length && defaulter?.services[0]
   return (
@@ -20,8 +18,7 @@ const DefaulterCard = ({ defaulter, link }) => {
       >
         <Card.Header
           onClick={() => {
-            setFellowshipId(defaulter?.id)
-
+            clickCard(defaulter)
             navigate(`/${defaulter?.__typename.toLowerCase()}/displaydetails`)
           }}
           className="fw-bold"
@@ -37,8 +34,8 @@ const DefaulterCard = ({ defaulter, link }) => {
         <Card.Body>
           <Card.Text
             onClick={() => {
-              setFellowshipId(defaulter?.id)
-              setServiceRecordId(serviceDetails?.id)
+              clickCard(defaulter)
+              clickCard(serviceDetails)
               navigate(
                 link || `/${defaulter?.__typename.toLowerCase()}/displaydetails`
               )

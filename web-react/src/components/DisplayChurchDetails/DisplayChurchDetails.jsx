@@ -31,6 +31,8 @@ import useSetUserChurch from 'hooks/useSetUserChurch'
 import usePopup from 'hooks/usePopup'
 
 const DisplayChurchDetails = (props) => {
+  const { setUser } = useSetUserChurch()
+
   const navigate = useNavigate()
   let needsAdmin
 
@@ -324,7 +326,7 @@ const DisplayChurchDetails = (props) => {
               <Button
                 className={`btn-trends ${theme}`}
                 onClick={() => {
-                  useSetUserChurch({
+                  setUser({
                     id: props.churchId,
                     name: props.name,
                     __typename: props.churchType,

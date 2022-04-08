@@ -18,6 +18,7 @@ import ConstituencyDashboard from './DashboardConstituency'
 
 const ChurchBySubChurch = () => {
   const { clickCard } = useContext(ChurchContext)
+  const { setUser } = useSetUserChurch()
   const navigate = useNavigate()
   const { currentUser } = useContext(MemberContext)
   const [councilByConstituency] = useLazyQuery(COUNCIL_BY_CONSTITUENCY_ARRIVALS)
@@ -53,7 +54,7 @@ const ChurchBySubChurch = () => {
                       <Card.Body
                         onClick={() => {
                           clickCard(subChurch)
-                          useSetUserChurch(subChurch)
+                          setUser(subChurch)
                           navigate(`/arrivals/${subChurchLevel}`)
                         }}
                       >

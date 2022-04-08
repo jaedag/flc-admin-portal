@@ -20,6 +20,12 @@ export const FELLOWSHIP_BANKING_SLIP_QUERIES = gql`
           fullName
         }
         bankingSlip
+        bankingSlipUploader {
+          id
+          firstName
+          lastName
+          fullName
+        }
         income
       }
     }
@@ -45,6 +51,12 @@ export const CONSTITUENCY_BANKING_SLIP_QUERIES = gql`
           fullName
         }
         bankingSlip
+        bankingSlipUploader {
+          id
+          firstName
+          lastName
+          fullName
+        }
         income
       }
     }
@@ -71,6 +83,12 @@ export const COUNCIL_BANKING_SLIP_QUERIES = gql`
           fullName
         }
         bankingSlip
+        bankingSlipUploader {
+          id
+          firstName
+          lastName
+          fullName
+        }
         income
       }
     }

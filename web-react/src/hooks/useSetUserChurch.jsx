@@ -1,22 +1,25 @@
 import { MemberContext } from 'contexts/MemberContext'
 import { useContext } from 'react'
 
-const useSetUserChurch = (church) => {
+const useSetUserChurch = () => {
   const { currentUser, setCurrentUser } = useContext(MemberContext)
 
-  setCurrentUser({
-    ...currentUser,
-    currentChurch: church,
-  })
-
-  sessionStorage.setItem(
-    'currentUser',
-    JSON.stringify({
+  const setUser = (church) => {
+    setCurrentUser({
       ...currentUser,
       currentChurch: church,
     })
-  )
-  return { currentUser, setCurrentUser }
+
+    sessionStorage.setItem(
+      'currentUser',
+      JSON.stringify({
+        ...currentUser,
+        currentChurch: church,
+      })
+    )
+  }
+
+  return { currentUser, setCurrentUser, setUser }
 }
 
 export default useSetUserChurch

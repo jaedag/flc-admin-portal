@@ -62,6 +62,7 @@ export const SERVANTS_DASHBOARD = gql`
         name
         stream_name
         memberCount
+        vacationStatus
 
         services(limit: 4) {
           created_at

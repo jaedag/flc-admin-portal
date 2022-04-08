@@ -1,6 +1,6 @@
 import PlaceholderCustom from 'components/Placeholder'
-import { ServiceContext } from 'contexts/ServiceContext'
-import React, { useContext, useState, useEffect } from 'react'
+import useClickCard from 'hooks/useClickCard'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router'
 import {
   ResponsiveContainer,
@@ -17,7 +17,7 @@ import './ChurchGraph.css'
 
 const ChurchGraph = (props) => {
   const { loading, stat1, stat2, churchData, secondaryTitle } = props
-  const { setServiceRecordId } = useContext(ServiceContext)
+  const { clickCard } = useClickCard()
   const navigate = useNavigate()
 
   const [sortedData, setSortedData] = useState([])
@@ -134,7 +134,7 @@ const ChurchGraph = (props) => {
                 fill="url(#colorPrimary)"
                 onClick={(data) => {
                   if (data.id) {
-                    setServiceRecordId(data.id)
+                    clickCard({ ...data, __typename: 'ServiceRecord' })
                     navigate(`/${props.church}/service-details`)
                   }
                 }}
@@ -155,7 +155,7 @@ const ChurchGraph = (props) => {
                   fill="url(#colorSecondary)"
                   onClick={(data) => {
                     if (data.id) {
-                      setServiceRecordId(data.id)
+                      clickCard({ ...data, __typename: 'ServiceRecord' })
                       navigate(`/${props.church}/service-details`)
                     }
                   }}

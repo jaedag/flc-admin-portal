@@ -29,15 +29,16 @@ const Services = () => {
         </PlaceholderCustom>
 
         <div className="d-grid gap-2 mt-5 text-left">
-          {churchType === 'Fellowship' && (
-            <MenuButton
-              iconComponent={Book}
-              title="Fellowship Service"
-              color="members"
-              onClick={() => navigate(`/services/fellowship`)}
-              noCaption
-            />
-          )}
+          {churchType === 'Fellowship' &&
+            church?.vacationStatus === 'Active' && (
+              <MenuButton
+                iconComponent={Book}
+                title="Fellowship Service"
+                color="members"
+                onClick={() => navigate(`/services/fellowship`)}
+                noCaption
+              />
+            )}
           {churchType === 'Bacenta' && (
             <MenuButton
               iconComponent={Book}

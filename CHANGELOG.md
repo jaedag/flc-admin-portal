@@ -1,5 +1,15 @@
 #### 1.1.1 (2022-04-08)
 
+##### Chores
+
+*  version bump ([35237b8e](https://github.com/jaedag/fl-admin-portal/commit/35237b8e46e2f84d416d55a3a34a917b399d19a2))
+
+##### Documentation Changes
+
+*  updated CHANGELOG.md ([2f4405e7](https://github.com/jaedag/fl-admin-portal/commit/2f4405e777567c1907db4e3f31c3e438a5bf03a2))
+
+#### 1.1.1 (2022-04-08)
+
 ### 1.1.0 (2022-04-08)
 
 ##### Chores

@@ -1,13 +1,13 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import { useAuth0 } from '@auth0/auth0-react'
 import Popup from '../Popup/Popup'
-import { ChurchContext } from 'contexts/ChurchContext'
 import { Button, Spinner } from 'react-bootstrap'
 import { useLocation } from 'react-router'
+import usePopup from 'hooks/usePopup'
 
 const AuthButton = (props) => {
   const { loginWithRedirect, logout, isAuthenticated } = useAuth0()
-  const { togglePopup, isOpen } = useContext(ChurchContext)
+  const { togglePopup, isOpen } = usePopup()
   const { mobileFullSize } = props
   const location = useLocation()
 

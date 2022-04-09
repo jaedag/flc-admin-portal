@@ -10,7 +10,7 @@ import { Col, Row, Table, Container } from 'react-bootstrap'
 import Placeholder from '../../components/Placeholder'
 
 const UserDashboard = () => {
-  const { currentUser, userJobs, setMemberId } = useContext(MemberContext)
+  const { currentUser, userJobs, clickCard } = useContext(MemberContext)
   const navigate = useNavigate()
 
   return (
@@ -33,7 +33,7 @@ const UserDashboard = () => {
                       className="col-auto p-0"
                       key={i}
                       onClick={() => {
-                        setMemberId(currentUser.id)
+                        clickCard(currentUser.id)
                         role.clickCard()
                         navigate(role.link)
                       }}

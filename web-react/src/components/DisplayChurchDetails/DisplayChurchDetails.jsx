@@ -27,8 +27,12 @@ import PlaceholderCustom from 'components/Placeholder'
 import { Geo, PencilSquare } from 'react-bootstrap-icons'
 import ViewAll from 'components/buttons/ViewAll'
 import { permitAdmin } from 'permission-utils'
+import useSetUserChurch from 'hooks/useSetUserChurch'
+import usePopup from 'hooks/usePopup'
 
 const DisplayChurchDetails = (props) => {
+  const { setUser } = useSetUserChurch()
+
   const navigate = useNavigate()
   let needsAdmin
 
@@ -52,16 +56,11 @@ const DisplayChurchDetails = (props) => {
       break
   }
 
-  const { theme, setCurrentUser, currentUser } = useContext(MemberContext)
+  const { theme } = useContext(MemberContext)
   const [submitting, setSubmitting] = useState(false)
-  const {
-    clickCard,
-    togglePopup,
-    isOpen,
-    constituencyId,
-    councilId,
-    streamId,
-  } = useContext(ChurchContext)
+  const { clickCard, constituencyId, councilId, streamId } =
+    useContext(ChurchContext)
+  const { togglePopup, isOpen } = usePopup()
 
   //Change Admin Initialised
   const [MakeConstituencyAdmin] = useMutation(MAKE_CONSTITUENCY_ADMIN)
@@ -327,25 +326,11 @@ const DisplayChurchDetails = (props) => {
               <Button
                 className={`btn-trends ${theme}`}
                 onClick={() => {
-                  setCurrentUser({
-                    ...currentUser,
-                    currentChurch: {
-                      id: props.churchId,
-                      name: props.name,
-                      __typename: props.churchType,
-                    },
+                  setUser({
+                    id: props.churchId,
+                    name: props.name,
+                    __typename: props.churchType,
                   })
-                  sessionStorage.setItem(
-                    'currentUser',
-                    JSON.stringify({
-                      ...currentUser,
-                      currentChurch: {
-                        id: props.churchId,
-                        name: props.name,
-                        __typename: props.churchType,
-                      },
-                    })
-                  )
 
                   navigate(`/services/${props.churchType.toLowerCase()}`)
                 }}

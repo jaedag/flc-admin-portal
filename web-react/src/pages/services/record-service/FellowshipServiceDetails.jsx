@@ -18,7 +18,7 @@ const FellowshipServiceDetails = () => {
   throwErrorMsg(error)
 
   return (
-    <BaseComponent loading={loading} error={error} data={data} placeholder>
+    <BaseComponent loading={loading} error={error} data={data}>
       <ServiceDetails
         loading={loading}
         service={data?.serviceRecords[0]}

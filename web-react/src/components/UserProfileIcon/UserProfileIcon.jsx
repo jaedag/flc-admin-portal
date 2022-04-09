@@ -3,13 +3,13 @@ import { useAuth0 } from '@auth0/auth0-react'
 import AuthButton from '../buttons/AuthButton'
 import './UserProfileIcon.css'
 import { MemberContext } from '../../contexts/MemberContext.js'
-import { ChurchContext } from '../../contexts/ChurchContext'
 import { Spinner } from 'react-bootstrap'
 import CloudinaryImage from 'components/CloudinaryImage'
 import { USER_PLACEHOLDER } from 'global-utils'
+import useClickCard from 'hooks/useClickCard'
 
 function UserProfileIcon() {
-  const { setChurch } = useContext(ChurchContext)
+  const { setChurch } = useClickCard()
   const { currentUser } = useContext(MemberContext)
   const { isAuthenticated } = useAuth0()
 

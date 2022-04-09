@@ -1,13 +1,13 @@
 import { useAuth0 } from '@auth0/auth0-react'
-import { ChurchContext } from 'contexts/ChurchContext'
 import { MemberContext } from 'contexts/MemberContext'
 import { isAuthorised } from 'global-utils'
+import useClickCard from 'hooks/useClickCard'
 import { permitMe } from 'permission-utils'
 import React, { useContext, useEffect } from 'react'
 
 const SetPermissions = ({ children }) => {
   const { currentUser } = useContext(MemberContext)
-  const church = useContext(ChurchContext)
+  const church = useClickCard()
   const { isAuthenticated } = useAuth0()
 
   useEffect(() => {

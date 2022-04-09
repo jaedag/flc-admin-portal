@@ -2,13 +2,15 @@ import MenuButton from 'components/buttons/MenuButton'
 import { ChurchContext } from 'contexts/ChurchContext'
 import { MemberContext } from 'contexts/MemberContext'
 import { parseMemberCount } from 'global-utils'
+import useSetUserChurch from 'hooks/useSetUserChurch'
 import React, { useContext } from 'react'
 import { useNavigate } from 'react-router'
 import MemberIcon from '../../assets/people-svgrepo-com-2.svg'
 
 const ChurchList = ({ color, link }) => {
-  const { currentUser, setCurrentUser, userJobs } = useContext(MemberContext)
+  const { userJobs } = useContext(MemberContext)
   const { clickCard } = useContext(ChurchContext)
+  const { setUser } = useSetUserChurch()
   const navigate = useNavigate()
 
   return (
@@ -36,18 +38,7 @@ const ChurchList = ({ color, link }) => {
                 iconCaption={church.__typename}
                 onClick={() => {
                   clickCard(church)
-                  setCurrentUser({
-                    ...currentUser,
-                    currentChurch: church,
-                  })
-
-                  sessionStorage.setItem(
-                    'currentUser',
-                    JSON.stringify({
-                      ...currentUser,
-                      currentChurch: church,
-                    })
-                  )
+                  setUser(church)
 
                   if (color === 'arrivals') {
                     navigate(`/arrivals/${church.__typename.toLowerCase()}`)

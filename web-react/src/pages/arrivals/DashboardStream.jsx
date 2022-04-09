@@ -1,6 +1,5 @@
 import { useMutation, useQuery } from '@apollo/client'
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
-import { ChurchContext } from 'contexts/ChurchContext'
 import React, { useContext } from 'react'
 import * as Yup from 'yup'
 import { useNavigate } from 'react-router'
@@ -24,9 +23,10 @@ import MenuButton from 'components/buttons/MenuButton'
 import DefaulterInfoCard from 'pages/services/defaulters/DefaulterInfoCard'
 import { MemberContext } from 'contexts/MemberContext'
 import { CheckAll } from 'react-bootstrap-icons'
+import usePopup from 'hooks/usePopup'
 
 const StreamDashboard = () => {
-  const { isOpen, togglePopup } = useContext(ChurchContext)
+  const { isOpen, togglePopup } = usePopup()
   const { currentUser } = useContext(MemberContext)
   const navigate = useNavigate()
   const { data, loading, error } = useQuery(STREAM_ARRIVALS_DASHBOARD, {

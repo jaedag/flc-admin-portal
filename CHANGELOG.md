@@ -1,3 +1,65 @@
+#### 1.1.1 (2022-04-08)
+
+##### Chores
+
+*  version bump ([35237b8e](https://github.com/jaedag/fl-admin-portal/commit/35237b8e46e2f84d416d55a3a34a917b399d19a2))
+
+##### Documentation Changes
+
+*  updated CHANGELOG.md ([2f4405e7](https://github.com/jaedag/fl-admin-portal/commit/2f4405e777567c1907db4e3f31c3e438a5bf03a2))
+
+#### 1.1.1 (2022-04-08)
+
+### 1.1.0 (2022-04-08)
+
+##### Chores
+
+*  removed console.log ([af4a3e81](https://github.com/jaedag/fl-admin-portal/commit/af4a3e81a522cc381266742d06d75d6d85bb5b27))
+*  downgraded neo4j/graphql to version 2.5.9 ([3bc4d14c](https://github.com/jaedag/fl-admin-portal/commit/3bc4d14cb648ee3f76030d3ecc375a97c2cb9fb3))
+*  updated version number ([ffca27de](https://github.com/jaedag/fl-admin-portal/commit/ffca27def5697dd9f7b4a5d75e039c8f025c1f09))
+*  update @neo4j/graphql and graphql libraries ([26515e15](https://github.com/jaedag/fl-admin-portal/commit/26515e15ce7aa75422ba3e0368b726f686189f99))
+
+##### Documentation Changes
+
+*  updated CHANGELOG.md ([b4e0d2be](https://github.com/jaedag/fl-admin-portal/commit/b4e0d2be74503d3eca6b2252d754360095bd6fd7))
+*  updated CHANGELOG.md ([283b5471](https://github.com/jaedag/fl-admin-portal/commit/283b54716ac37e4d87d64768becc7db58340fd4d))
+*  updated CHANGELOG.md ([2e59f2e5](https://github.com/jaedag/fl-admin-portal/commit/2e59f2e5b63a6619f526b711e31156b99790539f))
+
+##### New Features
+
+*  implemented a feature to show who uploaded a banking slip ([36245d1e](https://github.com/jaedag/fl-admin-portal/commit/36245d1edbd55f56468e490b21308555c22d7a86))
+* **arrivals:**  implemented feature for stream admins to set arrival times ([7e73aad5](https://github.com/jaedag/fl-admin-portal/commit/7e73aad50ff56f965f7ee6f70b0f290f1a4b000d))
+
+##### Bug Fixes
+
+*  fixed version updates script ([f3b53900](https://github.com/jaedag/fl-admin-portal/commit/f3b539002292fc743e54416eb72f06d3675e81ae))
+*  admin-85 fellowships on vacation can no longer fill service forms ([d10d18e9](https://github.com/jaedag/fl-admin-portal/commit/d10d18e9af07e21dafb751aadcd0b14c8f53eeb5))
+*  admin-85 implemented non-null constraints on all ID fields ([73ea92bd](https://github.com/jaedag/fl-admin-portal/commit/73ea92bd851342dbd7f9713f8be5a413b02df776))
+*  admin-85 implemented error handling for banking slip submission form ([54b037af](https://github.com/jaedag/fl-admin-portal/commit/54b037affdbeb86748e0fb265e2a0c4aa79e0039))
+*  correct event object incorrectly being passed in context ([b76ed9e0](https://github.com/jaedag/fl-admin-portal/commit/b76ed9e006fe4ec4e9b5f88fce737b488a1ed408))
+*  upgraded @neo4j/graphql ([f4165d4a](https://github.com/jaedag/fl-admin-portal/commit/f4165d4a2c511512cd1595c18b9a576923ff0c6d))
+*  downgraded neo4j/graphql lib ([e4381be7](https://github.com/jaedag/fl-admin-portal/commit/e4381be74ec34619d65a11626d59a3932fa228b9))
+*  awaitign the createHandler function in graphql.js ([e6fa1fc9](https://github.com/jaedag/fl-admin-portal/commit/e6fa1fc93a0e96bf0ae845623d520c99194798bb))
+*  awaitign the createHandler function in graphql.js ([be6382d5](https://github.com/jaedag/fl-admin-portal/commit/be6382d5f85de4e70dd60a03946bf7bf289b7095))
+*  wrote a function to convert a time string to ISODateString ([c45a10d9](https://github.com/jaedag/fl-admin-portal/commit/c45a10d9f36c8ddcd72f4cd4e468c569664c190b))
+*  rewrote the graphql.js to fix breaking change on @neo4j update ([8782858f](https://github.com/jaedag/fl-admin-portal/commit/8782858fd47a4a66c1e3df68746c8e61608bc72d))
+*  updated apollo-server-lambda ([a35144d9](https://github.com/jaedag/fl-admin-portal/commit/a35144d9abaed149c1104a3c4636b48006b6fb0a))
+*  fixed breaking changes on updating to @neo4j/graphql 3.0.3 ([c6e608c4](https://github.com/jaedag/fl-admin-portal/commit/c6e608c41404a0aa5c284cf3a68391b80241cf2c))
+*  fixed breaking changes on updating to @neo4j/graphql 3.0.3 ([b5fdbd09](https://github.com/jaedag/fl-admin-portal/commit/b5fdbd091a50a196c75a1ed0fc1d97679bc2506e))
+*  updated graphql file to use @neo4j/graphql 3.0.3 (breaking change) ([e270f888](https://github.com/jaedag/fl-admin-portal/commit/e270f88849f4f2b3860cf88339bc304080666b54))
+*  tightened phoneNumber validation to prevent using a duplicate number with '+2330' syntax ([d342e0f4](https://github.com/jaedag/fl-admin-portal/commit/d342e0f46a72bec74960d5db07ce187b0b30b91f))
+*  tightened phoneNumber validation to prevent using a duplicate number with '+2330' syntax ([5cf25d69](https://github.com/jaedag/fl-admin-portal/commit/5cf25d698a1ff9e3aaf609af23634c9d5ac34692))
+*  added missing 'id' to leaders in ListQueries ([bf74c3d6](https://github.com/jaedag/fl-admin-portal/commit/bf74c3d6d8129552f4437bbbc072d78a99365929))
+*  fixed member and church icons on search flow ([fbdba11f](https://github.com/jaedag/fl-admin-portal/commit/fbdba11f3396d994c873bb9eacae1c6a2a26fe8e))
+*  fixed bug breaking the update member page ([d656aaed](https://github.com/jaedag/fl-admin-portal/commit/d656aaedf8e8f4100f1b5e7279d1d3ae46032322))
+*  fixed create member submission ([56ddcf4f](https://github.com/jaedag/fl-admin-portal/commit/56ddcf4fd580cc89d2965755628e7aa84310926d))
+*  improved bacenta form for non stream admins ([175d5556](https://github.com/jaedag/fl-admin-portal/commit/175d5556e3119264dbc9a242024a519299a78e6f))
+*  fixed bug where emails could not be changed ([54f64770](https://github.com/jaedag/fl-admin-portal/commit/54f6477063560fcefe05070220a626e4993cd757))
+
+##### Refactors
+
+*  introduced custom hook usePopup to take the weight of context ([7b37b9f7](https://github.com/jaedag/fl-admin-portal/commit/7b37b9f71442be70d7e5e7f396c0c323dfeafb35))
+
 #### 1.0.3 (2022-04-03)
 
 ##### Chores

@@ -3,7 +3,7 @@ import HeadingSecondary from 'components/HeadingSecondary'
 import PlaceholderCustom from 'components/Placeholder'
 import SpinnerPage from 'components/SpinnerPage'
 import { MemberContext } from 'contexts/MemberContext'
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { Col, Container, Row, Table, Button } from 'react-bootstrap'
 import { useNavigate } from 'react-router'
 import './ServiceDetails.css'
@@ -12,14 +12,14 @@ const ServiceDetails = ({ service, church, loading }) => {
   const { theme } = useContext(MemberContext)
   const navigate = useNavigate()
 
-  if (!service) {
-    navigate(-1)
-  }
-
+  useEffect(() => {
+    if (!service) {
+      navigate(-1)
+    }
+  }, [service])
   if (loading) {
     return <SpinnerPage />
   }
-
   return (
     <Container>
       <PlaceholderCustom as="h3" loading={loading}>
@@ -28,6 +28,9 @@ const ServiceDetails = ({ service, church, loading }) => {
       <PlaceholderCustom as="h6" loading={loading}>
         <HeadingSecondary>{`${church?.name} ${church?.__typename}`}</HeadingSecondary>
         <p>{`Recorded by ${service?.created_by.fullName}`}</p>
+        {service?.bankingSlipUploader && (
+          <p className="fw-bold">{`Banking Slip Uploaded by ${service?.bankingSlipUploader.fullName}`}</p>
+        )}
       </PlaceholderCustom>
       <Row>
         <Col>

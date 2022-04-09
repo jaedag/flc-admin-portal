@@ -476,6 +476,8 @@ type ServiceRecord implements Record @auth(rules: [{ isAuthenticated: true }]) {
   servicePicture: String
   treasurerSelfie: String
   bankingSlip: String
+  bankingSlipUploader: Member
+    @relationship(type: "UPLOADED_SLIP_FOR", direction: IN)
   treasurers: [Member!]! @relationship(type: "WAS_TREASURER_FOR", direction: IN)
   serviceLog: ServiceLog @relationship(type: "HAS_SERVICE", direction: IN)
   noServiceReason: String
@@ -583,6 +585,18 @@ extend type Mutation {
       MERGE (log)-[:HAS_SERVICE]->(serviceRecord)
 
       RETURN serviceRecord
+      """
+    )
+
+  SubmitBankingSlip(serviceRecordId: ID!, bankingSlip: String!): ServiceRecord
+    @cypher(
+      statement: """
+      MATCH (record:ServiceRecord {id: $serviceRecordId})
+        SET serviceRecord.bankingSlip = $bankingSlip
+        MATCH (banker:Member {auth_id: $auth.jwt.sub})
+        MERGE (banker)-[:UPLOADED_SLIP_FOR]->(record)
+
+        RETURN record
       """
     )
 }

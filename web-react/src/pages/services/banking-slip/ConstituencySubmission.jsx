@@ -16,6 +16,7 @@ import BaseComponent from 'components/base-component/BaseComponent'
 import { useNavigate } from 'react-router'
 import { ChurchContext } from 'contexts/ChurchContext'
 import { getHumanReadableDate } from 'date-utils'
+import { throwErrorMsg } from 'global-utils'
 
 const ConstituencyBankingSlipSubmission = () => {
   const { serviceRecordId } = useContext(ServiceContext)
@@ -37,19 +38,22 @@ const ConstituencyBankingSlipSubmission = () => {
     bankingSlip: Yup.string().required('You must upload a banking slip'),
   })
 
-  const onSubmit = (values, onSubmitProps) => {
+  const onSubmit = async (values, onSubmitProps) => {
     onSubmitProps.setSubmitting(true)
-    SubmitBankingSlip({
-      variables: {
-        serviceRecordId: serviceRecordId,
-        bankingSlip: values.bankingSlip,
-      },
-    }).then(() => {
+    try {
+      await SubmitBankingSlip({
+        variables: {
+          serviceRecordId: serviceRecordId,
+          bankingSlip: values.bankingSlip,
+        },
+      })
       onSubmitProps.setSubmitting(false)
       onSubmitProps.resetForm()
 
       navigate(`/constituency/service-details`)
-    })
+    } catch (error) {
+      throwErrorMsg(error)
+    }
   }
 
   return (

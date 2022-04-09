@@ -81,7 +81,7 @@ export const COUNCIL_DROPDOWN = gql`
 `
 
 export const GET_CONSTITUENCY_BACENTAS = gql`
-  query ($id: ID) {
+  query ($id: ID!) {
     constituencies(where: { id: $id }) {
       id
       name
@@ -123,7 +123,7 @@ export const GET_CONSTITUENCY_BACENTAS = gql`
 `
 
 export const GET_SONTAS_BY_CONSTITUENCY = gql`
-  query ($id: ID) {
+  query ($id: ID!) {
     constituencies(where: { bishop: { id: $id } }) {
       id
       name
@@ -147,7 +147,7 @@ export const GET_SONTAS_BY_CONSTITUENCY = gql`
 `
 
 export const GET_COUNCIL_CONSTITUENCIES = gql`
-  query ($id: ID) {
+  query ($id: ID!) {
     councils(where: { id: $id }) {
       id
       name
@@ -193,7 +193,7 @@ export const GET_COUNCIL_CONSTITUENCIES = gql`
   }
 `
 export const GET_GATHERING_SERVICE_CONSTITUENCIES = gql`
-  query ($id: ID) {
+  query ($id: ID!) {
     gatheringServices(where: { id: $id }) {
       id
       name
@@ -232,7 +232,7 @@ export const GET_GATHERING_SERVICE_CONSTITUENCIES = gql`
 `
 
 export const GET_STREAM_COUNCILS = gql`
-  query ($id: ID) {
+  query ($id: ID!) {
     streams(where: { id: $id }) {
       id
       name
@@ -272,7 +272,7 @@ export const GET_STREAM_COUNCILS = gql`
 `
 
 export const GET_GATHERINGSERVICE_STREAMS = gql`
-  query ($id: ID) {
+  query ($id: ID!) {
     gatheringServices(where: { id: $id }) {
       id
       name
@@ -357,7 +357,7 @@ export const GET_MINISTRIES = gql`
 `
 
 export const GET_BACENTA_FELLOWSHIPS = gql`
-  query ($id: ID) {
+  query ($id: ID!) {
     bacentas(where: { id: $id }) {
       id
       memberCount

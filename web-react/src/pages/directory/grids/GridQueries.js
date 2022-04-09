@@ -56,7 +56,7 @@ export const GET_FEDERAL_MEMBERS = gql`
 `
 
 export const GET_SERVANT_MEMBERS = gql`
-  query ($id: ID) {
+  query ($id: ID!) {
     members(where: { id: $id }) {
       id
       firstName
@@ -125,7 +125,7 @@ export const GET_SERVANT_MEMBERS = gql`
 `
 
 export const GET_GATHERING_SERVICE_MEMBERS = gql`
-  query ($id: ID) {
+  query ($id: ID!) {
     gatheringServices(where: { id: $id }) {
       id
       name
@@ -191,7 +191,7 @@ export const GET_GATHERING_SERVICE_MEMBERS = gql`
   }
 `
 export const GET_STREAM_MEMBERS = gql`
-  query ($id: ID) {
+  query ($id: ID!) {
     streams(where: { id: $id }) {
       id
       name
@@ -258,7 +258,7 @@ export const GET_STREAM_MEMBERS = gql`
 `
 
 export const GET_COUNCIL_MEMBERS = gql`
-  query ($id: ID) {
+  query ($id: ID!) {
     councils(where: { id: $id }) {
       id
       name
@@ -325,7 +325,7 @@ export const GET_COUNCIL_MEMBERS = gql`
 `
 
 export const GET_CONSTITUENCY_MEMBERS = gql`
-  query ($id: ID) {
+  query ($id: ID!) {
     constituencies(where: { id: $id }) {
       id
       name
@@ -388,7 +388,7 @@ export const GET_CONSTITUENCY_MEMBERS = gql`
 `
 
 export const GET_BACENTA_MEMBERS = gql`
-  query ($id: ID) {
+  query ($id: ID!) {
     bacentas(where: { id: $id }) {
       id
       name
@@ -446,7 +446,7 @@ export const GET_BACENTA_MEMBERS = gql`
 `
 
 export const GET_FELLOWSHIP_MEMBERS = gql`
-  query ($id: ID) {
+  query ($id: ID!) {
     fellowships(where: { id: $id }) {
       id
       name
@@ -510,7 +510,7 @@ export const GET_FELLOWSHIP_MEMBERS = gql`
 `
 
 export const GET_SONTA_MEMBERS = gql`
-  query ($id: ID) {
+  query ($id: ID!) {
     sontas(where: { id: $id }) {
       id
       name

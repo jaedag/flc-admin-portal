@@ -1,6 +1,7 @@
 import MenuButton from 'components/buttons/MenuButton'
 import PlaceholderCustom from 'components/Placeholder'
 import { MemberContext } from 'contexts/MemberContext'
+import useClickCard from 'hooks/useClickCard'
 import React, { useContext } from 'react'
 import { Container } from 'react-bootstrap'
 import {
@@ -28,15 +29,16 @@ const Services = () => {
         </PlaceholderCustom>
 
         <div className="d-grid gap-2 mt-5 text-left">
-          {churchType === 'Fellowship' && (
-            <MenuButton
-              iconComponent={Book}
-              title="Fellowship Service"
-              color="members"
-              onClick={() => navigate(`/services/fellowship`)}
-              noCaption
-            />
-          )}
+          {churchType === 'Fellowship' &&
+            church?.vacationStatus === 'Active' && (
+              <MenuButton
+                iconComponent={Book}
+                title="Fellowship Service"
+                color="members"
+                onClick={() => navigate(`/services/fellowship`)}
+                noCaption
+              />
+            )}
           {churchType === 'Bacenta' && (
             <MenuButton
               iconComponent={Book}
@@ -71,9 +73,10 @@ const Services = () => {
               title="Banking Slips"
               color="members"
               noCaption
-              onClick={() =>
+              onClick={() => {
+                useClickCard(church)
                 navigate(`/services/${churchType.toLowerCase()}/banking-slips`)
-              }
+              }}
             />
           )}
         </div>

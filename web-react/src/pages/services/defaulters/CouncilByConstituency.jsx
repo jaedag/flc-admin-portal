@@ -2,7 +2,7 @@ import { useQuery } from '@apollo/client'
 import BaseComponent from 'components/base-component/BaseComponent'
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import { ChurchContext } from 'contexts/ChurchContext'
-import { MemberContext } from 'contexts/MemberContext'
+import useSetUserChurch from 'hooks/useSetUserChurch'
 import React, { useContext } from 'react'
 import { Card, Col, Row, Button, Container } from 'react-bootstrap'
 import { TelephoneFill, Whatsapp } from 'react-bootstrap-icons'
@@ -12,7 +12,7 @@ import PlaceholderDefaulterList from './PlaceholderDefaulterList'
 
 const CouncilByConstituency = () => {
   const { councilId, clickCard } = useContext(ChurchContext)
-  const { currentUser, setCurrentUser } = useContext(MemberContext)
+  const { setUser } = useSetUserChurch()
   const { data, loading, error } = useQuery(COUNCIL_BY_CONSTITUENCY, {
     variables: {
       id: councilId,
@@ -35,17 +35,7 @@ const CouncilByConstituency = () => {
                   <Card.Body
                     onClick={() => {
                       clickCard(constituency)
-                      setCurrentUser({
-                        ...currentUser,
-                        currentChurch: constituency,
-                      })
-                      sessionStorage.setItem(
-                        'currentUser',
-                        JSON.stringify({
-                          ...currentUser,
-                          currentChurch: constituency,
-                        })
-                      )
+                      setUser(constituency)
 
                       navigate('/services/defaulters/dashboard')
                     }}

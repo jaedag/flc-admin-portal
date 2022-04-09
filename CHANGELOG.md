@@ -1,3 +1,27 @@
+#### 1.1.7 (2022-04-09)
+
+##### Continuous Integration
+
+*  updated the git repository address ([07dd73fc](https://github.com/firstlovecenter/fl-admin-portal/commit/07dd73fcf448dfccf9503dda79229f08f1e01e8c))
+
+##### New Features
+
+* **sabbath:**  implemented a no work policy for Mondays ([4838a0eb](https://github.com/firstlovecenter/fl-admin-portal/commit/4838a0eb3eaca2f0ca68f3e7367d8155725816d0))
+
+##### Bug Fixes
+
+*  cleaned up the flow for submitting banking slips ([5f7a0529](https://github.com/firstlovecenter/fl-admin-portal/commit/5f7a0529d7dedba7ea62bc247cf3a5a12e0219bc))
+*  fixed bug which was preventing deploy ([1bd02adb](https://github.com/firstlovecenter/fl-admin-portal/commit/1bd02adb4293857806878c7dfee017c6beffccfb))
+
+##### Refactors
+
+* **sabbath:**  extracted the sabbath code into its own component ([b6d6ce4c](https://github.com/firstlovecenter/fl-admin-portal/commit/b6d6ce4c7a88273ffd5b89a2c0c0cc6495fff8a1))
+*  reverted back to separate resolver files ([9c72ab57](https://github.com/firstlovecenter/fl-admin-portal/commit/9c72ab575681fa66951cd6b059ec593b137076ad))
+*  corrected schema patch in graphql.js ([19c3fbcd](https://github.com/firstlovecenter/fl-admin-portal/commit/19c3fbcd4d51f8c5ce6696a50037ca9ff9ca373e))
+*  brought back financial-utils.js ([8f0bd049](https://github.com/firstlovecenter/fl-admin-portal/commit/8f0bd049ebfc54573f6259a065351a4c243c5be5))
+*  replaced the use of import statement outside a module ([54d0c221](https://github.com/firstlovecenter/fl-admin-portal/commit/54d0c221f89a530a6f7211c81cba404902c65455))
+*  correct error with import statement after refactor ([bc2a06c9](https://github.com/firstlovecenter/fl-admin-portal/commit/bc2a06c940af72cc4954aa6ae11b681657449cc4))
+
 #### 1.1.6 (2022-04-09)
 
 ##### Chores

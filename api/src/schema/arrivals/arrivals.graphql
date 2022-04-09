@@ -1086,7 +1086,6 @@ extend type Mutation {
   ConfirmBussingByAdmin(
     bussingRecordId: ID!
     attendance: Int!
-    bussingTopUp: Float!
     comments: String
   ): BussingRecord
     @auth(rules: [{ roles: ["arrivalsCounterStream"] }])
@@ -1094,7 +1093,6 @@ extend type Mutation {
       statement: """
       MATCH (bussingRecord:BussingRecord {id: $bussingRecordId})
         SET bussingRecord.attendance = $attendance,
-        bussingRecord.bussingTopUp = $bussingTopUp,
         bussingRecord.comments = $comments
 
          WITH bussingRecord

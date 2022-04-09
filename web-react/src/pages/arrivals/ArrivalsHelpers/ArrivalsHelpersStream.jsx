@@ -3,7 +3,7 @@ import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import { ChurchContext } from 'contexts/ChurchContext'
 import { alertMsg, throwErrorMsg } from 'global-utils'
 import React, { useContext } from 'react'
-import { Button, Container } from 'react-bootstrap'
+import { Button, Container, Spinner } from 'react-bootstrap'
 import { useNavigate } from 'react-router'
 import {
   REMOVE_ALL_STREAMARRIVALS_HELPERS,
@@ -14,7 +14,7 @@ const ArrivalsHelpersStream = () => {
   const { streamId } = useContext(ChurchContext)
   const navigate = useNavigate()
 
-  const [RemoveAllStreamArrivalsHelpers] = useMutation(
+  const [RemoveAllStreamArrivalsHelpers, { loading }] = useMutation(
     REMOVE_ALL_STREAMARRIVALS_HELPERS,
     {
       refetchQueries: [
@@ -53,6 +53,7 @@ const ArrivalsHelpersStream = () => {
         <Button
           variant="primary"
           size="lg"
+          disabled={loading}
           onClick={async () => {
             const confirmBox = window.confirm(
               `Do you want to delete all helpers`
@@ -71,7 +72,9 @@ const ArrivalsHelpersStream = () => {
             }
           }}
         >
-          Delete All Helpers
+          <div>
+            Delete All Helpers {loading && <Spinner animation="grow" />}
+          </div>
         </Button>
       </div>
     </Container>

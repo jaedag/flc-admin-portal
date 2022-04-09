@@ -1,6 +1,6 @@
 import { permitAdmin } from './permissions'
 import { serviceMutation } from './service-resolvers'
-import { arrivalsMutation } from './arrivals-resolvers'
+import { arrivalsMutation } from '../schema/arrivals/arrivals-resolvers'
 import { directoryMutation } from './directory-resolvers'
 
 /* eslint-disable no-console */
@@ -28,8 +28,8 @@ const texts = require('./texts.json')
 
 dotenv.config()
 
-let authToken
-let authRoles = {}
+export let authToken
+export let authRoles = {}
 
 const formData = require('form-data')
 const Mailgun = require('mailgun.js')
@@ -137,6 +137,8 @@ axios(getTokenConfig)
   .catch((err) =>
     console.error('There was an error obtaining auth token', err?.data ?? err)
   )
+
+export const getRoleId = (role) => authRoles[role].id
 
 const assignRoles = (servant, userRoles, rolesToAssign) => {
   const userRoleIds = userRoles.map((role) => authRoles[role].id)

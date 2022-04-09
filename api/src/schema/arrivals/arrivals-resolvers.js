@@ -1,7 +1,17 @@
-import { permitAdmin, permitAdminArrivals, permitArrivals } from './permissions'
-import { isAuth, rearrangeCypherObject, throwErrorMsg } from './resolver-utils'
-import { MakeServant, RemoveServant } from './resolvers'
-const cypher = require('./cypher/arrivals-cypher')
+import { createRole, deleteRole } from '../../resolvers/auth0-utils'
+import {
+  permitAdmin,
+  permitAdminArrivals,
+  permitArrivals,
+} from '../../resolvers/permissions'
+import {
+  isAuth,
+  noEmptyArgsValidation,
+  rearrangeCypherObject,
+  throwErrorMsg,
+} from '../../resolvers/resolver-utils'
+import { MakeServant, RemoveServant } from '../../resolvers/resolvers'
+const cypher = require('./arrivals-cypher')
 const axios = require('axios').default
 
 export const arrivalsMutation = {
@@ -104,6 +114,47 @@ export const arrivalsMutation = {
       'Stream',
       'ArrivalsConfirmer'
     ),
+  RemoveAllStreamArrivalsHelpers: async (object, args, context) => {
+    isAuth(permitAdminArrivals('Stream'), context.auth.roles)
+    noEmptyArgsValidation(['streamId'])
+
+    const session = context.driver.session()
+
+    try {
+      await axios(deleteRole('arrivalsConfirmerStream'))
+      await axios(deleteRole('arrivalsCounterStream'))
+
+      console.log('Arrivals Helper Roles Deleted Successfully')
+    } catch (error) {
+      throwErrorMsg('There was an error deleting arrivals helper roles', error)
+    }
+
+    try {
+      await axios(
+        createRole(
+          'arrivalsConfirmerStream',
+          'A person who confirms the arrival of bacentas'
+        )
+      )
+      await axios(
+        createRole(
+          'arrivalsCounterStream',
+          'A person who confirms the attendance of bacentas'
+        )
+      )
+      console.log('Arrivals Helper Roles Created Successfully')
+    } catch (error) {
+      throwErrorMsg('There was an error creating arrivals helper roles')
+    }
+
+    const stream = rearrangeCypherObject(
+      await session.run(cypher.RemoveAllStreamArrivalsHelpers, {
+        streamId: args?.streamId,
+      })
+    )
+
+    return stream.properties
+  },
   SetBussingSupport: async (object, args, context) => {
     const session = context.driver.session()
 

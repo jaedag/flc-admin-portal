@@ -1,3 +1,6 @@
+import { getRoleId } from './resolvers'
+import { authToken } from './resolvers'
+
 export const createAuthUserConfig = (member, authToken) => ({
   method: 'post',
   baseURL: process.env.AUTH0_BASE_URL,
@@ -108,3 +111,30 @@ export const deleteUserRoles = (memberId, roles, authToken) => ({
     roles: roles,
   },
 })
+
+export const deleteRole = (role) => {
+  return {
+    method: 'delete',
+    baseURL: process.env.AUTH0_BASE_URL,
+    url: `/api/v2/roles/${getRoleId(role)}`,
+    headers: {
+      autho: '',
+      Authorization: `Bearer ${authToken}`,
+    },
+  }
+}
+export const createRole = (role, description) => {
+  return {
+    method: 'post',
+    baseURL: process.env.AUTH0_BASE_URL,
+    url: `/api/v2/roles`,
+    headers: {
+      autho: '',
+      Authorization: `Bearer ${authToken}`,
+    },
+    data: {
+      name: role,
+      description: description,
+    },
+  }
+}

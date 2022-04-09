@@ -107,8 +107,19 @@ export const REMOVE_ALL_STREAMARRIVALS_HELPERS = gql`
   mutation RemoveAllStreamArrivalsHelpers($streamId: ID!) {
     RemoveAllStreamArrivalsHelpers(streamId: $streamId) {
       id
-      firstName
-      lastName
+      name
+      arrivalsConfirmers {
+        id
+        firstName
+        lastName
+        fullName
+      }
+      arrivalsCounters {
+        id
+        firstName
+        lastName
+        fullName
+      }
     }
   }
 `

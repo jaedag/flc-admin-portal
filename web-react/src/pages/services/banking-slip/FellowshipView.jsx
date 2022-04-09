@@ -2,7 +2,6 @@ import { useQuery } from '@apollo/client'
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import PlaceholderCustom from 'components/Placeholder'
 import { ChurchContext } from 'contexts/ChurchContext'
-import { ChurchCOntext } from 'contexts/ChurchContext'
 import { throwErrorMsg } from 'global-utils'
 import { parseDate } from 'date-utils'
 import React, { useContext } from 'react'
@@ -13,8 +12,7 @@ import { FELLOWSHIP_BANKING_SLIP_QUERIES } from '../ServicesQueries'
 import BaseComponent from 'components/base-component/BaseComponent'
 
 const FellowshipBankingSlipView = () => {
-  const { fellowshipId } = useContext(ChurchContext)
-  const { clickCard } = useContext(ChurchCOntext)
+  const { clickCard, fellowshipId } = useContext(ChurchContext)
   const navigate = useNavigate()
 
   const { data, loading, error } = useQuery(FELLOWSHIP_BANKING_SLIP_QUERIES, {

@@ -1,7 +1,7 @@
 import MenuButton from 'components/buttons/MenuButton'
 import PlaceholderCustom from 'components/Placeholder'
 import { MemberContext } from 'contexts/MemberContext'
-import useClickCard from 'hooks/useClickCard'
+import { ChurchContext } from 'contexts/ChurchContext'
 import React, { useContext } from 'react'
 import { Container } from 'react-bootstrap'
 import {
@@ -14,6 +14,7 @@ import { useNavigate } from 'react-router'
 const Services = () => {
   const { currentUser, theme } = useContext(MemberContext)
   const navigate = useNavigate()
+  const { clickCard } = useContext(ChurchContext)
 
   const church = currentUser.currentChurch
   const churchType = currentUser.currentChurch?.__typename
@@ -74,7 +75,7 @@ const Services = () => {
               color="members"
               noCaption
               onClick={() => {
-                useClickCard(church)
+                clickCard(church)
                 navigate(`/services/${churchType.toLowerCase()}/banking-slips`)
               }}
             />

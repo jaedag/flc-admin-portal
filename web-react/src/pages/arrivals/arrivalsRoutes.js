@@ -26,6 +26,8 @@ import ChurchBySubChurch from './ChurchBySubChurch'
 import StateBacentasToCount from './StateBacentasToCount'
 import SetArrivalsTime from './arrivalTimes/SetArrivalsTime'
 import ArrivalTimes from './arrivalTimes/ArrivalTimes'
+import ArrivalsCounters from './ArrivalsHelpers/ArrivalsCounters'
+import ArrivalsConfirmers from './ArrivalsHelpers/ArrivalsConfirmers'
 
 export const arrivals = [
   {
@@ -181,6 +183,16 @@ export const arrivals = [
     element: ArrivalsHelpersStream,
     placeholder: false,
   },
+  {
+    path: '/stream/arrivals-counters',
+    roles: permitAdminArrivals('Stream'),
+    element: ArrivalsCounters,
+  },
+  {
+    path: '/stream/arrivals-confirmers',
+    roles: permitAdminArrivals('Stream'),
+    element: ArrivalsConfirmers,
+  }, //Arrivals Times
   {
     path: '/stream/arrival-times',
     roles: permitAdminArrivals('Stream'),

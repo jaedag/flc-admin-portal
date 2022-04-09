@@ -71,6 +71,38 @@ export const REMOVE_STREAMARRIVALS_COUNTER = gql`
   }
 `
 
+export const MAKE_STREAMARRIVALS_CONFIRMER = gql`
+  mutation MakeStreamArrivalsConfirmer(
+    $streamId: ID!
+    $arrivalsConfirmerId: ID!
+  ) {
+    MakeStreamArrivalsConfirmer(
+      streamId: $streamId
+      arrivalsConfirmerId: $arrivalsConfirmerId
+    ) {
+      id
+      firstName
+      lastName
+    }
+  }
+`
+
+export const REMOVE_STREAMARRIVALS_CONFIRMER = gql`
+  mutation RemoveStreamArrivalsConfirmer(
+    $streamId: ID!
+    $arrivalsConfirmerId: ID!
+  ) {
+    RemoveStreamArrivalsConfirmer(
+      streamId: $streamId
+      arrivalsConfirmerId: $arrivalsConfirmerId
+    ) {
+      id
+      firstName
+      lastName
+    }
+  }
+`
+
 export const REMOVE_ALL_STREAMARRIVALS_HELPERS = gql`
   mutation RemoveAllStreamArrivalsHelpers($streamId: ID!) {
     RemoveAllStreamArrivalsHelpers(streamId: $streamId) {

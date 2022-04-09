@@ -32,8 +32,10 @@ WITH apoc.cypher.runFirstColumn(
   RETURN arrivalsAdminStream", {this: member}, true) | member_arrivalsAdminStreams { .id,.name}],
   isArrivalsAdminForGatheringService: [ member_arrivalsAdminGatheringServices IN apoc.cypher.runFirstColumn("MATCH (this)-[:DOES_ARRIVALS_FOR]->(arrivalsAdminGatheringService:GatheringService)
   RETURN arrivalsAdminGatheringService", {this: member}, true) | member_arrivalsAdminGatheringServices { .id,.name}],
-  isArrivalsHelperForStream: [ member_arrivalsHelperStreams IN apoc.cypher.runFirstColumn("MATCH (this)-[:HELPS_ARRIVALS_FOR]->(arrivalsHelperStream:Stream)
-  RETURN arrivalsHelperStream", {this: member}, true) | member_arrivalsHelperStreams { .id,.name}]
+  isArrivalsCounterForStream: [ member_arrivalsCounterStreams IN apoc.cypher.runFirstColumn("MATCH (this)-[:COUNTS_ARRIVALS_FOR]->(arrivalsCounterStream:Stream)
+  RETURN arrivalsCounterStream", {this: member}, true) | member_arrivalsCounterStreams { .id,.name}],
+  isArrivalsConfirmerForStream: [ member_arrivalsConfirmerStreams IN apoc.cypher.runFirstColumn("MATCH (this)-[:CONFIRMS_ARRIVALS_FOR]->(arrivalsConfirmerStream:Stream)
+  RETURN arrivalsConfirmerStream", {this: member}, true) | member_arrivalsConfirmerStreams { .id,.name}]
   } AS member
   `
 

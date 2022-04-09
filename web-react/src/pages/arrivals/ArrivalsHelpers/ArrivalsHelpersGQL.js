@@ -6,7 +6,22 @@ export const STREAM_ARRIVALS_HELPERS = gql`
       id
       name
 
-      arrivalsHelpers {
+      arrivalsCounters {
+        id
+        firstName
+        lastName
+        fullName
+        pictureUrl
+        fellowship {
+          id
+          name
+        }
+        ministry {
+          id
+          name
+        }
+      }
+      arrivalsConfirmers {
         id
         firstName
         lastName
@@ -27,11 +42,11 @@ export const STREAM_ARRIVALS_HELPERS = gql`
   }
 `
 
-export const MAKE_STREAMARRIVALS_HELPER = gql`
-  mutation MakeStreamArrivalsHelper($streamId: ID!, $arrivalsHelperId: ID!) {
-    MakeStreamArrivalsHelper(
+export const MAKE_STREAMARRIVALS_COUNTER = gql`
+  mutation MakeStreamArrivalsCounter($streamId: ID!, $arrivalsCounterId: ID!) {
+    MakeStreamArrivalsCounter(
       streamId: $streamId
-      arrivalsHelperId: $arrivalsHelperId
+      arrivalsCounterId: $arrivalsCounterId
     ) {
       id
       firstName
@@ -40,11 +55,14 @@ export const MAKE_STREAMARRIVALS_HELPER = gql`
   }
 `
 
-export const REMOVE_STREAMARRIVALS_HELPER = gql`
-  mutation RemoveStreamArrivalsHelper($streamId: ID!, $arrivalsHelperId: ID!) {
-    RemoveStreamArrivalsHelper(
+export const REMOVE_STREAMARRIVALS_COUNTER = gql`
+  mutation RemoveStreamArrivalsCounter(
+    $streamId: ID!
+    $arrivalsCounterId: ID!
+  ) {
+    RemoveStreamArrivalsCounter(
       streamId: $streamId
-      arrivalsHelperId: $arrivalsHelperId
+      arrivalsCounterId: $arrivalsCounterId
     ) {
       id
       firstName

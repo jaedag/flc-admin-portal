@@ -1,6 +1,6 @@
 import {
   permitArrivals,
-  permitArrivalsHelper,
+  permitArrivalsHelpers,
   permitLeaderAdmin,
 } from 'permission-utils'
 
@@ -27,7 +27,7 @@ export const menuItems = [
     roles: [
       ...permitLeaderAdmin('Bacenta'),
       ...permitArrivals('Bacenta'),
-      ...permitArrivalsHelper('Stream'),
+      ...permitArrivalsHelpers('Stream'),
     ],
   },
   {

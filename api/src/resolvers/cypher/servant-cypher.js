@@ -44,10 +44,10 @@ REMOVE oldHistory.current, oldAdminHistory.current
 RETURN admin.id AS id, admin.auth_id AS auth_id, admin.firstName AS firstName, admin.lastName AS lastName
 `
 
-export const disconnectChurchArrivalsHelper = `
+export const disconnectChurchArrivalsCounter = `
 MATCH (church {id: $churchId}) 
 WHERE church:Council OR church:Stream OR church:GatheringService
-MATCH (church)<-[oldAdmin:HELPS_ARRIVALS_FOR]-(admin:Member {id: $arrivalsHelperId})
+MATCH (church)<-[oldAdmin:COUNTS_ARRIVALS_FOR]-(admin:Member {id: $arrivalsCounterId})
 DELETE oldAdmin
 
 WITH church, admin
@@ -59,6 +59,20 @@ REMOVE oldHistory.current, oldAdminHistory.current
 RETURN admin.id AS id, admin.auth_id AS auth_id, admin.firstName AS firstName, admin.lastName AS lastName
 `
 
+export const disconnectChurchArrivalsConfirmer = `
+MATCH (church {id: $churchId}) 
+WHERE church:Council OR church:Stream OR church:GatheringService
+MATCH (church)<-[oldAdmin:CONFIRMS_ARRIVALS_FOR]-(admin:Member {id: $arrivalsConfirmerId})
+DELETE oldAdmin
+
+WITH church, admin
+
+MATCH (church)-[oldHistory:HAS_HISTORY]->(:ServiceLog)<-[oldAdminHistory:HAS_HISTORY]-(admin)
+REMOVE oldHistory.current, oldAdminHistory.current
+
+
+RETURN admin.id AS id, admin.auth_id AS auth_id, admin.firstName AS firstName, admin.lastName AS lastName
+`
 //Create Church Leader Connection
 export const connectChurchLeader = `
 MATCH (church {id: $churchId})<-[:HAS]-(higherChurch)
@@ -90,16 +104,25 @@ MERGE (admin)-[:DOES_ARRIVALS_FOR]->(church)
 RETURN church.id AS id, church.name AS name, higherChurch.id AS higherChurchId, higherChurch.name AS higherChurchName
 `
 
-export const connectChurchArrivalsHelper = `
+export const connectChurchArrivalsCounter = `
 MATCH (church {id:$churchId})<-[:HAS]-(higherChurch)
-WHERE church:Constituency OR church:Council OR church:Stream OR church:GatheringService OR church:Sonta OR church:Ministry
-MATCH (admin:Member {id: $arrivalsHelperId})
+WHERE church:Stream OR church:GatheringService OR church:Sonta OR church:Ministry
+MATCH (admin:Member {id: $arrivalsCounterId})
    SET admin.auth_id =  $auth_id
-MERGE (admin)-[:HELPS_ARRIVALS_FOR]->(church)
+MERGE (admin)-[:COUNTS_ARRIVALS_FOR]->(church)
 
 RETURN church.id AS id, church.name AS name, higherChurch.id AS higherChurchId, higherChurch.name AS higherChurchName
 `
 
+export const connectChurchArrivalsConfirmer = `
+MATCH (church {id:$churchId})<-[:HAS]-(higherChurch)
+WHERE church:Stream OR church:GatheringService OR church:Sonta OR church:Ministry
+MATCH (admin:Member {id: $arrivalsConfirmerId})
+   SET admin.auth_id =  $auth_id
+MERGE (admin)-[:CONFIRMS_ARRIVALS_FOR]->(church)
+
+RETURN church.id AS id, church.name AS name, higherChurch.id AS higherChurchId, higherChurch.name AS higherChurchName
+`
 //Create the service log and returns its ID
 export const createServiceLog = `
 MATCH (church {id:$id}) WHERE church:Fellowship OR church:Bacenta OR church:Constituency OR church:Council OR church:Stream OR church:GatheringService OR church:Sonta OR church:Ministry OR church:Member 

@@ -13,7 +13,7 @@ import { DISPLAY_BUSSING_RECORDS } from './arrivalsQueries'
 import '../services/record-service/ServiceDetails.css'
 import { useNavigate } from 'react-router'
 import RoleView from 'auth/RoleView'
-import { permitArrivalsHelper, permitMe } from 'permission-utils'
+import { permitAdminArrivals, permitArrivalsCounter } from 'permission-utils'
 import CloudinaryImage from 'components/CloudinaryImage'
 import { beforeArrivalDeadline } from './arrivals-utils'
 
@@ -37,16 +37,18 @@ const BusFormDetails = () => {
         <PlaceholderCustom as="h6" loading={loading}>
           <HeadingSecondary>{`${church?.name} ${church?.__typename}`}</HeadingSecondary>
           <p>{`Recorded by ${bussing?.created_by.fullName}`}</p>
-          <RoleView roles={permitMe('Constituency')}>
-            {bussing?.confirmed_by && (
-              <p>
-                {`Confirmed by `}
+
+          {bussing?.confirmed_by && (
+            <p>
+              {`Confirmed`}
+              <RoleView roles={permitAdminArrivals('Stream')}>
+                {` by `}
                 <span className="fw-bold good">
                   {bussing?.confirmed_by.fullName}
                 </span>
-              </p>
-            )}
-          </RoleView>
+              </RoleView>
+            </p>
+          )}
         </PlaceholderCustom>
 
         <Row>
@@ -185,7 +187,7 @@ const BusFormDetails = () => {
           </Col>
         </Row>
         <div className="d-grid gap-2">
-          <RoleView roles={permitArrivalsHelper('Stream')}>
+          <RoleView roles={permitArrivalsCounter('Stream')}>
             {beforeArrivalDeadline(bussing, church) && (
               <Button
                 onClick={() => navigate('/arrivals/submit-bus-attendance')}

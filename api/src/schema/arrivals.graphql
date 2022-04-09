@@ -29,8 +29,10 @@ extend type Member {
     @relationship(type: "DOES_ARRIVALS_FOR", direction: OUT)
   isArrivalsAdminForGatheringService: [GatheringService!]!
     @relationship(type: "DOES_ARRIVALS_FOR", direction: OUT)
-  isArrivalsHelperForStream: [Stream!]!
-    @relationship(type: "HELPS_ARRIVALS_FOR", direction: OUT)
+  isArrivalsCounterForStream: [Stream!]!
+    @relationship(type: "COUNTS_ARRIVALS_FOR", direction: OUT)
+  isArrivalsConfirmerForStream: [Stream!]!
+    @relationship(type: "CONFIRMS_ARRIVALS_FOR", direction: OUT)
 }
 extend type GatheringService {
   arrivalsAdmin: Member @relationship(type: "DOES_ARRIVALS_FOR", direction: IN)
@@ -207,8 +209,10 @@ extend type GatheringService {
 
 extend type Stream {
   arrivalsAdmin: Member @relationship(type: "DOES_ARRIVALS_FOR", direction: IN)
-  arrivalsHelpers: [Member!]!
-    @relationship(type: "HELPS_ARRIVALS_FOR", direction: IN)
+  arrivalsCounters: [Member!]!
+    @relationship(type: "COUNTS_ARRIVALS_FOR", direction: IN)
+  arrivalsConfirmers: [Member!]!
+    @relationship(type: "CONFIRMS_ARRIVALS_FOR", direction: IN)
   bacentasNoActivity: [Bacenta!]!
     @cypher(
       statement: """
@@ -852,14 +856,16 @@ extend type Mutation {
     gatheringServiceId: ID!
   ): Member
 
-  MakeStreamArrivalsHelper(arrivalsHelperId: ID!, streamId: ID!): Member
-  RemoveStreamArrivalsHelper(arrivalsHelperId: ID!, streamId: ID!): Member
+  MakeStreamArrivalsCounter(arrivalsCounterId: ID!, streamId: ID!): Member
+  RemoveStreamArrivalsCounter(arrivalsCounterId: ID!, streamId: ID!): Member
+  MakeStreamArrivalsConfirmer(arrivalsConfrimerId: ID!, streamId: ID!): Member
+  RemoveStreamArrivalsConfirmer(arrivalsConfrimerId: ID!, streamId: ID!): Member
   RemoveAllStreamArrivalsHelpers(streamId: ID!): Member
     @cypher(
       statement: """
       MATCH (church {id: $streamId})
       WHERE church:Stream
-      MATCH (church)<-[oldAdmin:HELPS_ARRIVALS_FOR]-(admin:Member)
+      MATCH (church)<-[oldHelpers:COUNTS_ARRIVALS_FOR|CONFIRMS_ARRIVALS_FOR]-(admin:Member)
       DELETE oldAdmin
 
       WITH church, admin
@@ -1099,22 +1105,7 @@ extend type Mutation {
     bussingTopUp: Float!
     comments: String
   ): BussingRecord
-    @auth(
-      rules: [
-        {
-          roles: [
-            "adminGatheringService"
-            "adminStream"
-            "adminCouncil"
-            "arrivalsAdminGatheringService"
-            "arrivalsAdminConstituency"
-            "arrivalsAdminCouncil"
-            "arrivalsAdminStream"
-            "arrivalsHelperStream"
-          ]
-        }
-      ]
-    )
+    @auth(rules: [{ roles: ["arrivalsCounterStream"] }])
     @cypher(
       statement: """
       MATCH (bussingRecord:BussingRecord {id: $bussingRecordId})
@@ -1131,21 +1122,7 @@ extend type Mutation {
     )
 
   RecordArrivalTime(bussingRecordId: ID!): BussingRecord
-    @auth(
-      rules: [
-        {
-          roles: [
-            "arrivalsAdminConstituency"
-            "arrivalsAdminCouncil"
-            "arrivalsAdminStream"
-            "arrivalsAdminGatheringService"
-            "adminGatheringService"
-            "adminStream"
-            "adminCouncil"
-          ]
-        }
-      ]
-    )
+    @auth(rules: [{ roles: ["arrivalsConfirmerStream"] }])
     @cypher(
       statement: """
       MATCH (bussingRecord:BussingRecord {id: $bussingRecordId})

@@ -17,7 +17,8 @@ import RoleView from 'auth/RoleView'
 import {
   permitAdmin,
   permitArrivals,
-  permitArrivalsHelper,
+  permitArrivalsConfirmer,
+  permitArrivalsCounter,
 } from 'permission-utils'
 import MenuButton from 'components/buttons/MenuButton'
 import DefaulterInfoCard from 'pages/services/defaulters/DefaulterInfoCard'
@@ -161,7 +162,7 @@ const StreamDashboard = () => {
             iconBg
             noCaption
           />
-          <RoleView roles={permitArrivalsHelper('Stream')}>
+          <RoleView roles={permitArrivalsCounter('Stream')}>
             <MenuButton
               title="Bacentas To Be Counted"
               onClick={() => navigate('/arrivals/bacentas-to-count')}
@@ -171,13 +172,15 @@ const StreamDashboard = () => {
               noCaption
             />
           </RoleView>
-          <MenuButton
-            title="Confirm Bacenta Arrival"
-            onClick={() => navigate('/arrivals/confirm-bacenta-arrival')}
-            iconComponent={CheckAll}
-            iconBg
-            noCaption
-          />
+          <RoleView roles={permitArrivalsConfirmer('Stream')}>
+            <MenuButton
+              title="Confirm Bacenta Arrival"
+              onClick={() => navigate('/arrivals/confirm-bacenta-arrival')}
+              iconComponent={CheckAll}
+              iconBg
+              noCaption
+            />
+          </RoleView>
 
           <MenuButton
             title="Bacentas That Have Arrived"

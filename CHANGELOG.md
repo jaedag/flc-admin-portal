@@ -1,3 +1,9 @@
+#### 1.2.1 (2022-04-09)
+
+##### Bug Fixes
+
+* **sabbath:**  fixed sabbath message from showing on Saturday ([fa8e8a9d](https://github.com/firstlovecenter/fl-admin-portal/commit/fa8e8a9da38b13cd0899267d62705d9d4b1fef40))
+
 #### 1.1.7 (2022-04-09)
 
 ##### Continuous Integration

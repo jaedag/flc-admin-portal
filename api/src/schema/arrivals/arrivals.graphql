@@ -1102,6 +1102,19 @@ extend type Mutation {
       RETURN bussingRecord
       """
     )
+    @auth(
+      rules: [
+        {
+          roles: [
+            "adminStream"
+            "arrivalsAdminStream"
+            "adminGatheringService"
+            "arrivalsAdminGatheringService"
+          ]
+        }
+      ]
+    )
+
 
   RecordArrivalTime(bussingRecordId: ID!): BussingRecord
     @auth(rules: [{ roles: ["arrivalsConfirmerStream"] }])

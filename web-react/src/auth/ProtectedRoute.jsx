@@ -18,7 +18,7 @@ const ProtectedRoute = ({ children, roles, roleBased, placeholder }) => {
   const location = useLocation()
   const atHome = location?.pathname === '/'
 
-  if (new Date().getDay() === 6) {
+  if (new Date().getDay() === 1) {
     return <Sabbath />
   }
   if (atHome && !isAuthenticated) {

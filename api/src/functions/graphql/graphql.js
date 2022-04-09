@@ -11,7 +11,9 @@ const neo4j = require('neo4j-driver')
 const { typeDefs } = require('./schema/graphql-schema')
 const { resolvers } = require('../../resolvers/resolvers.js')
 const { serviceResolvers } = require('../../resolvers/service-resolvers')
-const { arrivalsResolvers } = require('./schema/arrivals/arrivals-resolvers')
+const {
+  arrivalsResolvers,
+} = require('../../resolvers/arrivals/arrivals-resolvers')
 
 const driver = neo4j.driver(
   process.env.NEO4J_URI || 'bolt://localhost:7687',

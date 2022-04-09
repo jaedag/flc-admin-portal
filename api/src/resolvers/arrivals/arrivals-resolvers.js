@@ -1,18 +1,18 @@
 /* eslint-disable no-console */
-const { getMobileCode, padNumbers } = require('../../resolvers/financial-utils')
-const { createRole, deleteRole } = require('../../resolvers/auth0-utils')
+const { getMobileCode, padNumbers } = require('../financial-utils')
+const { createRole, deleteRole } = require('../auth0-utils')
 const {
   permitAdmin,
   permitAdminArrivals,
   permitArrivals,
-} = require('../../resolvers/permissions')
+} = require('../permissions')
 const {
   isAuth,
   noEmptyArgsValidation,
   rearrangeCypherObject,
   throwErrorMsg,
-} = require('../../resolvers/resolver-utils')
-const { MakeServant, RemoveServant } = require('../../resolvers/resolvers')
+} = require('../resolver-utils')
+const { MakeServant, RemoveServant } = require('../resolvers')
 const cypher = require('./arrivals-cypher')
 const axios = require('axios').default
 

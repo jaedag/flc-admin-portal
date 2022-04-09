@@ -1,6 +1,6 @@
 import { permitAdmin } from './permissions'
 import { serviceMutation } from './service-resolvers'
-import { arrivalsMutation } from '../schema/arrivals/arrivals-resolvers'
+import { arrivalsMutation } from './arrivals/arrivals-resolvers'
 import { directoryMutation } from './directory-resolvers'
 
 /* eslint-disable no-console */

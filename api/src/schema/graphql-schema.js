@@ -32,7 +32,7 @@ const services = fs
   .toString('utf-8')
 
 const arrivals = fs
-  .readFileSync(path.join(__dirname, './arrivals/arrivals.graphql'))
+  .readFileSync(path.join(__dirname, './arrivals.graphql'))
   .toString('utf-8')
 
 const campaigns = fs

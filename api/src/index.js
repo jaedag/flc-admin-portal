@@ -7,7 +7,7 @@ import { Neo4jGraphQLAuthJWTPlugin } from '@neo4j/graphql-plugin-auth'
 import dotenv from 'dotenv'
 import { resolvers } from './resolvers/resolvers'
 import { serviceResolvers } from './resolvers/service-resolvers'
-import { arrivalsResolvers } from './schema/arrivals/arrivals-resolvers'
+import { arrivalsResolvers } from './resolvers/arrivals/arrivals-resolvers'
 
 // set environment variables from .env
 dotenv.config()

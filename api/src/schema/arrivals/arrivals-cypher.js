@@ -46,3 +46,18 @@ MATCH (record:BussingRecord {id: $bussingRecordId})<-[:HAS_BUSSING]-(:ServiceLog
 SET record.bussingTopUp = bacenta.normalBussingCost - bacenta.normalPersonalContribution
 RETURN record
 `
+
+export const RemoveAllStreamArrivalsHelpers = `
+MATCH (church {id: $streamId})
+WHERE church:Stream
+OPTIONAL MATCH (church)<-[oldHelpers:COUNTS_ARRIVALS_FOR|CONFIRMS_ARRIVALS_FOR]-(admin:Member)
+DELETE oldHelpers
+
+WITH church, admin
+
+MATCH (church)-[oldHistory:HAS_HISTORY]->(:ServiceLog)<-[oldAdminHistory:HAS_HISTORY]-(admin)
+REMOVE oldHistory.current, oldAdminHistory.current
+
+
+RETURN church
+`

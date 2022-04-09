@@ -291,11 +291,15 @@ export const formatting = (churchType, servantType) => {
     verb = `isArrivalsAdminFor${churchType}`
     servantLower = 'arrivalsAdmin'
   }
-  if (servantType === 'ArrivalsHelper') {
-    verb = `isArrivalsHelperFor${churchType}`
-    servantLower = 'arrivalsHelper'
+  if (servantType === 'ArrivalsCounter') {
+    verb = `isArrivalsCounterFor${churchType}`
+    servantLower = 'arrivalsCounter'
   }
 
+  if (servantType === 'ArrivalsConfirmer') {
+    verb = `isArrivalsConfirmerFor${churchType}`
+    servantLower = 'arrivalsConfirmer'
+  }
   if (churchType === 'GatheringService') {
     churchLower = 'gatheringService'
   }

@@ -108,8 +108,12 @@ const Navigator = () => {
       case 'ArrivalsAdmin':
         verb = `isArrivalsAdminFor${churchType}`
         break
-      case 'ArrivalsHelper':
-        verb = `isArrivalsHelperFor${churchType}`
+      case 'ArrivalsCounter':
+        verb = `isArrivalsCounterFor${churchType}`
+        break
+
+      case 'ArrivalsConfirmer':
+        verb = `isArrivalsConfirmerFor${churchType}`
         break
       default:
         break
@@ -117,7 +121,10 @@ const Navigator = () => {
 
     const permittedForLink = permitMe(churchType)
 
-    if (servantType === 'ArrivalsHelper') {
+    if (
+      servantType === 'ArrivalsConfirmer' ||
+      servantType === 'ArrivalsCounter'
+    ) {
       const adminsOneChurch = servant[`${verb}`].length === 1 ?? false
       roles.push({
         name: adminsOneChurch
@@ -220,8 +227,11 @@ const Navigator = () => {
     if (servantArrivals?.isArrivalsAdminForStream?.length) {
       setServantRoles(servantArrivals, 'ArrivalsAdmin', 'Stream')
     }
-    if (servantArrivals?.isArrivalsHelperForStream?.length) {
-      setServantRoles(servantArrivals, 'ArrivalsHelper', 'Stream')
+    if (servantArrivals?.isArrivalsCounterForStream?.length) {
+      setServantRoles(servantArrivals, 'ArrivalsCounter', 'Stream')
+    }
+    if (servantArrivals?.isArrivalsConfirmerForStream?.length) {
+      setServantRoles(servantArrivals, 'ArrivalsConfirmer', 'Stream')
     }
     if (servantLeader?.leadsGatheringService?.length) {
       setServantRoles(servantLeader, 'Leader', 'GatheringService')

@@ -5,12 +5,11 @@ import { useNavigate } from 'react-router'
 
 const DefaulterInfoCard = ({ defaulter }) => {
   const navigate = useNavigate()
-
   return (
     <Card className="text-center" onClick={() => navigate(defaulter.link)}>
       <Card.Header>{defaulter.title}</Card.Header>
       <PlaceholderCustom
-        loading={!defaulter.data}
+        loading={defaulter.data === undefined}
         className={`fw-bold large-number pb-3 ${defaulter.color}`}
       >
         <Card.Body className={`fw-bold large-number ${defaulter.color}`}>

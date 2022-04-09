@@ -407,7 +407,7 @@ export const SERVANTS_ARRIVALS = gql`
           income
         }
       }
-      isArrivalsHelperForStream {
+      isArrivalsCounterForStream {
         id
         name
 
@@ -418,20 +418,17 @@ export const SERVANTS_ARRIVALS = gql`
           lastName
           fullName
         }
-        services(limit: 4) {
-          created_at
-          attendance
-          income
-          week
-          serviceDate {
-            date
-          }
-        }
+      }
+      isArrivalsConfirmerForStream {
+        id
+        name
 
-        componentServiceAggregate {
-          week
-          attendance
-          income
+        memberCount
+        leader {
+          id
+          firstName
+          lastName
+          fullName
         }
       }
       isArrivalsAdminForStream {

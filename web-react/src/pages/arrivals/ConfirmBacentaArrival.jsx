@@ -107,16 +107,16 @@ const ConfirmBacentaArrival = () => {
                       bussingRecordId: bussingRecordId,
                     },
                   })
-
+                  const bussingData = arrivalRes.data.RecordArrivalTime
                   if (
-                    !arrivalRes.data.RecordArrivalTime.bussingTopUp ||
+                    !bussingData.bussingTopUp ||
                     church?.stream_name === 'Anagkazo'
                   ) {
                     //if there is no value for the bussing top up
                     return
                   }
 
-                  if (arrivalRes.data.RecordArrivalTime.confirmed_by.id) {
+                  if (bussingData.confirmed_by.id) {
                     //If Attendance has been confrimed then send bussing support
                     try {
                       const supportRes = await SendBussingSupport({

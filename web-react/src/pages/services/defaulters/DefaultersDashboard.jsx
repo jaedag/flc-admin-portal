@@ -53,13 +53,13 @@ const DefaultersDashboard = () => {
   const defaulters = [
     {
       title: 'Services This Week',
-      data: church?.servicesThisWeekCount || '0',
+      data: church?.servicesThisWeekCount,
       color: church?.servicesThisWeekCount ? 'good' : 'bad',
       link: church?.servicesThisWeekCount ? '/services/filled-services' : '#',
     },
     {
       title: 'Not Filled Forms',
-      data: church?.formDefaultersThisWeekCount || '0',
+      data: church?.formDefaultersThisWeekCount,
       color: church?.formDefaultersThisWeekCount ? 'bad' : 'good',
       link: church?.formDefaultersThisWeekCount
         ? '/services/form-defaulters'
@@ -67,7 +67,7 @@ const DefaultersDashboard = () => {
     },
     {
       title: 'Have Banked',
-      data: church?.bankedThisWeekCount || '0',
+      data: church?.bankedThisWeekCount,
       color:
         church?.bankedThisWeekCount === church?.servicesThisWeekCount
           ? 'good'
@@ -78,7 +78,7 @@ const DefaultersDashboard = () => {
     },
     {
       title: 'Have Not Banked',
-      data: church?.bankingDefaultersThisWeekCount || '0',
+      data: church?.bankingDefaultersThisWeekCount,
       color: church?.bankingDefaultersThisWeekCount ? 'bad' : 'good',
       link: church?.bankingDefaultersThisWeekCount
         ? '/services/banking-defaulters'
@@ -86,7 +86,7 @@ const DefaultersDashboard = () => {
     },
     {
       title: 'Canc. Service',
-      data: church?.cancelledServicesThisWeekCount || '0',
+      data: church?.cancelledServicesThisWeekCount,
       color: church?.cancelledServicesThisWeekCount ? 'bad' : 'good',
       link: church?.cancelledServicesThisWeekCount
         ? '/services/cancelled-services'

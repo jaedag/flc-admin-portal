@@ -18,8 +18,6 @@ import {
 import { useNavigate } from 'react-router'
 import FormikControl from 'components/formik-components/FormikControl'
 import SubmitButton from 'components/formik-components/SubmitButton'
-import { useState } from 'react'
-import { useEffect } from 'react'
 import CloudinaryImage from 'components/CloudinaryImage'
 import { alertMsg, throwErrorMsg } from 'global-utils'
 
@@ -41,17 +39,8 @@ const FormAttendanceConfirmation = () => {
     bussingTopUp: '',
     comments: '',
   }
-  const [bussingMoney, setBussingMoney] = useState(0)
-
-  useEffect(() => {
-    setBussingMoney(data?.bacentas[0]?.normalBussingTopUp)
-  }, [data])
 
   const validationSchema = Yup.object({
-    bussingTopUp: Yup.number()
-      .typeError('Please enter a valid number')
-      .positive()
-      .required('This is a required field'),
     attendance: Yup.number()
       .typeError('Please enter a valid number')
       .positive()
@@ -66,12 +55,18 @@ const FormAttendanceConfirmation = () => {
       variables: {
         bussingRecordId: bussingRecordId,
         attendance: parseInt(values.attendance),
-        bussingTopUp: parseFloat(values.bussingTopUp),
         comments: values.comments,
       },
     })
 
-    if (res.data.ConfirmBussingByAdmin.arrivalTime) {
+    const bussingData = res.data.ConfirmBussingByAdmin
+
+    if (!bussingData.bussingTopUp || bacenta?.stream_name === 'Anagkazo') {
+      //if there is no value for the bussing top up
+      return
+    }
+
+    if (bussingData.arrivalTime) {
       //If arrival time has been logged then send bussing support
       try {
         const supportRes = await SendBussingSupport({
@@ -146,25 +141,8 @@ const FormAttendanceConfirmation = () => {
                 name="attendance"
                 label="Attendance (from Picture)*"
                 placeholder={bussing?.attendance}
-                onChange={(e) => {
-                  formik.setFieldValue('attendance', e.target.value)
-                  if (e.target.value > 20) {
-                    setBussingMoney(bacenta?.normalBussingTopUp * 1.5)
-                  }
-                  if (e.target.value < 20) {
-                    setBussingMoney(bacenta?.normalBussingTopUp)
-                  }
-                }}
               />
 
-              <div>{`This bacenta usually receives ${bacenta?.normalBussingTopUp} GHS on a normal day and ${bacenta?.swellBussingTopUp} on a swell day`}</div>
-
-              <FormikControl
-                control="input"
-                name="bussingTopUp"
-                label="Bussing Top Up From Church* (in GHS)"
-                placeholder={`${bussingMoney}`}
-              />
               <FormikControl
                 control="textarea"
                 name="comments"

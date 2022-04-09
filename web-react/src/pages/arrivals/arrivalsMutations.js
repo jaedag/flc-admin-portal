@@ -221,13 +221,11 @@ export const CONFIRM_BUSSING_BY_ADMIN = gql`
   mutation ConfirmBussingByAdmin(
     $bussingRecordId: ID!
     $attendance: Int!
-    $bussingTopUp: Float!
     $comments: String
   ) {
     ConfirmBussingByAdmin(
       bussingRecordId: $bussingRecordId
       attendance: $attendance
-      bussingTopUp: $bussingTopUp
       comments: $comments
     ) {
       id

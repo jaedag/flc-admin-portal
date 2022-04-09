@@ -29,8 +29,10 @@ extend type Member {
     @relationship(type: "DOES_ARRIVALS_FOR", direction: OUT)
   isArrivalsAdminForGatheringService: [GatheringService!]!
     @relationship(type: "DOES_ARRIVALS_FOR", direction: OUT)
-  isArrivalsHelperForStream: [Stream!]!
-    @relationship(type: "HELPS_ARRIVALS_FOR", direction: OUT)
+  isArrivalsCounterForStream: [Stream!]!
+    @relationship(type: "COUNTS_ARRIVALS_FOR", direction: OUT)
+  isArrivalsConfirmerForStream: [Stream!]!
+    @relationship(type: "CONFIRMS_ARRIVALS_FOR", direction: OUT)
 }
 extend type GatheringService {
   arrivalsAdmin: Member @relationship(type: "DOES_ARRIVALS_FOR", direction: IN)
@@ -207,8 +209,10 @@ extend type GatheringService {
 
 extend type Stream {
   arrivalsAdmin: Member @relationship(type: "DOES_ARRIVALS_FOR", direction: IN)
-  arrivalsHelpers: [Member!]!
-    @relationship(type: "HELPS_ARRIVALS_FOR", direction: IN)
+  arrivalsCounters: [Member!]!
+    @relationship(type: "COUNTS_ARRIVALS_FOR", direction: IN)
+  arrivalsConfirmers: [Member!]!
+    @relationship(type: "CONFIRMS_ARRIVALS_FOR", direction: IN)
   bacentasNoActivity: [Bacenta!]!
     @cypher(
       statement: """
@@ -852,25 +856,11 @@ extend type Mutation {
     gatheringServiceId: ID!
   ): Member
 
-  MakeStreamArrivalsHelper(arrivalsHelperId: ID!, streamId: ID!): Member
-  RemoveStreamArrivalsHelper(arrivalsHelperId: ID!, streamId: ID!): Member
-  RemoveAllStreamArrivalsHelpers(streamId: ID!): Member
-    @cypher(
-      statement: """
-      MATCH (church {id: $streamId})
-      WHERE church:Stream
-      MATCH (church)<-[oldAdmin:HELPS_ARRIVALS_FOR]-(admin:Member)
-      DELETE oldAdmin
-
-      WITH church, admin
-
-      MATCH (church)-[oldHistory:HAS_HISTORY]->(:ServiceLog)<-[oldAdminHistory:HAS_HISTORY]-(admin)
-      REMOVE oldHistory.current, oldAdminHistory.current
-
-
-      RETURN admin
-      """
-    )
+  MakeStreamArrivalsCounter(arrivalsCounterId: ID!, streamId: ID!): Member
+  RemoveStreamArrivalsCounter(arrivalsCounterId: ID!, streamId: ID!): Member
+  MakeStreamArrivalsConfirmer(arrivalsConfirmerId: ID!, streamId: ID!): Member
+  RemoveStreamArrivalsConfirmer(arrivalsConfirmerId: ID!, streamId: ID!): Member
+  RemoveAllStreamArrivalsHelpers(streamId: ID!): Stream
 
   ## GENERATE CODE OF THE DAY
   GenerateCodeOfTheDay: String!
@@ -1096,30 +1086,13 @@ extend type Mutation {
   ConfirmBussingByAdmin(
     bussingRecordId: ID!
     attendance: Int!
-    bussingTopUp: Float!
     comments: String
   ): BussingRecord
-    @auth(
-      rules: [
-        {
-          roles: [
-            "adminGatheringService"
-            "adminStream"
-            "adminCouncil"
-            "arrivalsAdminGatheringService"
-            "arrivalsAdminConstituency"
-            "arrivalsAdminCouncil"
-            "arrivalsAdminStream"
-            "arrivalsHelperStream"
-          ]
-        }
-      ]
-    )
+    @auth(rules: [{ roles: ["arrivalsCounterStream"] }])
     @cypher(
       statement: """
       MATCH (bussingRecord:BussingRecord {id: $bussingRecordId})
         SET bussingRecord.attendance = $attendance,
-        bussingRecord.bussingTopUp = $bussingTopUp,
         bussingRecord.comments = $comments
 
          WITH bussingRecord
@@ -1131,21 +1104,7 @@ extend type Mutation {
     )
 
   RecordArrivalTime(bussingRecordId: ID!): BussingRecord
-    @auth(
-      rules: [
-        {
-          roles: [
-            "arrivalsAdminConstituency"
-            "arrivalsAdminCouncil"
-            "arrivalsAdminStream"
-            "arrivalsAdminGatheringService"
-            "adminGatheringService"
-            "adminStream"
-            "adminCouncil"
-          ]
-        }
-      ]
-    )
+    @auth(rules: [{ roles: ["arrivalsConfirmerStream"] }])
     @cypher(
       statement: """
       MATCH (bussingRecord:BussingRecord {id: $bussingRecordId})
@@ -1161,6 +1120,182 @@ extend type Mutation {
 
   SetSwellDate(date: String!): TimeGraph
   SendBussingSupport(bussingRecordId: ID!, stream_name: String!): BussingRecord
+}
+
+#SETTING AND ENDING TIME THINGS
+extend type Stream {
+  mobilisationStartTime: DateTime
+    @auth(
+      rules: [
+        {
+          roles: [
+            "adminStream"
+            "arrivalsAdminStream"
+            "adminGatheringService"
+            "arrivalsAdminGatheringService"
+          ]
+        }
+      ]
+    )
+  mobilisationEndTime: DateTime
+    @auth(
+      rules: [
+        {
+          roles: [
+            "adminStream"
+            "arrivalsAdminStream"
+            "adminGatheringService"
+            "arrivalsAdminGatheringService"
+          ]
+        }
+      ]
+    )
+  arrivalStartTime: DateTime
+    @auth(
+      rules: [
+        {
+          roles: [
+            "adminStream"
+            "arrivalsAdminStream"
+            "adminGatheringService"
+            "arrivalsAdminGatheringService"
+          ]
+        }
+      ]
+    )
+  arrivalEndTime: DateTime
+    @auth(
+      rules: [
+        {
+          roles: [
+            "adminStream"
+            "arrivalsAdminStream"
+            "adminGatheringService"
+            "arrivalsAdminGatheringService"
+          ]
+        }
+      ]
+    )
+}
+
+extend type Mutation {
+  SetStreamArrivalTimes(
+    id: ID!
+    mobilisationStartTime: String!
+    mobilisationEndTime: String!
+    arrivalStartTime: String!
+    arrivalEndTime: String!
+  ): Stream!
+    @cypher(
+      statement: """
+      MATCH (stream:Stream {id: $id})
+      SET stream.mobilisationStartTime = $mobilisationStartTime,
+        stream.mobilisationEndTime = $mobilisationEndTime,
+        stream.arrivalStartTime = $arrivalStartTime,
+        stream.arrivalEndTime = $arrivalEndTime
+      RETURN stream
+      """
+    )
+    @auth(
+      rules: [
+        {
+          roles: [
+            "adminStream"
+            "arrivalsAdminStream"
+            "adminGatheringService"
+            "arrivalsAdminGatheringService"
+          ]
+        }
+      ]
+    )
+}
+
+#SETTING AND ENDING TIME THINGS
+extend type Stream {
+  mobilisationStartTime: DateTime
+    @auth(
+      rules: [
+        {
+          roles: [
+            "adminStream"
+            "arrivalsAdminStream"
+            "adminGatheringService"
+            "arrivalsAdminGatheringService"
+          ]
+        }
+      ]
+    )
+  mobilisationEndTime: DateTime
+    @auth(
+      rules: [
+        {
+          roles: [
+            "adminStream"
+            "arrivalsAdminStream"
+            "adminGatheringService"
+            "arrivalsAdminGatheringService"
+          ]
+        }
+      ]
+    )
+  arrivalStartTime: DateTime
+    @auth(
+      rules: [
+        {
+          roles: [
+            "adminStream"
+            "arrivalsAdminStream"
+            "adminGatheringService"
+            "arrivalsAdminGatheringService"
+          ]
+        }
+      ]
+    )
+  arrivalEndTime: DateTime
+    @auth(
+      rules: [
+        {
+          roles: [
+            "adminStream"
+            "arrivalsAdminStream"
+            "adminGatheringService"
+            "arrivalsAdminGatheringService"
+          ]
+        }
+      ]
+    )
+}
+
+extend type Mutation {
+  SetStreamArrivalTimes(
+    id: ID!
+    mobilisationStartTime: String!
+    mobilisationEndTime: String!
+    arrivalStartTime: String!
+    arrivalEndTime: String!
+  ): Stream!
+    @cypher(
+      statement: """
+      MATCH (stream:Stream {id: $id})
+      SET stream.mobilisationStartTime = $mobilisationStartTime,
+        stream.mobilisationEndTime = $mobilisationEndTime,
+        stream.arrivalStartTime = $arrivalStartTime,
+        stream.arrivalEndTime = $arrivalEndTime
+      RETURN stream
+      """
+    )
+    @auth(
+      rules: [
+        {
+          roles: [
+            "adminStream"
+            "arrivalsAdminStream"
+            "adminGatheringService"
+            "arrivalsAdminGatheringService"
+          ]
+        }
+      ]
+    )
 }
 
 #SETTING AND ENDING TIME THINGS

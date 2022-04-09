@@ -592,7 +592,9 @@ extend type Mutation {
     @cypher(
       statement: """
       MATCH (record:ServiceRecord {id: $serviceRecordId})
-        SET serviceRecord.bankingSlip = $bankingSlip
+        SET record.bankingSlip = $bankingSlip
+
+        WITH record
         MATCH (banker:Member {auth_id: $auth.jwt.sub})
         MERGE (banker)-[:UPLOADED_SLIP_FOR]->(record)
 

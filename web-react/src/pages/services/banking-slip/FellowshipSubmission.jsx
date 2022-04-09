@@ -20,14 +20,14 @@ import { throwErrorMsg } from 'global-utils'
 const FellowshipBankingSlipSubmission = () => {
   const { serviceRecordId } = useContext(ServiceContext)
   const { theme } = useContext(MemberContext)
-  const { setFellowshipId } = useContext(ChurchContext)
+  const { clickCard } = useContext(ChurchContext)
   const navigate = useNavigate()
 
   const { data, loading, error } = useQuery(FELLOWSHIP_SERVICE_RECORDS, {
     variables: { serviceId: serviceRecordId },
   })
   const fellowship = data?.serviceRecords[0]?.serviceLog?.fellowship[0]
-  setFellowshipId(fellowship?.id)
+
   const initialValues = {
     bankingSlip: '',
   }
@@ -48,7 +48,7 @@ const FellowshipBankingSlipSubmission = () => {
       })
       onSubmitProps.setSubmitting(false)
       onSubmitProps.resetForm()
-
+      clickCard(fellowship)
       navigate(`/fellowship/service-details`)
     } catch (error) {
       throwErrorMsg(error)

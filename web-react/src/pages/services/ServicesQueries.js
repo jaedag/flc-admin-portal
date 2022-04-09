@@ -101,18 +101,16 @@ export const BANKING_SLIP_SUBMISSION = gql`
       serviceRecordId: $serviceRecordId
       bankingSlip: $bankingSlip
     ) {
-      serviceRecords {
+      id
+      bankingSlip
+      bankingSlipUploader {
         id
-        bankingSlip
-        bankingSlipUploader {
+        firstName
+        lastName
+      }
+      serviceLog {
+        fellowship {
           id
-          firstName
-          lastName
-        }
-        serviceLog {
-          fellowship {
-            id
-          }
         }
       }
     }

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const { getMobileCode, padNumbers } = require('../../resolvers/financial-utils')
 const { createRole, deleteRole } = require('../../resolvers/auth0-utils')
 const {
@@ -125,6 +126,7 @@ export const arrivalsMutation = {
       await axios(deleteRole('arrivalsConfirmerStream'))
       await axios(deleteRole('arrivalsCounterStream'))
 
+      // eslint-disable-next-line no-console
       console.log('Arrivals Helper Roles Deleted Successfully')
     } catch (error) {
       throwErrorMsg('There was an error deleting arrivals helper roles', error)

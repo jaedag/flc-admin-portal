@@ -17,15 +17,14 @@
     "prettier-eslint-cli": "^5.0.0"
   },
   "scripts": {
-    "seedDb": "node scripts/seed.js",
     "start": "node scripts/start-dev.js",
     "build": "node scripts/build.js",
     "format": "find . -name \"*.js\" | grep -v node_modules | grep -v build | xargs prettier --write",
     "format:log": "find . -name \"*.js\" | grep -v node_modules | grep -v build | xargs prettier",
     "inferschema:write": "node scripts/inferSchema.js",
-    "release:major": "changelog -M && git add CHANGELOG.md && git commit -m 'docs: updated CHANGELOG.md' && npm version major && cd web-react && npm version major && cd ../api && npm version major && cd .. && git push origin && git push origin --tags",
-    "release:minor": "changelog -m && git add CHANGELOG.md && git commit -m 'docs: updated CHANGELOG.md' && npm version minor && cd web-react && npm version minor && cd ../api && npm version minor && cd .. && git push origin && git push origin --tags",
-    "release:patch": "changelog -p && git add CHANGELOG.md && git commit -m 'docs: updated CHANGELOG.md' && npm version patch && cd web-react && npm version patch && cd ../api && npm version patch && cd .. && git push origin && git push origin --tags",
+    "release:major": "node scripts/release.js major",
+    "release:minor": "node scripts/release.js minor",
+    "release:patch": "node scripts/release.js patch",
     "prepare": "husky install"
   },
   "lint-staged": {
@@ -43,7 +42,7 @@
     "url": "git://github.com/jaedag/fl-admin-portal.git"
   },
   "license": "Apache-2.0",
-  "version": "1.1.1",
+  "version": "1.1.5",
   "dependencies": {
     "neo4j-driver": "^4.4.5"
   }

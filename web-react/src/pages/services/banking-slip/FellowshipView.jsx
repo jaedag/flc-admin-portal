@@ -2,7 +2,7 @@ import { useQuery } from '@apollo/client'
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import PlaceholderCustom from 'components/Placeholder'
 import { ChurchContext } from 'contexts/ChurchContext'
-import { ServiceContext } from 'contexts/ServiceContext'
+import { ChurchCOntext } from 'contexts/ChurchContext'
 import { throwErrorMsg } from 'global-utils'
 import { parseDate } from 'date-utils'
 import React, { useContext } from 'react'
@@ -14,7 +14,7 @@ import BaseComponent from 'components/base-component/BaseComponent'
 
 const FellowshipBankingSlipView = () => {
   const { fellowshipId } = useContext(ChurchContext)
-  const { setServiceRecordId } = useContext(ServiceContext)
+  const { clickCard } = useContext(ChurchCOntext)
   const navigate = useNavigate()
 
   const { data, loading, error } = useQuery(FELLOWSHIP_BANKING_SLIP_QUERIES, {
@@ -42,9 +42,10 @@ const FellowshipBankingSlipView = () => {
               key={index}
               className="mb-2"
               onClick={() => {
-                setServiceRecordId(service.id)
-                !service.bankingSlip &&
-                  navigate('/fellowship/banking-slip/submission')
+                clickCard(service)
+                !service.bankingSlip
+                  ? navigate('/fellowship/banking-slip/submission')
+                  : navigate('/fellowship/service-details')
               }}
             >
               <Card.Header>

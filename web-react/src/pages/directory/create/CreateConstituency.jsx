@@ -9,8 +9,7 @@ import { NEW_CONSTITUENCY_LEADER } from './MakeLeaderMutations'
 import ConstituencyForm from '../../../components/reusable-forms/ConstituencyForm'
 
 const CreateConstituency = () => {
-  const { clickCard, councilId, setConstituencyId, setCouncilId } =
-    useContext(ChurchContext)
+  const { clickCard, councilId } = useContext(ChurchContext)
 
   const navigate = useNavigate()
 
@@ -27,42 +26,46 @@ const CreateConstituency = () => {
       { query: GET_COUNCIL_CONSTITUENCIES, variables: { id: councilId } },
     ],
     onCompleted: (newConstituencyData) => {
-      setConstituencyId(newConstituencyData.CreateConstituency.id)
+      clickCard(newConstituencyData.CreateConstituency)
       navigate(`/constituency/displaydetails`)
     },
   })
 
   //onSubmit receives the form state as argument
-  const onSubmit = (values, onSubmitProps) => {
-    onSubmitProps.setSubmitting(true)
-    setCouncilId(values.council)
 
-    CreateConstituency({
-      variables: {
-        name: values.name,
-        leaderId: values.leaderId,
-        councilId: values.council,
-        bacentas: values.bacentas,
-      },
-    })
-      .then((res) => {
-        clickCard(res.data.CreateConstituency)
-        NewConstituencyLeader({
+  const onSubmit = async (values, onSubmitProps) => {
+    onSubmitProps.setSubmitting(true)
+    clickCard({ id: values.council, __typename: 'Council' })
+    try {
+      const res = await CreateConstituency({
+        variables: {
+          name: values.name,
+          leaderId: values.leaderId,
+          councilId: values.council,
+          bacentas: values.bacentas,
+        },
+      })
+
+      clickCard(res.data.CreateConstituency)
+      try {
+        await NewConstituencyLeader({
           variables: {
             leaderId: values.leaderId,
             constituencyId:
               res.data.CreateConstituency.council.constituencies[0].id,
           },
-        }).catch((error) => {
-          throwErrorMsg('There was an error adding leader', error)
         })
-        onSubmitProps.setSubmitting(false)
-        onSubmitProps.resetForm()
-        navigate(`/constituency/displaydetails`)
-      })
-      .catch((error) => throwErrorMsg('There was an error', error))
-  }
+      } catch (error) {
+        throwErrorMsg('There was an error adding the leader', error)
+      }
 
+      onSubmitProps.setSubmitting(false)
+      onSubmitProps.resetForm()
+      navigate(`/constituency/displaydetails`)
+    } catch (error) {
+      throwErrorMsg('There was an error creating the constituency', error)
+    }
+  }
   return (
     <ConstituencyForm
       initialValues={initialValues}

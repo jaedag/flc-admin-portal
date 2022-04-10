@@ -55,7 +55,10 @@ const BankingDefaulters = () => {
         <Row>
           {church?.bankingDefaultersThisWeek.map((defaulter, i) => (
             <Col key={i} xs={12} className="mb-3">
-              <DefaulterCard defaulter={defaulter} />
+              <DefaulterCard
+                defaulter={defaulter}
+                link="/fellowship/service-details"
+              />
             </Col>
           ))}
           {!church && <PlaceholderDefaulter />}

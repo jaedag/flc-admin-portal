@@ -21,14 +21,14 @@ import { throwErrorMsg } from 'global-utils'
 const ConstituencyBankingSlipSubmission = () => {
   const { serviceRecordId } = useContext(ServiceContext)
   const { theme } = useContext(MemberContext)
-  const { setConstituencyId } = useContext(ChurchContext)
+  const { clickCard } = useContext(ChurchContext)
   const navigate = useNavigate()
 
   const { data, loading, error } = useQuery(CONSTITUENCY_SERVICE_RECORDS, {
     variables: { serviceId: serviceRecordId },
   })
   const constituency = data?.serviceRecords[0]?.serviceLog?.constituency[0]
-  setConstituencyId(constituency?.id)
+  clickCard(constituency)
   const initialValues = {
     bankingSlip: '',
   }

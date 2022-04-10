@@ -8,7 +8,7 @@ extend type GatheringService {
   servicesThisWeek: [Fellowship!]!
     @cypher(
       statement: """
-      MATCH (this)-[:HAS*5]-(fellowshipsActive:Fellowship) OR fellowships:ClosedFellowship
+      MATCH (this)-[:HAS*5]->(fellowships) WHERE fellowships:Active:Fellowship OR fellowships:ClosedFellowship
       MATCH (fellowships) WHERE EXISTS {
         MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph)
         WHERE date(date.date).week = date().week AND record.attendance IS NOT NULL

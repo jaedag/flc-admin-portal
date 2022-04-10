@@ -21,14 +21,14 @@ import { throwErrorMsg } from 'global-utils'
 const CouncilBankingSlipSubmission = () => {
   const { serviceRecordId } = useContext(ServiceContext)
   const { theme } = useContext(MemberContext)
-  const { setCouncilId } = useContext(ChurchContext)
+  const { clickCard } = useContext(ChurchContext)
   const navigate = useNavigate()
 
   const { data, loading, error } = useQuery(COUNCIL_SERVICE_RECORDS, {
     variables: { serviceId: serviceRecordId },
   })
   const council = data?.serviceRecords[0]?.serviceLog?.council[0]
-  setCouncilId(council?.id)
+  clickCard(council)
   const initialValues = {
     bankingSlip: '',
   }

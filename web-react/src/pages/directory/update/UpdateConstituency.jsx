@@ -17,7 +17,7 @@ import { MAKE_CONSTITUENCY_LEADER } from './ChangeLeaderMutations'
 import ConstituencyForm from 'components/reusable-forms/ConstituencyForm'
 
 const UpdateConstituency = () => {
-  const { constituencyId, setCouncilId } = useContext(ChurchContext)
+  const { constituencyId, clickCard } = useContext(ChurchContext)
   const { data, loading } = useQuery(DISPLAY_CONSTITUENCY, {
     variables: { id: constituencyId },
   })
@@ -139,129 +139,127 @@ const UpdateConstituency = () => {
   })
 
   //onSubmit receives the form state as argument
-  const onSubmit = (values, onSubmitProps) => {
+  const onSubmit = async (values, onSubmitProps) => {
     onSubmitProps.setSubmitting(true)
-    setCouncilId(values.council)
+    clickCard({ id: values.council, __typename: 'Council' })
+    try {
+      await UpdateConstituency({
+        variables: {
+          constituencyId: constituencyId,
+          name: values.name,
+          councilId: values.council,
+        },
+      })
+      //Log if Constituency Name Changes
+      if (values.name !== initialValues.name) {
+        await LogConstituencyHistory({
+          variables: {
+            constituencyId: constituencyId,
+            newLeaderId: '',
+            oldLeaderId: '',
+            oldCouncilId: '',
+            newCouncilId: '',
+            historyRecord: `Constituency name has been changed from ${initialValues.name} to ${values.name}`,
+          },
+        })
+      }
 
-    UpdateConstituency({
-      variables: {
-        constituencyId: constituencyId,
-        name: values.name,
-        councilId: values.council,
-      },
-    })
-      .then(() => {
-        //Log if Constituency Name Changes
-        if (values.name !== initialValues.name) {
-          LogConstituencyHistory({
-            variables: {
-              constituencyId: constituencyId,
-              newLeaderId: '',
-              oldLeaderId: '',
-              oldCouncilId: '',
-              newCouncilId: '',
-              historyRecord: `Constituency name has been changed from ${initialValues.name} to ${values.name}`,
-            },
-          })
-        }
-
-        //Log if the Leader Changes
-        if (values.leaderId !== initialValues.leaderId) {
-          return MakeConstituencyLeader({
+      //Log if the Leader Changes
+      if (values.leaderId !== initialValues.leaderId) {
+        try {
+          await MakeConstituencyLeader({
             variables: {
               oldLeaderId: initialValues.leaderId || 'old-leader',
               newLeaderId: values.leaderId,
               constituencyId: constituencyId,
             },
           })
-            .then(() => {
-              alertMsg('Leader Changed Successfully')
-              navigate(`/constituency/displaydetails`)
-            })
-            .catch((err) =>
-              throwErrorMsg('There was a problem changing the CO', err)
-            )
+
+          alertMsg('Leader Changed Successfully')
+          navigate(`/constituency/displaydetails`)
+        } catch (error) {
+          throwErrorMsg('There was a problem changing the CO', error)
         }
+      }
 
-        //Log if Council Changes
-        if (values.council !== initialValues.council) {
-          RemoveConstituencyCouncil({
+      //Log if Council Changes
+      if (values.council !== initialValues.council) {
+        await RemoveConstituencyCouncil({
+          variables: {
+            councilId: initialValues.council,
+            constituencyId: constituencyId,
+          },
+        })
+        await AddConstituencyCouncil({
+          variables: {
+            councilId: values.council,
+            constituencyId: constituencyId,
+          },
+        })
+      }
+
+      //For the Adding and Removing of Bacentas
+      const oldBacentaList = initialValues.bacentas.map((bacenta) => {
+        return bacenta.id
+      })
+
+      const newBacentaList = values.bacentas.map((bacenta) => {
+        return bacenta.id ? bacenta.id : bacenta
+      })
+
+      const removeBacentas = oldBacentaList.filter((value) => {
+        return !newBacentaList.includes(value)
+      })
+
+      const addBacentas = values.bacentas.filter((value) => {
+        return !oldBacentaList.includes(value.id)
+      })
+
+      removeBacentas.forEach(async (bacenta) => {
+        await RemoveBacentaConstituency({
+          variables: {
+            constituencyId: constituencyId,
+            bacentaId: bacenta,
+          },
+        })
+      })
+
+      addBacentas.forEach(async (bacenta) => {
+        if (bacenta.constituency) {
+          await RemoveBacentaConstituency({
             variables: {
-              councilId: initialValues.council,
-              constituencyId: constituencyId,
-            },
-          })
-          AddConstituencyCouncil({
-            variables: {
-              councilId: values.council,
-              constituencyId: constituencyId,
-            },
-          })
-        }
-
-        //For the Adding and Removing of Bacentas
-        const oldBacentaList = initialValues.bacentas.map((bacenta) => {
-          return bacenta.id
-        })
-
-        const newBacentaList = values.bacentas.map((bacenta) => {
-          return bacenta.id ? bacenta.id : bacenta
-        })
-
-        const removeBacentas = oldBacentaList.filter((value) => {
-          return !newBacentaList.includes(value)
-        })
-
-        const addBacentas = values.bacentas.filter((value) => {
-          return !oldBacentaList.includes(value.id)
-        })
-
-        removeBacentas.forEach((bacenta) => {
-          RemoveBacentaConstituency({
-            variables: {
-              constituencyId: constituencyId,
-              bacentaId: bacenta,
-            },
-          })
-        })
-
-        addBacentas.forEach((bacenta) => {
-          if (bacenta.constituency) {
-            RemoveBacentaConstituency({
-              variables: {
-                constituencyId: bacenta.constituency.id,
-                bacentaId: bacenta.id,
-              },
-            })
-          } else {
-            //Bacenta has no previous constituency and is now joining. ie. RemoveBacentaConstituency won't run
-            LogBacentaHistory({
-              variables: {
-                bacentaId: bacenta.id,
-                newLeaderId: '',
-                oldLeaderId: '',
-                newconstituencyId: constituencyId,
-                oldconstituencyId: '',
-                historyRecord: `${bacenta.name} Bacenta has been started again under ${initialValues.name} Constituency`,
-              },
-            })
-          }
-
-          AddConstituencyBacentas({
-            variables: {
-              constituencyId: constituencyId,
+              constituencyId: bacenta.constituency.id,
               bacentaId: bacenta.id,
             },
           })
-        })
+        } else {
+          //Bacenta has no previous constituency and is now joining. ie. RemoveBacentaConstituency won't run
+          await LogBacentaHistory({
+            variables: {
+              bacentaId: bacenta.id,
+              newLeaderId: '',
+              oldLeaderId: '',
+              newconstituencyId: constituencyId,
+              oldconstituencyId: '',
+              historyRecord: `${bacenta.name} Bacenta has been started again under ${initialValues.name} Constituency`,
+            },
+          })
+        }
 
-        onSubmitProps.setSubmitting(false)
-        onSubmitProps.resetForm()
-        navigate(`/constituency/displaydetails`)
+        await AddConstituencyBacentas({
+          variables: {
+            constituencyId: constituencyId,
+            bacentaId: bacenta.id,
+          },
+        })
       })
-      .catch((err) =>
-        throwErrorMsg('There was a problem updating this constituency', err)
-      )
+
+      onSubmitProps.setSubmitting(false)
+      onSubmitProps.resetForm()
+      navigate(`/constituency/displaydetails`)
+    } catch (error) {
+      throwErrorMsg('There was a problem updating this constituency', error)
+    }
   }
 
   return (

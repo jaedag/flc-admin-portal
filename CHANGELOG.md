@@ -1,3 +1,15 @@
+#### 1.2.2 (2022-04-10)
+
+##### Bug Fixes
+
+*  added the leader name to the payswitch transaction desc ([623f9065](https://github.com/firstlovecenter/fl-admin-portal/commit/623f906596a1c0bbdc40c098a4caa311124d4bcd))
+*  fixed wrong syntax in cypher script ([8a0db81a](https://github.com/firstlovecenter/fl-admin-portal/commit/8a0db81a2f786e7c0b1fa9a51fd557037e8b0af8))
+*  improved the count to account for fellowships that have service and then close down ([11fd5755](https://github.com/firstlovecenter/fl-admin-portal/commit/11fd5755b87b3df0a675c85f87434c40f9ec5003))
+
+##### Refactors
+
+*  refactored constituency CRUD pages into async-await ([c608cae8](https://github.com/firstlovecenter/fl-admin-portal/commit/c608cae8ff4978eb31ed73993be3b37e97a3b674))
+
 #### 1.2.1 (2022-04-09)
 
 ##### Bug Fixes

@@ -8,8 +8,8 @@ extend type GatheringService {
   servicesThisWeek: [Fellowship!]!
     @cypher(
       statement: """
-      MATCH (this)-[:HAS*5]-(fellowships) WHERE fellowships:Active:Fellowship OR fellowships:ClosedFellowship
-      WHERE EXISTS {
+      MATCH (this)-[:HAS*5]-(fellowshipsActive:Fellowship) OR fellowships:ClosedFellowship
+      MATCH (fellowships) WHERE EXISTS {
         MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph)
         WHERE date(date.date).week = date().week AND record.attendance IS NOT NULL
         }
@@ -20,7 +20,7 @@ extend type GatheringService {
     @cypher(
       statement: """
       MATCH (this)-[:HAS*5]->(fellowships) WHERE fellowships:Active:Fellowship OR fellowships:ClosedFellowship
-      WHERE EXISTS {
+        MATCH (fellowships) WHERE EXISTS {
         MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph)
         WHERE date(date.date).week = date().week AND record.attendance IS NOT NULL
         }
@@ -120,7 +120,7 @@ extend type Stream {
     @cypher(
       statement: """
       MATCH (this)-[:HAS*4]->(fellowships) WHERE fellowships:Active:Fellowship OR fellowships:ClosedFellowship
-      WHERE EXISTS {
+      MATCH (fellowships) WHERE EXISTS {
         MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph)
         WHERE date(date.date).week = date().week AND record.attendance IS NOT NULL
         }
@@ -131,7 +131,7 @@ extend type Stream {
     @cypher(
       statement: """
       MATCH (this)-[:HAS*4]-(fellowships) WHERE fellowships:Active:Fellowship OR fellowships:ClosedFellowship
-      WHERE EXISTS {
+       MATCH (fellowships) WHERE EXISTS {
         MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph)
         WHERE date(date.date).week = date().week AND record.attendance IS NOT NULL
         }
@@ -231,7 +231,7 @@ extend type Council {
     @cypher(
       statement: """
       MATCH (this)-[:HAS*3]->(fellowships) WHERE fellowships:Active:Fellowship OR fellowships:ClosedFellowship
-      WHERE EXISTS {
+       MATCH (fellowships) WHERE EXISTS {
         MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph)
         WHERE date(date.date).week = date().week AND record.attendance IS NOT NULL
         }
@@ -242,7 +242,7 @@ extend type Council {
     @cypher(
       statement: """
       MATCH (this)-[:HAS*3]->(fellowships) WHERE fellowships:Active:Fellowship OR fellowships:ClosedFellowship
-      WHERE EXISTS {
+      MATCH (fellowships) WHERE EXISTS {
         MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph)
         WHERE date(date.date).week = date().week AND record.attendance IS NOT NULL
         }
@@ -342,7 +342,7 @@ extend type Constituency {
     @cypher(
       statement: """
       MATCH (this)-[:HAS*2]->(fellowships) WHERE fellowships:Active:Fellowship OR fellowships:ClosedFellowship
-      WHERE EXISTS {
+      MATCH (fellowships) WHERE EXISTS {
         MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph)
         WHERE date(date.date).week = date().week AND record.attendance IS NOT NULL
         }
@@ -353,7 +353,7 @@ extend type Constituency {
     @cypher(
       statement: """
       MATCH (this)-[:HAS*2]->(fellowships) WHERE fellowships:Active:Fellowship OR fellowships:ClosedFellowship
-      WHERE EXISTS {
+      MATCH (fellowships) WHERE EXISTS {
         MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph)
         WHERE date(date.date).week = date().week AND record.attendance IS NOT NULL
         }

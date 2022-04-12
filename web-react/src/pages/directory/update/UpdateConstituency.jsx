@@ -8,6 +8,7 @@ import {
   ADD_CONSTITUENCY_COUNCIL,
   REMOVE_CONSTITUENCY_COUNCIL,
   ADD_CONSTITUENCY_BACENTAS,
+  REMOVE_BACENTA_CONSTITUENCY,
 } from './UpdateMutations'
 import { ChurchContext } from '../../../contexts/ChurchContext'
 import { DISPLAY_CONSTITUENCY } from '../display/ReadQueries'
@@ -56,6 +57,34 @@ const UpdateConstituency = () => {
 
   //Changes downwards. ie. Bacenta Changes underneath constituency
   const [AddConstituencyBacentas] = useMutation(ADD_CONSTITUENCY_BACENTAS)
+  const [RemoveBacentaConstituency] = useMutation(REMOVE_BACENTA_CONSTITUENCY, {
+    onCompleted: (data) => {
+      const prevConstituency = data.updateConstituencies.constituencies[0]
+      const bacenta = data.updateBacentas.bacentas[0]
+      let newConstituencyId = ''
+      let oldConstituencyId = ''
+      let historyRecord
+
+      if (prevConstituency.id !== constituencyId) {
+        //Bacenta has previous constituency which is not current constituency and is joining
+        oldConstituencyId = prevConstituency.id
+        newConstituencyId = constituencyId
+        historyRecord = `${bacenta.name} Bacenta has been moved to ${initialValues.name} Constituency from ${prevConstituency.name} Constituency`
+      }
+
+      //After removing the bacenta from a constituency, then you log that change.
+      LogBacentaHistory({
+        variables: {
+          bacentaId: bacenta.id,
+          newLeaderId: '',
+          oldLeaderId: '',
+          newconstituencyId: newConstituencyId,
+          oldconstituencyId: oldConstituencyId,
+          historyRecord: historyRecord,
+        },
+      })
+    },
+  })
   const [CloseDownBacenta] = useMutation(MAKE_BACENTA_INACTIVE, {
     onCompleted: (data) => {
       const prevConstituency = data.updateConstituencies.constituencies[0]
@@ -69,11 +98,6 @@ const UpdateConstituency = () => {
         oldConstituencyId = constituencyId
         newConstituencyId = ''
         historyRecord = `${bacenta.name} Bacenta has been closed down under ${initialValues.name} Constituency`
-      } else if (prevConstituency.id !== constituencyId) {
-        //Bacenta has previous constituency which is not current constituency and is joining
-        oldConstituencyId = prevConstituency.id
-        newConstituencyId = constituencyId
-        historyRecord = `${bacenta.name} Bacenta has been moved to ${initialValues.name} Constituency from ${prevConstituency.name} Constituency`
       }
 
       //After removing the bacenta from a constituency, then you log that change.
@@ -230,7 +254,7 @@ const UpdateConstituency = () => {
       addBacentas.forEach(async (bacenta) => {
         if (bacenta.constituency) {
           try {
-            await CloseDownBacenta({
+            await RemoveBacentaConstituency({
               variables: {
                 constituencyId: bacenta.constituency.id,
                 bacentaId: bacenta.id,

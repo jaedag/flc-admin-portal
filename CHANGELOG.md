@@ -1,3 +1,9 @@
+#### 1.2.3 (2022-04-12)
+
+##### Bug Fixes
+
+* **services:**  fixed a bug with servicesThisWeek ([1cdafdd3](https://github.com/firstlovecenter/fl-admin-portal/commit/1cdafdd3961009a09de2ba94ca088d5b87c6b866))
+
 #### 1.2.2 (2022-04-10)
 
 ##### Bug Fixes

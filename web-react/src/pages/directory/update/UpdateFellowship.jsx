@@ -16,7 +16,7 @@ import { alertMsg, repackDecimals, throwErrorMsg } from 'global-utils'
 import { SET_VACATION_FELLOWSHIP, SET_ACTIVE_FELLOWSHIP } from './StatusChanges'
 
 const UpdateFellowship = () => {
-  const { setBacentaId, fellowshipId } = useContext(ChurchContext)
+  const { clickCard, fellowshipId } = useContext(ChurchContext)
   const {
     data: fellowshipData,
     loading: fellowshipLoading,
@@ -84,7 +84,7 @@ const UpdateFellowship = () => {
   //onSubmit receives the form state as argument
   const onSubmit = (values, onSubmitProps) => {
     onSubmitProps.setSubmitting(true)
-    setBacentaId(values.bacenta)
+    clickCard({ id: values.bacenta, __typename: 'Bacenta' })
     values.venueLongitude = parseFloat(values.venueLongitude)
     values.venueLatitude = parseFloat(values.venueLatitude)
 

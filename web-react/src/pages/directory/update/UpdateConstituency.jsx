@@ -7,7 +7,6 @@ import {
   UPDATE_CONSTITUENCY_MUTATION,
   ADD_CONSTITUENCY_COUNCIL,
   REMOVE_CONSTITUENCY_COUNCIL,
-  REMOVE_BACENTA_CONSTITUENCY,
   ADD_CONSTITUENCY_BACENTAS,
 } from './UpdateMutations'
 import { ChurchContext } from '../../../contexts/ChurchContext'
@@ -15,6 +14,7 @@ import { DISPLAY_CONSTITUENCY } from '../display/ReadQueries'
 import { LOG_CONSTITUENCY_HISTORY, LOG_BACENTA_HISTORY } from './LogMutations'
 import { MAKE_CONSTITUENCY_LEADER } from './ChangeLeaderMutations'
 import ConstituencyForm from 'components/reusable-forms/ConstituencyForm'
+import { MAKE_BACENTA_INACTIVE } from './CloseChurchMutations'
 
 const UpdateConstituency = () => {
   const { constituencyId, clickCard } = useContext(ChurchContext)
@@ -56,7 +56,7 @@ const UpdateConstituency = () => {
 
   //Changes downwards. ie. Bacenta Changes underneath constituency
   const [AddConstituencyBacentas] = useMutation(ADD_CONSTITUENCY_BACENTAS)
-  const [RemoveBacentaConstituency] = useMutation(REMOVE_BACENTA_CONSTITUENCY, {
+  const [CloseDownBacenta] = useMutation(MAKE_BACENTA_INACTIVE, {
     onCompleted: (data) => {
       const prevConstituency = data.updateConstituencies.constituencies[0]
       const bacenta = data.updateBacentas.bacentas[0]
@@ -199,39 +199,47 @@ const UpdateConstituency = () => {
       }
 
       //For the Adding and Removing of Bacentas
-      const oldBacentaList = initialValues.bacentas.map((bacenta) => {
-        return bacenta.id
-      })
+      const oldBacentaList = initialValues.bacentas.map((bacenta) => bacenta)
 
-      const newBacentaList = values.bacentas.map((bacenta) => {
-        return bacenta.id ? bacenta.id : bacenta
-      })
+      const newBacentaList = values.bacentas.map((bacenta) => bacenta)
 
       const removeBacentas = oldBacentaList.filter((value) => {
-        return !newBacentaList.includes(value)
+        const newArray = newBacentaList.map((bacenta) => bacenta.id)
+        return !newArray.includes(value.id)
       })
 
       const addBacentas = values.bacentas.filter((value) => {
-        return !oldBacentaList.includes(value.id)
+        const newArray = oldBacentaList.map((bacenta) => bacenta.id)
+        return !newArray.includes(value.id)
       })
 
       removeBacentas.forEach(async (bacenta) => {
-        await RemoveBacentaConstituency({
-          variables: {
-            constituencyId: constituencyId,
-            bacentaId: bacenta,
-          },
-        })
+        try {
+          await CloseDownBacenta({
+            variables: {
+              constituencyId: constituencyId,
+              bacentaId: bacenta.id,
+              leaderId: bacenta.leader?.id,
+            },
+          })
+        } catch (error) {
+          throwErrorMsg(error)
+        }
       })
 
       addBacentas.forEach(async (bacenta) => {
         if (bacenta.constituency) {
-          await RemoveBacentaConstituency({
-            variables: {
-              constituencyId: bacenta.constituency.id,
-              bacentaId: bacenta.id,
-            },
-          })
+          try {
+            await CloseDownBacenta({
+              variables: {
+                constituencyId: bacenta.constituency.id,
+                bacentaId: bacenta.id,
+                leaderId: bacenta.leader?.id,
+              },
+            })
+          } catch (error) {
+            throwErrorMsg(error)
+          }
         } else {
           //Bacenta has no previous constituency and is now joining. ie. RemoveBacentaConstituency won't run
           await LogBacentaHistory({

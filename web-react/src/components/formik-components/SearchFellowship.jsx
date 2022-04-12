@@ -11,7 +11,7 @@ import {
   STREAM_FELLOWSHIP_SEARCH,
   CONSTITUENCY_FELLOWSHIP_SEARCH,
   BACENTA_FELLOWSHIP_SEARCH,
-  FELLOWSHIP_SEARCH,
+  MEMBER_FELLOWSHIP_SEARCH,
 } from './SearchFellowshipQueries'
 import TextError from './TextError'
 
@@ -64,8 +64,16 @@ const SearchFellowship = (props) => {
       },
     }
   )
-  const [fellowshipSearch, { error: fellowshipError }] =
-    useLazyQuery(FELLOWSHIP_SEARCH)
+
+  const [memberSearch, { error: memberError }] = useLazyQuery(
+    MEMBER_FELLOWSHIP_SEARCH,
+    {
+      onCompleted: (data) => {
+        setSuggestions(data.members[0].fellowshipSearch)
+        return
+      },
+    }
+  )
 
   const error =
     gatheringServiceError ||
@@ -73,51 +81,53 @@ const SearchFellowship = (props) => {
     councilError ||
     constituencyError ||
     bacentaError ||
-    fellowshipError
+    memberError
   throwErrorMsg(error)
 
   const whichSearch = (searchString) => {
-    if (isAuthorised(permitMe('GatheringService'), currentUser.roles)) {
-      gatheringServiceSearch({
-        variables: {
-          id: currentUser.gatheringService,
-          key: searchString?.trim(),
-        },
-      })
-    } else if (isAuthorised(permitMe('Stream'), currentUser.roles)) {
-      streamSearch({
-        variables: {
-          id: currentUser.stream,
-          key: searchString?.trim(),
-        },
-      })
-    } else if (isAuthorised(permitMe('Council'), currentUser.roles)) {
-      councilSearch({
-        variables: {
-          id: currentUser.council,
-          key: searchString?.trim(),
-        },
-      })
-    } else if (isAuthorised(permitMe('Constituency'), currentUser.roles)) {
-      constituencySearch({
-        variables: {
-          id: currentUser.constituency,
-          key: searchString?.trim(),
-        },
-      })
-    } else if (isAuthorised(permitMe('Bacenta'), currentUser.roles)) {
-      bacentaSearch({
-        variables: {
-          id: currentUser.bacenta,
-          key: searchString?.trim(),
-        },
-      })
-    } else if (isAuthorised(permitMe('Fellowship'), currentUser.roles)) {
-      fellowshipSearch({
-        variables: {
-          id: currentUser.id,
-        },
-      }).then((res) => setSuggestions(res.data?.members[0].leadsFellowship))
+    memberSearch({
+      variables: {
+        id: currentUser.id,
+        key: searchString?.trim(),
+      },
+    })
+    if (props.roleBased) {
+      if (isAuthorised(permitMe('GatheringService'), currentUser.roles)) {
+        gatheringServiceSearch({
+          variables: {
+            id: currentUser.gatheringService,
+            key: searchString?.trim(),
+          },
+        })
+      } else if (isAuthorised(permitMe('Stream'), currentUser.roles)) {
+        streamSearch({
+          variables: {
+            id: currentUser.stream,
+            key: searchString?.trim(),
+          },
+        })
+      } else if (isAuthorised(permitMe('Council'), currentUser.roles)) {
+        councilSearch({
+          variables: {
+            id: currentUser.council,
+            key: searchString?.trim(),
+          },
+        })
+      } else if (isAuthorised(permitMe('Constituency'), currentUser.roles)) {
+        constituencySearch({
+          variables: {
+            id: currentUser.constituency,
+            key: searchString?.trim(),
+          },
+        })
+      } else if (isAuthorised(permitMe('Bacenta'), currentUser.roles)) {
+        bacentaSearch({
+          variables: {
+            id: currentUser.bacenta,
+            key: searchString?.trim(),
+          },
+        })
+      }
     }
   }
 
@@ -166,7 +176,7 @@ const SearchFellowship = (props) => {
           }
           setSearchString(suggestion.name)
 
-          props.setFieldValue(`${props.name}`, suggestion.id)
+          props.setFieldValue(`${props.name}`, suggestion)
         }}
         getSuggestionValue={(suggestion) => suggestion.name}
         highlightFirstSuggestion={true}

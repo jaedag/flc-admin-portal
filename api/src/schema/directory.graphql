@@ -32,14 +32,7 @@ type Member @auth(rules: [{ isAuthenticated: true }]) {
       RETURN DISTINCT members ORDER BY toLower(members.lastName), toLower(members.firstName)
       """
     )
-  memberSearch(key: String!, limit: Int! = 5): [Member!]!
-    @cypher(
-      statement: """
-      MATCH (this)-[:LEADS|HAS|DOES_ARRIVALS_FOR|IS_ADMIN_FOR*1..6]->(:Fellowship)<-[:BELONGS_TO]-(members:Member)
-      WHERE toLower(members.firstName+ ' ' + members.lastName) CONTAINS toLower($key)
-      RETURN DISTINCT members ORDER BY toLower(members.lastName), toLower(members.firstName) LIMIT $limit
-      """
-    )
+
   memberCount: Int
     @cypher(
       statement: """
@@ -246,14 +239,7 @@ type GatheringService implements Church {
       RETURN DISTINCT members ORDER BY toLower(members.lastName), toLower(members.firstName)
       """
     )
-  memberSearch(key: String!, limit: Int!): [Member!]!
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS*5]->(:Fellowship)<-[:BELONGS_TO]-(members:Member)
-      WHERE toLower(members.firstName+ ' ' + members.lastName) CONTAINS toLower($key)
-      RETURN DISTINCT members ORDER BY toLower(members.lastName), toLower(members.firstName) LIMIT $limit
-      """
-    )
+
   memberCount: Int
     @cypher(
       statement: """
@@ -292,25 +278,9 @@ type GatheringService implements Church {
     @cypher(
       statement: "MATCH (this)-[:HAS*5]->(fellowships:Fellowship) RETURN COUNT(DISTINCT fellowships)"
     )
-  fellowshipSearch(key: String!, limit: Int!): [Fellowship!]!
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS*5]->(fellowship:Fellowship)
-      WHERE toLower(fellowship.name) CONTAINS toLower($key)
-      RETURN DISTINCT fellowship LIMIT $limit
-      """
-    )
   activeFellowshipCount: Int
     @cypher(
       statement: "MATCH (this)-[:HAS*5]->(fellowships:Active:Fellowship) RETURN COUNT(DISTINCT fellowships)"
-    )
-  bacentaSearch(key: String!, limit: Int!): [Fellowship!]!
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS*4]->(bacenta:Bacenta)
-      WHERE toLower(bacenta.name) CONTAINS toLower($key)
-      RETURN DISTINCT bacenta LIMIT $limit
-      """
     )
   admin: Member @relationship(type: "IS_ADMIN_FOR", direction: IN)
   history: [HistoryLog!]! @relationship(type: "HAS_HISTORY", direction: OUT)
@@ -354,14 +324,6 @@ type Stream implements Church {
       RETURN DISTINCT members ORDER BY toLower(members.lastName), toLower(members.firstName)
       """
     )
-  memberSearch(key: String!, limit: Int!): [Member!]!
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS*4]->(:Fellowship)<-[:BELONGS_TO]-(members:Member)
-      WHERE toLower(members.firstName+ ' ' + members.lastName) CONTAINS toLower($key)
-      RETURN DISTINCT members ORDER BY toLower(members.lastName), toLower(members.firstName)  LIMIT $limit
-      """
-    )
   memberCount: Int
     @cypher(
       statement: """
@@ -392,25 +354,9 @@ type Stream implements Church {
     @cypher(
       statement: "MATCH (this)-[:HAS*3]->(bacentas:Bacenta:Active) RETURN COUNT(DISTINCT bacentas)"
     )
-  bacentaSearch(key: String!, limit: Int!): [Fellowship!]!
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS*3]->(bacenta:Bacenta)
-      WHERE toLower(bacenta.name) CONTAINS toLower($key)
-      RETURN DISTINCT bacenta LIMIT $limit
-      """
-    )
   fellowshipCount: Int
     @cypher(
       statement: "MATCH (this)-[:HAS*4]->(fellowships:Fellowship) RETURN COUNT(DISTINCT fellowships)"
-    )
-  fellowshipSearch(key: String!, limit: Int!): [Fellowship!]!
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS*4]->(fellowship:Fellowship)
-      WHERE toLower(fellowship.name) CONTAINS toLower($key)
-      RETURN DISTINCT fellowship LIMIT $limit
-      """
     )
   activeFellowshipCount: Int
     @cypher(
@@ -455,14 +401,6 @@ type Council implements Church {
       RETURN DISTINCT members ORDER BY toLower(members.lastName), toLower(members.firstName)
       """
     )
-  memberSearch(key: String!, limit: Int!): [Member!]!
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS*3]->(:Fellowship)<-[:BELONGS_TO]-(members:Member)
-      WHERE toLower(members.firstName+ ' ' + members.lastName) CONTAINS toLower($key)
-      RETURN DISTINCT members ORDER BY toLower(members.lastName), toLower(members.firstName)  LIMIT $limit
-      """
-    )
   memberCount: Int
     @cypher(
       statement: """
@@ -489,26 +427,11 @@ type Council implements Church {
     @cypher(
       statement: "MATCH (this)-[:HAS*2]->(bacentas:Bacenta:Active) RETURN COUNT(DISTINCT bacentas)"
     )
-  bacentaSearch(key: String!, limit: Int!): [Fellowship!]!
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS*2]->(bacenta:Bacenta)
-      WHERE toLower(bacenta.name) CONTAINS toLower($key)
-      RETURN DISTINCT bacenta LIMIT $limit
-      """
-    )
   fellowshipCount: Int
     @cypher(
       statement: "MATCH (this)-[:HAS*3]->(fellowships:Fellowship) RETURN COUNT(DISTINCT fellowships)"
     )
-  fellowshipSearch(key: String!, limit: Int!): [Fellowship!]!
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS*3]->(fellowship:Fellowship)
-      WHERE toLower(fellowship.name) CONTAINS toLower($key)
-      RETURN DISTINCT fellowship LIMIT $limit
-      """
-    )
+
   activeFellowshipCount: Int
     @cypher(
       statement: "MATCH (this)-[:HAS*3]->(fellowships:Active:Fellowship) RETURN COUNT(DISTINCT fellowships)"
@@ -545,14 +468,6 @@ type Constituency implements Church {
       RETURN DISTINCT members ORDER BY toLower(members.lastName), toLower(members.firstName)
       """
     )
-  memberSearch(key: String!, limit: Int!): [Member!]!
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS*2]->(:Fellowship)<-[:BELONGS_TO]-(members:Member)
-      WHERE toLower(members.firstName+ ' ' + members.lastName) CONTAINS toLower($key)
-      RETURN DISTINCT members ORDER BY toLower(members.lastName), toLower(members.firstName)  LIMIT $limit
-      """
-    )
   memberCount: Int
     @cypher(
       statement: """
@@ -570,22 +485,6 @@ type Constituency implements Church {
   fellowshipCount: Int
     @cypher(
       statement: "MATCH (this)-[:HAS]-(:Bacenta)-[:HAS]->(fellowship:Fellowship) RETURN COUNT(fellowship)"
-    )
-  fellowshipSearch(key: String!, limit: Int!): [Fellowship!]!
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS]-(:Bacenta)-[:HAS]->(fellowship:Fellowship)
-      WHERE toLower(fellowship.name) CONTAINS toLower($key)
-      RETURN DISTINCT fellowship LIMIT $limit
-      """
-    )
-  bacentaSearch(key: String!, limit: Int!): [Fellowship!]!
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS]->(bacenta:Bacenta)
-      WHERE toLower(bacenta.name) CONTAINS toLower($key)
-      RETURN DISTINCT bacenta LIMIT $limit
-      """
     )
   activeFellowshipCount: Int
     @cypher(
@@ -644,14 +543,6 @@ type Bacenta implements Church {
       RETURN DISTINCT members ORDER BY toLower(members.lastName), toLower(members.firstName)
       """
     )
-  memberSearch(key: String!, limit: Int!): [Member!]!
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS]->(:Fellowship)<-[:BELONGS_TO]-(members:Member)
-      WHERE toLower(members.firstName+ ' ' + members.lastName) CONTAINS toLower($key)
-      RETURN DISTINCT members ORDER BY toLower(members.lastName), toLower(members.firstName)  LIMIT $limit
-      """
-    )
   memberCount: Int
     @cypher(
       statement: """
@@ -668,14 +559,6 @@ type Bacenta implements Church {
     )
   leader: Member @relationship(type: "LEADS", direction: IN)
   fellowships: [Fellowship!]! @relationship(type: "HAS", direction: OUT)
-  fellowshipSearch(key: String!, limit: Int!): [Fellowship!]!
-    @cypher(
-      statement: """
-      MATCH (this)-[:HAS]->(fellowship:Fellowship)
-      WHERE toLower(fellowship.name) CONTAINS toLower($key)
-      RETURN DISTINCT fellowship LIMIT $limit
-      """
-    )
   basontas: Basonta @relationship(type: "HAS_BASONTA", direction: OUT)
   constituency: Constituency @relationship(type: "HAS", direction: IN)
   history: [HistoryLog!]! @relationship(type: "HAS_HISTORY", direction: OUT)
@@ -725,14 +608,6 @@ type Fellowship implements Church {
   bacenta: Bacenta @relationship(type: "HAS", direction: IN)
   leader: Member @relationship(type: "LEADS", direction: IN)
   members: [Member!]! @relationship(type: "BELONGS_TO", direction: IN)
-  memberSearch(key: String!, limit: Int!): [Member!]!
-    @cypher(
-      statement: """
-      MATCH (this)<-[:BELONGS_TO]-(members:Member)
-      WHERE toLower(members.firstName+ ' ' + members.lastName) CONTAINS toLower($key)
-      RETURN DISTINCT members ORDER BY toLower(members.lastName), toLower(members.firstName)  LIMIT $limit
-      """
-    )
   memberCount: Int
     @cypher(
       statement: """

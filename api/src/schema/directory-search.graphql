@@ -1,3 +1,168 @@
+extend type Member {
+  memberSearch(key: String!, limit: Int! = 5): [Member!]!
+    @cypher(
+      statement: """
+      MATCH (this)-[:LEADS|HAS|DOES_ARRIVALS_FOR|IS_ADMIN_FOR*1..6]->(:Fellowship)<-[:BELONGS_TO]-(members:Member)
+      WHERE toLower(members.firstName+ ' ' + members.lastName) CONTAINS toLower($key)
+      RETURN DISTINCT members ORDER BY toLower(members.lastName), toLower(members.firstName) LIMIT $limit
+      """
+    )
+  fellowshipSearch(key: String!, limit: Int! = 5): [Fellowship!]!
+    @cypher(
+      statement: """
+      MATCH (this)-[:LEADS|HAS|DOES_ARRIVALS_FOR|IS_ADMIN_FOR*1..6]->(fellowship:Fellowship)
+      WHERE toLower(fellowship.name) CONTAINS toLower($key)
+      RETURN DISTINCT fellowship LIMIT $limit
+      """
+    )
+  bacentaSearch(key: String!, limit: Int! = 5): [Fellowship!]!
+    @cypher(
+      statement: """
+      MATCH (this)-[:LEADS|HAS|DOES_ARRIVALS_FOR|IS_ADMIN_FOR*1..5]->(bacenta:Bacenta)
+      WHERE toLower(bacenta.name) CONTAINS toLower($key)
+      RETURN DISTINCT bacenta LIMIT $limit
+      """
+    )
+}
+
+extend type GatheringService {
+  memberSearch(key: String!, limit: Int!): [Member!]!
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*5]->(:Fellowship)<-[:BELONGS_TO]-(members:Member)
+      WHERE toLower(members.firstName+ ' ' + members.lastName) CONTAINS toLower($key)
+      RETURN DISTINCT members ORDER BY toLower(members.lastName), toLower(members.firstName) LIMIT $limit
+      """
+    )
+  fellowshipSearch(key: String!, limit: Int!): [Fellowship!]!
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*5]->(fellowship:Fellowship)
+      WHERE toLower(fellowship.name) CONTAINS toLower($key)
+      RETURN DISTINCT fellowship LIMIT $limit
+      """
+    )
+  bacentaSearch(key: String!, limit: Int!): [Fellowship!]!
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*4]->(bacenta:Bacenta)
+      WHERE toLower(bacenta.name) CONTAINS toLower($key)
+      RETURN DISTINCT bacenta LIMIT $limit
+      """
+    )
+}
+
+extend type Stream {
+  memberSearch(key: String!, limit: Int!): [Member!]!
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*4]->(:Fellowship)<-[:BELONGS_TO]-(members:Member)
+      WHERE toLower(members.firstName+ ' ' + members.lastName) CONTAINS toLower($key)
+      RETURN DISTINCT members ORDER BY toLower(members.lastName), toLower(members.firstName)  LIMIT $limit
+      """
+    )
+  fellowshipSearch(key: String!, limit: Int!): [Fellowship!]!
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*4]->(fellowship:Fellowship)
+      WHERE toLower(fellowship.name) CONTAINS toLower($key)
+      RETURN DISTINCT fellowship LIMIT $limit
+      """
+    )
+  bacentaSearch(key: String!, limit: Int!): [Fellowship!]!
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*3]->(bacenta:Bacenta)
+      WHERE toLower(bacenta.name) CONTAINS toLower($key)
+      RETURN DISTINCT bacenta LIMIT $limit
+      """
+    )
+}
+
+extend type Council {
+  memberSearch(key: String!, limit: Int!): [Member!]!
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*3]->(:Fellowship)<-[:BELONGS_TO]-(members:Member)
+      WHERE toLower(members.firstName+ ' ' + members.lastName) CONTAINS toLower($key)
+      RETURN DISTINCT members ORDER BY toLower(members.lastName), toLower(members.firstName)  LIMIT $limit
+      """
+    )
+  fellowshipSearch(key: String!, limit: Int!): [Fellowship!]!
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*3]->(fellowship:Fellowship)
+      WHERE toLower(fellowship.name) CONTAINS toLower($key)
+      RETURN DISTINCT fellowship LIMIT $limit
+      """
+    )
+  bacentaSearch(key: String!, limit: Int!): [Fellowship!]!
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*2]->(bacenta:Bacenta)
+      WHERE toLower(bacenta.name) CONTAINS toLower($key)
+      RETURN DISTINCT bacenta LIMIT $limit
+      """
+    )
+}
+
+extend type Constituency {
+  memberSearch(key: String!, limit: Int!): [Member!]!
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*2]->(:Fellowship)<-[:BELONGS_TO]-(members:Member)
+      WHERE toLower(members.firstName+ ' ' + members.lastName) CONTAINS toLower($key)
+      RETURN DISTINCT members ORDER BY toLower(members.lastName), toLower(members.firstName)  LIMIT $limit
+      """
+    )
+  fellowshipSearch(key: String!, limit: Int!): [Fellowship!]!
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS]->(:Bacenta)-[:HAS]->(fellowship:Fellowship)
+      WHERE toLower(fellowship.name) CONTAINS toLower($key)
+      RETURN DISTINCT fellowship LIMIT $limit
+      """
+    )
+  bacentaSearch(key: String!, limit: Int!): [Fellowship!]!
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS]->(bacenta:Bacenta)
+      WHERE toLower(bacenta.name) CONTAINS toLower($key)
+      RETURN DISTINCT bacenta LIMIT $limit
+      """
+    )
+}
+
+extend type Bacenta {
+  memberSearch(key: String!, limit: Int!): [Member!]!
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS]->(:Fellowship)<-[:BELONGS_TO]-(members:Member)
+      WHERE toLower(members.firstName+ ' ' + members.lastName) CONTAINS toLower($key)
+      RETURN DISTINCT members ORDER BY toLower(members.lastName), toLower(members.firstName)  LIMIT $limit
+      """
+    )
+  fellowshipSearch(key: String!, limit: Int!): [Fellowship!]!
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS]->(fellowship:Fellowship)
+      WHERE toLower(fellowship.name) CONTAINS toLower($key)
+      RETURN DISTINCT fellowship LIMIT $limit
+      """
+    )
+}
+
+extend type Fellowship {
+  memberSearch(key: String!, limit: Int!): [Member!]!
+    @cypher(
+      statement: """
+      MATCH (this)<-[:BELONGS_TO]-(members:Member)
+      WHERE toLower(members.firstName+ ' ' + members.lastName) CONTAINS toLower($key)
+      RETURN DISTINCT members ORDER BY toLower(members.lastName), toLower(members.firstName)  LIMIT $limit
+      """
+    )
+}
+
 extend type Query {
   ###Member Searches%####
 

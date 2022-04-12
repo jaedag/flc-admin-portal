@@ -47,3 +47,14 @@ export const CONSTITUENCY_BACENTA_SEARCH = gql`
     }
   }
 `
+export const MEMBER_BACENTA_SEARCH = gql`
+  query ($id: ID!, $key: String!) {
+    members(where: { id: $id }) {
+      id
+      bacentaSearch(key: $key) {
+        id
+        name
+      }
+    }
+  }
+`

@@ -25,14 +25,13 @@ import {
 } from './StatusChanges'
 
 const UpdateBacenta = () => {
-  const { church, bacentaId, setConstituencyId } = useContext(ChurchContext)
+  const { church, bacentaId, clickCard } = useContext(ChurchContext)
   const { data: bacentaData, loading: bacentaLoading } = useQuery(
     DISPLAY_BACENTA,
     {
       variables: { id: bacentaId },
     }
   )
-
   const navigate = useNavigate()
   const bacenta = bacentaData?.bacentas[0]
 
@@ -110,7 +109,7 @@ const UpdateBacenta = () => {
   const [AddBacentaConstituency] = useMutation(ADD_BACENTA_CONSTITUENCY, {
     onCompleted: (data) => {
       const oldConstituency = bacenta?.constituency
-      const newConstituency = data.updateBacentas.constituencies[0].constituency
+      const newConstituency = data.updateBacentas.bacentas[0].constituency
       if (!oldConstituency) {
         //If There is no old Constituency
         let recordIfNooldConstituency = `${initialValues.name} Bacenta has been moved to ${newConstituency.name} Constituency`
@@ -154,169 +153,168 @@ const UpdateBacenta = () => {
   })
 
   //onSubmit receives the form state as argument
-  const onSubmit = (values, onSubmitProps) => {
+  const onSubmit = async (values, onSubmitProps) => {
     onSubmitProps.setSubmitting(true)
-    setConstituencyId(values.constituency)
-
-    UpdateBacenta({
-      variables: {
-        bacentaId: bacentaId,
-        name: values.name,
-        leaderId: values.leaderId,
-        constituencyId: values.constituency,
-      },
-    })
-      .then(() => {
-        //Log if Bacenta Name Changes
-        if (values.name !== initialValues.name) {
-          LogBacentaHistory({
-            variables: {
-              bacentaId: bacentaId,
-              newLeaderId: '',
-              oldLeaderId: '',
-              oldConstituencyId: '',
-              newConstituencyId: '',
-              historyRecord: `Bacenta name has been changed from ${initialValues.name} to ${values.name}`,
-            },
-          })
-        }
-
-        //Change from IC to Graduated
-        if (values.graduationStatus !== initialValues.graduationStatus) {
-          if (values.graduationStatus === 'IC') {
-            MakeBacentaIC({
-              variables: {
-                bacentaId: bacentaId,
-              },
-            })
-          }
-
-          if (values.graduationStatus === 'Graduated') {
-            MakeBacentaGraduated({ variables: { bacentaId: bacentaId } })
-          }
-        }
-
-        //Change if the vacation status changes
-        if (values.vacationStatus !== initialValues.vacationStatus) {
-          if (values.vacationStatus === 'Vacation') {
-            SetBacentaOnVacation({
-              variables: {
-                bacentaId: bacentaId,
-              },
-            })
-          }
-          if (values.vacationStatus === 'Active') {
-            SetBacentaActive({
-              variables: {
-                bacentaId: bacentaId,
-              },
-            })
-          }
-        }
-
-        //Log if the Leader Changes
-        if (values.leaderId !== initialValues.leaderId) {
-          return MakeBacentaLeader({
-            variables: {
-              oldLeaderId: initialValues.leaderId || 'old-leader',
-              newLeaderId: values.leaderId,
-              bacentaId: bacentaId,
-            },
-          })
-            .then(() => {
-              alertMsg('Leader Changed Successfully')
-              navigate(`/bacenta/displaydetails`)
-            })
-            .catch((error) =>
-              throwErrorMsg('There was an error changing the leader', error)
-            )
-        }
-
-        //Log If The Constituency Changes
-        if (values.constituency !== initialValues.constituency) {
-          RemoveBacentaConstituency({
-            variables: {
-              constituencyId: initialValues.constituency,
-              bacentaId: bacentaId,
-            },
-          })
-          AddBacentaConstituency({
-            variables: {
-              constituencyId: values.constituency,
-              bacentaId: bacentaId,
-            },
-          })
-        }
-
-        //For the adding and removing of fellowships
-        const oldFellowshipList = initialValues.fellowships.map(
-          (fellowship) => {
-            return fellowship.id
-          }
-        )
-
-        const newFellowshipList = values.fellowships.map((fellowship) => {
-          return fellowship.id ? fellowship.id : fellowship
-        })
-
-        const removeFellowships = oldFellowshipList.filter(function (value) {
-          return !newFellowshipList.includes(value)
-        })
-
-        const addFellowships = values.fellowships.filter(function (value) {
-          return !oldFellowshipList.includes(value.id)
-        })
-
-        if (removeFellowships.length) {
-          removeFellowships.forEach((fellowship) => {
-            CloseDownFellowship({
-              variables: {
-                fellowshipId: fellowship ?? '',
-              },
-            }).catch((error) => throwErrorMsg(error))
-          })
-        }
-
-        if (addFellowships.length) {
-          addFellowships.forEach((fellowship) => {
-            if (fellowship.bacenta) {
-              RemoveFellowshipFromBacenta({
-                variables: {
-                  bacentaId: fellowship.bacenta.id,
-                  fellowshipIds: [fellowship.id],
-                },
-              })
-            } else {
-              //Fellowship has no previous bacenta and is now joining. ie. CloseDownFellowship won't run
-              LogFellowshipHistory({
-                variables: {
-                  fellowshipId: fellowship.id,
-                  newLeaderId: '',
-                  oldLeaderId: '',
-                  newBacentaId: bacentaId,
-                  oldBacentaId: '',
-                  historyRecord: `${fellowship.name} 
-              Fellowship has been started again under ${initialValues.name} Bacenta`,
-                },
-              })
-            }
-
-            AddBacentaFellowships({
-              variables: {
-                bacentaId: bacentaId,
-                fellowshipId: [fellowship.id],
-              },
-            })
-          })
-        }
-
-        onSubmitProps.setSubmitting(false)
-        onSubmitProps.resetForm()
-        navigate(`/bacenta/displaydetails`)
+    clickCard({ id: values.constituency, __typename: 'Constituency' })
+    try {
+      await UpdateBacenta({
+        variables: {
+          bacentaId: bacentaId,
+          name: values.name,
+          leaderId: values.leaderId,
+          constituencyId: values.constituency,
+        },
       })
-      .catch((error) =>
-        throwErrorMsg('There was an error updating this bacenta', error)
-      )
+    } catch (error) {
+      throwErrorMsg(error)
+    }
+    //Log if Bacenta Name Changes
+    if (values.name !== initialValues.name) {
+      await LogBacentaHistory({
+        variables: {
+          bacentaId: bacentaId,
+          newLeaderId: '',
+          oldLeaderId: '',
+          oldConstituencyId: '',
+          newConstituencyId: '',
+          historyRecord: `Bacenta name has been changed from ${initialValues.name} to ${values.name}`,
+        },
+      })
+    }
+
+    //Change from IC to Graduated
+    if (values.graduationStatus !== initialValues.graduationStatus) {
+      if (values.graduationStatus === 'IC') {
+        await MakeBacentaIC({
+          variables: {
+            bacentaId: bacentaId,
+          },
+        })
+      }
+
+      if (values.graduationStatus === 'Graduated') {
+        await MakeBacentaGraduated({ variables: { bacentaId: bacentaId } })
+      }
+    }
+
+    //Change if the vacation status changes
+    if (values.vacationStatus !== initialValues.vacationStatus) {
+      if (values.vacationStatus === 'Vacation') {
+        await SetBacentaOnVacation({
+          variables: {
+            bacentaId: bacentaId,
+          },
+        })
+      }
+      if (values.vacationStatus === 'Active') {
+        await SetBacentaActive({
+          variables: {
+            bacentaId: bacentaId,
+          },
+        })
+      }
+    }
+
+    //Log if the Leader Changes
+    if (values.leaderId !== initialValues.leaderId) {
+      try {
+        await MakeBacentaLeader({
+          variables: {
+            oldLeaderId: initialValues.leaderId || 'old-leader',
+            newLeaderId: values.leaderId,
+            bacentaId: bacentaId,
+          },
+        })
+        alertMsg('Leader Changed Successfully')
+        navigate(`/bacenta/displaydetails`)
+      } catch (error) {
+        throwErrorMsg('There was an error changing the leader', error)
+      }
+    }
+
+    //Log If The Constituency Changes
+    if (values.constituency !== initialValues.constituency) {
+      await RemoveBacentaConstituency({
+        variables: {
+          constituencyId: initialValues.constituency,
+          bacentaId: bacentaId,
+        },
+      })
+      await AddBacentaConstituency({
+        variables: {
+          constituencyId: values.constituency,
+          bacentaId: bacentaId,
+        },
+      })
+    }
+    //For the adding and removing of fellowships
+    const oldFellowshipList = initialValues.fellowships.map(
+      (fellowship) => fellowship
+    )
+
+    const newFellowshipList = values.fellowships.map((fellowship) => fellowship)
+
+    const removeFellowships = oldFellowshipList.filter((value) => {
+      const newArray = newFellowshipList.map((fellowship) => fellowship.id)
+      return !newArray.includes(value.id)
+    })
+
+    const addFellowships = values.fellowships.filter(function (value) {
+      const newArray = newFellowshipList.map((fellowship) => fellowship.id)
+      return !newArray.includes(value.id)
+    })
+
+    if (removeFellowships.length) {
+      removeFellowships.forEach(async (fellowship) => {
+        try {
+          await CloseDownFellowship({
+            variables: {
+              fellowshipId: fellowship?.id ?? '',
+              leaderId: fellowship?.leader?.id,
+            },
+          })
+        } catch (error) {
+          throwErrorMsg(error)
+        }
+      })
+
+      if (addFellowships.length) {
+        addFellowships.forEach(async (fellowship) => {
+          if (fellowship.bacenta) {
+            await RemoveFellowshipFromBacenta({
+              variables: {
+                bacentaId: fellowship.bacenta.id,
+                fellowshipIds: [fellowship.id],
+              },
+            })
+          } else {
+            //Fellowship has no previous bacenta and is now joining. ie. CloseDownFellowship won't run
+            await LogFellowshipHistory({
+              variables: {
+                fellowshipId: fellowship.id,
+                newLeaderId: '',
+                oldLeaderId: '',
+                newBacentaId: bacentaId,
+                oldBacentaId: '',
+                historyRecord: `${fellowship.name} 
+              Fellowship has been started again under ${initialValues.name} Bacenta`,
+              },
+            })
+          }
+
+          await AddBacentaFellowships({
+            variables: {
+              bacentaId: bacentaId,
+              fellowshipId: [fellowship.id],
+            },
+          })
+        })
+      }
+    }
+    onSubmitProps.setSubmitting(false)
+    onSubmitProps.resetForm()
+
+    navigate(`/bacenta/displaydetails`)
   }
 
   return (

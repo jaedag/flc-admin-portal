@@ -287,6 +287,9 @@ export const DISPLAY_BACENTA = gql`
       fellowships {
         id
         name
+        leader {
+          id
+        }
         bacenta {
           id
           name
@@ -345,6 +348,9 @@ export const DISPLAY_CONSTITUENCY = gql`
       bacentas {
         id
         name
+        leader {
+          id
+        }
         constituency {
           id
           name

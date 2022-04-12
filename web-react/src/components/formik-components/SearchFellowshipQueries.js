@@ -60,11 +60,11 @@ export const BACENTA_FELLOWSHIP_SEARCH = gql`
   }
 `
 
-export const FELLOWSHIP_SEARCH = gql`
-  query ($id: ID!) {
+export const MEMBER_FELLOWSHIP_SEARCH = gql`
+  query ($id: ID!, $key: String!) {
     members(where: { id: $id }) {
       id
-      leadsFellowship {
+      fellowshipSearch(key: $key) {
         id
         name
       }

@@ -10,6 +10,7 @@ import {
   GATHERINGSERVICE_BACENTA_SEARCH,
   STREAM_BACENTA_SEARCH,
   CONSTITUENCY_BACENTA_SEARCH,
+  MEMBER_BACENTA_SEARCH,
 } from './SearchBacentaQueries'
 import TextError from './TextError'
 
@@ -54,39 +55,61 @@ const SearchBacenta = (props) => {
     }
   )
 
+  const [memberSearch, { error: memberError }] = useLazyQuery(
+    MEMBER_BACENTA_SEARCH,
+    {
+      onCompleted: (data) => {
+        setSuggestions(data.members[0].bacentaSearch)
+        return
+      },
+    }
+  )
+
   const error =
-    gatheringServiceError || streamError || councilError || constituencyError
+    memberError ||
+    gatheringServiceError ||
+    streamError ||
+    councilError ||
+    constituencyError
   throwErrorMsg(error)
 
   const whichSearch = (searchString) => {
-    if (isAuthorised(permitMe('GatheringService'), currentUser.roles)) {
-      gatheringServiceSearch({
-        variables: {
-          id: currentUser.gatheringService,
-          key: searchString?.trim(),
-        },
-      })
-    } else if (isAuthorised(permitMe('Stream'), currentUser.roles)) {
-      streamSearch({
-        variables: {
-          id: currentUser.stream,
-          key: searchString?.trim(),
-        },
-      })
-    } else if (isAuthorised(permitMe('Council'), currentUser.roles)) {
-      councilSearch({
-        variables: {
-          id: currentUser.council,
-          key: searchString?.trim(),
-        },
-      })
-    } else if (isAuthorised(permitMe('Constituency'), currentUser.roles)) {
-      constituencySearch({
-        variables: {
-          id: currentUser.constituency,
-          key: searchString?.trim(),
-        },
-      })
+    memberSearch({
+      variables: {
+        id: currentUser.id,
+        key: searchString?.trim(),
+      },
+    })
+    if (props.roleBased) {
+      if (isAuthorised(permitMe('GatheringService'), currentUser.roles)) {
+        gatheringServiceSearch({
+          variables: {
+            id: currentUser.gatheringService,
+            key: searchString?.trim(),
+          },
+        })
+      } else if (isAuthorised(permitMe('Stream'), currentUser.roles)) {
+        streamSearch({
+          variables: {
+            id: currentUser.stream,
+            key: searchString?.trim(),
+          },
+        })
+      } else if (isAuthorised(permitMe('Council'), currentUser.roles)) {
+        councilSearch({
+          variables: {
+            id: currentUser.council,
+            key: searchString?.trim(),
+          },
+        })
+      } else if (isAuthorised(permitMe('Constituency'), currentUser.roles)) {
+        constituencySearch({
+          variables: {
+            id: currentUser.constituency,
+            key: searchString?.trim(),
+          },
+        })
+      }
     }
   }
 
@@ -134,8 +157,7 @@ const SearchBacenta = (props) => {
             event.preventDefault()
           }
           setSearchString(suggestion.name)
-
-          props.setFieldValue(`${props.name}`, suggestion.id)
+          props.setFieldValue(`${props.name}`, suggestion)
         }}
         getSuggestionValue={(suggestion) => suggestion.name}
         highlightFirstSuggestion={true}

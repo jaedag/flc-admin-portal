@@ -37,19 +37,12 @@ const BusFormDetails = () => {
         <PlaceholderCustom as="h6" loading={loading}>
           <HeadingSecondary>{`${church?.name} ${church?.__typename}`}</HeadingSecondary>
           <p>{`Recorded by ${bussing?.created_by.fullName}`}</p>
-<<<<<<< HEAD
 
           {bussing?.confirmed_by && (
             <p>
               {`Confirmed`}
               <RoleView roles={permitAdminArrivals('Stream')}>
                 {` by `}
-=======
-          <RoleView roles={permitAdminArrivals('Stream')}>
-            {bussing?.confirmed_by && (
-              <p>
-                {`Confirmed by `}
->>>>>>> 0812895 (fix: bug fixes, and added section for leader comments)
                 <span className="fw-bold good">
                   {bussing?.confirmed_by.fullName}
                 </span>
@@ -219,13 +212,8 @@ const BusFormDetails = () => {
           </Col>
         </Row>
         <div className="d-grid gap-2">
-<<<<<<< HEAD
           <RoleView roles={permitArrivalsCounter('Stream')}>
-            {beforeArrivalDeadline(bussing, church) && (
-=======
-          <RoleView roles={permitArrivalsHelper('Stream')}>
             {beforeCountingDeadline(bussing, church) && (
->>>>>>> 0812895 (fix: bug fixes, and added section for leader comments)
               <Button
                 onClick={() => navigate('/arrivals/submit-bus-attendance')}
               >

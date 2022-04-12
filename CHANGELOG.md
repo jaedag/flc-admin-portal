@@ -1,3 +1,10 @@
+#### 1.3.1 (2022-04-12)
+
+##### Bug Fixes
+
+* **directory:**  got the plus and minus buttons on the edit pages working ([2e04bc6e](https://github.com/firstlovecenter/fl-admin-portal/commit/2e04bc6ee337862b1b94d25e7043726d781c9b7b))
+* **services:**  improved the defaulter checking with the services ([cfa7b717](https://github.com/firstlovecenter/fl-admin-portal/commit/cfa7b7179192e0426c2e7153f5fa5f5ba95073f9))
+
 #### 1.2.3 (2022-04-12)
 
 ##### Bug Fixes

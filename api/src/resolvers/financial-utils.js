@@ -25,16 +25,19 @@ export const padNumbers = (number) => {
 }
 
 export const getStreamFinancials = (stream) => {
-  let merchantId, auth
+  let merchantId, auth, passcode
 
   switch (stream) {
     case 'Anagkazo':
       throwErrorMsg('Anagkazo has a different way of banking their offerings')
       break
     case 'Campus':
+    case 'campus':
     case 'Town':
+    case 'town':
       merchantId = process.env.PAYSWITCH_CAMPUS_MERCHANT_ID
       auth = process.env.PAYSWITCH_CAMPUS_AUTH
+      passcode = process.env.PAYSWITCH_CAMPUS_PASSCODE
       break
     // case 'Town':
     //   merchantId = process.env.PAYSWITCH_TOWN_MERCHANT_ID
@@ -42,5 +45,5 @@ export const getStreamFinancials = (stream) => {
     //   break
   }
 
-  return { merchantId, auth }
+  return { merchantId, auth, passcode }
 }

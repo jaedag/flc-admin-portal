@@ -1,10 +1,15 @@
 /* eslint-disable no-console */
-const { getMobileCode, padNumbers } = require('../financial-utils')
+const {
+  getMobileCode,
+  padNumbers,
+  getStreamFinancials,
+} = require('../financial-utils')
 const { createRole, deleteRole } = require('../auth0-utils')
 const {
   permitAdmin,
   permitAdminArrivals,
   permitArrivals,
+  permitArrivalsHelpers,
 } = require('../permissions')
 const {
   isAuth,
@@ -180,36 +185,18 @@ export const arrivalsMutation = {
     return bussingRecord.record.properties
   },
   SendBussingSupport: async (object, args, context) => {
-    isAuth(permitAdminArrivals('Council'), context.auth.roles)
+    isAuth(permitArrivalsHelpers(), context.auth.roles)
     const session = context.driver.session()
 
-    let merchantId, passcode, auth
-
-    switch (args.stream_name) {
-      case 'Anagkazo':
-        throwErrorMsg(
-          'Anagkazo is not entitled to bussing support using this application'
-        )
-        break
-      case 'Campus':
-        merchantId = process.env.PAYSWITCH_CAMPUS_MERCHANT_ID
-        passcode = process.env.PAYSWITCH_CAMPUS_PASSCODE
-        auth = process.env.PAYSWITCH_CAMPUS_AUTH
-        break
-      case 'Town':
-        merchantId = process.env.PAYSWITCH_TOWN_MERCHANT_ID
-        passcode = process.env.PAYSWITCH_TOWN_PASSCODE
-        auth = process.env.PAYSWITCH_TOWN_AUTH
-        break
-    }
-
+    const { merchantId, auth, passcode } = getStreamFinancials(args.stream_name)
     const transactionResponse = rearrangeCypherObject(
       await session.run(cypher.checkTransactionId, args)
     )
 
     if (transactionResponse?.transactionId) {
       throwErrorMsg('Money has already been sent to this bacenta')
-    } else if (!transactionResponse?.arrivalTime || !transactionResponse) {
+    } else if (!transactionResponse?.record.properties.arrivalTime) {
+      console.log(transactionResponse?.record.properties.arrivalTime) // || !transactionResponse)
       //If record has not been confirmed, it will return null
       throwErrorMsg('This bacenta is not eligible to receive money')
     }

@@ -6,7 +6,7 @@ import PlaceholderCustom from 'components/Placeholder'
 import { ChurchContext } from 'contexts/ChurchContext'
 import { ServiceContext } from 'contexts/ServiceContext'
 import { Formik, Form } from 'formik'
-import React from 'react'
+import React, { useState } from 'react'
 import * as Yup from 'yup'
 import { useContext } from 'react'
 import { Card, Container } from 'react-bootstrap'
@@ -20,11 +20,15 @@ import FormikControl from 'components/formik-components/FormikControl'
 import SubmitButton from 'components/formik-components/SubmitButton'
 import CloudinaryImage from 'components/CloudinaryImage'
 import { alertMsg, throwErrorMsg } from 'global-utils'
+import Popup from 'components/Popup/Popup'
+import usePopup from 'hooks/usePopup'
 
 const FormAttendanceConfirmation = () => {
   const navigate = useNavigate()
   const { bacentaId } = useContext(ChurchContext)
   const { bussingRecordId } = useContext(ServiceContext)
+  const { isOpen, togglePopup } = usePopup()
+  const [picturePopup, setPicturePopup] = useState('')
 
   const { data, loading, error } = useQuery(DISPLAY_BUSSING_RECORDS, {
     variables: { bussingRecordId: bussingRecordId, bacentaId: bacentaId },
@@ -103,16 +107,40 @@ const FormAttendanceConfirmation = () => {
 
       <div className="text-center">
         <h6>Bussing Pictures</h6>
-        {bussing?.bussingPictures.map((picture, index) => {
-          return (
+        {isOpen && (
+          <Popup handleClose={togglePopup}>
             <CloudinaryImage
-              key={index}
-              src={picture}
-              className="report-picture"
-              size="large"
+              src={picturePopup}
+              className="full-width"
+              size="fullWidth"
             />
-          )
-        })}
+          </Popup>
+        )}
+        <div className="container card-button-row">
+          <table>
+            <tbody>
+              <tr>
+                {bussing?.bussingPictures.map((picture, index) => (
+                  <td
+                    onClick={() => {
+                      setPicturePopup(picture)
+                      togglePopup()
+                    }}
+                    key={index}
+                  >
+                    {' '}
+                    <CloudinaryImage
+                      key={index}
+                      src={picture}
+                      className="report-picture"
+                      size="large"
+                    />
+                  </td>
+                ))}
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
       <Container>
         <Card>

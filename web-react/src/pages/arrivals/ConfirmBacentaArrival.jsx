@@ -116,7 +116,7 @@ const ConfirmBacentaArrival = () => {
                     return
                   }
 
-                  if (bussingData.confirmed_by.id) {
+                  if (bussingData.confirmed_by?.id) {
                     //If Attendance has been confrimed then send bussing support
                     try {
                       const supportRes = await SendBussingSupport({
@@ -130,12 +130,17 @@ const ConfirmBacentaArrival = () => {
                         'Money Successfully Sent to ' +
                           supportRes.data.SendBussingSupport.momoNumber
                       )
-                      setSubmitting(false)
                     } catch (error) {
-                      setSubmitting(false)
                       throwErrorMsg(error)
                     }
+                  } else {
+                    alertMsg(
+                      'Money will be sent when attendance is counted and confirmed'
+                    )
                   }
+
+                  setSubmitting(false)
+                  navigate('/bacenta/bussing-details')
                 } catch (error) {
                   setSubmitting(false)
                   throwErrorMsg(

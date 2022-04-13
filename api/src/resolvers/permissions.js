@@ -92,7 +92,11 @@ export const permitLeaderAdmin = (churchLevel) => {
 }
 
 export const permitMe = (churchLevel) => {
-  return [...permitLeaderAdmin(churchLevel), ...permitArrivals(churchLevel)]
+  return [
+    ...permitLeaderAdmin(churchLevel),
+    ...permitArrivals(churchLevel),
+    ...permitArrivalsHelpers(churchLevel),
+  ]
 }
 
 export const permitArrivals = (churchLevel) => {
@@ -136,6 +140,15 @@ export const permitArrivals = (churchLevel) => {
   return [...permitAdmin(churchLevel), ...permittedFor]
 }
 
+export const permitArrivalsCounter = () => {
+  return ['arrivalsCounterStream']
+}
+export const permitArrivalsConfirmer = () => {
+  return ['arrivalsConfirmerStream']
+}
+export const permitArrivalsHelpers = () => {
+  return ['arrivalsCounterStream', 'arrivalsConfirmerStream']
+}
 export const permitLeaderAdminArrivals = (churchLevel) => {
   return [...permitLeaderAdmin(churchLevel), ...permitArrivals(churchLevel)]
 }

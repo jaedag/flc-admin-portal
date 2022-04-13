@@ -165,7 +165,10 @@ export const arrivals = [
   },
   {
     path: '/bacenta/bussing-details',
-    roles: permitLeaderAdminArrivals('Bacenta'),
+    roles: [
+      ...permitArrivalsHelpers(),
+      ...permitLeaderAdminArrivals('Bacenta'),
+    ],
     element: BusFormDetails,
     placeholder: false,
   },

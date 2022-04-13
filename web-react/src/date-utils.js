@@ -32,9 +32,11 @@ export const parseNeoTime = (timestamp) => {
   const data = new Date(timestamp)
   let hrs = data.getHours()
   let mins = data.getMinutes()
+  let secs = data.getSeconds()
   if (hrs <= 9) hrs = `0${hrs}`
   if (mins < 10) mins = `0${mins}`
-  const postTime = `${hrs}:${mins}`
+  if (secs < 10) secs = `0${secs}`
+  const postTime = `${hrs}:${mins}:${secs}`
   return postTime
 }
 

@@ -14,6 +14,7 @@ import '../services/record-service/ServiceDetails.css'
 import { useNavigate } from 'react-router'
 import RoleView from 'auth/RoleView'
 import { permitAdminArrivals, permitArrivalsCounter } from 'permission-utils'
+import { parseNeoTime } from 'date-utils'
 import CloudinaryImage from 'components/CloudinaryImage'
 import { beforeCountingDeadline } from './arrivals-utils'
 import usePopup from 'hooks/usePopup'
@@ -170,13 +171,24 @@ const BusFormDetails = () => {
                       </td>
                     </tr>
                   )}
-
                   {bussing?.comments && (
                     <tr>
                       <td>Comments</td>
                       <td>
+                        <i>
+                          <PlaceholderCustom loading={loading}>
+                            {bussing?.comments}
+                          </PlaceholderCustom>
+                        </i>
+                      </td>
+                    </tr>
+                  )}
+                  {bussing?.arrivalTime && (
+                    <tr>
+                      <td>Arrival Time</td>
+                      <td className="fw-bold good">
                         <PlaceholderCustom loading={loading}>
-                          {bussing?.comments}
+                          {parseNeoTime(bussing?.arrivalTime)}
                         </PlaceholderCustom>
                       </td>
                     </tr>
@@ -225,11 +237,21 @@ const BusFormDetails = () => {
         <div className="d-grid gap-2">
           <RoleView roles={permitArrivalsCounter('Stream')}>
             {beforeCountingDeadline(bussing, church) && (
-              <Button
-                onClick={() => navigate('/arrivals/submit-bus-attendance')}
-              >
-                Confirm Attendance
-              </Button>
+              <>
+                {' '}
+                <Button
+                  variant="success"
+                  onClick={() => navigate('/arrivals/submit-bus-attendance')}
+                >
+                  Confirm Attendance
+                </Button>
+                <Button
+                  variant="danger"
+                  onClick={() => navigate('/arrivals/bacentas-to-count')}
+                >
+                  Continue Counting
+                </Button>
+              </>
             )}
           </RoleView>
           <Button onClick={() => navigate('/arrivals')}>

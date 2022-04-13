@@ -24,7 +24,7 @@ export const beforeCountingDeadline = (bussing, church) => {
   }
 
   if (arrivalStartTime < today && today < countingEndTime) {
-    if (isToday(bussing?.created_at) && !bussing?.confirmed_by) {
+    if (isToday(bussing?.created_at)) {
       //If the record was created today
       //And if the time is less than the arrivals cutoff time
       return true

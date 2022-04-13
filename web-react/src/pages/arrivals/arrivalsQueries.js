@@ -381,7 +381,6 @@ export const DISPLAY_BUSSING_RECORDS = gql`
       attendance
       bussingPictures
       bussingCost
-      leaderComments
       bussingTopUp
       mobileNetwork
       momoName

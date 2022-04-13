@@ -38,7 +38,7 @@ const ArrivalTimes = () => {
             </tr>
             <tr>
               <td>Mobilisation End</td>
-              <td>{parseNeoTime(stream?.mobilisationStartTime)}</td>
+              <td>{parseNeoTime(stream?.mobilisationEndTime)}</td>
             </tr>
             <tr>
               <td>Arrival Start</td>

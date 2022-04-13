@@ -46,7 +46,6 @@ const BacentaArrivals = () => {
     )
   }
 
-  beforeMobilisationDeadline(bussing, bacenta)
   return (
     <BaseComponent data={data} loading={loading} error={error}>
       <Container>

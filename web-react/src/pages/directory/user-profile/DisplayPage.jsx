@@ -54,7 +54,7 @@ const DisplayPage = () => {
                   <CloudinaryImage
                     src={member?.pictureUrl || USER_PLACEHOLDER}
                     className="img bg-secondary m-2 rounded-circle"
-                    large
+                    size="large"
                   />
                 </PlaceholderCustom>
               </Col>

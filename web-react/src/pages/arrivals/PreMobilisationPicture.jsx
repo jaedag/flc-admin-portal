@@ -25,7 +25,7 @@ const PreMobilisationPicture = () => {
         <CloudinaryImage
           className="report-picture"
           src={bussing?.mobilisationPicture}
-          large
+          size="respond"
         />
         <div className="d-grid gap-2">
           <Button size="lg" onClick={() => navigate(-1)}>

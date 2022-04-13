@@ -109,7 +109,7 @@ const FormAttendanceConfirmation = () => {
               key={index}
               src={picture}
               className="report-picture"
-              large
+              size="large"
             />
           )
         })}
@@ -123,7 +123,6 @@ const FormAttendanceConfirmation = () => {
                 GHS {bussing?.bussingCost || 0}
               </span>
             </div>
-            <div>{bussing?.leaderComments}</div>
           </Card.Body>
         </Card>
       </Container>

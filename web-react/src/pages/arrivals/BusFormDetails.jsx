@@ -6,7 +6,7 @@ import PlaceholderCustom from 'components/Placeholder'
 import { ChurchContext } from 'contexts/ChurchContext'
 import { MemberContext } from 'contexts/MemberContext'
 import { ServiceContext } from 'contexts/ServiceContext'
-import React from 'react'
+import React, { useState } from 'react'
 import { useContext } from 'react'
 import { Container, Row, Col, Table, Button } from 'react-bootstrap'
 import { DISPLAY_BUSSING_RECORDS } from './arrivalsQueries'
@@ -16,11 +16,15 @@ import RoleView from 'auth/RoleView'
 import { permitAdminArrivals, permitArrivalsCounter } from 'permission-utils'
 import CloudinaryImage from 'components/CloudinaryImage'
 import { beforeCountingDeadline } from './arrivals-utils'
+import usePopup from 'hooks/usePopup'
+import Popup from 'components/Popup/Popup'
 
 const BusFormDetails = () => {
   const { bacentaId } = useContext(ChurchContext)
   const { theme } = useContext(MemberContext)
   const { bussingRecordId } = useContext(ServiceContext)
+  const { isOpen, togglePopup } = usePopup()
+  const [picturePopup, setPicturePopup] = useState('')
   const { data, loading, error } = useQuery(DISPLAY_BUSSING_RECORDS, {
     variables: { bussingRecordId: bussingRecordId, bacentaId: bacentaId },
   })
@@ -117,16 +121,7 @@ const BusFormDetails = () => {
                       </PlaceholderCustom>
                     </td>
                   </tr>
-                  {bussing?.leaderComments && (
-                    <tr>
-                      <td>Leader Comments</td>
-                      <td>
-                        <PlaceholderCustom loading={loading}>
-                          {bussing?.leaderComments}
-                        </PlaceholderCustom>
-                      </td>
-                    </tr>
-                  )}
+
                   <tr>
                     <td>Number of Busses</td>
                     <td>
@@ -189,17 +184,32 @@ const BusFormDetails = () => {
                 </tbody>
               </Table>
               <Row className="text-center">
+                {isOpen && (
+                  <Popup handleClose={togglePopup}>
+                    <CloudinaryImage
+                      src={picturePopup}
+                      className="full-width"
+                      size="fullWidth"
+                    />
+                  </Popup>
+                )}
                 <h6>Bussing Pictures</h6>
                 <div className="container card-button-row">
                   <table>
                     <tbody>
                       <tr>
                         {bussing?.bussingPictures?.map((picture, index) => (
-                          <td key={index}>
+                          <td
+                            onClick={() => {
+                              setPicturePopup(picture)
+                              togglePopup()
+                            }}
+                            key={index}
+                          >
                             <CloudinaryImage
                               className="report-picture"
                               src={picture}
-                              large
+                              size="large"
                             />
                           </td>
                         ))}
@@ -211,6 +221,7 @@ const BusFormDetails = () => {
             </Row>
           </Col>
         </Row>
+
         <div className="d-grid gap-2">
           <RoleView roles={permitArrivalsCounter('Stream')}>
             {beforeCountingDeadline(bussing, church) && (

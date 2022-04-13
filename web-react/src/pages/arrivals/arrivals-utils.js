@@ -23,14 +23,14 @@ export const beforeCountingDeadline = (bussing, church) => {
     countingEndTime = addMinutes(arrivalEndTime, 30)
   }
 
-  if (
-    isToday(bussing?.created_at) &&
-    arrivalStartTime < today < countingEndTime
-  ) {
-    //If the record was created today
-    //And if the time is less than the arrivals cutoff time
-    return true
+  if (arrivalStartTime < today && today < countingEndTime) {
+    if (isToday(bussing?.created_at) && !bussing?.confirmed_by) {
+      //If the record was created today
+      //And if the time is less than the arrivals cutoff time
+      return true
+    }
   }
+
   // return false
   return false
 }
@@ -48,14 +48,14 @@ export const beforeArrivalDeadline = (bussing, church) => {
     arrivalEndTime = new Date(getTodayTime(church?.stream.arrivalEndTime))
   }
 
-  if (
-    isToday(bussing?.created_at) &&
-    arrivalStartTime < today < arrivalEndTime
-  ) {
-    //If the record was created today
-    //And if the time is less than the arrivals cutoff time
-    return true
+  if (arrivalStartTime < today && today < arrivalEndTime) {
+    if (isToday(bussing?.created_at) && !bussing?.bussingPictures) {
+      //If the record was created today
+      //And if the time is less than the arrivals cutoff time
+      return true
+    }
   }
+
   // return false
   return false
 }
@@ -74,24 +74,25 @@ export const beforeMobilisationDeadline = (bussing, church) => {
       getTodayTime(church?.stream.mobilisationStartTime)
     )
     mobilisationEndTime = new Date(
-      getTodayTime(church?.stream.mobilisationStartTime)
+      getTodayTime(church?.stream.mobilisationEndTime)
     )
   }
 
-  if (!bussing && mobilisationStartTime < today < mobilisationEndTime) {
-    return true
-  }
-
-  if (
-    isToday(bussing?.created_at) &&
-    mobilisationStartTime < today < mobilisationEndTime
-  ) {
-    if (!bussing?.mobilisationPicture) {
-      //If the record was created today
-      //And if the time is less than the mobilisation cutoff time
+  if (mobilisationStartTime < today && today < mobilisationEndTime) {
+    if (!bussing) {
+      //If there is no bussing Record
       return true
     }
+
+    if (!isToday(bussing?.created_at)) {
+      return true
+    }
+
+    if (isToday(bussing?.created_at) && !bussing?.mobilisationPicture) {
+      return true //Should Fill
+    }
   }
+
   // return false
   return false
 }

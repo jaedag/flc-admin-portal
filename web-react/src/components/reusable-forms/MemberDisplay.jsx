@@ -67,7 +67,7 @@ const MemberDisplay = ({ memberId }) => {
             className="profile-img"
             src={member?.pictureUrl || USER_PLACEHOLDER}
             alt={`${member?.fullName}`}
-            large
+            size="large"
           />
         </PlaceholderCustom>
       </div>

@@ -808,7 +808,6 @@ type BussingRecord implements Record @auth(rules: [{ isAuthenticated: true }]) {
   numberOfBusses: Int
   numberOfCars: Int
   bussingCost: Float
-  leaderComments: String
   bussingTopUp: Float
   mobileNetwork: String
   momoName: String
@@ -1055,7 +1054,6 @@ extend type Mutation {
     attendance: Int!
     bussingPictures: [String]!
     bussingCost: Float!
-    leaderComments: String
     numberOfBusses: Int!
     numberOfCars: Int!
     mobileNetwork: String!
@@ -1069,7 +1067,6 @@ extend type Mutation {
       bussingRecord.leaderDeclaration = $attendance,
       bussingRecord.bussingPictures = $bussingPictures,
       bussingRecord.bussingCost = $bussingCost,
-      bussingRecord.leaderComments = $leaderComments,
       bussingRecord.numberOfBusses = $numberOfBusses,
       bussingRecord.numberOfCars = $numberOfCars,
       bussingRecord.mobileNetwork = $mobileNetwork,
@@ -1118,7 +1115,6 @@ extend type Mutation {
       ]
     )
 
-
   RecordArrivalTime(bussingRecordId: ID!): BussingRecord
     @auth(rules: [{ roles: ["arrivalsConfirmerStream"] }])
     @cypher(
@@ -1137,63 +1133,6 @@ extend type Mutation {
   SetSwellDate(date: String!): TimeGraph
   SendBussingSupport(bussingRecordId: ID!, stream_name: String!): BussingRecord
 }
-
-#SETTING AND ENDING TIME THINGS
-extend type Stream {
-  mobilisationStartTime: DateTime
-    @auth(
-      rules: [
-        {
-          roles: [
-            "adminStream"
-            "arrivalsAdminStream"
-            "adminGatheringService"
-            "arrivalsAdminGatheringService"
-          ]
-        }
-      ]
-    )
-  mobilisationEndTime: DateTime
-    @auth(
-      rules: [
-        {
-          roles: [
-            "adminStream"
-            "arrivalsAdminStream"
-            "adminGatheringService"
-            "arrivalsAdminGatheringService"
-          ]
-        }
-      ]
-    )
-  arrivalStartTime: DateTime
-    @auth(
-      rules: [
-        {
-          roles: [
-            "adminStream"
-            "arrivalsAdminStream"
-            "adminGatheringService"
-            "arrivalsAdminGatheringService"
-          ]
-        }
-      ]
-    )
-  arrivalEndTime: DateTime
-    @auth(
-      rules: [
-        {
-          roles: [
-            "adminStream"
-            "arrivalsAdminStream"
-            "adminGatheringService"
-            "arrivalsAdminGatheringService"
-          ]
-        }
-      ]
-    )
-}
-
 extend type Mutation {
   SetStreamArrivalTimes(
     id: ID!
@@ -1229,57 +1168,9 @@ extend type Mutation {
 #SETTING AND ENDING TIME THINGS
 extend type Stream {
   mobilisationStartTime: DateTime
-    @auth(
-      rules: [
-        {
-          roles: [
-            "adminStream"
-            "arrivalsAdminStream"
-            "adminGatheringService"
-            "arrivalsAdminGatheringService"
-          ]
-        }
-      ]
-    )
   mobilisationEndTime: DateTime
-    @auth(
-      rules: [
-        {
-          roles: [
-            "adminStream"
-            "arrivalsAdminStream"
-            "adminGatheringService"
-            "arrivalsAdminGatheringService"
-          ]
-        }
-      ]
-    )
   arrivalStartTime: DateTime
-    @auth(
-      rules: [
-        {
-          roles: [
-            "adminStream"
-            "arrivalsAdminStream"
-            "adminGatheringService"
-            "arrivalsAdminGatheringService"
-          ]
-        }
-      ]
-    )
   arrivalEndTime: DateTime
-    @auth(
-      rules: [
-        {
-          roles: [
-            "adminStream"
-            "arrivalsAdminStream"
-            "adminGatheringService"
-            "arrivalsAdminGatheringService"
-          ]
-        }
-      ]
-    )
 }
 
 extend type Mutation {

@@ -16,6 +16,7 @@ const DetailsStream = () => {
   const stream = data?.streams[0]
   let breadcrumb = [stream?.gatheringService, stream]
   const details = [
+    { title: 'Target', number: stream?.target, link: '#' },
     { title: 'Pastors', number: stream?.pastorCount || '0', link: '#' },
     {
       title: 'Constituencies',

@@ -344,6 +344,7 @@ export const DISPLAY_CONSTITUENCY = gql`
     constituencies(where: { id: $id }, options: { limit: 1 }) {
       id
       name
+      target
       stream_name
       bacentas {
         id
@@ -418,6 +419,7 @@ export const DISPLAY_COUNCIL = gql`
     councils(where: { id: $id }, options: { limit: 1 }) {
       id
       name
+      target
       stream {
         id
         name
@@ -534,6 +536,7 @@ export const DISPLAY_GATHERINGSERVICE = gql`
     gatheringServices(where: { id: $id }, options: { limit: 1 }) {
       id
       name
+      target
       streamCount
       councilCount
       constituencyCount

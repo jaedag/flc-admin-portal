@@ -22,6 +22,7 @@ const DetailsCouncil = () => {
   }, [council?.stream_name])
 
   const details = [
+    { title: 'Target', number: council?.target, link: '#' },
     { title: 'Pastors', number: council?.pastorCount, link: '#' },
     {
       title: 'Bacentas',

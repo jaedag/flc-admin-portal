@@ -15,6 +15,7 @@ const DetailsGatheringService = () => {
   const gathering = data?.gatheringServices[0]
   let breadcrumb = [gathering]
   const details = [
+    { title: 'Target', number: gathering?.target, link: '#' },
     { title: 'Pastors', number: gathering?.pastorCount || '0', link: '#' },
     {
       title: 'Councils',

@@ -13,10 +13,13 @@ const DetailsConstituency = () => {
   const { data, loading, error } = useQuery(DISPLAY_CONSTITUENCY, {
     variables: { id: constituencyId },
   })
+  const constituency = data?.constituencies[0]
 
+  const details = [{ title: 'Target', number: constituency?.target, link: '#' }]
   return (
     <BaseComponent loading={loading} error={error} data={data} placeholder>
       <DisplayChurchDetails
+        details={details}
         loading={loading}
         name={data?.constituencies[0]?.name}
         leaderTitle={'Constituency Overseer'}

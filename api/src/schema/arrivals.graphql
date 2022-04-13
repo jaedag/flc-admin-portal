@@ -743,7 +743,6 @@ extend type Bacenta {
       RETURN status
       """
     )
-  target: Int
   normalBussingCost: Float
   normalPersonalContribution: Float
   normalBussingTopUp: Float

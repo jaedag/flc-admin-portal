@@ -129,7 +129,7 @@ export const isToday = (date) => {
 
 //Arrivals Specific Date Functions
 export const getTodayTime = (timeString) => {
-  return new Date().toISOString().slice(0, 10) + timeString.slice(10)
+  return new Date().toISOString().slice(0, 10) + timeString?.slice(10)
 }
 
 export const addHours = (date, hours) => {

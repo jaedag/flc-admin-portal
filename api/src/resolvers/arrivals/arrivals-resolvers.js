@@ -161,7 +161,7 @@ export const arrivalsMutation = {
       })
     )
 
-    return stream.properties
+    return stream?.record.properties
   },
   SetBussingSupport: async (object, args, context) => {
     const session = context.driver.session()
@@ -182,7 +182,7 @@ export const arrivalsMutation = {
       )
     }
 
-    return bussingRecord.record.properties
+    return bussingRecord?.record.properties
   },
   SendBussingSupport: async (object, args, context) => {
     isAuth(permitArrivalsHelpers(), context.auth.roles)
@@ -195,8 +195,7 @@ export const arrivalsMutation = {
 
     if (transactionResponse?.transactionId) {
       throwErrorMsg('Money has already been sent to this bacenta')
-    } else if (!transactionResponse?.record.properties.arrivalTime) {
-      console.log(transactionResponse?.record.properties.arrivalTime) // || !transactionResponse)
+    } else if (!transactionResponse?.arrivalTime) {
       //If record has not been confirmed, it will return null
       throwErrorMsg('This bacenta is not eligible to receive money')
     }

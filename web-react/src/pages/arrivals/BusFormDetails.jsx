@@ -19,6 +19,7 @@ import CloudinaryImage from 'components/CloudinaryImage'
 import { beforeCountingDeadline } from './arrivals-utils'
 import usePopup from 'hooks/usePopup'
 import Popup from 'components/Popup/Popup'
+import { getHumanReadableDate } from 'date-utils'
 
 const BusFormDetails = () => {
   const { bacentaId } = useContext(ChurchContext)
@@ -69,9 +70,7 @@ const BusFormDetails = () => {
                       loading={loading}
                       className="td-placeholder"
                     >
-                      <td>
-                        {new Date(bussing?.serviceDate.date).toDateString()}
-                      </td>
+                      <td>{getHumanReadableDate(bussing?.serviceDate.date)}</td>
                     </PlaceholderCustom>
                   </tr>
                   <tr>

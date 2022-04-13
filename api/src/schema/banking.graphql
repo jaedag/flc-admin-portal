@@ -5,7 +5,10 @@ extend type Mutation {
     mobileNetwork: String!
     mobileNumber: String!
   ): ServiceRecord
-  ConfirmOfferingPayment(stream_name: String!, serviceRecordId: ID!): String
+  ConfirmOfferingPayment(
+    stream_name: String!
+    serviceRecordId: ID!
+  ): ServiceRecord
 }
 
 extend type ServiceRecord {

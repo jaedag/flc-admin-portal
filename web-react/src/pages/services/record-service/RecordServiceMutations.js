@@ -109,6 +109,12 @@ export const DISPLAY_FELLOWSHIP_SERVICE = gql`
         lastName
         fullName
       }
+      offeringBankedBy {
+        id
+        firstName
+        lastName
+        fullName
+      }
       treasurers {
         id
         firstName
@@ -145,6 +151,12 @@ export const DISPLAY_BACENTA_SERVICE = gql`
       servicePicture
       bankingSlip
       bankingSlipUploader {
+        id
+        firstName
+        lastName
+        fullName
+      }
+      offeringBankedBy {
         id
         firstName
         lastName
@@ -218,6 +230,12 @@ export const DISPLAY_CONSTITUENCY_SERVICE = gql`
         lastName
         fullName
       }
+      offeringBankedBy {
+        id
+        firstName
+        lastName
+        fullName
+      }
       treasurers {
         id
         firstName
@@ -254,6 +272,12 @@ export const DISPLAY_COUNCIL_SERVICE = gql`
       servicePicture
       bankingSlip
       bankingSlipUploader {
+        id
+        firstName
+        lastName
+        fullName
+      }
+      offeringBankedBy {
         id
         firstName
         lastName
@@ -300,6 +324,12 @@ export const DISPLAY_STREAM_SERVICE = gql`
         lastName
         fullName
       }
+      offeringBankedBy {
+        id
+        firstName
+        lastName
+        fullName
+      }
       treasurers {
         id
         firstName
@@ -336,6 +366,12 @@ export const DISPLAY_GATHERINGSERVICE_SERVICE = gql`
       servicePicture
       bankingSlip
       bankingSlipUploader {
+        id
+        firstName
+        lastName
+        fullName
+      }
+      offeringBankedBy {
         id
         firstName
         lastName

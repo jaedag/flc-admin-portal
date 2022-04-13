@@ -9,7 +9,7 @@ import {
 } from './bankingQueries'
 import * as Yup from 'yup'
 import { Form, Formik } from 'formik'
-import { MOMO_NUM_REGEX } from 'global-utils'
+import { MOMO_NUM_REGEX, throwErrorMsg } from 'global-utils'
 import FormikControl from 'components/formik-components/FormikControl'
 import { MOBILE_NETWORK_OPTIONS } from 'pages/arrivals/arrivals-utils'
 import SubmitButton from 'components/formik-components/SubmitButton'
@@ -53,16 +53,18 @@ const PayOffering = (props) => {
     const { setSubmitting } = onSubmitProps
 
     setSubmitting(true)
-
-    await BankServiceOffering({
-      variables: {
-        serviceRecordId: serviceRecordId,
-        stream_name: service.stream_name,
-        mobileNetwork: values.mobileNetwork,
-        mobileNumber: values.mobileNumber,
-      },
-    })
-
+    try {
+      await BankServiceOffering({
+        variables: {
+          serviceRecordId: serviceRecordId,
+          stream_name: service.stream_name,
+          mobileNetwork: values.mobileNetwork,
+          mobileNumber: values.mobileNumber,
+        },
+      })
+    } catch (error) {
+      throwErrorMsg(error)
+    }
     setSubmitting(false)
 
     navigate('/self-banking/confirm-payment')

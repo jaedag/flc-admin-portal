@@ -9,7 +9,7 @@ import React, { useContext } from 'react'
 import { Card, Col, Container, Row } from 'react-bootstrap'
 import { CheckCircleFill, XCircleFill } from 'react-bootstrap-icons'
 import { useNavigate } from 'react-router'
-import { COUNCIL_BANKING_SLIP_QUERIES } from '../ServicesQueries'
+import { COUNCIL_BANKING_SLIP_QUERIES } from '../../ServicesQueries'
 
 const CouncilBankingSlipView = () => {
   const { councilId } = useContext(ChurchContext)
@@ -37,7 +37,9 @@ const CouncilBankingSlipView = () => {
             className="mb-2"
             onClick={() => {
               setServiceRecordId(service.id)
+
               !service.bankingSlip &&
+                !service.offeringBankedBy &&
                 navigate('/council/banking-slip/submission')
             }}
           >

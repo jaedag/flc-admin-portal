@@ -26,6 +26,12 @@ export const FELLOWSHIP_BANKING_SLIP_QUERIES = gql`
           lastName
           fullName
         }
+        offeringBankedBy {
+          id
+          firstName
+          lastName
+          fullName
+        }
         income
       }
     }

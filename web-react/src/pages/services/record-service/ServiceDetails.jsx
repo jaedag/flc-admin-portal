@@ -31,6 +31,9 @@ const ServiceDetails = ({ service, church, loading }) => {
         {service?.bankingSlipUploader && (
           <p className="fw-bold">{`Banking Slip Uploaded by ${service?.bankingSlipUploader.fullName}`}</p>
         )}
+        {service?.offeringBankedBy && (
+          <p className="fw-bold">{`Offering Banked by ${service?.offeringBankedBy.fullName}`}</p>
+        )}
       </PlaceholderCustom>
       <Row>
         <Col>
@@ -95,7 +98,6 @@ const ServiceDetails = ({ service, church, loading }) => {
                     />
                   </PlaceholderCustom>
                 </div>
-
                 <h6>Service Picture</h6>
                 <div>
                   <PlaceholderCustom
@@ -109,9 +111,21 @@ const ServiceDetails = ({ service, church, loading }) => {
                     />
                   </PlaceholderCustom>
                 </div>
-                {service?.bankingSlip ? (
+                {service?.offeringBankedBy && (
+                  <div className="mb-4">
+                    {`${service?.offeringBankedBy.fullName} used the Self Banking Feature. Click this button to see
+                    Details`}
+                    <div>
+                      <Button onClick={() => navigate('/self-banking/receipt')}>
+                        View Banking Details
+                      </Button>
+                    </div>
+                  </div>
+                )}
+                {service?.bankingSlip && (
                   <>
                     <h6>Banking Slip</h6>
+
                     <div>
                       <PlaceholderCustom
                         loading={loading}
@@ -125,12 +139,12 @@ const ServiceDetails = ({ service, church, loading }) => {
                       </PlaceholderCustom>
                     </div>
                   </>
-                ) : (
+                )}{' '}
+                {!service?.bankingSlip && !service?.offeringBankedBy && (
                   <p className="fw-bold text-danger">
                     You Have Not Submitted Your Banking Slip!!!
                   </p>
                 )}
-
                 <div className="d-grid gap-2">
                   <Button
                     className={`btn-trends ${theme}`}

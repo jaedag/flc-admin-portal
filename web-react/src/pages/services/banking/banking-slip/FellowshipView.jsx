@@ -8,7 +8,7 @@ import React, { useContext } from 'react'
 import { Card, Col, Container, Row } from 'react-bootstrap'
 import { CheckCircleFill, XCircleFill } from 'react-bootstrap-icons'
 import { useNavigate } from 'react-router'
-import { FELLOWSHIP_BANKING_SLIP_QUERIES } from '../ServicesQueries'
+import { FELLOWSHIP_BANKING_SLIP_QUERIES } from '../../ServicesQueries'
 import BaseComponent from 'components/base-component/BaseComponent'
 
 const FellowshipBankingSlipView = () => {
@@ -41,7 +41,7 @@ const FellowshipBankingSlipView = () => {
               className="mb-2"
               onClick={() => {
                 clickCard(service)
-                !service.bankingSlip
+                !service.bankingSlip && !service.offeringBankedBy
                   ? navigate('/fellowship/banking-slip/submission')
                   : navigate('/fellowship/service-details')
               }}
@@ -55,7 +55,7 @@ const FellowshipBankingSlipView = () => {
                     <span>Offering: {service.income}</span>
                   </Col>
                   <Col className="col-auto">
-                    {service.bankingSlip ? (
+                    {service.bankingSlip || service?.offeringBankedBy ? (
                       <span className="text-success fw-bold">
                         <CheckCircleFill color="green" size={35} /> Filled
                       </span>

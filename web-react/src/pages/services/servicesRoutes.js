@@ -13,8 +13,8 @@ import CouncilReport from 'pages/services/reports/CouncilReport'
 import FellowshipReport from 'pages/services/reports/FellowshipReport'
 import SontaReport from 'pages/services/reports/SontaReport'
 import BacentaJoint from 'pages/services/BacentaJoint'
-import FellowshipBankingSlipSubmission from 'pages/services/banking-slip/FellowshipSubmission'
-import FellowshipBankingSlipView from 'pages/services/banking-slip/FellowshipView'
+import FellowshipBankingSlipSubmission from 'pages/services/banking/banking-slip/FellowshipSubmission'
+import FellowshipBankingSlipView from 'pages/services/banking/banking-slip/FellowshipView'
 import ConstituencyJoint from 'pages/services/ConstituencyJoint'
 import Banked from 'pages/services/defaulters/Banked'
 import BankingDefaulters from 'pages/services/defaulters/BankingDefaulters'
@@ -29,13 +29,13 @@ import StreamReport from 'pages/services/reports/StreamReport'
 import GatheringServiceReport from 'pages/services/reports/GatheringServiceReport'
 import StreamByCouncil from 'pages/services/defaulters/StreamByCouncil'
 import GatheringServiceByStream from 'pages/services/defaulters/GatheringServiceByStream'
-import { permitLeaderAdmin, permitMe } from 'permission-utils'
-import ConstituencyBankingSlipView from 'pages/services/banking-slip/ConstituencyView'
-import ConstituencyBankingSlipSubmission from 'pages/services/banking-slip/ConstituencySubmission'
+import { permitLeaderAdmin } from 'permission-utils'
+import ConstituencyBankingSlipView from 'pages/services/banking/banking-slip/ConstituencyView'
+import ConstituencyBankingSlipSubmission from 'pages/services/banking/banking-slip/ConstituencySubmission'
 import CouncilService from 'pages/services/record-service/CouncilService'
 import CouncilServiceDetails from 'pages/services/record-service/CouncilServiceDetails'
-import CouncilBankingSlipView from 'pages/services/banking-slip/CouncilView'
-import CouncilBankingSlipSubmission from 'pages/services/banking-slip/CouncilSubmission'
+import CouncilBankingSlipView from 'pages/services/banking/banking-slip/CouncilView'
+import CouncilBankingSlipSubmission from 'pages/services/banking/banking-slip/CouncilSubmission'
 import CouncilJoint from 'pages/services/CouncilJoint'
 import StreamJoint from 'pages/services/StreamJoint'
 import GatheringServiceJoint from 'pages/services/GatheringServiceJoint'
@@ -45,11 +45,10 @@ import GatheringServiceService from 'pages/services/record-service/GatheringServ
 import GatheringServiceServiceDetails from 'pages/services/record-service/GatheringServiceServiceDetails'
 import Defaulters from './defaulters/Defaulters'
 import DefaultersDashboard from './defaulters/DefaultersDashboard'
-import FellowshipSelfBanking from './banking-slip/self-banking/FellowshipSelfBanking'
-import PayFellowshipOffering from './banking-slip/self-banking/PayFellowshipOffering'
-import ConfirmPayment from './banking-slip/self-banking/ConfirmPayment'
+import { banking } from './banking/self-banking/selfBankingRoutes'
 
 export const services = [
+  ...banking,
   {
     path: '/services',
     element: ServicesMenu,
@@ -111,23 +110,7 @@ export const services = [
     roles: ['leaderFellowship'],
     placeholder: true,
   },
-  //Self Banking Options
-  {
-    path: '/services/fellowship/self-banking',
-    element: FellowshipSelfBanking,
-    roles: ['leaderFellowship'],
-    placeholder: true,
-  },
-  {
-    path: '/services/fellowship/self-banking/pay',
-    element: PayFellowshipOffering,
-    roles: ['leaderFellowship'],
-  },
-  {
-    path: '/self-banking/confirm-payment',
-    element: ConfirmPayment,
-    roles: permitMe('Fellowship'),
-  },
+
   {
     path: '/services/constituency/banking-slips',
     element: ConstituencyBankingSlipView,

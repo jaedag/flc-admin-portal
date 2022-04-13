@@ -48,6 +48,37 @@ export const CONFIRM_OFFERING_PAYMENT = gql`
     ConfirmOfferingPayment(
       serviceRecordId: $serviceRecordId
       stream_name: $stream_name
-    )
+    ) {
+      id
+      income
+      offeringBankedBy {
+        id
+        firstName
+        lastName
+        fullName
+      }
+    }
+  }
+`
+
+export const SELF_BANKING_RECEIPT = gql`
+  query ($id: ID!) {
+    serviceRecords(where: { id: $id }) {
+      id
+      income
+      serviceDate {
+        date
+      }
+      offeringBankedBy {
+        id
+        firstName
+        lastName
+        fullName
+      }
+      sourceNetwork
+      sourceNumber
+      desc
+      transactionTime
+    }
   }
 `

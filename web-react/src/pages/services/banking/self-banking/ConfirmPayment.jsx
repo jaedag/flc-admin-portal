@@ -1,12 +1,17 @@
-import { useQuery } from '@apollo/client'
+import { useMutation, useQuery } from '@apollo/client'
 import BaseComponent from 'components/base-component/BaseComponent'
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import Popup from 'components/Popup/Popup'
 import { ChurchContext } from 'contexts/ChurchContext'
 import { ServiceContext } from 'contexts/ServiceContext'
+import { alertMsg, throwErrorMsg } from 'global-utils'
 import React, { useContext, useEffect, useState } from 'react'
 import { Button, Col, Container, Row, Spinner } from 'react-bootstrap'
-import { DISPLAY_OFFERING_DETAILS } from './bankingQueries'
+import { useNavigate } from 'react-router'
+import {
+  CONFIRM_OFFERING_PAYMENT,
+  DISPLAY_OFFERING_DETAILS,
+} from './bankingQueries'
 import './ConfirmPayment.css'
 import ManualApprovalSteps from './ManualApprovalSteps'
 
@@ -16,16 +21,14 @@ const ConfirmPayment = () => {
   const { data, loading, error } = useQuery(DISPLAY_OFFERING_DETAILS, {
     variables: { serviceRecordId: serviceRecordId },
   })
+  const [ConfirmOfferingPayment] = useMutation(CONFIRM_OFFERING_PAYMENT)
   const [countdown, setCountdown] = useState(15)
+  const service = data?.serviceRecords[0]
+  const navigate = useNavigate()
 
   useEffect(() => {
-    // const timerId = setInterval(
-    //   () => setCountdown((oldCount) => oldCount - 1),
-    //   1000
     countdown > 0 && setTimeout(() => setCountdown(countdown - 1), 1000)
-
-    // eslint-disable-next-line
-  }, [countdown])
+  }, [countdown, setCountdown])
 
   return (
     <BaseComponent data={data} loading={loading} error={error}>
@@ -44,6 +47,19 @@ const ConfirmPayment = () => {
                 size="lg"
                 disabled={countdown > 0}
                 className="p-3 mt-5"
+                onClick={() =>
+                  ConfirmOfferingPayment({
+                    variables: {
+                      serviceRecordId: serviceRecordId,
+                      stream_name: service?.stream_name,
+                    },
+                  })
+                    .then(() => {
+                      alertMsg('Payment Confirmed Successfully')
+                      navigate('/self-banking/receipt')
+                    })
+                    .catch((error) => throwErrorMsg(error))
+                }
               >
                 Confirm Transaction
               </Button>

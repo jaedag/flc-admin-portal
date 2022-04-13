@@ -7,28 +7,27 @@ import React, { useContext } from 'react'
 import { Col, Container, Row, Button } from 'react-bootstrap'
 import {
   BANKING_SLIP_SUBMISSION,
-  COUNCIL_SERVICE_RECORDS,
-} from '../ServicesQueries'
+  FELLOWSHIP_SERVICE_RECORDS,
+} from '../../ServicesQueries'
 import { MemberContext } from 'contexts/MemberContext'
 import { useMutation, useQuery } from '@apollo/client'
 import HeadingSecondary from 'components/HeadingSecondary'
 import BaseComponent from 'components/base-component/BaseComponent'
 import { useNavigate } from 'react-router'
 import { ChurchContext } from 'contexts/ChurchContext'
-import { getHumanReadableDate } from 'date-utils'
 import { throwErrorMsg } from 'global-utils'
 
-const CouncilBankingSlipSubmission = () => {
+const FellowshipBankingSlipSubmission = () => {
   const { serviceRecordId } = useContext(ServiceContext)
   const { theme } = useContext(MemberContext)
   const { clickCard } = useContext(ChurchContext)
   const navigate = useNavigate()
 
-  const { data, loading, error } = useQuery(COUNCIL_SERVICE_RECORDS, {
+  const { data, loading, error } = useQuery(FELLOWSHIP_SERVICE_RECORDS, {
     variables: { serviceId: serviceRecordId },
   })
-  const council = data?.serviceRecords[0]?.serviceLog?.council[0]
-  clickCard(council)
+  const fellowship = data?.serviceRecords[0]?.serviceLog?.fellowship[0]
+
   const initialValues = {
     bankingSlip: '',
   }
@@ -49,15 +48,15 @@ const CouncilBankingSlipSubmission = () => {
       })
       onSubmitProps.setSubmitting(false)
       onSubmitProps.resetForm()
-
-      navigate(`/council/service-details`)
+      clickCard(fellowship)
+      navigate(`/fellowship/service-details`)
     } catch (error) {
       throwErrorMsg(error)
     }
   }
 
   return (
-    <BaseComponent loading={loading} error={error} data={data && council}>
+    <BaseComponent loading={loading} error={error} data={data && fellowship}>
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
@@ -67,14 +66,8 @@ const CouncilBankingSlipSubmission = () => {
         {(formik) => (
           <Container>
             <HeadingPrimary>Banking Slip Submission</HeadingPrimary>
-            <HeadingSecondary>{council?.name}</HeadingSecondary>
-            <p>
-              Date of Joint Service Code:{' '}
-              {getHumanReadableDate(
-                data.serviceRecords[0].serviceDate.date,
-                'weekday'
-              )}
-            </p>
+            <HeadingSecondary>{fellowship?.name}</HeadingSecondary>
+            <p>Banking Code: {fellowship?.bankingCode}</p>
             <p>Expected Income: {data.serviceRecords[0].income}</p>
             <Form>
               <Row className="row-cols-1 row-cols-md-2 mt-5">
@@ -110,4 +103,4 @@ const CouncilBankingSlipSubmission = () => {
   )
 }
 
-export default CouncilBankingSlipSubmission
+export default FellowshipBankingSlipSubmission

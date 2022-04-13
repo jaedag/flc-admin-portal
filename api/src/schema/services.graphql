@@ -77,7 +77,9 @@ extend type GatheringService {
       statement: """
       MATCH (this)-[:HAS*5]->(fellowships) WHERE fellowships:Active:Fellowship OR fellowships:ClosedFellowship
       MATCH (fellowships) WHERE EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week and  date.date > date() - duration({weeks: 1}) AND record.noServiceReason IS NULL AND record.bankingSlip IS NULL
+        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph )
+        WHERE date(date.date).week = date().week AND  date.date > date() - duration({weeks: 1})
+        AND record.noServiceReason IS NULL AND record.bankingSlip IS NULL
         }
       RETURN fellowships
       """
@@ -87,7 +89,9 @@ extend type GatheringService {
       statement: """
       MATCH (this)-[:HAS*5]->(fellowships) WHERE fellowships:Active:Fellowship OR fellowships:ClosedFellowship
       MATCH (fellowships) WHERE EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week and  date.date > date() - duration({weeks: 1}) AND record.noServiceReason IS NULL AND record.bankingSlip IS NULL
+        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph )
+        WHERE date(date.date).week = date().week AND  date.date > date() - duration({weeks: 1})
+        AND record.noServiceReason IS NULL AND record.bankingSlip IS NULL
         }
       RETURN COUNT(DISTINCT fellowships)
       """
@@ -491,6 +495,16 @@ type ServiceRecord implements Record @auth(rules: [{ isAuthenticated: true }]) {
       RETURN stream.name
       """
     )
+}
+
+extend type ServiceRecord {
+  # Self Banking Properties
+  offeringBankedBy: Member
+    @relationship(type: "OFFERING_BANKED_BY", direction: OUT)
+  sourceNumber: String
+  sourceNetwork: String
+  desc: String
+  transactionTime: DateTime
 }
 
 type NoService implements Record @auth(rules: [{ isAuthenticated: true }]) {

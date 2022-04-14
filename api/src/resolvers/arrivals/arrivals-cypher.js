@@ -19,7 +19,7 @@ RETURN record, bacenta.name AS bacentaName, date.date AS date
 export const getBussingRecordWithDate = `
 MATCH (record:BussingRecord {id: $bussingRecordId})
 MATCH (record)-[:BUSSED_ON]->(date:TimeGraph)
-RETURN record.id AS bussingRecordId,  labels(date) AS dateLabels
+RETURN record.id AS bussingRecordId, record.attendance AS attendance,  labels(date) AS dateLabels
 `
 
 export const checkTransactionId = `

@@ -170,16 +170,18 @@ export const arrivalsMutation = {
       await session.run(cypher.getBussingRecordWithDate, args)
     )
 
-    let bussingRecord
+    let bussingRecord = 0
 
-    if (response.dateLabels.includes('SwellDate')) {
-      bussingRecord = rearrangeCypherObject(
-        await session.run(cypher.setSwellBussingTopUp, args)
-      )
-    } else {
-      bussingRecord = rearrangeCypherObject(
-        await session.run(cypher.setNormalBussingTopUp, args)
-      )
+    if (response.attendance >= 8) {
+      if (response.dateLabels.includes('SwellDate')) {
+        bussingRecord = rearrangeCypherObject(
+          await session.run(cypher.setSwellBussingTopUp, args)
+        )
+      } else {
+        bussingRecord = rearrangeCypherObject(
+          await session.run(cypher.setNormalBussingTopUp, args)
+        )
+      }
     }
 
     return bussingRecord?.record.properties

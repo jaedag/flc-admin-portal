@@ -1,3 +1,43 @@
+#### 1.3.2 (2022-04-14)
+
+##### Chores
+
+*  solved merge conflicts with origin ([3c1b018d](https://github.com/firstlovecenter/fl-admin-portal/commit/3c1b018d065b415a491d03457385541f233ccdfb))
+
+##### New Features
+
+* **self-banking:**
+  *  improvd UX by returning a success state to the banking screen ([e1974cb5](https://github.com/firstlovecenter/fl-admin-portal/commit/e1974cb532acf9e2859f415a342ff4ace67bfd2e))
+  *  admin-88 this implementation handles users who pause the banking process ([5092b4e2](https://github.com/firstlovecenter/fl-admin-portal/commit/5092b4e2bbc8ae210eff2ae8864b5f13cbbb27c8))
+  *  admin-62 implemented self banking receipt page ([597ceeb8](https://github.com/firstlovecenter/fl-admin-portal/commit/597ceeb84137e48bdb007195a61a2c7e0a6c4dd6))
+  *  admin-62 implemented payment flow up to manual approval ([f4bab829](https://github.com/firstlovecenter/fl-admin-portal/commit/f4bab8293270966d6b980697e96c26cc682d3613))
+  *  corrected import statements outside a module ([d4de6ae9](https://github.com/firstlovecenter/fl-admin-portal/commit/d4de6ae98921926f75f6e524d07dbe958f638736))
+  *  first implementation of the self banking feature ([690b6184](https://github.com/firstlovecenter/fl-admin-portal/commit/690b6184a88dd474454da5e590fea81dfde2fe8e))
+  *  first implementation of the self banking feature ([a2662cac](https://github.com/firstlovecenter/fl-admin-portal/commit/a2662cac67aa8e2eb38bacd176cd3d40db07252e))
+  *  admin-62 implemented payment flow up to manual approval ([af0553bc](https://github.com/firstlovecenter/fl-admin-portal/commit/af0553bcff6e4888f991f177dbbd3915c2be2e51))
+  *  corrected import statements outside a module ([158d27ef](https://github.com/firstlovecenter/fl-admin-portal/commit/158d27ef19572921bdb0ca51b1e03f48bb3fde91))
+  *  first implementation of the self banking feature ([9dfc3e9e](https://github.com/firstlovecenter/fl-admin-portal/commit/9dfc3e9e5ef9ef7f911efb994974e219419904b6))
+  *  first implementation of the self banking feature ([b5197b55](https://github.com/firstlovecenter/fl-admin-portal/commit/b5197b55fcc8fa408f57d90d9c5810f33beedd45))
+* **arrivals:**
+  *  added a caveat where a bacenta only gets money if the attendance is 8 and above ([afc573b6](https://github.com/firstlovecenter/fl-admin-portal/commit/afc573b61707a343e1dd71a6bbb292126560cc86))
+  *  targets are now aggregated at all church levels ([cb5de572](https://github.com/firstlovecenter/fl-admin-portal/commit/cb5de572d7f57810bef32fc39ed4059741676eaf))
+  *  arrivals feature is ready to be demoed ([28251085](https://github.com/firstlovecenter/fl-admin-portal/commit/28251085dcb8de84b33a6dfe968851695d27400a))
+  *  clicking on the picture opens the full picture up in a window ([e0167217](https://github.com/firstlovecenter/fl-admin-portal/commit/e01672175790e9c283f249209cc0dfff1ff0a8e7))
+*  implemented a history log when a member changes fellowships ([26fc65b6](https://github.com/firstlovecenter/fl-admin-portal/commit/26fc65b6601bbfb547884360a62e3cb53b8dbbbf))
+*  implemented a history log when a member changes fellowships ([c5ef2223](https://github.com/firstlovecenter/fl-admin-portal/commit/c5ef2223e1ce02bace7f4aa2492eed6d73b74353))
+
+##### Bug Fixes
+
+* **directory:**
+  *  admin-87 fixed update council form ([b1fe4b06](https://github.com/firstlovecenter/fl-admin-portal/commit/b1fe4b065c31c1263159d24576da021add74fd34))
+  *  fix bug where transferred bacentas still retained their old relationships ([67bc30c0](https://github.com/firstlovecenter/fl-admin-portal/commit/67bc30c002a91c408aebf83258cfa67e9e84d4e6))
+*  bug fixes, and added section for leader comments ([a1eae4a3](https://github.com/firstlovecenter/fl-admin-portal/commit/a1eae4a345bbdedd6f5181c6b5642c9c0f0acb4d))
+*  bug fixes, and added section for leader comments ([08128956](https://github.com/firstlovecenter/fl-admin-portal/commit/08128956593689e4ad6647ffb473872006460cbe))
+
+##### Refactors
+
+* **directory:**  refactored all promises to async await syntax for easier debugging ([09f80ceb](https://github.com/firstlovecenter/fl-admin-portal/commit/09f80cebbb401fd6c9eb934ec931f6a30f3b13c3))
+
 #### 1.3.1 (2022-04-12)
 
 ##### Bug Fixes

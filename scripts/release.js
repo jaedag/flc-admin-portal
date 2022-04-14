@@ -41,7 +41,7 @@ switch (process.argv[2]) {
     release.push({
       name: 'release:minor',
       command:
-        "changelog -p && git add CHANGELOG.md && git commit -m 'docs: updated CHANGELOG.md' && npm version minor && git push origin && git push origin --tags",
+        "changelog -m && git add CHANGELOG.md && git commit -m 'docs: updated CHANGELOG.md' && npm version minor && git push origin && git push origin --tags",
       prefixColor: 'yellow',
     })
     break
@@ -61,7 +61,7 @@ switch (process.argv[2]) {
     release.push({
       name: 'release:major',
       command:
-        "changelog -p && git add CHANGELOG.md && git commit -m 'docs: updated CHANGELOG.md' && npm version major && git push origin && git push origin --tags",
+        "changelog -M && git add CHANGELOG.md && git commit -m 'docs: updated CHANGELOG.md' && npm version major && git push origin && git push origin --tags",
       prefixColor: 'yellow',
     })
     break

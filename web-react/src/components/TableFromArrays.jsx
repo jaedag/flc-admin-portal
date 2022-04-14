@@ -7,7 +7,7 @@ const TableFromArrays = (tableArray) => {
   return (
     <Table variant={theme} striped bordered>
       <tbody>
-        {tableArray.map((row, i) => (
+        {tableArray?.map((row, i) => (
           <tr key={i}>
             {row.map((col, i) => (
               <td key={i}>{col}</td>

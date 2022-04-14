@@ -102,6 +102,7 @@ export const DISPLAY_FELLOWSHIP_SERVICE = gql`
       foreignCurrency
       treasurerSelfie
       servicePicture
+      bankingProof
       bankingSlip
       bankingSlipUploader {
         id
@@ -149,6 +150,7 @@ export const DISPLAY_BACENTA_SERVICE = gql`
       foreignCurrency
       treasurerSelfie
       servicePicture
+      bankingProof
       bankingSlip
       bankingSlipUploader {
         id
@@ -223,6 +225,7 @@ export const DISPLAY_CONSTITUENCY_SERVICE = gql`
       foreignCurrency
       treasurerSelfie
       servicePicture
+      bankingProof
       bankingSlip
       bankingSlipUploader {
         id
@@ -270,6 +273,7 @@ export const DISPLAY_COUNCIL_SERVICE = gql`
       foreignCurrency
       treasurerSelfie
       servicePicture
+      bankingProof
       bankingSlip
       bankingSlipUploader {
         id
@@ -317,6 +321,7 @@ export const DISPLAY_STREAM_SERVICE = gql`
       foreignCurrency
       treasurerSelfie
       servicePicture
+      bankingProof
       bankingSlip
       bankingSlipUploader {
         id
@@ -364,6 +369,7 @@ export const DISPLAY_GATHERINGSERVICE_SERVICE = gql`
       foreignCurrency
       treasurerSelfie
       servicePicture
+      bankingProof
       bankingSlip
       bankingSlipUploader {
         id

@@ -55,7 +55,7 @@ const MemberForm = ({ initialValues, onSubmit, title, loading, update }) => {
       PHONE_NUM_REGEX,
       `Phone Number must start with + and country code (eg. '+233')`
     ),
-    fellowship: Yup.string().required(
+    fellowship: Yup.object().required(
       'Please pick a fellowship from the dropdown'
     ),
   })
@@ -208,7 +208,6 @@ const MemberForm = ({ initialValues, onSubmit, title, loading, update }) => {
                 {/* <!-- Beginning of Church Info Section--> */}
                 <div className="col my-4">
                   <HeadingPrimary>Church Info</HeadingPrimary>
-
                   <div className="form-row row-cols-1 row-cols-md-2 justify-content-center">
                     <Col sm={10}>
                       <FormikControl
@@ -218,7 +217,7 @@ const MemberForm = ({ initialValues, onSubmit, title, loading, update }) => {
                         placeholder="Start Typing"
                         setFieldValue={formik.setFieldValue}
                         aria-describedby="Fellowship Name"
-                        initialValue={initialValues?.fellowship || null}
+                        initialValue={initialValues?.fellowship?.name || null}
                         error={
                           formik.errors.fellowship && formik.errors.fellowship
                         }

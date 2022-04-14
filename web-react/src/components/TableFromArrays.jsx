@@ -2,8 +2,10 @@ import { MemberContext } from 'contexts/MemberContext'
 import React, { useContext } from 'react'
 import { Table } from 'react-bootstrap'
 
-const TableFromArrays = (tableArray) => {
+const TableFromArrays = ({ tableArray }) => {
   const { theme } = useContext(MemberContext)
+  // tableArray.map((arr) => console.log('Ye'))
+
   return (
     <Table variant={theme} striped bordered>
       <tbody>

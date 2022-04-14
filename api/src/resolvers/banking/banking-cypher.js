@@ -2,20 +2,26 @@ export const setServiceRecordTransactionId = `
 MATCH (record:ServiceRecord {id: $serviceRecordId})<-[:HAS_SERVICE]-(:ServiceLog)<-[:HAS_HISTORY]-(church)
 WHERE church:Fellowship OR church:Constituency OR church:Council OR church:Stream OR church:GatheringService
 
+
+UNWIND labels(church) AS churchLevel 
+WITH record, church, churchLevel
+WHERE churchLevel = 'Fellowship' OR churchLevel = 'Bacenta' OR churchLevel = 'Constituency' 
+OR churchLevel = 'Council' OR churchLevel = 'Stream' OR churchLevel = 'GatheringService'
+
 MATCH (author:Member {auth_id: $auth.jwt.sub})
 MATCH (record)-[:SERVICE_HELD_ON]->(date:TimeGraph)
 MATCH (transaction: LastPaySwitchTransactionId)
     SET record.transactionId = transaction.id + 1,
     record.sourceNumber = $mobileNumber,
     record.sourceNetwork = $mobileNetwork,
-    record.desc = church.name + " " + date.date,
+    record.desc = church.name + ' ' + churchLevel + ' '  + date.date,
     record.transactionTime = datetime(),
     record.transactionStatus = "pending",
     transaction.id = record.transactionId
 
 MERGE (author)<-[:OFFERING_BANKED_BY]-(record)
 
-RETURN record, church.name AS churchName, date.date AS date
+RETURN record, church.name AS churchName, date.date AS date, churchLevel AS churchLevel
 `
 
 export const checkTransactionId = `

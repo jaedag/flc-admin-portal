@@ -50,7 +50,7 @@ export const bankingMutation = {
         amount: padNumbers(serviceRecord?.income * 100),
         processing_code: '000200',
         'r-switch': getMobileCode(args.mobileNetwork),
-        desc: cypherResponse.churchName + ' ' + cypherResponse.date,
+        desc: `${cypherResponse.churchName} ${cypherResponse.churchLevel} ${cypherResponse.date}`,
         subscriber_number: args.mobileNumber,
         voucher: '',
       },

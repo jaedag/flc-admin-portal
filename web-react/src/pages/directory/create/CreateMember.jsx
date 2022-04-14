@@ -23,7 +23,7 @@ const CreateMember = () => {
     maritalStatus: '',
     occupation: '',
     pictureUrl: '',
-    fellowship: '',
+    fellowship: {},
     ministry: '',
 
     pastoralHistory: [
@@ -68,50 +68,50 @@ const CreateMember = () => {
     // Variables that are not controlled by formik
 
     const pastoralAppointment = filterPastoralTitles(values.pastoralAppointment)
+    try {
+      const res = await CreateMember({
+        variables: {
+          firstName: values.firstName.trim(),
+          middleName: values.middleName.trim(),
+          lastName: values.lastName.trim(),
+          gender: values.gender,
+          phoneNumber: parsePhoneNum(values.phoneNumber),
+          whatsappNumber: parsePhoneNum(values.whatsappNumber),
+          email: values.email.trim().toLowerCase(),
+          dob: values.dob,
+          maritalStatus: values.maritalStatus,
+          occupation: values.occupation,
+          pictureUrl: values.pictureUrl,
 
-    CreateMember({
-      variables: {
-        firstName: values.firstName.trim(),
-        middleName: values.middleName.trim(),
-        lastName: values.lastName.trim(),
-        gender: values.gender,
-        phoneNumber: parsePhoneNum(values.phoneNumber),
-        whatsappNumber: parsePhoneNum(values.whatsappNumber),
-        email: values.email.trim().toLowerCase(),
-        dob: values.dob,
-        maritalStatus: values.maritalStatus,
-        occupation: values.occupation,
-        pictureUrl: values.pictureUrl,
+          fellowship: values.fellowship?.id,
+          ministry: values.ministry,
+        },
+      })
 
-        fellowship: values.fellowship,
-        ministry: values.ministry,
-      },
-    })
-      .then((res) => {
-        pastoralAppointment.forEach((title) => {
-          if (!title.date) {
-            return
-          }
-
-          AddMemberTitle({
+      pastoralAppointment.forEach(async (title) => {
+        if (!title.date) {
+          return
+        }
+        try {
+          await AddMemberTitle({
             variables: {
               memberId: res.data.CreateMember.id,
               title: title.title,
               status: true,
               date: title.date,
             },
-          }).catch((error) =>
-            throwErrorMsg(`There was a problem adding member title`, error)
-          )
-        })
-
-        setSubmitting(false)
-        resetForm()
-        navigate('/member/displaydetails')
+          })
+        } catch (error) {
+          throwErrorMsg(`There was a problem adding member title`, error)
+        }
       })
-      .catch((err) =>
-        throwErrorMsg('There was an error creating the member profile\n', err)
-      )
+    } catch (error) {
+      throwErrorMsg('There was an error creating the member profile\n', error)
+    }
+
+    setSubmitting(false)
+    resetForm()
+    navigate('/member/displaydetails')
   }
 
   return (

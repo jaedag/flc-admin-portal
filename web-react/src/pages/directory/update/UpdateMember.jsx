@@ -46,7 +46,7 @@ const UpdateMember = () => {
     maritalStatus: member?.maritalStatus?.status ?? '',
     occupation: member?.occupation?.occupation ?? '',
     pictureUrl: member?.pictureUrl ?? '',
-    fellowship: memberChurch?.fellowship ? memberChurch?.fellowship?.name : '',
+    fellowship: memberChurch?.fellowship,
     fellowshipName: '',
     ministry: memberChurch?.ministry ? memberChurch?.ministry?.id : '',
 
@@ -105,7 +105,7 @@ const UpdateMember = () => {
           occupation: values.occupation,
           pictureUrl: values.pictureUrl,
 
-          fellowship: values.fellowship,
+          fellowship: values.fellowship?.id,
           ministry: values.ministry,
         },
       })
@@ -122,31 +122,12 @@ const UpdateMember = () => {
         await UpdateMemberFellowship({
           variables: {
             memberId: memberId,
-            fellowshipId: values.fellowship,
-            ids: [memberId, values.fellowship, memberChurch?.fellowship.id],
-            historyRecord: `${member.firstName} ${member.lastName} moved from ${memberChurch?.fellowship.name} Fellowship to ${values.fellowshipName} Fellowship`,
+            fellowshipId: values.fellowship?.id,
+            ids: [memberId, values.fellowship?.id, memberChurch?.fellowship.id],
+            historyRecord: `${member.firstName} ${member.lastName} moved from ${memberChurch?.fellowship.name} Fellowship to ${values.fellowship?.name} Fellowship`,
           },
         })
       }
-
-      // pastoralAppointment.forEach(async (title) => {
-      //   if (!title.date) {
-      //     return
-      //   }
-
-      //   try {
-      //     await AddMemberTitle({
-      //       variables: {
-      //         memberId: memberId,
-      //         title: title.title,
-      //         status: true,
-      //         date: title.date,
-      //       },
-      //     })
-      //   } catch (error) {
-      //     throwErrorMsg(`There was a problem adding member title`, error)
-      //   }
-      // })
 
       onSubmitProps.setSubmitting(false)
       onSubmitProps.resetForm()

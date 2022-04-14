@@ -1,3 +1,14 @@
+#### 2.0.1 (2022-04-14)
+
+##### Bug Fixes
+
+*  rewrote the defaulters queries to include those who used the self banking option ([9884236a](https://github.com/firstlovecenter/fl-admin-portal/commit/9884236a827ab4885c6c047fe971028d90eadb32))
+*  rewrote the defaulters queries to include those who used the self banking option ([6896d055](https://github.com/firstlovecenter/fl-admin-portal/commit/6896d055b2ff07ecebe9b121430d3052376393e8))
+
+##### Performance Improvements
+
+*  corrected wrong tag usage with generate-changelog ([0fab3397](https://github.com/firstlovecenter/fl-admin-portal/commit/0fab3397aec76dd96bcc0626971d4d7ba1855636))
+
 #### 2.0.0 (2022-04-14)
 
 ##### Chores

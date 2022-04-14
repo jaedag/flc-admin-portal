@@ -56,7 +56,7 @@ export const bankingMutation = {
       },
     }
     axios(payOffering).catch((e) => throwErrorMsg(e))
-    await session.run(cypher.setTransactionStatus, args)
+
     return
   },
   ConfirmOfferingPayment: async (object, args, context) => {
@@ -91,34 +91,44 @@ export const bankingMutation = {
 
     const confirmationResponse = await axios(confirmPaymentBody)
 
-    try {
-      if (confirmationResponse.data.code === '111') {
-        throwErrorMsg('Payment is still pending. Please wait or try again')
+    if (confirmationResponse.data.code.toString() === '111') {
+      throwErrorMsg(
+        'Payment is still pending. Please wait for the prompt or try again'
+      )
+    }
+
+    if (confirmationResponse.data.code.toString() === '104') {
+      try {
+        await session.run(cypher.setTransactionStatusFailed, args)
+      } catch (error) {
+        throwErrorMsg(error, 'Payment Unsuccessful!')
       }
-      if (confirmationResponse.data.code !== '000') {
+    }
+
+    if (confirmationResponse.data.code.toString() !== '000') {
+      try {
         await session.run(cypher.removeBankingRecordTransactionId, args)
-
-        throwErrorMsg(
-          confirmationResponse.data.code +
-            ' ' +
-            confirmationResponse.data.reason
-        )
+      } catch (error) {
+        throwErrorMsg(error)
       }
 
-      // eslint-disable-next-line no-console
-      console.log('Payment Verified Successfully!')
-      return {
-        id: record.id,
-        income: record.income,
-        offeringBankedBy: {
-          id: banker.id,
-          firstName: banker.firstName,
-          lastName: banker.lastName,
-          fullName: banker.firstName + ' ' + banker.fullName,
-        },
-      }
-    } catch (error) {
-      throwErrorMsg(error, 'Payment Unsuccessful!')
+      throwErrorMsg(
+        confirmationResponse.data.code + ' ' + confirmationResponse.data.reason
+      )
+    }
+
+    // eslint-disable-next-line no-console
+    console.log('Payment Verified Successfully!')
+
+    return {
+      id: record.id,
+      income: record.income,
+      offeringBankedBy: {
+        id: banker.id,
+        firstName: banker.firstName,
+        lastName: banker.lastName,
+        fullName: banker.firstName + ' ' + banker.fullName,
+      },
     }
   },
 }

@@ -50,7 +50,10 @@ const ReceiptPage = () => {
       </Table>
       <Container>
         <div className="d-grid gap-2">
-          <Button size="lg" onClick={() => navigate(-1)}>
+          <Button
+            size="lg"
+            onClick={() => navigate('/services/fellowship/self-banking')}
+          >
             Go Back
           </Button>
         </div>

@@ -13,4 +13,5 @@ extend type Mutation {
 
 extend type ServiceRecord {
   transactionTime: DateTime
+  transactionStatus: String
 }

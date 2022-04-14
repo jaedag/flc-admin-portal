@@ -51,6 +51,7 @@ export const CONFIRM_OFFERING_PAYMENT = gql`
     ) {
       id
       income
+      transactionStatus
       offeringBankedBy {
         id
         firstName

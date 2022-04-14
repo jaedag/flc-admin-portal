@@ -8,6 +8,7 @@ export const FELLOWSHIP_BANKING_SLIP_QUERIES = gql`
       name
       services(limit: 12) {
         id
+        stream_name
         noServiceReason
         created_at
         serviceDate {
@@ -33,6 +34,7 @@ export const FELLOWSHIP_BANKING_SLIP_QUERIES = gql`
           fullName
         }
         income
+        transactionStatus
       }
     }
   }

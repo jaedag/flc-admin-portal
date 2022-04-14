@@ -117,6 +117,14 @@ export const bankingMutation = {
       )
     }
 
+    if (confirmationResponse.data.code.toString() === '000') {
+      try {
+        await session.run(cypher.setTransactionStatusSuccess, args)
+      } catch (error) {
+        throwErrorMsg(error)
+      }
+    }
+
     // eslint-disable-next-line no-console
     console.log('Payment Verified Successfully!')
 

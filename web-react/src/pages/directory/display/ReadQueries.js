@@ -511,6 +511,7 @@ export const DISPLAY_STREAM = gql`
         id
         firstName
         lastName
+        fullName
         pictureUrl
       }
       history(options: { limit: 5 }) {

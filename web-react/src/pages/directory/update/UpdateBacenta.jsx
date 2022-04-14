@@ -23,6 +23,7 @@ import {
   SET_ACTIVE_BACENTA,
   SET_VACATION_BACENTA,
 } from './StatusChanges'
+import { getChurchIdsFromObject } from './update-utils'
 
 const UpdateBacenta = () => {
   const { church, bacentaId, clickCard } = useContext(ChurchContext)
@@ -255,13 +256,11 @@ const UpdateBacenta = () => {
     const newFellowshipList = values.fellowships.map((fellowship) => fellowship)
 
     const removeFellowships = oldFellowshipList.filter((value) => {
-      const newArray = newFellowshipList.map((fellowship) => fellowship.id)
-      return !newArray.includes(value.id)
+      return !getChurchIdsFromObject(newFellowshipList).includes(value.id)
     })
 
     const addFellowships = values.fellowships.filter(function (value) {
-      const newArray = newFellowshipList.map((fellowship) => fellowship.id)
-      return !newArray.includes(value.id)
+      return !getChurchIdsFromObject(newFellowshipList).includes(value.id)
     })
 
     if (removeFellowships.length) {

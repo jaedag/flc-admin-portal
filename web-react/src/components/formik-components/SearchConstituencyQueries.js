@@ -43,6 +43,10 @@ export const MEMBER_CONSTITUENCY_SEARCH = gql`
       constituencySearch(key: $key) {
         id
         name
+        council {
+          id
+          name
+        }
       }
     }
   }

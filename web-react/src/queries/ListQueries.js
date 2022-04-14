@@ -47,39 +47,6 @@ export const FELLOWSHIP_DROPDOWN = gql`
   }
 `
 
-export const BACENTA_DROPDOWN = gql`
-  query ($bacentaName: String) {
-    bacentaDropdown(bacentaName: $bacentaName, first: 8) {
-      id
-      name
-
-      constituency {
-        id
-        name
-      }
-    }
-  }
-`
-export const CONSTITUENCY_DROPDOWN = gql`
-  query ($nameSearch: String!) {
-    constituencyDropdown(nameSearch: $nameSearch) {
-      id
-      name
-      stream_name
-    }
-  }
-`
-
-export const COUNCIL_DROPDOWN = gql`
-  query ($nameSearch: String!) {
-    councilDropdown(nameSearch: $nameSearch) {
-      id
-      name
-      stream_name
-    }
-  }
-`
-
 export const GET_CONSTITUENCY_BACENTAS = gql`
   query ($id: ID!) {
     constituencies(where: { id: $id }) {

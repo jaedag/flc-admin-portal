@@ -680,13 +680,15 @@ export const ADD_STREAM_COUNCILS = gql`
   mutation AddStreamCouncils($streamId: ID!, $councilId: ID!) {
     updateCouncils(
       where: { id: $councilId }
-      connect: { councils: { where: { node: { id: $councilId } } } }
+      connect: { stream: { where: { node: { id: $streamId } } } }
     ) {
-      streams {
+      councils {
         id
-        name
-        councils {
+        stream {
           id
+          councils {
+            id
+          }
         }
       }
     }

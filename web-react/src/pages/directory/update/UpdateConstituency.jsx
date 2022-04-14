@@ -16,6 +16,7 @@ import { LOG_CONSTITUENCY_HISTORY, LOG_BACENTA_HISTORY } from './LogMutations'
 import { MAKE_CONSTITUENCY_LEADER } from './ChangeLeaderMutations'
 import ConstituencyForm from 'pages/directory/reusable-forms/ConstituencyForm'
 import { MAKE_BACENTA_INACTIVE } from './CloseChurchMutations'
+import { getChurchIdsFromObject } from './update-utils'
 
 const UpdateConstituency = () => {
   const { constituencyId, clickCard } = useContext(ChurchContext)
@@ -228,13 +229,11 @@ const UpdateConstituency = () => {
       const newBacentaList = values.bacentas.map((bacenta) => bacenta)
 
       const removeBacentas = oldBacentaList.filter((value) => {
-        const newArray = newBacentaList.map((bacenta) => bacenta.id)
-        return !newArray.includes(value.id)
+        return !getChurchIdsFromObject(newBacentaList).includes(value.id)
       })
 
       const addBacentas = values.bacentas.filter((value) => {
-        const newArray = oldBacentaList.map((bacenta) => bacenta.id)
-        return !newArray.includes(value.id)
+        return !getChurchIdsFromObject(oldBacentaList).includes(value.id)
       })
 
       removeBacentas.forEach(async (bacenta) => {

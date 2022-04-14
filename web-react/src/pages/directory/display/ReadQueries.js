@@ -201,7 +201,7 @@ export const DISPLAY_FELLOWSHIP_HISTORY = gql`
       id
       services(limit: 5) {
         id
-        bankingSlip
+        bankingProof
         week
       }
       history(options: { limit: 5 }) {

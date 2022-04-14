@@ -140,7 +140,7 @@ const ServiceDetails = ({ service, church, loading }) => {
                     </div>
                   </>
                 )}{' '}
-                {!service?.bankingSlip && !service?.offeringBankedBy && (
+                {!service?.bankingProof && (
                   <p className="fw-bold text-danger">
                     You Have Not Submitted Your Banking Slip!!!
                   </p>

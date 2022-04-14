@@ -31,7 +31,7 @@ export const RECORD_SERVICE = gql`
           services(limit: 5) {
             id
             week
-            bankingSlip
+            bankingProof
           }
         }
       }

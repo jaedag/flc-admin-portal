@@ -41,7 +41,7 @@ const FellowshipBankingSlipView = () => {
               className="mb-2"
               onClick={() => {
                 clickCard(service)
-                !service.bankingSlip && !service.offeringBankedBy
+                !service.bankingProof
                   ? navigate('/fellowship/banking-slip/submission')
                   : navigate('/fellowship/service-details')
               }}
@@ -55,7 +55,7 @@ const FellowshipBankingSlipView = () => {
                     <span>Offering: {service.income}</span>
                   </Col>
                   <Col className="col-auto">
-                    {service.bankingSlip || service?.offeringBankedBy ? (
+                    {service?.bankingProof ? (
                       <span className="text-success fw-bold">
                         <CheckCircleFill color="green" size={35} /> Filled
                       </span>

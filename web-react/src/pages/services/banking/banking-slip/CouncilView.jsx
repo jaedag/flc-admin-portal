@@ -38,8 +38,7 @@ const CouncilBankingSlipView = () => {
             onClick={() => {
               setServiceRecordId(service.id)
 
-              !service.bankingSlip &&
-                !service.offeringBankedBy &&
+              !service.bankingProof &&
                 navigate('/council/banking-slip/submission')
             }}
           >

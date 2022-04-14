@@ -37,8 +37,7 @@ const ConstituencyBankingSlipView = () => {
             className="mb-2"
             onClick={() => {
               setServiceRecordId(service.id)
-              !service.bankingSlip &&
-                !service?.offeringBankedBy &&
+              !service.bankingProof &&
                 navigate('/constituency/banking-slip/submission')
             }}
           >

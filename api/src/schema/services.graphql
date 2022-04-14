@@ -32,7 +32,7 @@ extend type GatheringService {
       statement: """
       MATCH (this)-[:HAS*5]->(fellowships:Active:Fellowship)
       WHERE EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week and  date.date > date() - duration({weeks: 1}) AND record.noServiceReason IS NOT NULL
+        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph) WHERE date(date.date).week = date().week and  date.date > date() - duration({weeks: 1}) AND record.noServiceReason IS NOT NULL
         }
       RETURN fellowships
       """
@@ -42,7 +42,7 @@ extend type GatheringService {
       statement: """
       MATCH (this)-[:HAS*5]->(fellowships:Active:Fellowship)
       WHERE EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week and  date.date > date() - duration({weeks: 1}) AND record.noServiceReason IS NOT NULL AND record.attendance IS NULL
+        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph) WHERE date(date.date).week = date().week and  date.date > date() - duration({weeks: 1}) AND record.noServiceReason IS NOT NULL AND record.attendance IS NULL
         }
       RETURN COUNT(DISTINCT fellowships)
       """
@@ -55,7 +55,7 @@ extend type GatheringService {
         MATCH (fellowships)-[:MEETS_ON]->(day:ServiceDay)
         WHERE day.dayNumber < date().dayOfWeek OR (day.dayNumber = date().dayOfWeek AND  time() > time('20:30'))
          }
-        AND NOT EXISTS {MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date.date.week = date().week}
+        AND NOT EXISTS {MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph) WHERE date.date.week = date().week}
       RETURN DISTINCT fellowships
       """
     )
@@ -67,7 +67,7 @@ extend type GatheringService {
         MATCH (fellowships)-[:MEETS_ON]->(day:ServiceDay)
         WHERE day.dayNumber < date().dayOfWeek OR (day.dayNumber = date().dayOfWeek AND  time() > time('20:30'))
          }
-        AND NOT EXISTS {MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date.date.week = date().week}
+        AND NOT EXISTS {MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph) WHERE date.date.week = date().week}
 
       RETURN COUNT(DISTINCT fellowships)
       """
@@ -77,9 +77,9 @@ extend type GatheringService {
       statement: """
       MATCH (this)-[:HAS*5]->(fellowships) WHERE fellowships:Active:Fellowship OR fellowships:ClosedFellowship
       MATCH (fellowships) WHERE EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph )
+        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph)
         WHERE date(date.date).week = date().week AND  date.date > date() - duration({weeks: 1})
-        AND record.noServiceReason IS NULL AND record.bankingSlip IS NULL AND record.transactionId IS NULL
+        AND record.noServiceReason IS NULL AND record.bankingSlip IS NULL AND record.transactionStatus <>'success'
         }
       RETURN fellowships
       """
@@ -89,9 +89,9 @@ extend type GatheringService {
       statement: """
       MATCH (this)-[:HAS*5]->(fellowships) WHERE fellowships:Active:Fellowship OR fellowships:ClosedFellowship
       MATCH (fellowships) WHERE EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph )
+        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph)
         WHERE date(date.date).week = date().week AND  date.date > date() - duration({weeks: 1})
-        AND record.noServiceReason IS NULL AND record.bankingSlip IS NULL AND record.transactionId IS NULL
+        AND record.noServiceReason IS NULL AND record.bankingSlip IS NULL AND record.transactionStatus <> 'success'
         }
       RETURN COUNT(DISTINCT fellowships)
       """
@@ -101,9 +101,11 @@ extend type GatheringService {
       statement: """
       MATCH (this)-[:HAS*5]->(fellowships) WHERE fellowships:Active:Fellowship OR fellowships:ClosedFellowship
       MATCH (fellowships) WHERE EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph )
+        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph)
         WHERE date(date.date).week = date().week and  date.date > date() - duration({weeks: 1})
-        AND record.noServiceReason IS NULL AND record.bankingSlip IS NOT NULL
+        AND record.noServiceReason IS NULL
+
+         AND record.bankingSlip IS NOT NULL OR record.transactionStatus ='success'
         }
       RETURN fellowships
       """
@@ -113,8 +115,12 @@ extend type GatheringService {
       statement: """
       MATCH (this)-[:HAS*5]->(fellowships) WHERE fellowships:Active:Fellowship OR fellowships:ClosedFellowship
       MATCH (fellowships) WHERE EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week and  date.date > date() - duration({weeks: 1})
-        AND record.noServiceReason IS NULL AND record.bankingSlip IS NOT NULL
+        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph)
+        WHERE date(date.date).week = date().week and  date.date > date() - duration({weeks: 1})
+        AND record.noServiceReason IS NULL
+
+
+         AND record.bankingSlip IS NOT NULL OR record.transactionStatus ='success'
 
         }
       RETURN COUNT(DISTINCT fellowships)
@@ -151,7 +157,7 @@ extend type Stream {
       statement: """
       MATCH (this)-[:HAS*4]->(fellowships:Active:Fellowship)
       WHERE EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week and  date.date > date() - duration({weeks: 1}) AND record.noServiceReason IS NOT NULL
+        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph) WHERE date(date.date).week = date().week and  date.date > date() - duration({weeks: 1}) AND record.noServiceReason IS NOT NULL
         }
       RETURN fellowships
       """
@@ -161,7 +167,7 @@ extend type Stream {
       statement: """
       MATCH (this)-[:HAS*4]->(fellowships:Active:Fellowship)
       WHERE EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week and  date.date > date() - duration({weeks: 1}) AND record.noServiceReason IS NOT NULL AND record.attendance IS NULL
+        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph) WHERE date(date.date).week = date().week and  date.date > date() - duration({weeks: 1}) AND record.noServiceReason IS NOT NULL AND record.attendance IS NULL
         }
       RETURN COUNT(DISTINCT fellowships)
       """
@@ -174,7 +180,7 @@ extend type Stream {
         MATCH (fellowships)-[:MEETS_ON]->(day:ServiceDay)
         WHERE day.dayNumber < date().dayOfWeek OR (day.dayNumber = date().dayOfWeek AND  time() > time('20:30'))
          }
-        AND NOT EXISTS {MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date.date.week = date().week}
+        AND NOT EXISTS {MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph) WHERE date.date.week = date().week}
       RETURN DISTINCT fellowships
       """
     )
@@ -186,7 +192,7 @@ extend type Stream {
         MATCH (fellowships)-[:MEETS_ON]->(day:ServiceDay)
         WHERE day.dayNumber < date().dayOfWeek OR (day.dayNumber = date().dayOfWeek AND  time() > time('20:30'))
          }
-        AND NOT EXISTS {MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date.date.week = date().week}
+        AND NOT EXISTS {MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph) WHERE date.date.week = date().week}
 
       RETURN COUNT(DISTINCT fellowships)
       """
@@ -196,8 +202,8 @@ extend type Stream {
       statement: """
       MATCH (this)-[:HAS*4]->(fellowships) WHERE fellowships:Active:Fellowship OR fellowships:ClosedFellowship
       MATCH (fellowships) WHERE EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week and  date.date > date() - duration({weeks: 1}) 
-        AND record.noServiceReason IS NULL AND record.bankingSlip IS NULL AND record.transactionId IS NULL
+        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph) WHERE date(date.date).week = date().week and  date.date > date() - duration({weeks: 1})
+        AND record.noServiceReason IS NULL AND record.bankingSlip IS NULL AND record.transactionStatus ='success'
         }
       RETURN fellowships
       """
@@ -207,8 +213,8 @@ extend type Stream {
       statement: """
       MATCH (this)-[:HAS*4]->(fellowships) WHERE fellowships:Active:Fellowship OR fellowships:ClosedFellowship
       MATCH (fellowships) WHERE EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week and  date.date > date() - duration({weeks: 1}) 
-        AND record.noServiceReason IS NULL AND record.bankingSlip IS NULL AND record.transactionId IS NULL
+        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph) WHERE date(date.date).week = date().week and  date.date > date() - duration({weeks: 1})
+        AND record.noServiceReason IS NULL AND record.bankingSlip IS NULL AND record.transactionStatus ='success'
         }
       RETURN COUNT(DISTINCT fellowships)
       """
@@ -218,9 +224,12 @@ extend type Stream {
       statement: """
       MATCH (this)-[:HAS*4]->(fellowships) WHERE fellowships:Active:Fellowship OR fellowships:ClosedFellowship
       MATCH (fellowships) WHERE EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week and  date.date > date() - duration({weeks: 1})
-        AND record.noServiceReason IS NULL AND record.bankingSlip IS NOT NULL
+       MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph)
+        WHERE date(date.date).week = date().week and  date.date > date() - duration({weeks: 1})
+        AND record.noServiceReason IS NULL
 
+
+         AND record.bankingSlip IS NOT NULL OR record.transactionStatus ='success'
         }
       RETURN fellowships
       """
@@ -230,9 +239,12 @@ extend type Stream {
       statement: """
       MATCH (this)-[:HAS*4]->(fellowships) WHERE fellowships:Active:Fellowship OR fellowships:ClosedFellowship
       MATCH (fellowships) WHERE EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week and  date.date > date() - duration({weeks: 1})
-        AND record.noServiceReason IS NULL AND record.bankingSlip IS NOT NULL
+      MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph)
+        WHERE date(date.date).week = date().week and  date.date > date() - duration({weeks: 1})
+        AND record.noServiceReason IS NULL
 
+
+         AND record.bankingSlip IS NOT NULL OR record.transactionStatus ='success'
         }
       RETURN COUNT(DISTINCT fellowships)
       """
@@ -268,7 +280,7 @@ extend type Council {
       statement: """
       MATCH (this)-[:HAS*3]->(fellowships:Active:Fellowship)
       WHERE EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week and  date.date > date() - duration({weeks: 1}) AND record.noServiceReason IS NOT NULL
+        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph) WHERE date(date.date).week = date().week and  date.date > date() - duration({weeks: 1}) AND record.noServiceReason IS NOT NULL
         }
       RETURN fellowships
       """
@@ -278,7 +290,7 @@ extend type Council {
       statement: """
       MATCH (this)-[:HAS*3]->(fellowships:Active:Fellowship)
       WHERE EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week and  date.date > date() - duration({weeks: 1}) AND record.noServiceReason IS NOT NULL AND record.attendance IS NULL
+        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph) WHERE date(date.date).week = date().week and  date.date > date() - duration({weeks: 1}) AND record.noServiceReason IS NOT NULL AND record.attendance IS NULL
         }
       RETURN COUNT(DISTINCT fellowships)
       """
@@ -291,7 +303,7 @@ extend type Council {
         MATCH (fellowships)-[:MEETS_ON]->(day:ServiceDay)
         WHERE day.dayNumber < date().dayOfWeek OR (day.dayNumber = date().dayOfWeek AND  time() > time('20:30'))
          }
-        AND NOT EXISTS {MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date.date.week = date().week}
+        AND NOT EXISTS {MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph) WHERE date.date.week = date().week}
       RETURN DISTINCT fellowships
       """
     )
@@ -303,7 +315,7 @@ extend type Council {
         MATCH (fellowships)-[:MEETS_ON]->(day:ServiceDay)
         WHERE day.dayNumber < date().dayOfWeek OR (day.dayNumber = date().dayOfWeek AND  time() > time('20:30'))
          }
-        AND NOT EXISTS {MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date.date.week = date().week}
+        AND NOT EXISTS {MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph) WHERE date.date.week = date().week}
 
       RETURN COUNT(DISTINCT fellowships)
       """
@@ -313,7 +325,9 @@ extend type Council {
       statement: """
       MATCH (this)-[:HAS*3]->(fellowships) WHERE fellowships:Active:Fellowship OR fellowships:ClosedFellowship
       MATCH (fellowships) WHERE EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week and  date.date > date() - duration({weeks: 1}) AND record.noServiceReason IS NULL AND record.bankingSlip IS NULL AND record.transactionId IS NULL
+        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph)
+        WHERE date(date.date).week = date().week and  date.date > date() - duration({weeks: 1})
+        AND record.noServiceReason IS NULL AND record.bankingSlip IS NULL AND record.transactionStatus ='success'
         }
       RETURN fellowships
       """
@@ -323,7 +337,9 @@ extend type Council {
       statement: """
       MATCH (this)-[:HAS*3]->(fellowships) WHERE fellowships:Active:Fellowship OR fellowships:ClosedFellowship
       MATCH (fellowships) WHERE EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week and  date.date > date() - duration({weeks: 1}) AND record.noServiceReason IS NULL AND record.bankingSlip IS NULL AND record.transactionId IS NULL
+        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph)
+        WHERE date(date.date).week = date().week and  date.date > date() - duration({weeks: 1})
+        AND record.noServiceReason IS NULL AND record.bankingSlip IS NULL AND record.transactionStatus ='success'
         }
       RETURN COUNT(DISTINCT fellowships)
       """
@@ -333,9 +349,12 @@ extend type Council {
       statement: """
       MATCH (this)-[:HAS*3]->(fellowships) WHERE fellowships:Active:Fellowship OR fellowships:ClosedFellowship
       MATCH (fellowships) WHERE EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week and  date.date > date() - duration({weeks: 1})
-        AND record.noServiceReason IS NULL AND record.bankingSlip IS NOT NULL
+          MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph)
+        WHERE date(date.date).week = date().week and  date.date > date() - duration({weeks: 1})
+        AND record.noServiceReason IS NULL
 
+
+         AND record.bankingSlip IS NOT NULL OR record.transactionStatus ='success'
         }
       RETURN fellowships
       """
@@ -345,9 +364,12 @@ extend type Council {
       statement: """
       MATCH (this)-[:HAS*3]->(fellowships) WHERE fellowships:Active:Fellowship OR fellowships:ClosedFellowship
       MATCH (fellowships) WHERE EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week and  date.date > date() - duration({weeks: 1})
-        AND record.noServiceReason IS NULL AND record.bankingSlip IS NOT NULL
+        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph)
+        WHERE date(date.date).week = date().week and  date.date > date() - duration({weeks: 1})
+        AND record.noServiceReason IS NULL
 
+
+         AND record.bankingSlip IS NOT NULL OR record.transactionStatus ='success'
         }
       RETURN COUNT(DISTINCT fellowships)
       """
@@ -383,7 +405,7 @@ extend type Constituency {
       statement: """
       MATCH (this)-[:HAS*2]->(fellowships:Active:Fellowship)
       WHERE EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week and  date.date > date() - duration({weeks: 1}) AND record.noServiceReason IS NOT NULL
+        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph) WHERE date(date.date).week = date().week and  date.date > date() - duration({weeks: 1}) AND record.noServiceReason IS NOT NULL
         }
       RETURN fellowships
       """
@@ -393,7 +415,7 @@ extend type Constituency {
       statement: """
       MATCH (this)-[:HAS*2]->(fellowships:Active:Fellowship)
       WHERE EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week and  date.date > date() - duration({weeks: 1}) AND record.noServiceReason IS NOT NULL
+        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph) WHERE date(date.date).week = date().week and  date.date > date() - duration({weeks: 1}) AND record.noServiceReason IS NOT NULL
         }
       RETURN COUNT(DISTINCT fellowships)
       """
@@ -406,7 +428,7 @@ extend type Constituency {
         MATCH (fellowships)-[:MEETS_ON]->(day:ServiceDay)
         WHERE day.dayNumber < date().dayOfWeek OR (day.dayNumber = date().dayOfWeek AND  time() > time('20:30'))
          }
-        AND NOT EXISTS {MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date.date.week = date().week}
+        AND NOT EXISTS {MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph) WHERE date.date.week = date().week}
       RETURN DISTINCT fellowships
       """
     )
@@ -418,7 +440,7 @@ extend type Constituency {
         MATCH (fellowships)-[:MEETS_ON]->(day:ServiceDay)
         WHERE day.dayNumber < date().dayOfWeek OR (day.dayNumber = date().dayOfWeek AND  time() > time('20:30'))
          }
-        AND NOT EXISTS {MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date.date.week = date().week}
+        AND NOT EXISTS {MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph) WHERE date.date.week = date().week}
       RETURN COUNT(DISTINCT fellowships)
       """
     )
@@ -427,7 +449,9 @@ extend type Constituency {
       statement: """
       MATCH (this)-[:HAS*2]->(fellowships) WHERE fellowships:Active:Fellowship OR fellowships:ClosedFellowship
       MATCH (fellowships) WHERE EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week and  date.date > date() - duration({weeks: 1}) AND record.noServiceReason IS NULL AND record.bankingSlip IS NULL AND record.transactionId IS NULL
+        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph)
+        WHERE date(date.date).week = date().week and  date.date > date() - duration({weeks: 1})
+        AND record.noServiceReason IS NULL  AND record.bankingSlip IS NULL AND record.transactionStatus ='success'
         }
       RETURN fellowships
       """
@@ -437,7 +461,9 @@ extend type Constituency {
       statement: """
       MATCH (this)-[:HAS*2]->(fellowships) WHERE fellowships:Active:Fellowship OR fellowships:ClosedFellowship
       MATCH (fellowships) WHERE EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week and  date.date > date() - duration({weeks: 1}) AND record.noServiceReason IS NULL AND record.bankingSlip IS NULL AND record.transactionId IS NULL
+        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph
+        WHERE date(date.date).week = date().week and  date.date > date() - duration({weeks: 1})
+        AND record.noServiceReason IS NULL AND record.bankingSlip IS NULL AND record.transactionStatus ='success'
         }
       RETURN COUNT(DISTINCT fellowships)
       """
@@ -447,7 +473,12 @@ extend type Constituency {
       statement: """
       MATCH (this)-[:HAS*2]->(fellowships) WHERE fellowships:Active:Fellowship OR fellowships:ClosedFellowship
       MATCH (fellowships) WHERE EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph) WHERE date(date.date).week = date().week and  date.date > date() - duration({weeks: 1}) AND record.noServiceReason IS NULL AND record.bankingSlip IS NOT NULL
+        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph)
+        WHERE date(date.date).week = date().week and  date.date > date() - duration({weeks: 1})
+        AND record.noServiceReason IS NULL
+
+
+         AND record.bankingSlip IS NOT NULL OR record.transactionStatus ='success'
         }
       RETURN fellowships
       """
@@ -457,9 +488,12 @@ extend type Constituency {
       statement: """
       MATCH (this)-[:HAS*2]->(fellowships) WHERE fellowships:Active:Fellowship OR fellowships:ClosedFellowship
       MATCH (fellowships) WHERE EXISTS {
-        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph ) WHERE date(date.date).week = date().week and  date.date > date() - duration({weeks: 1})
-        AND record.noServiceReason IS NULL AND record.bankingSlip IS NOT NULL
+        MATCH (fellowships)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_SERVICE]->(record:ServiceRecord)-[:SERVICE_HELD_ON]->(date:TimeGraph)
+        WHERE date(date.date).week = date().week and  date.date > date() - duration({weeks: 1})
+        AND record.noServiceReason IS NULL
 
+
+         AND record.bankingSlip IS NOT NULL OR record.transactionStatus ='success'
         }
       RETURN COUNT(DISTINCT fellowships)
       """

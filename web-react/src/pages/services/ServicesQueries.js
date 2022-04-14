@@ -20,6 +20,7 @@ export const FELLOWSHIP_BANKING_SLIP_QUERIES = gql`
           lastName
           fullName
         }
+        bankingProof
         bankingSlip
         bankingSlipUploader {
           id
@@ -58,6 +59,7 @@ export const CONSTITUENCY_BANKING_SLIP_QUERIES = gql`
           lastName
           fullName
         }
+        bankingProof
         bankingSlip
         bankingSlipUploader {
           id
@@ -90,6 +92,7 @@ export const COUNCIL_BANKING_SLIP_QUERIES = gql`
           lastName
           fullName
         }
+        bankingProof
         bankingSlip
         bankingSlipUploader {
           id
@@ -110,6 +113,7 @@ export const BANKING_SLIP_SUBMISSION = gql`
       bankingSlip: $bankingSlip
     ) {
       id
+      bankingProof
       bankingSlip
       bankingSlipUploader {
         id

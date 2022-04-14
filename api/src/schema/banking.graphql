@@ -14,4 +14,14 @@ extend type Mutation {
 extend type ServiceRecord {
   transactionTime: DateTime
   transactionStatus: String
+  bankingProof: Boolean
+    @cypher(
+      statement: """
+      MATCH (this)
+      WITH this WHERE this.bankingSlip IS NOT NULL
+      OR  this.transactionStatus = "success"
+
+      RETURN true
+      """
+    )
 }

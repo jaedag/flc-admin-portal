@@ -1,19 +1,18 @@
 import { useQuery } from '@apollo/client'
 import BaseComponent from 'components/base-component/BaseComponent'
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
-import { MemberContext } from 'contexts/MemberContext'
+import TableFromArrays from 'components/TableFromArrays'
 import { ServiceContext } from 'contexts/ServiceContext'
 import { parseNeoTime } from 'date-utils'
 import { parseDate } from 'date-utils'
 import { getHumanReadableDate } from 'date-utils'
 import React, { useContext } from 'react'
-import { Button, Container, Table } from 'react-bootstrap'
+import { Button, Container } from 'react-bootstrap'
 import { useNavigate } from 'react-router'
 import { SELF_BANKING_RECEIPT } from './bankingQueries'
 
 const ReceiptPage = () => {
   const { serviceRecordId } = useContext(ServiceContext)
-  const { theme } = useContext(MemberContext)
   const { data, loading, error } = useQuery(SELF_BANKING_RECEIPT, {
     variables: {
       id: serviceRecordId,
@@ -37,24 +36,11 @@ const ReceiptPage = () => {
       <Container>
         <HeadingPrimary>Self Banking Receipt</HeadingPrimary>
       </Container>
-      <Table variant={theme} striped bordered>
-        <tbody>
-          {tablevalues.map((row, i) => (
-            <tr key={i}>
-              {row.map((col, i) => (
-                <td key={i}>{col}</td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </Table>
       <Container>
+        <TableFromArrays tableArray={tablevalues} />
         <div className="d-grid gap-2">
-          <Button
-            size="lg"
-            onClick={() => navigate('/services/fellowship/self-banking')}
-          >
-            Go Back
+          <Button size="lg" onClick={() => navigate('/services/church-list')}>
+            Go Home
           </Button>
         </div>
       </Container>

@@ -5,7 +5,7 @@ import { throwErrorMsg } from '../../../global-utils'
 import { CREATE_COUNCIL_MUTATION } from './CreateMutations'
 import { ChurchContext } from '../../../contexts/ChurchContext'
 import { NEW_COUNCIL_LEADER } from './MakeLeaderMutations'
-import CouncilForm from 'components/reusable-forms/CouncilForm'
+import CouncilForm from 'pages/directory/reusable-forms/CouncilForm'
 
 const CreateCouncil = () => {
   const { clickCard, streamId, setStreamId } = useContext(ChurchContext)

@@ -14,7 +14,7 @@ import {
 } from '../display/ReadQueries'
 
 import { MemberContext } from '../../../contexts/MemberContext'
-import MemberForm from '../../../components/reusable-forms/MemberForm'
+import MemberForm from '../reusable-forms/MemberForm'
 // import { ADD_MEMBER_TITLE_MUTATION } from 'pages/directory/create/CreateMutations'
 // import { filterPastoralTitles } from 'components/reusable-forms/form-utils'
 

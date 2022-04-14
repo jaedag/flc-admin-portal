@@ -6,7 +6,7 @@ import { GET_COUNCIL_CONSTITUENCIES } from '../../../queries/ListQueries'
 import { CREATE_CONSTITUENCY_MUTATION } from './CreateMutations'
 import { ChurchContext } from '../../../contexts/ChurchContext'
 import { NEW_CONSTITUENCY_LEADER } from './MakeLeaderMutations'
-import ConstituencyForm from '../../../components/reusable-forms/ConstituencyForm'
+import ConstituencyForm from '../reusable-forms/ConstituencyForm'
 
 const CreateConstituency = () => {
   const { clickCard, councilId } = useContext(ChurchContext)

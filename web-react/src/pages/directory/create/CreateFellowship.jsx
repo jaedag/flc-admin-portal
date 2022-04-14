@@ -4,7 +4,7 @@ import { useMutation } from '@apollo/client'
 import { CREATE_FELLOWSHIP_MUTATION } from './CreateMutations'
 import { ChurchContext } from '../../../contexts/ChurchContext'
 import { NEW_FELLOWSHIP_LEADER } from './MakeLeaderMutations'
-import FellowshipForm from 'components/reusable-forms/FellowshipForm'
+import FellowshipForm from 'pages/directory/reusable-forms/FellowshipForm'
 import { throwErrorMsg } from 'global-utils'
 
 const CreateFellowship = () => {

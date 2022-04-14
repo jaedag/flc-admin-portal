@@ -15,7 +15,7 @@ import { ChurchContext } from '../../../contexts/ChurchContext'
 import { DISPLAY_BACENTA } from '../display/ReadQueries'
 import { LOG_BACENTA_HISTORY, LOG_FELLOWSHIP_HISTORY } from './LogMutations'
 import { MAKE_BACENTA_LEADER } from './ChangeLeaderMutations'
-import BacentaForm from '../../../components/reusable-forms/BacentaForm'
+import BacentaForm from '../reusable-forms/BacentaForm'
 import { MAKE_FELLOWSHIP_INACTIVE } from './CloseChurchMutations'
 import {
   MAKE_BACENTA_GRADUATED,

@@ -4,7 +4,7 @@ import { useMutation } from '@apollo/client'
 import { CREATE_SONTA_MUTATION } from './CreateMutations'
 import { ChurchContext } from '../../../contexts/ChurchContext'
 import { NEW_SONTA_LEADER } from './MakeLeaderMutations'
-import SontaForm from 'components/reusable-forms/SontaForm'
+import SontaForm from 'pages/directory/reusable-forms/SontaForm'
 import { throwErrorMsg } from 'global-utils'
 
 function CreateSonta() {

@@ -3,7 +3,7 @@ import BaseComponent from 'components/base-component/BaseComponent'
 import { FieldArray, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import { makeSelectOptions } from 'global-utils'
-import { CONSTITUENCY_DROPDOWN, GET_STREAMS } from 'queries/ListQueries'
+import { GET_STREAMS } from 'queries/ListQueries'
 import React, { useContext } from 'react'
 import { ChurchContext } from 'contexts/ChurchContext'
 import FormikControl from 'components/formik-components/FormikControl'
@@ -116,19 +116,12 @@ const CouncilForm = ({ initialValues, onSubmit, title, newCouncil }) => {
                               <Row key={index} className="form-row">
                                 <Col>
                                   <FormikControl
-                                    control="combobox"
+                                    control="constituencySearch"
                                     name={`constituencies[${index}]`}
                                     placeholder="Constituency Name"
                                     initialValue={constituency?.name}
                                     setFieldValue={formik.setFieldValue}
-                                    optionsQuery={CONSTITUENCY_DROPDOWN}
-                                    queryVariable="nameSearch"
-                                    suggestionText="name"
-                                    suggestionID="id"
-                                    dataset="constituencyDropdown"
-                                    church="bacenta"
-                                    returnObject={!newCouncil && true}
-                                    aria-describedby="Bacenta Name"
+                                    aria-describedby="Constituency Name"
                                     error={
                                       formik.errors.constituencies &&
                                       formik.errors.constituencies[index]

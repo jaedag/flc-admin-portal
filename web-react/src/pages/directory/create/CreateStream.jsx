@@ -5,7 +5,7 @@ import { throwErrorMsg } from '../../../global-utils'
 import { CREATE_STREAM_MUTATION } from './CreateMutations'
 import { ChurchContext } from '../../../contexts/ChurchContext'
 import { NEW_STREAM_LEADER } from './MakeLeaderMutations'
-import StreamForm from 'components/reusable-forms/StreamForm'
+import StreamForm from 'pages/directory/reusable-forms/StreamForm'
 
 const CreateStream = () => {
   const { clickCard, gatheringServiceId, setGatheringServiceId, setStreamId } =

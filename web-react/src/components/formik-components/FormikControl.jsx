@@ -11,6 +11,7 @@ import CheckboxWithQuery from './CheckboxWithQuery'
 import SearchMember from './SearchMember'
 import SearchFellowship from './SearchFellowship'
 import SearchBacenta from './SearchBacenta'
+import SearchConstituency from './SearchConstituency'
 
 function FormikControl(props) {
   const { control, ...rest } = props
@@ -26,6 +27,8 @@ function FormikControl(props) {
       return <SearchFellowship {...rest} />
     case 'bacentaSearch':
       return <SearchBacenta {...rest} />
+    case 'constituencySearch':
+      return <SearchConstituency {...rest} />
     case 'textarea':
       return <Textarea {...rest} />
     case 'select':

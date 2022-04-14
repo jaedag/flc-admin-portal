@@ -14,10 +14,10 @@ import { ChurchContext } from '../../../contexts/ChurchContext'
 import { DISPLAY_COUNCIL } from '../display/ReadQueries'
 import { LOG_COUNCIL_HISTORY, LOG_CONSTITUENCY_HISTORY } from './LogMutations'
 import { MAKE_COUNCIL_LEADER } from './ChangeLeaderMutations'
-import CouncilForm from 'components/reusable-forms/CouncilForm'
+import CouncilForm from 'pages/directory/reusable-forms/CouncilForm'
 
 const UpdateCouncil = () => {
-  const { councilId, setStreamId } = useContext(ChurchContext)
+  const { councilId, clickCard } = useContext(ChurchContext)
   const { data, loading } = useQuery(DISPLAY_COUNCIL, {
     variables: { id: councilId },
   })
@@ -137,7 +137,7 @@ const UpdateCouncil = () => {
   //onSubmit receives the form state as argument
   const onSubmit = (values, onSubmitProps) => {
     onSubmitProps.setSubmitting(true)
-    setStreamId(values.stream)
+    clickCard({ id: values.stream, __typename: 'Stream' })
 
     UpdateCouncil({
       variables: {

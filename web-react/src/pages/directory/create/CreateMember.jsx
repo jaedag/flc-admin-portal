@@ -7,8 +7,8 @@ import {
   CREATE_MEMBER_MUTATION,
 } from './CreateMutations'
 import { ChurchContext } from '../../../contexts/ChurchContext'
-import MemberForm from '../../../components/reusable-forms/MemberForm'
-import { filterPastoralTitles } from 'components/reusable-forms/form-utils'
+import MemberForm from '../reusable-forms/MemberForm'
+import { filterPastoralTitles } from 'pages/directory/reusable-forms/form-utils'
 
 const CreateMember = () => {
   const initialValues = {

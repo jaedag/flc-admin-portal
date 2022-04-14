@@ -7,7 +7,7 @@ import { ChurchContext } from '../../../contexts/ChurchContext'
 import { DISPLAY_SONTA } from '../display/ReadQueries'
 import { LOG_SONTA_HISTORY } from './LogMutations'
 import { MAKE_SONTA_LEADER } from './ChangeLeaderMutations'
-import SontaForm from 'components/reusable-forms/SontaForm'
+import SontaForm from 'pages/directory/reusable-forms/SontaForm'
 import { throwErrorMsg } from 'global-utils'
 
 const UpdateSonta = () => {

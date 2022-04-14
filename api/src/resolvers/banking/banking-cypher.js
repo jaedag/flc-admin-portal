@@ -18,7 +18,7 @@ RETURN record, church.name AS churchName, date.date AS date
 
 export const checkTransactionId = `
 MATCH (record:ServiceRecord {id: $serviceRecordId})
-MATCH (record)-[r:OFFERING_BANKED_BY]->(banker)
+OPTIONAL MATCH (record)-[r:OFFERING_BANKED_BY]->(banker)
 RETURN record, banker 
 `
 

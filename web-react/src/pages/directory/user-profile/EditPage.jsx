@@ -10,7 +10,7 @@ import {
 } from '../display/ReadQueries'
 
 import { MemberContext } from '../../../contexts/MemberContext'
-import MemberForm from '../../../components/reusable-forms/MemberForm'
+import MemberForm from '../reusable-forms/MemberForm'
 import BaseComponent from 'components/base-component/BaseComponent'
 
 const UserProfileEditPage = () => {

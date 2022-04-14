@@ -2,9 +2,9 @@ import { useMutation, useQuery } from '@apollo/client'
 import BaseComponent from 'components/base-component/BaseComponent'
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import Popup from 'components/Popup/Popup'
-import { ChurchContext } from 'contexts/ChurchContext'
 import { ServiceContext } from 'contexts/ServiceContext'
 import { alertMsg, throwErrorMsg } from 'global-utils'
+import usePopup from 'hooks/usePopup'
 import React, { useContext, useEffect, useState } from 'react'
 import { Button, Col, Container, Row, Spinner } from 'react-bootstrap'
 import { useNavigate } from 'react-router'
@@ -16,7 +16,7 @@ import './ConfirmPayment.css'
 import ManualApprovalSteps from './ManualApprovalSteps'
 
 const ConfirmPayment = () => {
-  const { togglePopup, isOpen } = useContext(ChurchContext)
+  const { togglePopup, isOpen } = usePopup()
   const { serviceRecordId } = useContext(ServiceContext)
   const { data, loading, error } = useQuery(DISPLAY_OFFERING_DETAILS, {
     variables: { serviceRecordId: serviceRecordId },

@@ -15,12 +15,20 @@ extend type Member {
       RETURN DISTINCT fellowship LIMIT $limit
       """
     )
-  bacentaSearch(key: String!, limit: Int! = 5): [Fellowship!]!
+  bacentaSearch(key: String!, limit: Int! = 5): [Bacenta!]!
     @cypher(
       statement: """
       MATCH (this)-[:LEADS|HAS|DOES_ARRIVALS_FOR|IS_ADMIN_FOR*1..5]->(bacenta:Bacenta)
       WHERE toLower(bacenta.name) CONTAINS toLower($key)
       RETURN DISTINCT bacenta LIMIT $limit
+      """
+    )
+  constituencySearch(key: String!, limit: Int! = 5): [Constituency!]!
+    @cypher(
+      statement: """
+      MATCH (this)-[:LEADS|HAS|DOES_ARRIVALS_FOR|IS_ADMIN_FOR*1..4]->(constituency:Constituency)
+      WHERE toLower(constituency.name) CONTAINS toLower($key)
+      RETURN DISTINCT constituency LIMIT $limit
       """
     )
 }
@@ -42,7 +50,7 @@ extend type GatheringService {
       RETURN DISTINCT fellowship LIMIT $limit
       """
     )
-  bacentaSearch(key: String!, limit: Int!): [Fellowship!]!
+  bacentaSearch(key: String!, limit: Int!): [Bacenta!]!
     @cypher(
       statement: """
       MATCH (this)-[:HAS*4]->(bacenta:Bacenta)
@@ -69,7 +77,7 @@ extend type Stream {
       RETURN DISTINCT fellowship LIMIT $limit
       """
     )
-  bacentaSearch(key: String!, limit: Int!): [Fellowship!]!
+  bacentaSearch(key: String!, limit: Int!): [Bacenta!]!
     @cypher(
       statement: """
       MATCH (this)-[:HAS*3]->(bacenta:Bacenta)
@@ -96,7 +104,7 @@ extend type Council {
       RETURN DISTINCT fellowship LIMIT $limit
       """
     )
-  bacentaSearch(key: String!, limit: Int!): [Fellowship!]!
+  bacentaSearch(key: String!, limit: Int!): [Bacenta!]!
     @cypher(
       statement: """
       MATCH (this)-[:HAS*2]->(bacenta:Bacenta)
@@ -123,7 +131,7 @@ extend type Constituency {
       RETURN DISTINCT fellowship LIMIT $limit
       """
     )
-  bacentaSearch(key: String!, limit: Int!): [Fellowship!]!
+  bacentaSearch(key: String!, limit: Int!): [Bacenta!]!
     @cypher(
       statement: """
       MATCH (this)-[:HAS]->(bacenta:Bacenta)

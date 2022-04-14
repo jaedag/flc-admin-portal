@@ -56,7 +56,7 @@ export const bankingMutation = {
       },
     }
     axios(payOffering).catch((e) => throwErrorMsg(e))
-
+    await session.run(cypher.setTransactionStatus, args)
     return
   },
   ConfirmOfferingPayment: async (object, args, context) => {
@@ -68,8 +68,8 @@ export const bankingMutation = {
       await session.run(cypher.checkTransactionId, args)
     )
 
-    const record = transactionResponse?.record.properties
-    const banker = transactionResponse?.banker.properties
+    const record = transactionResponse?.record?.properties
+    const banker = transactionResponse?.banker?.properties
     if (!record?.transactionId) {
       throwErrorMsg(
         'It looks like there was a problem. Please try sending again!'

@@ -4,7 +4,7 @@ import { useMutation } from '@apollo/client'
 import { CREATE_BACENTA_MUTATION } from './CreateMutations'
 import { ChurchContext } from '../../../contexts/ChurchContext'
 import { NEW_BACENTA_LEADER } from './MakeLeaderMutations'
-import BacentaForm from '../../../components/reusable-forms/BacentaForm'
+import BacentaForm from '../reusable-forms/BacentaForm'
 import { throwErrorMsg } from 'global-utils'
 
 const CreateBacenta = () => {

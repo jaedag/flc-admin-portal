@@ -14,7 +14,7 @@ import { ChurchContext } from '../../../contexts/ChurchContext'
 import { DISPLAY_STREAM } from '../display/ReadQueries'
 import { LOG_STREAM_HISTORY, LOG_COUNCIL_HISTORY } from './LogMutations'
 import { MAKE_STREAM_LEADER } from './ChangeLeaderMutations'
-import StreamForm from 'components/reusable-forms/StreamForm'
+import StreamForm from 'pages/directory/reusable-forms/StreamForm'
 
 const UpdateStream = () => {
   const { streamId, setGatheringServiceId } = useContext(ChurchContext)

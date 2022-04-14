@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import { MemberContext } from '../../../contexts/MemberContext'
-import MemberDisplay from 'components/reusable-forms/MemberDisplay'
+import MemberDisplay from 'pages/directory/reusable-forms/MemberDisplay'
 
 const DetailsMember = () => {
   const { memberId } = useContext(MemberContext)

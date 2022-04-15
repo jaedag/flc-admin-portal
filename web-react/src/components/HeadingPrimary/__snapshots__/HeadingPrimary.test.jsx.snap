@@ -2,8 +2,12 @@
 
 exports[`renders 1`] = `
 <DocumentFragment>
-  <h3>
-    Heading
+  <h3
+    class="placeholder-wave"
+  >
+    <span
+      class="h-100 col-8 placeholder placeholder-lg bg-dark"
+    />
   </h3>
 </DocumentFragment>
 `;

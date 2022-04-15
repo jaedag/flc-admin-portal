@@ -6,7 +6,6 @@ import {
   responsive,
   placeholder,
 } from '@cloudinary/react'
-
 import { thumbnail, fill, scale } from '@cloudinary/url-gen/actions/resize'
 import { focusOn } from '@cloudinary/url-gen/qualifiers/gravity'
 import { FocusOn } from '@cloudinary/url-gen/qualifiers/focusOn'

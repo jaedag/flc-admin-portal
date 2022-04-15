@@ -2,9 +2,10 @@ import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import HeadingSecondary from 'components/HeadingSecondary'
 import PlaceholderCustom from 'components/Placeholder'
 import SpinnerPage from 'components/SpinnerPage'
+import TableFromArrays from 'components/TableFromArrays/TableFromArrays'
 import { MemberContext } from 'contexts/MemberContext'
 import React, { useContext, useEffect } from 'react'
-import { Col, Container, Row, Table, Button } from 'react-bootstrap'
+import { Col, Container, Row, Button } from 'react-bootstrap'
 import { useNavigate } from 'react-router'
 import './ServiceDetails.css'
 
@@ -20,6 +21,17 @@ const ServiceDetails = ({ service, church, loading }) => {
   if (loading) {
     return <SpinnerPage />
   }
+
+  const table = [
+    ['Date of Service', new Date(service.serviceDate.date).toDateString()],
+    ['Attendance', service.attendance],
+    ['Income', service.income],
+    ...service.treasurers.map((treasurer, i) => [
+      `Treasurer ${i + 1}`,
+      treasurer.fullName,
+    ]),
+  ]
+
   return (
     <Container>
       <PlaceholderCustom as="h3" loading={loading}>
@@ -39,51 +51,7 @@ const ServiceDetails = ({ service, church, loading }) => {
         <Col>
           {service?.attendance && (
             <Row className="d-flex justify-content-center">
-              <Table variant={theme} striped bordered>
-                <tbody>
-                  <tr>
-                    <td>Date of Service</td>
-                    <PlaceholderCustom
-                      as="td"
-                      xs={12}
-                      loading={loading}
-                      className="td-placeholder"
-                    >
-                      <td>
-                        {new Date(service.serviceDate.date).toDateString()}
-                      </td>
-                    </PlaceholderCustom>
-                  </tr>
-                  <tr>
-                    <td>Attendance</td>
-                    <td>
-                      <PlaceholderCustom loading={loading}>
-                        {service.attendance}
-                      </PlaceholderCustom>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Income</td>
-                    <td>
-                      <PlaceholderCustom loading={loading}>
-                        {service.income}
-                      </PlaceholderCustom>
-                    </td>
-                  </tr>
-                  {service.treasurers.map((treasurer, i) => {
-                    return (
-                      <tr key={i}>
-                        <td>{`Treasurer ${i + 1}`}</td>
-                        <td>
-                          <PlaceholderCustom loading={loading}>
-                            {treasurer.fullName}
-                          </PlaceholderCustom>
-                        </td>
-                      </tr>
-                    )
-                  })}
-                </tbody>
-              </Table>
+              <TableFromArrays tableArray={table} loading={loading} />
               <div className="text-center">
                 <h6>Treasurer Selfie</h6>
                 <div>

@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client'
 import BaseComponent from 'components/base-component/BaseComponent'
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
-import TableFromArrays from 'components/TableFromArrays'
+import TableFromArrays from 'components/TableFromArrays/TableFromArrays'
 import { ServiceContext } from 'contexts/ServiceContext'
 import { parseNeoTime } from 'date-utils'
 import { parseDate } from 'date-utils'

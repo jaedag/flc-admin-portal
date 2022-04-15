@@ -1,3 +1,15 @@
+#### 2.0.2 (2022-04-15)
+
+##### Bug Fixes
+
+*  admin-96 fixed bug where after filling service form a person gets returned to the form page ([196fc563](https://github.com/firstlovecenter/fl-admin-portal/commit/196fc563d61fc46ede52c2dab0ea58072a2350fa))
+*  admin-95 updated fellowship variables to match with the refactored fellowship search query ([8d17433a](https://github.com/firstlovecenter/fl-admin-portal/commit/8d17433ad3eb6ff11da6528acc2c3c1b1d548a6d))
+*  third iteration of the banking defaulters cypher script ([bcf4402e](https://github.com/firstlovecenter/fl-admin-portal/commit/bcf4402ec44252d2cccbc8788a51d403f963f2bd))
+
+##### Tests
+
+*  wrote a successful test using the MockedProvider from Apollo Client ([697f190a](https://github.com/firstlovecenter/fl-admin-portal/commit/697f190a2f70f43b53507c966eeb55ddbc0e8ebd))
+
 #### 2.0.1 (2022-04-14)
 
 ##### Bug Fixes

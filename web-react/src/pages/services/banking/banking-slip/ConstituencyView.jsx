@@ -2,7 +2,6 @@ import { useQuery } from '@apollo/client'
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import PlaceholderCustom from 'components/Placeholder'
 import { ChurchContext } from 'contexts/ChurchContext'
-import { ServiceContext } from 'contexts/ServiceContext'
 import { throwErrorMsg } from 'global-utils'
 import { parseDate } from 'date-utils'
 import React, { useContext } from 'react'
@@ -12,8 +11,7 @@ import { useNavigate } from 'react-router'
 import { CONSTITUENCY_BANKING_SLIP_QUERIES } from '../../ServicesQueries'
 
 const ConstituencyBankingSlipView = () => {
-  const { constituencyId } = useContext(ChurchContext)
-  const { setServiceRecordId } = useContext(ServiceContext)
+  const { constituencyId, clickCard } = useContext(ChurchContext)
   const navigate = useNavigate()
   const { data, loading, error } = useQuery(CONSTITUENCY_BANKING_SLIP_QUERIES, {
     variables: { constituencyId: constituencyId },
@@ -36,7 +34,7 @@ const ConstituencyBankingSlipView = () => {
             key={index}
             className="mb-2"
             onClick={() => {
-              setServiceRecordId(service.id)
+              clickCard(service)
               !service.bankingProof &&
                 navigate('/constituency/banking-slip/submission')
             }}

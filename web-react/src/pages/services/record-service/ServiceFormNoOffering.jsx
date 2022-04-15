@@ -3,7 +3,7 @@ import { Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import React, { useContext } from 'react'
 import { useNavigate } from 'react-router'
-import { ServiceContext } from 'contexts/ServiceContext'
+import { ChurchContext } from 'contexts/ChurchContext'
 
 const ServiceFormNoOffering = ({
   church,
@@ -11,7 +11,7 @@ const ServiceFormNoOffering = ({
   churchType,
   RecordServiceMutation,
 }) => {
-  const { setServiceRecordId } = useContext(ServiceContext)
+  const { clickCard } = useContext(ChurchContext)
   const navigate = useNavigate()
 
   const initialValues = {
@@ -46,7 +46,7 @@ const ServiceFormNoOffering = ({
     }).then((res) => {
       onSubmitProps.setSubmitting(false)
       onSubmitProps.resetForm()
-      setServiceRecordId(res.data.RecordServiceNoOffering.id)
+      clickCard(res.data.RecordServiceNoOffering)
       navigate(`/${churchType}/service-details`)
     })
   }

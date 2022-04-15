@@ -5,12 +5,12 @@ import { FieldArray, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import React, { useContext } from 'react'
 import { useNavigate } from 'react-router'
-import { ServiceContext } from 'contexts/ServiceContext'
 import { Col, Container, Row } from 'react-bootstrap'
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import SubmitButton from 'components/formik-components/SubmitButton'
 import { throwErrorMsg } from 'global-utils'
 import { getMondayThisWeek } from 'date-utils'
+import { ChurchContext } from 'contexts/ChurchContext'
 
 const ServiceForm = ({
   church,
@@ -18,7 +18,7 @@ const ServiceForm = ({
   churchType,
   RecordServiceMutation,
 }) => {
-  const { setServiceRecordId } = useContext(ServiceContext)
+  const { clickCard } = useContext(ChurchContext)
   const navigate = useNavigate()
 
   const initialValues = {
@@ -87,7 +87,7 @@ const ServiceForm = ({
         .then((res) => {
           onSubmitProps.setSubmitting(false)
           onSubmitProps.resetForm()
-          setServiceRecordId(res.data.RecordService.id)
+          clickCard(res.data.RecordService)
           navigate(`/${churchType}/service-details`)
         })
         .catch((error) => throwErrorMsg('', error))

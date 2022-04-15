@@ -3,17 +3,18 @@ import { Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import React, { useContext } from 'react'
 import { useNavigate } from 'react-router'
-import { ServiceContext } from 'contexts/ServiceContext'
 import { RECORD_CANCELLED_SERVICE } from './RecordServiceMutations'
 import { useMutation } from '@apollo/client'
 import { Button, Col, Container, Row } from 'react-bootstrap'
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import HeadingSecondary from 'components/HeadingSecondary'
 import { MemberContext } from 'contexts/MemberContext'
+import { ChurchContext } from 'contexts/ChurchContext'
+import { throwErrorMsg } from 'global-utils'
 
 const CancelledServiceForm = ({ church, churchId, churchType }) => {
   const { theme } = useContext(MemberContext)
-  const { setServiceRecordId } = useContext(ServiceContext)
+  const { clickCard } = useContext(ChurchContext)
   const navigate = useNavigate()
 
   const [RecordCancelledService] = useMutation(RECORD_CANCELLED_SERVICE)
@@ -38,12 +39,14 @@ const CancelledServiceForm = ({ church, churchId, churchType }) => {
         serviceDate: values.serviceDate,
         noServiceReason: values.noServiceReason,
       },
-    }).then((res) => {
-      onSubmitProps.setSubmitting(false)
-      onSubmitProps.resetForm()
-      setServiceRecordId(res.data.RecordCancelledService.id)
-      navigate(`/${churchType}/service-details`)
     })
+      .then((res) => {
+        onSubmitProps.setSubmitting(false)
+        onSubmitProps.resetForm()
+        clickCard(res.data.RecordCancelledService)
+        navigate(`/${churchType}/service-details`)
+      })
+      .catch((error) => throwErrorMsg(error))
   }
 
   return (

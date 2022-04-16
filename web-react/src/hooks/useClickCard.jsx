@@ -290,6 +290,10 @@ const useClickCard = () => {
         setServiceRecordId(card.id)
         sessionStorage.setItem('serviceRecordId', card.id)
         break
+      case 'NoService':
+        setServiceRecordId(card.id)
+        sessionStorage.setItem('serviceRecordId', card.id)
+        break
       case 'BussingRecord':
         setBussingRecordId(card.id)
         sessionStorage.setItem('bussingRecordId', card.id)

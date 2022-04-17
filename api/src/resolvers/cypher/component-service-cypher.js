@@ -7,7 +7,7 @@ export const componentServiceAggregates = `
 
   MATCH (componentRecords)-[:SERVICE_HELD_ON]->(date:TimeGraph)
   WHERE date.date > date() - duration({months: 2})
-  WITH DISTINCT componentServices,componentRecords, date(date.date).week AS week ORDER BY week
+  WITH  DISTINCT componentRecords, date(date.date).week AS week ORDER BY week
 
 RETURN week AS week,SUM(componentRecords.attendance) AS attendance, SUM(componentRecords.income) AS income ORDER BY week DESC LIMIT toInteger($limit)
 `
@@ -20,7 +20,7 @@ export const componentBacentaServiceAggregates = `
 
   MATCH (componentRecords)-[:SERVICE_HELD_ON]->(date:TimeGraph)
   WHERE date.date > date() - duration({months: 2})
-  WITH DISTINCT componentServices,componentRecords, date(date.date).week AS week ORDER BY week
+  WITH DISTINCT componentRecords, date(date.date).week AS week ORDER BY week
 
 RETURN week AS week,SUM(componentRecords.attendance) AS attendance, SUM(componentRecords.income) AS income ORDER BY week DESC LIMIT toInteger($limit)
 `
@@ -33,9 +33,9 @@ export const componentConstituencyServiceAggregates = `
 
   MATCH (componentRecords)-[:SERVICE_HELD_ON]->(date:TimeGraph)
   WHERE date.date > date() - duration({months: 2})
-  WITH DISTINCT componentServices,componentRecords, date(date.date).week AS week ORDER BY week
+  WITH DISTINCT componentRecords, date(date.date).week AS week ORDER BY week
 
-RETURN week AS week,SUM(componentRecords.attendance) AS attendance, SUM(componentRecords.income) AS income ORDER BY week DESC LIMIT toInteger($limit)
+RETURN week AS week, SUM(componentRecords.attendance) AS attendance, SUM(componentRecords.income) AS income ORDER BY week DESC LIMIT toInteger($limit)
 `
 
 export const componentCouncilServiceAggregates = `
@@ -46,7 +46,7 @@ export const componentCouncilServiceAggregates = `
 
   MATCH (componentRecords)-[:SERVICE_HELD_ON]->(date:TimeGraph)
   WHERE date.date > date() - duration({months: 2})
-  WITH DISTINCT componentServices,componentRecords, date(date.date).week AS week ORDER BY week
+  WITH DISTINCT componentRecords, date(date.date).week AS week ORDER BY week
 
 RETURN week AS week,SUM(componentRecords.attendance) AS attendance, SUM(componentRecords.income) AS income ORDER BY week DESC LIMIT toInteger($limit)
 `
@@ -59,7 +59,7 @@ export const componentStreamServiceAggregates = `
 
   MATCH (componentRecords)-[:SERVICE_HELD_ON]->(date:TimeGraph)
   WHERE date.date > date() - duration({months: 2})
-  WITH DISTINCT componentServices,componentRecords, date(date.date).week AS week ORDER BY week
+  WITH DISTINCT componentRecords, date(date.date).week AS week ORDER BY week
 
 RETURN week AS week,SUM(componentRecords.attendance) AS attendance, SUM(componentRecords.income) AS income ORDER BY week DESC LIMIT toInteger($limit)
 `
@@ -72,7 +72,7 @@ export const componentGatheringServiceServiceAggregates = `
 
   MATCH (componentRecords)-[:SERVICE_HELD_ON]->(date:TimeGraph)
   WHERE date.date > date() - duration({months: 2})
-  WITH DISTINCT componentServices,componentRecords, date(date.date).week AS week ORDER BY week
+  WITH DISTINCT componentRecords, date(date.date).week AS week ORDER BY week
 
-RETURN week AS week,SUM(componentRecords.attendance) AS attendance, SUM(componentRecords.income) AS income ORDER BY week DESC LIMIT toInteger($limit)
+RETURN week AS week, SUM(componentRecords.attendance) AS attendance, SUM(componentRecords.income) AS income ORDER BY week DESC LIMIT toInteger($limit)
 `

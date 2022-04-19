@@ -23,35 +23,37 @@ const CreateCouncil = () => {
   const [CreateCouncil] = useMutation(CREATE_COUNCIL_MUTATION)
 
   //onSubmit receives the form state as argument
-  const onSubmit = (values, onSubmitProps) => {
+  const onSubmit = async (values, onSubmitProps) => {
     onSubmitProps.setSubmitting(true)
     clickCard({ id: values.stream, __typename: 'Stream' })
+    try {
+      const res = await CreateCouncil({
+        variables: {
+          name: values.name,
+          leaderId: values.leaderId,
+          streamId: values.stream,
+          constituencies: values.constituencies,
+        },
+      })
+      clickCard(res.data.CreateCouncil)
 
-    CreateCouncil({
-      variables: {
-        name: values.name,
-        leaderId: values.leaderId,
-        streamId: values.stream,
-        constituencies: values.constituencies,
-      },
-    })
-      .then((res) => {
-        clickCard(res.data.CreateCouncil)
-        NewCouncilLeader({
+      try {
+        await NewCouncilLeader({
           variables: {
             leaderId: values.leaderId,
             councilId: res.data.CreateCouncil.id,
           },
-        }).catch((error) => {
-          throwErrorMsg('There was an error adding leader', error)
         })
-        onSubmitProps.setSubmitting(false)
-        onSubmitProps.resetForm()
-        navigate(`/council/displaydetails`)
-      })
-      .catch((error) => {
-        throwErrorMsg('There was an error creating council', error)
-      })
+      } catch (error) {
+        throwErrorMsg('There was an error adding leader', error)
+      }
+    } catch (error) {
+      throwErrorMsg('There was an error creating council', error)
+    }
+
+    onSubmitProps.setSubmitting(false)
+    onSubmitProps.resetForm()
+    navigate(`/council/displaydetails`)
   }
 
   return (

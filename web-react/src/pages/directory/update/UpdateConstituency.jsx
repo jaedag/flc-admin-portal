@@ -26,12 +26,11 @@ const UpdateConstituency = () => {
 
   const navigate = useNavigate()
   const constituency = data?.constituencies[0]
-
   const initialValues = {
     name: constituency?.name,
     leaderName: constituency?.leader?.fullName ?? '',
     leaderId: constituency?.leader?.id || '',
-    council: constituency?.council?.id ?? '',
+    council: constituency?.council.id ?? '',
     bacentas: constituency?.bacentas?.length ? constituency.bacentas : [''],
   }
 
@@ -137,15 +136,7 @@ const UpdateConstituency = () => {
       } else {
         //If there is an old Council
 
-        //Break Link to the Old Council
-        RemoveConstituencyCouncil({
-          variables: {
-            councilId: initialValues.council,
-            constituencyId: constituencyId,
-          },
-        })
-
-        let recordIfOldCouncil = `${initialValues.name} Constituency has been moved from ${constituency?.council.name} Council to ${data.updateConstituencies.constituencies[0].council.name} Council`
+        let recordIfOldCouncil = `${initialValues.name} Constituency has been moved from ${initialValues?.council.name} Council to ${data.updateConstituencies.constituencies[0].council.name} Council`
 
         //After Adding the constituency to a council, then you log that change.
         LogConstituencyHistory({
@@ -155,7 +146,7 @@ const UpdateConstituency = () => {
             oldLeaderId: '',
             newCouncilId:
               data.updateConstituencies.constituencies[0].council.id,
-            oldCouncilId: constituency?.council.id,
+            oldCouncilId: initialValues?.council,
             historyRecord: recordIfOldCouncil,
           },
         })

@@ -588,6 +588,9 @@ export const ADD_CONSTITUENCY_COUNCIL = gql`
         council {
           id
           name
+          constituencies {
+            id
+          }
         }
       }
     }

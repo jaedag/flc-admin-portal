@@ -1,3 +1,11 @@
+#### 2.0.4 (2022-04-19)
+
+##### Bug Fixes
+
+*  admin-100 fixed bug with changing councils of a constituency ([50368aca](https://github.com/firstlovecenter/fl-admin-portal/commit/50368acaeb19e626dbb764ae8df3c3d780dd396c))
+*  admin-101 replaced setStreamId with generic ClickCard function ([4a161812](https://github.com/firstlovecenter/fl-admin-portal/commit/4a1618129800236db4439d182d18203b3bde647d))
+*  admin-99 adjusted cypher query for catching banking defaulters by introducing parentheses ([69a57e84](https://github.com/firstlovecenter/fl-admin-portal/commit/69a57e84cc23d9be10df04944b4e7459cc92bf1c))
+
 #### 2.0.3 (2022-04-19)
 
 ##### Bug Fixes

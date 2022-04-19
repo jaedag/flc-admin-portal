@@ -1,6 +1,6 @@
 {
   "name": "grand-stack-starter-api",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "API app for GRANDstack",
   "main": "src/index.js",
   "scripts": {

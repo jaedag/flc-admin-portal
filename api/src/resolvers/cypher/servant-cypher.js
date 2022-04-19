@@ -150,7 +150,7 @@ CREATE (log:HistoryLog)
 
 //Connect log to leader, new church, and old leader
 export const connectServiceLog = `
-MATCH (church {id:$churchId}) WHERE church:Fellowship OR church:Bacenta OR church:Constituency OR church:Council OR church:Stream OR church:GatheringService OR church:Sonta OR church:Ministry OR church:Member 
+MATCH (church {id: $churchId}) WHERE church:Fellowship OR church:Bacenta OR church:Constituency OR church:Council OR church:Stream OR church:GatheringService OR church:Sonta OR church:Ministry OR church:Member 
 OR church:ClosedFellowship OR church:ClosedBacenta
 
 MATCH (leader:Member {id: $servantId})
@@ -198,8 +198,8 @@ export const connectChurchHistory = `
       MATCH (downRelatedChurch)-[r1:HAS_HISTORY]->(downHistory:ServiceLog) WHERE r1.current=true
       MATCH (upRelatedChurch)-[r2:HAS_HISTORY]->(upHistory:ServiceLog) WHERE r2.current=true
 
-      MERGE (upHistory)-[:HAS {direct: false}]->(churchHistory)
-      MERGE (churchHistory)-[:HAS {direct: false}]->(downHistory)
+      MERGE (upHistory)-[:HAS_COMPONENT]->(churchHistory)
+      MERGE (churchHistory)-[:HAS_COMPONENT]->(downHistory)
 
       RETURN churchHistory
 `
@@ -210,7 +210,7 @@ export const connectFellowshipHistory = `
       MATCH (upRelatedChurch)-[:HAS]->(church)
       MATCH (upRelatedChurch)-[r2:HAS_HISTORY]->(upHistory:ServiceLog) WHERE r2.current=true
 
-      MERGE (upHistory)-[:HAS {direct: false}]->(churchHistory)
+      MERGE (upHistory)-[:HAS_COMPONENT]->(churchHistory)
 
       RETURN churchHistory 
 `
@@ -221,7 +221,7 @@ MATCH (church)-[r:HAS_HISTORY]-(churchHistory:ServiceLog) WHERE r.current=true
 MATCH (downRelatedChurch)-[:HAS]->(church)
 MATCH (downRelatedChurch)-[r2:HAS_HISTORY]->(downHistory:ServiceLog) WHERE r2.current=true
 
-MERGE (churchHistory)-[:HAS {direct: false}]->(downHistory)
+MERGE (churchHistory)-[:HAS_COMPONENT]->(downHistory)
 
 RETURN churchHistory
 `

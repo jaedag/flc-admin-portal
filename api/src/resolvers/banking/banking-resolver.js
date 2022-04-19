@@ -105,7 +105,7 @@ export const bankingMutation = {
       }
     }
 
-    if (confirmationResponse.data.code.toString() !== '000') {
+    if (!['000', '111'].includes(confirmationResponse.data.code.toString())) {
       try {
         await session.run(cypher.removeBankingRecordTransactionId, args)
       } catch (error) {

@@ -45,4 +45,28 @@ RETURN log, otherLog;
 
 MATCH (log:ServiceLog)-[has:HAS]->(otherLog:ServiceLog) 
 MERGE (log)-[hasComponent:HAS_COMPONENT]->(otherLog)
+DELETE has
 RETURN log, otherLog;
+
+
+// Create a new History for the lower church
+MATCH (mainChurch) 
+WHERE mainChurch:Bacenta OR mainChurch:Constituency OR mainChurch:Council OR mainChurch:Stream OR mainChurch:GatheringService
+
+MATCH p=(church)-[:HAS*1..5]->(lowerChurch)
+WHERE lowerChurch:Fellowship OR lowerChurch:Bacenta OR lowerChurch:Constituency OR lowerChurch:Council OR lowerChurch:Stream
+
+MATCH (lowerChurch)<-[:LEADS]-(lowerChurchLeader)
+MATCH (lowerChurch)-[lowerHistory:HAS_HISTORY {current:true}]->(lowerLog:ServiceLog)
+MATCH (mainChurch)-[:HAS_HISTORY {current:true}]->(mainLog:ServiceLog)
+REMOVE lowerHistory.current
+
+CREATE (newLowerLog:ServiceLog)
+SET newLowerLog.id = apoc.create.uuid(),
+newLowerLog.timestamp= datetime(),
+newLowerLog.timeStamp= lowerLog.historyRecord
+
+MERGE (lowerChurch)-[:HAS_HISTORY {current:true}]->(newLowerLog)
+MERGE (mainLog)-[:HAS_COMPONENT]->(newLowerLog)
+
+RETURN mainChurch;

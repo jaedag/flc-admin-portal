@@ -12,6 +12,16 @@ extend type Mutation {
 }
 
 extend type ServiceRecord {
+  # Self Banking Properties
+  offeringBankedBy: Member
+    @relationship(type: "OFFERING_BANKED_BY", direction: OUT)
+  sourceNumber: String
+  sourceNetwork: String
+  desc: String
+  transactionTime: DateTime
+}
+
+extend type ServiceRecord {
   transactionTime: DateTime
   transactionStatus: String
   bankingProof: Boolean

@@ -60,8 +60,8 @@ extend type Mutation {
       MATCH (downRelatedChurch)-[r1:HAS_HISTORY]->(downHistory:ServiceLog) WHERE r1.current=true
       MATCH (upRelatedChurch)-[r2:HAS_HISTORY]->(upHistory:ServiceLog) WHERE r2.current=true
 
-      MERGE (upHistory)-[:HAS {direct: true}]->(churchHistory)
-      MERGE (churchHistory)-[:HAS {direct: true}]->(downHistory)
+      MERGE (upHistory)-[:HAS_COMPONENT {direct: true}]->(churchHistory)
+      MERGE (churchHistory)-[:HAS_COMPONENT {direct: true}]->(downHistory)
 
       RETURN churchHistory
       """
@@ -75,7 +75,7 @@ extend type Mutation {
       MATCH (upRelatedChurch)-[:HAS]->(church)
       MATCH (upRelatedChurch)-[r2:HAS_HISTORY]->(upHistory:ServiceLog) WHERE r2.current=true
 
-      MERGE (upHistory)-[:HAS {direct: false}]->(churchHistory)
+      MERGE (upHistory)-[:HAS_COMPONENT {direct: true}]->(churchHistory)
 
       RETURN churchHistory
       """
@@ -88,7 +88,7 @@ extend type Mutation {
       MATCH (downRelatedChurch)-[:HAS]->(church)
       MATCH (downRelatedChurch)-[r2:HAS_HISTORY]->(downHistory:ServiceLog) WHERE r2.current=true
 
-      MERGE (churchHistory)-[:HAS]->(downHistory)
+      MERGE (churchHistory)-[:HAS_COMPONENT]->(downHistory)
 
       RETURN churchHistory
       """
@@ -398,7 +398,6 @@ extend type Mutation {
   #     RETURN stream
   #     """
   #   )
-
   LogSontaHistory(
     sontaId: ID!
     historyRecord: String!
@@ -439,4 +438,6 @@ extend type Mutation {
        RETURN sonta
       """
     )
+
+  # New Church With History
 }

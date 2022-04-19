@@ -1,3 +1,12 @@
+#### 2.0.3 (2022-04-19)
+
+##### Bug Fixes
+
+*  admin-99 some slight improvements in the self-banking feature ux ([7fe91fdb](https://github.com/firstlovecenter/fl-admin-portal/commit/7fe91fdb52fb699a7373e3fd6d96bd68dbb7d4fa))
+*  admin-99 defaulters screens should only show banking data for the week we are in ([1c6e29c5](https://github.com/firstlovecenter/fl-admin-portal/commit/1c6e29c52d247542c14b2786fe4879a36f31868d))
+*  admin-55 rewrote cypher for service aggregates to eliminate duplicates ([f9c63394](https://github.com/firstlovecenter/fl-admin-portal/commit/f9c63394f93dade69c5ab2732935e5e6b4ab6c07))
+*  admin-96 implmented scenario in clickCard for NoService ([b4ac3f11](https://github.com/firstlovecenter/fl-admin-portal/commit/b4ac3f11a6325a1d1bf070c6584f0476b8abd3ea))
+
 #### 2.0.2 (2022-04-15)
 
 ##### Bug Fixes

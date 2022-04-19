@@ -8,7 +8,7 @@ import { NEW_COUNCIL_LEADER } from './MakeLeaderMutations'
 import CouncilForm from 'pages/directory/reusable-forms/CouncilForm'
 
 const CreateCouncil = () => {
-  const { clickCard, streamId, setStreamId } = useContext(ChurchContext)
+  const { clickCard, streamId } = useContext(ChurchContext)
 
   const navigate = useNavigate()
 
@@ -25,7 +25,7 @@ const CreateCouncil = () => {
   //onSubmit receives the form state as argument
   const onSubmit = (values, onSubmitProps) => {
     onSubmitProps.setSubmitting(true)
-    setStreamId(values.stream)
+    clickCard({ id: values.stream, __typename: 'Stream' })
 
     CreateCouncil({
       variables: {

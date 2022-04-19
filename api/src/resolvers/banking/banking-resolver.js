@@ -20,14 +20,16 @@ export const bankingMutation = {
 
     const { merchantId, auth } = getStreamFinancials(args.stream_name)
 
-    // This code checks if transaction ID already exists.
-    // const transactionResponse = rearrangeCypherObject(
-    //   await session.run(cypher.checkTransactionId, args)
-    // )
+    // This code checks if there has already been a successful transaction
+    const transactionResponse = rearrangeCypherObject(
+      await session.run(cypher.checkTransactionId, args)
+    )
 
-    // if (transactionResponse?.record.transactionId) {
-    //   throwErrorMsg('Banking has already been done for this service')
-    // }
+    if (
+      transactionResponse?.record.properties.transactionStatus === 'success'
+    ) {
+      throwErrorMsg('Banking has already been done for this service')
+    }
     const cypherResponse = rearrangeCypherObject(
       await session.run(cypher.setServiceRecordTransactionId, {
         auth: context.auth,
@@ -59,6 +61,7 @@ export const bankingMutation = {
 
     return
   },
+
   ConfirmOfferingPayment: async (object, args, context) => {
     isAuth(permitLeader('Fellowship'), context.auth.roles)
     const session = context.driver.session()

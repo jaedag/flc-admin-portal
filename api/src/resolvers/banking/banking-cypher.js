@@ -50,7 +50,6 @@ WHERE church:Fellowship OR church:Constituency OR church:Council OR church:Strea
 MATCH (record)-[r:OFFERING_BANKED_BY]->(banker)
 MATCH (record)-[:SERVICE_HELD_ON]->(date:TimeGraph)
 SET record.transactionStatus = "failed"
-REMOVE record.transactionId, record.transactionTime
 DELETE r
 
 RETURN record, church.name AS churchName, date.date AS date

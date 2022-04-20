@@ -97,14 +97,14 @@ const UpdateCouncil = () => {
     onCompleted: (data) => {
       if (!council?.stream.name) {
         //If There is no old Stream
-        let recordIfNoOldStream = `${initialValues.name} Council has been moved to ${data.updateConstituencies.constituencies[0].stream.name} Stream`
+        let recordIfNoOldStream = `${initialValues.name} Council has been moved to ${data.updateCouncils.councils[0].stream.name} Stream`
 
         LogCouncilHistory({
           variables: {
             councilId: councilId,
             newLeaderId: '',
             oldLeaderId: '',
-            newStreamId: data.updateConstituencies.constituencies[0].stream.id,
+            newStreamId: data.updateCouncils.councils[0].stream.id,
             oldStreamId: council?.stream.id,
             historyRecord: recordIfNoOldStream,
           },
@@ -112,15 +112,7 @@ const UpdateCouncil = () => {
       } else {
         //If there is an old Stream
 
-        //Break Link to the Old Stream
-        RemoveCouncilStream({
-          variables: {
-            streamId: initialValues.stream,
-            councilId: councilId,
-          },
-        })
-
-        let recordIfOldStream = `${initialValues.name} Council has been moved from ${council?.stream.name} Stream to ${data.updateConstituencies.constituencies[0].stream.name} Stream`
+        let recordIfOldStream = `${initialValues.name} Council has been moved from ${council?.stream.name} Stream to ${data.updateCouncils.councils[0].stream.name} Stream`
 
         //After Adding the council to a stream, then you log that change.
         LogCouncilHistory({
@@ -128,7 +120,7 @@ const UpdateCouncil = () => {
             councilId: councilId,
             newLeaderId: '',
             oldLeaderId: '',
-            newStreamId: data.updateConstituencies.constituencies[0].stream.id,
+            newStreamId: data.updateCouncils.councils[0].stream.id,
             oldStreamId: council?.stream.id,
             historyRecord: recordIfOldStream,
           },
@@ -215,7 +207,7 @@ const UpdateCouncil = () => {
     )
 
     const removeConstituencies = oldConstituencyList.filter((value) => {
-      return !getChurchIdsFromObject(newConstituencyList).includes(value)
+      return !getChurchIdsFromObject(newConstituencyList).includes(value.id)
     })
 
     const addConstituencies = values.constituencies.filter((value) => {

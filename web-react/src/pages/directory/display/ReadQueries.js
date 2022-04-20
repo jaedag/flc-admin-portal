@@ -434,6 +434,11 @@ export const DISPLAY_COUNCIL = gql`
       activeFellowshipCount
       memberCount
       pastorCount
+
+      stream {
+        id
+        name
+      }
       constituencies(options: { limit: 5 }) {
         id
         name
@@ -450,14 +455,6 @@ export const DISPLAY_COUNCIL = gql`
         lastName
         fellowship {
           id
-          bacenta {
-            id
-
-            constituency {
-              id
-              name
-            }
-          }
         }
       }
       leader {

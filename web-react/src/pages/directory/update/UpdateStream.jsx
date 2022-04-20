@@ -113,14 +113,6 @@ const UpdateStream = () => {
       } else {
         //If there is an old GatheringService
 
-        //Break Link to the Old GatheringService
-        RemoveStreamGatheringService({
-          variables: {
-            gatheringServiceId: initialValues.gatheringService,
-            streamId: streamId,
-          },
-        })
-
         let recordIfOldGatheringService = `${initialValues.name} Stream has been moved from ${stream?.gatheringService.name} GatheringService to ${data.updateStreams.streams[0].gatheringService.name} GatheringService`
 
         //After Adding the stream to a gatheringService, then you log that change.

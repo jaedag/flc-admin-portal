@@ -1,3 +1,13 @@
+#### 2.0.5 (2022-04-20)
+
+##### Bug Fixes
+
+*  admin-98 fixed bug preventing users from switching the upper church for fellowship, bacenta ([c7536fee](https://github.com/firstlovecenter/fl-admin-portal/commit/c7536feef5f4681c945c80ed33e5489d2f4279a3))
+
+##### Other Changes
+
+*   stream ([3a1e23a0](https://github.com/firstlovecenter/fl-admin-portal/commit/3a1e23a057d86c7adeba33ebe0b6dc8315965b2f))
+
 #### 2.0.4 (2022-04-19)
 
 ##### Bug Fixes

@@ -1,3 +1,9 @@
+#### 2.0.6 (2022-04-20)
+
+##### Bug Fixes
+
+*  admin-102 fixed bug where creating a bacenta was returning an error ([576ef7f2](https://github.com/firstlovecenter/fl-admin-portal/commit/576ef7f2e6e66298b322b21dbaa35f4c62542212))
+
 #### 2.0.5 (2022-04-20)
 
 ##### Bug Fixes

@@ -8,7 +8,6 @@ import { bankingMutation } from './banking/banking-resolver'
 const dotenv = require('dotenv')
 const axios = require('axios').default
 const cypher = require('./cypher/resolver-cypher')
-const closeChurchCypher = require('./cypher/close-church-cypher')
 
 const {
   isAuth,
@@ -492,97 +491,6 @@ export const resolvers = {
       }
 
       return updatedMember
-    },
-    CloseDownFellowship: async (object, args, context) => {
-      isAuth(permitAdmin('Constituency'), context.auth.roles)
-
-      const session = context.driver.session()
-
-      try {
-        const fellowshipCheckResponse = await session.run(
-          closeChurchCypher.checkFellowshipHasNoMembers,
-          args
-        )
-        const fellowshipCheck = rearrangeCypherObject(fellowshipCheckResponse)
-
-        if (fellowshipCheck.memberCount) {
-          throwErrorMsg(
-            `${fellowshipCheck?.name} Fellowship has ${fellowshipCheck?.memberCount} members. Please transfer all members and try again.`
-          )
-        }
-
-        //Fellowship Leader must be removed since the fellowship is being closed down
-        await RemoveServant(
-          context,
-          args,
-          [
-            'adminGatheringService',
-            'adminStream',
-            'adminCouncil',
-            'adminConstituency',
-          ],
-          'Fellowship',
-          'Leader'
-        )
-
-        const closeFellowshipResponse = await session.run(
-          closeChurchCypher.closeDownFellowship,
-          {
-            auth: context.auth,
-            fellowshipId: args.fellowshipId,
-          }
-        )
-
-        const fellowshipResponse = rearrangeCypherObject(
-          closeFellowshipResponse
-        ) //Returns a Bacenta
-
-        return fellowshipResponse.bacenta
-      } catch (error) {
-        throwErrorMsg(error)
-      }
-    },
-
-    CloseDownBacenta: async (object, args, context) => {
-      isAuth(permitAdmin('Constituency'), context.auth.roles)
-
-      const session = context.driver.session()
-
-      try {
-        const bacentaCheckResponse = await session.run(
-          closeChurchCypher.checkBacentaHasNoMembers,
-          args
-        )
-        const bacentaCheck = rearrangeCypherObject(bacentaCheckResponse)
-
-        if (bacentaCheck.memberCount) {
-          throwErrorMsg(
-            `${bacentaCheck?.name} Bacenta has ${bacentaCheck?.fellowshipCount} active fellowships. Please close down all fellowships and try again.`
-          )
-        }
-
-        //Bacenta Leader must be removed since the Bacenta is being closed down
-        await RemoveServant(
-          context,
-          args,
-          permitAdmin('Constituency'),
-          'Bacenta',
-          'Leader'
-        )
-
-        const closeBacentaResponse = await session.run(
-          closeChurchCypher.closeDownBacenta,
-          {
-            auth: context.auth,
-            bacentaId: args.bacentaId,
-          }
-        )
-
-        const bacentaResponse = rearrangeCypherObject(closeBacentaResponse)
-        return bacentaResponse.constituency
-      } catch (error) {
-        throwErrorMsg(error)
-      }
     },
 
     //Administrative Mutations

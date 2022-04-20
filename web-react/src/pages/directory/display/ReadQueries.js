@@ -308,6 +308,10 @@ export const DISPLAY_BACENTA = gql`
         id
         name
         stream_name
+        council {
+          id
+          name
+        }
       }
       leader {
         id

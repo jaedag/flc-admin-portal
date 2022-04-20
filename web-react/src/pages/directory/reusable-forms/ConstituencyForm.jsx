@@ -2,7 +2,7 @@ import { useMutation, useQuery } from '@apollo/client'
 import BaseComponent from 'components/base-component/BaseComponent'
 import { FieldArray, Form, Formik } from 'formik'
 import * as Yup from 'yup'
-import { makeSelectOptions } from 'global-utils'
+import { makeSelectOptions, throwErrorMsg } from 'global-utils'
 import { GET_COUNCILS } from 'queries/ListQueries'
 import React, { useContext } from 'react'
 import { ChurchContext } from 'contexts/ChurchContext'
@@ -165,7 +165,7 @@ const ConstituencyForm = ({
 
             {isOpen && (
               <Popup handleClose={togglePopup}>
-                Are you sure you want to close down this fellowship?
+                Are you sure you want to close down this constituency?
                 <Button
                   variant="primary"
                   type="submit"
@@ -174,6 +174,7 @@ const ConstituencyForm = ({
                     CloseDownConstituency({
                       variables: {
                         constituencyId,
+                        leaderId: initialValues.leaderId,
                       },
                     })
                       .then((res) => {
@@ -182,12 +183,7 @@ const ConstituencyForm = ({
                         navigate(`/constituency/displayall`)
                       })
                       .catch((error) => {
-                        // eslint-disable-next-line no-console
-                        console.error(error)
-                        alert(
-                          `There was an error closing down this constituency`,
-                          error
-                        )
+                        throwErrorMsg('', error)
                       })
                   }}
                 >

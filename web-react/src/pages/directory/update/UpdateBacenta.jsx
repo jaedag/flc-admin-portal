@@ -128,14 +128,6 @@ const UpdateBacenta = () => {
       } else {
         //If there is an old Constituency
 
-        //Break Link to the Old Constituency
-        RemoveBacentaConstituency({
-          variables: {
-            constituencyId: oldConstituency.id,
-            bacentaId: bacentaId,
-          },
-        })
-
         let recordIfoldConstituency = `${initialValues.name} Bacenta has been moved from ${oldConstituency.name} Constituency to ${newConstituency.name} Constituency`
 
         //After Adding the bacenta to a constituency, then you log that change.

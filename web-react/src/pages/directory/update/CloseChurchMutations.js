@@ -38,26 +38,9 @@ export const MAKE_CONSTITUENCY_INACTIVE = gql`
     ) {
       id
       name
-      stream_name
-      council {
+      constituencies {
         id
-        constituencies {
-          id
-        }
-
-        history(options: { limit: 5 }) {
-          id
-          timeStamp
-          created_at {
-            date
-          }
-          loggedBy {
-            id
-            firstName
-            lastName
-          }
-          historyRecord
-        }
+        name
       }
     }
   }

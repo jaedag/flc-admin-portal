@@ -795,32 +795,8 @@ extend type Mutation {
   MakeMemberInactive(id: ID!): Member
   CloseDownFellowship(fellowshipId: ID!, leaderId: ID!): Bacenta
   CloseDownBacenta(bacentaId: ID!, leaderId: ID!): Constituency
+  CloseDownConstituency(constituencyId: ID!, leaderId: ID!): Council
 
-  CloseDownConstituency(constituencyId: ID!): Constituency
-    @cypher(
-      statement: """
-      MATCH (constituency:Constituency {id:$constituencyId})
-      MATCH (admin:Member {auth_id: $auth.jwt.sub})
-      MATCH (constituency)<-[:HAS]-(council:Council)
-      OPTIONAL MATCH (constituency)-[:HAS]->(bacentas)-[:HAS]->(fellowships)
-
-      CREATE (log:HistoryLog {id:apoc.create.uuid()})
-        SET log.timeStamp = datetime(),
-        log.historyRecord = constituency.name + ' Constituency was closed down under ' + council.name +' Council'
-
-
-      MERGE (date:TimeGraph {date:date()})
-      MERGE (log)-[:LOGGED_BY]->(admin)
-      MERGE (log)-[:RECORDED_ON]->(date)
-      MERGE (council)-[:HAS_HISTORY]->(log)
-      MERGE (council)-[:HAS_HISTORY]->(log)
-
-      SET constituency:ClosedConstituency, bacentas:ClosedBacenta, fellowships:ClosedFellowship
-      REMOVE constituency:Constituency,bacentas:Bacenta,fellowships:Fellowship
-
-      RETURN constituency
-      """
-    )
   CloseDownCouncil(councilId: ID!): Council
     @cypher(
       statement: """

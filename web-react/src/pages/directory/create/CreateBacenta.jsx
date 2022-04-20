@@ -8,8 +8,7 @@ import BacentaForm from '../reusable-forms/BacentaForm'
 import { throwErrorMsg } from 'global-utils'
 
 const CreateBacenta = () => {
-  const { clickCard, constituencyId, setConstituencyId } =
-    useContext(ChurchContext)
+  const { clickCard, constituencyId } = useContext(ChurchContext)
   const navigate = useNavigate()
 
   const initialValues = {
@@ -25,36 +24,37 @@ const CreateBacenta = () => {
   const [CreateBacenta] = useMutation(CREATE_BACENTA_MUTATION)
 
   //onSubmit receives the form state as argument
-  const onSubmit = (values, onSubmitProps) => {
+  const onSubmit = async (values, onSubmitProps) => {
     onSubmitProps.setSubmitting(true)
-    setConstituencyId(values.constituency)
+    clickCard({ id: values.constituency, __typename: 'Bacenta' })
+    try {
+      const res = await CreateBacenta({
+        variables: {
+          name: values.name,
+          constituencyId: values.constituency,
+          leaderId: values.leaderId,
+          fellowships: values.fellowships,
+        },
+      })
 
-    CreateBacenta({
-      variables: {
-        name: values.name,
-        constituencyId: values.constituency,
-        leaderId: values.leaderId,
-        fellowships: values.fellowships,
-      },
-    })
-      .then((res) => {
-        clickCard(res.data.CreateBacenta)
-        NewBacentaLeader({
+      clickCard(res.data.CreateBacenta)
+      try {
+        await NewBacentaLeader({
           variables: {
             leaderId: values.leaderId,
             bacentaId: res.data.CreateBacenta.id,
           },
-        }).catch((error) =>
-          throwErrorMsg('There was an error adding leader', error)
-        )
+        })
+      } catch (error) {
+        throwErrorMsg('There was an error adding leader', error)
+      }
 
-        onSubmitProps.setSubmitting(false)
-        onSubmitProps.resetForm()
-        navigate('/bacenta/displaydetails')
-      })
-      .catch((error) =>
-        throwErrorMsg('There was an error creating bacenta', error)
-      )
+      onSubmitProps.setSubmitting(false)
+      onSubmitProps.resetForm()
+      navigate('/bacenta/displaydetails')
+    } catch (error) {
+      throwErrorMsg('There was an error creating bacenta', error)
+    }
   }
 
   return (

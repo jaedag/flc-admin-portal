@@ -193,11 +193,14 @@ export const arrivalsMutation = {
     const { merchantId, auth, passcode } = getStreamFinancials(args.stream_name)
     const transactionResponse = rearrangeCypherObject(
       await session.run(cypher.checkTransactionId, args)
-    )
+    ).record.properties
 
     if (transactionResponse?.transactionId) {
       throwErrorMsg('Money has already been sent to this bacenta')
-    } else if (transactionResponse?.arrivalTime) {
+    } else if (
+      !transactionResponse?.arrivalTime ||
+      transactionResponse?.attendance === 0
+    ) {
       //If record has not been confirmed, it will return null
       throwErrorMsg('This bacenta is not eligible to receive money')
     }
@@ -221,13 +224,15 @@ export const arrivalsMutation = {
         amount: padNumbers(bussingRecord.bussingTopUp * 100),
         processing_code: '404000',
         'r-switch': 'FLT',
-        desc: `${cypherResponse.bacentaName} ${cypherResponse.leaderName} ${cypherResponse.date}`,
+        desc: `${cypherResponse.bacentaName} Bacenta ${transactionResponse.momoName}`,
         pass_code: passcode,
         account_number: bussingRecord.momoNumber,
         account_issuer: getMobileCode(bussingRecord.mobileNetwork),
       },
     }
-
+    console.log(
+      `${cypherResponse.bacentaName} Bacenta ${transactionResponse.momoName}`
+    )
     try {
       const res = await axios(sendBussingSupport)
 

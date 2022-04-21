@@ -89,6 +89,7 @@ const FormAttendanceConfirmation = () => {
       } catch (error) {
         setSubmitting(false)
         throwErrorMsg(error)
+        navigate(`/bacenta/bussing-details`)
       }
     }
   }

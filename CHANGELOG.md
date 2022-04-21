@@ -1,3 +1,10 @@
+#### 2.0.7 (2022-04-21)
+
+##### Bug Fixes
+
+*  fixed issue where method used for assessing bacentas money is wrong ([0303f05b](https://github.com/firstlovecenter/fl-admin-portal/commit/0303f05bf1457acfc9e0cf03a0de9f6c8d44f382))
+*  admin-103 removed sonta search which was breaking search at consttiuency level ([48acbd7b](https://github.com/firstlovecenter/fl-admin-portal/commit/48acbd7bb9d1798941aa36f88e34fa6d4bd41093))
+
 #### 2.0.6 (2022-04-20)
 
 ##### Bug Fixes

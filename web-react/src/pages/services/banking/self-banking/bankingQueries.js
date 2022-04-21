@@ -29,6 +29,7 @@ export const PAY_OFFERING_MUTATION = gql`
     $serviceRecordId: ID!
     $stream_name: String!
     $mobileNetwork: String!
+    $momoName: String!
     $mobileNumber: String!
   ) {
     BankServiceOffering(
@@ -36,6 +37,7 @@ export const PAY_OFFERING_MUTATION = gql`
       stream_name: $stream_name
       mobileNetwork: $mobileNetwork
       mobileNumber: $mobileNumber
+      momoName: $momoName
     ) {
       id
       income

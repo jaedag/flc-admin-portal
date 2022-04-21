@@ -60,6 +60,7 @@ const PayOffering = (props) => {
           stream_name: service.stream_name,
           mobileNetwork: values.mobileNetwork,
           mobileNumber: values.mobileNumber,
+          momoName: values.momoName,
         },
       })
     } catch (error) {

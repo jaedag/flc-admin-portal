@@ -142,11 +142,6 @@ export const STREAM_SEARCH = gql`
 
 export const COUNCIL_SEARCH = gql`
   query councilSearch($searchKey: String, $councilId: ID!) {
-    councilSontaSearch(searchKey: $searchKey, councilId: $councilId) {
-      id
-      name
-    }
-
     councilConstituencySearch(searchKey: $searchKey, councilId: $councilId) {
       id
       name
@@ -198,13 +193,6 @@ export const COUNCIL_SEARCH = gql`
 
 export const CONSTITUENCY_SEARCH = gql`
   query constituencySearch($searchKey: String, $constituencyId: ID!) {
-    constituencySontaSearch(
-      searchKey: $searchKey
-      constituencyId: $constituencyId
-    ) {
-      id
-      name
-    }
     constituencyBacentaSearch(
       searchKey: $searchKey
       constituencyId: $constituencyId

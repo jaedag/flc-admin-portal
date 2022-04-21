@@ -197,7 +197,7 @@ export const arrivalsMutation = {
 
     if (transactionResponse?.transactionId) {
       throwErrorMsg('Money has already been sent to this bacenta')
-    } else if (!transactionResponse?.arrivalTime) {
+    } else if (transactionResponse?.arrivalTime) {
       //If record has not been confirmed, it will return null
       throwErrorMsg('This bacenta is not eligible to receive money')
     }

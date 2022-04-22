@@ -26,11 +26,18 @@ export const bankingMutation = {
       await session.run(cypher.checkTransactionId, args)
     )
 
-    if (
-      transactionResponse?.record.properties.transactionStatus === 'success'
-    ) {
+    const transactionStatus =
+      transactionResponse?.record.properties.transactionStatus
+    if (transactionStatus === 'success') {
       throwErrorMsg('Banking has already been done for this service')
     }
+
+    if (transactionStatus === 'pending') {
+      throwErrorMsg(
+        'Please confirm your initial payment before attempting another one'
+      )
+    }
+
     const cypherResponse = rearrangeCypherObject(
       await session.run(cypher.setServiceRecordTransactionId, {
         auth: context.auth,

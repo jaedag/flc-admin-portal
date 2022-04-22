@@ -1,3 +1,13 @@
+#### 2.0.8 (2022-04-22)
+
+##### Bug Fixes
+
+*  admin-103 added permissions for leaders as well as admins to search ([3278c476](https://github.com/firstlovecenter/fl-admin-portal/commit/3278c4762915308c3879caf4f9663312b2f966a1))
+
+##### Performance Improvements
+
+*  name of momo sender now shows in desc sent to theTeller API ([cb4ac34f](https://github.com/firstlovecenter/fl-admin-portal/commit/cb4ac34fe5b374144ccca2c40eeb5669bfb24bce))
+
 #### 2.0.7 (2022-04-21)
 
 ##### Bug Fixes

@@ -49,7 +49,7 @@ const FellowshipSelfBanking = () => {
         return (
           <>
             {isOpen && (
-              <Popup>
+              <Popup handleClose={togglePopup}>
                 <div>
                   Your transaction status is pending please press this button to
                   confirm the status

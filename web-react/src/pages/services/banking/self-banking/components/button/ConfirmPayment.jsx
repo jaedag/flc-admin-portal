@@ -27,7 +27,16 @@ const ButtonConfirmPayment = (props) => {
             stream_name: service?.stream_name,
           },
         })
-          .then(() => {
+          .then((res) => {
+            if (
+              res.data.ConfirmOfferingPayment.transactionStatus === 'pending'
+            ) {
+              alertMsg(
+                'Your Payment is still pending please follow the manual steps for approval'
+              )
+              navigate('/self-banking/receipt')
+            }
+
             alertMsg('Payment Confirmed Successfully')
             navigate('/self-banking/receipt')
           })

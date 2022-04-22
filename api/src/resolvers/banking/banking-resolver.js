@@ -2,6 +2,7 @@ const {
   getMobileCode,
   padNumbers,
   getStreamFinancials,
+  handlePaymentError,
 } = require('../financial-utils')
 const { permitLeader } = require('../permissions')
 const cypher = require('./banking-cypher')
@@ -57,7 +58,14 @@ export const bankingMutation = {
         voucher: '',
       },
     }
-    axios(payOffering).catch((e) => throwErrorMsg(e))
+
+    try {
+      const paymentResponse = await axios(payOffering)
+
+      handlePaymentError(paymentResponse)
+    } catch (error) {
+      throwErrorMsg(error)
+    }
 
     return
   },
@@ -95,9 +103,17 @@ export const bankingMutation = {
     const confirmationResponse = await axios(confirmPaymentBody)
 
     if (confirmationResponse.data.code.toString() === '111') {
-      throwErrorMsg(
-        'Payment is still pending. Please wait for the prompt or try again'
-      )
+      return {
+        id: record.id,
+        transactionStatus: 'pending',
+        income: record.income,
+        offeringBankedBy: {
+          id: banker.id,
+          firstName: banker.firstName,
+          lastName: banker.lastName,
+          fullName: banker.firstName + ' ' + banker.fullName,
+        },
+      }
     }
 
     if (confirmationResponse.data.code.toString() === '104') {

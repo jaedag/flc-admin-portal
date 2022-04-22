@@ -6,6 +6,7 @@ import { ServiceContext } from 'contexts/ServiceContext'
 import { parseNeoTime } from 'date-utils'
 import { parseDate } from 'date-utils'
 import { getHumanReadableDate } from 'date-utils'
+import { capitalise } from 'global-utils'
 import React, { useContext } from 'react'
 import { Button, Container } from 'react-bootstrap'
 import { useNavigate } from 'react-router'
@@ -24,6 +25,7 @@ const ReceiptPage = () => {
     ['Date of Service', getHumanReadableDate(service?.serviceDate.date)],
     ['Income', service?.income],
     ['Offering Banked By', service?.offeringBankedBy.fullName],
+    ['Transaction Status', capitalise(service?.transactionStatus)],
     ['Network Used', service?.sourceNetwork],
     ['Number Used', service?.sourceNumber],
     ['Reference', service?.desc],

@@ -1,3 +1,11 @@
+#### 2.0.9 (2022-04-22)
+
+##### New Features
+
+* **self-banking:**
+  *  you can no longer bank if you have a previous pending transaction ([1afb879a](https://github.com/firstlovecenter/fl-admin-portal/commit/1afb879a6d0a3c6f005b787e5561aa16d4ea9db8))
+  *  improved UX by handling for error states ([b524f86f](https://github.com/firstlovecenter/fl-admin-portal/commit/b524f86f68731220204c4f3e267f042443bcece8))
+
 #### 2.0.8 (2022-04-22)
 
 ##### Bug Fixes

@@ -11,13 +11,13 @@ OR churchLevel = 'Council' OR churchLevel = 'Stream' OR churchLevel = 'Gathering
 MATCH (author:Member {auth_id: $auth.jwt.sub})
 MATCH (record)-[:SERVICE_HELD_ON]->(date:TimeGraph)
 MATCH (transaction: LastPaySwitchTransactionId)
-    SET record.transactionId = transaction.id + 1,
+    SET record.transactionId = transaction.id + 1,  
+    ransaction.id = record.transactionId,
     record.sourceNumber = $mobileNumber,
     record.sourceNetwork = $mobileNetwork,
     record.desc = church.name + ' ' + churchLevel + ' '  + date.date,
     record.transactionTime = datetime(),
-    record.transactionStatus = "pending",
-    transaction.id = record.transactionId
+    record.transactionStatus = "pending"
 
 MERGE (author)<-[:OFFERING_BANKED_BY]-(record)
 

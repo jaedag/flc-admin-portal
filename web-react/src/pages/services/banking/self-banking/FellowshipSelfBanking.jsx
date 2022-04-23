@@ -4,7 +4,7 @@ import PlaceholderCustom from 'components/Placeholder'
 import { ChurchContext } from 'contexts/ChurchContext'
 import { throwErrorMsg } from 'global-utils'
 import { parseDate } from 'date-utils'
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { Card, Col, Container, Row } from 'react-bootstrap'
 import { useNavigate } from 'react-router'
 import { FELLOWSHIP_BANKING_SLIP_QUERIES } from '../../ServicesQueries'
@@ -17,6 +17,7 @@ import ConfirmPaymentButton from './components/button/ConfirmPayment'
 const FellowshipSelfBanking = () => {
   const { fellowshipId, clickCard } = useContext(ChurchContext)
   const { isOpen, togglePopup } = usePopup()
+  const [confirmId, setConfirmId] = useState('')
   const navigate = useNavigate()
   const { data, loading, error, refetch } = useQuery(
     FELLOWSHIP_BANKING_SLIP_QUERIES,
@@ -40,6 +41,19 @@ const FellowshipSelfBanking = () => {
       <HeadingSecondary loading={loading}>
         Please click to bank any of these services
       </HeadingSecondary>
+
+      {isOpen && (
+        <Popup handleClose={togglePopup}>
+          <div>
+            Your transaction status is pending please press this button to
+            confirm the status
+          </div>
+          <div className="d-grid gap-2">
+            <ConfirmPaymentButton service={confirmId} refetch={refetch} />
+          </div>
+        </Popup>
+      )}
+
       {data?.fellowships[0].services.map((service, index) => {
         if (service.noServiceReason || service.bankingSlip) {
           return null
@@ -47,21 +61,11 @@ const FellowshipSelfBanking = () => {
 
         return (
           <>
-            {isOpen && (
-              <Popup handleClose={togglePopup}>
-                <div>
-                  Your transaction status is pending please press this button to
-                  confirm the status
-                </div>
-                <div className="d-grid gap-2">
-                  <ConfirmPaymentButton service={service} refetch={refetch} />
-                </div>
-              </Popup>
-            )}
             <Card
               key={index}
               className="mb-2"
               onClick={() => {
+                setConfirmId(service?.id)
                 clickCard(service)
                 if (service?.transactionStatus === 'pending') {
                   togglePopup()

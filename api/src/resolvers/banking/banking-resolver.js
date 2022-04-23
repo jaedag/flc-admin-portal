@@ -154,9 +154,6 @@ export const bankingMutation = {
       }
     }
 
-    // eslint-disable-next-line no-console
-    console.log('Payment Verified Successfully!')
-
     return {
       id: record.id,
       income: record.income,

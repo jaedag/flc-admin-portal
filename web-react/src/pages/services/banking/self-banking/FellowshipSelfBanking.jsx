@@ -17,7 +17,7 @@ import ConfirmPaymentButton from './components/button/ConfirmPayment'
 const FellowshipSelfBanking = () => {
   const { fellowshipId, clickCard } = useContext(ChurchContext)
   const { isOpen, togglePopup } = usePopup()
-  const [confirmId, setConfirmId] = useState('')
+  const [confirmService, setConfirmService] = useState(null)
   const navigate = useNavigate()
   const { data, loading, error, refetch } = useQuery(
     FELLOWSHIP_BANKING_SLIP_QUERIES,
@@ -49,7 +49,7 @@ const FellowshipSelfBanking = () => {
             confirm the status
           </div>
           <div className="d-grid gap-2">
-            <ConfirmPaymentButton service={confirmId} refetch={refetch} />
+            <ConfirmPaymentButton service={confirmService} refetch={refetch} />
           </div>
         </Popup>
       )}
@@ -65,7 +65,7 @@ const FellowshipSelfBanking = () => {
               key={index}
               className="mb-2"
               onClick={() => {
-                setConfirmId(service?.id)
+                setConfirmService(service)
                 clickCard(service)
                 if (service?.transactionStatus === 'pending') {
                   togglePopup()

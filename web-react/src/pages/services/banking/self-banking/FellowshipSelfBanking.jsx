@@ -24,7 +24,6 @@ const FellowshipSelfBanking = () => {
       variables: { fellowshipId: fellowshipId },
     }
   )
-
   const fellowship = data?.fellowships[0]
   const placeholder = ['', '', '']
   throwErrorMsg(error)

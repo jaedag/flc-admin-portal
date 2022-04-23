@@ -88,15 +88,17 @@ export const bankingMutation = {
 
     const record = transactionResponse?.record?.properties
     const banker = transactionResponse?.banker?.properties
+
+    // eslint-disable-next-line no-console
+    console.log('response', transactionResponse)
     if (!record?.transactionId) {
       throwErrorMsg(
         'It looks like there was a problem. Please try sending again!'
       )
     }
 
-    const paddedTransactionId = padNumbers(
-      transactionResponse?.record.properties.transactionId
-    )
+    const paddedTransactionId = padNumbers(record?.transactionId)
+
     const confirmPaymentBody = {
       method: 'get',
       url: `https://prod.theteller.net/v1.1/users/transactions/${paddedTransactionId}/status`,
@@ -112,6 +114,7 @@ export const bankingMutation = {
     if (confirmationResponse.data.code.toString() === '111') {
       return {
         id: record.id,
+        transactionId: record.transactionId,
         transactionStatus: 'pending',
         income: record.income,
         offeringBankedBy: {

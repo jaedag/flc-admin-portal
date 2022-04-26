@@ -1,4 +1,5 @@
 import { addMinutes } from 'date-utils'
+import { getDateTime } from 'date-utils'
 import { getTodayTime } from 'date-utils'
 import { isToday } from 'date-utils'
 
@@ -18,8 +19,12 @@ export const beforeCountingDeadline = (bussing, church) => {
 
   let arrivalEndTime, arrivalStartTime, countingEndTime
   if (church?.__typename === 'Bacenta') {
-    arrivalStartTime = new Date(getTodayTime(church?.stream.arrivalStartTime))
-    arrivalEndTime = new Date(getTodayTime(church?.stream.arrivalEndTime))
+    arrivalStartTime = new Date(
+      getDateTime(bussing?.created_at, church?.stream.arrivalStartTime)
+    )
+    arrivalEndTime = new Date(
+      getDateTime(bussing?.created_at, church?.stream.arrivalEndTime)
+    )
     countingEndTime = addMinutes(arrivalEndTime, 30)
   }
 

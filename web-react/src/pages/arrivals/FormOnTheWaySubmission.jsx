@@ -17,10 +17,8 @@ import {
   RECORD_BUSSING_FROM_BACENTA,
   SET_BUSSING_SUPPORT,
 } from './arrivalsMutations'
-import { MOMO_NUM_REGEX } from 'global-utils'
 import { parseDate } from 'date-utils'
 import { ServiceContext } from 'contexts/ServiceContext'
-import { MOBILE_NETWORK_OPTIONS } from './arrivals-utils'
 
 const FormOnTheWaySubmission = () => {
   const navigate = useNavigate()
@@ -32,9 +30,6 @@ const FormOnTheWaySubmission = () => {
     bussingCost: '',
     numberOfBusses: '',
     numberOfCars: '',
-    mobileNetwork: '',
-    momoName: '',
-    momoNumber: '',
   }
 
   const { data, loading, error } = useQuery(BACENTA_ARRIVALS, {
@@ -67,18 +62,6 @@ const FormOnTheWaySubmission = () => {
       .typeError('Please enter a valid number')
       .positive()
       .integer('You cannot have busses with decimals!'),
-    momoNumber: Yup.string().matches(
-      MOMO_NUM_REGEX,
-      `Enter a valid MoMo Number without spaces. eg. (02XXXXXXXX)`
-    ),
-    momoName: Yup.string().when('momoNumber', {
-      is: (momoNumber) => momoNumber && momoNumber.length > 0,
-      then: Yup.string().required('Please enter the Momo Name'),
-    }),
-    mobileNetwork: Yup.string().when('momoNumber', {
-      is: (momoNumber) => momoNumber && momoNumber.length > 0,
-      then: Yup.string().required('Please enter the Mobile Network'),
-    }),
   })
 
   const onSubmit = async (values, onSubmitProps) => {
@@ -91,9 +74,6 @@ const FormOnTheWaySubmission = () => {
         bussingCost: parseFloat(values.bussingCost),
         numberOfBusses: parseInt(values.numberOfBusses),
         numberOfCars: parseInt(values.numberOfCars || 0),
-        mobileNetwork: values.mobileNetwork,
-        momoName: values.momoName,
-        momoNumber: values.momoNumber,
       },
     })
 
@@ -163,23 +143,6 @@ const FormOnTheWaySubmission = () => {
                     control="input"
                     name="numberOfCars"
                     label="Number of Cars"
-                  />
-                  <FormikControl
-                    control="select"
-                    name="mobileNetwork"
-                    label="Mobile Network"
-                    options={MOBILE_NETWORK_OPTIONS}
-                  />
-                  <FormikControl
-                    control="input"
-                    name="momoNumber"
-                    label="MoMo Number"
-                    defaultOption="Choose a Network"
-                  />
-                  <FormikControl
-                    control="input"
-                    name="momoName"
-                    label="MoMo Name"
                   />
                   <FieldArray name="bussingPictures">
                     {(fieldArrayProps) => {

@@ -14,6 +14,8 @@ import HeadingSecondary from 'components/HeadingSecondary'
 import { Form, Formik } from 'formik'
 import FormikControl from 'components/formik-components/FormikControl'
 import SubmitButton from 'components/formik-components/SubmitButton'
+import { MOMO_NUM_REGEX } from 'global-utils'
+import { MOBILE_NETWORK_OPTIONS } from 'pages/arrivals/arrivals-utils'
 
 const UpdateBacentaBussing = () => {
   const { bacentaId } = useContext(ChurchContext)
@@ -37,6 +39,9 @@ const UpdateBacentaBussing = () => {
     normalPersonalContribution: bacenta?.normalPersonalContribution ?? '',
     swellBussingCost: bacenta?.swellBussingCost ?? '',
     swellPersonalContribution: bacenta?.swellPersonalContribution ?? '',
+    mobileNetwork: bacenta?.mobileNetwork ?? '',
+    momoName: bacenta?.momoName ?? '',
+    momoNumber: bacenta?.momoNumber ?? '',
   }
 
   const validationSchema = Yup.object({
@@ -49,6 +54,18 @@ const UpdateBacentaBussing = () => {
     swellPersonalContribution: Yup.string().required(
       'This is a required field'
     ),
+    momoNumber: Yup.string().matches(
+      MOMO_NUM_REGEX,
+      `Enter a valid MoMo Number without spaces. eg. (02XXXXXXXX)`
+    ),
+    momoName: Yup.string().when('momoNumber', {
+      is: (momoNumber) => momoNumber && momoNumber.length > 0,
+      then: Yup.string().required('Please enter the Momo Name'),
+    }),
+    mobileNetwork: Yup.string().when('momoNumber', {
+      is: (momoNumber) => momoNumber && momoNumber.length > 0,
+      then: Yup.string().required('Please enter the Mobile Network'),
+    }),
   })
 
   const onSubmit = async (values, onSubmitProps) => {
@@ -64,6 +81,9 @@ const UpdateBacentaBussing = () => {
         ),
         swellBussingCost: parseFloat(values.swellBussingCost),
         swellPersonalContribution: parseFloat(values.swellPersonalContribution),
+        mobileNetwork: values.mobileNetwork,
+        momoName: values.momoName,
+        momoNumber: values.momoNumber,
       },
     })
     onSubmitProps.setSubmitting(false)
@@ -123,6 +143,23 @@ const UpdateBacentaBussing = () => {
                           name="swellPersonalContribution"
                           label="Swell Personal Contribution"
                           placeholder="Enter Personal Contribution for Swell"
+                        />
+                        <FormikControl
+                          control="select"
+                          name="mobileNetwork"
+                          label="Mobile Network"
+                          options={MOBILE_NETWORK_OPTIONS}
+                        />
+                        <FormikControl
+                          control="input"
+                          name="momoNumber"
+                          label="MoMo Number"
+                          defaultOption="Choose a Network"
+                        />
+                        <FormikControl
+                          control="input"
+                          name="momoName"
+                          label="MoMo Name"
                         />
                       </Col>
                     </Row>

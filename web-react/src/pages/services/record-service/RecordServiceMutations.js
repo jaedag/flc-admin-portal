@@ -116,6 +116,7 @@ export const DISPLAY_FELLOWSHIP_SERVICE = gql`
         lastName
         fullName
       }
+      transactionId
       treasurers {
         id
         firstName
@@ -164,6 +165,7 @@ export const DISPLAY_BACENTA_SERVICE = gql`
         lastName
         fullName
       }
+      transactionId
       treasurers {
         id
         firstName
@@ -223,6 +225,7 @@ export const DISPLAY_CONSTITUENCY_SERVICE = gql`
       attendance
       income
       foreignCurrency
+      transactionId
       treasurerSelfie
       servicePicture
       bankingProof
@@ -270,6 +273,7 @@ export const DISPLAY_COUNCIL_SERVICE = gql`
       noServiceReason
       attendance
       income
+      transactionId
       foreignCurrency
       treasurerSelfie
       servicePicture
@@ -319,6 +323,7 @@ export const DISPLAY_STREAM_SERVICE = gql`
       attendance
       income
       foreignCurrency
+      transactionId
       treasurerSelfie
       servicePicture
       bankingProof
@@ -366,6 +371,7 @@ export const DISPLAY_GATHERINGSERVICE_SERVICE = gql`
       noServiceReason
       attendance
       income
+      transactionId
       foreignCurrency
       treasurerSelfie
       servicePicture

@@ -761,6 +761,9 @@ extend type Bacenta {
       RETURN this.swellBussingCost - this.swellPersonalContribution
       """
     )
+  mobileNetwork: String
+  momoNumber: String
+  momoName: String
 
   #Arrivals Data
   arrivalsCodeOfTheDay: String!

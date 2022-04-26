@@ -303,22 +303,27 @@ const DisplayChurchDetails = (props) => {
         )}
 
         {props.churchType === 'Bacenta' && (
-          <div className="d-grid gap-2">
-            <PlaceholderCustom
-              loading={props.loading}
-              className={`btn-trends ${theme}`}
-              button
-            >
-              <Button
-                className={`${theme}`}
-                onClick={() => {
-                  navigate(`/${props.churchType.toLowerCase()}/editbussing`)
-                }}
+          <RoleView
+            roles={['leaderBacenta', 'leaderGatheringService']}
+            verifyId={props?.leader?.id}
+          >
+            <div className="d-grid gap-2">
+              <PlaceholderCustom
+                loading={props.loading}
+                className={`btn-trends ${theme}`}
+                button
               >
-                Bus Payment Details
-              </Button>
-            </PlaceholderCustom>
-          </div>
+                <Button
+                  className={`${theme}`}
+                  onClick={() => {
+                    navigate(`/${props.churchType.toLowerCase()}/editbussing`)
+                  }}
+                >
+                  Bus Payment Details
+                </Button>
+              </PlaceholderCustom>
+            </div>
+          </RoleView>
         )}
         <hr />
         <div className="d-grid gap-2">

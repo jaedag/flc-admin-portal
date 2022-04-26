@@ -5,11 +5,27 @@ import { MemberContext } from '../contexts/MemberContext'
 import { isAuthorised } from '../global-utils'
 
 const RoleView = (props) => {
-  const { roles, children } = props
+  const { roles, children, verifyId } = props
   const { currentUser } = useContext(MemberContext)
   const { isAuthenticated } = useAuth0()
 
-  if (isAuthenticated && isAuthorised(roles, currentUser.roles)) {
+  const verify = (verifyId) => {
+    if (!verifyId) return true
+
+    if (verifyId) {
+      if (currentUser.id === verifyId) {
+        return true
+      } else {
+        return false
+      }
+    }
+  }
+
+  if (
+    isAuthenticated &&
+    isAuthorised(roles, currentUser.roles) &&
+    verify(verifyId)
+  ) {
     return <>{children}</>
   } else {
     return null

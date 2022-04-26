@@ -69,7 +69,6 @@ const SearchPageMobile = () => {
     onCompleted: (data) => {
       setCombinedData([
         ...data.constituencyMemberSearch,
-        ...data.constituencySontaSearch,
         ...data.constituencyBacentaSearch,
         ...data.constituencyFellowshipSearch,
       ])

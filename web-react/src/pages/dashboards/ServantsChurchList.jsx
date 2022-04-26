@@ -12,7 +12,6 @@ import {
   getMonthlyStatAverage,
   getServiceGraphData,
 } from 'pages/services/reports/report-utils'
-import { plural } from 'global-utils'
 import MenuButton from 'components/buttons/MenuButton'
 import { Container } from 'react-bootstrap'
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
@@ -48,9 +47,6 @@ const ServantsChurchList = () => {
         leaderPic: servant?.pictureUrl,
         attendance: getMonthlyStatAverage(serviceData, 'attendance'),
         income: getMonthlyStatAverage(serviceData, 'income'),
-        clickCard: () => {
-          clickCard(church)
-        },
         link: `/${church.__typename.toLowerCase()}/displaydetails`,
       })
     })
@@ -103,24 +99,24 @@ const ServantsChurchList = () => {
   return (
     <BaseComponent loading={loading} error={error} data={data} placeholder>
       <Container className="mt-4">
-        <HeadingPrimary>{plural(churches[0]?.typename)}</HeadingPrimary>
+        <HeadingPrimary
+          loading={!servant}
+        >{`${servant?.fullName}'s Churches`}</HeadingPrimary>
 
         <div className="d-grid gap-2 text-left">
-          {churches.map((church, i) => {
-            return (
-              <MenuButton
-                key={i}
-                avatar={church.leaderPic}
-                title={`${church.name} ${church.__typename}`}
-                caption={church.leader}
-                color="churches"
-                onClick={() => {
-                  church.clickCard()
-                  navigate(church.link)
-                }}
-              />
-            )
-          })}
+          {churches?.map((church, i) => (
+            <MenuButton
+              key={i}
+              avatar={church.leaderPic}
+              title={`${church.name} ${church.__typename}`}
+              caption={church.leader}
+              color="churches"
+              onClick={() => {
+                clickCard(church[0])
+                navigate(church.link)
+              }}
+            />
+          ))}
         </div>
       </Container>
     </BaseComponent>

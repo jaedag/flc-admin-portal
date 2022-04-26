@@ -263,6 +263,35 @@ export const arrivalsMutation = {
 
     return cypherResponse
   },
+  SendMobileVerificationNumber: async (object, args, context) => {
+    isAuth(['leaderBacenta'], context.auth.roles)
+
+    const sendMessage = {
+      method: 'post',
+      url: `https://api.mnotify.com/api/sms/quick?key=${process.env.MNOTIFY_KEY}`,
+      headers: {
+        'content-type': 'application/json',
+      },
+      data: {
+        recipient: [args.phoneNumber],
+        sender: 'FLC Admin',
+        message: `Hi ${args.firstName},\n\nYour code is ${args.code}. Input this on the portal to verify your phone number.`,
+        is_schedule: 'false',
+        schedule_date: '',
+      },
+    }
+
+    try {
+      const res = await axios(sendMessage)
+
+      if (res.data.code === '2000') {
+        return 'Message sent successfully'
+      }
+      throwErrorMsg('There was a problem sending your message')
+    } catch (error) {
+      throwErrorMsg('There was a problem sending your message', error)
+    }
+  },
 }
 
 export const arrivalsResolvers = {}

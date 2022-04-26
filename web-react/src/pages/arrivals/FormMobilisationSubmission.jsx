@@ -59,7 +59,7 @@ const FormMobilisationSubmission = () => {
     ) {
       navigate('/arrivals/bacenta')
     }
-  }, [])
+  }, [data?.bacentas, navigate])
 
   return (
     <BaseComponent data={data} loading={loading} error={error}>

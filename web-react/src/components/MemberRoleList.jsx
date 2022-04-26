@@ -7,11 +7,12 @@ import PlaceholderCustom from './Placeholder'
 import './MemberRoleList.css'
 
 const MemberRoleList = ({ memberLeader, memberAdmin }) => {
+  const { clickCard } = useContext(ChurchContext)
+  const navigate = useNavigate()
+
   if (!memberLeader || !memberAdmin) {
     return null
   }
-  const { clickCard } = useContext(ChurchContext)
-  const navigate = useNavigate()
 
   //To Display Ranks on the Member Card
   let rank = {

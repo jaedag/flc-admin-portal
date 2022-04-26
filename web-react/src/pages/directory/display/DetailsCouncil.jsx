@@ -19,7 +19,7 @@ const DetailsCouncil = () => {
   let breadcrumb = [council?.stream, council]
   useEffect(() => {
     setChurch({ church: council?.stream_name, subChurch: 'bacenta' })
-  }, [council?.stream_name])
+  }, [council?.stream_name, setChurch])
 
   const details = [
     { title: 'Target', number: council?.target, link: '#' },

@@ -36,7 +36,7 @@ const UserDashboard = () => {
                       key={i}
                       onClick={() => {
                         clickCard(currentUser)
-                        role.clickCard()
+                        clickCard(role.church[0])
                         navigate(role.link)
                       }}
                     >

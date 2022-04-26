@@ -265,27 +265,6 @@ const DisplayChurchDetails = (props) => {
             bgNone
           />
         </Link>
-        <Row>
-          <Col>
-            <DetailsCard
-              onClick={() =>
-                navigate(`/${props.subChurch.toLowerCase()}/displayall`)
-              }
-              heading={props.churchHeading}
-              detail={!props.loading && (props.churchCount || '0')}
-            />
-          </Col>
-
-          <Col className={!props.loading && `col-auto`}>
-            <DetailsCard
-              onClick={() =>
-                navigate(`/${props.churchType?.toLowerCase()}/members`)
-              }
-              heading="Members"
-              detail={!props.loading && (props.membership || '0')}
-            />
-          </Col>
-        </Row>
 
         {props.details?.length && (
           <Row>
@@ -301,6 +280,24 @@ const DisplayChurchDetails = (props) => {
           </Row>
         )}
 
+        {props.churchType === 'Bacenta' && (
+          <div className="d-grid gap-2">
+            <PlaceholderCustom
+              loading={props.loading}
+              className={`btn-trends ${theme}`}
+              button
+            >
+              <Button
+                className={`${theme}`}
+                onClick={() => {
+                  navigate(`/${props.churchType.toLowerCase()}/editbussing`)
+                }}
+              >
+                Bus Payment Details
+              </Button>
+            </PlaceholderCustom>
+          </div>
+        )}
         <hr />
         <div className="d-grid gap-2">
           <PlaceholderCustom

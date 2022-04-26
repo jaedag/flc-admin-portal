@@ -131,9 +131,7 @@ export const isToday = (date) => {
 export const getTodayTime = (timeString) => {
   return new Date().toISOString().slice(0, 10) + timeString?.slice(10)
 }
-export const getDateTime = (date, timeString) => {
-  return new Date(date).toISOString().slice(0, 10) + timeString?.slice(10)
-}
+
 export const addHours = (date, hours) => {
   const newDate = new Date(date)
   newDate.setHours(newDate.getHours() + hours)

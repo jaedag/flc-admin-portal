@@ -811,9 +811,6 @@ type BussingRecord implements Record @auth(rules: [{ isAuthenticated: true }]) {
   numberOfCars: Int
   bussingCost: Float
   bussingTopUp: Float
-  mobileNetwork: String
-  momoName: String
-  momoNumber: String
   confirmed_by: Member @relationship(type: "CONFIRMED_BY", direction: OUT)
 
   #Arrived
@@ -944,6 +941,36 @@ extend type Mutation {
       """
     )
 
+  UpdateBusPaymentDetails(
+    bacentaId: ID!
+    mobileNetwork: String!
+    momoName: String!
+    momoNumber: String!
+  ): Bacenta
+    @auth(rules: [{ roles: ["leaderBacenta"] }])
+    @cypher(
+      statement: """
+      MATCH (bacenta:Bacenta {id: $bacentaId})
+      	SET bacenta.mobileNetwork = $mobileNetwork,
+        bacenta.momoName = $momoName,
+        bacenta.momoNumber = $momoNumber
+
+      WITH bacenta
+      CREATE (log:HistoryLog {id:apoc.create.uuid()})
+        SET log.timeStamp = datetime(),
+        log.historyRecord = bacenta.name + ' Bus Payment Details were updated'
+
+      WITH log,bacenta
+      MATCH (admin:Member {auth_id: $auth.jwt.sub})
+      MERGE (date:TimeGraph {date:date()})
+      MERGE (log)-[:LOGGED_BY]->(admin)
+      MERGE (log)-[:RECORDED_ON]->(date)
+      MERGE (bacenta)-[:HAS_HISTORY]->(log)
+
+      RETURN bacenta
+      """
+    )
+
   MakeBacentaIC(bacentaId: ID!): Bacenta!
     @auth(
       rules: [
@@ -1058,9 +1085,6 @@ extend type Mutation {
     bussingCost: Float!
     numberOfBusses: Int!
     numberOfCars: Int!
-    mobileNetwork: String!
-    momoName: String!
-    momoNumber: String!
   ): BussingRecord
     @cypher(
       statement: """
@@ -1070,10 +1094,7 @@ extend type Mutation {
       bussingRecord.bussingPictures = $bussingPictures,
       bussingRecord.bussingCost = $bussingCost,
       bussingRecord.numberOfBusses = $numberOfBusses,
-      bussingRecord.numberOfCars = $numberOfCars,
-      bussingRecord.mobileNetwork = $mobileNetwork,
-      bussingRecord.momoNumber = $momoNumber,
-      bussingRecord.momoName = $momoName
+      bussingRecord.numberOfCars = $numberOfCars
 
        WITH bussingRecord
         MATCH (leader:Member {auth_id: $auth.jwt.sub})
@@ -1176,6 +1197,11 @@ extend type Stream {
 }
 
 extend type Mutation {
+  SendMobileVerificationNumber(
+    firstName: String!
+    phoneNumber: String!
+    code: String!
+  ): String!
   SetStreamArrivalTimes(
     id: ID!
     mobilisationStartTime: String!

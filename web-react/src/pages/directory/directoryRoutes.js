@@ -47,7 +47,7 @@ import {
   permitAdminArrivals,
 } from 'permission-utils'
 import ServantMembers from './grids/ServantMembers'
-import UpdateBacentaBussing from './update/UpdateBacentaBussing'
+import UpdateBacentaBussing from './update/UpdateBusPaymentDetails'
 
 export const memberDirectory = [
   {
@@ -298,7 +298,7 @@ export const directory = [
   {
     path: '/bacenta/editbussing',
     element: UpdateBacentaBussing,
-    roles: permitAdminArrivals('Stream'),
+    roles: ['leaderBacenta', ...permitAdminArrivals('Stream')],
     placeholder: true,
   },
   {

@@ -23,7 +23,7 @@ import { Col, Row, Table, Container } from 'react-bootstrap'
 import Placeholder from '../../components/Placeholder'
 
 const ServantsDashboard = () => {
-  const { memberId, setMemberId, currentUser } = useContext(MemberContext)
+  const { memberId, currentUser } = useContext(MemberContext)
   const { clickCard } = useContext(ChurchContext)
   const navigate = useNavigate()
   let servantId = currentUser.id
@@ -175,8 +175,8 @@ const ServantsDashboard = () => {
                         className="col-auto p-0"
                         key={i}
                         onClick={() => {
-                          setMemberId(servantId)
-                          role.clickCard()
+                          clickCard(servant)
+                          clickCard(role.church[0])
                           navigate(role.link)
                         }}
                       >

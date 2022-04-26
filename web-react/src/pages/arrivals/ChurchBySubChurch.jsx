@@ -27,16 +27,15 @@ const ChurchBySubChurch = () => {
     GATHERINGSERVICE_BY_STREAM_ARRIVALS
   )
   const currentChurch = currentUser?.currentChurch
-
-  if (currentChurch?.__typename === 'Constituency') {
-    return <ConstituencyDashboard />
-  }
-
   const { church, subChurchLevel, loading, error } = useChurchLevel({
     councilFunction: councilByConstituency,
     streamFunction: streamByCouncil,
     gatheringServiceFunction: gatheringServcieByStream,
   })
+
+  if (currentChurch?.__typename === 'Constituency') {
+    return <ConstituencyDashboard />
+  }
 
   return (
     <BaseComponent data={church} loading={loading} error={error} placeholder>

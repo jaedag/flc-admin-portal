@@ -48,6 +48,7 @@ const Navigator = () => {
 
       setCurrentUser({
         ...currentUser,
+        __typename: 'Member',
         id: data.memberByEmail.id,
         firstName: data.memberByEmail.firstName,
         lastName: data.memberByEmail.lastName,
@@ -132,9 +133,6 @@ const Navigator = () => {
           : plural(churchType) + ' ' + servantType,
         church: servant[`${verb}`],
         number: servant[`${verb}`].length,
-        clickCard: () => {
-          clickCard(servant[`${verb}`][0])
-        },
         link: authorisedLink(currentUser, permittedForLink, `/arrivals`),
       })
 

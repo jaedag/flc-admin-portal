@@ -46,21 +46,19 @@ const BacentasOnTheWay = () => {
           <NoData text="There are no bacentas on the way" />
         )}
 
-        {church?.bacentasOnTheWay?.map((bacenta, i) => {
-          return (
-            <MemberDisplayCard
-              key={i}
-              member={bacenta}
-              leader={bacenta.leader}
-              contact
-              onClick={() => {
-                clickCard(bacenta)
-                clickCard(bacenta.bussing[0])
-                navigate('/bacenta/bussing-details')
-              }}
-            />
-          )
-        })}
+        {church?.bacentasOnTheWay?.map((bacenta, i) => (
+          <MemberDisplayCard
+            key={i}
+            member={bacenta}
+            leader={bacenta.leader}
+            contact
+            onClick={() => {
+              clickCard(bacenta)
+              clickCard(bacenta.bussing[0])
+              navigate('/bacenta/bussing-details')
+            }}
+          />
+        ))}
 
         {!church?.bacentasOnTheWay.length && loading && (
           <PlaceholderMemberDisplay />

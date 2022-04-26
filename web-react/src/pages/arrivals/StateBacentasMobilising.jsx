@@ -3,6 +3,7 @@ import BaseComponent from 'components/base-component/BaseComponent'
 import MemberDisplayCard from 'components/card/MemberDisplayCard'
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import HeadingSecondary from 'components/HeadingSecondary'
+import PlaceholderMemberDisplay from 'pages/services/defaulters/PlaceholderDefaulter'
 import React from 'react'
 import { Container } from 'react-bootstrap'
 import {
@@ -53,6 +54,10 @@ const BacentasMobilising = () => {
             />
           )
         })}
+
+        {!church?.bacentasMobilising.length && loading && (
+          <PlaceholderMemberDisplay />
+        )}
       </Container>
     </BaseComponent>
   )

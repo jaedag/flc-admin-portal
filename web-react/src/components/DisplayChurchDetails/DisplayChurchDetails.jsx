@@ -266,6 +266,28 @@ const DisplayChurchDetails = (props) => {
           />
         </Link>
 
+        <Row>
+          <Col>
+            <DetailsCard
+              onClick={() =>
+                navigate(`/${props.subChurch.toLowerCase()}/displayall`)
+              }
+              heading={props.churchHeading}
+              detail={!props.loading && (props.churchCount || '0')}
+            />
+          </Col>
+
+          <Col className={!props.loading && `col-auto`}>
+            <DetailsCard
+              onClick={() =>
+                navigate(`/${props.churchType?.toLowerCase()}/members`)
+              }
+              heading="Members"
+              detail={!props.loading && (props.membership || '0')}
+            />
+          </Col>
+        </Row>
+
         {props.details?.length && (
           <Row>
             {props.details.map((detail, i) => (

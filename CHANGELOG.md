@@ -1,3 +1,18 @@
+### 2.2.0 (2022-04-26)
+
+##### Chores
+
+*  removed all eslint warnings ([505d253d](https://github.com/firstlovecenter/fl-admin-portal/commit/505d253d92ce70e95c0f6f319fe5615010f27240))
+
+##### New Features
+
+* **arrivals:**  implemented phone number verification for bacenta leaders ([27120cf4](https://github.com/firstlovecenter/fl-admin-portal/commit/27120cf4e1fb2af4aff8b1110d711ea0bbabbb91))
+*  implemented restriction so that confirmation can only be done on the day of bussing ([112ee594](https://github.com/firstlovecenter/fl-admin-portal/commit/112ee59483fd824cda4658865d630a3de782b25e))
+
+##### Bug Fixes
+
+*  fixed issue preventing the constituency level search from working ([06b6df62](https://github.com/firstlovecenter/fl-admin-portal/commit/06b6df620e1d104d2dd53b74e5021cef07eef8f9))
+
 ### 2.1.0 (2022-04-23)
 
 ##### New Features

@@ -1,3 +1,16 @@
+#### 2.2.1 (2022-04-27)
+
+##### New Features
+
+*  implemented placeholders for arrivals states ([8b987cf5](https://github.com/firstlovecenter/fl-admin-portal/commit/8b987cf5cdbab75b95056aa5e235d6781dfa0a72))
+* **arrivals:**  the bus payment details can only be edited by the leader of the bacenta ([5be2dde2](https://github.com/firstlovecenter/fl-admin-portal/commit/5be2dde207d26eb2d29d1ee5676af47f32bbe5d8))
+
+##### Bug Fixes
+
+*  fixed bug preventing on-the-way form from being submitted This ends up being leftover code after switching to the number verification system ([caff1f2c](https://github.com/firstlovecenter/fl-admin-portal/commit/caff1f2c8bc5402ba6feee203c5af87530fb02cc))
+*  cleaned up memberdisplaycard to enable calling and whatsapp functionality ([a4bad427](https://github.com/firstlovecenter/fl-admin-portal/commit/a4bad4279f3a3373303291f705e9a0c1b56f4c54))
+*  cleaned up the placeholders and loading ux for bacenta state pages ([0d7304db](https://github.com/firstlovecenter/fl-admin-portal/commit/0d7304db177ad5e88d8a6a55b94899bf56e932c6))
+
 ### 2.2.0 (2022-04-26)
 
 ##### Chores

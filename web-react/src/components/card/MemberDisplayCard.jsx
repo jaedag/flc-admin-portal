@@ -79,56 +79,56 @@ const MemberDisplayCard = (props) => {
   }
 
   return (
-    <Card
-      {...rest}
-      className="mobile-search-card"
-      onClick={props.onClick || clickFunction}
-    >
-      <div className="d-flex align-items-center">
-        <div className="flex-shrink-0">
-          {noPicture && member.__typename !== 'Member' ? (
-            <img
-              className={`${picture && 'rounded-circle'} img-search`}
-              src={icon}
-            />
-          ) : (
-            <CloudinaryImage
-              src={picture}
-              alt={member.fullName}
-              className={`${picture && 'rounded-circle'} img-search`}
-            />
-          )}
+    <Card className="mobile-search-card">
+      <Card.Body {...rest} onClick={props.onClick || clickFunction}>
+        <div className="d-flex align-items-center">
+          <div className="flex-shrink-0">
+            {noPicture && member.__typename !== 'Member' ? (
+              <img
+                className={`${picture && 'rounded-circle'} img-search`}
+                src={icon}
+              />
+            ) : (
+              <CloudinaryImage
+                src={picture}
+                alt={member.fullName}
+                className={`${picture && 'rounded-circle'} img-search`}
+              />
+            )}
+          </div>
+          <div className="flex-grow-1 ms-3">
+            <Card.Title>{name}</Card.Title>
+            <p className={`text-secondary mb-0 ${theme}`}>
+              {details?.length &&
+                details.map((detail) => (
+                  <>
+                    <span>{detail}</span>
+                    <br />
+                  </>
+                ))}
+            </p>
+          </div>
         </div>
-        <div className="flex-grow-1 ms-3">
-          <Card.Title>{name}</Card.Title>
-          <p className={`text-secondary mb-0 ${theme}`}>
-            {details?.length &&
-              details.map((detail) => (
-                <>
-                  <span>{detail}</span>
-                  <br />
-                </>
-              ))}
-          </p>
-          {props.contact && (
-            <div>
-              <a href={`tel:${leader?.phoneNumber}`}>
-                <Button variant="primary">
-                  <TelephoneFill /> Call
-                </Button>
-              </a>
-              <a
-                href={`https://wa.me/${leader?.whatsappNumber}`}
-                className="ms-3"
-              >
-                <Button variant="success">
-                  <Whatsapp /> WhatsApp
-                </Button>
-              </a>
-            </div>
-          )}
-        </div>
-      </div>
+      </Card.Body>
+      <Card.Footer>
+        {props.contact && (
+          <div className="d-flex align-items-center">
+            <a href={`tel:${leader?.phoneNumber}`}>
+              <Button variant="primary">
+                <TelephoneFill /> Call
+              </Button>
+            </a>
+            <a
+              href={`https://wa.me/${leader?.whatsappNumber}`}
+              className="ms-3"
+            >
+              <Button variant="success">
+                <Whatsapp /> WhatsApp
+              </Button>
+            </a>
+          </div>
+        )}
+      </Card.Footer>
     </Card>
   )
 }

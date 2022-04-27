@@ -179,9 +179,6 @@ export const RECORD_BUSSING_FROM_BACENTA = gql`
     $bussingCost: Float!
     $numberOfBusses: Int!
     $numberOfCars: Int!
-    $mobileNetwork: String!
-    $momoName: String!
-    $momoNumber: String!
   ) {
     RecordBussingFromBacenta(
       bussingRecordId: $bussingRecordId
@@ -190,9 +187,6 @@ export const RECORD_BUSSING_FROM_BACENTA = gql`
       bussingCost: $bussingCost
       numberOfBusses: $numberOfBusses
       numberOfCars: $numberOfCars
-      mobileNetwork: $mobileNetwork
-      momoName: $momoName
-      momoNumber: $momoNumber
     ) {
       id
       attendance
@@ -201,8 +195,6 @@ export const RECORD_BUSSING_FROM_BACENTA = gql`
       leaderDeclaration
       numberOfBusses
       numberOfCars
-      momoName
-      momoNumber
 
       serviceLog {
         bacenta {

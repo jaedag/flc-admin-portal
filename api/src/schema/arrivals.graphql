@@ -1156,6 +1156,7 @@ extend type Mutation {
   SetSwellDate(date: String!): TimeGraph
   SendBussingSupport(bussingRecordId: ID!, stream_name: String!): BussingRecord
 }
+
 extend type Mutation {
   SetStreamArrivalTimes(
     id: ID!

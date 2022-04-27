@@ -382,9 +382,6 @@ export const DISPLAY_BUSSING_RECORDS = gql`
       bussingPictures
       bussingCost
       bussingTopUp
-      mobileNetwork
-      momoName
-      momoNumber
       numberOfBusses
       numberOfCars
       comments

@@ -12,9 +12,9 @@ import {
   GATHERINGSERVICE_CANCELLED_SERVICES_LIST,
 } from './DefaultersQueries'
 import DefaulterCard from './DefaulterCard'
-import PlaceholderDefaulter from './PlaceholderDefaulter'
 import BaseComponent from 'components/base-component/BaseComponent'
 import useChurchLevel from 'hooks/useChurchLevel'
+import PlaceholderDefaulterList from './PlaceholderDefaulterList'
 
 const CancelledServicesThisWeek = () => {
   const [constituencyCancelledServices] = useLazyQuery(
@@ -56,7 +56,7 @@ const CancelledServicesThisWeek = () => {
               <DefaulterCard defaulter={service} />
             </Col>
           ))}
-          {!church && <PlaceholderDefaulter />}
+          {!church && <PlaceholderDefaulterList />}
         </Row>
       </Container>
     </BaseComponent>

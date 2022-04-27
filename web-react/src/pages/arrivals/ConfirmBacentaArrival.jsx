@@ -10,7 +10,6 @@ import { MemberContext } from 'contexts/MemberContext'
 import { ServiceContext } from 'contexts/ServiceContext'
 import { Form, Formik } from 'formik'
 import { alertMsg, throwErrorMsg } from 'global-utils'
-import PlaceholderMemberDisplay from 'pages/services/defaulters/PlaceholderDefaulter'
 import React, { useContext, useEffect, useState } from 'react'
 import { Button, Card, Container, Spinner } from 'react-bootstrap'
 import { useNavigate } from 'react-router'
@@ -25,6 +24,7 @@ import CloudinaryImage from 'components/CloudinaryImage'
 import useChurchLevel from 'hooks/useChurchLevel'
 import NoData from './CompNoData'
 import usePopup from 'hooks/usePopup'
+import PlaceholderDefaulterList from 'pages/services/defaulters/PlaceholderDefaulterList'
 
 const ConfirmBacentaArrival = () => {
   const { clickCard } = useContext(ChurchContext)
@@ -229,7 +229,7 @@ const ConfirmBacentaArrival = () => {
           <NoData text="There is no data to display for you" />
         )}
 
-        {loading && <PlaceholderMemberDisplay />}
+        {loading && <PlaceholderDefaulterList />}
       </Container>
     </BaseComponent>
   )

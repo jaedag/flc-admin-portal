@@ -12,9 +12,9 @@ import {
   GATHERINGSERVICE_SERVICES_LIST,
 } from './DefaultersQueries'
 import DefaulterCard from './DefaulterCard'
-import PlaceholderDefaulter from './PlaceholderDefaulter'
 import useChurchLevel from 'hooks/useChurchLevel'
 import BaseComponent from 'components/base-component/BaseComponent'
+import PlaceholderDefaulterList from './PlaceholderDefaulterList'
 
 const ServicesThisWeek = () => {
   const [constituencyServicesThisWeek] = useLazyQuery(
@@ -54,7 +54,7 @@ const ServicesThisWeek = () => {
               />
             </Col>
           ))}
-          {!church && <PlaceholderDefaulter />}
+          {!church && <PlaceholderDefaulterList />}
         </Row>
       </Container>
     </BaseComponent>

@@ -3,7 +3,6 @@ import BaseComponent from 'components/base-component/BaseComponent'
 import MemberDisplayCard from 'components/card/MemberDisplayCard'
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import HeadingSecondary from 'components/HeadingSecondary'
-import PlaceholderMemberDisplay from 'pages/services/defaulters/PlaceholderDefaulter'
 import React from 'react'
 import { Container } from 'react-bootstrap'
 import {
@@ -14,6 +13,7 @@ import {
 } from './bussingStatusQueries'
 import useChurchLevel from '../../hooks/useChurchLevel'
 import NoData from './CompNoData'
+import PlaceholderDefaulterList from 'pages/services/defaulters/PlaceholderDefaulterList'
 
 const BacentasNoActiviity = () => {
   const [constituencyBacentasNoActivity] = useLazyQuery(
@@ -56,7 +56,7 @@ const BacentasNoActiviity = () => {
         ))}
 
         {!church?.bacentasNoActivity.length && loading && (
-          <PlaceholderMemberDisplay />
+          <PlaceholderDefaulterList />
         )}
       </Container>
     </BaseComponent>

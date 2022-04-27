@@ -5,7 +5,7 @@ import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import HeadingSecondary from 'components/HeadingSecondary'
 import { ChurchContext } from 'contexts/ChurchContext'
 import useChurchLevel from 'hooks/useChurchLevel'
-import PlaceholderMemberDisplay from 'pages/services/defaulters/PlaceholderDefaulter'
+import PlaceholderDefaulterList from 'pages/services/defaulters/PlaceholderDefaulterList'
 import React, { useContext } from 'react'
 import { Container } from 'react-bootstrap'
 import { useNavigate } from 'react-router'
@@ -61,7 +61,7 @@ const BacentasOnTheWay = () => {
         ))}
 
         {!church?.bacentasOnTheWay.length && loading && (
-          <PlaceholderMemberDisplay />
+          <PlaceholderDefaulterList loading={true} />
         )}
       </Container>
     </BaseComponent>

@@ -14,7 +14,7 @@ import {
   STREAM_BANKED_LIST,
   GATHERINGSERVICE_BANKED_LIST,
 } from './DefaultersQueries'
-import PlaceholderDefaulter from './PlaceholderDefaulter'
+import PlaceholderDefaulterList from './PlaceholderDefaulterList'
 
 const Banked = () => {
   const [constituencyBanked] = useLazyQuery(CONSTITUENCY_BANKED_LIST)
@@ -52,7 +52,7 @@ const Banked = () => {
               />
             </Col>
           ))}
-          {!church && <PlaceholderDefaulter />}
+          {!church && <PlaceholderDefaulterList />}
         </Row>
       </Container>
     </BaseComponent>

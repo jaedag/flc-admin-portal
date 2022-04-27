@@ -2,33 +2,33 @@ import PlaceholderCustom from 'components/Placeholder'
 import React from 'react'
 import { Card, Col } from 'react-bootstrap'
 
-const PlaceholderDefaulterList = (loading) => {
+const PlaceholderDefaulterList = () => {
   return [1, 2, 3].map((placeholder, i) => (
     <Col key={i} xs={12} className="mb-3">
       <Card>
         <Card.Header className="fw-bold">
           <PlaceholderCustom
-            loading={loading}
+            loading={true}
             className="fw-bold"
           ></PlaceholderCustom>
         </Card.Header>
         <Card.Body>
-          <PlaceholderCustom loading={loading} as="div" />
-          <PlaceholderCustom loading={loading} as="div" />
-          <PlaceholderCustom loading={loading} as="div" />
-          <PlaceholderCustom loading={loading} as="div" />
+          <PlaceholderCustom loading={true} as="div" />
+          <PlaceholderCustom loading={true} as="div" />
+          <PlaceholderCustom loading={true} as="div" />
+          <PlaceholderCustom loading={true} as="div" />
         </Card.Body>
         <Card.Footer>
           <PlaceholderCustom
             variant="primary"
-            loading={loading}
+            loading={true}
             className="btn-call"
             button
           />
           <PlaceholderCustom
             variant="success"
             className="btn-whatsapp"
-            loading={loading}
+            loading={true}
             button
           />
         </Card.Footer>

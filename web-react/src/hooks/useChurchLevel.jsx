@@ -10,7 +10,7 @@ const useChurchLevel = (props) => {
   const subChurchLevel = getSubChurchLevel(currentChurch?.__typename)
 
   const [church, setChurch] = useState(null)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
 
   useEffect(() => {
@@ -75,7 +75,9 @@ const useChurchLevel = (props) => {
     }
 
     whichQuery()
-  }, [setChurch, currentChurch, churchLevel, props])
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [setChurch])
 
   return { church, subChurchLevel, loading, error }
 }

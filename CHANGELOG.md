@@ -1,3 +1,14 @@
+#### 2.2.4 (2022-04-29)
+
+##### New Features
+
+* **directory:**  you can now see the momo number on the bacenta details page ([a2524d4f](https://github.com/firstlovecenter/fl-admin-portal/commit/a2524d4f50dddf60733a5f4d10480f7c88c5e048))
+* **arrivals:**  added a message to alert leaders that they do not have a valid number for sending ([a976b81e](https://github.com/firstlovecenter/fl-admin-portal/commit/a976b81e7ced307baf9fe88663f1d0b136cb01d0))
+
+##### Bug Fixes
+
+* **arrivals:**  slightly improved ux for verifying momo Number ([0cff9f17](https://github.com/firstlovecenter/fl-admin-portal/commit/0cff9f170f93c9f4bc1e2c40a73995acfe7d6b21))
+
 #### 2.2.3 (2022-04-29)
 
 ##### Bug Fixes

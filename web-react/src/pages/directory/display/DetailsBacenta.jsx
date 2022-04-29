@@ -60,11 +60,16 @@ const DetailsBacenta = () => {
     },
   ]
 
+  if (!bacenta?.normalBussingTopUp && !bacenta?.swellBussingTopUp) {
+    details.pop()
+  }
+
   return (
     <BaseComponent loading={loading} error={error} data={data} placeholder>
       <DisplayChurchDetails
         details={details}
         loading={loading}
+        church={bacenta}
         momoNumber={bacenta?.momoNumber}
         name={bacenta?.name}
         leaderTitle="Bacenta Leader"

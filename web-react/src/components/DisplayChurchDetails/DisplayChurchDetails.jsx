@@ -302,7 +302,9 @@ const DisplayChurchDetails = (props) => {
           </Row>
         )}
 
-        {props.churchType === 'Bacenta' && (
+        {props.churchType === 'Bacenta' &&
+        (props.church?.normalBussingTopUp ||
+          props.church?.swellBussingTopUp) ? (
           <RoleView
             roles={['leaderBacenta', 'leaderGatheringService']}
             stream={['Campus', 'Town']}
@@ -331,7 +333,7 @@ const DisplayChurchDetails = (props) => {
               </PlaceholderCustom>
             </div>
           </RoleView>
-        )}
+        ) : null}
         <hr />
         <div className="d-grid gap-2">
           <PlaceholderCustom

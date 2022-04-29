@@ -218,6 +218,14 @@ const UpdateBusPayment = () => {
                                   setSubmitting(false)
                                   return
                                 }
+                                if (
+                                  !formik.values.mobileNetwork ||
+                                  !formik.values.momoName ||
+                                  !formik.values.momoNumber
+                                ) {
+                                  throwErrorMsg('No bussing details')
+                                  return
+                                }
 
                                 try {
                                   await UpdateBusPaymentDetails({

@@ -59,6 +59,7 @@ const DetailsBacenta = () => {
       <DisplayChurchDetails
         details={details}
         loading={loading}
+        momoNumber={bacenta?.momoNumber}
         name={bacenta?.name}
         leaderTitle="Bacenta Leader"
         leader={bacenta?.leader}

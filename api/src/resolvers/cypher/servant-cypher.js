@@ -8,7 +8,8 @@ DELETE oldLeads
 
 WITH church, leader
 
-MATCH (church)-[oldHistory:HAS_HISTORY]->(:ServiceLog)<-[oldLeaderHistory:HAS_HISTORY]-(leader)
+
+OPTIONAL MATCH (church)-[oldHistory:HAS_HISTORY]->(:ServiceLog)<-[oldLeaderHistory:HAS_HISTORY]-(leader)
 REMOVE oldHistory.current, oldLeaderHistory.current
 
 RETURN leader.id AS id, leader.auth_id AS auth_id, leader.firstName AS firstName, leader.lastName AS lastName

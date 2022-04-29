@@ -110,7 +110,7 @@ const UpdateBusPayment = () => {
           ),
         },
       })
-      navigate(`/bacenta/displaydetails`)
+      if (!values.mobileNetwork) navigate(`/bacenta/displaydetails`)
     }
 
     if (values.mobileNetwork) {

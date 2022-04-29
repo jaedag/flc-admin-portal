@@ -283,6 +283,7 @@ export const DISPLAY_BACENTA = gql`
       target
       normalBussingTopUp
       swellBussingTopUp
+      momoNumber
       stream_name
       fellowships {
         id

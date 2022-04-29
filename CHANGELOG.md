@@ -1,3 +1,16 @@
+#### 2.2.5 (2022-04-29)
+
+##### New Features
+
+* **arrivals:**
+  *  you cannot fill your forms if you have bussing top up without momo number ([3c13f96e](https://github.com/firstlovecenter/fl-admin-portal/commit/3c13f96e4a98b44a452ea67b845170cb204f193c))
+  *  final preparations for an end to end test ([a915cb3b](https://github.com/firstlovecenter/fl-admin-portal/commit/a915cb3bb52b9e01e31afb1002f6544062d1f043))
+* **directory:**  if you don't take money, you will not be trouble with payment things ([35d7e536](https://github.com/firstlovecenter/fl-admin-portal/commit/35d7e53626c433fdbed0dafcfb363d90647b3ebd))
+
+##### Bug Fixes
+
+*  improved error handling for less than 8 bussing ([2fe3e933](https://github.com/firstlovecenter/fl-admin-portal/commit/2fe3e933ad1bb6226ab64b9f4e593a922d2baf74))
+
 #### 2.2.4 (2022-04-29)
 
 ##### New Features

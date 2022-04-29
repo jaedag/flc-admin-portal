@@ -40,9 +40,4 @@ export const menuItems = [
     to: '/maps',
     roles: ['adminGatheringService'],
   },
-  {
-    name: 'Reconciliation',
-    to: '/recon',
-    roles: ['adminGatheringService'],
-  },
 ]

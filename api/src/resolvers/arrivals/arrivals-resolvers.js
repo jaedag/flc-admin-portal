@@ -170,7 +170,11 @@ export const arrivalsMutation = {
         await session.run(cypher.getBussingRecordWithDate, args)
       )
 
-      let bussingRecord = 0
+      let bussingRecord
+
+      if (response.attendance < 8) {
+        throwErrorMsg("Today's Bussing doesn't merit a top up")
+      }
 
       if (response.attendance >= 8) {
         if (response.dateLabels.includes('SwellDate')) {
@@ -202,7 +206,8 @@ export const arrivalsMutation = {
       throwErrorMsg('Money has already been sent to this bacenta')
     } else if (
       !transactionResponse?.arrivalTime ||
-      transactionResponse?.attendance < 8
+      transactionResponse?.attendance < 8 ||
+      !transactionResponse?.bussingTopUp
     ) {
       //If record has not been confirmed, it will return null
       throwErrorMsg('This bacenta is not eligible to receive money')

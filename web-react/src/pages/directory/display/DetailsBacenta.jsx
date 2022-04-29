@@ -23,13 +23,13 @@ const DetailsBacenta = () => {
 
   const details = [
     {
-      title: 'Status',
+      title: 'Grad. Status',
       number: bacenta?.graduationStatus,
       link: `#`,
       width: 'auto',
     },
     {
-      title: 'Vacation Status',
+      title: 'Status',
       number: bacenta?.vacationStatus,
       link: '#',
       width: 'auto',

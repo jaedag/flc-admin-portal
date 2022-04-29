@@ -52,6 +52,12 @@ const DetailsBacenta = () => {
       link: `#`,
       width: 'auto',
     },
+    {
+      title: 'Momo Number',
+      number: bacenta?.momoNumber || '-',
+      link: `#`,
+      width: 'auto',
+    },
   ]
 
   return (

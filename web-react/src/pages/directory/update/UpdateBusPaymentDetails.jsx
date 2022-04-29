@@ -25,7 +25,7 @@ import {
 import { MOBILE_NETWORK_OPTIONS } from 'pages/arrivals/arrivals-utils'
 import RoleView from 'auth/RoleView'
 import { permitAdminArrivals } from 'permission-utils'
-import useMyAuth from 'auth/useMyAuth'
+import useAuth from 'auth/useAuth'
 import Popup from 'components/Popup/Popup'
 import usePopup from 'hooks/usePopup'
 import { MemberContext } from 'contexts/MemberContext'
@@ -34,7 +34,7 @@ const UpdateBusPayment = () => {
   const { bacentaId } = useContext(ChurchContext)
   const { theme } = useContext(MemberContext)
   const { isOpen, togglePopup } = usePopup()
-  const { isAuthorised } = useMyAuth()
+  const { isAuthorised } = useAuth()
   const [otp] = useState(randomOTPGenerator())
   const [submitting, setSubmitting] = useState(false)
   const navigate = useNavigate()

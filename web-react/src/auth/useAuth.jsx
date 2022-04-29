@@ -1,7 +1,7 @@
 import { MemberContext } from 'contexts/MemberContext'
 import { useContext } from 'react'
 
-const useMyAuth = () => {
+const useAuth = () => {
   const { currentUser } = useContext(MemberContext)
 
   const isAuthorised = (permittedRoles) => {
@@ -14,4 +14,4 @@ const useMyAuth = () => {
   return { isAuthorised }
 }
 
-export default useMyAuth
+export default useAuth

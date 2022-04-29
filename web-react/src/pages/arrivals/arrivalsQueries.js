@@ -263,6 +263,10 @@ export const BACENTA_ARRIVALS = gql`
         arrivalStartTime
         arrivalEndTime
       }
+      momoNumber
+      normalBussingTopUp
+      swellBussingTopUp
+
       arrivalsCodeOfTheDay
       bussing(limit: 1) {
         id

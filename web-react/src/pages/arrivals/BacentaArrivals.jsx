@@ -24,6 +24,16 @@ const BacentaArrivals = () => {
   const bacenta = data?.bacentas[0]
   let bussing
 
+  const isMomoCleared = (bacenta) => {
+    if (bacenta?.normalBussingTopUp || bacenta?.swellBussingTopUp) {
+      if (bacenta?.momoNumber) {
+        return true
+      }
+      return false
+    }
+    return true
+  }
+
   data?.bacentas[0].bussing.map((data) => {
     if (isToday(data.serviceDate.date)) {
       bussing = data
@@ -52,12 +62,34 @@ const BacentaArrivals = () => {
         <HeadingPrimary loading={loading}>
           {bacenta?.name} Arrivals
         </HeadingPrimary>
+        <div className="text-center text-seconday">
+          <p>Code of the Day: </p>
+          <h4 className="fw-bold">{`${bacenta?.arrivalsCodeOfTheDay}`}</h4>
+        </div>
 
         <div className="d-grid gap-2 mt-5">
+          {!isMomoCleared(bacenta) && (
+            <>
+              <Button
+                variant="danger"
+                size="lg"
+                onClick={() => navigate('/bacenta/editbussing')}
+              >
+                Please update your payment details
+              </Button>
+              <p className="text-center fw-bold">
+                You will need this to fill your forms
+              </p>
+            </>
+          )}
+
           <Button
             variant="primary"
             size="lg"
-            disabled={!beforeMobilisationDeadline(bussing, bacenta)}
+            disabled={
+              !beforeMobilisationDeadline(bussing, bacenta) ||
+              !isMomoCleared(bacenta)
+            }
             onClick={() => {
               clickCard(bacenta)
               navigate('/arrivals/submit-mobilisation-picture')

@@ -1094,8 +1094,7 @@ extend type Mutation {
     @cypher(
       statement: """
       MATCH (bussingRecord:BussingRecord {id: $bussingRecordId})
-      SET  bussingRecord.attendance = $attendance,
-      bussingRecord.leaderDeclaration = $attendance,
+      SET bussingRecord.leaderDeclaration = $attendance,
       bussingRecord.bussingPictures = $bussingPictures,
       bussingRecord.bussingCost = $bussingCost,
       bussingRecord.numberOfBusses = $numberOfBusses,

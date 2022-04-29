@@ -196,14 +196,6 @@ const GatheringServiceDashboard = () => {
           />
 
           <MenuButton
-            title="Confirm Bacenta Arrival"
-            onClick={() => navigate('/arrivals/confirm-bacenta-arrival')}
-            number={gatheringService?.bacentasOnTheWayCount.toString()}
-            iconBg
-            noCaption
-          />
-
-          <MenuButton
             title="Bacentas That Have Arrived"
             onClick={() => navigate('/arrivals/bacentas-have-arrived')}
             number={gatheringService?.bacentasHaveArrivedCount.toString()}

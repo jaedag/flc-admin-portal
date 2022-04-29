@@ -308,6 +308,12 @@ const DisplayChurchDetails = (props) => {
             stream={['Campus', 'Town']}
             verifyId={props?.leader?.id}
           >
+            {!props.momoNumber && (
+              <p className="my-1 bad fw-bold text-center">
+                There is no valid Mobile Money Number! Please update!
+              </p>
+            )}
+
             <div className="d-grid gap-2">
               <PlaceholderCustom
                 loading={props.loading}

@@ -3,7 +3,7 @@ import RoleView from 'auth/RoleView'
 import UserProfileIcon from 'components/UserProfileIcon/UserProfileIcon'
 import { ChurchContext } from 'contexts/ChurchContext'
 import { MemberContext } from 'contexts/MemberContext'
-import { authorisedLink, plural } from 'global-utils'
+import { authorisedLink, capitalise, plural } from 'global-utils'
 import { getServiceGraphData } from 'pages/services/reports/report-utils'
 import React, { useContext, useEffect } from 'react'
 import { Container, Nav, Navbar, Offcanvas, Row, Col } from 'react-bootstrap'
@@ -61,7 +61,7 @@ const Navigator = () => {
           data.memberByEmail?.fellowship?.bacenta.constituency?.council.id,
         constituency: data.memberByEmail?.fellowship?.bacenta.constituency?.id,
         church: { church: church, subChurch: 'bacenta' },
-        stream_name: data?.memberByEmail?.stream_name,
+        stream_name: capitalise(data?.memberByEmail?.stream_name),
         stream:
           data.memberByEmail?.fellowship?.bacenta.constituency?.council.stream
             .id,

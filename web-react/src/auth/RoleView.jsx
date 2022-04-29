@@ -5,7 +5,7 @@ import { MemberContext } from '../contexts/MemberContext'
 import { isAuthorised } from '../global-utils'
 
 const RoleView = (props) => {
-  const { roles, children, verifyId } = props
+  const { roles, children, verifyId, stream } = props
   const { currentUser } = useContext(MemberContext)
   const { isAuthenticated } = useAuth0()
 
@@ -21,10 +21,23 @@ const RoleView = (props) => {
     }
   }
 
+  const permittedStream = (stream) => {
+    if (!stream) return true
+
+    if (stream) {
+      if (stream.includes(currentUser.stream_name)) {
+        return true
+      } else {
+        return false
+      }
+    }
+  }
+
   if (
     isAuthenticated &&
     isAuthorised(roles, currentUser.roles) &&
-    verify(verifyId)
+    verify(verifyId) &&
+    permittedStream(stream)
   ) {
     return <>{children}</>
   } else {

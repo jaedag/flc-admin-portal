@@ -305,6 +305,7 @@ const DisplayChurchDetails = (props) => {
         {props.churchType === 'Bacenta' && (
           <RoleView
             roles={['leaderBacenta', 'leaderGatheringService']}
+            stream={['Campus', 'Town']}
             verifyId={props?.leader?.id}
           >
             <div className="d-grid gap-2">

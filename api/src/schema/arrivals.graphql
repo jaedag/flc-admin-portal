@@ -66,7 +66,7 @@ extend type GatheringService {
       MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
         WHERE date(date.date)=date()
         AND bussing.mobilisationPicture IS NOT NULL
-        AND bussing.attendance IS NULL
+        AND bussing.leaderDeclaration IS NULL
       }
       RETURN DISTINCT bacentas
       """
@@ -79,7 +79,7 @@ extend type GatheringService {
       MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
         WHERE date(date.date)=date()
         AND bussing.mobilisationPicture IS NOT NULL
-        AND bussing.attendance IS NULL
+        AND bussing.leaderDeclaration IS NULL
       }
       RETURN COUNT(DISTINCT bacentas)
       """
@@ -243,7 +243,7 @@ extend type Stream {
       MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
         WHERE date(date.date)=date()
         AND bussing.mobilisationPicture IS NOT NULL
-        AND bussing.attendance IS NULL
+        AND bussing.leaderDeclaration IS NULL
       }
       RETURN DISTINCT bacentas
       """
@@ -256,7 +256,7 @@ extend type Stream {
       MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
         WHERE date(date.date)=date()
         AND bussing.mobilisationPicture IS NOT NULL
-        AND bussing.attendance IS NULL
+        AND bussing.leaderDeclaration IS NULL
       }
       RETURN COUNT(DISTINCT bacentas)
       """
@@ -418,7 +418,7 @@ extend type Council {
       MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
         WHERE date(date.date)=date()
         AND bussing.mobilisationPicture IS NOT NULL
-        AND bussing.attendance IS NULL
+        AND bussing.leaderDeclaration IS NULL
       }
       RETURN DISTINCT bacentas
       """
@@ -431,7 +431,7 @@ extend type Council {
       MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
         WHERE date(date.date)=date()
         AND bussing.mobilisationPicture IS NOT NULL
-        AND bussing.attendance IS NULL
+        AND bussing.leaderDeclaration IS NULL
       }
       RETURN COUNT(DISTINCT bacentas)
       """
@@ -592,7 +592,7 @@ extend type Constituency {
       MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
         WHERE date(date.date)=date()
         AND bussing.mobilisationPicture IS NOT NULL
-        AND bussing.attendance IS NULL
+        AND bussing.leaderDeclaration IS NULL
       }
       RETURN DISTINCT bacentas
       """
@@ -605,7 +605,7 @@ extend type Constituency {
       MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
         WHERE date(date.date)=date()
         AND bussing.mobilisationPicture IS NOT NULL
-        AND bussing.attendance IS NULL
+        AND bussing.leaderDeclaration IS NULL
       }
       RETURN COUNT(DISTINCT bacentas)
       """

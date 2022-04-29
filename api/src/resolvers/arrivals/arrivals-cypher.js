@@ -3,10 +3,7 @@ MATCH (record:BussingRecord {id: $bussingRecordId})<-[:HAS_BUSSING]-(:ServiceLog
 MATCH (record)-[:BUSSED_ON]->(date:TimeGraph)
 MATCH (transaction: LastPaySwitchTransactionId)
 SET record.transactionId = transaction.id + 1,
-transaction.id = record.transactionId,
-record.momoNumber = bacenta.momoNumber, 
-record.mobileNetwork = bacenta.mobileNetwork,
-record.momoName = bacenta.momoName
+transaction.id = record.transactionId
 
 RETURN record, bacenta.name AS bacentaName, date.date AS date
 `
@@ -40,13 +37,21 @@ RETURN toString(date.date) AS id, date.date AS date, true AS swell
 
 export const setSwellBussingTopUp = `
 MATCH (record:BussingRecord {id: $bussingRecordId})<-[:HAS_BUSSING]-(:ServiceLog)<-[:HAS_HISTORY]-(bacenta:Bacenta)
-SET record.bussingTopUp = bacenta.swellBussingCost - bacenta.swellPersonalContribution
+SET record.bussingTopUp = bacenta.swellBussingCost - bacenta.swellPersonalContribution,
+record.momoNumber = bacenta.momoNumber, 
+record.mobileNetwork = bacenta.mobileNetwork,
+record.momoName = bacenta.momoName
+
 RETURN record
 `
 
 export const setNormalBussingTopUp = `
 MATCH (record:BussingRecord {id: $bussingRecordId})<-[:HAS_BUSSING]-(:ServiceLog)<-[:HAS_HISTORY]-(bacenta:Bacenta)
-SET record.bussingTopUp = bacenta.normalBussingCost - bacenta.normalPersonalContribution
+SET record.bussingTopUp = bacenta.normalBussingCost - bacenta.normalPersonalContribution,
+record.momoNumber = bacenta.momoNumber, 
+record.mobileNetwork = bacenta.mobileNetwork,
+record.momoName = bacenta.momoName
+
 RETURN record
 `
 

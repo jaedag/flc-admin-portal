@@ -112,6 +112,11 @@ const UpdateBusPayment = () => {
         navigate(`/bacenta/displaydetails`)
     }
 
+    if (!values.mobileNetwork || !values.momoName || !values.momoNumber) {
+      throwErrorMsg('No bussing details')
+      return
+    }
+
     if (initialValues.momoNumber !== values.momoNumber) {
       await SendMobileVerificationNumber({
         variables: {
@@ -122,8 +127,6 @@ const UpdateBusPayment = () => {
       })
       togglePopup()
     }
-
-    onSubmitProps.setSubmitting(false)
   }
 
   return (
@@ -216,14 +219,6 @@ const UpdateBusPayment = () => {
                                     'Your verification code is wrong! Try again 😡'
                                   )
                                   setSubmitting(false)
-                                  return
-                                }
-                                if (
-                                  !formik.values.mobileNetwork ||
-                                  !formik.values.momoName ||
-                                  !formik.values.momoNumber
-                                ) {
-                                  throwErrorMsg('No bussing details')
                                   return
                                 }
 

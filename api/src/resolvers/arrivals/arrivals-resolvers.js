@@ -17,7 +17,7 @@ const {
   rearrangeCypherObject,
   throwErrorMsg,
 } = require('../resolver-utils')
-const { MakeServant, RemoveServant } = require('../resolvers')
+import { MakeServant, RemoveServant } from '../resolvers'
 const cypher = require('./arrivals-cypher')
 const axios = require('axios').default
 
@@ -165,26 +165,29 @@ export const arrivalsMutation = {
   },
   SetBussingSupport: async (object, args, context) => {
     const session = context.driver.session()
+    try {
+      const response = rearrangeCypherObject(
+        await session.run(cypher.getBussingRecordWithDate, args)
+      )
 
-    const response = rearrangeCypherObject(
-      await session.run(cypher.getBussingRecordWithDate, args)
-    )
+      let bussingRecord = 0
 
-    let bussingRecord = 0
-
-    if (response.attendance >= 8) {
-      if (response.dateLabels.includes('SwellDate')) {
-        bussingRecord = rearrangeCypherObject(
-          await session.run(cypher.setSwellBussingTopUp, args)
-        )
-      } else {
-        bussingRecord = rearrangeCypherObject(
-          await session.run(cypher.setNormalBussingTopUp, args)
-        )
+      if (response.attendance >= 8) {
+        if (response.dateLabels.includes('SwellDate')) {
+          bussingRecord = rearrangeCypherObject(
+            await session.run(cypher.setSwellBussingTopUp, args)
+          )
+        } else {
+          bussingRecord = rearrangeCypherObject(
+            await session.run(cypher.setNormalBussingTopUp, args)
+          )
+        }
       }
-    }
 
-    return bussingRecord?.record.properties
+      return bussingRecord?.record.properties
+    } catch (error) {
+      throwErrorMsg(error)
+    }
   },
   SendBussingSupport: async (object, args, context) => {
     isAuth(permitArrivalsHelpers(), context.auth.roles)

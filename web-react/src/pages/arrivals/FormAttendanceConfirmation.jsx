@@ -14,6 +14,7 @@ import { DISPLAY_BUSSING_RECORDS } from './arrivalsQueries'
 import {
   CONFIRM_BUSSING_BY_ADMIN,
   SEND_BUSSING_SUPPORT,
+  SET_BUSSING_SUPPORT,
 } from './arrivalsMutations'
 import { useNavigate } from 'react-router'
 import FormikControl from 'components/formik-components/FormikControl'
@@ -34,6 +35,7 @@ const FormAttendanceConfirmation = () => {
     variables: { bussingRecordId: bussingRecordId, bacentaId: bacentaId },
   })
   const [ConfirmBussingByAdmin] = useMutation(CONFIRM_BUSSING_BY_ADMIN)
+  const [SetBussingSupport] = useMutation(SET_BUSSING_SUPPORT)
   const [SendBussingSupport] = useMutation(SEND_BUSSING_SUPPORT)
 
   const bussing = data?.bussingRecords[0]
@@ -55,13 +57,23 @@ const FormAttendanceConfirmation = () => {
   const onSubmit = async (values, onSubmitProps) => {
     const { setSubmitting } = onSubmitProps
     setSubmitting(true)
+
     const res = await ConfirmBussingByAdmin({
       variables: {
         bussingRecordId: bussingRecordId,
         attendance: parseInt(values.attendance),
         comments: values.comments,
       },
-    })
+    }).catch((error) =>
+      throwErrorMsg('There was an error confirming bussing', error)
+    )
+    await SetBussingSupport({
+      variables: {
+        bussingRecordId: bussingRecordId,
+      },
+    }).catch((error) =>
+      throwErrorMsg('There was an error setting bussing support', error)
+    )
 
     const bussingData = res.data.ConfirmBussingByAdmin
 
@@ -89,9 +101,9 @@ const FormAttendanceConfirmation = () => {
       } catch (error) {
         setSubmitting(false)
         throwErrorMsg(error)
-        navigate(`/bacenta/bussing-details`)
       }
     }
+    navigate(`/bacenta/bussing-details`)
   }
 
   return (

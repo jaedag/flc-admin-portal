@@ -820,6 +820,11 @@ type BussingRecord implements Record @auth(rules: [{ isAuthenticated: true }]) {
   arrivalTime_Logged_By: Member
     @relationship(type: "ARRIVAL_LOGGED_BY", direction: OUT)
 
+  #Money Things
+  mobileNetwork: String
+  momoNumber: String
+  momoName: String
+
   serviceLog: ServiceLog @relationship(type: "HAS_BUSSING", direction: IN)
 }
 
@@ -1089,7 +1094,7 @@ extend type Mutation {
     @cypher(
       statement: """
       MATCH (bussingRecord:BussingRecord {id: $bussingRecordId})
-      SET bussingRecord.attendance = $attendance,
+      SET  bussingRecord.attendance = $attendance,
       bussingRecord.leaderDeclaration = $attendance,
       bussingRecord.bussingPictures = $bussingPictures,
       bussingRecord.bussingCost = $bussingCost,

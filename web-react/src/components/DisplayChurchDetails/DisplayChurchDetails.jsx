@@ -306,7 +306,7 @@ const DisplayChurchDetails = (props) => {
         (props.church?.normalBussingTopUp ||
           props.church?.swellBussingTopUp) ? (
           <RoleView
-            roles={['leaderBacenta', 'leaderGatheringService']}
+            roles={['leaderBacenta']}
             stream={['Campus', 'Town']}
             verifyId={props?.leader?.id}
           >

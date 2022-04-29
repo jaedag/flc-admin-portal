@@ -13,12 +13,10 @@ import { ChurchContext } from 'contexts/ChurchContext'
 import BaseComponent from 'components/base-component/BaseComponent'
 import PlusSign from 'components/buttons/PlusMinusSign/PlusSign'
 import MinusSign from 'components/buttons/PlusMinusSign/MinusSign'
-import {
-  RECORD_BUSSING_FROM_BACENTA,
-  SET_BUSSING_SUPPORT,
-} from './arrivalsMutations'
+import { RECORD_BUSSING_FROM_BACENTA } from './arrivalsMutations'
 import { parseDate } from 'date-utils'
 import { ServiceContext } from 'contexts/ServiceContext'
+import { throwErrorMsg } from 'global-utils'
 
 const FormOnTheWaySubmission = () => {
   const navigate = useNavigate()
@@ -38,7 +36,6 @@ const FormOnTheWaySubmission = () => {
 
   const bacenta = data?.bacentas[0]
   const [RecordBussingFromBacenta] = useMutation(RECORD_BUSSING_FROM_BACENTA)
-  const [SetBussingSupport] = useMutation(SET_BUSSING_SUPPORT)
 
   const validationSchema = Yup.object({
     attendance: Yup.number()
@@ -66,27 +63,26 @@ const FormOnTheWaySubmission = () => {
 
   const onSubmit = async (values, onSubmitProps) => {
     onSubmitProps.setSubmitting(true)
-    const res = await RecordBussingFromBacenta({
-      variables: {
-        attendance: parseInt(values.attendance),
-        bussingRecordId: bussingRecordId,
-        bussingPictures: values.bussingPictures,
-        bussingCost: parseFloat(values.bussingCost),
-        numberOfBusses: parseInt(values.numberOfBusses),
-        numberOfCars: parseInt(values.numberOfCars || 0),
-      },
-    })
+    try {
+      const res = await RecordBussingFromBacenta({
+        variables: {
+          attendance: parseInt(values.attendance),
+          bussingRecordId: bussingRecordId,
+          bussingPictures: values.bussingPictures,
+          bussingCost: parseFloat(values.bussingCost),
+          numberOfBusses: parseInt(values.numberOfBusses),
+          numberOfCars: parseInt(values.numberOfCars || 0),
+        },
+      })
 
-    clickCard(res.data.RecordBussingFromBacenta)
-    await SetBussingSupport({
-      variables: {
-        bussingRecordId: bussingRecordId,
-      },
-    })
+      clickCard(res.data.RecordBussingFromBacenta)
 
-    onSubmitProps.resetForm()
-    onSubmitProps.setSubmitting(false)
-    navigate(`/bacenta/bussing-details`)
+      onSubmitProps.resetForm()
+      onSubmitProps.setSubmitting(false)
+      navigate(`/bacenta/bussing-details`)
+    } catch (error) {
+      throwErrorMsg('There was a problem submitting your form', error)
+    }
   }
 
   return (
@@ -150,7 +146,7 @@ const FormOnTheWaySubmission = () => {
                       const { values } = form
                       const { bussingPictures } = values
 
-                      const pictureLimit = 4
+                      const pictureLimit = 5
 
                       return (
                         <>

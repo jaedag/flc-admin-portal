@@ -3,7 +3,10 @@ MATCH (record:BussingRecord {id: $bussingRecordId})<-[:HAS_BUSSING]-(:ServiceLog
 MATCH (record)-[:BUSSED_ON]->(date:TimeGraph)
 MATCH (transaction: LastPaySwitchTransactionId)
 SET record.transactionId = transaction.id + 1,
-transaction.id = record.transactionId
+transaction.id = record.transactionId,
+record.momoNumber = bacenta.momoNumber, 
+record.mobileNetwork = bacenta.mobileNetwork,
+record.momoName = bacenta.momoName
 
 RETURN record, bacenta.name AS bacentaName, date.date AS date
 `

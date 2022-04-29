@@ -37,7 +37,7 @@ const ButtonConfirmPayment = (props) => {
               navigate('/self-banking/receipt')
             }
 
-            alertMsg('Payment Confirmed Successfully')
+            alertMsg('Payment Confirmed Successfully 😊')
             navigate('/self-banking/receipt')
           })
           .catch((error) => {

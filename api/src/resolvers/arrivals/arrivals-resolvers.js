@@ -224,7 +224,7 @@ export const arrivalsMutation = {
         amount: padNumbers(bussingRecord.bussingTopUp * 100),
         processing_code: '404000',
         'r-switch': 'FLT',
-        desc: `${cypherResponse.bacentaName} Bacenta ${transactionResponse.momoName}`,
+        desc: `${cypherResponse.bacentaName} Bacenta ${bussingRecord.momoName}`,
         pass_code: passcode,
         account_number: bussingRecord.momoNumber,
         account_issuer: getMobileCode(bussingRecord.mobileNetwork),

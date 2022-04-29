@@ -1,3 +1,14 @@
+#### 2.2.3 (2022-04-29)
+
+##### Bug Fixes
+
+*  removed bus payment details button for anagkazo ([6a588a50](https://github.com/firstlovecenter/fl-admin-portal/commit/6a588a502a7ff60180b9c79c0e6423736b9c1d9e))
+* **self-banking:**  admin-112 removed self banking option for anagkazo ([2cc829f1](https://github.com/firstlovecenter/fl-admin-portal/commit/2cc829f1d07ad915d2f22c8ae97ecf79e3c9d8aa))
+
+##### Performance Improvements
+
+*  tidied up useAuth custom hook ([24433eb7](https://github.com/firstlovecenter/fl-admin-portal/commit/24433eb7a293d4f78d86b171e6d94b435077650e))
+
 #### 2.2.2 (2022-04-29)
 
 ##### Chores

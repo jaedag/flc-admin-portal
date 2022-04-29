@@ -83,16 +83,19 @@ const Services = () => {
                   )
                 }}
               />
-
-              <MenuButton
-                iconComponent={Coin}
-                title="Self Banking Option"
-                color="banking"
-                noCaption
-                onClick={() =>
-                  navigate(`/services/${churchType.toLowerCase()}/self-banking`)
-                }
-              />
+              {!currentUser?.stream_name !== 'anagkazo' && (
+                <MenuButton
+                  iconComponent={Coin}
+                  title="Self Banking Option"
+                  color="banking"
+                  noCaption
+                  onClick={() =>
+                    navigate(
+                      `/services/${churchType.toLowerCase()}/self-banking`
+                    )
+                  }
+                />
+              )}
             </>
           )}
         </div>

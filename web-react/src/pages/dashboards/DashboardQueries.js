@@ -57,6 +57,7 @@ export const SERVANTS_DASHBOARD = gql`
       lastName
       fullName
       pictureUrl
+      stream_name
       leadsFellowship {
         id
         name

@@ -61,6 +61,7 @@ const Navigator = () => {
           data.memberByEmail?.fellowship?.bacenta.constituency?.council.id,
         constituency: data.memberByEmail?.fellowship?.bacenta.constituency?.id,
         church: { church: church, subChurch: 'bacenta' },
+        stream_name: data?.memberByEmail?.stream_name,
         stream:
           data.memberByEmail?.fellowship?.bacenta.constituency?.council.stream
             .id,

@@ -53,22 +53,19 @@ const PayOffering = (props) => {
     const { setSubmitting } = onSubmitProps
 
     setSubmitting(true)
-    try {
-      BankServiceOffering({
-        variables: {
-          serviceRecordId: serviceRecordId,
-          stream_name: service.stream_name,
-          mobileNetwork: values.mobileNetwork,
-          mobileNumber: values.mobileNumber,
-          momoName: values.momoName,
-        },
-      })
-    } catch (error) {
-      throwErrorMsg(error)
-    }
 
-    navigate('/self-banking/confirm-payment')
+    BankServiceOffering({
+      variables: {
+        serviceRecordId: serviceRecordId,
+        stream_name: service.stream_name,
+        mobileNetwork: values.mobileNetwork,
+        mobileNumber: values.mobileNumber,
+        momoName: values.momoName,
+      },
+    }).catch((error) => throwErrorMsg('There was a problem', error))
+
     setSubmitting(false)
+    navigate('/self-banking/confirm-payment')
   }
 
   return (

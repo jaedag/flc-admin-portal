@@ -106,25 +106,23 @@ const FellowshipSelfBanking = () => {
       })}
 
       {loading &&
-        placeholder.map((service, index) => {
-          return (
-            <Card key={index} className="mb-2">
-              <Card.Header>
-                <PlaceholderCustom as="p" loading={loading}></PlaceholderCustom>
-              </Card.Header>
-              <Card.Body>
-                <Row>
-                  <Col>
-                    <PlaceholderCustom
-                      as="span"
-                      loading={loading}
-                    ></PlaceholderCustom>
-                  </Col>
-                </Row>
-              </Card.Body>
-            </Card>
-          )
-        })}
+        placeholder.map((service, index) => (
+          <Card key={index} className="mb-2">
+            <Card.Header>
+              <PlaceholderCustom as="p" loading={loading}></PlaceholderCustom>
+            </Card.Header>
+            <Card.Body>
+              <Row>
+                <Col>
+                  <PlaceholderCustom
+                    as="span"
+                    loading={loading}
+                  ></PlaceholderCustom>
+                </Col>
+              </Row>
+            </Card.Body>
+          </Card>
+        ))}
     </Container>
   )
 }

@@ -23,7 +23,9 @@ export const bankingMutation = {
 
     // This code checks if there has already been a successful transaction
     const transactionResponse = rearrangeCypherObject(
-      await session.run(cypher.checkTransactionId, args)
+      await session
+        .run(cypher.checkTransactionId, args)
+        .catch((error) => throwErrorMsg(error))
     )
 
     const transactionStatus =
@@ -39,10 +41,12 @@ export const bankingMutation = {
     }
 
     const cypherResponse = rearrangeCypherObject(
-      await session.run(cypher.setServiceRecordTransactionId, {
-        auth: context.auth,
-        ...args,
-      })
+      await session
+        .run(cypher.setServiceRecordTransactionId, {
+          auth: context.auth,
+          ...args,
+        })
+        .catch((error) => throwErrorMsg(error))
     )
 
     const serviceRecord = cypherResponse.record.properties

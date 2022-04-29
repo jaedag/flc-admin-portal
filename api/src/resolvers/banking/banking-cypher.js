@@ -12,7 +12,7 @@ MATCH (author:Member {auth_id: $auth.jwt.sub})
 MATCH (record)-[:SERVICE_HELD_ON]->(date:TimeGraph)
 MATCH (transaction: LastPaySwitchTransactionId)
     SET record.transactionId = transaction.id + 1,  
-    ransaction.id = record.transactionId,
+    transaction.id = record.transactionId,
     record.sourceNumber = $mobileNumber,
     record.sourceNetwork = $mobileNetwork,
     record.desc = church.name + ' ' + churchLevel + ' '  + date.date,

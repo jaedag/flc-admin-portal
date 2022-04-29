@@ -250,7 +250,7 @@ export const CONFIRM_GATHERINGSERVICE_ARRIVALS = gql`
 `
 
 export const BACENTA_ARRIVALS = gql`
-  query ($id: ID!) {
+  query ($id: ID!, $date: Date) {
     bacentas(where: { id: $id }, options: { limit: 1 }) {
       id
       name
@@ -279,6 +279,11 @@ export const BACENTA_ARRIVALS = gql`
         bussingPictures
         arrivalTime
       }
+    }
+    timeGraphs(where: { date: $date }) {
+      id
+      date
+      swell
     }
   }
 `

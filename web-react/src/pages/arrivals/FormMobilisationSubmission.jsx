@@ -13,6 +13,7 @@ import { ChurchContext } from 'contexts/ChurchContext'
 import BaseComponent from 'components/base-component/BaseComponent'
 import { UPLOAD_MOBILISATION_PICTURE } from './arrivalsMutations'
 import { beforeMobilisationDeadline } from './arrivals-utils'
+import { isToday } from 'date-utils'
 
 const FormMobilisationSubmission = () => {
   const navigate = useNavigate()
@@ -51,15 +52,18 @@ const FormMobilisationSubmission = () => {
   }
 
   useEffect(() => {
-    if (
-      !beforeMobilisationDeadline(
-        data?.bacentas[0].bussing[0],
-        data?.bacentas[0]
-      )
-    ) {
+    let bussing
+
+    data?.bacentas[0].bussing.forEach((data) => {
+      if (isToday(data.serviceDate.date)) {
+        bussing = data
+      }
+    })
+
+    if (data && !beforeMobilisationDeadline(bussing, data?.bacentas[0])) {
       navigate('/arrivals/bacenta')
     }
-  }, [data?.bacentas, navigate])
+  }, [data?.bacentas, navigate, data])
 
   return (
     <BaseComponent data={data} loading={loading} error={error}>

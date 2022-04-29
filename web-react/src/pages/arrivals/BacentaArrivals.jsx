@@ -13,15 +13,19 @@ import {
   beforeMobilisationDeadline,
 } from './arrivals-utils'
 import { isToday } from 'date-utils'
+import HeadingSecondary from 'components/HeadingSecondary'
 
 const BacentaArrivals = () => {
   const { clickCard, bacentaId } = useContext(ChurchContext)
   const navigate = useNavigate()
+  const today = new Date().toISOString().slice(0, 10)
   const { data, loading, error } = useQuery(BACENTA_ARRIVALS, {
-    variables: { id: bacentaId },
+    variables: { id: bacentaId, date: today },
   })
 
   const bacenta = data?.bacentas[0]
+  const date = data?.timeGraphs[0]
+
   let bussing
 
   const isMomoCleared = (bacenta) => {
@@ -62,6 +66,11 @@ const BacentaArrivals = () => {
         <HeadingPrimary loading={loading}>
           {bacenta?.name} Arrivals
         </HeadingPrimary>
+        {date?.swell && (
+          <HeadingSecondary loading={loading}>
+            <h3 className="fw-bold text-center yellow">Swollen Weekend!!!</h3>
+          </HeadingSecondary>
+        )}
         <div className="text-center text-seconday">
           <p>Code of the Day: </p>
           <h4 className="fw-bold">{`${bacenta?.arrivalsCodeOfTheDay}`}</h4>

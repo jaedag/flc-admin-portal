@@ -163,6 +163,57 @@ export const arrivalsMutation = {
 
     return stream?.record.properties
   },
+  UploadMobilisationPicture: async (object, args, context) => {
+    const session = context.driver.session()
+    isAuth(['leaderBacenta'], context.auth.roles)
+    const checkBacentaMomo = rearrangeCypherObject(
+      await session.run(cypher.checkBacentaMomoDetails, args)
+    )
+
+    if (
+      !checkBacentaMomo.momoNumber &&
+      (checkBacentaMomo.normalTopUp || checkBacentaMomo.swellTopUp)
+    ) {
+      throwErrorMsg('You need a mobile money number before filling this form')
+    }
+
+    const response = rearrangeCypherObject(
+      await session.run(cypher.uploadMobilisationPicture, {
+        ...args,
+        auth: context.auth,
+      })
+    )
+
+    const bacenta = response.bacenta.properties
+    const bussingRecord = response.bussingRecord.properties
+    const date = response.date.properties
+
+    const returnToCache = {
+      id: bussingRecord.id,
+      attendance: bussingRecord.attendance,
+      mobilisationPicture: bussingRecord.mobilisationPicture,
+      serviceLog: {
+        bacenta: [
+          {
+            id: bacenta.id,
+            stream_name: response.stream_name,
+            bussing: [
+              {
+                id: bussingRecord.id,
+                serviceDate: {
+                  date: date.date,
+                },
+                week: response.week,
+                mobilisationPicture: bussingRecord.mobilisationPicture,
+              },
+            ],
+          },
+        ],
+      },
+    }
+
+    return returnToCache
+  },
   SetBussingSupport: async (object, args, context) => {
     const session = context.driver.session()
     try {
@@ -173,11 +224,20 @@ export const arrivalsMutation = {
       let bussingRecord
 
       if (response.attendance < 8) {
-        throwErrorMsg("Today's Bussing doesn't merit a top up")
+        try {
+          rearrangeCypherObject(await session.run(cypher.lessThanEight, args))
+        } catch (error) {
+          console.log(error)
+        } finally {
+          throwErrorMsg("Today's Bussing doesn't merit a top up")
+        }
       }
 
       if (response.attendance >= 8) {
-        if (response.dateLabels.includes('SwellDate')) {
+        if (
+          response.attendance >= response.target &&
+          response.dateLabels.includes('SwellDate')
+        ) {
           bussingRecord = rearrangeCypherObject(
             await session.run(cypher.setSwellBussingTopUp, args)
           )

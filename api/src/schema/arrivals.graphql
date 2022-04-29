@@ -1,6 +1,6 @@
 type SwellDate implements TimeGraphNode
   @auth(rules: [{ isAuthenticated: true }]) {
-  id: ID
+  id: ID!
     @cypher(
       statement: """
       MATCH (this)
@@ -1055,6 +1055,7 @@ extend type Mutation {
       """
     )
 
+  # TODO: Rewrite this as a resolver to prevent anyone from filling this who doesn't have momo details
   UploadMobilisationPicture(
     bacentaId: ID!
     serviceDate: String!
@@ -1062,23 +1063,7 @@ extend type Mutation {
   ): BussingRecord
     @cypher(
       statement: """
-       CREATE (bussingRecord:BussingRecord {created_at:datetime()})
-         SET bussingRecord.id = apoc.create.uuid(),
-         bussingRecord.mobilisationPicture = $mobilisationPicture
 
-       WITH bussingRecord
-         MATCH (bacenta:Bacenta {id:$bacentaId})
-         MATCH (bacenta)-[has_history:HAS_HISTORY {current: true}]->(log:ServiceLog)
-
-       MERGE (log)-[:HAS_BUSSING]->(bussingRecord)
-       MERGE (serviceDate:TimeGraph {date: date($serviceDate)})
-       MERGE (bussingRecord)-[:BUSSED_ON]->(serviceDate)
-
-      WITH bussingRecord
-         MATCH (leader:Member {auth_id: $auth.jwt.sub})
-         MERGE (bussingRecord)-[:LOGGED_BY]->(leader)
-
-       RETURN bussingRecord
       """
     )
 

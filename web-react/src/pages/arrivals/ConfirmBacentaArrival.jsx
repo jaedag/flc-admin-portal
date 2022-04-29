@@ -109,12 +109,15 @@ const ConfirmBacentaArrival = () => {
                     },
                   })
                   const bussingData = arrivalRes.data.RecordArrivalTime
+
                   if (
                     !bussingData.bussingTopUp ||
                     church?.stream_name === 'Anagkazo'
                   ) {
                     //if there is no value for the bussing top up
-                    return
+                    alertMsg(
+                      'Money will be sent when attendance is counted and confirmed'
+                    )
                   }
 
                   if (bussingData.confirmed_by?.id) {
@@ -134,10 +137,6 @@ const ConfirmBacentaArrival = () => {
                     } catch (error) {
                       throwErrorMsg(error)
                     }
-                  } else {
-                    alertMsg(
-                      'Money will be sent when attendance is counted and confirmed'
-                    )
                   }
 
                   setSubmitting(false)
@@ -225,7 +224,8 @@ const ConfirmBacentaArrival = () => {
             </Card.Footer>
           </Card>
         ))}
-        {!bacentaData?.length && (
+
+        {!bacentaData?.length && !loading && (
           <NoData text="There is no data to display for you" />
         )}
 

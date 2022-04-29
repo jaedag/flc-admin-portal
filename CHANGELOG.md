@@ -1,3 +1,13 @@
+#### 2.2.2 (2022-04-29)
+
+##### Chores
+
+*  merge improvements into deploy branch ([2c1c6791](https://github.com/firstlovecenter/fl-admin-portal/commit/2c1c6791fff4958f19796551bd070276ec11f906))
+
+##### Bug Fixes
+
+* **self-banking:**  fixed bug with self banking feature and improved error handling ([1d1668f4](https://github.com/firstlovecenter/fl-admin-portal/commit/1d1668f48e8fd0ddf4775d6431edf6fe7f955ed7))
+
 #### 2.2.1 (2022-04-27)
 
 ##### New Features

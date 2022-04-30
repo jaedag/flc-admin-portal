@@ -228,7 +228,7 @@ const UpdateBusPayment = () => {
                                       bacentaId,
                                       mobileNetwork:
                                         formik.values.mobileNetwork,
-                                      momoName: formik.values.momoName,
+                                      momoName: formik.values.momoName.trim(),
                                       momoNumber: formik.values.momoNumber,
                                     },
                                   })

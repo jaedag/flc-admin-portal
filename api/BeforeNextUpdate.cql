@@ -70,3 +70,17 @@ MERGE (lowerChurch)-[:HAS_HISTORY {current:true}]->(newLowerLog)
 MERGE (mainLog)-[:HAS_COMPONENT]->(newLowerLog)
 
 RETURN mainChurch;
+
+
+
+// Delete Swell Dates
+MATCH (n:SwellDate)
+DETACH DELETE n;
+
+
+MATCH (n:BussingRecord)
+DETACH DELETE n;
+
+
+
+

@@ -110,8 +110,8 @@ const MemberDisplayCard = (props) => {
           </div>
         </div>
       </Card.Body>
-      <Card.Footer>
-        {props.contact && (
+      {props.contact && (
+        <Card.Footer>
           <div className="d-flex align-items-center">
             <a href={`tel:${leader?.phoneNumber}`}>
               <Button variant="primary">
@@ -127,8 +127,8 @@ const MemberDisplayCard = (props) => {
               </Button>
             </a>
           </div>
-        )}
-      </Card.Footer>
+        </Card.Footer>
+      )}
     </Card>
   )
 }

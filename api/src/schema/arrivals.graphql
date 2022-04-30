@@ -150,7 +150,7 @@ extend type GatheringService {
       statement: """
       MATCH (this)-[:HAS*4]->(bacentas:Active:Bacenta)
       MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
-      WHERE date(date.date)=date()
+      WHERE date(date.date)=date() AND bussing.leaderDeclaration IS NOT NULL
       AND NOT EXISTS {
        MATCH (bussing)-[:CONFIRMED_BY]->(:Member)
       }
@@ -162,7 +162,7 @@ extend type GatheringService {
       statement: """
       MATCH (this)-[:HAS*4]->(bacentas:Active:Bacenta)
       MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
-      WHERE date(date.date)=date()
+       WHERE date(date.date)=date() AND bussing.leaderDeclaration IS NOT NULL
       AND NOT EXISTS {
         MATCH (bussing)-[:CONFIRMED_BY]->(:Member)
       }
@@ -327,7 +327,7 @@ extend type Stream {
       statement: """
       MATCH (this)-[:HAS*3]->(bacentas:Active:Bacenta)
       MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
-      WHERE date(date.date)=date()
+      WHERE date(date.date)=date() AND bussing.leaderDeclaration IS NOT NULL
       AND NOT EXISTS {
        MATCH (bussing)-[:CONFIRMED_BY]->(:Member)
       }
@@ -339,7 +339,7 @@ extend type Stream {
       statement: """
       MATCH (this)-[:HAS*3]->(bacentas:Active:Bacenta)
       MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
-      WHERE date(date.date)=date()
+      WHERE date(date.date)=date() AND bussing.leaderDeclaration IS NOT NULL
       AND NOT EXISTS {
         MATCH (bussing)-[:CONFIRMED_BY]->(:Member)
       }
@@ -502,7 +502,7 @@ extend type Council {
       statement: """
       MATCH (this)-[:HAS*2]->(bacentas:Active:Bacenta)
       MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
-      WHERE date(date.date)=date()
+      WHERE date(date.date)=date() AND bussing.leaderDeclaration IS NOT NULL
       AND NOT EXISTS {
        MATCH (bussing)-[:CONFIRMED_BY]->(:Member)
       }
@@ -514,7 +514,7 @@ extend type Council {
       statement: """
       MATCH (this)-[:HAS*2]->(bacentas:Active:Bacenta)
       MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
-      WHERE date(date.date)=date()
+      WHERE date(date.date)=date() AND bussing.leaderDeclaration IS NOT NULL
       AND NOT EXISTS {
         MATCH (bussing)-[:CONFIRMED_BY]->(:Member)
       }
@@ -676,7 +676,7 @@ extend type Constituency {
       statement: """
       MATCH (this)-[:HAS]->(bacentas:Active:Bacenta)
       MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
-      WHERE date(date.date)=date()
+     WHERE date(date.date)=date() AND bussing.leaderDeclaration IS NOT NULL
       AND NOT EXISTS {
        MATCH (bussing)-[:CONFIRMED_BY]->(:Member)
       }
@@ -688,7 +688,7 @@ extend type Constituency {
       statement: """
       MATCH (this)-[:HAS]->(bacentas:Active:Bacenta)
       MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
-      WHERE date(date.date)=date()
+     WHERE date(date.date)=date() AND bussing.leaderDeclaration IS NOT NULL
       AND NOT EXISTS {
         MATCH (bussing)-[:CONFIRMED_BY]->(:Member)
       }

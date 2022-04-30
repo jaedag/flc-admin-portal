@@ -1,3 +1,16 @@
+#### 2.2.6 (2022-04-30)
+
+##### New Features
+
+*  implemented a custom resolver such that you need momo details before uploading pre mobilisati ([f9aaaf8f](https://github.com/firstlovecenter/fl-admin-portal/commit/f9aaaf8f94be1043283835c3fe2386e503dfd447))
+
+##### Bug Fixes
+
+*  fixed bug preventing counters from counting ([f6b3fa06](https://github.com/firstlovecenter/fl-admin-portal/commit/f6b3fa065c6e0eccc277597980e3f0c9bda51651))
+*  fixed error where mobilising bacentas were showing up as bacentas to be counted ([f149bc29](https://github.com/firstlovecenter/fl-admin-portal/commit/f149bc29b996113ed1ac1f4cd92527d6266575f9))
+*  minor improvements ([10bb9f22](https://github.com/firstlovecenter/fl-admin-portal/commit/10bb9f226ef442b38803d890440dfd53ea136ea4))
+*  fixed error in counting and listing the number of bacentas mobilising ([7a7573a0](https://github.com/firstlovecenter/fl-admin-portal/commit/7a7573a079909f04cb9a709f4975181d9d1fd003))
+
 #### 2.2.5 (2022-04-29)
 
 ##### New Features

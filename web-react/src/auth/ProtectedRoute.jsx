@@ -27,7 +27,7 @@ const ProtectedRoute = ({ children, roles, roleBased, placeholder }) => {
   }
 
   if (isAuthorised(roles, currentUser.roles)) {
-    //if the user has permission to access the route
+    //if the user has permission to access the initialTouchedroute
     return children
   } else if (placeholder && !isAuthenticated && roleBased) {
     //User has no permission but there is a placeholder, and he's authenticated so let's load the screen

@@ -1,3 +1,9 @@
+#### 2.2.15 (2022-05-01)
+
+##### Chores
+
+*  version bump ([4b5af4b6](https://github.com/firstlovecenter/fl-admin-portal/commit/4b5af4b66dea37603dfbae4b286a53b1cfeade0a))
+
 #### 2.2.10 (2022-05-01)
 
 #### 2.2.9 (2022-05-01)

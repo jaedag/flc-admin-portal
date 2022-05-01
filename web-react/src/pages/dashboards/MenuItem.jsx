@@ -29,7 +29,7 @@ const MenuItem = (props) => {
         <ul className={`sub-menu ${theme} ${expand ? 'active' : ''}`}>
           {subMenus.map((menu, index) => (
             <li key={index}>
-              <NavLink to={menu.to} exact>
+              <NavLink to={menu.to} exact={`${true}`}>
                 {menu.name}
               </NavLink>
             </li>

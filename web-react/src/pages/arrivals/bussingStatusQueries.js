@@ -16,6 +16,8 @@ export const CONSTITUENCY_BACENTAS_NO_ACTIVITY = gql`
           lastName
           fullName
           pictureUrl
+          phoneNumber
+          whatsappNumber
         }
       }
     }
@@ -37,6 +39,8 @@ export const COUNCIL_BACENTAS_NO_ACTIVITY = gql`
           lastName
           fullName
           pictureUrl
+          phoneNumber
+          whatsappNumber
         }
       }
     }
@@ -58,6 +62,8 @@ export const STREAM_BACENTAS_NO_ACTIVITY = gql`
           lastName
           fullName
           pictureUrl
+          phoneNumber
+          whatsappNumber
         }
       }
     }
@@ -79,6 +85,8 @@ export const GATHERINGSERVICE_BACENTAS_NO_ACTIVITY = gql`
           lastName
           fullName
           pictureUrl
+          phoneNumber
+          whatsappNumber
         }
       }
     }
@@ -100,6 +108,11 @@ export const CONSTITUENCY_BACENTAS_MOBILISING = gql`
           lastName
           fullName
           pictureUrl
+          phoneNumber
+          whatsappNumber
+        }
+        bussing(limit: 1) {
+          id
         }
       }
     }
@@ -121,6 +134,11 @@ export const COUNCIL_BACENTAS_MOBILISING = gql`
           lastName
           fullName
           pictureUrl
+          phoneNumber
+          whatsappNumber
+        }
+        bussing(limit: 1) {
+          id
         }
       }
     }
@@ -142,6 +160,11 @@ export const STREAM_BACENTAS_MOBILISING = gql`
           lastName
           fullName
           pictureUrl
+          phoneNumber
+          whatsappNumber
+        }
+        bussing(limit: 1) {
+          id
         }
       }
     }
@@ -163,6 +186,11 @@ export const GATHERINGSERVICE_BACENTAS_MOBILISING = gql`
           lastName
           fullName
           pictureUrl
+          phoneNumber
+          whatsappNumber
+        }
+        bussing(limit: 1) {
+          id
         }
       }
     }
@@ -184,6 +212,8 @@ export const CONSTITUENCY_BACENTAS_ON_THE_WAY = gql`
           lastName
           fullName
           pictureUrl
+          phoneNumber
+          whatsappNumber
         }
         bussing(limit: 1) {
           id
@@ -208,6 +238,8 @@ export const COUNCIL_BACENTAS_ON_THE_WAY = gql`
           lastName
           fullName
           pictureUrl
+          phoneNumber
+          whatsappNumber
         }
         bussing(limit: 1) {
           id
@@ -231,6 +263,8 @@ export const STREAM_BACENTAS_ON_THE_WAY = gql`
           lastName
           fullName
           pictureUrl
+          phoneNumber
+          whatsappNumber
         }
         bussing(limit: 1) {
           id
@@ -255,6 +289,8 @@ export const GATHERINGSERVICE_BACENTAS_ON_THE_WAY = gql`
           lastName
           fullName
           pictureUrl
+          phoneNumber
+          whatsappNumber
         }
         bussing(limit: 1) {
           id
@@ -279,6 +315,8 @@ export const CONSTITUENCY_BACENTAS_TO_COUNT = gql`
           lastName
           fullName
           pictureUrl
+          phoneNumber
+          whatsappNumber
         }
         bussing(limit: 1) {
           id
@@ -303,6 +341,8 @@ export const COUNCIL_BACENTAS_TO_COUNT = gql`
           lastName
           fullName
           pictureUrl
+          phoneNumber
+          whatsappNumber
         }
         bussing(limit: 1) {
           id
@@ -326,6 +366,8 @@ export const STREAM_BACENTAS_TO_COUNT = gql`
           lastName
           fullName
           pictureUrl
+          phoneNumber
+          whatsappNumber
         }
         bussing(limit: 1) {
           id
@@ -350,6 +392,8 @@ export const GATHERINGSERVICE_BACENTAS_TO_COUNT = gql`
           lastName
           fullName
           pictureUrl
+          phoneNumber
+          whatsappNumber
         }
         bussing(limit: 1) {
           id
@@ -374,6 +418,8 @@ export const CONSTITUENCY_BACENTAS_ARRIVED = gql`
           lastName
           fullName
           pictureUrl
+          phoneNumber
+          whatsappNumber
         }
         bussing(limit: 1) {
           id
@@ -398,6 +444,8 @@ export const COUNCIL_BACENTAS_ARRIVED = gql`
           lastName
           fullName
           pictureUrl
+          phoneNumber
+          whatsappNumber
         }
         bussing(limit: 1) {
           id
@@ -422,6 +470,8 @@ export const STREAM_BACENTAS_ARRIVED = gql`
           lastName
           fullName
           pictureUrl
+          phoneNumber
+          whatsappNumber
         }
         bussing(limit: 1) {
           id
@@ -446,6 +496,8 @@ export const GATHERINGSERVICES_BACENTAS_ARRIVED = gql`
           lastName
           fullName
           pictureUrl
+          phoneNumber
+          whatsappNumber
         }
         bussing(limit: 1) {
           id

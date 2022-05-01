@@ -52,6 +52,12 @@ const FormAttendanceConfirmation = () => {
       .positive()
       .integer('You cannot have attendance with decimals!')
       .required('This is a required field'),
+    comments: Yup.string().when('attendance', {
+      is: (attendance) => attendance !== bussing?.leaderDeclaration,
+      then: Yup.string().required(
+        'You need to explain if the numbers are different'
+      ),
+    }),
   })
 
   const onSubmit = async (values, onSubmitProps) => {
@@ -79,7 +85,7 @@ const FormAttendanceConfirmation = () => {
 
     if (!bussingData.bussingTopUp || bacenta?.stream_name === 'Anagkazo') {
       //if there is no value for the bussing top up
-      return
+      navigate(`/bacenta/bussing-details`)
     }
 
     if (bussingData.arrivalTime) {
@@ -172,7 +178,9 @@ const FormAttendanceConfirmation = () => {
         initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={onSubmit}
-        validateOnMount={true}
+        initialErrors={{
+          comments: true,
+        }}
       >
         {(formik) => (
           <Container>

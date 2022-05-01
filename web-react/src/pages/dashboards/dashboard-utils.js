@@ -8,7 +8,7 @@ export const menuItems = [
   { name: 'Home', to: '/', roles: ['all'] },
   {
     name: 'Directory',
-    exact: true,
+    exact: 'true',
     to: '/directory',
     subMenus: [
       { name: 'Members', to: '/directory/members' },

@@ -311,7 +311,7 @@ const Navigator = () => {
                 <Nav.Link
                   as={Link}
                   eventKey={menuItems.length}
-                  exact
+                  exact="true"
                   to="/user-profile"
                 >
                   <UserProfileIcon />

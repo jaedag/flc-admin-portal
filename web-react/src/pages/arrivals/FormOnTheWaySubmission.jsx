@@ -52,7 +52,6 @@ const FormOnTheWaySubmission = () => {
       .required('This is a required field'),
     numberOfBusses: Yup.number()
       .typeError('Please enter a valid number')
-      .positive()
       .integer('You cannot have busses with decimals!')
       .required('This is a required field'),
     numberOfCars: Yup.number()

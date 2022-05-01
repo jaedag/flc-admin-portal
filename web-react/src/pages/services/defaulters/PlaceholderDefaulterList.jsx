@@ -23,13 +23,13 @@ const PlaceholderDefaulterList = () => {
             variant="primary"
             loading={true}
             className="btn-call"
-            button
+            button="true"
           />
           <PlaceholderCustom
             variant="success"
             className="btn-whatsapp"
             loading={true}
-            button
+            button="true"
           />
         </Card.Footer>
       </Card>

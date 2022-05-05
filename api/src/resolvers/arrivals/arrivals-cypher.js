@@ -32,10 +32,11 @@ labels(date) AS dateLabels
 `
 
 export const checkTransactionId = `
-MATCH (record:BussingRecord {id: $bussingRecordId})
+MATCH (record:BussingRecord {id: $bussingRecordId})<-[:HAS_BUSSING]-(:ServiceLog)<-[:HAS_HISTORY]-(bacenta:Bacenta)
+MATCH (bacenta)<-[:HAS*3]-(stream:Stream)
 MATCH (record)-[:COUNTED_BY]->(admin:Member)
 
-RETURN record
+RETURN record, stream
 `
 
 export const setSwellDate = `
@@ -118,4 +119,30 @@ WITH bussingRecord, bacenta, serviceDate,  date($serviceDate).week AS week
     serviceDate AS date, 
     week AS week,
     stream.name AS stream_name
+`
+
+export const recordArrivalTime = `
+MATCH (bussingRecord:BussingRecord {id: $bussingRecordId})
+SET bussingRecord.arrivalTime = datetime()
+
+WITH bussingRecord
+MATCH (admin:Member {auth_id: $auth.jwt.sub})
+OPTIONAL MATCH (bussingRecord)-[:COUNTED_BY]->(counter)
+MERGE (bussingRecord)-[:ARRIVAL_LOGGED_BY]->(admin)
+
+RETURN bussingRecord {
+    .id,
+    .bussingTopUp,
+    .arrivalTime,
+    counted_by: counter {
+        .id,
+        .firstName,
+        .lastName
+    },
+       arrival_confirmed_by:  admin {
+           .id,
+           .firstName,
+           .lastName
+       }
+}
 `

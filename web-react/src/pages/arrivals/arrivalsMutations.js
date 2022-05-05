@@ -247,8 +247,10 @@ export const RECORD_ARRIVAL_TIME = gql`
       arrivalTime
       counted_by {
         id
+        firstName
+        lastName
       }
-      arrivalTime_Logged_By {
+      arrival_confirmed_by {
         id
         firstName
         lastName

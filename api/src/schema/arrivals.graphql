@@ -1226,19 +1226,6 @@ extend type Mutation {
     )
 
   RecordArrivalTime(bussingRecordId: ID!): BussingRecord
-    @auth(rules: [{ roles: ["arrivalsConfirmerStream"] }])
-    @cypher(
-      statement: """
-      MATCH (bussingRecord:BussingRecord {id: $bussingRecordId})
-        SET bussingRecord.arrivalTime = datetime()
-
-      WITH bussingRecord
-      MATCH (admin:Member {auth_id: $auth.jwt.sub})
-      MERGE (bussingRecord)-[:ARRIVAL_LOGGED_BY]->(admin)
-
-      RETURN bussingRecord
-      """
-    )
 
   SetSwellDate(date: String!): TimeGraph
   SendBussingSupport(bussingRecordId: ID!, stream_name: String!): BussingRecord

@@ -6,7 +6,9 @@ import { makeSelectOptions } from 'global-utils'
 import { GET_STREAMS } from 'queries/ListQueries'
 import React, { useContext } from 'react'
 import { ChurchContext } from 'contexts/ChurchContext'
-import FormikControl from 'components/formik-components/FormikControl'
+import FormikControl, {
+  arrayError,
+} from 'components/formik-components/FormikControl'
 import PlusSign from 'components/buttons/PlusMinusSign/PlusSign'
 import MinusSign from 'components/buttons/PlusMinusSign/MinusSign'
 import { MAKE_COUNCIL_INACTIVE } from 'pages/directory/update/CloseChurchMutations'
@@ -122,10 +124,10 @@ const CouncilForm = ({ initialValues, onSubmit, title, newCouncil }) => {
                                     initialValue={constituency?.name}
                                     setFieldValue={formik.setFieldValue}
                                     aria-describedby="Constituency Name"
-                                    error={
-                                      formik.errors.constituencies &&
-                                      formik.errors.constituencies[index]
-                                    }
+                                    error={arrayError(
+                                      formik.errors.constituencies,
+                                      index
+                                    )}
                                   />
                                 </Col>
                                 <Col className="col-auto d-flex">

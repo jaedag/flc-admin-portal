@@ -83,6 +83,7 @@ const MemberForm = ({ initialValues, onSubmit, title, loading, update }) => {
                     control="imageUpload"
                     name="pictureUrl"
                     initialValue={initialValues.pictureUrl}
+                    error={formik.errors.pictureUrl}
                     uploadPreset={process.env.REACT_APP_CLOUDINARY_MEMBERS}
                     placeholder="Upload New Picture"
                     setFieldValue={formik.setFieldValue}

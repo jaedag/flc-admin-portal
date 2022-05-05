@@ -14,6 +14,10 @@ import SearchBacenta from './SearchBacenta'
 import SearchConstituency from './SearchConstituency'
 import SearchCouncil from './SearchCouncil'
 
+export const arrayError = (array, index) => {
+  if (array?.length) return array[index]
+}
+
 function FormikControl(props) {
   const { control, ...rest } = props
 

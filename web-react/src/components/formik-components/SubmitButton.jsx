@@ -11,8 +11,8 @@ const SubmitButton = (props) => {
       variant="primary"
       size="lg"
       type="submit"
-      className={`btn-main ${theme}`}
-      disabled={!formik.isValid || formik.isSubmitting}
+      className={`btn-main ${theme} ${!formik.isValid && 'invalid'}`}
+      disabled={formik.isSubmitting}
       {...rest}
     >
       {formik.isSubmitting ? (

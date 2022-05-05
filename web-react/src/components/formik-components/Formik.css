@@ -20,3 +20,6 @@
 .textarea {
   height: auto;
 }
+.invalid {
+  opacity: 0.65;
+}

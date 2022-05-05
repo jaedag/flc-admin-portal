@@ -200,7 +200,7 @@ const BusFormDetails = () => {
                     <CloudinaryImage
                       src={picturePopup}
                       className="full-width"
-                      size="fullWidth"
+                      size="respond"
                     />
                   </Popup>
                 )}
@@ -220,7 +220,7 @@ const BusFormDetails = () => {
                             <CloudinaryImage
                               className="report-picture"
                               src={picture}
-                              size="large"
+                              size="respond"
                             />
                           </td>
                         ))}

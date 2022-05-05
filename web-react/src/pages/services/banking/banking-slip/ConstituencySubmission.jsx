@@ -83,6 +83,7 @@ const ConstituencyBankingSlipSubmission = () => {
                     label="Upload a Picture of Your Banking Slip"
                     control="imageUpload"
                     name="bankingSlip"
+                    error={formik.errors.bankingSlip}
                     uploadPreset={process.env.REACT_APP_CLOUDINARY_BANKING}
                     placeholder="Choose"
                     setFieldValue={formik.setFieldValue}

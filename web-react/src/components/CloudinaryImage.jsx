@@ -49,9 +49,7 @@ const CloudinaryImage = ({ src, size, ...rest }) => {
 
   switch (size) {
     case 'respond':
-      image.resize(
-        fill().height(dimensions.height).gravity(focusOn(FocusOn.face()))
-      )
+      image.resize(fill().gravity(focusOn(FocusOn.face())))
       break
     case 'large':
       image.resize(

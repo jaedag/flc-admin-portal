@@ -108,6 +108,7 @@ const FormMobilisationSubmission = () => {
                     uploadPreset={
                       process.env.REACT_APP_CLOUDINARY_BUS_MOBILISATION
                     }
+                    error={formik.errors.mobilisationPicture}
                     placeholder="Upload Mobilisation Picture"
                     setFieldValue={formik.setFieldValue}
                     aria-describedby="ImageUpload"

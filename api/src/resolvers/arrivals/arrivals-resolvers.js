@@ -223,9 +223,12 @@ export const arrivalsMutation = {
 
       let bussingRecord
 
-      if (response.attendance < 8) {
+      if (
+        response.attendance < 8 ||
+        (response.numberOfBusses === 0 && response.numberOfCars === 0)
+      ) {
         try {
-          rearrangeCypherObject(await session.run(cypher.lessThanEight, args))
+          rearrangeCypherObject(await session.run(cypher.noBussingTopUp, args))
         } catch (error) {
           console.log(error)
         } finally {

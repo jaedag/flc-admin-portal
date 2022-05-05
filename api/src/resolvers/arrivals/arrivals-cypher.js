@@ -23,7 +23,12 @@ MATCH (record:BussingRecord {id: $bussingRecordId})<-[:HAS_BUSSING]-(:ServiceLog
 MATCH (record)-[:BUSSED_ON]->(date:TimeGraph)
 SET record.target = bacenta.target
 
-RETURN record.id AS bussingRecordId, record.target, record.attendance AS attendance,  labels(date) AS dateLabels
+RETURN record.id AS bussingRecordId,
+record.target,
+record.attendance AS attendance, 
+record.numberOfBusses AS numberOfBusses,
+record.numberOfCars AS numberOfCars,
+labels(date) AS dateLabels
 `
 
 export const checkTransactionId = `
@@ -49,7 +54,7 @@ record.momoName = bacenta.momoName
 RETURN record
 `
 
-export const lessThanEight = `
+export const noBussingTopUp = `
 MATCH (record:BussingRecord {id: $bussingRecordId})
 SET record.bussingTopUp = 0
 

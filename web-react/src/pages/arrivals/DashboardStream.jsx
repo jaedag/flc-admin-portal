@@ -183,6 +183,15 @@ const StreamDashboard = () => {
           </RoleView>
 
           <MenuButton
+            title="Bacentas Below 8"
+            onClick={() => navigate('/arrivals/bacentas-below-8')}
+            number={stream?.bacentasBelow8Count.toString()}
+            iconBg
+            color="red"
+            noCaption
+          />
+
+          <MenuButton
             title="Bacentas That Have Arrived"
             onClick={() => navigate('/arrivals/bacentas-have-arrived')}
             number={stream?.bacentasHaveArrivedCount.toString()}

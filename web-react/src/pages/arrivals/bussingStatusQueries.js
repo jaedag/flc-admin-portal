@@ -506,3 +506,107 @@ export const GATHERINGSERVICES_BACENTAS_ARRIVED = gql`
     }
   }
 `
+
+export const CONSTITUENCY_BACENTAS_BELOW_8 = gql`
+  query ($id: ID!) {
+    constituencies(where: { id: $id }, options: { limit: 1 }) {
+      id
+      name
+
+      bacentasBelow8 {
+        id
+        name
+        leader {
+          id
+          firstName
+          lastName
+          fullName
+          pictureUrl
+          phoneNumber
+          whatsappNumber
+        }
+        bussing(limit: 1) {
+          id
+        }
+      }
+    }
+  }
+`
+
+export const COUNCIL_BACENTAS_BELOW_8 = gql`
+  query ($id: ID!) {
+    councils(where: { id: $id }, options: { limit: 1 }) {
+      id
+      name
+
+      bacentasBelow8 {
+        id
+        name
+        leader {
+          id
+          firstName
+          lastName
+          fullName
+          pictureUrl
+          phoneNumber
+          whatsappNumber
+        }
+        bussing(limit: 1) {
+          id
+        }
+      }
+    }
+  }
+`
+
+export const STREAM_BACENTAS_BELOW_8 = gql`
+  query ($id: ID!) {
+    streams(where: { id: $id }, options: { limit: 1 }) {
+      id
+      name
+
+      bacentasBelow8 {
+        id
+        name
+        leader {
+          id
+          firstName
+          lastName
+          fullName
+          pictureUrl
+          phoneNumber
+          whatsappNumber
+        }
+        bussing(limit: 1) {
+          id
+        }
+      }
+    }
+  }
+`
+
+export const GATHERINGSERVICE_BACENTAS_BELOW_8 = gql`
+  query ($id: ID!) {
+    gatheringServices(where: { id: $id }, options: { limit: 1 }) {
+      id
+      name
+
+      bacentasBelow8 {
+        id
+        name
+        leader {
+          id
+          firstName
+          lastName
+          fullName
+          pictureUrl
+          phoneNumber
+          whatsappNumber
+        }
+        bussing(limit: 1) {
+          id
+        }
+      }
+    }
+  }
+`

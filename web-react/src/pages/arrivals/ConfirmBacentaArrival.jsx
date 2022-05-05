@@ -120,7 +120,7 @@ const ConfirmBacentaArrival = () => {
                     )
                   }
 
-                  if (bussingData.confirmed_by?.id) {
+                  if (bussingData.counted_by?.id) {
                     //If Attendance has been confrimed then send bussing support
                     try {
                       const supportRes = await SendBussingSupport({

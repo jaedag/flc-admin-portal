@@ -28,6 +28,7 @@ import SetArrivalsTime from './arrivalTimes/SetArrivalsTime'
 import ArrivalTimes from './arrivalTimes/ArrivalTimes'
 import ArrivalsCounters from './ArrivalsHelpers/ArrivalsCounters'
 import ArrivalsConfirmers from './ArrivalsHelpers/ArrivalsConfirmers'
+import BacentasBelow8 from './StateBacentasBelow8'
 
 export const arrivals = [
   {
@@ -154,6 +155,12 @@ export const arrivals = [
     ],
     element: BacentasHaveArrived,
     placeholder: true,
+  },
+  {
+    path: '/arrivals/bacentas-below-8',
+    roles: permitLeaderAdminArrivals('Constituency'),
+    element: BacentasBelow8,
+    placeholder: false,
   },
 
   //Bacenta Forms

@@ -16,7 +16,7 @@ import RoleView from 'auth/RoleView'
 import { permitAdminArrivals, permitArrivalsCounter } from 'permission-utils'
 import { parseNeoTime } from 'date-utils'
 import CloudinaryImage from 'components/CloudinaryImage'
-import { beforeCountingDeadline } from './arrivals-utils'
+import { beforeArrivalDeadline, beforeCountingDeadline } from './arrivals-utils'
 import usePopup from 'hooks/usePopup'
 import Popup from 'components/Popup/Popup'
 import { getHumanReadableDate } from 'date-utils'
@@ -43,18 +43,28 @@ const BusFormDetails = () => {
         <PlaceholderCustom as="h6" loading={loading}>
           <HeadingSecondary>{`${church?.name} ${church?.__typename}`}</HeadingSecondary>
           <p>{`Recorded by ${bussing?.created_by.fullName}`}</p>
-
-          {bussing?.confirmed_by && (
-            <p>
-              {`Confirmed`}
+          {bussing?.counted_by && (
+            <p className="mb-0">
+              {`Counted`}
               <RoleView roles={permitAdminArrivals('Stream')}>
                 {` by `}
                 <span className="fw-bold good">
-                  {bussing?.confirmed_by.fullName}
+                  {bussing?.counted_by.fullName}
                 </span>
               </RoleView>
             </p>
           )}
+          {bussing?.arrival_confirmed_by && (
+            <p>
+              {`Arrival Confirmed`}
+              <RoleView roles={permitAdminArrivals('Stream')}>
+                {` by `}
+                <span className="fw-bold good">
+                  {bussing?.arrival_confirmed_by.fullName}
+                </span>
+              </RoleView>
+            </p>
+          )}{' '}
         </PlaceholderCustom>
 
         <Row>
@@ -237,13 +247,14 @@ const BusFormDetails = () => {
           <RoleView roles={permitArrivalsCounter('Stream')}>
             {beforeCountingDeadline(bussing, church) && (
               <>
-                {' '}
-                <Button
-                  variant="success"
-                  onClick={() => navigate('/arrivals/submit-bus-attendance')}
-                >
-                  Confirm Attendance
-                </Button>
+                {!bussing?.attendance && (
+                  <Button
+                    variant="success"
+                    onClick={() => navigate('/arrivals/submit-bus-attendance')}
+                  >
+                    Confirm Attendance
+                  </Button>
+                )}
                 <Button
                   variant="danger"
                   onClick={() => navigate('/arrivals/bacentas-to-count')}
@@ -251,6 +262,15 @@ const BusFormDetails = () => {
                   Continue Counting
                 </Button>
               </>
+            )}
+
+            {beforeArrivalDeadline(null, church) && (
+              <Button
+                variant="danger"
+                onClick={() => navigate('/arrivals/confirm-bacenta-arrival')}
+              >
+                Continue Confirming Arrivals
+              </Button>
             )}
           </RoleView>
           <Button onClick={() => navigate('/arrivals')}>

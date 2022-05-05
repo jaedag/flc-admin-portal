@@ -226,7 +226,7 @@ body {
 }
 
 .good {
-  color: var(--good);
+  color: var(--good) !important;
 }
 
 .red {

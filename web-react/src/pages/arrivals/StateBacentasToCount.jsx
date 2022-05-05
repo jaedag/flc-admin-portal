@@ -43,7 +43,7 @@ const StateBacentasToCount = () => {
         </HeadingSecondary>
 
         {church && !church?.bacentasNotCounted.length && (
-          <NoData text="There are no bacentas on the way" />
+          <NoData text="There are no bacentas to be counted" />
         )}
 
         {church?.bacentasNotCounted?.map((bacenta, i) => {

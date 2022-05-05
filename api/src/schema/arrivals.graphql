@@ -129,7 +129,7 @@ extend type GatheringService {
       MATCH (this)-[:HAS*4]->(bacentas:Active:Bacenta)
       WHERE EXISTS {
       MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph) WHERE date(date.date)=date()
-       AND EXISTS {MATCH (bussing)-[:CONFIRMED_BY]->(:Member)}
+       AND EXISTS {MATCH (bussing)-[:COUNTED_BY]->(:Member)}
       }
       RETURN DISTINCT bacentas
       """
@@ -140,7 +140,7 @@ extend type GatheringService {
       MATCH (this)-[:HAS*4]->(bacentas:Active:Bacenta)
       WHERE EXISTS {
        MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph) WHERE date(date.date)=date()
-       AND EXISTS {MATCH (bussing)-[:CONFIRMED_BY]->(:Member)}
+       AND EXISTS {MATCH (bussing)-[:COUNTED_BY]->(:Member)}
       }
       RETURN COUNT(DISTINCT bacentas)
       """
@@ -152,7 +152,7 @@ extend type GatheringService {
       MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
       WHERE date(date.date)=date() AND bussing.leaderDeclaration IS NOT NULL
       AND NOT EXISTS {
-       MATCH (bussing)-[:CONFIRMED_BY]->(:Member)
+       MATCH (bussing)-[:COUNTED_BY]->(:Member)
       }
       RETURN DISTINCT bacentas
       """
@@ -164,7 +164,31 @@ extend type GatheringService {
       MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
        WHERE date(date.date)=date() AND bussing.leaderDeclaration IS NOT NULL
       AND NOT EXISTS {
-        MATCH (bussing)-[:CONFIRMED_BY]->(:Member)
+       MATCH (bussing)-[:COUNTED_BY]->(:Member)
+      }
+      RETURN COUNT(DISTINCT bacentas)
+      """
+    )
+  bacentasBelow8: [Bacenta!]!
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*4]->(bacentas:Active:Bacenta)
+      WHERE EXISTS {
+      MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
+        WHERE date(date.date)=date()
+        AND bussing.attendance < 8
+      }
+      RETURN DISTINCT bacentas
+      """
+    )
+  bacentasBelow8Count: Int!
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*4]->(bacentas:Active:Bacenta)
+      WHERE EXISTS {
+      MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
+        WHERE date(date.date)=date()
+        AND bussing.attendance < 8
       }
       RETURN COUNT(DISTINCT bacentas)
       """
@@ -306,7 +330,7 @@ extend type Stream {
       MATCH (this)-[:HAS*3]->(bacentas:Active:Bacenta)
       WHERE EXISTS {
       MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph) WHERE date(date.date)=date()
-       AND EXISTS {MATCH (bussing)-[:CONFIRMED_BY]->(:Member)}
+       AND EXISTS {MATCH (bussing)-[:COUNTED_BY]->(:Member)}
       }
       RETURN DISTINCT bacentas
       """
@@ -317,7 +341,7 @@ extend type Stream {
        MATCH (this)-[:HAS*3]->(bacentas:Active:Bacenta)
        WHERE EXISTS {
       MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph) WHERE date(date.date)=date()
-        AND EXISTS {MATCH (bussing)-[:CONFIRMED_BY]->(:Member)}
+        AND EXISTS {MATCH (bussing)-[:COUNTED_BY]->(:Member)}
        }
        RETURN COUNT(DISTINCT bacentas)
       """
@@ -329,7 +353,7 @@ extend type Stream {
       MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
       WHERE date(date.date)=date() AND bussing.leaderDeclaration IS NOT NULL
       AND NOT EXISTS {
-       MATCH (bussing)-[:CONFIRMED_BY]->(:Member)
+       MATCH (bussing)-[:COUNTED_BY]->(:Member)
       }
       RETURN DISTINCT bacentas
       """
@@ -341,7 +365,31 @@ extend type Stream {
       MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
       WHERE date(date.date)=date() AND bussing.leaderDeclaration IS NOT NULL
       AND NOT EXISTS {
-        MATCH (bussing)-[:CONFIRMED_BY]->(:Member)
+       MATCH (bussing)-[:COUNTED_BY]->(:Member)
+      }
+      RETURN COUNT(DISTINCT bacentas)
+      """
+    )
+  bacentasBelow8: [Bacenta!]!
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*3]->(bacentas:Active:Bacenta)
+      WHERE EXISTS {
+      MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
+        WHERE date(date.date)=date()
+        AND bussing.attendance < 8
+      }
+      RETURN DISTINCT bacentas
+      """
+    )
+  bacentasBelow8Count: Int!
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*3]->(bacentas:Active:Bacenta)
+      WHERE EXISTS {
+      MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
+        WHERE date(date.date)=date()
+        AND bussing.attendance < 8
       }
       RETURN COUNT(DISTINCT bacentas)
       """
@@ -481,7 +529,7 @@ extend type Council {
       MATCH (this)-[:HAS*2]->(bacentas:Active:Bacenta)
       WHERE EXISTS {
       MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph) WHERE date(date.date)=date()
-       AND EXISTS {MATCH (bussing)-[:CONFIRMED_BY]->(:Member)}
+       AND EXISTS {MATCH (bussing)-[:COUNTED_BY]->(:Member)}
       }
       RETURN DISTINCT bacentas
       """
@@ -492,7 +540,7 @@ extend type Council {
       MATCH (this)-[:HAS*2]->(bacentas:Active:Bacenta)
       WHERE EXISTS {
       MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph) WHERE date(date.date)=date()
-       AND EXISTS {MATCH (bussing)-[:CONFIRMED_BY]->(:Member)}
+       AND EXISTS {MATCH (bussing)-[:COUNTED_BY]->(:Member)}
       }
       RETURN COUNT(DISTINCT bacentas)
       """
@@ -504,7 +552,7 @@ extend type Council {
       MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
       WHERE date(date.date)=date() AND bussing.leaderDeclaration IS NOT NULL
       AND NOT EXISTS {
-       MATCH (bussing)-[:CONFIRMED_BY]->(:Member)
+        MATCH (bussing)-[:COUNTED_BY]->(:Member)
       }
       RETURN DISTINCT bacentas
       """
@@ -516,7 +564,31 @@ extend type Council {
       MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
       WHERE date(date.date)=date() AND bussing.leaderDeclaration IS NOT NULL
       AND NOT EXISTS {
-        MATCH (bussing)-[:CONFIRMED_BY]->(:Member)
+       MATCH (bussing)-[:COUNTED_BY]->(:Member)
+      }
+      RETURN COUNT(DISTINCT bacentas)
+      """
+    )
+  bacentasBelow8: [Bacenta!]!
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*2]->(bacentas:Active:Bacenta)
+      WHERE EXISTS {
+      MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
+        WHERE date(date.date)=date()
+        AND bussing.attendance < 8
+      }
+      RETURN DISTINCT bacentas
+      """
+    )
+  bacentasBelow8Count: Int!
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS*2]->(bacentas:Active:Bacenta)
+      WHERE EXISTS {
+      MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
+        WHERE date(date.date)=date()
+        AND bussing.attendance < 8
       }
       RETURN COUNT(DISTINCT bacentas)
       """
@@ -655,7 +727,7 @@ extend type Constituency {
       MATCH (this)-[:HAS]->(bacentas:Active:Bacenta)
       WHERE EXISTS {
       MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph) WHERE date(date.date)=date()
-       AND EXISTS {MATCH (bussing)-[:CONFIRMED_BY]->(:Member)}
+       AND EXISTS {MATCH (bussing)-[:COUNTED_BY]->(:Member)}
       }
       RETURN DISTINCT bacentas
       """
@@ -666,7 +738,7 @@ extend type Constituency {
       MATCH (this)-[:HAS]->(bacentas:Active:Bacenta)
       WHERE EXISTS {
       MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph) WHERE date(date.date)=date()
-       AND EXISTS {MATCH (bussing)-[:CONFIRMED_BY]->(:Member)}
+       AND EXISTS {MATCH (bussing)-[:COUNTED_BY]->(:Member)}
       }
       RETURN COUNT(DISTINCT bacentas)
       """
@@ -674,23 +746,47 @@ extend type Constituency {
   bacentasNotCounted: [Bacenta!]!
     @cypher(
       statement: """
-      MATCH (this)-[:HAS]->(bacentas:Active:Bacenta)
-      MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
-     WHERE date(date.date)=date() AND bussing.leaderDeclaration IS NOT NULL
-      AND NOT EXISTS {
-       MATCH (bussing)-[:CONFIRMED_BY]->(:Member)
-      }
-      RETURN DISTINCT bacentas
+       MATCH (this)-[:HAS]->(bacentas:Active:Bacenta)
+       MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
+      WHERE date(date.date)=date() AND bussing.leaderDeclaration IS NOT NULL
+       AND NOT EXISTS {
+        MATCH (bussing)-[:COUNTED_BY]->(:Member)
+       }
+       RETURN DISTINCT bacentas
       """
     )
   bacentasNotCountedCount: Int
     @cypher(
       statement: """
+       MATCH (this)-[:HAS]->(bacentas:Active:Bacenta)
+       MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
+      WHERE date(date.date)=date() AND bussing.leaderDeclaration IS NOT NULL
+       AND NOT EXISTS {
+         MATCH (bussing)-[:COUNTED_BY]->(:Member)
+       }
+       RETURN COUNT(DISTINCT bacentas)
+      """
+    )
+  bacentasBelow8: [Bacenta!]!
+    @cypher(
+      statement: """
       MATCH (this)-[:HAS]->(bacentas:Active:Bacenta)
+      WHERE EXISTS {
       MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
-     WHERE date(date.date)=date() AND bussing.leaderDeclaration IS NOT NULL
-      AND NOT EXISTS {
-        MATCH (bussing)-[:CONFIRMED_BY]->(:Member)
+        WHERE date(date.date)=date()
+        AND bussing.attendance < 8
+      }
+      RETURN DISTINCT bacentas
+      """
+    )
+  bacentasBelow8Count: Int!
+    @cypher(
+      statement: """
+      MATCH (this)-[:HAS]->(bacentas:Active:Bacenta)
+      WHERE EXISTS {
+      MATCH (bacentas)-[:HAS_HISTORY]->(:ServiceLog)-[:HAS_BUSSING]->(bussing:BussingRecord)-[:BUSSED_ON]->(date:TimeGraph)
+        WHERE date(date.date)=date()
+        AND bussing.attendance < 8
       }
       RETURN COUNT(DISTINCT bacentas)
       """
@@ -811,14 +907,14 @@ type BussingRecord implements Record @auth(rules: [{ isAuthenticated: true }]) {
   numberOfCars: Int
   bussingCost: Float
   bussingTopUp: Float
-  confirmed_by: Member @relationship(type: "CONFIRMED_BY", direction: OUT)
+  counted_by: Member @relationship(type: "COUNTED_BY", direction: OUT)
 
   #Arrived
   comments: String
   arrivalTime: DateTime
   transactionId: Int
-  arrivalTime_Logged_By: Member
-    @relationship(type: "ARRIVAL_LOGGED_BY", direction: OUT)
+  arrival_confirmed_by: Member
+    @relationship(type: "ARRIVAL_CONFIRMED_BY", direction: OUT)
 
   #Money Things
   mobileNetwork: String
@@ -1109,7 +1205,9 @@ extend type Mutation {
 
          WITH bussingRecord
           MATCH (admin:Member {auth_id: $auth.jwt.sub})
-          MERGE (bussingRecord)-[:CONFIRMED_BY]->(admin)
+          OPTIONAL MATCH (bussingRecord)-[r:COUNTED_BY]->(oldCounter)
+          DELETE r
+          MERGE (bussingRecord)-[:COUNTED_BY]->(admin)
 
       RETURN bussingRecord
       """

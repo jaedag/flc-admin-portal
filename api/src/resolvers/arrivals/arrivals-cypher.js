@@ -3,7 +3,9 @@ MATCH (record:BussingRecord {id: $bussingRecordId})<-[:HAS_BUSSING]-(:ServiceLog
 MATCH (record)-[:BUSSED_ON]->(date:TimeGraph)
 MATCH (transaction: LastPaySwitchTransactionId)
 SET record.transactionId = transaction.id + 1,
-transaction.id = record.transactionId
+transaction.id = record.transactionId,
+record.transactionTime = datetime(),
+record.transactionStatus = "pending"
 
 RETURN record, bacenta.name AS bacentaName, date.date AS date
 `
@@ -11,7 +13,7 @@ RETURN record, bacenta.name AS bacentaName, date.date AS date
 export const removeBussingRecordTransactionId = `
 MATCH (record:BussingRecord {id: $bussingRecordId})<-[:HAS_BUSSING]-(:ServiceLog)<-[:HAS_HISTORY]-(bacenta:Bacenta)
 MATCH (record)-[:BUSSED_ON]->(date:TimeGraph)
-REMOVE record.transactionId
+REMOVE record.transactionId, record.transactionTime, record.transactionStatus
 
 RETURN record, bacenta.name AS bacentaName, date.date AS date
 `
@@ -26,7 +28,7 @@ RETURN record.id AS bussingRecordId, record.target, record.attendance AS attenda
 
 export const checkTransactionId = `
 MATCH (record:BussingRecord {id: $bussingRecordId})
-MATCH (record)-[:CONFIRMED_BY]->(admin:Member)
+MATCH (record)-[:COUNTED_BY]->(admin:Member)
 
 RETURN record
 `

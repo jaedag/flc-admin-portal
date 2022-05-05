@@ -53,7 +53,7 @@ const ArrivalsHelpersStream = () => {
         <Button
           variant="primary"
           size="lg"
-          disabled={loading}
+          disabled={true}
           onClick={async () => {
             const confirmBox = window.confirm(
               `Do you want to delete all helpers`

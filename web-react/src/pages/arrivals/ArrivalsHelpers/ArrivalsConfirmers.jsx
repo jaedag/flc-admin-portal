@@ -3,8 +3,8 @@ import BaseComponent from 'components/base-component/BaseComponent'
 import MemberDisplayCard from 'components/card/MemberDisplayCard'
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import { ChurchContext } from 'contexts/ChurchContext'
-import React, { useContext } from 'react'
-import { Button, Col, Container, Row } from 'react-bootstrap'
+import React, { useContext, useState } from 'react'
+import { Button, Col, Container, Row, Spinner } from 'react-bootstrap'
 import * as Yup from 'yup'
 import { Form, Formik } from 'formik'
 import {
@@ -22,6 +22,7 @@ import usePopup from 'hooks/usePopup'
 const ArrivalsConfirmers = () => {
   const { streamId } = useContext(ChurchContext)
   const { isOpen, togglePopup } = usePopup()
+  const [submitting, setSubmitting] = useState(false)
 
   const { data, loading, error } = useQuery(STREAM_ARRIVALS_HELPERS, {
     variables: { id: streamId },
@@ -125,7 +126,9 @@ const ArrivalsConfirmers = () => {
           <div key={i}>
             <MemberDisplayCard key={i} member={confirmer} />
             <Button
+              disabled={submitting}
               onClick={async () => {
+                setSubmitting(true)
                 const confirmBox = window.confirm(
                   `Do you want to delete ${confirmer.fullName} as a confirmer`
                 )
@@ -138,7 +141,7 @@ const ArrivalsConfirmers = () => {
                         arrivalsConfirmerId: confirmer.id,
                       },
                     })
-
+                    setSubmitting(false)
                     alertMsg(`${confirmer.fullName} Deleted Successfully`)
                   } catch (error) {
                     throwErrorMsg(error)
@@ -146,7 +149,14 @@ const ArrivalsConfirmers = () => {
                 }
               }}
             >
-              Delete
+              {submitting ? (
+                <>
+                  <Spinner animation="grow" size="sm" />
+                  <span> Submitting</span>
+                </>
+              ) : (
+                'Delete'
+              )}
             </Button>
           </div>
         ))}

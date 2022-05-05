@@ -3,8 +3,8 @@ import BaseComponent from 'components/base-component/BaseComponent'
 import MemberDisplayCard from 'components/card/MemberDisplayCard'
 import { HeadingPrimary } from 'components/HeadingPrimary/HeadingPrimary'
 import { ChurchContext } from 'contexts/ChurchContext'
-import React, { useContext } from 'react'
-import { Button, Col, Container, Row } from 'react-bootstrap'
+import React, { useContext, useState } from 'react'
+import { Button, Col, Container, Row, Spinner } from 'react-bootstrap'
 import * as Yup from 'yup'
 import { Form, Formik } from 'formik'
 import {
@@ -22,6 +22,7 @@ import usePopup from 'hooks/usePopup'
 const ArrivalsCounters = () => {
   const { streamId } = useContext(ChurchContext)
   const { isOpen, togglePopup } = usePopup()
+  const [submitting, setSubmitting] = useState()
 
   const { data, loading, error } = useQuery(STREAM_ARRIVALS_HELPERS, {
     variables: { id: streamId },
@@ -122,6 +123,7 @@ const ArrivalsCounters = () => {
           <div key={i}>
             <MemberDisplayCard key={i} member={counter} />
             <Button
+              disabled={submitting}
               onClick={async () => {
                 const confirmBox = window.confirm(
                   `Do you want to delete ${counter.fullName} as a counter`
@@ -135,7 +137,7 @@ const ArrivalsCounters = () => {
                         arrivalsCounterId: counter.id,
                       },
                     })
-
+                    setSubmitting(false)
                     alertMsg(`${counter.fullName} Deleted Successfully`)
                   } catch (error) {
                     throwErrorMsg(error)
@@ -143,7 +145,14 @@ const ArrivalsCounters = () => {
                 }
               }}
             >
-              Delete
+              {submitting ? (
+                <>
+                  <Spinner animation="grow" size="sm" />
+                  <span> Submitting</span>
+                </>
+              ) : (
+                'Delete'
+              )}
             </Button>
           </div>
         ))}
